@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- 공통 스타일 -->
+    <style name="BaseTextStyle">
+        <item name="android:fontFamily">@font/pretendard_semi_bold</item>
+        <item name="android:letterSpacing">-2.5</item>
+        <item name="android:lineSpacingMultiplier">1.29</item>
+        <item name="android:textColor">@color/black_18</item>
+    </style>
+</resources>
