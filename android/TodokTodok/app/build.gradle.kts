@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.serialization)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -15,6 +17,8 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunnerArguments["runnerBuilder"] =
+            "de.mannodermaus.junit5.AndroidJUnit5Builder"
     }
 
     buildTypes {
@@ -33,6 +37,12 @@ android {
     kotlinOptions {
         jvmTarget = "21"
     }
+    packaging {
+        resources {
+            excludes += "META-INF/**"
+            excludes += "win32-x86*/**"
+        }
+    }
     buildFeatures {
         viewBinding = true
     }
@@ -41,13 +51,13 @@ android {
 dependencies {
     implementation(project(":domain"))
 
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
-    implementation(libs.androidx.activity)
-    implementation(libs.androidx.constraintlayout)
-    implementation("androidx.fragment:fragment-ktx:1.8.8")
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+    implementation(libs.bundles.androidx)
+    implementation(libs.bundles.kotlin)
+    implementation(libs.bundles.network)
+    implementation(libs.bundles.google)
+    implementation(libs.bundles.glide)
+
+    testImplementation(libs.bundles.test)
+    androidTestImplementation(libs.bundles.android.test)
+    androidTestRuntimeOnly(libs.mannodermaus.junit5.runner)
 }
