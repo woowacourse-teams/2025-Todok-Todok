@@ -7,8 +7,10 @@ import com.example.todoktodok.R
 import com.example.todoktodok.databinding.FragmentNoteBinding
 
 class NoteFragment : Fragment(R.layout.fragment_note) {
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentNoteBinding.bind(view)
     }
