@@ -1,10 +1,10 @@
-package com.todoktodok.backend;
+package todoktodok.backend;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class TodokTodokApplicationTests {
+class TodokTodokApplicationTest {
 
     @Test
     void contextLoads() {
