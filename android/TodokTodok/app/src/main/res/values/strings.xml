@@ -3,4 +3,6 @@
     <string name="all_note">기록</string>
     <string name="all_discussion">토론</string>
     <string name="all_library">내 서재</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
