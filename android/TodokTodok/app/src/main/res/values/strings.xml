@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">TodokTodok</string>
+    <string name="all_note">기록</string>
+    <string name="all_discussion">토론</string>
+    <string name="all_library">내 서재</string>
 </resources>

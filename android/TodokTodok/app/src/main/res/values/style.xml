@@ -8,4 +8,13 @@
         <item name="android:lineSpacingMultiplier">1.29</item>
         <item name="android:textColor">@color/black_18</item>
     </style>
+
+    <style name="BottomNavigationText" parent="BaseTextStyle">
+        <item name="android:textSize">12sp</item>
+        <item name="android:fontFamily">@font/pretendard_regular</item>
+        <item name="android:lineSpacingMultiplier">1.0</item>
+        <item name="android:textColor">@color/gray_76</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+
 </resources>
