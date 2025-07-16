@@ -1,12 +1,10 @@
 package com.example.todoktodok.presentation.view
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import com.example.todoktodok.R
@@ -42,7 +40,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun navigateScreen(mainScreen: MainScreen) {
-        Log.d("12345", mainScreen.toString())
         supportFragmentManager.commit {
             when (mainScreen) {
                 MainScreen.NOTE -> replace<NoteFragment>(R.id.fcv_container)
