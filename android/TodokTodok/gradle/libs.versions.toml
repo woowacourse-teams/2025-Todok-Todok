@@ -1,28 +1,137 @@
 [versions]
+# Build Tools
 agp = "8.9.0"
-kotlin = "2.0.21"
-coreKtx = "1.16.0"
-junit = "4.13.2"
-junitVersion = "1.2.1"
-espressoCore = "3.6.1"
-appcompat = "1.7.1"
-material = "1.12.0"
-activity = "1.10.1"
-constraintlayout = "2.2.1"
+
+# Kotlin
+kotlin = "2.2.0"
+kotlinx-serialization-json = "1.8.1"
+kotlinx-coroutines-core = "1.7.3"
+
+# AndroidX
+andoridx-core-ktx = "1.16.0"
+androidx-appcompat = "1.7.1"
+androidx-activity-ktx = "1.10.1"
+androidx-fragment-ktx = "1.8.8"
+
+# Network
+retrofit = "3.0.0"
+retrofit-kotlinx-serialization-converter = "0.8.0"
+okhttp = "5.1.0"
+logging-interceptor = "5.1.0"
+
+# Glide
+glide = "4.16.0"
+
+# Google
+google-material = "1.12.0"
+
+# Ktlint
 ktlint = "13.0.0"
 
+# Ksp
+ksp = "1.9.22-1.0.16"
+
+# Test
+androidx-espresso-core = "3.6.1"
+androidx-test-ext-junit = "1.2.1"
+androidx-test-runner = "1.6.2"
+assertj-core = "3.27.3"
+core-testing = "2.2.0"
+mannodermaus-junit5 = "1.7.0"
+junit-jupiter = "5.12.0"
+kotest-runner-junit5 = "5.9.1"
+mockk = "1.13.8"
+
 [libraries]
-androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
-junit = { group = "junit", name = "junit", version.ref = "junit" }
-androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
-androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
-androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
-androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
-androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+# Androidx
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "andoridx-core-ktx" }
+androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "androidx-activity-ktx" }
+androidx-fragment = { module = "androidx.fragment:fragment-ktx", version.ref = "androidx-fragment-ktx" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }
+
+# Kotlin
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization-json" }
+kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines-core" }
+kotlinx-coroutines-core-jvm = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core-jvm", version.ref = "kotlinx-coroutines-core" }
+
+# Network
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+retrofit-kotlinx-serialization-converter = { module = "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter", version.ref = "retrofit-kotlinx-serialization-converter" }
+okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
+logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "logging-interceptor" }
+
+# Google
+google-material = { group = "com.google.android.material", name = "material", version.ref = "google-material" }
+
+# Glide
+glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
+
+# Test
+androidx-core-testing = { module = "androidx.arch.core:core-testing", version.ref = "core-testing" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidx-espresso-core" }
+androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
+androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "androidx-test-runner" }
+assertj-core = { group = "org.assertj", name = "assertj-core", version.ref = "assertj-core" }
+junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junit-jupiter" }
+kotest-runner-junit5 = { group = "io.kotest", name = "kotest-runner-junit5", version.ref = "kotest-runner-junit5" }
+mannodermaus-junit5-core = { group = "de.mannodermaus.junit5", name = "android-test-core", version.ref = "mannodermaus-junit5" }
+mannodermaus-junit5-runner = { group = "de.mannodermaus.junit5", name = "android-test-runner", version.ref = "mannodermaus-junit5" }
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+mockk-android = { module = "io.mockk:mockk-android", version.ref = "mockk" }
+
+[bundles]
+androidx = [
+    "androidx-core-ktx",
+    "androidx-activity",
+    "androidx-fragment",
+    "androidx-appcompat",
+]
+
+kotlin = [
+    "kotlinx-serialization-json",
+    "kotlinx-coroutines-core",
+    "kotlinx-coroutines-core-jvm"
+]
+
+network = [
+    "retrofit",
+    "retrofit-kotlinx-serialization-converter",
+    "okhttp",
+    "logging-interceptor"
+]
+
+google = [
+    "google-material"
+]
+
+glide = [
+    "glide"
+]
+
+test = [
+    "assertj-core",
+    "junit-jupiter",
+    "mockk",
+    "androidx-core-testing",
+    "kotest-runner-junit5",
+]
+
+android-test = [
+    "mockk-android",
+    "androidx-espresso-core",
+    "androidx-test-ext-junit",
+    "androidx-test-runner",
+    "assertj-core",
+    "junit-jupiter",
+    "kotest-runner-junit5",
+    "mannodermaus-junit5-core",
+]
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
+serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
