@@ -1,13 +1,148 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:fillViewport="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation.view.note.NoteFragment">
+    app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="노트 입니다" />
+        android:layout_height="0dp">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/tv_header"
+            style="@style/HeaderTitleText"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:gravity="center"
+            android:text="@string/all_note"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_search_book"
+            style="@style/BaseTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_3x_large"
+            android:text="@string/book_search_title"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_header" />
+
+        <LinearLayout
+            android:id="@+id/et_search_book_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/space_x_large"
+            android:layout_marginTop="@dimen/space_small"
+            android:background="@drawable/bg_green_f0_radius_8dp"
+            android:orientation="horizontal"
+            android:padding="@dimen/space_large"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_search_book">
+
+            <TextView
+                style="@style/HintTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/book_search_hint" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_search" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_book_content"
+            style="@style/BaseTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_3x_large"
+            android:layout_marginTop="@dimen/space_x_large"
+            android:text="@string/book_content"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/et_search_book_layout" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/et_book_content_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/space_x_large"
+            android:layout_marginTop="@dimen/space_small"
+            android:background="@drawable/bg_green_f0_radius_8dp"
+            app:boxBackgroundMode="none"
+            app:cursorColor="@color/black_18"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_book_content">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_book_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="start|top"
+                android:inputType="textMultiLine"
+                android:minLines="5"
+                android:textColor="@color/black_18" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/tv_opinion"
+            style="@style/BaseTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_3x_large"
+            android:layout_marginTop="@dimen/space_x_large"
+            android:text="@string/tezxt_my_opinion"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/et_book_content_layout" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/et_opinion_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/space_x_large"
+            android:layout_marginTop="@dimen/space_small"
+            android:background="@drawable/bg_green_f0_radius_8dp"
+            app:boxBackgroundMode="none"
+            app:cursorColor="@color/black_18"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_opinion">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_opinion"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="start|top"
+                android:inputType="textMultiLine"
+                android:minLines="10"
+                android:textColor="@color/black_18" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/btn_create"
+            style="@style/BasicButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/basic_btn_height"
+            android:layout_marginHorizontal="@dimen/space_large"
+            android:layout_marginBottom="@dimen/space_small"
+            android:gravity="center"
+            android:text="@string/text_create"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
