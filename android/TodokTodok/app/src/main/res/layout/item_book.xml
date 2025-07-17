@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="72dp"
+    android:paddingVertical="8dp">
+
+    <ImageView
+        android:id="@+id/iv_book_cover"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:contentDescription="TODO"
+        android:scaleType="centerCrop"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/book" />
+
+    <TextView
+        style="@style/LibraryBookTitleTextStyle"
+        android:id="@+id/tv_book_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="5.5dp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:gravity="start"
+        app:layout_constraintStart_toEndOf="@id/iv_book_cover"
+        app:layout_constraintTop_toTopOf="@id/iv_book_cover"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/tv_book_author"
+        tools:text="나무처럼 생각하기 : 나무처럼 자연의 질서 속에서 다시 살아가는 방법에 대하여" />
+
+    <TextView
+        style="@style/LibraryBookAuthorTextStyle"
+        android:id="@+id/tv_book_author"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5.5dp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:gravity="start"
+        app:layout_constraintBottom_toBottomOf="@id/iv_book_cover"
+        app:layout_constraintStart_toStartOf="@id/tv_book_title"
+        app:layout_constraintTop_toBottomOf="@id/tv_book_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="조슈아 블로쉬" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
