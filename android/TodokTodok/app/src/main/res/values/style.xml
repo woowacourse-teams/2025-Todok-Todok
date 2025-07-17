@@ -4,9 +4,10 @@
     <!-- 공통 스타일 -->
     <style name="BaseTextStyle">
         <item name="android:fontFamily">@font/pretendard_semi_bold</item>
-        <item name="android:letterSpacing">-0.0025</item>
+        <item name="android:letterSpacing">-0.025</item>
         <item name="android:lineSpacingMultiplier">1.29</item>
         <item name="android:textColor">@color/black_18</item>
+        <item name="android:textSize">@dimen/font_size_normal</item>
     </style>
 
     <style name="HeaderTitleText" parent="BaseTextStyle">
@@ -37,4 +38,14 @@
         <item name="android:textColor">@color/gray_76</item>
     </style>
 
+    <!--  서재 페이지에서 사용하는 textStyle  -->
+    <style name="LibraryBookTitleTextStyle" parent="BaseTextStyle">
+        <item name="fontFamily">@font/pretendard_bold</item>
+        <item name="android:textSize">@dimen/font_size_large</item>
+    </style>
+
+    <style name="LibraryBookAuthorTextStyle" parent="BaseTextStyle">
+        <item name="fontFamily">@font/pretendard_regular</item>
+        <item name="android:textSize">@dimen/font_size_normal</item>
+    </style>
 </resources>
