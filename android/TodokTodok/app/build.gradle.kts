@@ -49,6 +49,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":domain"))
 
     implementation(libs.bundles.androidx)
     implementation(libs.bundles.kotlin)
