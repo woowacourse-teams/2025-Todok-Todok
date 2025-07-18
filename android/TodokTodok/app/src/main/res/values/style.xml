@@ -23,6 +23,12 @@
         <item name="android:letterSpacing">0</item>
     </style>
 
+    <!--  서재 페이지에서 사용하는 textStyle  -->
+    <style name="LibraryBookTitleTextStyle" parent="BaseTextStyle">
+        <item name="fontFamily">@font/pretendard_bold</item>
+        <item name="android:textSize">@dimen/font_size_large</item>
+    </style>
+
     <style name="BasicButtonStyle" parent="@style/Widget.Material3.Button">
         <item name="android:background">@drawable/bg_green_1a_radius_8dp</item>
         <item name="backgroundTint">@color/green_1A</item>
@@ -36,12 +42,6 @@
         <item name="fontFamily">@font/pretendard_semi_bold</item>
         <item name="android:textSize">@dimen/font_size_small</item>
         <item name="android:textColor">@color/gray_76</item>
-    </style>
-
-    <!--  서재 페이지에서 사용하는 textStyle  -->
-    <style name="LibraryBookTitleTextStyle" parent="BaseTextStyle">
-        <item name="fontFamily">@font/pretendard_bold</item>
-        <item name="android:textSize">@dimen/font_size_large</item>
     </style>
 
     <style name="LibraryBookAuthorTextStyle" parent="BaseTextStyle">
