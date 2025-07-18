@@ -22,16 +22,4 @@ public abstract class TimeStamp {
     private LocalDateTime modifiedAt;
 
     private LocalDateTime deletedAt;
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public LocalDateTime getModifiedAt() {
-        return modifiedAt;
-    }
-
-    public LocalDateTime getDeletedAt() {
-        return deletedAt;
-    }
 }

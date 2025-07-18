@@ -8,8 +8,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import todoktodok.backend.global.auth.Auth;
 import todoktodok.backend.member.application.dto.request.LoginRequest;
+import todoktodok.backend.member.application.dto.request.SignupRequest;
 import todoktodok.backend.member.application.service.command.MemberCommandService;
+import todoktodok.backend.global.auth.Role;
 
 @RestController
 @AllArgsConstructor
@@ -18,12 +21,23 @@ public class MemberController {
 
     private final MemberCommandService memberCommandService;
 
+    @Auth(value = Role.GUEST)
     @PostMapping("/login")
     public ResponseEntity<Void> login(
             @RequestBody @Valid final LoginRequest loginRequest
     ) {
         return ResponseEntity.status(HttpStatus.OK)
                 .header("Authorization", "Bearer " + memberCommandService.login(loginRequest))
+                .build();
+    }
+
+    @Auth(value = Role.TEMPUSER)
+    @PostMapping("/signup")
+    public ResponseEntity<Void> signup(
+            @RequestBody @Valid final SignupRequest signupRequest
+    ) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .header("Authorization", "Bearer " + memberCommandService.signup(signupRequest))
                 .build();
     }
 }
