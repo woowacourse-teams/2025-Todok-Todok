@@ -7,5 +7,5 @@ import kotlin.getValue
 class RepositoryModule(
     dataSourceModule: DataSourceModule,
 ) {
-    val bookRepository: BookRepository by lazy { BookRepositoryImpl(dataSourceModule.BookDataSource) }
+    val bookRepository: BookRepository by lazy { BookRepositoryImpl(dataSourceModule.bookDataSource) }
 }
