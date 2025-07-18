@@ -55,16 +55,10 @@ public class Member extends TimeStamp {
         );
     }
 
-    private static void validateEmail(final String email) {
-        if (email == null || email.isBlank()) {
-            throw new IllegalArgumentException("이메일은 필수입니다");
-        }
-    }
-
     private static void validateNickname(final String nickname) {
         validateNicknameLength(nickname);
-        validateNicknamePattern(nickname);
         validateForbiddenNickname(nickname);
+        validateNicknamePattern(nickname);
     }
 
     private static void validateForbiddenNickname(final String nickname) {
@@ -82,6 +76,12 @@ public class Member extends TimeStamp {
     private static void validateNicknameLength(final String nickname) {
         if (nickname.isEmpty() || nickname.length() > NICKNAME_MAX_LENGTH) {
             throw new IllegalArgumentException("닉네임은 1자 이상, 8자 이하여야 합니다");
+        }
+    }
+
+    private static void validateEmail(final String email) {
+        if (email == null || email.isBlank()) {
+            throw new IllegalArgumentException("이메일은 필수입니다");
         }
     }
 }

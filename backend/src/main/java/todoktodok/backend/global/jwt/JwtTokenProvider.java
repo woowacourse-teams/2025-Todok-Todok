@@ -40,7 +40,7 @@ public class JwtTokenProvider {
         Date validity = new Date(now.getTime() + validityTempUserInMilliseconds);
 
         return Jwts.builder()
-                .claim("role", Role.TEMPUSER)
+                .claim("role", Role.TEMP_USER)
                 .expiration(validity)
                 .signWith(SECRET_KEY)
                 .compact();

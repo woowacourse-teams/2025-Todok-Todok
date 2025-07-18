@@ -1,6 +1,5 @@
 package todoktodok.backend.member.application.service.command;
 
-import jakarta.validation.Valid;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

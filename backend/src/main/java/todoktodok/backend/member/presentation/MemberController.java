@@ -31,7 +31,7 @@ public class MemberController {
                 .build();
     }
 
-    @Auth(value = Role.TEMPUSER)
+    @Auth(value = Role.TEMP_USER)
     @PostMapping("/signup")
     public ResponseEntity<Void> signup(
             @RequestBody @Valid final SignupRequest signupRequest
