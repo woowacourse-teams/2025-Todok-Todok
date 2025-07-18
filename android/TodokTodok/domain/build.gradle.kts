@@ -12,6 +12,12 @@ kotlin {
     }
 }
 
+tasks {
+    test {
+        useJUnitPlatform()
+    }
+}
+
 dependencies {
     testImplementation(libs.bundles.test)
 }
