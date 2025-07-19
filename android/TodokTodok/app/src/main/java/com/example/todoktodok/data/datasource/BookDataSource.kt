@@ -3,7 +3,7 @@ package com.example.todoktodok.data.datasource
 import com.example.domain.model.Book
 
 class BookDataSource {
-    fun getBooks(): List<Book> =
+    fun fetchBooks(): List<Book> =
         listOf(
             Book(
                 id = 0,

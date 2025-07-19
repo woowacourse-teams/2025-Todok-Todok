@@ -7,5 +7,5 @@ import com.example.todoktodok.data.datasource.BookDataSource
 class BookRepositoryImpl(
     private val bookDataSource: BookDataSource,
 ) : BookRepository {
-    override suspend fun getBooks(): List<Book> = bookDataSource.getBooks()
+    override suspend fun getBooks(): List<Book> = bookDataSource.fetchBooks()
 }

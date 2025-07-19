@@ -11,16 +11,16 @@ import kotlinx.coroutines.launch
 class LibraryViewModel(
     private val bookRepositoryImpl: BookRepository,
 ) : ViewModel() {
-    private val _books: MutableLiveData<List<Book>> = MutableLiveData()
+    private val _books: MutableLiveData<List<Book>> = MutableLiveData(emptyList())
     val books: LiveData<List<Book>> = _books
 
     init {
-        viewModelScope.launch {
-            getBooks()
-        }
+        loadBooks()
     }
 
-    private suspend fun getBooks() {
-        _books.value = bookRepositoryImpl.getBooks()
+    private fun loadBooks() {
+        viewModelScope.launch {
+            _books.value = bookRepositoryImpl.getBooks()
+        }
     }
 }
