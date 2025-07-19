@@ -27,7 +27,7 @@ public class MemberController {
             @RequestBody @Valid final LoginRequest loginRequest
     ) {
         return ResponseEntity.status(HttpStatus.OK)
-                .header("Authorization", "Bearer " + memberCommandService.login(loginRequest))
+                .header("Authorization", memberCommandService.login(loginRequest))
                 .build();
     }
 
@@ -37,7 +37,7 @@ public class MemberController {
             @RequestBody @Valid final SignupRequest signupRequest
     ) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .header("Authorization", "Bearer " + memberCommandService.signup(signupRequest))
+                .header("Authorization", memberCommandService.signup(signupRequest))
                 .build();
     }
 }

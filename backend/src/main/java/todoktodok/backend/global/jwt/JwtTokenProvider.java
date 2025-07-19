@@ -22,12 +22,13 @@ public class JwtTokenProvider {
     private static final SecretKey SECRET_KEY = SIG.HS256.key().build();
     private static final long validityInMilliseconds = 3600000;
     private static final long validityTempUserInMilliseconds = 300000;
+    private static final String TOKEN_PREFIX = "Bearer ";
 
     public String createToken(final Member member) {
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityInMilliseconds);
 
-        return Jwts.builder()
+        return TOKEN_PREFIX + Jwts.builder()
                 .claim("id", member.getId())
                 .claim("role", Role.USER)
                 .expiration(validity)
@@ -39,7 +40,7 @@ public class JwtTokenProvider {
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityTempUserInMilliseconds);
 
-        return Jwts.builder()
+        return TOKEN_PREFIX + Jwts.builder()
                 .claim("role", Role.TEMP_USER)
                 .expiration(validity)
                 .signWith(SECRET_KEY)

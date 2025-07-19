@@ -10,22 +10,32 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
+import todoktodok.backend.DatabaseInitializer;
+import todoktodok.backend.InitializerTimer;
 import todoktodok.backend.global.jwt.JwtTokenProvider;
 import todoktodok.backend.member.application.dto.request.LoginRequest;
 import todoktodok.backend.member.application.dto.request.SignupRequest;
 
+@ActiveProfiles("test")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@ContextConfiguration(initializers = InitializerTimer.class)
 class MemberControllerTest {
+
+    @Autowired
+    private DatabaseInitializer databaseInitializer;
+
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
 
     @LocalServerPort
     int port;
 
-    @Autowired
-    JwtTokenProvider jwtTokenProvider;
-
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+        databaseInitializer.clear();
     }
 
     @Test
