@@ -10,10 +10,9 @@ import todoktodok.backend.shelf.domain.Shelf;
 public interface ShelfRepository extends JpaRepository<Shelf, Long> {
 
     @Query("""
-                SELECT s.book
-                FROM Shelf s
-                WHERE s.member.id = :memberId
-           """
-    )
+        SELECT s.book
+        FROM Shelf s
+        WHERE s.member.id = :memberId
+    """)
     List<Book> findBookByMemberId(@Param("memberId") final Long memberId);
 }
