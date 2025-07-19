@@ -1,4 +1,4 @@
-package com.example.todoktodok.repository
+package com.example.todoktodok
 
 import com.example.domain.model.Book
 import com.example.domain.model.DiscussionRoom

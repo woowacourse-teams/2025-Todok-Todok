@@ -1,8 +1,8 @@
-package com.example.todoktodok.repository
+package com.example.todoktodok.data.repository
 
+import com.example.todoktodok.DISCUSSION_ROOMS
 import com.example.todoktodok.data.datasource.DiscussionRoomDataSource
 import com.example.todoktodok.data.datasource.DiscussionRoomDataSourceImpl
-import com.example.todoktodok.data.repository.DiscussionRoomRepositoryImpl
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
