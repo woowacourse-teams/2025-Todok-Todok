@@ -39,7 +39,7 @@ class NoteControllerTest {
     }
 
     @Test
-    @DisplayName("노트를 생성한다")
+    @DisplayName("기록을 생성한다")
     void createNoteTest() {
         //given
         databaseInitializer.setUserInfo();
@@ -57,5 +57,22 @@ class NoteControllerTest {
                 .when().post("/api/v1/notes")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
+    }
+
+    @Test
+    @DisplayName("내 기록들을 조회한다")
+    void readMyNotesTest() {
+        //given
+        databaseInitializer.setUserInfo();
+        databaseInitializer.setNoteInfo();
+        final String token = memberCommandService.login(new LoginRequest("user@gmail.com"));
+
+        //when - then
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .header("Authorization", token)
+                .when().get("/api/v1/notes/mine")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
     }
 }

@@ -40,4 +40,15 @@ public class DatabaseInitializer {
                 """
         ).executeUpdate();
     }
+
+    @Transactional
+    public void setNoteInfo() {
+        em.createNativeQuery( //todo book_id 추가
+                """
+                INSERT INTO NOTE (snap, memo, member_id, created_at, modified_at)
+                VALUES
+                ('DI와 IoC는 스프링의 중요한 개념이다.', 'Spring의 동작 원리를 이해하는 데 큰 도움이 됐다.', 1L, CURRENT_TIME, CURRENT_TIME)
+                """
+        ).executeUpdate();
+    }
 }
