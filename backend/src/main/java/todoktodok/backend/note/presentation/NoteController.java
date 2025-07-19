@@ -23,7 +23,7 @@ public class NoteController {
 
     @Auth(value = Role.USER)
     @PostMapping
-    public ResponseEntity<Void> createNote (
+    public ResponseEntity<Void> createNote(
             @LoginMember final Long memberId,
             @RequestBody @Valid final NoteRequest noteRequest
     ) {
