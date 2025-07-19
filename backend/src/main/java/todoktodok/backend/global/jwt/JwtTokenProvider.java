@@ -25,8 +25,8 @@ public class JwtTokenProvider {
     private static final String TOKEN_PREFIX = "Bearer ";
 
     public String createToken(final Member member) {
-        Date now = new Date();
-        Date validity = new Date(now.getTime() + validityInMilliseconds);
+        final Date now = new Date();
+        final Date validity = new Date(now.getTime() + validityInMilliseconds);
 
         return TOKEN_PREFIX + Jwts.builder()
                 .claim("id", member.getId())
@@ -37,8 +37,8 @@ public class JwtTokenProvider {
     }
 
     public String createTempToken() {
-        Date now = new Date();
-        Date validity = new Date(now.getTime() + validityTempUserInMilliseconds);
+        final Date now = new Date();
+        final Date validity = new Date(now.getTime() + validityTempUserInMilliseconds);
 
         return TOKEN_PREFIX + Jwts.builder()
                 .claim("role", Role.TEMP_USER)
@@ -53,8 +53,8 @@ public class JwtTokenProvider {
             throw new JwtException(JWT_EXCEPTION_MESSAGE);
         }
 
-        String extractedToken = token.replace("Bearer ","");
-        Claims claims = validateToken(extractedToken);
+        final String extractedToken = token.replace("Bearer ","");
+        final Claims claims = validateToken(extractedToken);
 
         return new TokenInfo(
                 claims.get("id", Long.class),
@@ -62,7 +62,7 @@ public class JwtTokenProvider {
         );
     }
 
-    private Claims validateToken(String token) {
+    private Claims validateToken(final String token) {
         if (token == null || token.trim().isEmpty()) {
             log.warn("JWT 토큰이 존재하지 않습니다");
             throw new JwtException(JWT_EXCEPTION_MESSAGE);

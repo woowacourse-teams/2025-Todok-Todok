@@ -30,20 +30,20 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
             return false;
         }
 
-        Method method = handlerMethod.getMethod();
+        final Method method = handlerMethod.getMethod();
 
         if (!method.isAnnotationPresent(Auth.class)) {
             return false;
         }
 
-        Auth auth = method.getAnnotation(Auth.class);
-        Role requiredRole = auth.value();
+        final Auth auth = method.getAnnotation(Auth.class);
+        final Role requiredRole = auth.value();
 
         if (requiredRole == Role.GUEST) {
             return true;
         }
 
-        String token = request.getHeader("Authorization");
+        final String token = request.getHeader("Authorization");
         final TokenInfo tokenInfo = jwtTokenProvider.getInfo(token);
 
         if (tokenInfo.role() == requiredRole) {

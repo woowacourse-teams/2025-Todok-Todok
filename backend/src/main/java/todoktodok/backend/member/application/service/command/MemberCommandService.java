@@ -19,7 +19,7 @@ public class MemberCommandService {
     private final JwtTokenProvider jwtTokenProvider;
 
     public String login(final LoginRequest loginRequest) {
-        Optional<Member> member = memberRepository.findByEmail(loginRequest.email());
+        final Optional<Member> member = memberRepository.findByEmail(loginRequest.email());
         if (member.isPresent()) {
             return jwtTokenProvider.createToken(member.get());
         }

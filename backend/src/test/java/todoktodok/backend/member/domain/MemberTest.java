@@ -13,9 +13,9 @@ class MemberTest {
     @DisplayName("닉네임에 '(알수없음)'을 사용할 수 없다")
     void validateForbiddenNicknameTest() {
         // given
-        String nickname = "(알수없음)";
-        String email = "email@gmail.com";
-        String profileImage = "https://www.image.com";
+        final String nickname = "(알수없음)";
+        final String email = "email@gmail.com";
+        final String profileImage = "https://www.image.com";
 
         // when - then
         assertThatThrownBy(() -> {
@@ -33,8 +33,8 @@ class MemberTest {
     @DisplayName("닉네임은 한글, 영어, 숫자만 입력할 수 있고, 특수문자, 공백은 입력할 수 없다")
     void validateNicknamePatternTest(String nickname) {
         // given
-        String email = "email@gmail.com";
-        String profileImage = "https://www.image.com";
+        final String email = "email@gmail.com";
+        final String profileImage = "https://www.image.com";
 
         // when - then
         assertThatThrownBy(() -> {
@@ -51,9 +51,9 @@ class MemberTest {
     @DisplayName("닉네임은 1자 이상, 8자 이하여야 한다")
     void validateNicknameLengthTest() {
         // given
-        String nickname = "123456789";
-        String email = "email@gmail.com";
-        String profileImage = "https://www.image.com";
+        final String nickname = "123456789";
+        final String email = "email@gmail.com";
+        final String profileImage = "https://www.image.com";
 
         // when - then
         assertThatThrownBy(() -> {
@@ -70,9 +70,9 @@ class MemberTest {
     @DisplayName("이메일은 공백일 수 없다")
     void validateEmailTest() {
         // given
-        String nickname = "12345678";
-        String email = "";
-        String profileImage = "https://www.image.com";
+        final String nickname = "12345678";
+        final String email = "";
+        final String profileImage = "https://www.image.com";
 
         // when - then
         assertThatThrownBy(() -> {

@@ -16,7 +16,7 @@ public class DatabaseInitializer {
     public void clear() {
         em.clear();
         em.createNativeQuery("SET REFERENTIAL_INTEGRITY=0").executeUpdate();
-        List<String> tables = em.createNativeQuery(
+        final List<String> tables = em.createNativeQuery(
                 "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'PUBLIC'"
         ).getResultList();
 
