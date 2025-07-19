@@ -2,6 +2,7 @@ package todoktodok.backend.member.presentation;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,7 @@ import todoktodok.backend.InitializerTimer;
 import todoktodok.backend.global.jwt.JwtTokenProvider;
 import todoktodok.backend.member.application.dto.request.LoginRequest;
 import todoktodok.backend.member.application.dto.request.SignupRequest;
+import todoktodok.backend.member.application.service.command.MemberCommandService;
 
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -28,6 +30,12 @@ class MemberControllerTest {
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
+
+    @Autowired
+    private MemberCommandService memberCommandService;
+
+    @Autowired
+    private EntityManager em;
 
     @LocalServerPort
     int port;
@@ -65,9 +73,27 @@ class MemberControllerTest {
         // when - then
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .header("Authorization", "Bearer " + tempToken)
+                .header("Authorization", tempToken)
                 .body(new SignupRequest(nickname, profileImage, email))
                 .when().post("/api/v1/members/signup")
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value());
+    }
+
+    @Test
+    @DisplayName("회원을 차단한다")
+    void blockTest() {
+        // given
+        databaseInitializer.setUserInfo();
+        memberCommandService.signup(new SignupRequest("user2", "https://user2.png", "user2@gmail.com")); //todo 이렇게 하는게 최선?
+
+        String token = memberCommandService.login(new LoginRequest("user@gmail.com"));
+
+        // when - then
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .header("Authorization", token)
+                .when().post("/api/v1/members/2/block")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
     }

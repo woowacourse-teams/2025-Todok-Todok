@@ -95,4 +95,16 @@ class MemberCommandServiceTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("이미 존재하는 닉네임입니다");
     }
+
+    @Test
+    @DisplayName("자기 자신을 차단하면 예외가 발생한다")
+    void blockSameMemberTest() {
+        //given
+        databaseInitializer.setUserInfo();
+
+        //when - then
+        assertThatThrownBy(() -> memberCommandService.block(1L, 1L))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("자기 자신을 차단할 수 없습니다");
+    }
 }
