@@ -40,4 +40,26 @@ public class DatabaseInitializer {
                 """
         ).executeUpdate();
     }
+
+    @Transactional
+    public void setBookInfo() {
+        em.createNativeQuery(
+                """
+                INSERT INTO BOOK (title, summary, author, publisher, isbn, image, created_at, modified_at)
+                VALUES
+                ('오브젝트', '오브젝트 설명', '조영호', '위키북스', '9791158391409', 'image.png', CURRENT_TIME, CURRENT_TIME)
+                """
+        ).executeUpdate();
+    }
+
+    @Transactional
+    public void setShelf() {
+        em.createNativeQuery(
+                """
+                INSERT INTO SHELF (member_id, book_id, created_at, modified_at)
+                VALUES
+                (1, 1, CURRENT_TIME, CURRENT_TIME)
+                """
+        ).executeUpdate();
+    }
 }
