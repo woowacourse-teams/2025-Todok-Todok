@@ -50,6 +50,10 @@ public class MemberCommandService {
     }
 
     public void block(Long memberId, Long targetId) {
+        if (memberId.equals(targetId)) {
+            throw new IllegalArgumentException("자기 자신을 차단할 수 없습니다");
+        }
+
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new NoSuchElementException("해당하는 회원을 찾을 수 없습니다"));
         Member target = memberRepository.findById(targetId)

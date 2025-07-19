@@ -15,6 +15,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 @Getter
+@Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 
@@ -34,18 +35,4 @@ public class Block {
     @ManyToOne
     @JoinColumn(nullable = false)
     private Member target;
-
-    @Builder
-    public static Block create(
-            Member member, Member target
-    ) {
-        validateMemberAndTarget(member, target);
-        return new Block(null, member, target);
-    }
-
-    private static void validateMemberAndTarget(Member member, Member target) {
-        if (member.getId().equals(target.getId())) { //todo equals 기준 이야기해보기
-            throw new IllegalArgumentException("자기 자신을 차단할 수 없습니다.");
-        }
-    }
 }
