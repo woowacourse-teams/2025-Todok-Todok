@@ -107,4 +107,16 @@ class MemberCommandServiceTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("자기 자신을 차단할 수 없습니다");
     }
+
+    @Test
+    @DisplayName("자기 자신을 신고하면 예외가 발생한다")
+    void reportSameMemberTest() {
+        //given
+        databaseInitializer.setUserInfo();
+
+        //when - then
+        assertThatThrownBy(() -> memberCommandService.report(1L, 1L))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("자기 자신을 신고할 수 없습니다");
+    }
 }

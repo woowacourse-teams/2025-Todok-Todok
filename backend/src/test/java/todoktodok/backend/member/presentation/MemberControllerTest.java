@@ -97,4 +97,22 @@ class MemberControllerTest {
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
     }
+
+    @Test
+    @DisplayName("회원을 신고한다")
+    void reportTest() {
+        // given
+        databaseInitializer.setUserInfo();
+        memberCommandService.signup(new SignupRequest("user2", "https://user2.png", "user2@gmail.com")); //todo 이렇게 하는게 최선?
+
+        String token = memberCommandService.login(new LoginRequest("user@gmail.com"));
+
+        // when - then
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .header("Authorization", token)
+                .when().post("/api/v1/members/2/report")
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value());
+    }
 }
