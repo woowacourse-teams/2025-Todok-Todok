@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 import todoktodok.backend.book.domain.Book;
+import todoktodok.backend.global.common.TimeStamp;
 import todoktodok.backend.member.domain.Member;
 
 @Getter
@@ -24,7 +25,7 @@ import todoktodok.backend.member.domain.Member;
 @Entity
 @SQLRestriction("deleted_at is NULL")
 @SQLDelete(sql = "UPDATE note SET deleted_at = NOW() WHERE id = ?")
-public class Note {
+public class Note extends TimeStamp {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
