@@ -9,6 +9,10 @@ android {
     namespace = "com.example.todoktodok"
     compileSdk = 35
 
+    lint {
+        disable += "NullSafeMutableLiveData"
+    }
+
     defaultConfig {
         applicationId = "com.example.todoktodok"
         minSdk = 30
