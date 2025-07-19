@@ -10,7 +10,9 @@ import todoktodok.backend.member.application.dto.request.LoginRequest;
 import todoktodok.backend.member.application.dto.request.SignupRequest;
 import todoktodok.backend.member.domain.Block;
 import todoktodok.backend.member.domain.Member;
+import todoktodok.backend.member.domain.MemberReport;
 import todoktodok.backend.member.domain.repository.BlockRepository;
+import todoktodok.backend.member.domain.repository.MemberReportRepository;
 import todoktodok.backend.member.domain.repository.MemberRepository;
 
 @Service
@@ -20,6 +22,7 @@ public class MemberCommandService {
 
     private final MemberRepository memberRepository;
     private final BlockRepository blockRepository;
+    private final MemberReportRepository memberReportRepository;
     private final JwtTokenProvider jwtTokenProvider;
 
     public String login(final LoginRequest loginRequest) {
@@ -64,5 +67,22 @@ public class MemberCommandService {
                 .target(target)
                 .build();
         blockRepository.save(block);
+    }
+
+    public void report(Long memberId, Long targetId) {
+        if (memberId.equals(targetId)) {
+            throw new IllegalArgumentException("자기 자신을 신고할 수 없습니다");
+        }
+
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new NoSuchElementException("해당하는 회원을 찾을 수 없습니다"));
+        Member target = memberRepository.findById(targetId)
+                .orElseThrow(() -> new NoSuchElementException("해당하는 회원을 찾을 수 없습니다"));
+
+        MemberReport memberReport = MemberReport.builder()
+                .member(member)
+                .target(target)
+                .build();
+        memberReportRepository.save(memberReport);
     }
 }

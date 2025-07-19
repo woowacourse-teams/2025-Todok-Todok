@@ -53,4 +53,15 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .build();
     }
+
+    @Auth(value = Role.USER)
+    @PostMapping("/{id}/report")
+    public ResponseEntity<Void> report(
+            @LoginMember final Long memberId,
+            @PathVariable("id") final Long targetId
+    ) {
+        memberCommandService.report(memberId, targetId);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .build();
+    }
 }

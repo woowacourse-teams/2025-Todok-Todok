@@ -22,8 +22,8 @@ import todoktodok.backend.global.common.TimeStamp;
 
 @Entity
 @SQLRestriction("deleted_at is NULL")
-@SQLDelete(sql = "UPDATE block SET deleted_at = NOW() WHERE id = ?")
-public class Block extends TimeStamp {
+@SQLDelete(sql = "UPDATE member SET deleted_at = NOW() WHERE id = ?")
+public class MemberReport extends TimeStamp {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
