@@ -34,8 +34,7 @@ public class DatabaseInitializer {
     public void setUserInfo() {
         em.createNativeQuery(
                 """
-                
-                        INSERT INTO MEMBER (email, nickname, profile_image, profile_message, created_at, modified_at)
+                INSERT INTO MEMBER (email, nickname, profile_image, profile_message, created_at, modified_at)
                 VALUES
                 ('user@gmail.com', 'user', 'https://user.png', 'user', CURRENT_TIME, CURRENT_TIME)
                 """
@@ -66,11 +65,11 @@ public class DatabaseInitializer {
 
     @Transactional
     public void setNoteInfo() {
-        em.createNativeQuery( //todo book_id 추가
+        em.createNativeQuery(
                 """
-                INSERT INTO NOTE (snap, memo, member_id, created_at, modified_at)
+                INSERT INTO NOTE (snap, memo, book_id, member_id, created_at, modified_at)
                 VALUES
-                ('DI와 IoC는 스프링의 중요한 개념이다.', 'Spring의 동작 원리를 이해하는 데 큰 도움이 됐다.', 1L, CURRENT_TIME, CURRENT_TIME)
+                ('DI와 IoC는 스프링의 중요한 개념이다.', 'Spring의 동작 원리를 이해하는 데 큰 도움이 됐다.', 1L, 1L, CURRENT_TIME, CURRENT_TIME)
                 """
         ).executeUpdate();
     }

@@ -14,8 +14,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import todoktodok.backend.DatabaseInitializer;
 import todoktodok.backend.InitializerTimer;
-import todoktodok.backend.member.application.dto.request.LoginRequest;
 import todoktodok.backend.member.application.service.command.MemberCommandService;
+import todoktodok.backend.member.presentation.fixture.MemberFixture;
 import todoktodok.backend.note.application.dto.request.NoteRequest;
 
 @ActiveProfiles("test")
@@ -43,11 +43,15 @@ class NoteControllerTest {
     void createNoteTest() {
         //given
         databaseInitializer.setUserInfo();
+        databaseInitializer.setBookInfo();
+        databaseInitializer.setShelfInfo();
+
         final NoteRequest noteRequest = new NoteRequest(
+                1L,
                 "DI와 IoC는 스프링의 중요한 개념이다.",
                 "Spring의 동작 원리를 이해하는 데 큰 도움이 됐다."
         );
-        final String token = memberCommandService.login(new LoginRequest("user@gmail.com"));
+        final String token = MemberFixture.login("user@gmail.com");
 
         //when - then
         RestAssured.given().log().all()
@@ -64,8 +68,10 @@ class NoteControllerTest {
     void readMyNotesTest() {
         //given
         databaseInitializer.setUserInfo();
+        databaseInitializer.setBookInfo();
+        databaseInitializer.setShelfInfo();
         databaseInitializer.setNoteInfo();
-        final String token = memberCommandService.login(new LoginRequest("user@gmail.com"));
+        final String token = MemberFixture.login("user@gmail.com");
 
         //when - then
         RestAssured.given().log().all()

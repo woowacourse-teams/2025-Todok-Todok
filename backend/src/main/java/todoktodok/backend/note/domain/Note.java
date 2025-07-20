@@ -37,9 +37,9 @@ public class Note extends TimeStamp {
     @Column(length = 1024)
     private String memo;
 
-//    @ManyToOne
-//    @JoinColumn(nullable = false)
-//    private Book book;
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private Book book;
 
     @ManyToOne
     @JoinColumn(nullable = false)
@@ -50,7 +50,7 @@ public class Note extends TimeStamp {
             String snap, String memo, Book book, Member member
     ) {
         validateBlankSnapAndMemo(snap, memo);
-        return new Note(null, snap, memo, member); //todo book 추가하기
+        return new Note(null, snap, memo, book, member);
     }
 
     private static void validateBlankSnapAndMemo(String snap, String memo) {

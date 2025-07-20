@@ -32,16 +32,16 @@ public class NoteController {
             @LoginMember final Long memberId,
             @RequestBody @Valid final NoteRequest noteRequest
     ) {
-        noteCommandService.createNote(noteRequest, memberId);//todo location 또는 응답데이터 추가하기
+        noteCommandService.createNote(noteRequest, memberId);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @Auth(value = Role.USER)
     @GetMapping("/mine")
-    public ResponseEntity<List<MyNoteResponse>> readMyNotes(
+    public ResponseEntity<List<MyNoteResponse>> getMyNotes(
             @LoginMember final Long memberId
     ) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(noteQueryService.readMyNotes(memberId));
+                .body(noteQueryService.getMyNotes(memberId));
     }
 }
