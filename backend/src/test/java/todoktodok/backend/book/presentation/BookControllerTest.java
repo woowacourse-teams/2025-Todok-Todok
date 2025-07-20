@@ -41,7 +41,7 @@ public class BookControllerTest {
         // given
         databaseInitializer.setUserInfo();
         databaseInitializer.setBookInfo();
-        databaseInitializer.setShelf();
+        databaseInitializer.setShelfInfo();
         final String token = MemberFixture.login("user@gmail.com");
 
         // when - then
