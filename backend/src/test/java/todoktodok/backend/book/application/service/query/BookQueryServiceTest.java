@@ -65,7 +65,7 @@ public class BookQueryServiceTest {
     }
 
     @Test
-    @DisplayName("일치하는 책이 없으면 빈 리스트를 반환한다")
+    @DisplayName("도서 검색 시 일치하는 책이 없으면 빈 리스트를 반환한다")
     void searchTestEmpty() {
         // given
         final String keyword = "오브젝트";
