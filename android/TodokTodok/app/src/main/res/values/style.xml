@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+<resources xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- 공통 스타일 -->
     <style name="BaseTextStyle">
         <item name="android:fontFamily">@font/pretendard_semi_bold</item>
         <item name="android:letterSpacing">-0.025</item>
         <item name="android:lineSpacingMultiplier">1.29</item>
-        <item name="android:textSize">@dimen/font_size_normal</item>
         <item name="android:textColor">@color/black_18</item>
+        <item name="android:textSize">@dimen/font_size_normal</item>
     </style>
 
     <style name="HeaderTitleText" parent="BaseTextStyle">
@@ -46,6 +46,25 @@
     <style name="LibraryBookAuthorTextStyle" parent="BaseTextStyle">
         <item name="fontFamily">@font/pretendard_regular</item>
         <item name="android:textSize">@dimen/font_size_normal</item>
+    </style>
+
+    <!--  토론방 목록 페이지에서 사용하는 textStyle  -->
+    <style name="DiscussionBookTitle" parent="BaseTextStyle">
+        <item name="android:textColor">@color/gray_66</item>
+        <item name="fontFamily">@font/pretendard_medium</item>
+    </style>
+
+    <style name="DiscussionTitle" parent="BaseTextStyle">
+        <item name="android:textColor">@color/black_18</item>
+        <item name="android:textSize">@dimen/font_size_large</item>
+        <item name="android:fontFamily">@font/pretendard_semi_bold</item>
+    </style>
+
+    <style name="DiscussionOpinionSummary" parent="BaseTextStyle">
+        <item name="android:textColor">@color/gray_66</item>
+        <item name="fontFamily">@font/pretendard_regular</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
     </style>
 
     <!--  도서 검색 페이지에서 사용하는 textStyle  -->
