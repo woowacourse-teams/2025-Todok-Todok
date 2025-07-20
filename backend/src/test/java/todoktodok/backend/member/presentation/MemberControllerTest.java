@@ -19,6 +19,7 @@ import todoktodok.backend.global.jwt.JwtTokenProvider;
 import todoktodok.backend.member.application.dto.request.LoginRequest;
 import todoktodok.backend.member.application.dto.request.SignupRequest;
 import todoktodok.backend.member.application.service.command.MemberCommandService;
+import todoktodok.backend.member.presentation.fixture.MemberFixture;
 
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -85,9 +86,9 @@ class MemberControllerTest {
     void blockTest() {
         // given
         databaseInitializer.setUserInfo();
-        memberCommandService.signup(new SignupRequest("user2", "https://user2.png", "user2@gmail.com")); //todo 이렇게 하는게 최선?
+        memberCommandService.signup(new SignupRequest("user2", "https://user2.png", "user2@gmail.com"));
 
-        String token = memberCommandService.login(new LoginRequest("user@gmail.com"));
+        String token = MemberFixture.login("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -103,9 +104,9 @@ class MemberControllerTest {
     void reportTest() {
         // given
         databaseInitializer.setUserInfo();
-        memberCommandService.signup(new SignupRequest("user2", "https://user2.png", "user2@gmail.com")); //todo 이렇게 하는게 최선?
+        memberCommandService.signup(new SignupRequest("user2", "https://user2.png", "user2@gmail.com"));
 
-        String token = memberCommandService.login(new LoginRequest("user@gmail.com"));
+        String token = MemberFixture.login("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()

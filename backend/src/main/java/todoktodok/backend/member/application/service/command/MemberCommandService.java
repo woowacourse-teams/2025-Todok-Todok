@@ -46,13 +46,10 @@ public class MemberCommandService {
         return jwtTokenProvider.createToken(savedMember);
     }
 
-    private void validateDuplicatedNickname(final SignupRequest signupRequest) {
-        if (memberRepository.existsByNickname(signupRequest.nickname())) {
-            throw new IllegalArgumentException("이미 존재하는 닉네임입니다");
-        }
-    }
-
-    public void block(Long memberId, Long targetId) {
+    public void block(
+            final Long memberId,
+            final Long targetId
+    ) {
         if (memberId.equals(targetId)) {
             throw new IllegalArgumentException("자기 자신을 차단할 수 없습니다");
         }
@@ -69,7 +66,10 @@ public class MemberCommandService {
         blockRepository.save(block);
     }
 
-    public void report(Long memberId, Long targetId) {
+    public void report(
+            final Long memberId,
+            final Long targetId
+    ) {
         if (memberId.equals(targetId)) {
             throw new IllegalArgumentException("자기 자신을 신고할 수 없습니다");
         }
@@ -84,5 +84,11 @@ public class MemberCommandService {
                 .target(target)
                 .build();
         memberReportRepository.save(memberReport);
+    }
+
+    private void validateDuplicatedNickname(final SignupRequest signupRequest) {
+        if (memberRepository.existsByNickname(signupRequest.nickname())) {
+            throw new IllegalArgumentException("이미 존재하는 닉네임입니다");
+        }
     }
 }
