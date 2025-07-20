@@ -1,12 +1,17 @@
 package todoktodok.backend.note.application.service.command;
 
 import jakarta.transaction.Transactional;
+import java.util.NoSuchElementException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import todoktodok.backend.book.domain.Book;
+import todoktodok.backend.book.domain.repository.BookRepository;
+import todoktodok.backend.member.domain.Member;
 import todoktodok.backend.member.domain.repository.MemberRepository;
 import todoktodok.backend.note.application.dto.request.NoteRequest;
 import todoktodok.backend.note.domain.Note;
 import todoktodok.backend.note.domain.repository.NoteRepository;
+import todoktodok.backend.shelf.domain.repository.ShelfRepository;
 
 @Service
 @Transactional
@@ -15,17 +20,27 @@ public class NoteCommandService {
 
     private final NoteRepository noteRepository;
     private final MemberRepository memberRepository;
+    private final BookRepository bookRepository;
+    private final ShelfRepository shelfRepository;
 
     public void createNote(
             final NoteRequest noteRequest,
             final Long memberId
     ) {
+        final Book book = bookRepository.findById(noteRequest.bookId())
+                .orElseThrow(() -> new NoSuchElementException("해당하는 도서를 찾을 수 없습니다"));
+        final Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new NoSuchElementException("해당하는 회원을 찾을 수 없습니다"));
+
+        if (!shelfRepository.existsByBookAndMember(book, member)) {
+            throw new IllegalArgumentException("서재 등록한 도서만 기록 가능합니다");
+        }
+
         final Note note = Note.builder()
                 .snap(noteRequest.snap())
                 .memo(noteRequest.memo())
-//                .book()
-                .member(memberRepository.findById(memberId)
-                        .orElseThrow(() -> new IllegalArgumentException("해당하는 회원을 찾을 수 없습니다")))
+                .book(book)
+                .member(member)
                 .build();
         noteRepository.save(note);
     }
