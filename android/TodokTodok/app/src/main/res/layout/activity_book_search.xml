@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginHorizontal="@dimen/space_x_large"
+    tools:context=".presentation.view.library.BookSearchActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/abl_book_search"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_height"
+        android:background="@color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_book_search_back"
+        android:layout_width="@dimen/space_2x_large"
+        android:layout_height="@dimen/space_2x_large"
+        android:contentDescription="@string/content_description_book_search_back"
+        android:src="@drawable/btn_back"
+        app:layout_constraintBottom_toBottomOf="@id/abl_book_search"
+        app:layout_constraintStart_toStartOf="@id/abl_book_search"
+        app:layout_constraintTop_toTopOf="@id/abl_book_search" />
+
+    <TextView
+        android:id="@+id/tv_book_search_title"
+        style="@style/HeaderTitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/space_x_small"
+        android:gravity="center"
+        android:text="@string/book_search"
+        app:layout_constraintBottom_toBottomOf="@id/abl_book_search"
+        app:layout_constraintEnd_toEndOf="@id/abl_book_search"
+        app:layout_constraintStart_toStartOf="@id/abl_book_search"
+        app:layout_constraintTop_toTopOf="@id/abl_book_search" />
+
+    <View
+        android:id="@+id/view_book_search_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/book_search_bar_height"
+        android:layout_marginVertical="@dimen/space_large"
+        android:background="@drawable/bg_green_f0_radius_8dp"
+        app:layout_constraintBottom_toTopOf="@id/rc_book_search_result"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/abl_book_search" />
+
+    <EditText
+        android:id="@+id/et_book_search_bar"
+        style="@style/BookSearchBarTextStyle"
+        android:layout_width="@dimen/space_2x_small"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/space_x_small"
+        android:autofillHints="search"
+        android:background="@android:color/transparent"
+        android:gravity="center_vertical"
+        android:hint="@string/book_search_hint"
+        android:inputType="text"
+        android:textColorHint="@color/gray_76"
+        app:layout_constraintBottom_toBottomOf="@id/view_book_search_bar"
+        app:layout_constraintEnd_toStartOf="@id/iv_book_search"
+        app:layout_constraintStart_toStartOf="@id/view_book_search_bar"
+        app:layout_constraintTop_toTopOf="@id/view_book_search_bar" />
+
+    <ImageView
+        android:id="@+id/iv_book_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/space_x_small"
+        android:contentDescription="@string/content_description_book_search_bar"
+        android:src="@drawable/ic_search"
+        app:layout_constraintBottom_toBottomOf="@id/view_book_search_bar"
+        app:layout_constraintEnd_toEndOf="@id/view_book_search_bar"
+        app:layout_constraintStart_toEndOf="@id/et_book_search_bar"
+        app:layout_constraintTop_toTopOf="@id/view_book_search_bar" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:contentDescription="@string/content_description_book_search_result"
+        android:id="@+id/rc_book_search_result"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/space_2x_small"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view_book_search_bar"
+        tools:listitem="@layout/item_book_search" />
+</androidx.constraintlayout.widget.ConstraintLayout>
