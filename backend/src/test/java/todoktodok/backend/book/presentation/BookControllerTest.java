@@ -42,6 +42,7 @@ public class BookControllerTest {
         databaseInitializer.setUserInfo();
         databaseInitializer.setBookInfo();
         databaseInitializer.setShelfInfo();
+
         final String token = MemberFixture.login("user@gmail.com");
 
         // when - then
@@ -61,6 +62,7 @@ public class BookControllerTest {
         databaseInitializer.setUserInfo();
         databaseInitializer.setBookInfo();
         databaseInitializer.setShelfInfo();
+
         final String token = MemberFixture.login("user@gmail.com");
         final String keyword = "오브젝트";
 
@@ -81,6 +83,7 @@ public class BookControllerTest {
         // given
         databaseInitializer.setUserInfo();
         databaseInitializer.setBookInfo();
+
         final String token = MemberFixture.login("user@gmail.com");
         final String keyword = "";
 
