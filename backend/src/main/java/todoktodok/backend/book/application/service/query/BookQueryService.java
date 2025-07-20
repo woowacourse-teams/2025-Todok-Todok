@@ -26,11 +26,10 @@ public class BookQueryService {
     }
 
     public List<BookResponse> search(final String keyword) {
-        final List<Book> books = bookRepository.findAll();
-        final String cleanLowerKeyword = keyword.trim().toLowerCase();
+        final String cleanKeyword = keyword.trim();
+        final List<Book> matchedBooks = bookRepository.findByTitleContainingIgnoreCase(cleanKeyword);
 
-        return books.stream()
-                .filter(book -> book.getTitle().toLowerCase().contains(cleanLowerKeyword))
+        return matchedBooks.stream()
                 .map(BookResponse::new)
                 .toList();
     }
