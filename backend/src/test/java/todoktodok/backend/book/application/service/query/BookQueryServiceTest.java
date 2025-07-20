@@ -6,6 +6,8 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -46,5 +48,32 @@ public class BookQueryServiceTest {
 
         // then
         assertThat(myBooks).hasSize(1);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"오브젝트", " 오브젝트", "오브젝트 ", "오", "오브", "오브젝"})
+    @DisplayName("검색어로 도서를 검색한다")
+    void searchTest(String keyword) {
+        // given
+        databaseInitializer.setBookInfo();
+
+        // when
+        final List<BookResponse> books = bookQueryService.search(keyword);
+
+        // then
+        assertThat(books).hasSize(1);
+    }
+
+    @Test
+    @DisplayName("일치하는 책이 없으면 빈 리스트를 반환한다")
+    void searchTestEmpty() {
+        // given
+        final String keyword = "오브젝트";
+
+        // when
+        final List<BookResponse> books = bookQueryService.search(keyword);
+
+        // then
+        assertThat(books).isEmpty();
     }
 }

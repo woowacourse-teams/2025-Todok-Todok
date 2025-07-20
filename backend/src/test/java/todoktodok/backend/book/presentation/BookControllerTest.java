@@ -53,4 +53,44 @@ public class BookControllerTest {
                 .statusCode(HttpStatus.OK.value())
                 .body("size()", is(1));
     }
+
+    @Test
+    @DisplayName("검색어로 도서를 검색한다")
+    void searchTest() {
+        // given
+        databaseInitializer.setUserInfo();
+        databaseInitializer.setBookInfo();
+        databaseInitializer.setShelfInfo();
+        final String token = MemberFixture.login("user@gmail.com");
+        final String keyword = "오브젝트";
+
+        // when - then
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .header("Authorization", token)
+                .param("keyword", keyword)
+                .when().get("/api/v1/books/search")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("size()", is(1));
+    }
+
+    @Test
+    @DisplayName("검색어가 1자 미만이면 Bad Request를 응답한다")
+    void searchTestFail() {
+        // given
+        databaseInitializer.setUserInfo();
+        databaseInitializer.setBookInfo();
+        final String token = MemberFixture.login("user@gmail.com");
+        final String keyword = "";
+
+        // when - then
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .header("Authorization", token)
+                .param("keyword", keyword)
+                .when().get("/api/v1/books/search")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
 }
