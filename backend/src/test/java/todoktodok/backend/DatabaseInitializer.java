@@ -40,4 +40,37 @@ public class DatabaseInitializer {
                 """
         ).executeUpdate();
     }
+
+    @Transactional
+    public void setBookInfo() {
+        em.createNativeQuery(
+                """
+                INSERT INTO BOOK (title, summary, author, publisher, isbn, image, created_at, modified_at)
+                VALUES
+                ('오브젝트', '오브젝트 설명', '조영호', '위키북스', '9791158391409', 'image.png', CURRENT_TIME, CURRENT_TIME)
+                """
+        ).executeUpdate();
+    }
+
+    @Transactional
+    public void setShelfInfo() {
+        em.createNativeQuery(
+                """
+                INSERT INTO SHELF (member_id, book_id, created_at, modified_at)
+                VALUES
+                (1, 1, CURRENT_TIME, CURRENT_TIME)
+                """
+        ).executeUpdate();
+    }
+
+    @Transactional
+    public void setNoteInfo() {
+        em.createNativeQuery(
+                """
+                INSERT INTO NOTE (snap, memo, book_id, member_id, created_at, modified_at)
+                VALUES
+                ('DI와 IoC는 스프링의 중요한 개념이다.', 'Spring의 동작 원리를 이해하는 데 큰 도움이 됐다.', 1L, 1L, CURRENT_TIME, CURRENT_TIME)
+                """
+        ).executeUpdate();
+    }
 }
