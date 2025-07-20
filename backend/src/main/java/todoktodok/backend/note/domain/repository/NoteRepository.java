@@ -7,5 +7,5 @@ import todoktodok.backend.note.domain.Note;
 
 public interface NoteRepository extends JpaRepository<Note, Long> {
 
-    List<Note> findNotesByMember(Member member);
+    List<Note> findNotesByMember(final Member member);
 }

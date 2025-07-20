@@ -45,7 +45,7 @@ class NoteCommandServiceTest {
         );
 
         //when - then
-        assertThatThrownBy(() -> noteCommandService.createNote(noteRequest, 1L))
+        assertThatThrownBy(() -> noteCommandService.createNote(1L, noteRequest))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("서재 등록한 도서만 기록 가능합니다");
     }

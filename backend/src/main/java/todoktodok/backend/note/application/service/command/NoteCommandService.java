@@ -24,8 +24,8 @@ public class NoteCommandService {
     private final ShelfRepository shelfRepository;
 
     public void createNote(
-            final NoteRequest noteRequest,
-            final Long memberId
+            final Long memberId,
+            final NoteRequest noteRequest
     ) {
         final Book book = bookRepository.findById(noteRequest.bookId())
                 .orElseThrow(() -> new NoSuchElementException("해당하는 도서를 찾을 수 없습니다"));

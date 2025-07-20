@@ -32,8 +32,9 @@ public class NoteController {
             @LoginMember final Long memberId,
             @RequestBody @Valid final NoteRequest noteRequest
     ) {
-        noteCommandService.createNote(noteRequest, memberId);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        noteCommandService.createNote(memberId, noteRequest);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .build();
     }
 
     @Auth(value = Role.USER)
