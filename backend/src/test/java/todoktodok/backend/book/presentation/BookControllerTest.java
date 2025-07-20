@@ -78,7 +78,7 @@ public class BookControllerTest {
     }
 
     @Test
-    @DisplayName("검색어가 1자 미만이면 Bad Request를 응답한다")
+    @DisplayName("검색어가 1자 미만이면 예외를 응답한다")
     void searchTestFail() {
         // given
         databaseInitializer.setUserInfo();
