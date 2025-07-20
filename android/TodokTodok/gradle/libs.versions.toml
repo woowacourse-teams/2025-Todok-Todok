@@ -81,7 +81,6 @@ mannodermaus-junit5-runner = { group = "de.mannodermaus.junit5", name = "android
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 mockk-android = { module = "io.mockk:mockk-android", version.ref = "mockk" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
-androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 
 [bundles]
 androidx = [
@@ -89,7 +88,6 @@ androidx = [
     "androidx-activity",
     "androidx-fragment",
     "androidx-appcompat",
-    "androidx-constraintlayout"
 ]
 
 kotlin = [
