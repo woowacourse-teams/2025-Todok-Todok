@@ -79,7 +79,7 @@ public class BookControllerTest {
 
     @Test
     @DisplayName("검색어가 1자 미만이면 예외를 응답한다")
-    void searchTestFail() {
+    void searchTestFailUnder1Char() {
         // given
         databaseInitializer.setUserInfo();
         databaseInitializer.setBookInfo();
@@ -92,6 +92,24 @@ public class BookControllerTest {
                 .contentType(ContentType.JSON)
                 .header("Authorization", token)
                 .param("keyword", keyword)
+                .when().get("/api/v1/books/search")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    @DisplayName("검색어 파라미터가 없다면 예외를 응답한다")
+    void searchTestFailEmptyParam() {
+        // given
+        databaseInitializer.setUserInfo();
+        databaseInitializer.setBookInfo();
+
+        final String token = MemberFixture.login("user@gmail.com");
+
+        // when - then
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .header("Authorization", token)
                 .when().get("/api/v1/books/search")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());

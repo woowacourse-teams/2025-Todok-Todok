@@ -16,7 +16,6 @@ import todoktodok.backend.global.auth.Auth;
 import todoktodok.backend.global.auth.Role;
 import todoktodok.backend.global.resolver.LoginMember;
 
-@Validated
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/v1/books")
@@ -36,10 +35,12 @@ public class BookController {
     @Auth(value = Role.USER)
     @GetMapping("/search")
     public ResponseEntity<List<BookResponse>> search(
-            @RequestParam(value = "keyword")
-            @NotBlank(message = "검색어는 1자 이상 입력해주세요")
-            final String keyword
+            @RequestParam(value = "keyword", required = false) final String keyword
     ) {
+        if (keyword == null || keyword.isBlank()) {
+            throw new IllegalArgumentException("검색어는 1자 이상 입력해주세요");
+        }
+
         return ResponseEntity.status(HttpStatus.OK)
                 .body(bookQueryService.search(keyword));
     }
