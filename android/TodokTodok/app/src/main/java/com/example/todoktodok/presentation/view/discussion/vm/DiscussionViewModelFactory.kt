@@ -9,7 +9,7 @@ class DiscussionViewModelFactory(
     private val discussionRoomRepository: DiscussionRoomRepository,
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(LibraryViewModel::class.java)) {
+        if (modelClass.isAssignableFrom(DiscussionViewModel::class.java)) {
             return DiscussionViewModel(discussionRoomRepository) as T
         } else {
             throw IllegalArgumentException()
