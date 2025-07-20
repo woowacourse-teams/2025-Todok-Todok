@@ -53,7 +53,7 @@ public class DatabaseInitializer {
     }
 
     @Transactional
-    public void setShelf() {
+    public void setShelfInfo() {
         em.createNativeQuery(
                 """
                 INSERT INTO SHELF (member_id, book_id, created_at, modified_at)
