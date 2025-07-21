@@ -82,7 +82,7 @@ class MemberControllerTest {
     void blockTest() {
         // given
         databaseInitializer.setDefaultUserInfo();
-        memberCommandService.signup(new SignupRequest("user2", "https://user2.png", "user2@gmail.com"));
+        databaseInitializer.setUserInfo("user2@gmail.com", "user2", "https://user2.png", "");
 
         String token = MemberFixture.login("user@gmail.com");
 
@@ -100,7 +100,7 @@ class MemberControllerTest {
     void reportTest() {
         // given
         databaseInitializer.setDefaultUserInfo();
-        memberCommandService.signup(new SignupRequest("user2", "https://user2.png", "user2@gmail.com"));
+        databaseInitializer.setUserInfo("user2@gmail.com", "user2", "https://user2.png", "");
 
         String token = MemberFixture.login("user@gmail.com");
 
