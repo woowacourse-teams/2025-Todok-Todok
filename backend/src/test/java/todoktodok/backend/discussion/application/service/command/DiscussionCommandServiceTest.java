@@ -48,9 +48,7 @@ class DiscussionCommandServiceTest {
         );
 
         // when - then
-        assertThatThrownBy(
-                        () -> discussionCommandService.createDiscussion(memberId, discussionRequest)
-                )
+        assertThatThrownBy(() -> discussionCommandService.createDiscussion(memberId, discussionRequest))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("해당 회원을 찾을 수 없습니다");
     }
@@ -74,8 +72,8 @@ class DiscussionCommandServiceTest {
 
         // when - then
         assertThatThrownBy(
-                        () -> discussionCommandService.createDiscussion(memberId, discussionRequest)
-                )
+                () -> discussionCommandService.createDiscussion(memberId, discussionRequest)
+        )
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("해당 기록을 찾을 수 없습니다");
     }
