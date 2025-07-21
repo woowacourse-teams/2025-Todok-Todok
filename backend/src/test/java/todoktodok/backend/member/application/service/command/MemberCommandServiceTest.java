@@ -89,18 +89,32 @@ class MemberCommandServiceTest {
     void validateDuplicatedNicknameTest() {
         // given
         databaseInitializer.setUserInfo();
-        final String email = "user@gmail.com";
-        final SignupRequest signupRequest = new SignupRequest("user", "https://user.png", email);
+        String nickname = "user";
+        final SignupRequest signupRequest = new SignupRequest(nickname, "https://user.png",  "user22@gmail.com");
 
         // when - then
-        assertThatThrownBy(() -> memberCommandService.signup(signupRequest, email))
+        assertThatThrownBy(() -> memberCommandService.signup(signupRequest,  "user22@gmail.com"))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("이미 존재하는 닉네임입니다");
     }
 
     @Test
+    @DisplayName("회원가입 시 중복된 이메일을 입력하면 예외가 발생한다")
+    void validateDuplicatedEmailTest() {
+        // given
+        databaseInitializer.setUserInfo();
+        final String email = "user@gmail.com";
+        final SignupRequest signupRequest = new SignupRequest("user22", "https://user.png", email);
+
+        // when - then
+        assertThatThrownBy(() -> memberCommandService.signup(signupRequest, email))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("이미 가입된 이메일입니다");
+    }
+
+    @Test
     @DisplayName("소셜 로그인을 하지 않은 유저가 회원가입을 시도할 경우 예외가 발생한다")
-    void validateEmailTest() {
+    void validateEmailWithTokenEmailTest() {
         //given
         final String email = "user@gmail.com";
         final SignupRequest signupRequest = new SignupRequest("user", "https://user.png", email);

@@ -31,7 +31,8 @@ public class MemberCommandService {
             final String memberEmail
     ) {
         validateDuplicatedNickname(signupRequest);
-        validateEmail(signupRequest.email(), memberEmail);
+        validateDuplicatedEmail(signupRequest);
+        validateEmailWithTokenEmail(signupRequest, memberEmail);
 
         final Member member = Member.builder()
                 .nickname(signupRequest.nickname())
@@ -49,11 +50,17 @@ public class MemberCommandService {
         }
     }
 
-    private void validateEmail(
-            final String requestEmail,
+    private void validateDuplicatedEmail(final SignupRequest signupRequest) {
+        if (memberRepository.existsByEmail(signupRequest.email())) {
+            throw new IllegalArgumentException("이미 가입된 이메일입니다");
+        }
+    }
+
+    private void validateEmailWithTokenEmail(
+            final SignupRequest signupRequest,
             final String tokenEmail
     ) {
-        if (!tokenEmail.equals(requestEmail)) {
+        if (!tokenEmail.equals(signupRequest.email())) {
             throw new IllegalArgumentException("소셜 로그인을 하지 않은 이메일입니다");
         }
     }
