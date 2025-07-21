@@ -42,13 +42,15 @@ fun <T> SingleLiveData<T>.getOrAwaitValue(
     var data: T? = null
     val latch = CountDownLatch(1)
 
-    val lifecycleOwner = object : LifecycleOwner {
-        private val registry = LifecycleRegistry(this)
-        override val lifecycle: Lifecycle
-            get() = registry.apply {
-                handleLifecycleEvent(Lifecycle.Event.ON_RESUME)
-            }
-    }
+    val lifecycleOwner =
+        object : LifecycleOwner {
+            private val registry = LifecycleRegistry(this)
+            override val lifecycle: Lifecycle
+                get() =
+                    registry.apply {
+                        handleLifecycleEvent(Lifecycle.Event.ON_RESUME)
+                    }
+        }
 
     this.observe(lifecycleOwner) {
         data = it
@@ -62,4 +64,3 @@ fun <T> SingleLiveData<T>.getOrAwaitValue(
     @Suppress("UNCHECKED_CAST")
     return data as T
 }
-

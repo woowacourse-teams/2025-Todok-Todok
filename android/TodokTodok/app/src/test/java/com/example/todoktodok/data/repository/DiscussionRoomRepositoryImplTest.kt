@@ -7,7 +7,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class DiscussionRoomRepositoryImplTest() {
+class DiscussionRoomRepositoryImplTest {
     private lateinit var discussionRoomDataSource: DiscussionRoomDataSource
     private lateinit var discussionRoomRepositoryImpl: DiscussionRoomRepositoryImpl
 
@@ -19,9 +19,9 @@ class DiscussionRoomRepositoryImplTest() {
 
     @Test
     fun `모든 토론방을 출력한다`() {
-        //given
+        // given
         val expected = DISCUSSION_ROOMS
-        //then
+        // then
         assertThat(discussionRoomRepositoryImpl.getDiscussionRooms()).isEqualTo(expected)
     }
 }

@@ -13,7 +13,7 @@ class RepositoryModule(
 
     val discussionRoomRepository: DiscussionRoomRepository by lazy {
         DiscussionRoomRepositoryImpl(
-            dataSourceModule.discussionRoomDataSource
+            dataSourceModule.discussionRoomDataSource,
         )
     }
 }

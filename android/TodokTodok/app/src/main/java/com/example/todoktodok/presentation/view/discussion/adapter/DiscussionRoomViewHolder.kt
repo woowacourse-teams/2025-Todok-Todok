@@ -9,9 +9,8 @@ import com.example.todoktodok.databinding.ItemDiscussionRoomBinding
 
 class DiscussionRoomViewHolder private constructor(
     private val binding: ItemDiscussionRoomBinding,
-    private val navigateDiscussionRoomClick: OnDiscussionRoomListener
-) :
-    RecyclerView.ViewHolder(binding.root) {
+    private val navigateDiscussionRoomClick: OnDiscussionRoomListener,
+) : RecyclerView.ViewHolder(binding.root) {
     fun bind(discussionRoom: DiscussionRoom) {
         with(binding) {
             Glide.with(binding.root.context).load(discussionRoom.book.image).into(ivBookImage)
@@ -20,7 +19,7 @@ class DiscussionRoomViewHolder private constructor(
             tvOpinionSummary.text = discussionRoom.discussionOpinion
             root.setOnClickListener {
                 navigateDiscussionRoomClick.navigateToDiscussionRoom(
-                    discussionRoom.id
+                    discussionRoom.id,
                 )
             }
         }
@@ -29,7 +28,7 @@ class DiscussionRoomViewHolder private constructor(
     companion object {
         fun create(
             parent: ViewGroup,
-            navigateDiscussionRoomClick: OnDiscussionRoomListener
+            navigateDiscussionRoomClick: OnDiscussionRoomListener,
         ): DiscussionRoomViewHolder {
             val layoutInflater = LayoutInflater.from(parent.context)
             val binding = ItemDiscussionRoomBinding.inflate(layoutInflater, parent, false)

@@ -10,9 +10,8 @@ import com.example.todoktodok.presentation.core.event.SingleLiveData
 import com.example.todoktodok.presentation.view.discussion.DiscussionUiEvent
 
 class DiscussionViewModel(
-    private val discussionRoomRepository: DiscussionRoomRepository
+    private val discussionRoomRepository: DiscussionRoomRepository,
 ) : ViewModel() {
-
     private val _discussionRooms = MutableLiveData<List<DiscussionRoom>>()
     val discussionRooms: LiveData<List<DiscussionRoom>> = _discussionRooms
 

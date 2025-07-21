@@ -22,29 +22,29 @@ class DiscussionViewModelTest {
 
     @Test
     fun `저장소에서 불러온 토론방 목록으로 값을 초기화 한다`() {
-        //given
+        // given
         val expected = DISCUSSION_ROOMS
-        //then
+        // then
         assertThat(discussionViewModel.discussionRooms.getOrAwaitValue()).isEqualTo(expected)
     }
 
     @Test
     fun `UiEvent를 NavigateAddDiscussionRoom으로 변경한다`() {
-        //given
+        // given
         val expected = DiscussionUiEvent.NavigateAddDiscussionRoom
-        //when
+        // when
         discussionViewModel.onUiEvent(DiscussionUiEvent.NavigateAddDiscussionRoom)
-        //then
+        // then
         assertThat(discussionViewModel.uiEvent.getOrAwaitValue()).isEqualTo(expected)
     }
 
     @Test
     fun `UiEvent를 NavigateDiscussionRoom으로 변경한다`() {
-        //given
+        // given
         val expected = DiscussionUiEvent.NavigateDiscussionRoom(1)
-        //when
+        // when
         discussionViewModel.onUiEvent(DiscussionUiEvent.NavigateDiscussionRoom(1))
-        //then
+        // then
         assertThat(discussionViewModel.uiEvent.getOrAwaitValue()).isEqualTo(expected)
     }
 }
