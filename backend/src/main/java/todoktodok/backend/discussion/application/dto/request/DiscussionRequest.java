@@ -1,9 +1,11 @@
 package todoktodok.backend.discussion.application.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public record DiscussionRequest(
+        @NotNull
         Long noteId,
 
         @NotBlank(message = "토론방 제목을 입력해주세요")
