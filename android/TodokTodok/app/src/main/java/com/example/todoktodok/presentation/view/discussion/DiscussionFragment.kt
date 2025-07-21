@@ -23,7 +23,10 @@ class DiscussionFragment : Fragment(R.layout.fragment_discussion) {
         }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentDiscussionBinding.bind(view)
         binding.rvDiscussionRooms.adapter = adapter
@@ -48,17 +51,21 @@ class DiscussionFragment : Fragment(R.layout.fragment_discussion) {
 
     private fun handleEvent(discussionUiEvent: DiscussionUiEvent) {
         when (discussionUiEvent) {
-            DiscussionUiEvent.NavigateAddDiscussionRoom -> Toast.makeText(
-                requireContext(),
-                "토론방 추가",
-                Toast.LENGTH_SHORT
-            ).show()
+            DiscussionUiEvent.NavigateAddDiscussionRoom ->
+                Toast
+                    .makeText(
+                        requireContext(),
+                        "토론방 추가",
+                        Toast.LENGTH_SHORT,
+                    ).show()
 
-            is DiscussionUiEvent.NavigateDiscussionRoom -> Toast.makeText(
-                requireContext(),
-                "토론방 이동",
-                Toast.LENGTH_SHORT
-            ).show()
+            is DiscussionUiEvent.NavigateDiscussionRoom ->
+                Toast
+                    .makeText(
+                        requireContext(),
+                        "토론방 이동",
+                        Toast.LENGTH_SHORT,
+                    ).show()
         }
     }
 }
