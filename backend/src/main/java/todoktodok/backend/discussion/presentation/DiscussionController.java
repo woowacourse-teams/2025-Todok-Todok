@@ -29,7 +29,7 @@ public class DiscussionController {
             @LoginMember final Long memberId,
             @RequestBody @Valid final DiscussionRequest discussionRequest
     ) {
-        Long discussionId = discussionCommandService.createDiscussion(memberId, discussionRequest);
+        final Long discussionId = discussionCommandService.createDiscussion(memberId, discussionRequest);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .location(createUri(discussionId))
