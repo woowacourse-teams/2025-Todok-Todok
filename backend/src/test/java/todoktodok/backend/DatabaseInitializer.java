@@ -73,4 +73,15 @@ public class DatabaseInitializer {
                 """
         ).executeUpdate();
     }
+
+    @Transactional
+    public void setDiscussionInfo() {
+        em.createNativeQuery(
+                """
+                INSERT INTO DISCUSSION (title, content, member_id, book_id, note_id, created_at, modified_at)
+                VALUES
+                ('의존성 주입에 대한 생각', 'Spring의 DI 방식은 유지보수에 도움이 된다고 느꼈습니다', 1L, 1L, 1L, CURRENT_TIME, CURRENT_TIME)
+                """
+        ).executeUpdate();
+    }
 }

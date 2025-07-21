@@ -35,7 +35,7 @@ class DiscussionControllerTest {
     }
 
     @Test
-    @DisplayName("토론방 생성 요청 시 201 CREATED 응답을 반환한다")
+    @DisplayName("토론방을 생성한다")
     void createDiscussion() {
         // given
         databaseInitializer.setUserInfo();
@@ -59,5 +59,23 @@ class DiscussionControllerTest {
                 .when().post("/api/v1/discussions")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
+    }
+
+    @Test
+    @DisplayName("전체 토론방을 조회한다")
+    void getDiscussions() {
+        // given
+        databaseInitializer.setUserInfo();
+        databaseInitializer.setBookInfo();
+        databaseInitializer.setShelfInfo();
+        databaseInitializer.setNoteInfo();
+        databaseInitializer.setDiscussionInfo();
+
+        // when - then
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .when().get("/api/v1/discussions")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
     }
 }
