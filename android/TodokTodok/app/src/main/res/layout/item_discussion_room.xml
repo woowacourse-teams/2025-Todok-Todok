@@ -7,23 +7,21 @@
     android:layout_marginHorizontal="@dimen/space_x_large"
     android:layout_marginVertical="@dimen/space_small">
 
-
     <androidx.cardview.widget.CardView
         android:id="@+id/cv_book_cover"
         android:layout_width="@dimen/item_discussion_book_cover_size"
         android:layout_height="@dimen/item_discussion_book_cover_size"
         app:cardCornerRadius="@dimen/space_x_small"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        >
 
         <ImageView
             android:id="@+id/iv_book_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:contentDescription="@string/content_description_book_image"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:contentDescription="@string/content_description_book_image" />
     </androidx.cardview.widget.CardView>
 
     <TextView
