@@ -2,19 +2,19 @@ package com.example.todoktodok.data.repository
 
 import com.example.todoktodok.DISCUSSION_ROOMS
 import com.example.todoktodok.data.datasource.DiscussionRoomDataSource
-import com.example.todoktodok.data.datasource.DiscussionRoomDataSourceImpl
+import com.example.todoktodok.data.datasource.DefaultDiscussionRoomDataSource
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class DiscussionRoomRepositoryImplTest {
+class DefaultDiscussionRoomRepositoryTest {
     private lateinit var discussionRoomDataSource: DiscussionRoomDataSource
-    private lateinit var discussionRoomRepositoryImpl: DiscussionRoomRepositoryImpl
+    private lateinit var defaultDiscussionRoomRepository: DefaultDiscussionRoomRepository
 
     @BeforeEach
     fun setUp() {
-        discussionRoomDataSource = DiscussionRoomDataSourceImpl()
-        discussionRoomRepositoryImpl = DiscussionRoomRepositoryImpl(discussionRoomDataSource)
+        discussionRoomDataSource = DefaultDiscussionRoomDataSource()
+        defaultDiscussionRoomRepository = DefaultDiscussionRoomRepository(discussionRoomDataSource)
     }
 
     @Test
@@ -22,6 +22,6 @@ class DiscussionRoomRepositoryImplTest {
         // given
         val expected = DISCUSSION_ROOMS
         // then
-        assertThat(discussionRoomRepositoryImpl.getDiscussionRooms()).isEqualTo(expected)
+        assertThat(defaultDiscussionRoomRepository.getDiscussionRooms()).isEqualTo(expected)
     }
 }
