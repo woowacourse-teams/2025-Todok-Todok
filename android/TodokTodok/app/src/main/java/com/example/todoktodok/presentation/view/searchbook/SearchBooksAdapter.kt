@@ -1,14 +1,13 @@
 package com.example.todoktodok.presentation.view.searchbook
 
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.ListAdapter
 import com.example.domain.model.Book
 import com.example.todoktodok.presentation.view.searchbook.SearchBooksViewHolder.Companion.SearchBooksViewHolder
 
 class SearchBooksAdapter(
-    private val books: List<Book>,
     private val onSelectBookListener: OnSelectBookListener,
-) : RecyclerView.Adapter<SearchBooksViewHolder>() {
+) : ListAdapter<Book, SearchBooksViewHolder>(SearchBooksDiffUtil) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -17,7 +16,5 @@ class SearchBooksAdapter(
     override fun onBindViewHolder(
         holder: SearchBooksViewHolder,
         position: Int,
-    ) = holder.bind(books[position])
-
-    override fun getItemCount(): Int = books.size
+    ) = holder.bind(getItem(position))
 }

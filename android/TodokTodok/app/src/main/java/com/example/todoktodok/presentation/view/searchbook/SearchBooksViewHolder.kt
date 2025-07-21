@@ -24,8 +24,10 @@ class SearchBooksViewHolder private constructor(
 
     fun bind(book: Book) {
         currentBookId = book.id
-        binding.tvBookTitle.text = book.title
-        binding.tvBookAuthor.text = book.author
+        with(binding) {
+            tvBookTitle.text = book.title
+            tvBookAuthor.text = book.author
+        }
     }
 
     companion object {

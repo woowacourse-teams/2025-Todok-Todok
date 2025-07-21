@@ -19,10 +19,8 @@ class SearchBooksActivity : AppCompatActivity() {
             layoutInflater,
         )
     }
-
     private val adapter by lazy {
         SearchBooksAdapter(
-            books,
             OnSelectBookListener { id: Long ->
                 finish()
             },
@@ -31,12 +29,13 @@ class SearchBooksActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        initSystemBar()
         initView()
-        binding.rcBookSearchResult.adapter = adapter
+        setupBooks()
         finishSearchBooks()
     }
 
-    private fun initView() {
+    private fun initSystemBar() {
         enableEdgeToEdge()
         setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
@@ -48,6 +47,16 @@ class SearchBooksActivity : AppCompatActivity() {
                 systemBars.bottom,
             )
             insets
+        }
+    }
+
+    private fun initView() {
+        binding.rcBookSearchResult.adapter = adapter
+    }
+
+    private fun setupBooks() {
+        viewModel.books.observe(this) { books: List<Book> ->
+            adapter.submitList(books)
         }
     }
 
