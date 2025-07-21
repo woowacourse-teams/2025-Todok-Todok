@@ -2,6 +2,7 @@ package todoktodok.backend.member.presentation.fixture;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import org.springframework.http.HttpStatus;
 import todoktodok.backend.member.application.dto.request.LoginRequest;
 
 public class MemberFixture {
@@ -12,7 +13,7 @@ public class MemberFixture {
                 .body(new LoginRequest(email))
                 .when().post("/api/v1/members/login")
                 .then().log().all()
-                .statusCode(200)
+                .statusCode(HttpStatus.OK.value())
                 .extract().header("Authorization");
     }
 }
