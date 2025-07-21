@@ -9,7 +9,7 @@ import com.example.todoktodok.databinding.OwnedBooksBottomSheetBinding
 import com.example.todoktodok.presentation.core.ext.getParcelableArrayListCompat
 import com.example.todoktodok.presentation.view.library.BooksAdapter
 import com.example.todoktodok.presentation.view.note.NoteFragment.Companion.REQUEST_KEY
-import com.example.todoktodok.presentation.view.parcelable.ParcelableBook
+import com.example.todoktodok.presentation.view.serialization.SerializationBook
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class OwnedBooksBottomSheet : BottomSheetDialogFragment(R.layout.owned_books_bottom_sheet) {
@@ -33,12 +33,12 @@ class OwnedBooksBottomSheet : BottomSheetDialogFragment(R.layout.owned_books_bot
     fun initView(binding: OwnedBooksBottomSheetBinding) {
         binding.rvBooks.adapter = booksAdapter
 
-        val books = requireArguments().getParcelableArrayListCompat<ParcelableBook>(KEY_BOOKS)
+        val books = requireArguments().getParcelableArrayListCompat<SerializationBook>(KEY_BOOKS)
         booksAdapter.submitList(books.map { it.toDomain() })
     }
 
     companion object {
-        fun newInstance(books: List<ParcelableBook>): OwnedBooksBottomSheet =
+        fun newInstance(books: List<SerializationBook>): OwnedBooksBottomSheet =
             OwnedBooksBottomSheet().apply {
                 arguments =
                     Bundle().apply {
