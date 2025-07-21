@@ -69,7 +69,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/space_3x_large"
             android:layout_marginTop="@dimen/space_x_large"
-            android:text="@string/book_content"
+            android:text="@string/note_book_content"
             android:textSize="@dimen/font_size_normal"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/et_search_book_layout" />
@@ -140,7 +140,7 @@
             android:layout_marginHorizontal="@dimen/space_large"
             android:layout_marginBottom="@dimen/space_small"
             android:gravity="center"
-            android:text="@string/text_create"
+            android:text="@string/note_create"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

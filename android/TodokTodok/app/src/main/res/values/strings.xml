@@ -8,8 +8,8 @@
 
     <!-- 기록 추가 페이지  -->
     <string name="note_owned_search_hint">내 서재에 있는 책 찾기</string>
-    <string name="book_content">책의 내용</string>
-    <string name="text_create">생성하기</string>
+    <string name="note_book_content">책의 내용</string>
+    <string name="note_create">생성하기</string>
     <string name="note_my_opinion">나의 생각</string>
     <string name="content_description_bottom_sheet_drag">바텀시트를 드래그하려면 이곳을 사용하세요</string>
 
