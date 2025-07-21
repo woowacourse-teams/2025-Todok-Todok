@@ -111,6 +111,6 @@ class DiscussionCommandServiceTest {
         // when - then
         assertThatThrownBy(() -> discussionCommandService.createDiscussion(memberId, discussionRequest))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("해당 기록의 소유자만 토론방을 생성할 수 있습니다.");
+                .hasMessage("해당 기록의 소유자만 토론방을 생성할 수 있습니다");
     }
 }

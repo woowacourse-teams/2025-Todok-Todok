@@ -43,7 +43,7 @@ public class DiscussionCommandService {
 
     private void validateNoteOwner(Note note, Member member) {
         if (!note.isOwnedBy(member)) {
-            throw new IllegalArgumentException("해당 기록의 소유자만 토론방을 생성할 수 있습니다.");
+            throw new IllegalArgumentException("해당 기록의 소유자만 토론방을 생성할 수 있습니다");
         }
     }
 
