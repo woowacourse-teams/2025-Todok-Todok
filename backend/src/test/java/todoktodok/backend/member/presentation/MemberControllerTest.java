@@ -39,10 +39,11 @@ class MemberControllerTest {
     }
 
     @Test
-    @DisplayName("비회원이 로그인 시도하면 임시 토큰을 발급한다")
+    @DisplayName("로그인한다")
     void loginTest() {
         // given
-        final String email = "email@gmail.com";
+        databaseInitializer.setUserInfo();
+        final String email = "user@gmail.com";
 
         // when - then
         RestAssured.given().log().all()
@@ -54,7 +55,7 @@ class MemberControllerTest {
     }
 
     @Test
-    @DisplayName("회원가입 성공 테스트")
+    @DisplayName("회원가입을 한다")
     void signUpTest() {
         // given
         final String email = "email@gmail.com";

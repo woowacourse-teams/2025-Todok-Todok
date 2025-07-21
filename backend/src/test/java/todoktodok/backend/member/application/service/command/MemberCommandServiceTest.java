@@ -41,7 +41,7 @@ class MemberCommandServiceTest {
     }
 
     @Test
-    @DisplayName("기존 회원 로그인 성공 테스트")
+    @DisplayName("기존 회원 로그인 시 회원 토큰을 발급한다")
     void loginUserTest() {
         // given
         databaseInitializer.setUserInfo();
@@ -56,7 +56,7 @@ class MemberCommandServiceTest {
     }
 
     @Test
-    @DisplayName("신규 회원 임시 토큰 발급 테스트")
+    @DisplayName("신규 회원 로그인 시 임시 토큰을 발급한다")
     void loginTempUserTest() {
         // given
         final LoginRequest loginRequest = new LoginRequest("user@gmail.com");
@@ -70,7 +70,7 @@ class MemberCommandServiceTest {
     }
 
     @Test
-    @DisplayName("회원가입 성공 테스트")
+    @DisplayName("임시 토큰으로 회원 가입 시 회원 토큰을 발급한다")
     void signUpTest() {
         // given
         String email = "user@gmail.com";
@@ -85,7 +85,7 @@ class MemberCommandServiceTest {
     }
 
     @Test
-    @DisplayName("닉네임 중복 테스트")
+    @DisplayName("회원가입 시 중복된 닉네임을 입력하면 예외가 발생한다")
     void validateDuplicatedNicknameTest() {
         // given
         databaseInitializer.setUserInfo();
