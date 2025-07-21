@@ -6,11 +6,11 @@ import com.example.domain.repository.BookRepository
 import kotlin.jvm.java
 
 class LibraryViewModelFactory(
-    private val bookRepositoryImpl: BookRepository,
+    private val bookRepository: BookRepository,
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(LibraryViewModel::class.java)) {
-            return LibraryViewModel(bookRepositoryImpl) as T
+            return LibraryViewModel(bookRepository) as T
         } else {
             throw IllegalArgumentException()
         }

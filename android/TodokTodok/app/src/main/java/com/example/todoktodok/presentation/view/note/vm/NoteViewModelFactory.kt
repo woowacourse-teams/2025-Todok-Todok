@@ -5,11 +5,11 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.domain.repository.BookRepository
 
 class NoteViewModelFactory(
-    private val defaultBookRepository: BookRepository,
+    private val bookRepository: BookRepository,
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(NoteViewModel::class.java)) {
-            return NoteViewModel(defaultBookRepository) as T
+            return NoteViewModel(bookRepository) as T
         } else {
             throw IllegalArgumentException()
         }
