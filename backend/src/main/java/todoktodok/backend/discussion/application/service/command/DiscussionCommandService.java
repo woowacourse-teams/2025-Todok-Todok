@@ -27,6 +27,8 @@ public class DiscussionCommandService {
         final Member member = getMember(memberId);
         final Note note = getNote(discussionRequest);
 
+        validateNoteOwner(note, member);
+
         final Discussion discussion = Discussion.builder()
                 .title(discussionRequest.discussionTitle())
                 .content(discussionRequest.discussionOpinion())
@@ -37,6 +39,12 @@ public class DiscussionCommandService {
 
         final Discussion savedDiscussion = discussionRepository.save(discussion);
         return savedDiscussion.getId();
+    }
+
+    private void validateNoteOwner(Note note, Member member) {
+        if (!note.isOwnedBy(member)) {
+            throw new IllegalArgumentException("해당 기록의 소유자만 토론방을 생성할 수 있습니다.");
+        }
     }
 
     private Member getMember(final Long memberId) {
