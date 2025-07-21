@@ -72,7 +72,12 @@ class SearchBooksActivity : AppCompatActivity() {
         setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            v.setPadding(
+                binding.root.paddingLeft,
+                systemBars.top,
+                binding.root.paddingRight,
+                systemBars.bottom,
+            )
             insets
         }
     }

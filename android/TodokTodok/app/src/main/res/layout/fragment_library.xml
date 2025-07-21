@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingHorizontal="@dimen/space_x_large"
     tools:context=".presentation.view.note.NoteFragment">
 
     <androidx.recyclerview.widget.RecyclerView
@@ -20,7 +21,7 @@
         android:id="@+id/iv_library_navigation"
         android:layout_width="@dimen/library_navigate_btn_size"
         android:layout_height="@dimen/library_navigate_btn_size"
-        android:layout_marginEnd="@dimen/space_x_large"
+
         android:layout_marginBottom="@dimen/space_x_large"
         android:background="@drawable/btn_green_1a_oval"
         android:contentDescription="@string/content_description_navigate_to_book_search"

@@ -5,7 +5,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginHorizontal="@dimen/space_x_large"
+    android:paddingRight="@dimen/space_x_large"
+    android:paddingLeft="@dimen/space_x_large"
     tools:context=".presentation.view.searchbook.SearchBooksActivity">
 
     <com.google.android.material.appbar.AppBarLayout
