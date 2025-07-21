@@ -15,4 +15,7 @@
     <string name="content_description_book_search_cover">책 이미지입니다</string>
     <string name="content_description_book_search_plus">책을 내 서재에 추가합니다</string>
     <string name="content_description_book_search_result">도서 검색 결과 목록</string>
+
+    <!-- 내 서재 페이지 -->
+    <string name="content_description_navigate_to_book_search">도서 검색 화면으로 이동합니다</string>
 </resources>
