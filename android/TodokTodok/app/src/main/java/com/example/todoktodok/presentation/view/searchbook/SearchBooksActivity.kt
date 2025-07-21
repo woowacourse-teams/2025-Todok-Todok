@@ -4,47 +4,16 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.domain.model.Book
 import com.example.todoktodok.databinding.ActivitySearchBooksBinding
+import com.example.todoktodok.presentation.view.searchbook.vm.SearchBooksViewModel
 
 class SearchBooksActivity : AppCompatActivity() {
-    private val books: List<Book> =
-        listOf(
-            Book(
-                id = 0,
-                title = "나무처럼 생각하기 : 나무처럼 자연의 질서 속에서 다시 살아가는 방법에 대하여",
-                author = "조슈아 블로쉬",
-                image = "",
-            ),
-            Book(
-                id = 0,
-                title = "나무처럼 생각하기 : 나무처럼 자연의 질서 속에서 다시 살아가는 방법에 대하여",
-                author = "조슈아 블로쉬",
-                image = "",
-            ),
-            Book(
-                id = 0,
-                title = "나무처럼 생각하기 : 나무처럼 자연의 질서 속에서 다시 살아가는 방법에 대하여",
-                author = "조슈아 블로쉬",
-                image = "",
-            ),
-            Book(
-                id = 0,
-                title = "나무처럼 생각하기 : 나무처럼 자연의 질서 속에서 다시 살아가는 방법에 대하여",
-                author = "조슈아 블로쉬",
-                image = "",
-            ),
-            Book(
-                id = 0,
-                title = "나무처럼 생각하기 : 나무처럼 자연의 질서 속에서 다시 살아가는 방법에 대하여",
-                author = "조슈아 블로쉬",
-                image = "",
-            ),
-        )
-
+    private val viewModel: SearchBooksViewModel by viewModels()
     private val binding: ActivitySearchBooksBinding by lazy {
         ActivitySearchBooksBinding.inflate(
             layoutInflater,
