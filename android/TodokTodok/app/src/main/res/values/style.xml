@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android">
+<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <!-- 공통 스타일 -->
     <style name="BaseTextStyle">
@@ -49,6 +49,11 @@
     </style>
 
     <!--  토론방 목록 페이지에서 사용하는 textStyle  -->
+    <style name="DiscussionBookHeader" parent="HeaderTitleText">
+        <item name="android:gravity">center</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <style name="DiscussionBookTitle" parent="BaseTextStyle">
         <item name="android:textColor">@color/gray_66</item>
         <item name="fontFamily">@font/pretendard_medium</item>

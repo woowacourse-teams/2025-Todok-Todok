@@ -6,11 +6,21 @@
     android:layout_height="match_parent"
     tools:context=".presentation.view.note.NoteFragment">
 
+    <TextView
+        android:id="@+id/tv_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/DiscussionBookHeader"
+        android:text="@string/all_discussion"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_discussion_rooms"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="@dimen/space_2x_small"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_header"
         tools:listitem="@layout/item_discussion_room" />
 
     <ImageView
