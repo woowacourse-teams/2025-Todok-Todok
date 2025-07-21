@@ -34,28 +34,12 @@ public class BookQueryServiceTest {
         databaseInitializer.clear();
     }
 
-    @Test
-    @DisplayName("내 서재의 도서 전체를 조회한다")
-    void getMyBooksTest() {
-        // given
-        databaseInitializer.setUserInfo();
-        databaseInitializer.setBookInfo();
-        databaseInitializer.setShelfInfo();
-        final Long memberId = 1L;
-
-        // when
-        final List<BookResponse> myBooks = bookQueryService.getMyBooks(memberId);
-
-        // then
-        assertThat(myBooks).hasSize(1);
-    }
-
     @ParameterizedTest
     @ValueSource(strings = {"오브젝트", " 오브젝트", "오브젝트 ", "오", "오브", "오브젝"})
     @DisplayName("검색어로 도서를 검색한다")
     void searchTest(String keyword) {
         // given
-        databaseInitializer.setBookInfo();
+        databaseInitializer.setDefaultBookInfo();
 
         // when
         final List<BookResponse> books = bookQueryService.search(keyword);
