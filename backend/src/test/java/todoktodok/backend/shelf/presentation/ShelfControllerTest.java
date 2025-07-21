@@ -17,6 +17,7 @@ import org.springframework.test.context.ContextConfiguration;
 import todoktodok.backend.DatabaseInitializer;
 import todoktodok.backend.InitializerTimer;
 import todoktodok.backend.member.presentation.fixture.MemberFixture;
+import todoktodok.backend.shelf.application.dto.request.ShelfRequest;
 
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -53,5 +54,25 @@ public class ShelfControllerTest {
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body("size()", is(1));
+    }
+
+    @Test
+    @DisplayName("내 서재에 도서를 추가한다")
+    void addBookTest() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+
+        final String token = MemberFixture.login("user@gmail.com");
+        final ShelfRequest shelfRequest = new ShelfRequest(1L);
+
+        // when - then
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .header("Authorization", token)
+                .body(shelfRequest)
+                .when().post("/api/v1/shelves")
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value());
     }
 }
