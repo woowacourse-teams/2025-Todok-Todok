@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import java.util.Objects;
 import java.util.regex.Pattern;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -45,7 +46,10 @@ public class Member extends TimeStamp {
 
     @Builder
     public static Member create(
-            String email, String nickname, String profileImage, String profileMessage
+            final String email,
+            final String nickname,
+            final String profileImage,
+            final String profileMessage
     ) {
         validateNickname(nickname);
         validateEmail(email);
@@ -53,6 +57,20 @@ public class Member extends TimeStamp {
         return new Member(
                 null, email, nickname, profileImage, profileMessage
         );
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object == null || getClass() != object.getClass()) {
+            return false;
+        }
+        Member member = (Member) object;
+        return Objects.equals(getId(), member.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(getId());
     }
 
     private static void validateNickname(final String nickname) {
