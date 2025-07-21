@@ -70,7 +70,7 @@
             android:layout_marginStart="@dimen/space_3x_large"
             android:layout_marginTop="@dimen/space_x_large"
             android:text="@string/book_content"
-            android:textSize="14sp"
+            android:textSize="@dimen/font_size_normal"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/et_search_book_layout" />
 
@@ -104,8 +104,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/space_3x_large"
             android:layout_marginTop="@dimen/space_x_large"
-            android:text="@string/tezxt_my_opinion"
-            android:textSize="14sp"
+            android:text="@string/note_my_opinion"
+            android:textSize="@dimen/font_size_normal"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/et_book_content_layout" />
 
