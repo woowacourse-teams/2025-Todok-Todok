@@ -7,6 +7,26 @@
     android:paddingHorizontal="@dimen/space_x_large"
     tools:context=".presentation.view.note.NoteFragment">
 
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/abl_library"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_height"
+        android:background="@color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_library_title"
+        style="@style/HeaderTitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/all_library"
+        app:layout_constraintBottom_toBottomOf="@id/abl_library"
+        app:layout_constraintEnd_toEndOf="@id/abl_library"
+        app:layout_constraintStart_toStartOf="@id/abl_library"
+        app:layout_constraintTop_toTopOf="@id/abl_library" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv"
         android:layout_width="match_parent"
@@ -15,7 +35,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/abl_library" />
 
     <ImageView
         android:id="@+id/iv_library_navigation"
