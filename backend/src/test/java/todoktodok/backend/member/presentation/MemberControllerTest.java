@@ -2,7 +2,6 @@ package todoktodok.backend.member.presentation;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -34,9 +33,6 @@ class MemberControllerTest {
 
     @Autowired
     private MemberCommandService memberCommandService;
-
-    @Autowired
-    private EntityManager em;
 
     @LocalServerPort
     int port;
@@ -85,7 +81,7 @@ class MemberControllerTest {
     @DisplayName("회원을 차단한다")
     void blockTest() {
         // given
-        databaseInitializer.setUserInfo();
+        databaseInitializer.setDefaultUserInfo();
         memberCommandService.signup(new SignupRequest("user2", "https://user2.png", "user2@gmail.com"));
 
         String token = MemberFixture.login("user@gmail.com");
@@ -103,7 +99,7 @@ class MemberControllerTest {
     @DisplayName("회원을 신고한다")
     void reportTest() {
         // given
-        databaseInitializer.setUserInfo();
+        databaseInitializer.setDefaultUserInfo();
         memberCommandService.signup(new SignupRequest("user2", "https://user2.png", "user2@gmail.com"));
 
         String token = MemberFixture.login("user@gmail.com");

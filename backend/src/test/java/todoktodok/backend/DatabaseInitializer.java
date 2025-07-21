@@ -31,7 +31,7 @@ public class DatabaseInitializer {
     }
 
     @Transactional
-    public void setUserInfo() {
+    public void setDefaultUserInfo() {
         em.createNativeQuery(
                 """
                 INSERT INTO MEMBER (email, nickname, profile_image, profile_message, created_at, modified_at)
@@ -42,7 +42,7 @@ public class DatabaseInitializer {
     }
 
     @Transactional
-    public void setBookInfo() {
+    public void setDefaultBookInfo() {
         em.createNativeQuery(
                 """
                 INSERT INTO BOOK (title, summary, author, publisher, isbn, image, created_at, modified_at)
@@ -53,7 +53,7 @@ public class DatabaseInitializer {
     }
 
     @Transactional
-    public void setShelfInfo() {
+    public void setDefaultShelfInfo() {
         em.createNativeQuery(
                 """
                 INSERT INTO SHELF (member_id, book_id, created_at, modified_at)
@@ -64,7 +64,7 @@ public class DatabaseInitializer {
     }
 
     @Transactional
-    public void setNoteInfo() {
+    public void setDefaultNoteInfo() {
         em.createNativeQuery(
                 """
                 INSERT INTO NOTE (snap, memo, book_id, member_id, created_at, modified_at)

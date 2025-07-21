@@ -42,9 +42,9 @@ class NoteControllerTest {
     @DisplayName("기록을 생성한다")
     void createNoteTest() {
         //given
-        databaseInitializer.setUserInfo();
-        databaseInitializer.setBookInfo();
-        databaseInitializer.setShelfInfo();
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultShelfInfo();
 
         final NoteRequest noteRequest = new NoteRequest(
                 1L,
@@ -67,10 +67,10 @@ class NoteControllerTest {
     @DisplayName("내 기록들을 조회한다")
     void readMyNotesTest() {
         //given
-        databaseInitializer.setUserInfo();
-        databaseInitializer.setBookInfo();
-        databaseInitializer.setShelfInfo();
-        databaseInitializer.setNoteInfo();
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultShelfInfo();
+        databaseInitializer.setDefaultNoteInfo();
         final String token = MemberFixture.login("user@gmail.com");
 
         //when - then

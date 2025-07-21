@@ -39,9 +39,9 @@ public class BookControllerTest {
     @DisplayName("내 서재의 도서 전체를 조회한다")
     void getMyBooksTest() {
         // given
-        databaseInitializer.setUserInfo();
-        databaseInitializer.setBookInfo();
-        databaseInitializer.setShelfInfo();
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultShelfInfo();
         final String token = MemberFixture.login("user@gmail.com");
 
         // when - then

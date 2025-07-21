@@ -36,8 +36,8 @@ class NoteCommandServiceTest {
     @DisplayName("서재에 없는 도서에 대한 기록을 생성할 경우 예외가 발생한다")
     void createNoteTest_fail() {
         //given
-        databaseInitializer.setUserInfo();
-        databaseInitializer.setBookInfo();
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
         NoteRequest noteRequest = new NoteRequest(
                 1L,
                 "DI와 IoC는 스프링의 중요한 개념이다.",

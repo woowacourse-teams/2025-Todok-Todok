@@ -36,9 +36,9 @@ public class BookQueryServiceTest {
     @DisplayName("내 서재의 도서 전체를 조회한다")
     void getMyBooksTest() {
         // given
-        databaseInitializer.setUserInfo();
-        databaseInitializer.setBookInfo();
-        databaseInitializer.setShelfInfo();
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultShelfInfo();
         final Long memberId = 1L;
 
         // when
