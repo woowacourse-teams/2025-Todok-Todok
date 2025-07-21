@@ -47,17 +47,23 @@ public class Note extends TimeStamp {
 
     @Builder
     public static Note create(
-            String snap, String memo, Book book, Member member
+            final String snap,
+            final String memo,
+            final Book book,
+            final Member member
     ) {
         validateBlankSnapAndMemo(snap, memo);
         return new Note(null, snap, memo, book, member);
     }
 
-    public boolean isOwnedBy(Member member) {
+    public boolean isOwnedBy(final Member member) {
         return this.member.equals(member);
     }
 
-    private static void validateBlankSnapAndMemo(String snap, String memo) {
+    private static void validateBlankSnapAndMemo(
+            final String snap,
+            final String memo
+    ) {
         if (snap.isBlank() && memo.isBlank()) {
             throw new IllegalArgumentException("스냅과 메모 중 최소 하나를 입력해주세요");
         }

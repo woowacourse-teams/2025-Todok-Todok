@@ -46,7 +46,10 @@ public class Member extends TimeStamp {
 
     @Builder
     public static Member create(
-            String email, String nickname, String profileImage, String profileMessage
+            final String email,
+            final String nickname,
+            final String profileImage,
+            final String profileMessage
     ) {
         validateNickname(nickname);
         validateEmail(email);
