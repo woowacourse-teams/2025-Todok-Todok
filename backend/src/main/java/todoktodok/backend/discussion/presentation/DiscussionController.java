@@ -30,10 +30,9 @@ public class DiscussionController {
             @RequestBody @Valid final DiscussionRequest discussionRequest
     ) {
         Long discussionId = discussionCommandService.createDiscussion(memberId, discussionRequest);
-        URI uri = createUri(discussionId);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .location(uri)
+                .location(createUri(discussionId))
                 .build();
     }
 
