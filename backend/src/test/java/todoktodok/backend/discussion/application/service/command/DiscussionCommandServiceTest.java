@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.DatabaseInitializer;
 import todoktodok.backend.InitializerTimer;
 import todoktodok.backend.discussion.application.dto.request.DiscussionRequest;
-import todoktodok.backend.member.domain.repository.MemberRepository;
 
 @ActiveProfiles("test")
 @Transactional
@@ -27,9 +26,6 @@ class DiscussionCommandServiceTest {
 
     @Autowired
     private DiscussionCommandService discussionCommandService;
-
-    @Autowired
-    private MemberRepository memberRepository;
 
     @BeforeEach
     void setUp() {
