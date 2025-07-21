@@ -1,11 +1,11 @@
-package com.example.todoktodok.presentation.view.parcelable
+package com.example.todoktodok.presentation.view.serialization
 
 import android.os.Parcelable
 import com.example.domain.model.Book
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class ParcelableBook(
+data class SerializationBook(
     val id: Long,
     val title: String,
     val author: String,

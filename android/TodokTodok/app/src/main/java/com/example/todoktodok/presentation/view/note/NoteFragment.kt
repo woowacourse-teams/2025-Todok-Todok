@@ -9,7 +9,7 @@ import com.example.todoktodok.R
 import com.example.todoktodok.databinding.FragmentNoteBinding
 import com.example.todoktodok.presentation.view.note.vm.NoteViewModel
 import com.example.todoktodok.presentation.view.note.vm.NoteViewModelFactory
-import com.example.todoktodok.presentation.view.parcelable.ParcelableBook
+import com.example.todoktodok.presentation.view.serialization.SerializationBook
 
 class NoteFragment : Fragment(R.layout.fragment_note) {
     private val viewModel: NoteViewModel by viewModels {
@@ -49,7 +49,7 @@ class NoteFragment : Fragment(R.layout.fragment_note) {
         }
     }
 
-    private fun showOwnedBooksBottomSheet(books: List<ParcelableBook>) {
+    private fun showOwnedBooksBottomSheet(books: List<SerializationBook>) {
         OwnedBooksBottomSheet
             .newInstance(books)
             .show(childFragmentManager, OWNED_BOOKS_BOTTOM_SHEET_TAG)

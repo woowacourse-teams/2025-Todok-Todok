@@ -7,7 +7,7 @@ import com.example.domain.repository.BookRepository
 import com.example.todoktodok.presentation.core.event.MutableSingleLiveData
 import com.example.todoktodok.presentation.core.event.SingleLiveData
 import com.example.todoktodok.presentation.view.note.NoteUiEvent
-import com.example.todoktodok.presentation.view.parcelable.ParcelableBook
+import com.example.todoktodok.presentation.view.serialization.SerializationBook
 import kotlinx.coroutines.launch
 
 class NoteViewModel(
@@ -23,9 +23,9 @@ class NoteViewModel(
         }
     }
 
-    private fun mapToParcelableBook(books: List<Book>): List<ParcelableBook> =
+    private fun mapToParcelableBook(books: List<Book>): List<SerializationBook> =
         books.map {
-            ParcelableBook(
+            SerializationBook(
                 id = it.id,
                 title = it.title,
                 author = it.author,
