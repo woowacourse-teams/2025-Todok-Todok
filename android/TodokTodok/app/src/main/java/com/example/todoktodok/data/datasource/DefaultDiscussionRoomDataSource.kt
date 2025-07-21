@@ -6,7 +6,7 @@ import com.example.domain.model.member.Nickname
 import com.example.domain.model.member.User
 import java.time.LocalDateTime
 
-class DiscussionRoomDataSourceImpl : DiscussionRoomDataSource {
+class DefaultDiscussionRoomDataSource : DiscussionRoomDataSource {
     private val dummyDiscussionRooms =
         listOf(
             DiscussionRoom(
