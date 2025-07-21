@@ -38,7 +38,7 @@ class NoteCommandServiceTest {
         //given
         databaseInitializer.setUserInfo();
         databaseInitializer.setBookInfo();
-        NoteRequest noteRequest = new NoteRequest(
+        final NoteRequest noteRequest = new NoteRequest(
                 1L,
                 "DI와 IoC는 스프링의 중요한 개념이다.",
                 "Spring의 동작 원리를 이해하는 데 큰 도움이 됐다."

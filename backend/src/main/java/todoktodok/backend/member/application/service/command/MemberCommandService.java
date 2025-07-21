@@ -26,7 +26,10 @@ public class MemberCommandService {
         return jwtTokenProvider.createTempToken(loginRequest.email());
     }
 
-    public String signup(final SignupRequest signupRequest, final String memberEmail) {
+    public String signup(
+            final SignupRequest signupRequest,
+            final String memberEmail
+    ) {
         validateDuplicatedNickname(signupRequest);
         validateEmail(signupRequest.email(), memberEmail);
 
