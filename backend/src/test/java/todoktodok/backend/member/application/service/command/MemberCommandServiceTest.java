@@ -44,7 +44,7 @@ class MemberCommandServiceTest {
     @DisplayName("기존 회원 로그인 성공 테스트")
     void loginUserTest() {
         // given
-        databaseInitializer.setUserInfo();
+        databaseInitializer.setDefaultUserInfo();
         final LoginRequest loginRequest = new LoginRequest("user@gmail.com");
 
         // when
@@ -87,12 +87,74 @@ class MemberCommandServiceTest {
     @DisplayName("닉네임 중복 테스트")
     void validateDuplicatedNicknameTest() {
         // given
-        databaseInitializer.setUserInfo();
+        databaseInitializer.setDefaultUserInfo();
         final SignupRequest signupRequest = new SignupRequest("user", "https://user.png", "user@gmail.com");
 
         // when - then
         assertThatThrownBy(() -> memberCommandService.signup(signupRequest))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("이미 존재하는 닉네임입니다");
+    }
+
+    @Test
+    @DisplayName("자기 자신을 차단하면 예외가 발생한다")
+    void validateSelfBlockTest() {
+        //given
+        databaseInitializer.setDefaultUserInfo();
+
+        Long memberId = 1L;
+
+        //when - then
+        assertThatThrownBy(() -> memberCommandService.block(memberId, memberId))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("자기 자신을 차단할 수 없습니다");
+    }
+
+    @Test
+    @DisplayName("자기 자신을 신고하면 예외가 발생한다")
+    void validateSelfReportTest() {
+        //given
+        databaseInitializer.setDefaultUserInfo();
+
+        Long memberId = 1L;
+
+        //when - then
+        assertThatThrownBy(() -> memberCommandService.report(memberId, memberId))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("자기 자신을 신고할 수 없습니다");
+    }
+
+    @Test
+    @DisplayName("이미 자신이 차단한 회원을 중복 차단하면 예외가 발생한다")
+    void validateDuplicatedBlockTest() {
+        //given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setUserInfo("user2@gmail.com", "user", "https://image.png", "");
+        Long memberId = 1L;
+        Long targetId = 2L;
+
+        memberCommandService.block(memberId, targetId);
+
+        //when - then
+        assertThatThrownBy(() -> memberCommandService.block(memberId, targetId))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("이미 차단한 회원입니다");
+    }
+
+    @Test
+    @DisplayName("이미 자신이 신고한 회원을 중복 신고하면 예외가 발생한다")
+    void validateDuplicatedReportTest() {
+        //given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setUserInfo("user2@gmail.com", "user", "https://image.png", "");
+        Long memberId = 1L;
+        Long targetId = 2L;
+
+        memberCommandService.report(memberId, targetId);
+
+        //when - then
+        assertThatThrownBy(() -> memberCommandService.report(memberId, targetId))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("이미 신고한 회원입니다");
     }
 }

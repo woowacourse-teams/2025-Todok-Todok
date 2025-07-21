@@ -39,9 +39,9 @@ public class BookControllerTest {
     @DisplayName("검색어로 도서를 검색한다")
     void searchTest() {
         // given
-        databaseInitializer.setUserInfo();
-        databaseInitializer.setBookInfo();
-        databaseInitializer.setShelfInfo();
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultShelfInfo();
 
         final String token = MemberFixture.login("user@gmail.com");
         final String keyword = "오브젝트";
@@ -61,8 +61,8 @@ public class BookControllerTest {
     @DisplayName("검색어가 1자 미만이면 빈 리스트를 응답한다")
     void searchTestFailUnder1Char() {
         // given
-        databaseInitializer.setUserInfo();
-        databaseInitializer.setBookInfo();
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
 
         final String token = MemberFixture.login("user@gmail.com");
         final String keyword = "";
@@ -82,8 +82,8 @@ public class BookControllerTest {
     @DisplayName("검색어 파라미터가 없으면 빈 리스트를 응답한다")
     void searchTestFailEmptyParam() {
         // given
-        databaseInitializer.setUserInfo();
-        databaseInitializer.setBookInfo();
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
 
         final String token = MemberFixture.login("user@gmail.com");
 

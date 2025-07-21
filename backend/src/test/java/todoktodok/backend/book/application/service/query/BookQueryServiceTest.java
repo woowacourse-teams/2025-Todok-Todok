@@ -39,7 +39,7 @@ public class BookQueryServiceTest {
     @DisplayName("검색어로 도서를 검색한다")
     void searchTest(String keyword) {
         // given
-        databaseInitializer.setBookInfo();
+        databaseInitializer.setDefaultBookInfo();
 
         // when
         final List<BookResponse> books = bookQueryService.search(keyword);
