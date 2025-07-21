@@ -13,4 +13,15 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/item_discussion_room" />
 
+    <ImageView
+        android:id="@+id/iv_add_discussion_room"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="@dimen/font_size_2x_large"
+        android:layout_marginBottom="14dp"
+        android:background="@drawable/btn_floating"
+        android:contentDescription="@null"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
