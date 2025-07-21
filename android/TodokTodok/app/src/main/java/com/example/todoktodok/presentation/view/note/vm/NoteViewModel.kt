@@ -19,7 +19,7 @@ class NoteViewModel(
     fun loadBooks() {
         viewModelScope.launch {
             val books = mapToParcelableBook(defaultBookRepository.getBooks())
-            sendUiEvent(NoteUiEvent.ShowOwnBooks(books))
+            onUiEvent(NoteUiEvent.ShowOwnBooks(books))
         }
     }
 
@@ -33,7 +33,7 @@ class NoteViewModel(
             )
         }
 
-    private fun sendUiEvent(event: NoteUiEvent) {
+    private fun onUiEvent(event: NoteUiEvent) {
         _uiEvent.setValue(event)
     }
 }
