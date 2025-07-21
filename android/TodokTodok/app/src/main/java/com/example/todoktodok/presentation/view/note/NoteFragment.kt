@@ -3,15 +3,60 @@ package com.example.todoktodok.presentation.view.note
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import com.example.todoktodok.App
 import com.example.todoktodok.R
 import com.example.todoktodok.databinding.FragmentNoteBinding
+import com.example.todoktodok.presentation.view.note.vm.NoteViewModel
+import com.example.todoktodok.presentation.view.note.vm.NoteViewModelFactory
+import com.example.todoktodok.presentation.view.parcelable.ParcelableBook
 
 class NoteFragment : Fragment(R.layout.fragment_note) {
+    private val viewModel: NoteViewModel by viewModels {
+        val container = (requireActivity().application as App).container
+        NoteViewModelFactory(container.repositoryModule.bookRepository)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        childFragmentManager
+            .setFragmentResultListener(REQUEST_KEY, this) { _, result ->
+                val selected = result.getString("selectedBook")
+            }
+    }
+
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
     ) {
-        super.onViewCreated(view, savedInstanceState)
         val binding = FragmentNoteBinding.bind(view)
+        initView(binding)
+        observeUiEvent()
+    }
+
+    private fun initView(binding: FragmentNoteBinding) {
+        binding.etSearchBookLayout.setOnClickListener {
+            viewModel.loadBooks()
+        }
+    }
+
+    private fun observeUiEvent() {
+        viewModel.uiEvent.observe(viewLifecycleOwner) { value ->
+            when (value) {
+                is NoteUiEvent.ShowOwnBooks -> showOwnedBooksBottomSheet(value.books)
+            }
+        }
+    }
+
+    private fun showOwnedBooksBottomSheet(books: List<ParcelableBook>) {
+        OwnedBooksBottomSheet
+            .newInstance(books)
+            .show(childFragmentManager, OWNED_BOOKS_BOTTOM_SHEET_TAG)
+    }
+
+    companion object {
+        private const val OWNED_BOOKS_BOTTOM_SHEET_TAG = "OwnedBooksBottomSheet"
+        const val REQUEST_KEY = "selectedBook"
     }
 }
