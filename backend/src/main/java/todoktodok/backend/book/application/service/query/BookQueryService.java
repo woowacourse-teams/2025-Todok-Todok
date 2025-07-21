@@ -26,6 +26,10 @@ public class BookQueryService {
     }
 
     public List<BookResponse> search(final String keyword) {
+        if (keyword == null || keyword.isBlank()) {
+            return List.of();
+        }
+
         final String cleanKeyword = keyword.trim();
         final List<Book> matchedBooks = bookRepository.findByTitleContainingIgnoreCase(cleanKeyword);
 

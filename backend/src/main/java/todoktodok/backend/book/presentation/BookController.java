@@ -35,10 +35,6 @@ public class BookController {
     public ResponseEntity<List<BookResponse>> search(
             @RequestParam(value = "keyword", required = false) final String keyword
     ) {
-        if (keyword == null || keyword.isBlank()) {
-            throw new IllegalArgumentException("검색어는 1자 이상 입력해주세요");
-        }
-
         return ResponseEntity.status(HttpStatus.OK)
                 .body(bookQueryService.search(keyword));
     }
