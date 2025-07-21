@@ -7,6 +7,7 @@
     <dimen name="font_size_x_large">20sp</dimen>
     <dimen name="font_size_2x_large">24sp</dimen>
 
+    <dimen name="space_2x_small">0dp</dimen>
     <dimen name="space_xs_small">4dp</dimen>
     <dimen name="space_x_small">8dp</dimen>
     <dimen name="space_small">12dp</dimen>
@@ -16,7 +17,14 @@
     <dimen name="space_x_large">24dp</dimen>
     <dimen name="space_2x_large">28dp</dimen>
     <dimen name="space_3x_large">32dp</dimen>
+    <dimen name="space_9x_large">56dp</dimen>
 
     <dimen name="toolbar_height">56dp</dimen>
     <dimen name="basic_btn_height">56dp</dimen>
+
+    <!--  도서 검색 페이지  -->
+    <dimen name="item_book_search_information_margin">5.5dp</dimen>
+    <dimen name="item_book_height">72dp</dimen>
+    <dimen name="book_search_bar_height">40dp</dimen>
+
 </resources>
