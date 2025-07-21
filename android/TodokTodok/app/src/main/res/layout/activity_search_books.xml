@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginHorizontal="@dimen/space_x_large"
-    tools:context=".presentation.view.library.BookSearchActivity">
+    tools:context=".presentation.view.searchbook.SearchBooksActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/abl_book_search"

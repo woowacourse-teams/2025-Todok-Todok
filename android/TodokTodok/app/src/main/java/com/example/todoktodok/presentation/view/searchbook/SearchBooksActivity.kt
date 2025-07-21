@@ -5,9 +5,15 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.todoktodok.R
+import com.example.todoktodok.databinding.ActivitySearchBooksBinding
 
-class BookSearchActivity : AppCompatActivity() {
+class SearchBooksActivity : AppCompatActivity() {
+    private val binding: ActivitySearchBooksBinding by lazy {
+        ActivitySearchBooksBinding.inflate(
+            layoutInflater,
+        )
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
