@@ -6,19 +6,24 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.book.application.dto.response.BookResponse;
 import todoktodok.backend.book.domain.Book;
-import todoktodok.backend.shelf.domain.repository.ShelfRepository;
+import todoktodok.backend.book.domain.repository.BookRepository;
 
 @Service
 @Transactional(readOnly = true)
 @AllArgsConstructor
 public class BookQueryService {
 
-    private final ShelfRepository shelfRepository;
+    private final BookRepository bookRepository;
 
-    public List<BookResponse> getMyBooks(final Long memberId) {
-        final List<Book> myBooks = shelfRepository.findBookByMemberId(memberId);
+    public List<BookResponse> search(final String keyword) {
+        if (keyword == null || keyword.isBlank()) {
+            return List.of();
+        }
 
-        return myBooks.stream()
+        final String cleanKeyword = keyword.trim();
+        final List<Book> matchedBooks = bookRepository.findByTitleContainingIgnoreCase(cleanKeyword);
+
+        return matchedBooks.stream()
                 .map(BookResponse::new)
                 .toList();
     }
