@@ -1,6 +1,7 @@
 package todoktodok.backend.discussion.application.service.command;
 
-import org.assertj.core.api.Assertions;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -51,7 +52,7 @@ class DiscussionCommandServiceTest {
         );
 
         // when - then
-        Assertions.assertThatThrownBy(
+        assertThatThrownBy(
                         () -> discussionCommandService.createDiscussion(memberId, discussionRequest)
                 )
                 .isInstanceOf(IllegalArgumentException.class)
@@ -76,7 +77,7 @@ class DiscussionCommandServiceTest {
         );
 
         // when - then
-        Assertions.assertThatThrownBy(
+        assertThatThrownBy(
                         () -> discussionCommandService.createDiscussion(memberId, discussionRequest)
                 )
                 .isInstanceOf(IllegalArgumentException.class)

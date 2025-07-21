@@ -1,6 +1,7 @@
 package todoktodok.backend.discussion.domain;
 
-import org.assertj.core.api.Assertions;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import todoktodok.backend.book.domain.Book;
@@ -20,7 +21,7 @@ class DiscussionTest {
         final String title = "";
 
         // when - then
-        Assertions.assertThatThrownBy(
+        assertThatThrownBy(
                         () -> Discussion.builder()
                                 .title(title)
                                 .content("클린한 코드를 작성해봅시다")
@@ -43,7 +44,7 @@ class DiscussionTest {
         final String title = "a".repeat(51);
 
         // when - then
-        Assertions.assertThatThrownBy(
+        assertThatThrownBy(
                         () -> Discussion.builder()
                                 .title(title)
                                 .content("클린한 코드를 작성해봅시다")
@@ -66,7 +67,7 @@ class DiscussionTest {
         final String content = "a".repeat(2501);
 
         // when - then
-        Assertions.assertThatThrownBy(
+        assertThatThrownBy(
                         () -> Discussion.builder()
                                 .title("클린코드")
                                 .content(content)
@@ -89,7 +90,7 @@ class DiscussionTest {
         final String content = "";
 
         // when - then
-        Assertions.assertThatThrownBy(
+        assertThatThrownBy(
                         () -> Discussion.builder()
                                 .title("클린코드")
                                 .content(content)
