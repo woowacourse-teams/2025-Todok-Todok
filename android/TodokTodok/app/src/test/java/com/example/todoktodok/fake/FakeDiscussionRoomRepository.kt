@@ -6,6 +6,7 @@ import com.example.todoktodok.DISCUSSION_ROOMS
 
 class FakeDiscussionRoomRepository : DiscussionRoomRepository {
     private val discussionRooms = DISCUSSION_ROOMS
+    override fun getDiscussionRoom(id: Long): DiscussionRoom = discussionRooms.find { it.id == id }!!
 
     override fun getDiscussionRooms(): List<DiscussionRoom> = discussionRooms
 }

@@ -18,7 +18,17 @@ class DefaultDiscussionRoomRepositoryTest {
     }
 
     @Test
-    fun `모든 토론방을 출력한다`() {
+    fun `Id가 같은 토론방을 반환한다`() {
+        // given
+        val expected = DISCUSSION_ROOMS.find { it.id == 2L }
+        //when
+        val actual = defaultDiscussionRoomRepository.getDiscussionRoom(2)
+        // then
+        assertThat(actual).isEqualTo(expected)
+    }
+
+    @Test
+    fun `모든 토론방을 반환한다`() {
         // given
         val expected = DISCUSSION_ROOMS
         // then
