@@ -18,7 +18,7 @@ class DiscussionRoomViewHolder private constructor(
             tvBookTitle.text = discussionRoom.book.title
             tvTitle.text = discussionRoom.discussionTitle
             tvOpinionSummary.text = discussionRoom.discussionOpinion
-            ivBookImage.setOnClickListener {
+            root.setOnClickListener {
                 navigateDiscussionRoomClick.navigateToDiscussionRoom(
                     discussionRoom.id
                 )
