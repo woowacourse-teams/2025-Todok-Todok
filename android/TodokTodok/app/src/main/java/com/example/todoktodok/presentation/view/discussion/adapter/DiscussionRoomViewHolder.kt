@@ -14,11 +14,11 @@ class DiscussionRoomViewHolder private constructor(
     RecyclerView.ViewHolder(binding.root) {
     fun bind(discussionRoom: DiscussionRoom) {
         with(binding) {
-            Glide.with(binding.root.context).load(discussionRoom.book.image).into(ivImage)
+            Glide.with(binding.root.context).load(discussionRoom.book.image).into(ivBookImage)
             tvBookTitle.text = discussionRoom.book.title
             tvTitle.text = discussionRoom.discussionTitle
             tvOpinionSummary.text = discussionRoom.discussionOpinion
-            ivImage.setOnClickListener {
+            ivBookImage.setOnClickListener {
                 navigateDiscussionRoomClick.navigateToDiscussionRoom(
                     discussionRoom.id
                 )

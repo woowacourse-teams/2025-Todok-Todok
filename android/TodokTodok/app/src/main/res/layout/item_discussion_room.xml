@@ -10,17 +10,17 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cv_book_cover"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
+        android:layout_width="@dimen/item_discussion_book_cover_size"
+        android:layout_height="@dimen/item_discussion_book_cover_size"
         app:cardCornerRadius="@dimen/space_x_small"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/iv_image"
+            android:id="@+id/iv_book_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:contentDescription="@null"
+            android:contentDescription="@string/content_description_book_image"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -29,10 +29,10 @@
     <TextView
         android:id="@+id/tv_book_title"
         style="@style/DiscussionBookTitle"
-        android:layout_width="0dp"
+        android:layout_width="@dimen/space_2x_small"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/space_median"
-        android:layout_marginTop="3dp"
+        android:layout_marginTop="@dimen/space_small"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/cv_book_cover"
         app:layout_constraintTop_toTopOf="parent"
@@ -41,7 +41,7 @@
     <TextView
         android:id="@+id/tv_title"
         style="@style/DiscussionTitle"
-        android:layout_width="0dp"
+        android:layout_width="@dimen/space_2x_small"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@id/tv_opinion_summary"
         app:layout_constraintEnd_toEndOf="parent"
@@ -52,9 +52,9 @@
     <TextView
         android:id="@+id/tv_opinion_summary"
         style="@style/DiscussionOpinionSummary"
-        android:layout_width="0dp"
+        android:layout_width="@dimen/space_2x_small"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="3dp"
+        android:layout_marginBottom="@dimen/space_small"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@id/tv_book_title"
