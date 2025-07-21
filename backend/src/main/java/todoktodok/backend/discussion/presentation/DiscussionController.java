@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import todoktodok.backend.discussion.application.dto.request.DiscussionRequest;
 import todoktodok.backend.discussion.application.service.command.DiscussionCommandService;
 import todoktodok.backend.global.auth.Auth;
@@ -28,13 +29,18 @@ public class DiscussionController {
             @LoginMember final Long memberId,
             @RequestBody @Valid final DiscussionRequest discussionRequest
     ) {
-        URI uri = URI.create(
-                "/api/v1/discussions/" +
-                        discussionCommandService.createDiscussion(memberId, discussionRequest)
-        );
+        Long discussionId = discussionCommandService.createDiscussion(memberId, discussionRequest);
+        URI uri = createUri(discussionId);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .location(uri)
                 .build();
+    }
+
+    private URI createUri(Long id) {
+        return ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(id)
+                .toUri();
     }
 }
