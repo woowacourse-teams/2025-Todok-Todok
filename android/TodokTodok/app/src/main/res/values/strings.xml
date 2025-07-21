@@ -8,6 +8,9 @@
     <string name="book_image">책 이미지입니다</string>
     <string name="book_search">도서 검색</string>
 
+    <!--  토론 목록 페이지  -->
+    <string name="content_description_add_discussion_room">토론방 추가 화면으로 이동합니다</string>
+    <string name="content_description_book_image">책 이미지입니다</string>
     <!--  도서 검색 페이지  -->
     <string name="book_search_hint">도서 이름을 입력해주세요</string>
     <string name="content_description_book_search_back">내 서재로 이동합니다</string>
@@ -15,4 +18,5 @@
     <string name="content_description_book_search_cover">책 이미지입니다</string>
     <string name="content_description_book_search_plus">책을 내 서재에 추가합니다</string>
     <string name="content_description_book_search_result">도서 검색 결과 목록</string>
+
 </resources>

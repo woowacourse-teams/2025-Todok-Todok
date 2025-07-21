@@ -15,12 +15,12 @@
 
     <ImageView
         android:id="@+id/iv_add_discussion_room"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="@dimen/item_discussion_floating_button_size"
+        android:layout_height="@dimen/item_discussion_floating_button_size"
         android:layout_marginEnd="@dimen/font_size_2x_large"
-        android:layout_marginBottom="14dp"
+        android:layout_marginBottom="@dimen/item_discussion_add_discussion_room_button_margin_bottom"
         android:background="@drawable/btn_floating"
-        android:contentDescription="@null"
+        android:contentDescription="@string/content_description_add_discussion_room"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
