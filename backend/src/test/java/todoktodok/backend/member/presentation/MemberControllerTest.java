@@ -60,7 +60,7 @@ class MemberControllerTest {
         final String email = "email@gmail.com";
         final String nickname = "test";
         final String profileImage = "https://www.image.com";
-        final String tempToken = jwtTokenProvider.createTempToken();
+        final String tempToken = jwtTokenProvider.createTempToken(email);
 
         // when - then
         RestAssured.given().log().all()

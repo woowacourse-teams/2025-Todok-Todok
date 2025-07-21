@@ -29,18 +29,19 @@ public class JwtTokenProvider {
         final Date validity = new Date(now.getTime() + validityInMilliseconds);
 
         return TOKEN_PREFIX + Jwts.builder()
-                .claim("id", member.getId())
+                .subject(member.getId().toString())
                 .claim("role", Role.USER)
                 .expiration(validity)
                 .signWith(SECRET_KEY)
                 .compact();
     }
 
-    public String createTempToken() {
+    public String createTempToken(String email) {
         final Date now = new Date();
         final Date validity = new Date(now.getTime() + validityTempUserInMilliseconds);
 
         return TOKEN_PREFIX + Jwts.builder()
+                .claim("email", email)
                 .claim("role", Role.TEMP_USER)
                 .expiration(validity)
                 .signWith(SECRET_KEY)
@@ -56,8 +57,16 @@ public class JwtTokenProvider {
         final String extractedToken = token.replace("Bearer ","");
         final Claims claims = validateToken(extractedToken);
 
+        if (claims.getSubject() == null) {
+            return new TokenInfo(
+                    null,
+                    claims.get("email", String.class),
+                    Role.valueOf(claims.get("role", String.class))
+            );
+        }
         return new TokenInfo(
-                claims.get("id", Long.class),
+                Long.valueOf(claims.getSubject()),
+                null,
                 Role.valueOf(claims.get("role", String.class))
         );
     }

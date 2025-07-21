@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import todoktodok.backend.global.auth.Auth;
+import todoktodok.backend.global.resolver.TempMember;
 import todoktodok.backend.member.application.dto.request.LoginRequest;
 import todoktodok.backend.member.application.dto.request.SignupRequest;
 import todoktodok.backend.member.application.service.command.MemberCommandService;
@@ -34,10 +35,11 @@ public class MemberController {
     @Auth(value = Role.TEMP_USER)
     @PostMapping("/signup")
     public ResponseEntity<Void> signup(
+            @TempMember final String memberEmail,
             @RequestBody @Valid final SignupRequest signupRequest
     ) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .header("Authorization", memberCommandService.signup(signupRequest))
+                .header("Authorization", memberCommandService.signup(signupRequest, memberEmail))
                 .build();
     }
 }

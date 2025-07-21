@@ -73,10 +73,11 @@ class MemberCommandServiceTest {
     @DisplayName("회원가입 성공 테스트")
     void signUpTest() {
         // given
-        final SignupRequest signupRequest = new SignupRequest("user", "https://user.png", "user@gmail.com");
+        String email = "user@gmail.com";
+        final SignupRequest signupRequest = new SignupRequest("user", "https://user.png", email);
 
         // when
-        final String token = memberCommandService.signup(signupRequest);
+        final String token = memberCommandService.signup(signupRequest, email);
         final TokenInfo tokenInfo = jwtTokenProvider.getInfo(token);
 
         // then
@@ -88,11 +89,25 @@ class MemberCommandServiceTest {
     void validateDuplicatedNicknameTest() {
         // given
         databaseInitializer.setUserInfo();
-        final SignupRequest signupRequest = new SignupRequest("user", "https://user.png", "user@gmail.com");
+        final String email = "user@gmail.com";
+        final SignupRequest signupRequest = new SignupRequest("user", "https://user.png", email);
 
         // when - then
-        assertThatThrownBy(() -> memberCommandService.signup(signupRequest))
+        assertThatThrownBy(() -> memberCommandService.signup(signupRequest, email))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("이미 존재하는 닉네임입니다");
+    }
+
+    @Test
+    @DisplayName("소셜 로그인을 하지 않은 유저가 회원가입을 시도할 경우 예외가 발생한다")
+    void validateEmailTest() {
+        //given
+        final String email = "user@gmail.com";
+        final SignupRequest signupRequest = new SignupRequest("user", "https://user.png", email);
+
+        //when - then
+        assertThatThrownBy(() -> memberCommandService.signup(signupRequest, "notLoginUser@gmail.com"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("소셜 로그인을 하지 않은 이메일입니다");
     }
 }

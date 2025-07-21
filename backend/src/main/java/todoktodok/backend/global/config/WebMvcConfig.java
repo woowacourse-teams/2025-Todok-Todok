@@ -8,6 +8,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import todoktodok.backend.global.interceptor.AuthorizationInterceptor;
 import todoktodok.backend.global.resolver.MemberArgumentResolver;
+import todoktodok.backend.global.resolver.TempMemberArgumentResolver;
 
 @Configuration
 @AllArgsConstructor
@@ -15,6 +16,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     private final AuthorizationInterceptor authorizationInterceptor;
     private final MemberArgumentResolver memberArgumentResolver;
+    private final TempMemberArgumentResolver tempMemberArgumentResolver;
 
     @Override
     public void addInterceptors(final InterceptorRegistry registry) {
@@ -31,5 +33,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(memberArgumentResolver);
+        resolvers.add(tempMemberArgumentResolver);
     }
 }
