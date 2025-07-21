@@ -1,4 +1,4 @@
-package com.example.todoktodok.presentation.view.searchbook
+package com.example.todoktodok.presentation.view.searchbooks
 
 import android.content.Context
 import android.content.Intent
@@ -10,7 +10,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.domain.model.Book
 import com.example.todoktodok.databinding.ActivitySearchBooksBinding
-import com.example.todoktodok.presentation.view.searchbook.vm.SearchBooksViewModel
+import com.example.todoktodok.presentation.view.searchbooks.vm.SearchBooksViewModel
 
 class SearchBooksActivity : AppCompatActivity() {
     private val viewModel: SearchBooksViewModel by viewModels()

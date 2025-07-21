@@ -1,4 +1,4 @@
-package com.example.todoktodok.presentation.view.searchbook.vm
+package com.example.todoktodok.presentation.view.searchbooks.vm
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

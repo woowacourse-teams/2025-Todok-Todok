@@ -1,4 +1,4 @@
-package com.example.todoktodok.presentation.view.searchbook
+package com.example.todoktodok.presentation.view.searchbooks
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

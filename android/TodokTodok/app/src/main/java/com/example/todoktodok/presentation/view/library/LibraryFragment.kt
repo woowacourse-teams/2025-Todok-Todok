@@ -9,7 +9,7 @@ import com.example.todoktodok.R
 import com.example.todoktodok.databinding.FragmentLibraryBinding
 import com.example.todoktodok.presentation.view.library.vm.LibraryViewModel
 import com.example.todoktodok.presentation.view.library.vm.LibraryViewModelFactory
-import com.example.todoktodok.presentation.view.searchbook.SearchBooksActivity
+import com.example.todoktodok.presentation.view.searchbooks.SearchBooksActivity
 import kotlin.getValue
 
 class LibraryFragment : Fragment(R.layout.fragment_library) {
