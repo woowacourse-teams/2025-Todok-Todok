@@ -7,9 +7,9 @@ import todoktodok.backend.member.domain.Member;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
-    Optional<Member> findByEmail(String email);
+    Optional<Member> findByEmail(final String email);
 
-    boolean existsByNickname(String nickname);
+    boolean existsByNickname(final String nickname);
 
-    boolean existsByEmail(String email);
+    boolean existsByEmail(final String email);
 }

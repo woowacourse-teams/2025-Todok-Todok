@@ -36,7 +36,7 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    public String createTempToken(String email) {
+    public String createTempToken(final String email) {
         final Date now = new Date();
         final Date validity = new Date(now.getTime() + validityTempUserInMilliseconds);
 

@@ -45,6 +45,7 @@ class MemberCommandServiceTest {
     void loginUserTest() {
         // given
         databaseInitializer.setUserInfo();
+
         final LoginRequest loginRequest = new LoginRequest("user@gmail.com");
 
         // when
@@ -73,7 +74,7 @@ class MemberCommandServiceTest {
     @DisplayName("임시 토큰으로 회원 가입 시 회원 토큰을 발급한다")
     void signUpTest() {
         // given
-        String email = "user@gmail.com";
+        final String email = "user@gmail.com";
         final SignupRequest signupRequest = new SignupRequest("user", "https://user.png", email);
 
         // when
@@ -89,7 +90,8 @@ class MemberCommandServiceTest {
     void validateDuplicatedNicknameTest() {
         // given
         databaseInitializer.setUserInfo();
-        String nickname = "user";
+
+        final String nickname = "user";
         final SignupRequest signupRequest = new SignupRequest(nickname, "https://user.png",  "user22@gmail.com");
 
         // when - then
@@ -103,6 +105,7 @@ class MemberCommandServiceTest {
     void validateDuplicatedEmailTest() {
         // given
         databaseInitializer.setUserInfo();
+
         final String email = "user@gmail.com";
         final SignupRequest signupRequest = new SignupRequest("user22", "https://user.png", email);
 

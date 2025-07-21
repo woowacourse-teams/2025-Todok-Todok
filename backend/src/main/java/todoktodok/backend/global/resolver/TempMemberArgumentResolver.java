@@ -17,6 +17,7 @@ import todoktodok.backend.global.jwt.TokenInfo;
 @Component
 @AllArgsConstructor
 public class TempMemberArgumentResolver implements HandlerMethodArgumentResolver {
+
     private final JwtTokenProvider jwtTokenProvider;
 
     @Override
@@ -43,7 +44,7 @@ public class TempMemberArgumentResolver implements HandlerMethodArgumentResolver
         return tokenInfo.tempUserEmail();
     }
 
-    private String getTokenFromAuthorizationHeader(HttpServletRequest httpServletRequest) {
+    private String getTokenFromAuthorizationHeader(final HttpServletRequest httpServletRequest) {
         try {
             return httpServletRequest.getHeader("Authorization");
         } catch (NullPointerException e) {

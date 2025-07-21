@@ -43,6 +43,7 @@ class MemberControllerTest {
     void loginTest() {
         // given
         databaseInitializer.setUserInfo();
+
         final String email = "user@gmail.com";
 
         // when - then
