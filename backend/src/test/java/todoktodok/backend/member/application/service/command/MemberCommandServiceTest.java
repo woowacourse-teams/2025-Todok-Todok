@@ -129,11 +129,14 @@ class MemberCommandServiceTest {
     void validateDuplicatedBlockTest() {
         //given
         databaseInitializer.setDefaultUserInfo();
-
+        databaseInitializer.setUserInfo("user2@gmail.com", "user", "https://image.png", "");
         Long memberId = 1L;
+        Long targetId = 2L;
+
+        memberCommandService.block(memberId, targetId);
 
         //when - then
-        assertThatThrownBy(() -> memberCommandService.block(memberId, memberId))
+        assertThatThrownBy(() -> memberCommandService.block(memberId, targetId))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("이미 차단한 회원입니다");
     }
@@ -143,11 +146,14 @@ class MemberCommandServiceTest {
     void validateDuplicatedReportTest() {
         //given
         databaseInitializer.setDefaultUserInfo();
-
+        databaseInitializer.setUserInfo("user2@gmail.com", "user", "https://image.png", "");
         Long memberId = 1L;
+        Long targetId = 2L;
+
+        memberCommandService.report(memberId, targetId);
 
         //when - then
-        assertThatThrownBy(() -> memberCommandService.report(memberId, memberId))
+        assertThatThrownBy(() -> memberCommandService.report(memberId, targetId))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("이미 신고한 회원입니다");
     }

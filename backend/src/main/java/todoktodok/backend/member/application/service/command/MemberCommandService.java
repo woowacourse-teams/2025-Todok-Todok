@@ -106,7 +106,7 @@ public class MemberCommandService {
     }
 
     private void validateDuplicatedReport(Member member, Member target) {
-        if (blockRepository.existsByMemberAndTarget(member, target)) {
+        if (memberReportRepository.existsByMemberAndTarget(member, target)) {
             throw new IllegalArgumentException("이미 신고한 회원입니다");
         }
     }
