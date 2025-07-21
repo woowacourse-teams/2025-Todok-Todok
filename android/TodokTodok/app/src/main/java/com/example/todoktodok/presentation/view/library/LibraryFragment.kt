@@ -9,6 +9,7 @@ import com.example.todoktodok.R
 import com.example.todoktodok.databinding.FragmentLibraryBinding
 import com.example.todoktodok.presentation.view.library.vm.LibraryViewModel
 import com.example.todoktodok.presentation.view.library.vm.LibraryViewModelFactory
+import com.example.todoktodok.presentation.view.searchbook.SearchBooksActivity
 import kotlin.getValue
 
 class LibraryFragment : Fragment(R.layout.fragment_library) {
@@ -26,7 +27,10 @@ class LibraryFragment : Fragment(R.layout.fragment_library) {
         val binding = FragmentLibraryBinding.bind(view)
 
         binding.rv.adapter = booksAdapter
-
+        binding.ivLibraryNavigation.setOnClickListener {
+            val intent = SearchBooksActivity.intent(requireActivity())
+            startActivity(intent)
+        }
         viewModel.books.observe(viewLifecycleOwner) { value ->
             booksAdapter.submitList(value)
         }

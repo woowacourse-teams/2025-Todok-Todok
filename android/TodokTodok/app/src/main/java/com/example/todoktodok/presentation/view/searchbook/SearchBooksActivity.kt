@@ -1,5 +1,7 @@
 package com.example.todoktodok.presentation.view.searchbook
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -79,5 +81,9 @@ class SearchBooksActivity : AppCompatActivity() {
         binding.ivBookSearchBack.setOnClickListener {
             finish()
         }
+    }
+
+    companion object {
+        fun intent(context: Context): Intent = Intent(context, SearchBooksActivity::class.java)
     }
 }

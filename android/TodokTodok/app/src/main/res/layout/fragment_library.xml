@@ -17,6 +17,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
+        android:id="@+id/iv_library_navigation"
         android:layout_width="@dimen/library_navigate_btn_size"
         android:layout_height="@dimen/library_navigate_btn_size"
         android:layout_marginEnd="@dimen/space_x_large"
