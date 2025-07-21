@@ -7,6 +7,7 @@ import androidx.fragment.app.viewModels
 import com.example.todoktodok.App
 import com.example.todoktodok.R
 import com.example.todoktodok.databinding.FragmentNoteBinding
+import com.example.todoktodok.presentation.view.note.OwnedBooksBottomSheet.Companion.RESULT_KEY
 import com.example.todoktodok.presentation.view.note.vm.NoteViewModel
 import com.example.todoktodok.presentation.view.note.vm.NoteViewModelFactory
 import com.example.todoktodok.presentation.view.serialization.SerializationBook
@@ -22,7 +23,7 @@ class NoteFragment : Fragment(R.layout.fragment_note) {
 
         childFragmentManager
             .setFragmentResultListener(REQUEST_KEY, this) { _, result ->
-                val selected = result.getString("selectedBook")
+                val selected = result.getString(RESULT_KEY)
             }
     }
 
@@ -32,7 +33,7 @@ class NoteFragment : Fragment(R.layout.fragment_note) {
     ) {
         val binding = FragmentNoteBinding.bind(view)
         initView(binding)
-        observeUiEvent()
+        setUpUiEvent()
     }
 
     private fun initView(binding: FragmentNoteBinding) {
@@ -41,7 +42,7 @@ class NoteFragment : Fragment(R.layout.fragment_note) {
         }
     }
 
-    private fun observeUiEvent() {
+    private fun setUpUiEvent() {
         viewModel.uiEvent.observe(viewLifecycleOwner) { value ->
             when (value) {
                 is NoteUiEvent.ShowOwnBooks -> showOwnedBooksBottomSheet(value.books)
