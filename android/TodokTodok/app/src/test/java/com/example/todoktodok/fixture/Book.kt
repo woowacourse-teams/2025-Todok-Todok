@@ -2,7 +2,7 @@ package com.example.todoktodok.fixture
 
 import com.example.domain.model.Book
 
-val BOOKS =
+val BOOKS_FIXTURES =
     listOf(
         Book(
             id = 1,
