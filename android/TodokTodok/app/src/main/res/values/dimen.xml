@@ -22,6 +22,11 @@
     <dimen name="toolbar_height">56dp</dimen>
     <dimen name="basic_btn_height">56dp</dimen>
 
+    <!--  토론방 검색 페이지  -->
+    <dimen name="item_discussion_floating_button_size">48dp</dimen>
+    <dimen name="item_discussion_add_discussion_room_button_margin_bottom">14dp</dimen>
+    <dimen name="item_discussion_book_cover_size">70dp</dimen>
+
     <!--  도서 검색 페이지  -->
     <dimen name="item_book_search_information_margin">5.5dp</dimen>
     <dimen name="item_book_height">72dp</dimen>
