@@ -20,7 +20,7 @@ class SearchBooksActivity : AppCompatActivity() {
         )
     }
     private val adapter by lazy {
-        SearchBooksAdapter { id: Long ->
+        SearchBooksAdapter { position: Int ->
             finish()
         }
     }
