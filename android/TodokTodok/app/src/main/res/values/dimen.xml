@@ -27,4 +27,6 @@
     <dimen name="item_book_height">72dp</dimen>
     <dimen name="book_search_bar_height">40dp</dimen>
 
+    <!--  내 서재 페이지  -->
+    <dimen name="library_navigate_btn_size">48dp</dimen>
 </resources>

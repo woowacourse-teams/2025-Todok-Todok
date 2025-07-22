@@ -5,8 +5,9 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginHorizontal="@dimen/space_x_large"
-    tools:context=".presentation.view.library.BookSearchActivity">
+    android:paddingRight="@dimen/space_x_large"
+    android:paddingLeft="@dimen/space_x_large"
+    tools:context=".presentation.view.searchbooks.SearchBooksActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/abl_book_search"
@@ -84,6 +85,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/space_2x_small"
         android:contentDescription="@string/content_description_book_search_result"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -43,7 +43,7 @@ junit-jupiter = "5.12.0"
 kotest-runner-junit5 = "5.9.1"
 mockk = "1.13.8"
 junit = "4.12"
-constraintlayout = "2.2.1"
+recycelerview = "1.2.0"
 
 [libraries]
 # Androidx
@@ -51,6 +51,7 @@ androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = 
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "androidx-activity-ktx" }
 androidx-fragment = { module = "androidx.fragment:fragment-ktx", version.ref = "androidx-fragment-ktx" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }
+androidx-recycelerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recycelerview" }
 
 # Kotlin
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization-json" }
@@ -89,6 +90,7 @@ androidx = [
     "androidx-activity",
     "androidx-fragment",
     "androidx-appcompat",
+    "androidx-recycelerview",
 ]
 
 kotlin = [
