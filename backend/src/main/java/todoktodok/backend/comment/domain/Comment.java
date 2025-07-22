@@ -20,7 +20,6 @@ import todoktodok.backend.global.common.TimeStamp;
 import todoktodok.backend.member.domain.Member;
 
 @Getter
-@Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 
@@ -43,4 +42,15 @@ public class Comment extends TimeStamp {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private Discussion discussion;
+
+    @Builder
+    public static Comment create(
+            final String content,
+            final Member member,
+            final Discussion discussion
+    ) {
+        return new Comment(
+                null, content, member, discussion
+        );
+    }
 }
