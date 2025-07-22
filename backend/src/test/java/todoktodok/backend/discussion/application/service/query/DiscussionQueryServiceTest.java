@@ -41,8 +41,10 @@ class DiscussionQueryServiceTest {
         databaseInitializer.setNoteInfo();
         databaseInitializer.setDiscussionInfo();
 
+        final Long memberId = 1L;
+
         // when
-        List<DiscussionResponse> discussions = discussionQueryService.getDiscussions();
+        List<DiscussionResponse> discussions = discussionQueryService.getDiscussions(memberId);
 
         // then
         assertThat(discussions).hasSize(1);

@@ -2,6 +2,7 @@ package todoktodok.backend.discussion.presentation;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import static org.hamcrest.Matchers.is;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -71,11 +72,15 @@ class DiscussionControllerTest {
         databaseInitializer.setNoteInfo();
         databaseInitializer.setDiscussionInfo();
 
+        final String token = MemberFixture.login("user@gmail.com");
+
         // when - then
         RestAssured.given().log().all()
+                .header("Authorization", token)
                 .contentType(ContentType.JSON)
                 .when().get("/api/v1/discussions")
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.OK.value())
+                .body("size()", is(1));
     }
 }
