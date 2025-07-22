@@ -38,7 +38,7 @@ public class CommentController {
                 .build();
     }
 
-    private URI createUri(Long id) {
+    private URI createUri(final Long id) {
         return ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(id)
