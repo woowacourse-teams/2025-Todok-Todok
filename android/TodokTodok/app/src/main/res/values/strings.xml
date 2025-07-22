@@ -3,10 +3,16 @@
     <string name="all_note">기록</string>
     <string name="all_discussion">토론</string>
     <string name="all_library">내 서재</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="all_book_search">도서 검색</string>
     <string name="book_image">책 이미지입니다</string>
-    <string name="book_search">도서 검색</string>
+
+    <!-- 기록 추가 페이지  -->
+    <string name="note_owned_search_hint">내 서재에 있는 책 찾기</string>
+    <string name="note_book_content">책의 내용</string>
+    <string name="note_create">생성하기</string>
+    <string name="note_my_opinion">나의 생각</string>
+    <string name="content_description_bottom_sheet_drag">바텀시트를 드래그하려면 이곳을 사용하세요</string>
+    <string name="content_description_book_search_layout">내 서재 검색 버튼입니다.</string>
 
     <!--  도서 검색 페이지  -->
     <string name="book_search_hint">도서 이름을 입력해주세요</string>

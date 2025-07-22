@@ -34,7 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/space_x_small"
         android:gravity="center"
-        android:text="@string/book_search"
+        android:text="@string/all_book_search"
         app:layout_constraintBottom_toBottomOf="@id/abl_book_search"
         app:layout_constraintEnd_toEndOf="@id/abl_book_search"
         app:layout_constraintStart_toStartOf="@id/abl_book_search"

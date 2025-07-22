@@ -35,6 +35,7 @@ ksp = "2.2.0-2.0.2"
 androidx-espresso-core = "3.6.1"
 androidx-test-ext-junit = "1.2.1"
 androidx-test-runner = "1.6.2"
+android-junit5 = "1.12.0.0"
 assertj-core = "3.27.3"
 core-testing = "2.2.0"
 mannodermaus-junit5 = "1.7.0"
@@ -141,3 +142,4 @@ ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
+android-junit5 = { id = "de.mannodermaus.android-junit5", version.ref = "android-junit5" }
