@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.model.Book
 import com.example.domain.repository.BookRepository
+import com.example.domain.repository.NoteRepository
+import com.example.todoktodok.data.repository.DefaultNoteRepository
 import com.example.todoktodok.presentation.core.event.MutableSingleLiveData
 import com.example.todoktodok.presentation.core.event.SingleLiveData
 import com.example.todoktodok.presentation.view.note.NoteUiEvent
@@ -12,6 +14,7 @@ import kotlinx.coroutines.launch
 
 class NoteViewModel(
     private val defaultBookRepository: BookRepository,
+    private val defaultNoteRepository: NoteRepository
 ) : ViewModel() {
     private val _uiEvent: MutableSingleLiveData<NoteUiEvent> = MutableSingleLiveData()
     val uiEvent: SingleLiveData<NoteUiEvent> get() = _uiEvent
