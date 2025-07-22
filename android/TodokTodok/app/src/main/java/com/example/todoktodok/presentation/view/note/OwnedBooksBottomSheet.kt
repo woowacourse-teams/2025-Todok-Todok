@@ -1,5 +1,6 @@
 package com.example.todoktodok.presentation.view.note
 
+import android.app.Dialog
 import android.os.Bundle
 import android.view.View
 import androidx.core.os.bundleOf
@@ -10,10 +11,18 @@ import com.example.todoktodok.presentation.core.ext.getParcelableArrayListCompat
 import com.example.todoktodok.presentation.view.library.BooksAdapter
 import com.example.todoktodok.presentation.view.note.NoteFragment.Companion.REQUEST_KEY
 import com.example.todoktodok.presentation.view.serialization.SerializationBook
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class OwnedBooksBottomSheet : BottomSheetDialogFragment(R.layout.owned_books_bottom_sheet) {
     private val booksAdapter: BooksAdapter = BooksAdapter()
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
+        setOnShowDialogListener(dialog)
+        return dialog
+    }
 
     override fun onViewCreated(
         view: View,
@@ -24,17 +33,48 @@ class OwnedBooksBottomSheet : BottomSheetDialogFragment(R.layout.owned_books_bot
 
         // TODO(리사이클러뷰 아이템 이벤트로 수정)
         binding.root.setOnClickListener {
-            setFragmentResult(REQUEST_KEY, bundleOf("selectedBook" to "da"))
+            setFragmentResult(REQUEST_KEY, bundleOf(RESULT_KEY to "da"))
             dismiss()
         }
         initView(binding)
     }
 
-    fun initView(binding: OwnedBooksBottomSheetBinding) {
+    private fun initView(binding: OwnedBooksBottomSheetBinding) {
         binding.rvBooks.adapter = booksAdapter
 
         val books = requireArguments().getParcelableArrayListCompat<SerializationBook>(KEY_BOOKS)
         booksAdapter.submitList(books.map { it.toDomain() })
+    }
+
+    private fun setOnShowDialogListener(dialog: BottomSheetDialog) {
+        dialog.setOnShowListener { dialogInterface ->
+            val bottomSheetDialog = dialogInterface as BottomSheetDialog
+            val bottomSheet =
+                bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+            bottomSheet?.let {
+                val behavior = BottomSheetBehavior.from(it)
+                val halfScreenHeight = getHalfScreenHeight()
+                setUpBehavior(behavior, halfScreenHeight)
+
+                bottomSheet.layoutParams.height = halfScreenHeight
+            }
+        }
+    }
+
+    private fun getHalfScreenHeight(): Int {
+        val displayMetrics = resources.displayMetrics
+        val screenHeight = displayMetrics.heightPixels
+        val halfScreenHeight = screenHeight / 2
+
+        return halfScreenHeight
+    }
+
+    private fun setUpBehavior(
+        behavior: BottomSheetBehavior<View>,
+        halfScreenHeight: Int,
+    ) {
+        behavior.peekHeight = halfScreenHeight
+        behavior.isDraggable = false
     }
 
     companion object {
