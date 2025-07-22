@@ -117,8 +117,8 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/space_x_large"
             android:layout_marginTop="@dimen/space_small"
-            android:background="@drawable/bg_green_f0_radius_8dp"
-            app:boxBackgroundMode="none"
+            app:counterEnabled="true"
+            app:counterMaxLength="1000"
             app:cursorColor="@color/black_18"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -128,10 +128,11 @@
                 android:id="@+id/et_opinion"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@drawable/bg_green_f0_radius_8dp"
                 android:gravity="start|top"
-                android:text="이것은 UI 테스트를 위한 매우 길고도 반복적인 텍스트입니다. 이 문장은 실제 내용을 담고 있지 않으며 단지 사용자 인터페이스 내에서 텍스트가 어떻게 표시되고, 줄이 어디에서 바뀌며, 오버플로우가 발생하는지를 확인하기 위해 작성된 것입니다. 이 텍스트는 길이를 계속해서 늘려가며, 여러 줄로 구성되어 있고, 한 문장이 끝나기 전에 여러 번 이어지는 경우도 포함되어 있습니다. 예를 들어, 이 문장은 여전히 끝나지 않았으며, 화면이 작을 경우 자동으로 줄바꿈이 발생해야 합니다. 또한 이 텍스트는 단어 사이의 간격, 자간, 행간 등이 UI 컴포넌트의 설정에 따라 어떻게 적용되는지도 테스트할 수 있도록 구성되어 있습니다. 만약 이 텍스트가 텍스트뷰나 에디트텍스트 내에서 잘린다면, 해당 UI 요소에 스크롤이 필요한지, 아니면 레이아웃을 조정해야 하는지를 판단하는 데 도움이 될 것입니다. 이 문장은 끝났다고 생각할 수도 있지만,"
                 android:inputType="textMultiLine"
                 android:minLines="10"
+                android:maxLength="1000"
                 android:textColor="@color/black_18" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -140,7 +141,7 @@
             style="@style/BasicButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="@dimen/basic_btn_height"
-            android:layout_marginTop="@dimen/space_small"
+            android:layout_marginTop="@dimen/space_3x_large"
             android:layout_marginHorizontal="@dimen/space_large"
             android:layout_marginBottom="@dimen/space_small"
             android:gravity="center"
