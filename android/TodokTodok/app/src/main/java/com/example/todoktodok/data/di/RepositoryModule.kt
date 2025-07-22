@@ -4,8 +4,8 @@ import com.example.domain.repository.BookRepository
 import com.example.domain.repository.DiscussionRoomRepository
 import com.example.domain.repository.NoteRepository
 import com.example.todoktodok.data.repository.DefaultBookRepository
-import com.example.todoktodok.data.repository.DefaultNoteRepository
 import com.example.todoktodok.data.repository.DefaultDiscussionRoomRepository
+import com.example.todoktodok.data.repository.DefaultNoteRepository
 import kotlin.getValue
 
 class RepositoryModule(
