@@ -52,9 +52,8 @@ public class CommentCommandService {
         final Discussion discussion = getDiscussion(discussionId);
 
         comment.validateMatchWithDiscussion(discussion);
-
-//        validateSelfReport(member, comment);
         comment.validateSelfReport(member);
+
         validateDuplicatedReport(member, comment);
 
         final CommentReport commentReport = CommentReport.builder()
@@ -78,15 +77,6 @@ public class CommentCommandService {
     private Member getMember(final Long memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new NoSuchElementException("해당 회원을 찾을 수 없습니다"));
-    }
-
-    private void validateSelfReport(
-            final Member member,
-            final Comment comment
-    ) {
-        if (comment.getMember().equals(member)) {
-            throw new IllegalArgumentException("자기 자신이 작성한 댓글을 신고할 수 없습니다");
-        }
     }
 
     private void validateDuplicatedReport(
