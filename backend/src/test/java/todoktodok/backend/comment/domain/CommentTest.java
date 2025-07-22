@@ -158,4 +158,49 @@ public class CommentTest {
         ).isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("해당 토론방에 있는 댓글이 아닙니다");
     }
+
+    @Test
+    @DisplayName("자기 자신이 작성한 댓글을 신고하려 하면 예외가 발생한다")
+    void validateComment_report_fail() {
+        // given
+        final Member member = MemberFixture.create(
+                "user@gmail.com",
+                "user",
+                "https://image.jpg"
+        );
+
+        final Book book = BookFixture.create(
+                "클린코드",
+                "로버트마틴",
+                "피어슨",
+                "123"
+        );
+
+        final Note note = NoteFixture.create(
+                "코드는 다른 사람이 읽을 수도 있다는 사실을 항상 염두에 두어야 한다.",
+                "함수명 하나 짓는 데 시간을 들이는 이유가 명확해졌다.",
+                book,
+                member
+        );
+
+        final Discussion discussion = DiscussionFixture.create(
+                "클린코드",
+                "네이밍은 언제나 중요하다",
+                member,
+                book,
+                note
+        );
+
+        final Comment comment = CommentFixture.create(
+                "네이밍에 너무 많은 시간을 쓸 필요가 있을까요?",
+                member,
+                discussion
+        );
+
+        // when - then
+        assertThatThrownBy(
+                () -> comment.validateSelfReport(member)
+        ).isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("자기 자신이 작성한 댓글을 신고할 수 없습니다");
+    }
 }
