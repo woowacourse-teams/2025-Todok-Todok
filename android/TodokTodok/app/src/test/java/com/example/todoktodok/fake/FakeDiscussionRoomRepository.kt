@@ -6,5 +6,6 @@ import com.example.todoktodok.DISCUSSION_ROOMS
 
 class FakeDiscussionRoomRepository : DiscussionRoomRepository {
     private val discussionRooms = DISCUSSION_ROOMS
+
     override fun getDiscussionRooms(): List<DiscussionRoom> = discussionRooms
 }

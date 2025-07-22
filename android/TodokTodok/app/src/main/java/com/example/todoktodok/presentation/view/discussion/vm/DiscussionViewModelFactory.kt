@@ -6,7 +6,7 @@ import com.example.domain.repository.DiscussionRoomRepository
 import com.example.todoktodok.presentation.view.library.vm.LibraryViewModel
 
 class DiscussionViewModelFactory(
-    private val discussionRoomRepository: DiscussionRoomRepository
+    private val discussionRoomRepository: DiscussionRoomRepository,
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(LibraryViewModel::class.java)) {

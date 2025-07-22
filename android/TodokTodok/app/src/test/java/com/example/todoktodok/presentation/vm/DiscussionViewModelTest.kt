@@ -21,9 +21,9 @@ class DiscussionViewModelTest {
 
     @Test
     fun `토론방 초기화 테스트`() {
-        //given
+        // given
         val expected = DISCUSSION_ROOMS
-        //then
+        // then
         assertThat(discussionViewModel.discussionRooms.getOrAwaitValue()).isEqualTo(expected)
     }
 }
