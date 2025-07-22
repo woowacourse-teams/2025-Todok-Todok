@@ -20,11 +20,9 @@ class SearchBooksActivity : AppCompatActivity() {
         )
     }
     private val adapter by lazy {
-        SearchBooksAdapter(
-            OnSelectBookListener { id: Long ->
-                finish()
-            },
-        )
+        SearchBooksAdapter { id: Long ->
+            finish()
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
