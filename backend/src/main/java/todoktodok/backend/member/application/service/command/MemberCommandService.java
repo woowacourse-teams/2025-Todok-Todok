@@ -55,11 +55,10 @@ public class MemberCommandService {
             final Long memberId,
             final Long targetId
     ) {
-        validateSelfBlock(memberId, targetId);
-
         final Member member = getMember(memberId);
         final Member target = getMember(targetId);
 
+        validateSelfBlock(member, target);
         validateDuplicatedBlock(member, target);
 
         final Block block = Block.builder()
@@ -73,11 +72,10 @@ public class MemberCommandService {
             final Long memberId,
             final Long targetId
     ) {
-        validateSelfReport(memberId, targetId);
-
         final Member member = getMember(memberId);
         final Member target = getMember(targetId);
 
+        validateSelfReport(member, target);
         validateDuplicatedReport(member, target);
 
         final MemberReport memberReport = MemberReport.builder()
@@ -114,10 +112,10 @@ public class MemberCommandService {
     }
 
     private static void validateSelfBlock(
-            final Long memberId,
-            final Long targetId
+            final Member member,
+            final Member target
     ) {
-        if (memberId.equals(targetId)) {
+        if (member.equals(target)) {
             throw new IllegalArgumentException("자기 자신을 차단할 수 없습니다");
         }
     }
@@ -132,10 +130,10 @@ public class MemberCommandService {
     }
 
     private static void validateSelfReport(
-            final Long memberId,
-            final Long targetId
+            final Member member,
+            final Member target
     ) {
-        if (memberId.equals(targetId)) {
+        if (member.equals(target)) {
             throw new IllegalArgumentException("자기 자신을 신고할 수 없습니다");
         }
     }
