@@ -26,8 +26,8 @@ public class ShelfCommandService {
             final Long memberId,
             final ShelfRequest shelfRequest
     ) {
-        final Member member = getMember(memberId);
-        final Book book = getBook(shelfRequest.bookId());
+        final Member member = findMember(memberId);
+        final Book book = findBook(shelfRequest.bookId());
 
         if (shelfRepository.existsByBookAndMember(book, member)) {
             throw new IllegalArgumentException("이미 추가한 도서입니다");
@@ -41,12 +41,12 @@ public class ShelfCommandService {
         return new BookResponse(savedShelf.getBook());
     }
 
-    private Member getMember(final Long memberId) {
+    private Member findMember(final Long memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new NoSuchElementException("해당하는 회원을 찾을 수 없습니다"));
     }
 
-    private Book getBook(final Long bookId) {
+    private Book findBook(final Long bookId) {
         return bookRepository.findById(bookId)
                 .orElseThrow(() -> new NoSuchElementException("해당하는 도서를 찾을 수 없습니다"));
     }
