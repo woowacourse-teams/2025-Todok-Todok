@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.comment.application.dto.request.CommentRequest;
 import todoktodok.backend.comment.domain.Comment;
+import todoktodok.backend.comment.domain.CommentReport;
+import todoktodok.backend.comment.domain.repository.CommentReportRepository;
 import todoktodok.backend.comment.domain.repository.CommentRepository;
 import todoktodok.backend.discussion.domain.Discussion;
 import todoktodok.backend.discussion.domain.repository.DiscussionRepository;
@@ -17,9 +19,10 @@ import todoktodok.backend.member.domain.repository.MemberRepository;
 @AllArgsConstructor
 public class CommentCommandService {
 
-    private final CommentRepository commentRepository;
-    private final DiscussionRepository discussionRepository;
     private final MemberRepository memberRepository;
+    private final DiscussionRepository discussionRepository;
+    private final CommentRepository commentRepository;
+    private final CommentReportRepository commentReportRepository;
 
     public Long createComment(
             final Long memberId,
@@ -39,6 +42,31 @@ public class CommentCommandService {
         return savedComment.getId();
     }
 
+    public void report(
+            final Long memberId,
+            final Long discussionId,
+            final Long commentId
+    ) {
+        final Member member = getMember(memberId);
+        final Comment comment = getComment(commentId);
+        getDiscussion(discussionId);
+
+        validateSelfReport(member, comment);
+        validateDuplicatedReport(member, comment);
+
+        final CommentReport commentReport = CommentReport.builder()
+                .comment(comment)
+                .member(member)
+                .build();
+
+        commentReportRepository.save(commentReport);
+    }
+
+    private Comment getComment(final Long commentId) {
+        return commentRepository.findById(commentId)
+                .orElseThrow(() -> new NoSuchElementException("해당 댓글을 찾을 수 없습니다"));
+    }
+
     private Discussion getDiscussion(final Long discussionId) {
         return discussionRepository.findById(discussionId)
                 .orElseThrow(() -> new NoSuchElementException("해당 토론방을 찾을 수 없습니다"));
@@ -47,5 +75,23 @@ public class CommentCommandService {
     private Member getMember(final Long memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new NoSuchElementException("해당 회원을 찾을 수 없습니다"));
+    }
+
+    private void validateSelfReport(
+            final Member member,
+            final Comment comment
+    ) {
+        if (comment.getMember().equals(member)) {
+            throw new IllegalArgumentException("자기 자신을 신고할 수 없습니다");
+        }
+    }
+
+    private void validateDuplicatedReport(
+            final Member member,
+            final Comment comment
+    ) {
+        if (commentReportRepository.existsByMemberAndComment(member, comment)) {
+            throw new IllegalArgumentException("이미 신고한 댓글입니다");
+        }
     }
 }
