@@ -36,10 +36,10 @@ class DiscussionQueryServiceTest {
     @DisplayName("전체 토론방을 조회한다")
     void getDiscussions() {
         // given
-        databaseInitializer.setUserInfo();
-        databaseInitializer.setBookInfo();
-        databaseInitializer.setNoteInfo();
-        databaseInitializer.setDiscussionInfo();
+        databaseInitializer.setDefaultUserInfo();;
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultNoteInfo();
+        databaseInitializer.setDefaultDiscussionInfo();;
 
         final Long memberId = 1L;
 
@@ -48,5 +48,34 @@ class DiscussionQueryServiceTest {
 
         // then
         assertThat(discussions).hasSize(1);
+    }
+
+    @Test
+    @DisplayName("특정 토론방을 조회한다")
+    void getDiscussion() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultNoteInfo();
+        final Long memberId = 1L;
+        final Long bookId = 1L;
+        final Long noteId = 1L;
+
+        databaseInitializer.setDiscussionInfo(
+                "클린코드에 대해 논의해볼까요",
+                "클린코드만세",
+                memberId,
+                bookId,
+                noteId
+        );
+        final Long discussionId = 1L;
+
+        // when
+        DiscussionResponse discussionResponse = discussionQueryService.getDiscussion(memberId, discussionId);
+
+        // then
+        assertThat(discussionResponse.discussionId()).isEqualTo(discussionId);
+        assertThat(discussionResponse.discussionTitle()).isEqualTo("클린코드에 대해 논의해볼까요");
+        assertThat(discussionResponse.discussionOpinion()).isEqualTo("클린코드만세");
     }
 }

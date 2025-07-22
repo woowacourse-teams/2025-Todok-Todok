@@ -66,11 +66,11 @@ class DiscussionControllerTest {
     @DisplayName("전체 토론방을 조회한다")
     void getDiscussions() {
         // given
-        databaseInitializer.setUserInfo();
-        databaseInitializer.setBookInfo();
-        databaseInitializer.setShelfInfo();
-        databaseInitializer.setNoteInfo();
-        databaseInitializer.setDiscussionInfo();
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultShelfInfo();
+        databaseInitializer.setDefaultNoteInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
 
         final String token = MemberFixture.login("user@gmail.com");
 
