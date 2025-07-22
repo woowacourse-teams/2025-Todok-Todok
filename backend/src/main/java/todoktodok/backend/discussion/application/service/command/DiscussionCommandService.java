@@ -1,5 +1,6 @@
 package todoktodok.backend.discussion.application.service.command;
 
+import java.util.NoSuchElementException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,11 +50,11 @@ public class DiscussionCommandService {
 
     private Member getMember(final Long memberId) {
         return memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 회원을 찾을 수 없습니다"));
+                .orElseThrow(() -> new NoSuchElementException("해당 회원을 찾을 수 없습니다"));
     }
 
     private Note getNote(final DiscussionRequest discussionRequest) {
         return noteRepository.findById(discussionRequest.noteId())
-                .orElseThrow(() -> new IllegalArgumentException("해당 기록을 찾을 수 없습니다"));
+                .orElseThrow(() -> new NoSuchElementException("해당 기록을 찾을 수 없습니다"));
     }
 }
