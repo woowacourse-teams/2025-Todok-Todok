@@ -28,7 +28,7 @@ class LibraryFragment : Fragment(R.layout.fragment_library) {
 
         binding.rv.adapter = booksAdapter
         binding.ivLibraryNavigation.setOnClickListener {
-            val intent = SearchBooksActivity.intent(requireActivity())
+            val intent = SearchBooksActivity.Intent(requireActivity())
             startActivity(intent)
         }
         viewModel.books.observe(viewLifecycleOwner) { value ->

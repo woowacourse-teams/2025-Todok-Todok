@@ -67,6 +67,6 @@ class SearchBooksActivity : AppCompatActivity() {
     }
 
     companion object {
-        fun intent(context: Context): Intent = Intent(context, SearchBooksActivity::class.java)
+        fun Intent(context: Context): Intent = Intent(context, SearchBooksActivity::class.java)
     }
 }
