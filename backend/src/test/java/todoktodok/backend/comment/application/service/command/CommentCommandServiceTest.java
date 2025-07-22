@@ -41,9 +41,7 @@ public class CommentCommandServiceTest {
         databaseInitializer.setDefaultBookInfo();
         databaseInitializer.setDefaultNoteInfo();
 
-        final CommentRequest commentRequest = new CommentRequest(
-                "상속의 핵심 목적은 타입 계층의 구축입니다!"
-        );
+        final CommentRequest commentRequest = new CommentRequest("상속의 핵심 목적은 타입 계층의 구축입니다!");
 
         // when - then
         assertThatThrownBy(() -> commentCommandService.createComment(1L, 1L, commentRequest))
@@ -60,9 +58,7 @@ public class CommentCommandServiceTest {
         databaseInitializer.setDefaultNoteInfo();
         databaseInitializer.setDefaultDiscussionInfo();
 
-        final CommentRequest commentRequest = new CommentRequest(
-                "상속의 핵심 목적은 타입 계층의 구축입니다!"
-        );
+        final CommentRequest commentRequest = new CommentRequest("상속의 핵심 목적은 타입 계층의 구축입니다!");
 
         // when - then
         assertThatThrownBy(() -> commentCommandService.createComment(2L, 1L, commentRequest))

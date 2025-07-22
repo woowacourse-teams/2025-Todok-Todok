@@ -43,9 +43,7 @@ public class CommentControllerTest {
         databaseInitializer.setDefaultNoteInfo();
         databaseInitializer.setDefaultDiscussionInfo();
 
-        final CommentRequest commentRequest = new CommentRequest(
-                "상속의 핵심 목적은 타입 계층의 구축입니다!"
-        );
+        final CommentRequest commentRequest = new CommentRequest("상속의 핵심 목적은 타입 계층의 구축입니다!");
 
         final String token = MemberFixture.login("user@gmail.com");
 
