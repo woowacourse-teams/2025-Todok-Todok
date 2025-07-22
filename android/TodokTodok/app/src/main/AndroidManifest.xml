@@ -14,7 +14,7 @@
         android:theme="@style/Theme.TodokTodok"
         tools:targetApi="31">
         <activity
-            android:name=".presentation.view.library.BookSearchActivity"
+            android:name=".presentation.view.searchbooks.SearchBooksActivity"
             android:exported="false" />
         <activity
             android:name=".presentation.view.MainActivity"

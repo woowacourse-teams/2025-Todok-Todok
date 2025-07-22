@@ -6,6 +6,7 @@ import java.time.LocalDateTime
 data class DiscussionRoom(
     val id: Long,
     val discussionTitle: String,
+    val book: Book,
     val writer: User,
     val createAt: LocalDateTime,
     val snap: String,
