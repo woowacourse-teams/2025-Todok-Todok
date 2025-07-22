@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.domain.model.Book
 import com.example.todoktodok.databinding.ItemBookBinding
 
-class BooksViewHolder(
+class BooksViewHolder private constructor(
     private val binding: ItemBookBinding,
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(item: Book) {
@@ -17,7 +17,7 @@ class BooksViewHolder(
     }
 
     companion object {
-        fun create(parent: ViewGroup): BooksViewHolder {
+        fun BooksViewHolder(parent: ViewGroup): BooksViewHolder {
             val layoutInflater = LayoutInflater.from(parent.context)
             val binding = ItemBookBinding.inflate(layoutInflater, parent, false)
             return BooksViewHolder(binding)
