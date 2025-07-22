@@ -27,13 +27,14 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
             final Object handler
     ) {
         if (!(handler instanceof HandlerMethod handlerMethod)) {
-            return false;
+            return true;
         }
 
         final Method method = handlerMethod.getMethod();
 
         if (!method.isAnnotationPresent(Auth.class)) {
-            return false;
+            log.warn("Auth 어노테이션을 확인해주세요");
+            throw new IllegalStateException("서버 내부 오류가 발생했습니다");
         }
 
         final Auth auth = method.getAnnotation(Auth.class);
@@ -51,6 +52,6 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
         }
 
         log.warn("Authorization failed");
-        return false;
+        throw new IllegalStateException("접근 권한이 없습니다");
     }
 }
