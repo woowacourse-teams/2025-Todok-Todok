@@ -1,6 +1,6 @@
 package com.example.todoktodok.fake.datasource
 
-import com.example.todoktodok.data.datasource.NoteDataSource
+import com.example.todoktodok.data.datasource.note.NoteDataSource
 import com.example.todoktodok.data.network.request.NoteRequest
 
 class FakeNoteDataSource : NoteDataSource {
