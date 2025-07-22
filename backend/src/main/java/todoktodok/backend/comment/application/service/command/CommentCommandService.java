@@ -88,7 +88,7 @@ public class CommentCommandService {
             final Comment comment
     ) {
         if (comment.getMember().equals(member)) {
-            throw new IllegalArgumentException("자기 자신을 신고할 수 없습니다");
+            throw new IllegalArgumentException("자기 자신이 작성한 댓글을 신고할 수 없습니다");
         }
     }
 

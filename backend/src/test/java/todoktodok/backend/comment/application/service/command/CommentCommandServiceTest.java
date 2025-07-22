@@ -83,7 +83,7 @@ public class CommentCommandServiceTest {
         //when - then
         assertThatThrownBy(() -> commentCommandService.report(memberId, discussionId, commentId))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("자기 자신을 신고할 수 없습니다");
+                .hasMessage("자기 자신이 작성한 댓글을 신고할 수 없습니다");
     }
 
     @Test
