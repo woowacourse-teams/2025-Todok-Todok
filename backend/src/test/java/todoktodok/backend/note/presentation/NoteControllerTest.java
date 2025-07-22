@@ -1,5 +1,7 @@
 package todoktodok.backend.note.presentation;
 
+import static org.hamcrest.Matchers.is;
+
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
@@ -61,7 +63,7 @@ class NoteControllerTest {
 
     @Test
     @DisplayName("내 기록들을 조회한다")
-    void readMyNotesTest() {
+    void getMyNotesTest() {
         //given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
@@ -75,6 +77,63 @@ class NoteControllerTest {
                 .contentType(ContentType.JSON)
                 .header("Authorization", token)
                 .when().get("/api/v1/notes/mine")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("size()", is(1));
+    }
+
+    @Test
+    @DisplayName("도서 별 내 기록들을 조회한다")
+    void getMyNotesByBookTest() {
+        //given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setBookInfo(
+                "book2",
+                "book2입니다",
+                "moda",
+                "woowa",
+                "1234",
+                "https://image.png"
+        );
+        databaseInitializer.setDefaultShelfInfo();
+        databaseInitializer.setShelfInfo(1L, 2L);
+        databaseInitializer.setDefaultNoteInfo();
+        databaseInitializer.setNoteInfo(
+                "book2의 내용은 이러해요",
+                "좋다...",
+                2L,
+                1L
+        );
+
+        final String token = MemberFixture.login("user@gmail.com");
+
+        //when - then
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .header("Authorization", token)
+                .when().get("/api/v1/notes/mine?bookId=1")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("size()", is(1));
+    }
+
+    @Test
+    @DisplayName("기록을 단일 조회한다")
+    void getNoteByIdTest() {
+        //given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultShelfInfo();
+        databaseInitializer.setDefaultNoteInfo();
+
+        final String token = MemberFixture.login("user@gmail.com");
+
+        //when - then
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .header("Authorization", token)
+                .when().get("/api/v1/notes/1")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }
