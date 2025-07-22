@@ -56,4 +56,27 @@ public class CommentControllerTest {
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
     }
+
+    @Test
+    @DisplayName("댓글을 신고한다")
+    void reportTest() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setUserInfo("user2@gmail.com", "user2", "https://user2.png", "");
+
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultNoteInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+        databaseInitializer.setCommentInfo("상속의 핵심 목적은 타입 계층의 구축입니다!", 2L, 1L);
+
+        String token = MemberFixture.login("user@gmail.com");
+
+        // when - then
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .header("Authorization", token)
+                .when().post("/api/v1/discussions/1/comments/1/report")
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value());
+    }
 }
