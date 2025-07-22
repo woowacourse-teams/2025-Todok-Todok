@@ -27,14 +27,10 @@ public class NoteCommandService {
             final Long memberId,
             final NoteRequest noteRequest
     ) {
-        final Book book = bookRepository.findById(noteRequest.bookId())
-                .orElseThrow(() -> new NoSuchElementException("해당하는 도서를 찾을 수 없습니다"));
-        final Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new NoSuchElementException("해당하는 회원을 찾을 수 없습니다"));
+        final Book book = getBook(noteRequest);
+        final Member member = getMember(memberId);
 
-        if (!shelfRepository.existsByBookAndMember(book, member)) {
-            throw new IllegalArgumentException("서재 등록한 도서만 기록 가능합니다");
-        }
+        validateShelfBook(book, member);
 
         final Note note = Note.builder()
                 .snap(noteRequest.snap())
@@ -43,5 +39,24 @@ public class NoteCommandService {
                 .member(member)
                 .build();
         noteRepository.save(note);
+    }
+
+    private Book getBook(final NoteRequest noteRequest) {
+        return bookRepository.findById(noteRequest.bookId())
+                .orElseThrow(() -> new NoSuchElementException("해당하는 도서를 찾을 수 없습니다"));
+    }
+
+    private Member getMember(final Long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new NoSuchElementException("해당하는 회원을 찾을 수 없습니다"));
+    }
+
+    private void validateShelfBook(
+            final Book book,
+            final Member member
+    ) {
+        if (!shelfRepository.existsByBookAndMember(book, member)) {
+            throw new IllegalArgumentException("서재 등록한 도서만 기록 가능합니다");
+        }
     }
 }

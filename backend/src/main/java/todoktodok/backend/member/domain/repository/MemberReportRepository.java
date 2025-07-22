@@ -6,5 +6,5 @@ import todoktodok.backend.member.domain.MemberReport;
 
 public interface MemberReportRepository extends JpaRepository<MemberReport, Long> {
 
-    boolean existsByMemberAndTarget(Member member, Member target);
+    boolean existsByMemberAndTarget(final Member member, final Member target);
 }

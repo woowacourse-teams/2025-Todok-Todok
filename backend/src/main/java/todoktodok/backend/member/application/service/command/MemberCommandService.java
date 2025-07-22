@@ -30,11 +30,16 @@ public class MemberCommandService {
         if (member.isPresent()) {
             return jwtTokenProvider.createToken(member.get());
         }
-        return jwtTokenProvider.createTempToken();
+        return jwtTokenProvider.createTempToken(loginRequest.email());
     }
 
-    public String signup(final SignupRequest signupRequest) {
+    public String signup(
+            final SignupRequest signupRequest,
+            final String memberEmail
+    ) {
         validateDuplicatedNickname(signupRequest);
+        validateDuplicatedEmail(signupRequest);
+        validateEmailWithTokenEmail(signupRequest, memberEmail);
 
         final Member member = Member.builder()
                 .nickname(signupRequest.nickname())
@@ -50,14 +55,13 @@ public class MemberCommandService {
             final Long memberId,
             final Long targetId
     ) {
-        validateSelfBlock(memberId, targetId);
+        final Member member = getMember(memberId);
+        final Member target = getMember(targetId);
 
-        Member member = getMember(memberId);
-        Member target = getMember(targetId);
+        validateSelfBlock(member, target);
+        validateDuplicatedBlock(member, target);
 
-        validateDuplicatedBlock(member,target);
-
-        Block block = Block.builder()
+        final Block block = Block.builder()
                 .member(member)
                 .target(target)
                 .build();
@@ -68,14 +72,13 @@ public class MemberCommandService {
             final Long memberId,
             final Long targetId
     ) {
-        validateSelfReport(memberId, targetId);
+        final Member member = getMember(memberId);
+        final Member target = getMember(targetId);
 
-        Member member = getMember(memberId);
-        Member target = getMember(targetId);
-
+        validateSelfReport(member, target);
         validateDuplicatedReport(member, target);
 
-        MemberReport memberReport = MemberReport.builder()
+        final MemberReport memberReport = MemberReport.builder()
                 .member(member)
                 .target(target)
                 .build();
@@ -88,32 +91,59 @@ public class MemberCommandService {
         }
     }
 
-    private Member getMember(Long memberId) {
+    private void validateDuplicatedEmail(final SignupRequest signupRequest) {
+        if (memberRepository.existsByEmail(signupRequest.email())) {
+            throw new IllegalArgumentException("이미 가입된 이메일입니다");
+        }
+    }
+
+    private void validateEmailWithTokenEmail(
+            final SignupRequest signupRequest,
+            final String tokenEmail
+    ) {
+        if (!tokenEmail.equals(signupRequest.email())) {
+            throw new IllegalArgumentException("소셜 로그인을 하지 않은 이메일입니다");
+        }
+    }
+
+    private Member getMember(final Long memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new NoSuchElementException("해당하는 회원을 찾을 수 없습니다"));
     }
 
-    private static void validateSelfBlock(Long memberId, Long targetId) {
-        if (memberId.equals(targetId)) {
+    private static void validateSelfBlock(
+            final Member member,
+            final Member target
+    ) {
+        if (member.equals(target)) {
             throw new IllegalArgumentException("자기 자신을 차단할 수 없습니다");
         }
     }
 
-    private void validateDuplicatedBlock(Member member, Member target) {
+    private void validateDuplicatedBlock(
+            final Member member,
+            final Member target
+    ) {
         if (blockRepository.existsByMemberAndTarget(member, target)) {
             throw new IllegalArgumentException("이미 차단한 회원입니다");
         }
     }
 
-    private void validateDuplicatedReport(Member member, Member target) {
-        if (memberReportRepository.existsByMemberAndTarget(member, target)) {
-            throw new IllegalArgumentException("이미 신고한 회원입니다");
+    private static void validateSelfReport(
+            final Member member,
+            final Member target
+    ) {
+        if (member.equals(target)) {
+            throw new IllegalArgumentException("자기 자신을 신고할 수 없습니다");
         }
     }
 
-    private static void validateSelfReport(Long memberId, Long targetId) {
-        if (memberId.equals(targetId)) {
-            throw new IllegalArgumentException("자기 자신을 신고할 수 없습니다");
+    private void validateDuplicatedReport(
+            final Member member,
+            final Member target
+    ) {
+        if (memberReportRepository.existsByMemberAndTarget(member, target)) {
+            throw new IllegalArgumentException("이미 신고한 회원입니다");
         }
     }
 }

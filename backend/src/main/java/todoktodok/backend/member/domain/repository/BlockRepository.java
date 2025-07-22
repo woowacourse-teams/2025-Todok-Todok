@@ -5,5 +5,6 @@ import todoktodok.backend.member.domain.Block;
 import todoktodok.backend.member.domain.Member;
 
 public interface BlockRepository extends JpaRepository<Block, Long> {
-    boolean existsByMemberAndTarget(Member member, Member target);
+
+    boolean existsByMemberAndTarget(final Member member, final Member target);
 }

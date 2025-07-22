@@ -14,7 +14,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import todoktodok.backend.DatabaseInitializer;
 import todoktodok.backend.InitializerTimer;
-import todoktodok.backend.member.application.service.command.MemberCommandService;
 import todoktodok.backend.member.presentation.fixture.MemberFixture;
 import todoktodok.backend.note.application.dto.request.NoteRequest;
 
@@ -25,9 +24,6 @@ class NoteControllerTest {
 
     @Autowired
     private DatabaseInitializer databaseInitializer;
-
-    @Autowired
-    private MemberCommandService memberCommandService;
 
     @LocalServerPort
     int port;
@@ -71,6 +67,7 @@ class NoteControllerTest {
         databaseInitializer.setDefaultBookInfo();
         databaseInitializer.setDefaultShelfInfo();
         databaseInitializer.setDefaultNoteInfo();
+
         final String token = MemberFixture.login("user@gmail.com");
 
         //when - then
