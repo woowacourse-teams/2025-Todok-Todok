@@ -12,6 +12,7 @@
     <string name="note_create">생성하기</string>
     <string name="note_my_opinion">나의 생각</string>
     <string name="content_description_bottom_sheet_drag">바텀시트를 드래그하려면 이곳을 사용하세요</string>
+    <string name="content_description_book_search_layout">내 서재 검색 버튼입니다.</string>
 
     <!--  도서 검색 페이지  -->
     <string name="book_search_hint">도서 이름을 입력해주세요</string>
