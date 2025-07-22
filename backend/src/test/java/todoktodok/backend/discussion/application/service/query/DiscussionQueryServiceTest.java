@@ -1,7 +1,9 @@
 package todoktodok.backend.discussion.application.service.query;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -36,10 +38,12 @@ class DiscussionQueryServiceTest {
     @DisplayName("전체 토론방을 조회한다")
     void getDiscussions() {
         // given
-        databaseInitializer.setDefaultUserInfo();;
+        databaseInitializer.setDefaultUserInfo();
+        ;
         databaseInitializer.setDefaultBookInfo();
         databaseInitializer.setDefaultNoteInfo();
-        databaseInitializer.setDefaultDiscussionInfo();;
+        databaseInitializer.setDefaultDiscussionInfo();
+        ;
 
         final Long memberId = 1L;
 
@@ -77,5 +81,19 @@ class DiscussionQueryServiceTest {
         assertThat(discussionResponse.discussionId()).isEqualTo(discussionId);
         assertThat(discussionResponse.discussionTitle()).isEqualTo("클린코드에 대해 논의해볼까요");
         assertThat(discussionResponse.discussionOpinion()).isEqualTo("클린코드만세");
+    }
+
+    @Test
+    @DisplayName("특정 토론방을 찾을 수 없는 경우 예외가 발생한다")
+    void getDiscussion_NotFound_fail() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        final Long memberId = 1L;
+        final Long discussionId = 999L;
+
+        // when - then
+        assertThatThrownBy(() -> discussionQueryService.getDiscussion(memberId, discussionId))
+                .isInstanceOf(NoSuchElementException.class)
+                .hasMessage("해당 토론방을 찾을 수 없습니다");
     }
 }
