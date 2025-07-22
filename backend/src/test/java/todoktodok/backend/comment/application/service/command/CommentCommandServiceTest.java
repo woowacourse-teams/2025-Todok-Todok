@@ -2,6 +2,7 @@ package todoktodok.backend.comment.application.service.command;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.util.NoSuchElementException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -46,7 +47,7 @@ public class CommentCommandServiceTest {
 
         // when - then
         assertThatThrownBy(() -> commentCommandService.createComment(1L, 1L, commentRequest))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(NoSuchElementException.class)
                 .hasMessage("해당 토론방을 찾을 수 없습니다");
     }
 
@@ -65,7 +66,7 @@ public class CommentCommandServiceTest {
 
         // when - then
         assertThatThrownBy(() -> commentCommandService.createComment(2L, 1L, commentRequest))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(NoSuchElementException.class)
                 .hasMessage("해당 회원을 찾을 수 없습니다");
     }
 }
