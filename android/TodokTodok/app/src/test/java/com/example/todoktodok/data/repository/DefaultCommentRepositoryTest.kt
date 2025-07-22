@@ -18,7 +18,7 @@ class DefaultCommentRepositoryTest {
     }
 
     @Test
-    fun getCommentByDiscussionRoomId() {
+    fun `토론방 Id을 통해 댓글들을 반환한다`() {
         // given
         val expected = COMMENTS
         // when
