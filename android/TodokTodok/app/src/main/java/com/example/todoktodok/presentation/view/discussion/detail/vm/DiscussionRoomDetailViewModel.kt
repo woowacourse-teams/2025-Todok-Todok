@@ -19,7 +19,7 @@ class DiscussionRoomDetailViewModel(
     private val _discussionRoom = MutableLiveData<DiscussionRoom>()
     val discussionRoom: LiveData<DiscussionRoom> = _discussionRoom
 
-    private val _comments = MutableLiveData<List<Comment>>()
+    private val _comments = MutableLiveData<List<Comment>>(emptyList())
     val comments: LiveData<List<Comment>> = _comments
 
     init {
