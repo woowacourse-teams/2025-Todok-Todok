@@ -41,10 +41,13 @@ public class DiscussionController {
                 .build();
     }
 
+    @Auth(Role.USER)
     @GetMapping
-    public ResponseEntity<List<DiscussionResponse>> getDiscussions() {
+    public ResponseEntity<List<DiscussionResponse>> getDiscussions(
+            @LoginMember final Long memberId
+    ) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(discussionQueryService.getDiscussions());
+                .body(discussionQueryService.getDiscussions(memberId));
     }
 
     private URI createUri(final Long id) {
