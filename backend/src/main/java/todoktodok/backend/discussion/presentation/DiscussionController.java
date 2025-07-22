@@ -55,7 +55,7 @@ public class DiscussionController {
     @GetMapping("/{discussionId}")
     public ResponseEntity<DiscussionResponse> getDiscussions(
             @LoginMember final Long memberId,
-            @PathVariable Long discussionId
+            @PathVariable final Long discussionId
     ) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(discussionQueryService.getDiscussion(memberId, discussionId));
