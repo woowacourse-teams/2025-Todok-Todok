@@ -41,7 +41,6 @@
         android:id="@+id/iv_library_navigation"
         android:layout_width="@dimen/library_navigate_btn_size"
         android:layout_height="@dimen/library_navigate_btn_size"
-
         android:layout_marginBottom="@dimen/space_x_large"
         android:background="@drawable/btn_green_1a_oval"
         android:contentDescription="@string/content_description_navigate_to_book_search"
