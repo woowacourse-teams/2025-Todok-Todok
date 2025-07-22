@@ -58,6 +58,12 @@ public class Comment extends TimeStamp {
         );
     }
 
+    public void validateMatchWithDiscussion(final Discussion discussion) {
+        if (!this.discussion.equals(discussion)) {
+            throw new IllegalArgumentException("해당 토론방에 있는 댓글이 아닙니다");
+        }
+    }
+
     private static void validateContent(final String content) {
         if (content.isEmpty() || content.length() > CONTENT_MAX_LENGTH) {
             throw new IllegalArgumentException("댓글 내용은 1자 이상, 1500자 이하여야 합니다");
