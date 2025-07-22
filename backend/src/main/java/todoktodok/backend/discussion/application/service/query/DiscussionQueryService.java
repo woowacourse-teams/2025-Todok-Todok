@@ -19,14 +19,32 @@ public class DiscussionQueryService {
     private final MemberRepository memberRepository;
 
     public List<DiscussionResponse> getDiscussions(final Long memberId) {
-        if (!memberRepository.existsById(memberId)) {
-            throw new NoSuchElementException("해당 회원을 찾을 수 없습니다");
-        }
+        validateMember(memberId);
 
         final List<Discussion> discussions = discussionRepository.findAll();
 
         return discussions.stream()
                 .map(DiscussionResponse::new)
                 .toList();
+    }
+
+    public DiscussionResponse getDiscussion(
+            final Long memberId,
+            final Long discussionId
+    ) {
+        validateMember(memberId);
+
+        return new DiscussionResponse(findDiscussion(discussionId));
+    }
+
+    private void validateMember(final Long memberId) {
+        if (!memberRepository.existsById(memberId)) {
+            throw new NoSuchElementException("해당 회원을 찾을 수 없습니다");
+        }
+    }
+
+    private Discussion findDiscussion(final Long discussionId) {
+        return discussionRepository.findById(discussionId)
+                .orElseThrow(() -> new NoSuchElementException("해당 토론방을 찾을 수 없습니다"));
     }
 }
