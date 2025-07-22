@@ -2,6 +2,7 @@ package todoktodok.backend.shelf.application.service.command;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.InstanceOfAssertFactories.set;
 
 import java.util.NoSuchElementException;
 import org.junit.jupiter.api.BeforeEach;
@@ -95,5 +96,22 @@ public class ShelfCommandServiceTest {
         assertThatThrownBy(() -> shelfCommandService.addBook(memberId, shelfRequest))
                 .isInstanceOf(NoSuchElementException.class)
                 .hasMessage("해당하는 도서를 찾을 수 없습니다");
+    }
+
+    @Test
+    @DisplayName("이미 추가한 도서를 추가하면 예외가 발생한다")
+    void addBookTest_duplicateBook_fail() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultShelfInfo();
+
+        final Long memberId = 1L;
+        final ShelfRequest shelfRequest = new ShelfRequest(1L);
+
+        // when - then
+        assertThatThrownBy(() -> shelfCommandService.addBook(memberId, shelfRequest))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("이미 추가한 도서입니다");
     }
 }

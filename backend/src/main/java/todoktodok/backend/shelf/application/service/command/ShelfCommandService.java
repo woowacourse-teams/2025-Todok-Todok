@@ -29,6 +29,10 @@ public class ShelfCommandService {
         final Member member = getMember(memberId);
         final Book book = getBook(shelfRequest.bookId());
 
+        if (shelfRepository.existsByBookAndMember(book, member)) {
+            throw new IllegalArgumentException("이미 추가한 도서입니다");
+        }
+
         final Shelf shelf = Shelf.builder()
                 .member(member)
                 .book(book)
