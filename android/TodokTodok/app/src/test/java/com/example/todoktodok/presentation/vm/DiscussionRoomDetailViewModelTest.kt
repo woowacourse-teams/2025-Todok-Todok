@@ -22,11 +22,12 @@ class DiscussionRoomDetailViewModelTest {
     fun setUp() {
         val state = SavedStateHandle(mapOf(KEY_DISCUSSION_ID to 2L))
 
-        discussionRoomDetailViewModel = DiscussionRoomDetailViewModel(
-            state,
-            FakeDiscussionRoomRepository(),
-            FakeCommentRepository()
-        )
+        discussionRoomDetailViewModel =
+            DiscussionRoomDetailViewModel(
+                state,
+                FakeDiscussionRoomRepository(),
+                FakeCommentRepository(),
+            )
     }
 
     @Test
@@ -35,7 +36,7 @@ class DiscussionRoomDetailViewModelTest {
         val expected = DISCUSSION_ROOMS.find { it.id == 2L }
         // then
         assertThat(discussionRoomDetailViewModel.discussionRoom.getOrAwaitValue()).isEqualTo(
-            expected
+            expected,
         )
     }
 
@@ -45,7 +46,7 @@ class DiscussionRoomDetailViewModelTest {
         val expected = COMMENTS
         // then
         assertThat(discussionRoomDetailViewModel.comments.getOrAwaitValue()).isEqualTo(
-            expected
+            expected,
         )
     }
 }

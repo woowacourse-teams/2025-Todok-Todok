@@ -19,11 +19,11 @@ class DefaultCommentRepositoryTest {
 
     @Test
     fun getCommentByDiscussionRoomId() {
-        //given
+        // given
         val expected = COMMENTS
-        //when
+        // when
         val comments = defaultCommentRepository.getCommentsByDiscussionRoomId(0)
-        //then
+        // then
         assertThat(comments).isEqualTo(expected)
     }
 }

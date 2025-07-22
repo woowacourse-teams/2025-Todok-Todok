@@ -12,7 +12,7 @@ import com.example.domain.repository.DiscussionRoomRepository
 class DiscussionRoomDetailViewModel(
     savedStateHandle: SavedStateHandle,
     private val discussionRoomRepository: DiscussionRoomRepository,
-    private val commentRepository: CommentRepository
+    private val commentRepository: CommentRepository,
 ) : ViewModel() {
     private val discussionRoomId =
         savedStateHandle.get<Long>(KEY_DISCUSSION_ID) ?: throw IllegalStateException()
