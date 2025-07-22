@@ -22,7 +22,7 @@ class DefaultDiscussionRoomRepositoryTest {
         // given
         val expected = DISCUSSION_ROOMS.find { it.id == 2L }
         // when
-        val actual = defaultDiscussionRoomRepository.getDiscussionRoom(2)
+        val actual = defaultDiscussionRoomRepository.getDiscussionRoom(2).getOrNull()
         // then
         assertThat(actual).isEqualTo(expected)
     }
