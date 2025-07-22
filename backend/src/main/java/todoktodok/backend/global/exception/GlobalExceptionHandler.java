@@ -21,10 +21,15 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PREFIX + e.getMessage());
     }
 
-    @ExceptionHandler({IllegalStateException.class, IllegalArgumentException.class, NoSuchElementException.class,
+    @ExceptionHandler({IllegalArgumentException.class, NoSuchElementException.class,
             DateTimeException.class})
     public ResponseEntity<String> handleBadRequest(final RuntimeException e) {
         return ResponseEntity.badRequest().body(PREFIX + e.getMessage());
+    }
+
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<String> handleIllegalState(final IllegalStateException e) {
+        return ResponseEntity.internalServerError().body(PREFIX + e.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -36,6 +41,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<String> handleRuntimeException(final RuntimeException e) {
         log.error("Unexpected error occurred", e);
-        return ResponseEntity.badRequest().body(PREFIX + "예상하지 못한 예외가 발생하였습니다. 상세 정보: " + e.getMessage());
+        return ResponseEntity.internalServerError().body(PREFIX + "예상하지 못한 예외가 발생하였습니다. 상세 정보: " + e.getMessage());
     }
 }
