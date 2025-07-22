@@ -1,8 +1,7 @@
 package todoktodok.backend.book.application.service.query;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.util.List;
+import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -34,28 +33,12 @@ public class BookQueryServiceTest {
         databaseInitializer.clear();
     }
 
-    @Test
-    @DisplayName("내 서재의 도서 전체를 조회한다")
-    void getMyBooksTest() {
-        // given
-        databaseInitializer.setUserInfo();
-        databaseInitializer.setBookInfo();
-        databaseInitializer.setShelfInfo();
-        final Long memberId = 1L;
-
-        // when
-        final List<BookResponse> myBooks = bookQueryService.getMyBooks(memberId);
-
-        // then
-        assertThat(myBooks).hasSize(1);
-    }
-
     @ParameterizedTest
     @ValueSource(strings = {"오브젝트", " 오브젝트", "오브젝트 ", "오", "오브", "오브젝"})
     @DisplayName("검색어로 도서를 검색한다")
     void searchTest(String keyword) {
         // given
-        databaseInitializer.setBookInfo();
+        databaseInitializer.setDefaultBookInfo();
 
         // when
         final List<BookResponse> books = bookQueryService.search(keyword);

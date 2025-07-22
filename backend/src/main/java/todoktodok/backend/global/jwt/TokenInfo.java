@@ -4,6 +4,7 @@ import todoktodok.backend.global.auth.Role;
 
 public record TokenInfo(
         Long id,
+        String tempUserEmail,
         Role role
 ) {
 }

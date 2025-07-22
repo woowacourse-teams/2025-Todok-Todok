@@ -12,7 +12,6 @@ import todoktodok.backend.book.application.dto.response.BookResponse;
 import todoktodok.backend.book.application.service.query.BookQueryService;
 import todoktodok.backend.global.auth.Auth;
 import todoktodok.backend.global.auth.Role;
-import todoktodok.backend.global.resolver.LoginMember;
 
 @RestController
 @AllArgsConstructor
@@ -20,15 +19,6 @@ import todoktodok.backend.global.resolver.LoginMember;
 public class BookController {
 
     private final BookQueryService bookQueryService;
-
-    @Auth(value = Role.USER)
-    @GetMapping("/mine")
-    public ResponseEntity<List<BookResponse>> getMyBooks(
-            @LoginMember final Long memberId
-    ) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(bookQueryService.getMyBooks(memberId));
-    }
 
     @Auth(value = Role.USER)
     @GetMapping("/search")

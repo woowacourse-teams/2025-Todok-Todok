@@ -42,8 +42,8 @@ class DiscussionCommandServiceTest {
     @DisplayName("존재하지 않는 회원으로 토론방 생성 시 예외가 발생한다")
     void createDiscussion_memberNotFound_fail() {
         //given
-        databaseInitializer.setUserInfo();
-        databaseInitializer.setBookInfo();
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
 
         final Long memberId = 999L;
 
@@ -63,9 +63,9 @@ class DiscussionCommandServiceTest {
     @DisplayName("존재하지 않는 기록으로 토론방 생성 시 예외가 발생한다")
     void createDiscussion_NoteNotFound_fail() {
         //given
-        databaseInitializer.setUserInfo();
-        databaseInitializer.setBookInfo();
-        databaseInitializer.setNoteInfo();
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultNoteInfo();
 
         final Long memberId = 1L;
         final Long noteId = 999L;
@@ -88,9 +88,9 @@ class DiscussionCommandServiceTest {
     @DisplayName("기록 소유자가 아닌 경우 토론방 생성 시 예외가 발생한다")
     void createDiscussion_whenNoteNotOwnedByMember_fail() {
         //given
-        databaseInitializer.setUserInfo();
-        databaseInitializer.setBookInfo();
-        databaseInitializer.setNoteInfo();
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultNoteInfo();
 
         final Member member = MemberFixture.create(
                 "user12@gmail.com",

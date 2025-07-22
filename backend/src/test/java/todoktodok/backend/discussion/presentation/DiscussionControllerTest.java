@@ -39,10 +39,10 @@ class DiscussionControllerTest {
     @DisplayName("토론방을 생성한다")
     void createDiscussion() {
         // given
-        databaseInitializer.setUserInfo();
-        databaseInitializer.setBookInfo();
-        databaseInitializer.setShelfInfo();
-        databaseInitializer.setNoteInfo();
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultShelfInfo();
+        databaseInitializer.setDefaultNoteInfo();
 
         final String token = MemberFixture.login("user@gmail.com");
 

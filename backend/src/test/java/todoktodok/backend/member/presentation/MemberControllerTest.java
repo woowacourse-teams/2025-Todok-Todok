@@ -17,6 +17,8 @@ import todoktodok.backend.InitializerTimer;
 import todoktodok.backend.global.jwt.JwtTokenProvider;
 import todoktodok.backend.member.application.dto.request.LoginRequest;
 import todoktodok.backend.member.application.dto.request.SignupRequest;
+import todoktodok.backend.member.application.service.command.MemberCommandService;
+import todoktodok.backend.member.presentation.fixture.MemberFixture;
 
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -29,6 +31,9 @@ class MemberControllerTest {
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
+    @Autowired
+    private MemberCommandService memberCommandService;
+
     @LocalServerPort
     int port;
 
@@ -39,10 +44,12 @@ class MemberControllerTest {
     }
 
     @Test
-    @DisplayName("비회원이 로그인 시도하면 임시 토큰을 발급한다")
+    @DisplayName("로그인한다")
     void loginTest() {
         // given
-        final String email = "email@gmail.com";
+        databaseInitializer.setDefaultUserInfo();
+
+        final String email = "user@gmail.com";
 
         // when - then
         RestAssured.given().log().all()
@@ -54,20 +61,56 @@ class MemberControllerTest {
     }
 
     @Test
-    @DisplayName("회원가입 성공 테스트")
+    @DisplayName("회원가입을 한다")
     void signUpTest() {
         // given
         final String email = "email@gmail.com";
         final String nickname = "test";
         final String profileImage = "https://www.image.com";
-        final String tempToken = jwtTokenProvider.createTempToken();
+        final String tempToken = jwtTokenProvider.createTempToken(email);
 
         // when - then
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .header("Authorization", "Bearer " + tempToken)
+                .header("Authorization", tempToken)
                 .body(new SignupRequest(nickname, profileImage, email))
                 .when().post("/api/v1/members/signup")
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value());
+    }
+
+    @Test
+    @DisplayName("회원을 차단한다")
+    void blockTest() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setUserInfo("user2@gmail.com", "user2", "https://user2.png", "");
+
+        String token = MemberFixture.login("user@gmail.com");
+
+        // when - then
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .header("Authorization", token)
+                .when().post("/api/v1/members/2/block")
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value());
+    }
+
+    @Test
+    @DisplayName("회원을 신고한다")
+    void reportTest() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setUserInfo("user2@gmail.com", "user2", "https://user2.png", "");
+
+        String token = MemberFixture.login("user@gmail.com");
+
+        // when - then
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .header("Authorization", token)
+                .when().post("/api/v1/members/2/report")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
     }
