@@ -47,6 +47,6 @@ class OwnedBooksBottomSheet : BottomSheetDialogFragment(R.layout.owned_books_bot
             }
 
         private const val KEY_BOOKS = "books"
-        private const val RESULT_KEY = "selectedBook"
+        const val RESULT_KEY = "selectedBook"
     }
 }
