@@ -8,9 +8,9 @@
 
     <TextView
         android:id="@+id/tv_header"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
         style="@style/DiscussionBookHeader"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_height"
         android:text="@string/all_discussion"
         app:layout_constraintTop_toTopOf="parent" />
 
