@@ -15,7 +15,10 @@ import com.example.todoktodok.presentation.view.serialization.SerializationBook
 class NoteFragment : Fragment(R.layout.fragment_note) {
     private val viewModel: NoteViewModel by viewModels {
         val container = (requireActivity().application as App).container
-        NoteViewModelFactory(container.repositoryModule.bookRepository)
+        NoteViewModelFactory(
+            container.repositoryModule.bookRepository,
+            container.repositoryModule.noteRepository
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
