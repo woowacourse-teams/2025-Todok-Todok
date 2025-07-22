@@ -155,7 +155,10 @@ class DefaultDiscussionRoomDataSource : DiscussionRoomDataSource {
             ),
         )
 
-    override fun getDiscussionRoom(id: Long): DiscussionRoom = dummyDiscussionRooms.find { id == it.id }!!
+    override fun getDiscussionRoom(id: Long): Result<DiscussionRoom> =
+        runCatching {
+            dummyDiscussionRooms.find { id == it.id } ?: throw IllegalArgumentException()
+        }
 
     override fun getDiscussionRooms(): List<DiscussionRoom> = dummyDiscussionRooms
 }

@@ -28,7 +28,8 @@ class DiscussionRoomDetailViewModel(
     }
 
     private fun loadDiscussionRoom() {
-        _discussionRoom.value = discussionRoomRepository.getDiscussionRoom(discussionRoomId)
+        _discussionRoom.value =
+            discussionRoomRepository.getDiscussionRoom(discussionRoomId).getOrNull()
     }
 
     private fun loadComments() {
