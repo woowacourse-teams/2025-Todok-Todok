@@ -76,9 +76,9 @@ public class CommentCommandServiceTest {
         databaseInitializer.setDefaultDiscussionInfo();
         databaseInitializer.setDefaultCommentInfo();
 
-        Long memberId = 1L;
-        Long discussionId = 1L;
-        Long commentId = 1L;
+        final Long memberId = 1L;
+        final Long discussionId = 1L;
+        final Long commentId = 1L;
 
         //when - then
         assertThatThrownBy(() -> commentCommandService.report(memberId, discussionId, commentId))
@@ -97,9 +97,9 @@ public class CommentCommandServiceTest {
         databaseInitializer.setDefaultDiscussionInfo();
         databaseInitializer.setCommentInfo("상속의 핵심 목적은 타입 계층의 구축입니다!", 2L, 1L);
 
-        Long memberId = 1L;
-        Long discussionId = 1L;
-        Long commentId = 1L;
+        final Long memberId = 1L;
+        final Long discussionId = 1L;
+        final Long commentId = 1L;
 
         commentCommandService.report(memberId, discussionId, commentId);
 
