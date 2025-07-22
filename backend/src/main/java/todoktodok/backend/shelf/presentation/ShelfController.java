@@ -39,7 +39,7 @@ public class ShelfController {
     @PostMapping
     public ResponseEntity<BookResponse> addBook(
             @LoginMember final Long memberId,
-            @RequestBody @Valid ShelfRequest shelfRequest
+            @RequestBody @Valid final ShelfRequest shelfRequest
     ) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(shelfCommandService.addBook(memberId, shelfRequest));
