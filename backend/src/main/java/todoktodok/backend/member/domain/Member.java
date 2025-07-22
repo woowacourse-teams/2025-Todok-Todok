@@ -60,12 +60,16 @@ public class Member extends TimeStamp {
     }
 
     @Override
-    public boolean equals(Object object) {
-        if (object == null || getClass() != object.getClass()) {
-            return false;
-        }
-        Member member = (Member) object;
-        return Objects.equals(getId(), member.getId());
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null) return false;
+
+        Class<?> thisClass = org.hibernate.Hibernate.getClass(this);
+        Class<?> thatClass = org.hibernate.Hibernate.getClass(o);
+        if (thisClass != thatClass) return false;
+
+        Member that = (Member) o;
+        return Objects.equals(getId(), that.getId());
     }
 
     @Override

@@ -53,7 +53,8 @@ public class CommentCommandService {
 
         comment.validateMatchWithDiscussion(discussion);
 
-        validateSelfReport(member, comment);
+//        validateSelfReport(member, comment);
+        comment.validateSelfReport(member);
         validateDuplicatedReport(member, comment);
 
         final CommentReport commentReport = CommentReport.builder()

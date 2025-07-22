@@ -64,6 +64,12 @@ public class Comment extends TimeStamp {
         }
     }
 
+    public void validateSelfReport(final Member member) {
+        if (this.member.equals(member)) {
+            throw new IllegalArgumentException("자기 자신이 작성한 댓글을 신고할 수 없습니다");
+        }
+    }
+
     private static void validateContent(final String content) {
         if (content.isEmpty() || content.length() > CONTENT_MAX_LENGTH) {
             throw new IllegalArgumentException("댓글 내용은 1자 이상, 1500자 이하여야 합니다");
