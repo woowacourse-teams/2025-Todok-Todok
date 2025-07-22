@@ -1,8 +1,8 @@
 package com.example.todoktodok.data.repository
 
-import com.example.todoktodok.COMMENTS
 import com.example.todoktodok.data.datasource.CommentDataSource
 import com.example.todoktodok.data.datasource.DefaultCommentDataSource
+import com.example.todoktodok.fixture.COMMENTS
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

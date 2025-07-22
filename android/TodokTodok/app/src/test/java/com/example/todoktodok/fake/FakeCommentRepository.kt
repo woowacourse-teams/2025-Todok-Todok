@@ -2,7 +2,7 @@ package com.example.todoktodok.fake
 
 import com.example.domain.model.Comment
 import com.example.domain.repository.CommentRepository
-import com.example.todoktodok.COMMENTS
+import com.example.todoktodok.fixture.COMMENTS
 
 class FakeCommentRepository : CommentRepository {
     private val comments = COMMENTS

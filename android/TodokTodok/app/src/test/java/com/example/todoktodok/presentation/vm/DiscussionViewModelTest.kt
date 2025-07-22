@@ -1,9 +1,9 @@
 package com.example.todoktodok.presentation.vm
 
-import com.example.todoktodok.DISCUSSION_ROOMS
 import com.example.todoktodok.InstantTaskExecutorExtension
 import com.example.todoktodok.ext.getOrAwaitValue
 import com.example.todoktodok.fake.FakeDiscussionRoomRepository
+import com.example.todoktodok.fixture.DISCUSSION_ROOMS
 import com.example.todoktodok.presentation.view.discussion.DiscussionUiEvent
 import com.example.todoktodok.presentation.view.discussion.vm.DiscussionViewModel
 import org.assertj.core.api.Assertions.assertThat

@@ -1,12 +1,12 @@
 package com.example.todoktodok.presentation.vm
 
 import androidx.lifecycle.SavedStateHandle
-import com.example.todoktodok.COMMENTS
-import com.example.todoktodok.DISCUSSION_ROOMS
 import com.example.todoktodok.InstantTaskExecutorExtension
 import com.example.todoktodok.ext.getOrAwaitValue
 import com.example.todoktodok.fake.FakeCommentRepository
 import com.example.todoktodok.fake.FakeDiscussionRoomRepository
+import com.example.todoktodok.fixture.COMMENTS
+import com.example.todoktodok.fixture.DISCUSSION_ROOMS
 import com.example.todoktodok.presentation.view.discussion.detail.vm.DiscussionRoomDetailViewModel
 import com.example.todoktodok.presentation.view.discussion.detail.vm.DiscussionRoomDetailViewModel.Companion.KEY_DISCUSSION_ID
 import org.assertj.core.api.Assertions.assertThat
