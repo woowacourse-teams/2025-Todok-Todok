@@ -39,11 +39,9 @@ class DiscussionQueryServiceTest {
     void getDiscussions() {
         // given
         databaseInitializer.setDefaultUserInfo();
-        ;
         databaseInitializer.setDefaultBookInfo();
         databaseInitializer.setDefaultNoteInfo();
         databaseInitializer.setDefaultDiscussionInfo();
-        ;
 
         final Long memberId = 1L;
 
