@@ -39,14 +39,12 @@
 
     <ImageView
         android:id="@+id/iv_library_navigation"
-        android:layout_width="@dimen/library_navigate_btn_size"
-        android:layout_height="@dimen/library_navigate_btn_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/space_x_large"
-        android:background="@drawable/btn_green_1a_oval"
+        android:background="@drawable/btn_plus_oval"
         android:contentDescription="@string/content_description_navigate_to_book_search"
-        android:src="@drawable/btn_plus"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:tint="@color/white" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
