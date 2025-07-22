@@ -10,7 +10,7 @@ class DiscussionViewModel(
     private val discussionRoomRepository: DiscussionRoomRepository
 ) : ViewModel() {
 
-    private val _discussionRooms = MutableLiveData<List<DiscussionRoom>>()
+    private val _discussionRooms = MutableLiveData<List<DiscussionRoom>>(emptyList())
     val discussionRooms: LiveData<List<DiscussionRoom>> = _discussionRooms
 
     init {
