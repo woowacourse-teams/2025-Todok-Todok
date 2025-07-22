@@ -23,12 +23,12 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({IllegalArgumentException.class, NoSuchElementException.class,
             DateTimeException.class})
-    public ResponseEntity<String> handleBadRequest(final RuntimeException e) {
+    public ResponseEntity<String> handleBadRequestException(final RuntimeException e) {
         return ResponseEntity.badRequest().body(PREFIX + e.getMessage());
     }
 
     @ExceptionHandler(IllegalStateException.class)
-    public ResponseEntity<String> handleIllegalState(final IllegalStateException e) {
+    public ResponseEntity<String> handleIllegalStateException(final IllegalStateException e) {
         return ResponseEntity.internalServerError().body(PREFIX + e.getMessage());
     }
 
