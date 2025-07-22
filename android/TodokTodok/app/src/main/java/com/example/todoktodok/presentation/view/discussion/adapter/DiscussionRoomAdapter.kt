@@ -3,6 +3,7 @@ package com.example.todoktodok.presentation.view.discussion.adapter
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.example.domain.model.DiscussionRoom
+import com.example.todoktodok.presentation.view.discussion.adapter.DiscussionRoomViewHolder.Companion.DiscussionRoomViewHolder
 
 class DiscussionRoomAdapter(
     private val navigateDiscussionRoomClick: OnDiscussionRoomListener,
@@ -12,7 +13,7 @@ class DiscussionRoomAdapter(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): DiscussionRoomViewHolder = DiscussionRoomViewHolder.create(parent, navigateDiscussionRoomClick)
+    ): DiscussionRoomViewHolder = DiscussionRoomViewHolder(parent, navigateDiscussionRoomClick)
 
     override fun onBindViewHolder(
         holder: DiscussionRoomViewHolder,

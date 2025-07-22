@@ -26,7 +26,7 @@ class DiscussionRoomViewHolder private constructor(
     }
 
     companion object {
-        fun create(
+        fun DiscussionRoomViewHolder(
             parent: ViewGroup,
             navigateDiscussionRoomClick: OnDiscussionRoomListener,
         ): DiscussionRoomViewHolder {
