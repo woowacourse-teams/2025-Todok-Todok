@@ -5,6 +5,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import com.example.todoktodok.R
@@ -21,11 +22,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         enableEdgeToEdge()
         setContentView(binding.root)
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+        initSystemBar()
         initBottomNavigation()
     }
 
@@ -37,6 +34,18 @@ class MainActivity : AppCompatActivity() {
                 R.id.menu_library -> navigateScreen(MainScreen.LIBRARY)
             }
             true
+        }
+    }
+
+    private fun initSystemBar() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
+        binding.bnvContainer.setOnApplyWindowInsetsListener { view, insets ->
+            view.updatePadding(bottom = 0)
+            insets
         }
     }
 
