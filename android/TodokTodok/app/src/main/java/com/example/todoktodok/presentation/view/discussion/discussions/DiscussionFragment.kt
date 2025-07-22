@@ -1,4 +1,4 @@
-package com.example.todoktodok.presentation.view.discussion
+package com.example.todoktodok.presentation.view.discussion.discussions
 
 import android.os.Bundle
 import android.view.View
@@ -8,9 +8,9 @@ import androidx.fragment.app.viewModels
 import com.example.todoktodok.App
 import com.example.todoktodok.R
 import com.example.todoktodok.databinding.FragmentDiscussionBinding
-import com.example.todoktodok.presentation.view.discussion.adapter.DiscussionRoomAdapter
-import com.example.todoktodok.presentation.view.discussion.vm.DiscussionViewModel
-import com.example.todoktodok.presentation.view.discussion.vm.DiscussionViewModelFactory
+import com.example.todoktodok.presentation.view.discussion.discussions.adapter.DiscussionRoomAdapter
+import com.example.todoktodok.presentation.view.discussion.discussions.vm.DiscussionViewModel
+import com.example.todoktodok.presentation.view.discussion.discussions.vm.DiscussionViewModelFactory
 
 class DiscussionFragment : Fragment(R.layout.fragment_discussion) {
     private val viewModel: DiscussionViewModel by viewModels {

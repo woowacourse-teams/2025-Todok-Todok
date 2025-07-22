@@ -1,4 +1,4 @@
-package com.example.todoktodok.presentation.view.discussion
+package com.example.todoktodok.presentation.view.discussion.discussions
 
 sealed interface DiscussionUiEvent {
     data class NavigateDiscussionRoom(

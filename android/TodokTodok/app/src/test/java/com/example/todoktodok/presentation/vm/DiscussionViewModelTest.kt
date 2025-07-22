@@ -4,8 +4,8 @@ import com.example.todoktodok.InstantTaskExecutorExtension
 import com.example.todoktodok.ext.getOrAwaitValue
 import com.example.todoktodok.fake.FakeDiscussionRoomRepository
 import com.example.todoktodok.fixture.DISCUSSION_ROOMS
-import com.example.todoktodok.presentation.view.discussion.DiscussionUiEvent
-import com.example.todoktodok.presentation.view.discussion.vm.DiscussionViewModel
+import com.example.todoktodok.presentation.view.discussion.discussions.DiscussionUiEvent
+import com.example.todoktodok.presentation.view.discussion.discussions.vm.DiscussionViewModel
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

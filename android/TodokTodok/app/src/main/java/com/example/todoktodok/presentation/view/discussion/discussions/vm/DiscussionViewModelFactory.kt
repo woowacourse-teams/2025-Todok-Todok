@@ -1,4 +1,4 @@
-package com.example.todoktodok.presentation.view.discussion.vm
+package com.example.todoktodok.presentation.view.discussion.discussions.vm
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
