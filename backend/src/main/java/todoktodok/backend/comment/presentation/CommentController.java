@@ -46,6 +46,7 @@ public class CommentController {
             @PathVariable final Long commentId
     ) {
         commentCommandService.report(memberId, discussionId, commentId);
+
         return ResponseEntity.status(HttpStatus.CREATED)
                 .build();
     }
