@@ -91,7 +91,7 @@ public class CommentCommandServiceTest {
     void validateDuplicatedReportTest() {
         //given
         databaseInitializer.setDefaultUserInfo();
-        databaseInitializer.setUserInfo("user2@gmail.com", "user", "https://image.png", "");
+        databaseInitializer.setUserInfo("user2@gmail.com", "user", "https://image.png", "프로필 메시지");
         databaseInitializer.setDefaultBookInfo();
         databaseInitializer.setDefaultNoteInfo();
         databaseInitializer.setDefaultDiscussionInfo();
