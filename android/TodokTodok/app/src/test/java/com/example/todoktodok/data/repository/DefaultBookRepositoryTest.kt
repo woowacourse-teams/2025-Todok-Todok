@@ -35,6 +35,6 @@ class DefaultBookRepositoryTest {
             val expected = defaultBookRepository.getBooks()
 
             // then
-            assertEquals(books, expected[0])
+            assertEquals(books, expected.items[0])
         }
 }

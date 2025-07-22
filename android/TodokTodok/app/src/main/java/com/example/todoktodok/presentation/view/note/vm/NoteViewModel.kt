@@ -18,7 +18,7 @@ class NoteViewModel(
     private val defaultNoteRepository: NoteRepository,
 ) : ViewModel() {
     private val _uiState = MutableLiveData(NoteState())
-    val uiState get() = _uiState
+    val uiState: LiveData<NoteState> get() = _uiState
 
     private val _uiEvent: MutableSingleLiveData<NoteUiEvent> = MutableSingleLiveData()
     val uiEvent: SingleLiveData<NoteUiEvent> get() = _uiEvent
@@ -37,13 +37,13 @@ class NoteViewModel(
         }
     }
 
-    private fun sendShowBooksEvent(books: List<Book>) {
+    private fun sendShowBooksEvent(books: Books) {
         val parcelables = mapToParcelableBook(books)
         onUiEvent(NoteUiEvent.ShowOwnBooks(parcelables))
     }
 
-    private fun mapToParcelableBook(books: List<Book>): List<SerializationBook> =
-        books.map {
+    private fun mapToParcelableBook(books: Books): List<SerializationBook> =
+        books.items.map {
             SerializationBook(
                 id = it.id,
                 title = it.title,

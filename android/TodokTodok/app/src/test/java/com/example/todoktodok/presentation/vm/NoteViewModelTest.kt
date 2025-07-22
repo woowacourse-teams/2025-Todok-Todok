@@ -1,10 +1,12 @@
 package com.example.todoktodok.presentation.vm
 
+import androidx.lifecycle.MutableLiveData
 import com.example.domain.repository.BookRepository
 import com.example.domain.repository.NoteRepository
 import com.example.todoktodok.CoroutinesTestExtension
 import com.example.todoktodok.InstantTaskExecutorExtension
 import com.example.todoktodok.fixture.BOOKS_FIXTURES
+import com.example.todoktodok.presentation.view.note.NoteState
 import com.example.todoktodok.presentation.view.note.NoteUiEvent
 import com.example.todoktodok.presentation.view.note.vm.NoteViewModel
 import com.example.todoktodok.presentation.view.serialization.SerializationBook
@@ -17,6 +19,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import java.lang.reflect.Field
 
 @ExperimentalCoroutinesApi
 @ExtendWith(CoroutinesTestExtension::class)
@@ -27,7 +30,7 @@ class NoteViewModelTest {
     private lateinit var viewModel: NoteViewModel
 
     private val result =
-        BOOKS_FIXTURES.map {
+        BOOKS_FIXTURES.items.map {
             SerializationBook(
                 id = it.id,
                 title = it.title,
@@ -63,7 +66,12 @@ class NoteViewModelTest {
     fun `내 서재에 저장된 책에 대한 정보가 있으면 getBooks가 호출되지 않는다`() =
         runTest {
             // given
-            viewModel.uiState.value = viewModel.uiState.value?.copy(savedBooks = BOOKS_FIXTURES)
+            val uiStateField: Field = NoteViewModel::class.java.getDeclaredField("_uiState")
+            uiStateField.isAccessible = true
+
+            @Suppress("UNCHECKED_CAST")
+            val uiState = uiStateField.get(viewModel) as MutableLiveData<NoteState>
+            uiState.value = NoteState(savedBooks = BOOKS_FIXTURES)
 
             // when
             viewModel.loadOrShowSavedBooks()
