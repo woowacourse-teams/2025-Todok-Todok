@@ -49,8 +49,8 @@ public class CommentCommandService {
     ) {
         final Member member = getMember(memberId);
         final Comment comment = getComment(commentId);
-        getDiscussion(discussionId);
 
+        validateIsDiscussionExists(discussionId);
         validateSelfReport(member, comment);
         validateDuplicatedReport(member, comment);
 
@@ -75,6 +75,12 @@ public class CommentCommandService {
     private Member getMember(final Long memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new NoSuchElementException("해당 회원을 찾을 수 없습니다"));
+    }
+
+    private void validateIsDiscussionExists(final Long discussionId) {
+        if (!discussionRepository.existsById(discussionId)) {
+            throw new NoSuchElementException("해당 토론방을 찾을 수 없습니다");
+        }
     }
 
     private void validateSelfReport(
