@@ -1,4 +1,4 @@
-package com.example.todoktodok
+package com.example.todoktodok.fixture
 
 import com.example.domain.model.Book
 import com.example.domain.model.DiscussionRoom

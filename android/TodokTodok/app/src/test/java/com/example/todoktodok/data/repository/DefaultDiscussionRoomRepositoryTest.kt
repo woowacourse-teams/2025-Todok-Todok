@@ -1,8 +1,8 @@
 package com.example.todoktodok.data.repository
 
-import com.example.todoktodok.DISCUSSION_ROOMS
 import com.example.todoktodok.data.datasource.DefaultDiscussionRoomDataSource
 import com.example.todoktodok.data.datasource.DiscussionRoomDataSource
+import com.example.todoktodok.fixture.DISCUSSION_ROOMS
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -18,7 +18,17 @@ class DefaultDiscussionRoomRepositoryTest {
     }
 
     @Test
-    fun `모든 토론방을 출력한다`() {
+    fun `Id가 같은 토론방을 반환한다`() {
+        // given
+        val expected = DISCUSSION_ROOMS.find { it.id == 2L }
+        // when
+        val actual = defaultDiscussionRoomRepository.getDiscussionRoom(2).getOrNull()
+        // then
+        assertThat(actual).isEqualTo(expected)
+    }
+
+    @Test
+    fun `모든 토론방을 반환한다`() {
         // given
         val expected = DISCUSSION_ROOMS
         // then
