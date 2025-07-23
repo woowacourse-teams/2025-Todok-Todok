@@ -40,6 +40,7 @@ class SearchBooksViewModel(
                 return@launch
             }
             _uiState.value = _uiState.value?.copy(isLoading = false, searchedBooks = books)
+            _uiEvent.value = _uiEvent.value ?: SearchBooksUiEvent.ShowSearchedBooks(books)
         }
     }
 

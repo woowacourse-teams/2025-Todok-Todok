@@ -11,7 +11,7 @@ data class SearchBooksUiState(
 ) {
     fun findSelectedBook(selectedPosition: Int): SearchBooksUiState {
         val selectedBook =
-            searchedBooks[selectedPosition] ?: return this.copy(errorMessage = "책을 찾을 수 없습니다")
+            searchedBooks[selectedPosition]
         return this.copy(selectedBook = selectedBook)
     }
 }

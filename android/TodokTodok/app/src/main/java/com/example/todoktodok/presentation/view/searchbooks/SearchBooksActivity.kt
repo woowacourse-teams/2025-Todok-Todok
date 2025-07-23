@@ -73,6 +73,9 @@ class SearchBooksActivity : AppCompatActivity() {
                 is SearchBooksUiEvent.ShowDialog -> {
                     Toast.makeText(this, event.message, Toast.LENGTH_SHORT).show()
                 }
+                is SearchBooksUiEvent.ShowSearchedBooks -> {
+                    adapter.submitList(event.books)
+                }
             }
             viewModel.clearUiState()
         }
