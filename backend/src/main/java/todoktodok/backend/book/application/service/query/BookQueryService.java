@@ -1,0 +1,30 @@
+package todoktodok.backend.book.application.service.query;
+
+import java.util.List;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import todoktodok.backend.book.application.dto.response.BookResponse;
+import todoktodok.backend.book.domain.Book;
+import todoktodok.backend.book.domain.repository.BookRepository;
+
+@Service
+@Transactional(readOnly = true)
+@AllArgsConstructor
+public class BookQueryService {
+
+    private final BookRepository bookRepository;
+
+    public List<BookResponse> search(final String keyword) {
+        if (keyword == null || keyword.isBlank()) {
+            return List.of();
+        }
+
+        final String cleanKeyword = keyword.trim();
+        final List<Book> matchedBooks = bookRepository.findByTitleContainingIgnoreCase(cleanKeyword);
+
+        return matchedBooks.stream()
+                .map(BookResponse::new)
+                .toList();
+    }
+}
