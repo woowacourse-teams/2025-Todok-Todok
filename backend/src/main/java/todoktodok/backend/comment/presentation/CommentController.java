@@ -1,5 +1,6 @@
 package todoktodok.backend.comment.presentation;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
@@ -29,6 +30,7 @@ public class CommentController {
     private final CommentCommandService commentCommandService;
     private final CommentQueryService commentQueryService;
 
+    @Operation(summary = "댓글 생성 API")
     @Auth(value = Role.USER)
     @PostMapping
     public ResponseEntity<Void> createComment(
@@ -43,6 +45,7 @@ public class CommentController {
                 .build();
     }
 
+    @Operation(summary = "댓글 신고 API")
     @Auth(value = Role.USER)
     @PostMapping("/{commentId}/report")
     public ResponseEntity<Void> report(
