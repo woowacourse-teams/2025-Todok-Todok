@@ -8,6 +8,7 @@ import androidx.fragment.app.viewModels
 import com.example.todoktodok.App
 import com.example.todoktodok.R
 import com.example.todoktodok.databinding.FragmentDiscussionBinding
+import com.example.todoktodok.presentation.view.discussion.detail.DiscussionRoomDetailActivity
 import com.example.todoktodok.presentation.view.discussion.discussions.adapter.DiscussionRoomAdapter
 import com.example.todoktodok.presentation.view.discussion.discussions.vm.DiscussionViewModel
 import com.example.todoktodok.presentation.view.discussion.discussions.vm.DiscussionViewModelFactory
@@ -19,7 +20,7 @@ class DiscussionFragment : Fragment(R.layout.fragment_discussion) {
     }
     private val adapter by lazy {
         DiscussionRoomAdapter { id ->
-            viewModel.onUiEvent(DiscussionUiEvent.NavigateDiscussionRoom(id))
+            viewModel.onUiEvent(DiscussionUiEvent.NavigateToDiscussionRoomDetail(id))
         }
     }
 
@@ -45,13 +46,13 @@ class DiscussionFragment : Fragment(R.layout.fragment_discussion) {
 
     private fun setupOnClick(binding: FragmentDiscussionBinding) {
         binding.ivAddDiscussionRoom.setOnClickListener {
-            viewModel.onUiEvent(DiscussionUiEvent.NavigateAddDiscussionRoom)
+            viewModel.onUiEvent(DiscussionUiEvent.NavigateToAddDiscussionRoom)
         }
     }
 
     private fun handleEvent(discussionUiEvent: DiscussionUiEvent) {
         when (discussionUiEvent) {
-            DiscussionUiEvent.NavigateAddDiscussionRoom ->
+            DiscussionUiEvent.NavigateToAddDiscussionRoom ->
                 Toast
                     .makeText(
                         requireContext(),
@@ -59,13 +60,13 @@ class DiscussionFragment : Fragment(R.layout.fragment_discussion) {
                         Toast.LENGTH_SHORT,
                     ).show()
 
-            is DiscussionUiEvent.NavigateDiscussionRoom ->
-                Toast
-                    .makeText(
-                        requireContext(),
-                        "토론방 이동",
-                        Toast.LENGTH_SHORT,
-                    ).show()
+            is DiscussionUiEvent.NavigateToDiscussionRoomDetail ->
+                navigateToDiscussionRoomDetail(discussionUiEvent.discussionRoomId)
         }
+    }
+
+    private fun navigateToDiscussionRoomDetail(discussionRoomId: Long) {
+        val intent = DiscussionRoomDetailActivity.Intent(requireContext(), discussionRoomId)
+        startActivity(intent)
     }
 }

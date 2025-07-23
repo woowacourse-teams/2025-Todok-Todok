@@ -1,9 +1,9 @@
 package com.example.todoktodok.presentation.view.discussion.discussions
 
 sealed interface DiscussionUiEvent {
-    data class NavigateDiscussionRoom(
+    data class NavigateToDiscussionRoomDetail(
         val discussionRoomId: Long,
     ) : DiscussionUiEvent
 
-    data object NavigateAddDiscussionRoom : DiscussionUiEvent
+    data object NavigateToAddDiscussionRoom : DiscussionUiEvent
 }

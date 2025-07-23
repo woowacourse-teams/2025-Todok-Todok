@@ -31,9 +31,9 @@ class DiscussionViewModelTest {
     @Test
     fun `UiEvent를 NavigateAddDiscussionRoom으로 변경한다`() {
         // given
-        val expected = DiscussionUiEvent.NavigateAddDiscussionRoom
+        val expected = DiscussionUiEvent.NavigateToAddDiscussionRoom
         // when
-        discussionViewModel.onUiEvent(DiscussionUiEvent.NavigateAddDiscussionRoom)
+        discussionViewModel.onUiEvent(DiscussionUiEvent.NavigateToAddDiscussionRoom)
         // then
         assertThat(discussionViewModel.uiEvent.getOrAwaitValue()).isEqualTo(expected)
     }
@@ -41,9 +41,9 @@ class DiscussionViewModelTest {
     @Test
     fun `UiEvent를 NavigateDiscussionRoom으로 변경한다`() {
         // given
-        val expected = DiscussionUiEvent.NavigateDiscussionRoom(1)
+        val expected = DiscussionUiEvent.NavigateToDiscussionRoomDetail(1)
         // when
-        discussionViewModel.onUiEvent(DiscussionUiEvent.NavigateDiscussionRoom(1))
+        discussionViewModel.onUiEvent(DiscussionUiEvent.NavigateToDiscussionRoomDetail(1))
         // then
         assertThat(discussionViewModel.uiEvent.getOrAwaitValue()).isEqualTo(expected)
     }
