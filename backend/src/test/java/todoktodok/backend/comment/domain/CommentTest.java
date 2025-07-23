@@ -153,8 +153,8 @@ public class CommentTest {
         );
 
         // when - then
-        assertThatThrownBy(() -> comment.validateMatchWithDiscussion(anotherDiscussion)
-        ).isInstanceOf(IllegalArgumentException.class)
+        assertThatThrownBy(() -> comment.validateMatchWithDiscussion(anotherDiscussion))
+                .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("해당 토론방에 있는 댓글이 아닙니다");
     }
 
@@ -197,8 +197,8 @@ public class CommentTest {
         );
 
         // when - then
-        assertThatThrownBy(() -> comment.validateSelfReport(member)
-        ).isInstanceOf(IllegalArgumentException.class)
+        assertThatThrownBy(() -> comment.validateSelfReport(member))
+                .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("자기 자신이 작성한 댓글을 신고할 수 없습니다");
     }
 }
