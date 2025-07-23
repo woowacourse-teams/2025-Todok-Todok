@@ -34,6 +34,6 @@
 
     <!--  토론방 생성 페이지  -->
     <string name="discussion_title">토론 제목</string>
-    <string name="discussion_content">나의 의견</string>
+    <string name="discussion_content">나의 생각</string>
     <string name="discussion_room_create">생성하기</string>
 </resources>
