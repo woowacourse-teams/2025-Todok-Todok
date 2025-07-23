@@ -59,7 +59,7 @@ class DiscussionRoomDetailViewModel(
             discussionRoomRepository.getDiscussionRoom(discussionRoomId).getOrNull()
     }
 
-    private fun loadComments() {
+    fun loadComments() {
         _comments.value = commentRepository.getCommentsByDiscussionRoomId(discussionRoomId)
     }
 

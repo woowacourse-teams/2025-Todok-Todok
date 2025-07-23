@@ -3,7 +3,6 @@ package com.example.todoktodok.presentation.view.discussion.detail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -116,12 +115,7 @@ class DiscussionRoomDetailActivity : AppCompatActivity() {
             DiscussionRoomDetailUiEvent.NavigateUp -> onBackPressedDispatcher.onBackPressed()
             is DiscussionRoomDetailUiEvent.AddComment -> {
                 viewModel.addComment(LocalDateTime.now(), discussionRoomDetailUiEvent.content)
-                Toast
-                    .makeText(
-                        this,
-                        "댓글:${discussionRoomDetailUiEvent.content}",
-                        Toast.LENGTH_SHORT,
-                    ).show()
+                viewModel.loadComments()
             }
         }
     }
