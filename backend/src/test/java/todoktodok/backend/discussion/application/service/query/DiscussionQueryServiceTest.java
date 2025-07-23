@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -46,7 +47,7 @@ class DiscussionQueryServiceTest {
         final Long memberId = 1L;
 
         // when
-        List<DiscussionResponse> discussions = discussionQueryService.getDiscussions(memberId);
+        final List<DiscussionResponse> discussions = discussionQueryService.getDiscussions(memberId);
 
         // then
         assertThat(discussions).hasSize(1);
@@ -59,6 +60,7 @@ class DiscussionQueryServiceTest {
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
         databaseInitializer.setDefaultNoteInfo();
+
         final Long memberId = 1L;
         final Long bookId = 1L;
         final Long noteId = 1L;
@@ -70,22 +72,26 @@ class DiscussionQueryServiceTest {
                 bookId,
                 noteId
         );
+
         final Long discussionId = 1L;
 
         // when
-        DiscussionResponse discussionResponse = discussionQueryService.getDiscussion(memberId, discussionId);
+        final DiscussionResponse discussionResponse = discussionQueryService.getDiscussion(memberId, discussionId);
 
         // then
-        assertThat(discussionResponse.discussionId()).isEqualTo(discussionId);
-        assertThat(discussionResponse.discussionTitle()).isEqualTo("클린코드에 대해 논의해볼까요");
-        assertThat(discussionResponse.discussionOpinion()).isEqualTo("클린코드만세");
+        assertAll(
+                () -> assertThat(discussionResponse.discussionId()).isEqualTo(discussionId),
+                () -> assertThat(discussionResponse.discussionTitle()).isEqualTo("클린코드에 대해 논의해볼까요"),
+                () -> assertThat(discussionResponse.discussionOpinion()).isEqualTo("클린코드만세")
+        );
     }
 
     @Test
     @DisplayName("특정 토론방을 찾을 수 없는 경우 예외가 발생한다")
-    void getDiscussion_NotFound_fail() {
+    void getDiscussion_notFound_fail() {
         // given
         databaseInitializer.setDefaultUserInfo();
+
         final Long memberId = 1L;
         final Long discussionId = 999L;
 
