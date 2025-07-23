@@ -12,7 +12,7 @@ import com.example.todoktodok.data.datasource.RemoteNoteDataSource
 class DataSourceModule(
     serviceModule: ServiceModule,
 ) {
-    val remoteBookDataSource: BookDataSource by lazy { RemoteBookDataSource() }
+    val remoteBookDataSource: RemoteBookDataSource by lazy { RemoteBookDataSource() }
 
     val noteDataSource: NoteDataSource by lazy { RemoteNoteDataSource() }
 
