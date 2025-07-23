@@ -6,7 +6,9 @@ import com.example.todoktodok.data.datasource.DiscussionRoomDataSource
 import com.example.todoktodok.data.datasource.NoteDataSource
 import com.example.todoktodok.data.datasource.RemoteNoteDataSource
 
-class DataSourceModule {
+class DataSourceModule(
+    serviceModule: ServiceModule,
+) {
     val bookDataSource: BookDataSource by lazy { BookDataSource() }
 
     val noteDataSource: NoteDataSource by lazy { RemoteNoteDataSource() }
