@@ -12,6 +12,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.todoktodok.App
 import com.example.todoktodok.R
 import com.example.todoktodok.databinding.ActivityDiscussionRoomDetailBinding
+import com.example.todoktodok.presentation.view.discussion.detail.adapter.CommentAdapter
 import com.example.todoktodok.presentation.view.discussion.detail.vm.DiscussionRoomDetailViewModel
 import com.example.todoktodok.presentation.view.discussion.detail.vm.DiscussionRoomDetailViewModel.Companion.KEY_DISCUSSION_ID
 import com.example.todoktodok.presentation.view.discussion.detail.vm.DiscussionRoomDetailViewModelFactory
@@ -20,6 +21,7 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 class DiscussionRoomDetailActivity : AppCompatActivity() {
+    private val adapter by lazy { CommentAdapter() }
     private val viewModel by viewModels<DiscussionRoomDetailViewModel> {
         val repositoryModule = (application as App).container.repositoryModule
         DiscussionRoomDetailViewModelFactory(
@@ -36,10 +38,11 @@ class DiscussionRoomDetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initView()
+        initAdapter()
         setContentView(binding.root)
-        setupObserve()
         setupOnClickAddComment()
         setupOnClickNavigateUp()
+        setupObserve()
     }
 
     private fun initView() {
@@ -54,6 +57,10 @@ class DiscussionRoomDetailActivity : AppCompatActivity() {
             )
             insets
         }
+    }
+
+    private fun initAdapter() {
+        binding.rvComments.adapter = adapter
     }
 
     private fun setupOnClickAddComment() {
@@ -87,6 +94,9 @@ class DiscussionRoomDetailActivity : AppCompatActivity() {
         }
         viewModel.uiEvent.observe(this) { value ->
             handleEvent(value)
+        }
+        viewModel.comments.observe(this) { value ->
+            adapter.submitList(value)
         }
     }
 

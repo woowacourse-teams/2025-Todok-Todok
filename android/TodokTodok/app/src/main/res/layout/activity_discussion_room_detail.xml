@@ -61,7 +61,8 @@
         android:id="@+id/tv_discussion_room_report"
         style="@style/DiscussionDetailSubContent"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/item_discussion_detail_meta_line_height"
+        android:gravity="center"
         android:text="@string/all_report"
         app:layout_constraintBottom_toBottomOf="@id/tv_discussion_room_title"
         app:layout_constraintEnd_toEndOf="parent"
@@ -128,8 +129,10 @@
         android:id="@+id/rv_comments"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@id/til_text_comment_content"
-        app:layout_constraintTop_toBottomOf="@id/tv_comment_title" />
+        app:layout_constraintTop_toBottomOf="@id/tv_comment_title"
+        tools:listitem="@layout/item_comment" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_text_comment_content"
