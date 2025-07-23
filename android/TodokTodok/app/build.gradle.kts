@@ -85,6 +85,7 @@ dependencies {
     implementation(libs.bundles.glide)
 
     testImplementation(libs.bundles.test)
+    testImplementation(libs.androidx.core.testing)
     androidTestImplementation(libs.bundles.android.test)
     androidTestRuntimeOnly(libs.mannodermaus.junit5.runner)
 }
