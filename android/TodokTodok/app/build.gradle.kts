@@ -1,3 +1,4 @@
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
@@ -9,6 +10,17 @@ plugins {
 }
 
 android {
+    val properties = Properties()
+    properties.load(project.rootProject.file("local.properties").inputStream())
+
+    defaultConfig {
+        buildConfigField(
+            "String",
+            "BASE_URL",
+            "\"${properties.getProperty("base_url")}\"",
+        )
+    }
+
     namespace = "com.example.todoktodok"
     compileSdk = 35
 
@@ -36,6 +48,10 @@ android {
                 "proguard-rules.pro",
             )
         }
+    }
+
+    buildFeatures {
+        buildConfig = true
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_21
