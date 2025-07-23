@@ -71,9 +71,6 @@ class DiscussionRoomDetailViewModelTest {
             )
         // when
         discussionRoomDetailViewModel.addComment(LocalDateTime.of(2000, 7, 3, 10, 21), "테스트가 어려워")
-        println(
-            commentRepository.getCommentsByDiscussionRoomId(1),
-        )
         // then
         assertThat(
             commentRepository

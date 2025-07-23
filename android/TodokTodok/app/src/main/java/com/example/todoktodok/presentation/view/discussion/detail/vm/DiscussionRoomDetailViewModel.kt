@@ -52,7 +52,6 @@ class DiscussionRoomDetailViewModel(
                 currentDateTime,
             )
         commentRepository.saveComment(comment)
-        println(comment)
     }
 
     private fun loadDiscussionRoom() {
