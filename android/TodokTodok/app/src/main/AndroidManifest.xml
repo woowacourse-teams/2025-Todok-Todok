@@ -15,18 +15,21 @@
         android:theme="@style/Theme.TodokTodok"
         tools:targetApi="31">
         <activity
-            android:name=".presentation.view.searchbooks.SearchBooksActivity"
-            android:exported="false" />
-        <activity
-            android:name=".presentation.view.MainActivity"
-            android:windowSoftInputMode="adjustPan"
-            android:exported="true">
+            android:name=".presentation.view.start.StartActivity"
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".presentation.view.searchbooks.SearchBooksActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.view.MainActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan">
+        </activity>
     </application>
-
 </manifest>
