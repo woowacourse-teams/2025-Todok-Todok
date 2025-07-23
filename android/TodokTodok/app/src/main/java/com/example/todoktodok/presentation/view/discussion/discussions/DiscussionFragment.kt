@@ -2,7 +2,6 @@ package com.example.todoktodok.presentation.view.discussion.discussions
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.todoktodok.App
@@ -54,14 +53,10 @@ class DiscussionFragment : Fragment(R.layout.fragment_discussion) {
     private fun handleEvent(discussionUiEvent: DiscussionUiEvent) {
         when (discussionUiEvent) {
             DiscussionUiEvent.NavigateToAddDiscussionRoom ->
-            {
-                val intent = DiscussionRoomCreateActivity.Intent(requireActivity())
-                startActivity(intent)
-            }
-
-
-
-
+                {
+                    val intent = DiscussionRoomCreateActivity.Intent(requireActivity())
+                    startActivity(intent)
+                }
 
             is DiscussionUiEvent.NavigateToDiscussionRoomDetail ->
                 navigateToDiscussionRoomDetail(discussionUiEvent.discussionRoomId)

@@ -32,7 +32,6 @@ class DiscussionRoomCreateActivity : AppCompatActivity() {
     }
 
     companion object {
-        fun Intent(context: Context): Intent =
-            Intent(context, DiscussionRoomCreateActivity::class.java)
+        fun Intent(context: Context): Intent = Intent(context, DiscussionRoomCreateActivity::class.java)
     }
 }
