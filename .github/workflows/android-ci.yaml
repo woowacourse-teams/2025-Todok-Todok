@@ -31,6 +31,11 @@ jobs:
           distribution: 'temurin'
           cache: gradle
 
+      - name: Create local.properties
+        run: |
+          echo "sdk.dir=$ANDROID_SDK_ROOT" > local.properties
+          echo "base_url=${{ secrets.BASE_URL }}" >> local.properties          
+
       - name: Grant execute permission to gradlew
         run: chmod +x gradlew
 
