@@ -21,12 +21,14 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(final InterceptorRegistry registry) {
         registry.addInterceptor(authorizationInterceptor)
-                .addPathPatterns("/**")
+                .addPathPatterns("/api/**")
                 .excludePathPatterns(
                         "/swagger-ui/**",
                         "/swagger-resources/**",
+                        "/v3/api-docs",
                         "/v3/api-docs/**",
-                        "/h2-console"
+                        "/webjars/**",
+                        "/h2-console/**"
                 );
     }
 
