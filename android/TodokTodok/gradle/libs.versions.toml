@@ -24,6 +24,8 @@ glide = "4.16.0"
 
 # Google
 google-material = "1.12.0"
+google-play-services-auth = "21.3.0"
+google-services = "4.4.3"
 
 # Ktlint
 ktlint = "13.0.0"
@@ -66,6 +68,8 @@ logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-intercep
 
 # Google
 google-material = { group = "com.google.android.material", name = "material", version.ref = "google-material" }
+play-services-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "google-play-services-auth" }
+google-services = { module = "com.google.gms:google-services", version.ref = "google-services" }
 
 # Glide
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
@@ -107,7 +111,8 @@ network = [
 ]
 
 google = [
-    "google-material"
+    "google-material",
+    "play-services-auth"
 ]
 
 glide = [
