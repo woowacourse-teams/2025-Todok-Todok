@@ -1,5 +1,6 @@
 package todoktodok.backend.discussion.presentation;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import java.net.URI;
 import lombok.AllArgsConstructor;
@@ -23,6 +24,7 @@ public class DiscussionController {
 
     private final DiscussionCommandService discussionCommandService;
 
+    @Operation(summary = "토론방 생성 API")
     @Auth(value = Role.USER)
     @PostMapping
     public ResponseEntity<Void> createDiscussion(

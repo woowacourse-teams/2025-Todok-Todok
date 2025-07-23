@@ -1,5 +1,6 @@
 package todoktodok.backend.note.presentation;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -26,6 +27,7 @@ public class NoteController {
     private final NoteCommandService noteCommandService;
     private final NoteQueryService noteQueryService;
 
+    @Operation(summary = "기록 생성 API")
     @Auth(value = Role.USER)
     @PostMapping
     public ResponseEntity<Void> createNote(
@@ -37,6 +39,7 @@ public class NoteController {
                 .build();
     }
 
+    @Operation(summary = "내 기록 조회 API")
     @Auth(value = Role.USER)
     @GetMapping("/mine")
     public ResponseEntity<List<MyNoteResponse>> getMyNotes(
