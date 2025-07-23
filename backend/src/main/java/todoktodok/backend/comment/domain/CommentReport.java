@@ -1,4 +1,4 @@
-package todoktodok.backend.member.domain;
+package todoktodok.backend.comment.domain;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 import todoktodok.backend.global.common.TimeStamp;
+import todoktodok.backend.member.domain.Member;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -22,8 +23,8 @@ import todoktodok.backend.global.common.TimeStamp;
 
 @Entity
 @SQLRestriction("deleted_at is NULL")
-@SQLDelete(sql = "UPDATE block SET deleted_at = NOW() WHERE id = ?")
-public class Block extends TimeStamp {
+@SQLDelete(sql = "UPDATE comment_report SET deleted_at = NOW() WHERE id = ?")
+public class CommentReport extends TimeStamp {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,19 +32,20 @@ public class Block extends TimeStamp {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
-    private Member member;
+    private Comment comment;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
-    private Member target;
+    private Member member;
 
     @Builder
-    public static Block create(
-            final Member member,
-            final Member target
-    ){
-        return new Block(
-                null, member, target
+    public static CommentReport create(
+            final Comment comment,
+            final Member member
+    ) {
+
+        return new CommentReport(
+                null, comment, member
         );
     }
 }

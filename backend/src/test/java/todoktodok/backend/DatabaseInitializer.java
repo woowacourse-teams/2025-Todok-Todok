@@ -49,17 +49,17 @@ public class DatabaseInitializer {
             final String profileMessage
     ) {
         em.createNativeQuery(
-                """
-                        INSERT INTO MEMBER (email, nickname, profile_image, profile_message, created_at, modified_at)
-                        VALUES 
-                        (:email, :nickname, :profileImage, :profileMessage, CURRENT_TIME, CURRENT_TIME)
                         """
-        )
-        .setParameter("email", email)
-        .setParameter("nickname", nickname)
-        .setParameter("profileImage", profileImage)
-        .setParameter("profileMessage", profileMessage)
-        .executeUpdate();
+                                INSERT INTO MEMBER (email, nickname, profile_image, profile_message, created_at, modified_at)
+                                VALUES 
+                                (:email, :nickname, :profileImage, :profileMessage, CURRENT_TIME, CURRENT_TIME)
+                                """
+                )
+                .setParameter("email", email)
+                .setParameter("nickname", nickname)
+                .setParameter("profileImage", profileImage)
+                .setParameter("profileMessage", profileMessage)
+                .executeUpdate();
     }
 
     @Transactional
@@ -83,19 +83,19 @@ public class DatabaseInitializer {
             final String image
     ) {
         em.createNativeQuery(
-                """
-                        INSERT INTO BOOK (title, summary, author, publisher, isbn, image, created_at, modified_at)
-                        VALUES 
-                        (:title, :summary, :author, :publisher, :isbn, :image, CURRENT_TIME, CURRENT_TIME)
                         """
-        )
-        .setParameter("title", title)
-        .setParameter("summary", summary)
-        .setParameter("author", author)
-        .setParameter("publisher", publisher)
-        .setParameter("isbn", isbn)
-        .setParameter("image", image)
-        .executeUpdate();
+                                INSERT INTO BOOK (title, summary, author, publisher, isbn, image, created_at, modified_at)
+                                VALUES 
+                                (:title, :summary, :author, :publisher, :isbn, :image, CURRENT_TIME, CURRENT_TIME)
+                                """
+                )
+                .setParameter("title", title)
+                .setParameter("summary", summary)
+                .setParameter("author", author)
+                .setParameter("publisher", publisher)
+                .setParameter("isbn", isbn)
+                .setParameter("image", image)
+                .executeUpdate();
     }
 
     @Transactional
@@ -115,15 +115,15 @@ public class DatabaseInitializer {
             final Long bookId
     ) {
         em.createNativeQuery(
-                """
-                        INSERT INTO SHELF (member_id, book_id, created_at, modified_at)
-                        VALUES 
-                        (:memberId, :bookId, CURRENT_TIME, CURRENT_TIME)
                         """
-        )
-        .setParameter("memberId", memberId)
-        .setParameter("bookId", bookId)
-        .executeUpdate();
+                                INSERT INTO SHELF (member_id, book_id, created_at, modified_at)
+                                VALUES 
+                                (:memberId, :bookId, CURRENT_TIME, CURRENT_TIME)
+                                """
+                )
+                .setParameter("memberId", memberId)
+                .setParameter("bookId", bookId)
+                .executeUpdate();
     }
 
     @Transactional
@@ -145,17 +145,17 @@ public class DatabaseInitializer {
             final Long memberId
     ) {
         em.createNativeQuery(
-                """
-                        INSERT INTO NOTE (snap, memo, book_id, member_id, created_at, modified_at)
-                        VALUES 
-                        (:snap, :memo, :bookId, :memberId, CURRENT_TIME, CURRENT_TIME)
                         """
-        )
-        .setParameter("snap", snap)
-        .setParameter("memo", memo)
-        .setParameter("bookId", bookId)
-        .setParameter("memberId", memberId)
-        .executeUpdate();
+                                INSERT INTO NOTE (snap, memo, book_id, member_id, created_at, modified_at)
+                                VALUES 
+                                (:snap, :memo, :bookId, :memberId, CURRENT_TIME, CURRENT_TIME)
+                                """
+                )
+                .setParameter("snap", snap)
+                .setParameter("memo", memo)
+                .setParameter("bookId", bookId)
+                .setParameter("memberId", memberId)
+                .executeUpdate();
     }
 
     @Transactional
@@ -178,17 +178,47 @@ public class DatabaseInitializer {
             final Long noteId
     ) {
         em.createNativeQuery(
-                """
-                        INSERT INTO DISCUSSION (title, content, member_id, book_id, note_id, created_at, modified_at)
-                        VALUES 
-                        (:title, :content, :memberId, :bookId, :noteId, CURRENT_TIME, CURRENT_TIME)
                         """
-        )
-        .setParameter("title", title)
-        .setParameter("content", content)
-        .setParameter("memberId", memberId)
-        .setParameter("bookId", bookId)
-        .setParameter("noteId", noteId)
-        .executeUpdate();
+                                INSERT INTO DISCUSSION (title, content, member_id, book_id, note_id, created_at, modified_at)
+                                VALUES 
+                                (:title, :content, :memberId, :bookId, :noteId, CURRENT_TIME, CURRENT_TIME)
+                                """
+                )
+                .setParameter("title", title)
+                .setParameter("content", content)
+                .setParameter("memberId", memberId)
+                .setParameter("bookId", bookId)
+                .setParameter("noteId", noteId)
+                .executeUpdate();
+    }
+
+    @Transactional
+    public void setDefaultCommentInfo() {
+        em.createNativeQuery(
+                """
+                        INSERT INTO COMMENT (content, member_id, discussion_id, created_at, modified_at)
+                        VALUES 
+                        ('상속의 핵심 목적은 타입 계층의 구축입니다!', 1L, 1L, CURRENT_TIME, CURRENT_TIME)
+                        """
+        ).executeUpdate();
+    }
+
+    @Transactional
+    public void setCommentInfo(
+            final String content,
+            final Long memberId,
+            final Long discussionId
+    ) {
+        em.createNativeQuery(
+                        """
+                                INSERT INTO COMMENT (content, member_id, discussion_id, created_at, modified_at)
+                                VALUES 
+                                (:content, :memberId, :discussionId, CURRENT_TIME, CURRENT_TIME)
+                                """
+                )
+                .setParameter("content", content)
+                .setParameter("memberId", memberId)
+                .setParameter("discussionId", discussionId)
+                .executeUpdate();
     }
 }

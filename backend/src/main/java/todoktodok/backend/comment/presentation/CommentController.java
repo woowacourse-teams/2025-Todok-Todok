@@ -38,6 +38,19 @@ public class CommentController {
                 .build();
     }
 
+    @Auth(value = Role.USER)
+    @PostMapping("/{commentId}/report")
+    public ResponseEntity<Void> report(
+            @LoginMember final Long memberId,
+            @PathVariable final Long discussionId,
+            @PathVariable final Long commentId
+    ) {
+        commentCommandService.report(memberId, discussionId, commentId);
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .build();
+    }
+
     private URI createUri(final Long id) {
         return ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")

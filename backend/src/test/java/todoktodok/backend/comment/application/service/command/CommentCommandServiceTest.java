@@ -65,4 +65,47 @@ public class CommentCommandServiceTest {
                 .isInstanceOf(NoSuchElementException.class)
                 .hasMessage("해당 회원을 찾을 수 없습니다");
     }
+
+    @Test
+    @DisplayName("자기 자신을 신고하면 예외가 발생한다")
+    void validateSelfReportTest() {
+        //given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultNoteInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+        databaseInitializer.setDefaultCommentInfo();
+
+        final Long memberId = 1L;
+        final Long discussionId = 1L;
+        final Long commentId = 1L;
+
+        //when - then
+        assertThatThrownBy(() -> commentCommandService.report(memberId, discussionId, commentId))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("자기 자신이 작성한 댓글을 신고할 수 없습니다");
+    }
+
+    @Test
+    @DisplayName("이미 자신이 신고한 댓글을 중복 신고하면 예외가 발생한다")
+    void validateDuplicatedReportTest() {
+        //given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setUserInfo("user2@gmail.com", "user", "https://image.png", "프로필 메시지");
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultNoteInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+        databaseInitializer.setCommentInfo("상속의 핵심 목적은 타입 계층의 구축입니다!", 2L, 1L);
+
+        final Long memberId = 1L;
+        final Long discussionId = 1L;
+        final Long commentId = 1L;
+
+        commentCommandService.report(memberId, discussionId, commentId);
+
+        //when - then
+        assertThatThrownBy(() -> commentCommandService.report(memberId, discussionId, commentId))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("이미 신고한 댓글입니다");
+    }
 }
