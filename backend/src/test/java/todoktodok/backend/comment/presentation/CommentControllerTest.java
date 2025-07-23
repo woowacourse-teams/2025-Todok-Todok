@@ -1,5 +1,7 @@
 package todoktodok.backend.comment.presentation;
 
+import static org.hamcrest.Matchers.is;
+
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
@@ -100,6 +102,7 @@ public class CommentControllerTest {
                 .header("Authorization", token)
                 .when().get("/api/v1/discussions/1/comments")
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.OK.value())
+                .body("size()", is(2));
     }
 }
