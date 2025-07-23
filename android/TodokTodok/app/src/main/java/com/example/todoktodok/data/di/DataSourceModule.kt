@@ -1,6 +1,5 @@
 package com.example.todoktodok.data.di
 
-import com.example.todoktodok.data.datasource.BookDataSource
 import com.example.todoktodok.data.datasource.CommentDataSource
 import com.example.todoktodok.data.datasource.DefaultCommentDataSource
 import com.example.todoktodok.data.datasource.DefaultDiscussionRoomDataSource

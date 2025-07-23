@@ -13,7 +13,6 @@ import androidx.core.widget.addTextChangedListener
 import com.example.domain.model.Book
 import com.example.todoktodok.App
 import com.example.todoktodok.databinding.ActivitySearchBooksBinding
-import com.example.todoktodok.presentation.view.note.vm.NoteViewModelFactory
 import com.example.todoktodok.presentation.view.searchbooks.vm.SearchBooksViewModel
 import com.example.todoktodok.presentation.view.searchbooks.vm.SearchBooksViewModelFactory
 
