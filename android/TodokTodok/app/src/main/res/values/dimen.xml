@@ -34,4 +34,8 @@
 
     <!--  내 서재 페이지  -->
     <dimen name="library_navigate_btn_size">48dp</dimen>
+
+    <!--  토론방 생성 페이지  -->
+    <dimen name="discussion_room_create_note_search_bar_height">48dp</dimen>
+    <dimen name="discussion_room_create_button_height">48dp</dimen>
 </resources>

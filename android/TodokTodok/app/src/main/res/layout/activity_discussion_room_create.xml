@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    app:layout_constraintTop_toTopOf="parent">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/space_x_large"
+        android:paddingRight="@dimen/space_x_large">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/abl_discussion_room_create"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toolbar_height"
+            android:background="@color/white"
+            app:layout_constraintBottom_toTopOf="@id/tv_note_search"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv_discussion_room_create_back"
+            android:layout_width="@dimen/space_2x_large"
+            android:layout_height="@dimen/space_2x_large"
+            android:contentDescription="@string/content_description_discussion_room_create_back"
+            android:src="@drawable/btn_back"
+            app:layout_constraintBottom_toBottomOf="@id/abl_discussion_room_create"
+            app:layout_constraintStart_toStartOf="@id/abl_discussion_room_create"
+            app:layout_constraintTop_toTopOf="@id/abl_discussion_room_create" />
+
+        <TextView
+            android:id="@+id/tv_book_search_title"
+            style="@style/HeaderTitleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/space_x_small"
+            android:gravity="center"
+            android:text="@string/discussion_room_title"
+            app:layout_constraintBottom_toBottomOf="@id/abl_discussion_room_create"
+            app:layout_constraintEnd_toEndOf="@id/abl_discussion_room_create"
+            app:layout_constraintStart_toStartOf="@id/abl_discussion_room_create"
+            app:layout_constraintTop_toTopOf="@id/abl_discussion_room_create" />
+
+        <TextView
+            android:id="@+id/tv_note_search"
+            style="@style/BaseTextStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_x_small"
+            android:layout_marginTop="@dimen/space_large"
+            android:layout_marginBottom="@dimen/space_x_small"
+            android:gravity="start"
+            android:text="@string/note_search"
+            app:layout_constraintBottom_toTopOf="@id/view_note_search_bar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/abl_discussion_room_create" />
+
+        <View
+            android:id="@+id/view_note_search_bar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/discussion_room_create_note_search_bar_height"
+            android:background="@drawable/bg_green_f0_radius_8dp"
+            app:layout_constraintBottom_toTopOf="@id/tv_discussion_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_note_search" />
+
+        <ImageView
+            android:id="@+id/iv_note_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/space_x_small"
+            android:contentDescription="@string/content_description_book_search_bar"
+            android:src="@drawable/ic_search"
+            app:layout_constraintBottom_toBottomOf="@id/view_note_search_bar"
+            app:layout_constraintEnd_toEndOf="@id/view_note_search_bar"
+            app:layout_constraintTop_toTopOf="@id/view_note_search_bar" />
+
+        <TextView
+            android:id="@+id/tv_discussion_title"
+            style="@style/BaseTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_x_small"
+            android:layout_marginTop="@dimen/space_large"
+            android:layout_marginBottom="@dimen/space_x_small"
+            android:text="@string/discussion_title"
+            app:layout_constraintBottom_toTopOf="@id/view_discussion_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_note_search_bar" />
+
+        <View
+            android:id="@+id/view_discussion_title"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/discussion_room_create_note_search_bar_height"
+            android:background="@drawable/bg_green_f0_radius_8dp"
+            app:layout_constraintBottom_toTopOf="@id/tv_discussion_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_discussion_title" />
+
+        <EditText
+            android:id="@+id/et_discussion_title"
+            style="@style/BookSearchBarTextStyle"
+            android:layout_width="@dimen/space_2x_small"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/space_x_small"
+            android:autofillHints="search"
+            android:background="@android:color/transparent"
+            android:gravity="center_vertical"
+            android:inputType="text"
+            android:textColorHint="@color/gray_76"
+            app:layout_constraintBottom_toBottomOf="@id/view_discussion_title"
+            app:layout_constraintEnd_toEndOf="@id/view_discussion_title"
+            app:layout_constraintStart_toStartOf="@id/view_discussion_title"
+            app:layout_constraintTop_toTopOf="@id/view_discussion_title" />
+
+        <TextView
+            android:id="@+id/tv_discussion_content"
+            style="@style/BaseTextStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/space_x_small"
+            android:layout_marginTop="@dimen/space_large"
+            android:layout_marginBottom="@dimen/space_x_small"
+            android:text="@string/discussion_content"
+            app:layout_constraintBottom_toTopOf="@id/et_discussion_content_layout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_discussion_title" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/et_discussion_content_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_x_small"
+            android:background="@drawable/bg_green_f0_radius_8dp"
+            app:boxBackgroundMode="none"
+            app:cursorColor="@color/black_18"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_discussion_content">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_discussion_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="start|top"
+                android:inputType="textMultiLine"
+                android:minLines="10"
+                android:textColor="@color/black_18" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/tv_discussion_create"
+            style="@style/BasicButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/discussion_room_create_button_height"
+            android:layout_marginVertical="@dimen/space_x_large"
+            android:background="@drawable/bg_green_1a_radius_8dp"
+            android:gravity="center"
+            android:text="@string/discussion_room_create"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/et_discussion_content_layout"
+            app:layout_constraintVertical_bias="1" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
