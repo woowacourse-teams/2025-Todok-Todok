@@ -8,6 +8,7 @@ spring:
   sql:
     init:
       mode: always
+      data-locations: classpath:data.sql
   jpa:
     show-sql: true
     properties:
