@@ -40,8 +40,11 @@ public class CommentQueryServiceTest {
         databaseInitializer.setDefaultBookInfo();
         databaseInitializer.setDefaultNoteInfo();
 
+        final Long memberId = 1L;
+        final Long discussionId = 1L;
+
         // when - then
-        assertThatThrownBy(() -> commentQueryService.getComments(1L, 1L))
+        assertThatThrownBy(() -> commentQueryService.getComments(memberId, discussionId))
                 .isInstanceOf(NoSuchElementException.class)
                 .hasMessage("해당 토론방을 찾을 수 없습니다");
     }
@@ -56,8 +59,11 @@ public class CommentQueryServiceTest {
         databaseInitializer.setDefaultDiscussionInfo();
         databaseInitializer.setDefaultCommentInfo();
 
+        final Long memberId = 2L;
+        final Long discussionId = 1L;
+
         // when - then
-        assertThatThrownBy(() -> commentQueryService.getComments(2L, 1L))
+        assertThatThrownBy(() -> commentQueryService.getComments(memberId, discussionId))
                 .isInstanceOf(NoSuchElementException.class)
                 .hasMessage("해당 회원을 찾을 수 없습니다");
     }
