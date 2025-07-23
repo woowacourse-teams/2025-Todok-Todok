@@ -44,7 +44,6 @@ kotest-runner-junit5 = "5.9.1"
 mockk = "1.13.8"
 junit = "4.12"
 recycelerview = "1.2.0"
-constraintlayout = "2.2.1"
 
 [libraries]
 # Androidx
@@ -84,7 +83,6 @@ mannodermaus-junit5-runner = { group = "de.mannodermaus.junit5", name = "android
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 mockk-android = { module = "io.mockk:mockk-android", version.ref = "mockk" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
-androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 
 [bundles]
 androidx = [
