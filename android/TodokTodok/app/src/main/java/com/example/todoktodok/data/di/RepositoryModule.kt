@@ -18,5 +18,5 @@ class RepositoryModule(
     }
     val bookRepository: BookRepository by lazy { DefaultBookRepository(dataSourceModule.remoteBookDataSource) }
 
-    val noteRepository: NoteRepository by lazy { DefaultNoteRepository(dataSourceModule.noteDataSource) }
+    val noteRepository: NoteRepository by lazy { DefaultNoteRepository(dataSourceModule.remoteNoteDataSource) }
 }
