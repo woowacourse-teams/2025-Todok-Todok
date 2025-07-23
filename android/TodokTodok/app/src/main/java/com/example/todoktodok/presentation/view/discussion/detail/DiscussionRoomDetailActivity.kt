@@ -3,6 +3,7 @@ package com.example.todoktodok.presentation.view.discussion.detail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -37,6 +38,8 @@ class DiscussionRoomDetailActivity : AppCompatActivity() {
         initView()
         setContentView(binding.root)
         setupObserve()
+        setupOnClickAddComment()
+        setupOnClickNavigateUp()
     }
 
     private fun initView() {
@@ -53,6 +56,24 @@ class DiscussionRoomDetailActivity : AppCompatActivity() {
         }
     }
 
+    private fun setupOnClickAddComment() {
+        with(binding) {
+            ivAddComment.setOnClickListener {
+                viewModel.onUiEvent(DiscussionRoomDetailUiEvent.AddComment(etTextCommentContent.text.toString()))
+                etTextCommentContent.text?.clear()
+                etTextCommentContent.clearFocus()
+            }
+        }
+    }
+
+    private fun setupOnClickNavigateUp() {
+        with(binding) {
+            ivDiscussionRoomDetailBack.setOnClickListener {
+                viewModel.onUiEvent(DiscussionRoomDetailUiEvent.NavigateUp)
+            }
+        }
+    }
+
     private fun setupObserve() {
         viewModel.discussionRoom.observe(this) { value ->
             with(binding) {
@@ -63,6 +84,9 @@ class DiscussionRoomDetailActivity : AppCompatActivity() {
                 tvDiscussionRoomNote.text = value.snap
                 tvDiscussionRoomOpinion.text = value.discussionOpinion
             }
+        }
+        viewModel.uiEvent.observe(this) { value ->
+            handleEvent(value)
         }
     }
 
@@ -75,6 +99,21 @@ class DiscussionRoomDetailActivity : AppCompatActivity() {
         val formattedDate = date.format(formatter)
 
         return this.getString(R.string.author_and_date_format, author, formattedDate)
+    }
+
+    private fun handleEvent(discussionRoomDetailUiEvent: DiscussionRoomDetailUiEvent) {
+        when (discussionRoomDetailUiEvent) {
+            DiscussionRoomDetailUiEvent.NavigateUp -> onBackPressedDispatcher.onBackPressed()
+            is DiscussionRoomDetailUiEvent.AddComment -> {
+                viewModel.addComment(LocalDateTime.now(), discussionRoomDetailUiEvent.content)
+                Toast
+                    .makeText(
+                        this,
+                        "댓글:${discussionRoomDetailUiEvent.content}",
+                        Toast.LENGTH_SHORT,
+                    ).show()
+            }
+        }
     }
 
     companion object {
