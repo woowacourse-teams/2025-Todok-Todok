@@ -17,7 +17,6 @@ import org.hibernate.annotations.SQLRestriction;
 import todoktodok.backend.global.common.TimeStamp;
 
 @Getter
-@Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 
@@ -37,4 +36,14 @@ public class Block extends TimeStamp {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private Member target;
+
+    @Builder
+    public static Block create(
+            final Member member,
+            final Member target
+    ){
+        return new Block(
+                null, member, target
+        );
+    }
 }
