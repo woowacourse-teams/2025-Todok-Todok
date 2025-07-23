@@ -2,7 +2,9 @@ package com.example.todoktodok.presentation.view.note
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.todoktodok.App
@@ -46,8 +48,22 @@ class NoteFragment : Fragment(R.layout.fragment_note) {
     }
 
     private fun initView(binding: FragmentNoteBinding) {
-        binding.etSearchBookLayout.setOnClickListener {
-            viewModel.loadOrShowSavedBooks()
+        with(binding) {
+            etSearchBookLayout.setOnClickListener {
+                viewModel.loadOrShowSavedBooks()
+            }
+
+            etSnap.addTextChangedListener { text ->
+                viewModel.updateSnap(text.toString())
+            }
+
+            tvMemo.addTextChangedListener { text ->
+                viewModel.updateMemo(text.toString())
+            }
+
+            btnCreate.setOnClickListener {
+                viewModel.saveNote()
+            }
         }
     }
 
@@ -55,6 +71,10 @@ class NoteFragment : Fragment(R.layout.fragment_note) {
         viewModel.uiEvent.observe(viewLifecycleOwner) { value ->
             when (value) {
                 is NoteUiEvent.ShowOwnBooks -> showOwnedBooksBottomSheet(value.books)
+                NoteUiEvent.NotHasSelectedBook -> {
+                    val message = getString(R.string.note_not_has_selected_book)
+                    showToast(message)
+                }
             }
         }
     }
@@ -79,6 +99,10 @@ class NoteFragment : Fragment(R.layout.fragment_note) {
             )
             ivBookSearch.visibility = View.INVISIBLE
         }
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 
     companion object {

@@ -1,6 +1,5 @@
 package com.example.todoktodok.presentation.view.note.vm
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -24,6 +23,35 @@ class NoteViewModel(
 
     private val _uiEvent: MutableSingleLiveData<NoteUiEvent> = MutableSingleLiveData()
     val uiEvent: SingleLiveData<NoteUiEvent> get() = _uiEvent
+
+    fun saveNote() {
+        val currentUiState = _uiState.value ?: return
+
+        currentUiState.selectedBook?.let {
+            requestSaveNote(it.id, currentUiState.snap, currentUiState.memo)
+        } ?: run {
+            onUiEvent(NoteUiEvent.NotHasSelectedBook)
+            loadOrShowSavedBooks()
+        }
+    }
+
+    private fun requestSaveNote(
+        selectedBookId: Long,
+        snap: String,
+        memo: String,
+    ) {
+        viewModelScope.launch {
+            defaultNoteRepository.saveNote(selectedBookId, snap, memo)
+        }
+    }
+
+    fun updateSnap(snap: String) {
+        _uiState.value = _uiState.value?.copy(snap = snap)
+    }
+
+    fun updateMemo(memo: String) {
+        _uiState.value = _uiState.value?.copy(memo = memo)
+    }
 
     fun loadOrShowSavedBooks() {
         val savedBooks = _uiState.value?.savedBooks
