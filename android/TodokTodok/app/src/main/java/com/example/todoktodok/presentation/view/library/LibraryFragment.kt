@@ -17,7 +17,7 @@ class LibraryFragment : Fragment(R.layout.fragment_library) {
         val container = (requireActivity().application as App).container
         LibraryViewModelFactory(container.repositoryModule.bookRepository)
     }
-    private val booksAdapter: BooksAdapter by lazy { BooksAdapter() }
+    private val booksAdapter: BooksAdapter by lazy { BooksAdapter(bookAdapterEventHandler) }
 
     override fun onViewCreated(
         view: View,
@@ -32,7 +32,14 @@ class LibraryFragment : Fragment(R.layout.fragment_library) {
             startActivity(intent)
         }
         viewModel.books.observe(viewLifecycleOwner) { value ->
-            booksAdapter.submitList(value)
+            booksAdapter.submitList(value.items)
         }
     }
+
+    private val bookAdapterEventHandler =
+        object : BooksAdapter.Handler {
+            override fun onSelectBook(position: Int) {
+                TODO("책 선택 이벤트 구현")
+            }
+        }
 }
