@@ -15,12 +15,15 @@
         android:theme="@style/Theme.TodokTodok"
         tools:targetApi="31">
         <activity
+            android:name=".presentation.view.discussion.detail.DiscussionRoomDetailActivity"
+            android:exported="false" />
+        <activity
             android:name=".presentation.view.searchbooks.SearchBooksActivity"
             android:exported="false" />
         <activity
             android:name=".presentation.view.MainActivity"
-            android:windowSoftInputMode="adjustPan"
-            android:exported="true">
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

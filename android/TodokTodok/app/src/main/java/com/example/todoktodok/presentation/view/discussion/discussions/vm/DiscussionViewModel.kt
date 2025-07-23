@@ -1,4 +1,4 @@
-package com.example.todoktodok.presentation.view.discussion.vm
+package com.example.todoktodok.presentation.view.discussion.discussions.vm
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -7,7 +7,7 @@ import com.example.domain.model.DiscussionRoom
 import com.example.domain.repository.DiscussionRoomRepository
 import com.example.todoktodok.presentation.core.event.MutableSingleLiveData
 import com.example.todoktodok.presentation.core.event.SingleLiveData
-import com.example.todoktodok.presentation.view.discussion.DiscussionUiEvent
+import com.example.todoktodok.presentation.view.discussion.discussions.DiscussionUiEvent
 
 class DiscussionViewModel(
     private val discussionRoomRepository: DiscussionRoomRepository,
