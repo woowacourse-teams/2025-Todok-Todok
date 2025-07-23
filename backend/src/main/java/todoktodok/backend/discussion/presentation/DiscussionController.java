@@ -53,7 +53,7 @@ public class DiscussionController {
 
     @Auth(Role.USER)
     @GetMapping("/{discussionId}")
-    public ResponseEntity<DiscussionResponse> getDiscussions(
+    public ResponseEntity<DiscussionResponse> getDiscussion(
             @LoginMember final Long memberId,
             @PathVariable final Long discussionId
     ) {
