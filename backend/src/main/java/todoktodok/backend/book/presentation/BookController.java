@@ -1,5 +1,6 @@
 package todoktodok.backend.book.presentation;
 
+import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,7 @@ public class BookController {
 
     private final BookQueryService bookQueryService;
 
+    @Operation(summary = "도서 검색 API")
     @Auth(value = Role.USER)
     @GetMapping("/search")
     public ResponseEntity<List<BookResponse>> search(
