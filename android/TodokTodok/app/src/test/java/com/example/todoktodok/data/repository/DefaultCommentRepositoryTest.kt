@@ -1,11 +1,14 @@
 package com.example.todoktodok.data.repository
 
+import com.example.domain.model.Comment
 import com.example.todoktodok.data.datasource.CommentDataSource
 import com.example.todoktodok.data.datasource.DefaultCommentDataSource
 import com.example.todoktodok.fixture.COMMENTS
+import com.example.todoktodok.fixture.USERS
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.time.LocalDateTime
 
 class DefaultCommentRepositoryTest {
     private lateinit var commentDataSource: CommentDataSource
@@ -25,5 +28,20 @@ class DefaultCommentRepositoryTest {
         val comments = defaultCommentRepository.getCommentsByDiscussionRoomId(0)
         // then
         assertThat(comments).isEqualTo(expected)
+    }
+
+    @Test
+    fun `댓글을 추가한다`() {
+        // given
+        val expected = Comment(6, "수고 많으셨습니다다.", USERS[4], LocalDateTime.of(2024, 7, 20, 22, 15))
+
+        // when
+        defaultCommentRepository.saveComment(
+            Comment(6, "수고 많으셨습니다다.", USERS[4], LocalDateTime.of(2024, 7, 20, 22, 15)),
+        )
+        // then
+        assertThat(defaultCommentRepository.getCommentsByDiscussionRoomId(1).last()).isEqualTo(
+            expected,
+        )
     }
 }
