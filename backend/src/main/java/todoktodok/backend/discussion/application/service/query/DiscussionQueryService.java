@@ -33,8 +33,9 @@ public class DiscussionQueryService {
             final Long discussionId
     ) {
         validateMember(memberId);
+        final Discussion discussion = findDiscussion(discussionId);
 
-        return new DiscussionResponse(findDiscussion(discussionId));
+        return new DiscussionResponse(discussion);
     }
 
     private void validateMember(final Long memberId) {
