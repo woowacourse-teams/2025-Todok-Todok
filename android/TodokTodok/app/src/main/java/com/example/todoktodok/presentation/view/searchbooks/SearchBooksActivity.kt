@@ -3,24 +3,35 @@ package com.example.todoktodok.presentation.view.searchbooks
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.widget.addTextChangedListener
 import com.example.domain.model.Book
+import com.example.todoktodok.App
 import com.example.todoktodok.databinding.ActivitySearchBooksBinding
+import com.example.todoktodok.presentation.view.note.vm.NoteViewModelFactory
 import com.example.todoktodok.presentation.view.searchbooks.vm.SearchBooksViewModel
+import com.example.todoktodok.presentation.view.searchbooks.vm.SearchBooksViewModelFactory
 
 class SearchBooksActivity : AppCompatActivity() {
-    private val viewModel: SearchBooksViewModel by viewModels()
+    private val viewModel: SearchBooksViewModel by viewModels {
+        val container = (this.application as App).container
+        SearchBooksViewModelFactory(container.repositoryModule.bookRepository)
+    }
+
     private val binding: ActivitySearchBooksBinding by lazy {
         ActivitySearchBooksBinding.inflate(
             layoutInflater,
         )
     }
+
     private val adapter by lazy {
-        SearchBooksAdapter { position: Int ->
+        SearchBooksAdapter { selectedPosition: Int ->
+            viewModel.saveBook(selectedPosition)
             finish()
         }
     }
@@ -50,11 +61,17 @@ class SearchBooksActivity : AppCompatActivity() {
     private fun initView() {
         setContentView(binding.root)
         binding.rcBookSearchResult.adapter = adapter
+        binding.etBookSearchBar.addTextChangedListener { text: Editable? ->
+            viewModel.updateSearchInput(text.toString())
+        }
     }
 
     private fun setupBooks() {
         viewModel.books.observe(this) { books: List<Book> ->
             adapter.submitList(books)
+        }
+        viewModel.searchInput.observe(this) {
+            viewModel.searchBooks()
         }
     }
 
