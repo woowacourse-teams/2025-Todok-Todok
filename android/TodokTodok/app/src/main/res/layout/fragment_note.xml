@@ -69,7 +69,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
-            android:id="@+id/tv_book_content"
+            android:id="@+id/tv_snap"
             style="@style/BaseTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -81,7 +81,7 @@
             app:layout_constraintTop_toBottomOf="@id/et_search_book_layout" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/et_book_content_layout"
+            android:id="@+id/et_snap_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/space_x_large"
@@ -91,10 +91,10 @@
             app:cursorColor="@color/black_18"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_book_content">
+            app:layout_constraintTop_toBottomOf="@id/tv_snap">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_book_content"
+                android:id="@+id/et_snap"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="start|top"
@@ -104,7 +104,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
-            android:id="@+id/tv_opinion"
+            android:id="@+id/tv_memo"
             style="@style/BaseTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -113,10 +113,10 @@
             android:text="@string/note_my_opinion"
             android:textSize="@dimen/font_size_normal"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/et_book_content_layout" />
+            app:layout_constraintTop_toBottomOf="@id/et_snap_layout" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/et_opinion_layout"
+            android:id="@+id/et_memo_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/space_x_large"
@@ -126,10 +126,10 @@
             app:cursorColor="@color/black_18"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_opinion">
+            app:layout_constraintTop_toBottomOf="@id/tv_memo">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_opinion"
+                android:id="@+id/et_memo"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/bg_green_f0_radius_8dp"
@@ -150,7 +150,7 @@
             android:layout_marginBottom="@dimen/space_small"
             android:gravity="center"
             android:text="@string/note_create"
-            app:layout_constraintTop_toBottomOf="@id/et_opinion_layout"
+            app:layout_constraintTop_toBottomOf="@id/et_memo_layout"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
