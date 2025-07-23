@@ -39,6 +39,7 @@
 
     <TextView
         android:id="@+id/tv_book_title"
+        style="@style/DiscussionDetailSubContent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/space_x_small"
@@ -58,7 +59,7 @@
 
     <TextView
         android:id="@+id/tv_discussion_room_report"
-        style="@style/DiscussionDetailBase"
+        style="@style/DiscussionDetailSubContent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/all_report"
@@ -69,7 +70,7 @@
 
     <TextView
         android:id="@+id/tv_user_content"
-        style="@style/DiscussionDetailBase"
+        style="@style/DiscussionDetailSubContent"
         android:layout_width="wrap_content"
         android:layout_height="34dp"
         android:gravity="center"
@@ -79,7 +80,7 @@
 
     <TextView
         android:id="@+id/tv_discussion_room_note"
-        style="@style/DiscussionDetailBase"
+        style="@style/DiscussionDetailContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/tv_user_content"
@@ -98,7 +99,7 @@
 
     <TextView
         android:id="@+id/tv_discussion_room_opinion"
-        style="@style/DiscussionDetailBase"
+        style="@style/DiscussionDetailContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/tv_discussion_room_opinion_title"
@@ -128,9 +129,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@id/til_text_comment_content"
-        app:layout_constraintTop_toBottomOf="@id/tv_comment_title"
-        app:layout_constraintVertical_bias="0.0"
-        tools:layout_editor_absoluteX="24dp" />
+        app:layout_constraintTop_toBottomOf="@id/tv_comment_title" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_text_comment_content"
