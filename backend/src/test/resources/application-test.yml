@@ -5,6 +5,9 @@ spring:
       path: /h2-console
   datasource:
     url: jdbc:h2:mem:test
+  sql:
+    init:
+      data-locations:
   jpa:
     show-sql: true
     properties:

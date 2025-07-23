@@ -8,6 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,7 +27,7 @@ import todoktodok.backend.note.domain.Note;
 
 @Entity
 @SQLRestriction("deleted_at is NULL")
-@SQLDelete(sql = "UPDATE member SET deleted_at = NOW() WHERE id = ?")
+@SQLDelete(sql = "UPDATE discussion SET deleted_at = NOW() WHERE id = ?")
 public class Discussion extends TimeStamp {
 
     public static final int TITLE_MAX_LENGTH = 50;
@@ -65,6 +66,24 @@ public class Discussion extends TimeStamp {
         validateContent(content);
 
         return new Discussion(null, title, content, member, book, note);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null) return false;
+
+        Class<?> thisClass = org.hibernate.Hibernate.getClass(this);
+        Class<?> thatClass = org.hibernate.Hibernate.getClass(o);
+        if (thisClass != thatClass) return false;
+
+        Discussion that = (Discussion) o;
+        return getId() != null && getId().equals(that.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 
     private static void validateTitle(final String title) {

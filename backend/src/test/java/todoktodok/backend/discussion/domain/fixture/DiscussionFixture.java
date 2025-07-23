@@ -1,4 +1,4 @@
-package todoktodok.backend.comment.domain.fixture;
+package todoktodok.backend.discussion.domain.fixture;
 
 import todoktodok.backend.book.domain.Book;
 import todoktodok.backend.discussion.domain.Discussion;
