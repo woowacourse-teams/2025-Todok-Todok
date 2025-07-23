@@ -11,7 +11,7 @@ class DataSourceModule(
 ) {
     val bookDataSource: BookDataSource by lazy { BookDataSource() }
 
-    val noteDataSource: NoteDataSource by lazy { RemoteNoteDataSource(serviceModule.noteService) }
+    val noteDataSource: NoteDataSource by lazy { RemoteNoteDataSource() }
 
     val discussionRoomDataSource: DiscussionRoomDataSource by lazy { DefaultDiscussionRoomDataSource() }
 }
