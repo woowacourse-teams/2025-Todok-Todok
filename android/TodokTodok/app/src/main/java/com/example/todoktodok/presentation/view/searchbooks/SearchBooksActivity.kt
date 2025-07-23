@@ -4,13 +4,13 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.widget.addTextChangedListener
-import com.example.domain.model.Book
 import com.example.todoktodok.App
 import com.example.todoktodok.databinding.ActivitySearchBooksBinding
 import com.example.todoktodok.presentation.view.searchbooks.vm.SearchBooksViewModel
@@ -30,8 +30,8 @@ class SearchBooksActivity : AppCompatActivity() {
 
     private val adapter by lazy {
         SearchBooksAdapter { selectedPosition: Int ->
-            viewModel.saveBook(selectedPosition)
-            finish()
+            viewModel.updateSelectedBook(selectedPosition)
+            viewModel.saveSelectedBook()
         }
     }
 
@@ -62,21 +62,25 @@ class SearchBooksActivity : AppCompatActivity() {
         binding.rcBookSearchResult.adapter = adapter
         binding.etBookSearchBar.addTextChangedListener { text: Editable? ->
             viewModel.updateSearchInput(text.toString())
+            viewModel.searchBooks()
         }
     }
 
     private fun setupBooks() {
-        viewModel.books.observe(this) { books: List<Book> ->
-            adapter.submitList(books)
-        }
-        viewModel.searchInput.observe(this) {
-            viewModel.searchBooks()
+        viewModel.uiEvent.observe(this) { event ->
+            when (event) {
+                is SearchBooksUiEvent.NavigateToLibrary -> finish()
+                is SearchBooksUiEvent.ShowDialog -> {
+                    Toast.makeText(this, event.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+            viewModel.clearUiState()
         }
     }
 
     private fun finishSearchBooks() {
         binding.ivBookSearchBack.setOnClickListener {
-            finish()
+            viewModel.navigateToLibrary()
         }
     }
 

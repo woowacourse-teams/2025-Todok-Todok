@@ -9,7 +9,7 @@ import com.example.domain.repository.BookRepository
 import kotlinx.coroutines.launch
 
 class LibraryViewModel(
-    private val bookRepositoryImpl: BookRepository,
+    private val bookRepository: BookRepository,
 ) : ViewModel() {
     private val _books: MutableLiveData<List<Book>> = MutableLiveData(emptyList())
     val books: LiveData<List<Book>> = _books
@@ -20,7 +20,7 @@ class LibraryViewModel(
 
     private fun loadBooks() {
         viewModelScope.launch {
-            _books.value = bookRepositoryImpl.getBooks()
+            _books.value = bookRepository.getBooks()
         }
     }
 }
