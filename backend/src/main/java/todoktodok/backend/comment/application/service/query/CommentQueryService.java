@@ -20,7 +20,10 @@ public class CommentQueryService {
     private final DiscussionRepository discussionRepository;
     private final CommentRepository commentRepository;
 
-    public List<CommentResponse> getComments(final Long memberId, final Long discussionId) {
+    public List<CommentResponse> getComments(
+            final Long memberId,
+            final Long discussionId
+    ) {
         validateIsExistMember(memberId);
         final Discussion discussion = getDiscussion(discussionId);
 
