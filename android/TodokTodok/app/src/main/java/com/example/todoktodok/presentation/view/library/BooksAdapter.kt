@@ -5,11 +5,13 @@ import androidx.recyclerview.widget.ListAdapter
 import com.example.domain.model.Book
 import com.example.todoktodok.presentation.view.library.BooksViewHolder.Companion.BooksViewHolder
 
-class BooksAdapter : ListAdapter<Book, BooksViewHolder>(booksDiffUtil) {
+class BooksAdapter(
+    private val eventHandler: Handler,
+) : ListAdapter<Book, BooksViewHolder>(booksDiffUtil) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): BooksViewHolder = BooksViewHolder(parent)
+    ): BooksViewHolder = BooksViewHolder(parent, eventHandler)
 
     override fun onBindViewHolder(
         holder: BooksViewHolder,
@@ -17,4 +19,6 @@ class BooksAdapter : ListAdapter<Book, BooksViewHolder>(booksDiffUtil) {
     ) {
         holder.bind(getItem(position))
     }
+
+    interface Handler : BooksViewHolder.Handler
 }
