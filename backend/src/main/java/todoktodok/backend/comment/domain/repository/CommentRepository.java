@@ -2,7 +2,6 @@ package todoktodok.backend.comment.domain.repository;
 
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
-import todoktodok.backend.comment.application.dto.CommentResponse;
 import todoktodok.backend.comment.domain.Comment;
 import todoktodok.backend.discussion.domain.Discussion;
 

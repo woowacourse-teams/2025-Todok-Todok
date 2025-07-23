@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import todoktodok.backend.comment.application.dto.CommentResponse;
+import todoktodok.backend.comment.application.dto.response.CommentResponse;
 import todoktodok.backend.comment.application.dto.request.CommentRequest;
 import todoktodok.backend.comment.application.service.command.CommentCommandService;
 import todoktodok.backend.comment.application.service.query.CommentQueryService;

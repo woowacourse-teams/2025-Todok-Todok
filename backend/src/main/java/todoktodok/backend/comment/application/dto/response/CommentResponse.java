@@ -1,4 +1,4 @@
-package todoktodok.backend.comment.application.dto;
+package todoktodok.backend.comment.application.dto.response;
 
 import java.time.LocalDateTime;
 import todoktodok.backend.comment.domain.Comment;

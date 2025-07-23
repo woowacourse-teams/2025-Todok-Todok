@@ -5,7 +5,7 @@ import java.util.NoSuchElementException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import todoktodok.backend.comment.application.dto.CommentResponse;
+import todoktodok.backend.comment.application.dto.response.CommentResponse;
 import todoktodok.backend.comment.domain.repository.CommentRepository;
 import todoktodok.backend.discussion.domain.Discussion;
 import todoktodok.backend.discussion.domain.repository.DiscussionRepository;
