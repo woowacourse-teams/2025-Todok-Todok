@@ -59,6 +59,7 @@ public class CommentController {
                 .build();
     }
 
+    @Operation(summary = "토론방별 댓글 목록 조회 API")
     @Auth(value = Role.USER)
     @GetMapping
     public ResponseEntity<List<CommentResponse>> getComments(
