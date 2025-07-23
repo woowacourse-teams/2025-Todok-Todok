@@ -28,4 +28,12 @@
 
     <!-- 내 서재 페이지 -->
     <string name="content_description_navigate_to_book_search">도서 검색 화면으로 이동합니다</string>
+    <string name="discussion_room_title">토론방 생성</string>
+    <string name="content_description_discussion_room_create_back">토론방 목록으로 이동합니다</string>
+    <string name="note_search">기록 검색</string>
+
+    <!--  토론방 생성 페이지  -->
+    <string name="discussion_title">토론 제목</string>
+    <string name="discussion_content">나의 생각</string>
+    <string name="discussion_room_create">생성하기</string>
 </resources>
