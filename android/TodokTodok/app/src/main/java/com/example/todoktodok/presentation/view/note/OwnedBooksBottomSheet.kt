@@ -76,7 +76,6 @@ class OwnedBooksBottomSheet : BottomSheetDialogFragment(R.layout.owned_books_bot
         halfScreenHeight: Int,
     ) {
         behavior.peekHeight = halfScreenHeight
-        behavior.isDraggable = false
     }
 
     companion object {
