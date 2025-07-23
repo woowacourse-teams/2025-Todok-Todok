@@ -2,6 +2,7 @@ package com.example.todoktodok.presentation.view.note
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.todoktodok.App
@@ -17,7 +18,7 @@ class NoteFragment : Fragment(R.layout.fragment_note) {
         val container = (requireActivity().application as App).container
         NoteViewModelFactory(
             container.repositoryModule.bookRepository,
-            container.repositoryModule.noteRepository
+            container.repositoryModule.noteRepository,
         )
     }
 
@@ -26,7 +27,8 @@ class NoteFragment : Fragment(R.layout.fragment_note) {
 
         childFragmentManager
             .setFragmentResultListener(REQUEST_KEY, this) { _, result ->
-                val selected = result.getString(RESULT_KEY)
+                val selectedIndex = result.getInt(RESULT_KEY)
+                viewModel.updateSelectedBook(selectedIndex)
             }
     }
 
@@ -37,11 +39,15 @@ class NoteFragment : Fragment(R.layout.fragment_note) {
         val binding = FragmentNoteBinding.bind(view)
         initView(binding)
         setUpUiEvent()
+
+        viewModel.uiState.observe(viewLifecycleOwner) { value ->
+            value.selectedBook?.let { setUpSelectedBookText(binding, it.title) }
+        }
     }
 
     private fun initView(binding: FragmentNoteBinding) {
         binding.etSearchBookLayout.setOnClickListener {
-            viewModel.loadBooks()
+            viewModel.loadOrShowSavedBooks()
         }
     }
 
@@ -57,6 +63,22 @@ class NoteFragment : Fragment(R.layout.fragment_note) {
         OwnedBooksBottomSheet
             .newInstance(books)
             .show(childFragmentManager, OWNED_BOOKS_BOTTOM_SHEET_TAG)
+    }
+
+    private fun setUpSelectedBookText(
+        binding: FragmentNoteBinding,
+        title: String,
+    ) {
+        with(binding) {
+            tvSelectedBookTitle.text = title
+            tvSelectedBookTitle.setTextColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.black_18,
+                ),
+            )
+            ivBookSearch.visibility = View.INVISIBLE
+        }
     }
 
     companion object {
