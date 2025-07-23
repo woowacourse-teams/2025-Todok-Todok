@@ -46,15 +46,19 @@
             app:layout_constraintTop_toBottomOf="@id/tv_search_book">
 
             <TextView
+                android:id="@+id/tv_selected_book_title"
                 style="@style/HintTextStyle"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/note_owned_search_hint"
+
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/iv_book_search"/>
 
             <ImageView
+                android:id="@+id/iv_book_search"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/content_description_book_search_layout"

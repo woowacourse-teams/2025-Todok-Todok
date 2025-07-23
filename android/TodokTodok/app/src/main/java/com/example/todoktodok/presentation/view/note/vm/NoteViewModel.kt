@@ -1,9 +1,11 @@
 package com.example.todoktodok.presentation.view.note.vm
 
+import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.domain.model.Book
+import com.example.domain.model.Books
 import com.example.domain.repository.BookRepository
 import com.example.domain.repository.NoteRepository
 import com.example.todoktodok.presentation.core.event.MutableSingleLiveData
@@ -51,6 +53,11 @@ class NoteViewModel(
                 image = it.image,
             )
         }
+
+    fun updateSelectedBook(selectedIndex: Int) {
+        val selectedBook = _uiState.value?.modifySelectedBook(selectedIndex)
+        _uiState.value = selectedBook
+    }
 
     private fun onUiEvent(event: NoteUiEvent) {
         _uiEvent.setValue(event)
