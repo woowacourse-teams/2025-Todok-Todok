@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SwaggerConfig {
     public OpenApiCustomizer buildSecurityOpenApi() {
-        Server authenticated = new Server();
+        final Server authenticated = new Server();
 
         return openApi -> openApi
                 .addSecurityItem(new SecurityRequirement().addList("jwt token"))
@@ -27,9 +27,8 @@ public class SwaggerConfig {
                         .scheme("bearer"));
     }
 
-    // Authenticated and Unauthenticated need to be Varied : Since the grouping
     public OpenApiCustomizer buildUnauthenticatedOpenApi() {
-        Server unauthenticated = new Server();
+        final Server unauthenticated = new Server();
         unauthenticated.url("/").setDescription("Swagger for Unauthenticated");
 
         return openApi -> openApi.addServersItem(unauthenticated);
@@ -56,10 +55,10 @@ public class SwaggerConfig {
 
     @Bean
     public OpenAPI springTodokTodokOpenAPI() {
-        String title = "Todok-Todok";
-        String description = "토독토독 프로젝트";
+        final String title = "Todok-Todok";
+        final String description = "토독토독 프로젝트";
 
-        Info info = new Info().title(title).description(description).version("1.0.0");
+        final Info info = new Info().title(title).description(description).version("1.0.0");
         return new OpenAPI().info(info);
     }
 }
