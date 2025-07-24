@@ -13,7 +13,7 @@ import org.hamcrest.Matchers.allOf
 import org.junit.Before
 import org.junit.Test
 
-class SearchBooksActivityTest {
+class SearchBooksRequestActivityTest {
     @Before
     fun setup() {
         ActivityScenario.launch(MainActivity::class.java)

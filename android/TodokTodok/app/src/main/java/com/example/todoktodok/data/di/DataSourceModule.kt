@@ -2,6 +2,9 @@ package com.example.todoktodok.data.di
 
 import com.example.todoktodok.data.datasource.CommentDataSource
 import com.example.todoktodok.data.datasource.DefaultCommentDataSource
+import com.example.todoktodok.data.datasource.DefaultDiscussionRoomDataSource
+import com.example.todoktodok.data.datasource.DiscussionRoomDataSource
+import com.example.todoktodok.data.datasource.RemoteBookDataSource
 import com.example.todoktodok.data.datasource.book.BookDataSource
 import com.example.todoktodok.data.datasource.book.RemoteBookDataSource
 import com.example.todoktodok.data.datasource.discussion.DefaultDiscussionRemoteDataSource
@@ -14,7 +17,12 @@ import com.example.todoktodok.data.datasource.note.RemoteNoteDataSource
 class DataSourceModule(
     serviceModule: ServiceModule,
 ) {
-    val bookDataSource: BookDataSource by lazy { RemoteBookDataSource() }
+    val remoteBookDataSource: BookDataSource by lazy {
+        RemoteBookDataSource(
+            serviceModule.libraryService,
+            serviceModule.bookService,
+        )
+    }
 
     val noteDataSource: NoteDataSource by lazy { RemoteNoteDataSource() }
 
