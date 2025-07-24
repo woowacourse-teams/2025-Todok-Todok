@@ -5,11 +5,11 @@ import com.example.todoktodok.data.datasource.CommentDataSource
 import com.example.todoktodok.data.datasource.DefaultCommentDataSource
 import com.example.todoktodok.data.datasource.DefaultDiscussionRoomDataSource
 import com.example.todoktodok.data.datasource.DiscussionRoomDataSource
-import com.example.todoktodok.data.datasource.NoteDataSource
 import com.example.todoktodok.data.datasource.RemoteBookDataSource
-import com.example.todoktodok.data.datasource.RemoteNoteDataSource
 import com.example.todoktodok.data.datasource.member.MemberDataSource
 import com.example.todoktodok.data.datasource.member.RemoteMemberDataSource
+import com.example.todoktodok.data.datasource.note.NoteDataSource
+import com.example.todoktodok.data.datasource.note.RemoteNoteDataSource
 
 class DataSourceModule(
     serviceModule: ServiceModule,
