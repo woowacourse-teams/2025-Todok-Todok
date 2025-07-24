@@ -25,7 +25,7 @@ public class BookController {
     @Auth(value = Role.USER)
     @GetMapping("/search")
     public ResponseEntity<List<BookResponse>> search(
-            @RequestParam(value = "keyword", required = false) final String keyword
+            @RequestParam(required = false) final String keyword
     ) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(bookQueryService.search(keyword));

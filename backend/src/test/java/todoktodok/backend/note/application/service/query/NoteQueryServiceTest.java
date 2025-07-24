@@ -1,4 +1,4 @@
-package todoktodok.backend.note.application.service.command;
+package todoktodok.backend.note.application.service.query;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,19 +12,18 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.DatabaseInitializer;
 import todoktodok.backend.InitializerTimer;
-import todoktodok.backend.note.application.dto.request.NoteRequest;
 
 @ActiveProfiles("test")
 @Transactional
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
 @ContextConfiguration(initializers = InitializerTimer.class)
-class NoteCommandServiceTest {
+class NoteQueryServiceTest {
 
     @Autowired
     private DatabaseInitializer databaseInitializer;
 
     @Autowired
-    private NoteCommandService noteCommandService;
+    private NoteQueryService noteQueryService;
 
     @BeforeEach
     void setUp() {
@@ -32,21 +31,23 @@ class NoteCommandServiceTest {
     }
 
     @Test
-    @DisplayName("서재에 없는 도서에 대한 기록을 생성할 경우 예외가 발생한다")
-    void createNoteTest_fail() {
+    @DisplayName("기록 단일 조회 시 내 기록이 아니라면 예외가 발생한다")
+    void validateIsMyNoteTest() {
         // given
         databaseInitializer.setDefaultUserInfo();
-        databaseInitializer.setDefaultBookInfo();
-
-        final NoteRequest noteRequest = new NoteRequest(
-                1L,
-                "DI와 IoC는 스프링의 중요한 개념이다.",
-                "Spring의 동작 원리를 이해하는 데 큰 도움이 됐다."
+        databaseInitializer.setUserInfo(
+                "user2@gmail.com",
+                "user2",
+                "https://image.png",
+                ""
         );
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultShelfInfo();
+        databaseInitializer.setDefaultNoteInfo();
 
         // when - then
-        assertThatThrownBy(() -> noteCommandService.createNote(1L, noteRequest))
+        assertThatThrownBy(() -> noteQueryService.getMyNote(2L, 1L))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("서재 등록한 도서만 기록 가능합니다");
+                .hasMessage("자신의 기록만 조회 가능합니다");
     }
 }

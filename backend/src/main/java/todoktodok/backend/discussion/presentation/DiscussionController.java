@@ -1,6 +1,7 @@
 package todoktodok.backend.discussion.presentation;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
@@ -34,7 +35,7 @@ public class DiscussionController {
     @Auth(value = Role.USER)
     @PostMapping
     public ResponseEntity<Void> createDiscussion(
-            @LoginMember final Long memberId,
+            @Parameter(hidden = true) @LoginMember final Long memberId,
             @RequestBody @Valid final DiscussionRequest discussionRequest
     ) {
         final Long discussionId = discussionCommandService.createDiscussion(memberId, discussionRequest);
@@ -48,7 +49,7 @@ public class DiscussionController {
     @Auth(Role.USER)
     @GetMapping
     public ResponseEntity<List<DiscussionResponse>> getDiscussions(
-            @LoginMember final Long memberId
+            @Parameter(hidden = true) @LoginMember final Long memberId
     ) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(discussionQueryService.getDiscussions(memberId));
@@ -58,7 +59,7 @@ public class DiscussionController {
     @Auth(Role.USER)
     @GetMapping("/{discussionId}")
     public ResponseEntity<DiscussionResponse> getDiscussion(
-            @LoginMember final Long memberId,
+            @Parameter(hidden = true) @LoginMember final Long memberId,
             @PathVariable final Long discussionId
     ) {
         return ResponseEntity.status(HttpStatus.OK)
