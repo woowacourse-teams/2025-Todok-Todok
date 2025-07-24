@@ -1,5 +1,6 @@
 package todoktodok.backend.shelf.presentation;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -26,6 +27,7 @@ public class ShelfController {
     private final ShelfCommandService shelfCommandService;
     private final ShelfQueryService shelfQueryService;
 
+    @Operation(summary = "내 서재 도서 전체 조회 API")
     @Auth(value = Role.USER)
     @GetMapping
     public ResponseEntity<List<BookResponse>> getMyBooks(
@@ -35,6 +37,7 @@ public class ShelfController {
                 .body(shelfQueryService.getMyBooks(memberId));
     }
 
+    @Operation(summary = "내 서재 도서 추가 API")
     @Auth(value = Role.USER)
     @PostMapping
     public ResponseEntity<BookResponse> addBook(

@@ -17,13 +17,12 @@ import org.hibernate.annotations.SQLRestriction;
 import todoktodok.backend.global.common.TimeStamp;
 
 @Getter
-@Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 
 @Entity
 @SQLRestriction("deleted_at is NULL")
-@SQLDelete(sql = "UPDATE member SET deleted_at = NOW() WHERE id = ?")
+@SQLDelete(sql = "UPDATE member_report SET deleted_at = NOW() WHERE id = ?")
 public class MemberReport extends TimeStamp {
 
     @Id
@@ -37,4 +36,14 @@ public class MemberReport extends TimeStamp {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private Member target;
+
+    @Builder
+    public static MemberReport create(
+            final Member member,
+            final Member target
+    ){
+        return new MemberReport(
+                null, member, target
+        );
+    }
 }

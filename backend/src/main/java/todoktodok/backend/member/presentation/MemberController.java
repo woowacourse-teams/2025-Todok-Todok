@@ -1,5 +1,6 @@
 package todoktodok.backend.member.presentation;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,7 @@ public class MemberController {
 
     private final MemberCommandService memberCommandService;
 
+    @Operation(summary = "로그인 API")
     @Auth(value = Role.GUEST)
     @PostMapping("/login")
     public ResponseEntity<Void> login(
@@ -34,6 +36,7 @@ public class MemberController {
                 .build();
     }
 
+    @Operation(summary = "회원가입 API")
     @Auth(value = Role.TEMP_USER)
     @PostMapping("/signup")
     public ResponseEntity<Void> signup(
@@ -45,6 +48,7 @@ public class MemberController {
                 .build();
     }
 
+    @Operation(summary = "작성자 차단 API")
     @Auth(value = Role.USER)
     @PostMapping("/{id}/block")
     public ResponseEntity<Void> block(
@@ -56,6 +60,7 @@ public class MemberController {
                 .build();
     }
 
+    @Operation(summary = "작성자 신고 API")
     @Auth(value = Role.USER)
     @PostMapping("/{id}/report")
     public ResponseEntity<Void> report(
