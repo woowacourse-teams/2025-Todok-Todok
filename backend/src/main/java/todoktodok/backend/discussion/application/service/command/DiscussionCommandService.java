@@ -63,7 +63,10 @@ public class DiscussionCommandService {
         discussionReportRepository.save(discussionReport);
     }
 
-    private void validateDuplicatedReport(final Discussion discussion, final Member member) {
+    private void validateDuplicatedReport(
+            final Discussion discussion,
+            final Member member
+    ) {
         if (discussionReportRepository.existsByDiscussionAndMember(discussion, member)) {
             throw new IllegalArgumentException("이미 신고한 토론방입니다");
         }
