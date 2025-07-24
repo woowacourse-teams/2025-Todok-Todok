@@ -1,6 +1,7 @@
-package com.example.todoktodok.data.datasource
+package com.example.todoktodok.data.datasource.book
 
 import com.example.domain.model.Book
+import com.example.todoktodok.data.datasource.book.BookDataSource
 import com.example.todoktodok.data.network.request.SaveBookRequest
 import com.example.todoktodok.data.network.response.BookResponse
 import com.example.todoktodok.data.network.service.BookService
@@ -11,20 +12,16 @@ class RemoteBookDataSource(
     private val bookService: BookService,
 ) : BookDataSource {
     override suspend fun fetchBooks(): List<Book> =
-        libraryService.fetchBooks(token).map { bookResponse: BookResponse ->
+        libraryService.fetchBooks().map { bookResponse: BookResponse ->
             bookResponse.toDomain()
         }
 
     override suspend fun fetchBooks(searchInput: String): List<Book> =
         bookService
-            .fetchBooks(token, searchInput)
+            .fetchBooks(searchInput)
             .map { bookResponse: BookResponse -> bookResponse.toDomain() }
 
     override suspend fun saveBook(bookId: Long) {
-        libraryService.saveBook(token, SaveBookRequest(bookId))
-    }
-
-    companion object {
-        val token = "Bearer"
+        libraryService.saveBook(SaveBookRequest(bookId))
     }
 }

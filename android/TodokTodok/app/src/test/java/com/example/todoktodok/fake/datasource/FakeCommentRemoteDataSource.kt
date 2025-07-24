@@ -1,6 +1,6 @@
 package com.example.todoktodok.fake.datasource
 
-import com.example.todoktodok.data.datasource.CommentRemoteDataSource
+import com.example.todoktodok.data.datasource.comment.CommentRemoteDataSource
 import com.example.todoktodok.data.network.request.CommentRequest
 import com.example.todoktodok.data.network.response.comment.CommentResponse
 import com.example.todoktodok.data.network.response.discussion.MemberResponse

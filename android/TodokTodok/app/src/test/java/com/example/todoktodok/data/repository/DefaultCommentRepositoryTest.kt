@@ -3,7 +3,7 @@ package com.example.todoktodok.data.repository
 import com.example.domain.model.Comment
 import com.example.domain.model.member.Nickname
 import com.example.domain.model.member.User
-import com.example.todoktodok.data.datasource.CommentRemoteDataSource
+import com.example.todoktodok.data.datasource.comment.CommentRemoteDataSource
 import com.example.todoktodok.fake.datasource.FakeCommentRemoteDataSource
 import com.example.todoktodok.fixture.COMMENTS
 import kotlinx.coroutines.test.runTest

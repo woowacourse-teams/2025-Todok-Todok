@@ -2,7 +2,6 @@ package com.example.todoktodok.data.repository
 
 import com.example.domain.model.Book
 import com.example.domain.repository.BookRepository
-import com.example.todoktodok.data.datasource.book.BookDataSource
 import com.example.todoktodok.fake.datasource.FakeBookDataSource
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
