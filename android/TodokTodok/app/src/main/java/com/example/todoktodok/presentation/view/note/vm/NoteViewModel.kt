@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.domain.model.Book
 import com.example.domain.model.Books
 import com.example.domain.repository.BookRepository
 import com.example.domain.repository.NoteRepository
@@ -67,13 +68,13 @@ class NoteViewModel(
         }
     }
 
-    private fun sendShowBooksEvent(books: Books) {
+    private fun sendShowBooksEvent(books: List<Book>) {
         val parcelables = mapToParcelableBook(books)
         onUiEvent(NoteUiEvent.ShowOwnBooks(parcelables))
     }
 
-    private fun mapToParcelableBook(books: Books): List<SerializationBook> =
-        books.items.map {
+    private fun mapToParcelableBook(books: List<Book>): List<SerializationBook> =
+        books.map {
             SerializationBook(
                 id = it.id,
                 title = it.title,

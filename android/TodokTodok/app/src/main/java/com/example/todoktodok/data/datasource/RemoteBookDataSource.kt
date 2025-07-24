@@ -22,7 +22,6 @@ class RemoteBookDataSource(
             .map { bookResponse: BookResponse -> bookResponse.toDomain() }
 
     override suspend fun saveBook(bookId: Long) {
-        Log.d("test", "호출1")
         libraryService.saveBook(token, SaveBookRequest(bookId))
     }
 
