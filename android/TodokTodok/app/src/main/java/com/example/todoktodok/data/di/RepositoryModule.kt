@@ -23,7 +23,7 @@ class RepositoryModule(
 
     val noteRepository: NoteRepository by lazy { DefaultNoteRepository(dataSourceModule.noteDataSource) }
 
-    val commentRepository: CommentRepository by lazy { DefaultCommentRepository(dataSourceModule.commentDataSource) }
+    val commentRepository: CommentRepository by lazy { DefaultCommentRepository(dataSourceModule.commentRemoteDataSource) }
 
     val memberRepository: MemberRepository by lazy { DefaultMemberRepository(dataSourceModule.remoteMemberDataSource) }
 }
