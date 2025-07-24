@@ -38,11 +38,12 @@ class LibraryFragment : Fragment(R.layout.fragment_library) {
         }
     }
 
-    private val startActivity = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            viewModel.loadBooks()
+    private val startActivity =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult(),
+        ) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                viewModel.loadBooks()
+            }
         }
-    }
 }
