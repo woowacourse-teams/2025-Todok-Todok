@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">TodokTodok</string>
+    <string name="app_name_kr">토독토독</string>
     <string name="all_note">기록</string>
     <string name="all_discussion">토론</string>
     <string name="all_library">내 서재</string>
@@ -28,4 +29,12 @@
 
     <!-- 내 서재 페이지 -->
     <string name="content_description_navigate_to_book_search">도서 검색 화면으로 이동합니다</string>
+
+    <!-- 로그인 페이지 -->
+    <string name="login_fail_to_login">로그인에 실패했어요. 다시 시도해주세요</string>
+
+    <!-- 닉네임 입력 페이지 -->
+    <string name="complete_nickname_text">닉네임 설정</string>
+    <string name="complete_nickname_btn_text">가입하기</string>
+    <string name="complete_nickname_et_hint">닉네임을 입력해주세요</string>
 </resources>
