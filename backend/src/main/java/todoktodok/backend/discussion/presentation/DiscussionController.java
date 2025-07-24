@@ -70,7 +70,7 @@ public class DiscussionController {
     @Auth(Role.USER)
     @PostMapping("/{discussionId}/report")
     public ResponseEntity<Void> report(
-            @LoginMember final Long memberId,
+            @Parameter(hidden = true) @LoginMember final Long memberId,
             @PathVariable final Long discussionId
     ) {
         discussionCommandService.report(memberId, discussionId);
