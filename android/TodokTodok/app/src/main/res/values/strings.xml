@@ -11,6 +11,7 @@
     <string name="book_image">책 이미지입니다</string>
     <string name="all_opinion">의견</string>
     <string name="all_comment">댓글</string>
+    <string name="all_unknown_exception">알 수 없는 오류가 발생했어요</string>
     <string name="date_format_pattern">yyyy년 M월 d일</string>
 
     <!-- 기록 추가 페이지  -->
@@ -57,7 +58,10 @@
     <string name="login_fail_to_login">로그인에 실패했어요. 다시 시도해주세요</string>
 
     <!-- 닉네임 입력 페이지 -->
-    <string name="complete_nickname_text">닉네임 설정</string>
-    <string name="complete_nickname_btn_text">가입하기</string>
-    <string name="complete_nickname_et_hint">닉네임을 입력해주세요</string>
+    <string name="signup_text">닉네임 설정</string>
+    <string name="signup_btn_text">가입하기</string>
+    <string name="signup_et_hint">닉네임을 입력해주세요</string>
+    <string name="signup_invalid_nickname_message_white_space">띄어쓰기를 제거해주세요.</string>
+    <string name="signup_invalid_nickname_message_character">한글, 영문, 숫자만 입력할 수 있어요.</string>
+    <string name="signup_invalid_nickname_message_length">1자 이상 8자 이하로 입력해주세요.</string>
 </resources>

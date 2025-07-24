@@ -3,12 +3,14 @@ package com.example.todoktodok.presentation.view.auth.login
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.todoktodok.App
 import com.example.todoktodok.R
 import com.example.todoktodok.databinding.FragmentLoginBinding
 import com.example.todoktodok.presentation.view.MainActivity
+import com.example.todoktodok.presentation.view.auth.signup.SignUpFragment
 import com.example.todoktodok.presentation.view.auth.vm.AuthViewModel
 import com.example.todoktodok.presentation.view.auth.vm.AuthViewModelFactory
 import com.google.android.material.snackbar.Snackbar
@@ -50,13 +52,21 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
     private fun setUpUiEvent() {
         viewModel.uiEvent.observe(viewLifecycleOwner) {
             when (it) {
-                LoginUiEvent.NavigateToMain -> {
-                    val intent = MainActivity.Intent(requireContext())
-                    startActivity(intent)
-                    requireActivity().finish()
-                }
-                LoginUiEvent.NavigateToSignUp -> TODO()
+                LoginUiEvent.NavigateToMain -> moveToMain()
+                LoginUiEvent.NavigateToSignUp -> moveToSignUp()
             }
+        }
+    }
+
+    private fun moveToMain() {
+        val intent = MainActivity.Intent(requireContext())
+        startActivity(intent)
+        requireActivity().finish()
+    }
+
+    private fun moveToSignUp() {
+        childFragmentManager.commit {
+            replace(R.id.fcv_container, SignUpFragment())
         }
     }
 
