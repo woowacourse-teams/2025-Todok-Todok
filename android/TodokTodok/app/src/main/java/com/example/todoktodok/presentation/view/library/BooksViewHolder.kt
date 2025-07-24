@@ -3,7 +3,6 @@ package com.example.todoktodok.presentation.view.library
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.domain.model.Book
 import com.example.todoktodok.databinding.ItemBookBinding
 import com.example.todoktodok.state.BookState
 

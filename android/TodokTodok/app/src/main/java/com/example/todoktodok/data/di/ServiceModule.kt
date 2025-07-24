@@ -13,9 +13,9 @@ class ServiceModule(
     val noteService: NoteService by lazy {
         retrofit.instance.create(NoteService::class.java)
     }
-
     val discussionService: DiscussionService by lazy {
         retrofit.instance.create(DiscussionService::class.java)
+
     }
 
     val memberService: MemberService by lazy {

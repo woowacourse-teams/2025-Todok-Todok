@@ -26,7 +26,7 @@ class RemoteBookDataSource(
     }
 
     companion object {
-        val token =
-            "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwicm9sZSI6IlVTRVIiLCJleHAiOjE3NTM5NDg1MDh9.cJCjodXTn0Tu5RrWt8fmgL4K9YZwQJpDrjgmnmz5OC0"
+        val token = "Bearer"
+
     }
 }

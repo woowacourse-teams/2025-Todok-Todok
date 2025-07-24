@@ -27,6 +27,21 @@
         app:layout_constraintStart_toStartOf="@id/abl_library"
         app:layout_constraintTop_toTopOf="@id/abl_library" />
 
+    <TextView
+        android:id="@+id/tv_library_list"
+        style="@style/BaseTextStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_x_small"
+        android:layout_marginTop="@dimen/space_large"
+        android:layout_marginBottom="@dimen/space_x_small"
+        android:gravity="start"
+        android:text="@string/library_list"
+        app:layout_constraintTop_toBottomOf="@id/abl_library"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/rv"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv"
         android:layout_width="match_parent"
@@ -35,7 +50,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/abl_library" />
+        app:layout_constraintTop_toBottomOf="@id/tv_library_list" />
 
     <ImageView
         android:id="@+id/iv_library_navigation"
