@@ -1,6 +1,7 @@
 package todoktodok.backend.shelf.presentation;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -31,7 +32,7 @@ public class ShelfController {
     @Auth(value = Role.USER)
     @GetMapping
     public ResponseEntity<List<BookResponse>> getMyBooks(
-            @LoginMember final Long memberId
+            @Parameter(hidden = true) @LoginMember final Long memberId
     ) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(shelfQueryService.getMyBooks(memberId));
@@ -41,7 +42,7 @@ public class ShelfController {
     @Auth(value = Role.USER)
     @PostMapping
     public ResponseEntity<BookResponse> addBook(
-            @LoginMember final Long memberId,
+            @Parameter(hidden = true) @LoginMember final Long memberId,
             @RequestBody @Valid final ShelfRequest shelfRequest
     ) {
         return ResponseEntity.status(HttpStatus.CREATED)

@@ -1,6 +1,7 @@
 package todoktodok.backend.member.presentation;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -52,7 +53,7 @@ public class MemberController {
     @Auth(value = Role.USER)
     @PostMapping("/{memberId}/block")
     public ResponseEntity<Void> block(
-            @LoginMember final Long memberId,
+            @Parameter(hidden = true) @LoginMember final Long memberId,
             @PathVariable("memberId") final Long targetId
     ) {
         memberCommandService.block(memberId, targetId);
@@ -64,7 +65,7 @@ public class MemberController {
     @Auth(value = Role.USER)
     @PostMapping("/{memberId}/report")
     public ResponseEntity<Void> report(
-            @LoginMember final Long memberId,
+            @Parameter(hidden = true) @LoginMember final Long memberId,
             @PathVariable("memberId") final Long targetId
     ) {
         memberCommandService.report(memberId, targetId);
