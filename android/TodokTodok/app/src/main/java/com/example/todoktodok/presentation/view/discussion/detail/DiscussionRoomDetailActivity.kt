@@ -8,6 +8,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.widget.addTextChangedListener
 import com.example.todoktodok.App
 import com.example.todoktodok.R
 import com.example.todoktodok.databinding.ActivityDiscussionRoomDetailBinding
@@ -41,6 +42,7 @@ class DiscussionRoomDetailActivity : AppCompatActivity() {
         setContentView(binding.root)
         setupOnClickAddComment()
         setupOnClickNavigateUp()
+        setupOnChangeComment()
         setupObserve()
     }
 
@@ -80,6 +82,14 @@ class DiscussionRoomDetailActivity : AppCompatActivity() {
         }
     }
 
+    private fun setupOnChangeComment() {
+        with(binding) {
+            etTextCommentContent.addTextChangedListener { editable ->
+                viewModel.onCommentChanged(editable)
+            }
+        }
+    }
+
     private fun setupObserve() {
         viewModel.discussionRoom.observe(this) { value ->
             with(binding) {
@@ -96,6 +106,9 @@ class DiscussionRoomDetailActivity : AppCompatActivity() {
         }
         viewModel.comments.observe(this) { value ->
             adapter.submitList(value)
+        }
+        viewModel.commentText.observe(this) { value ->
+            binding.ivAddComment.isEnabled = value.isNotBlank()
         }
     }
 
