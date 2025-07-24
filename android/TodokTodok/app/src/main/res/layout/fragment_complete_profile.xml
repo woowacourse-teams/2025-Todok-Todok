@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".presentation.view.start.completeprofile.CompleteProfileFragment">
+
+    <TextView
+        android:id="@+id/tv_header"
+        style="@style/DiscussionBookHeader"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_height"
+        android:text="@string/app_name_kr"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_nickname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/complete_nickname_text"
+        style="@style/BaseTextStyle"
+        android:textSize="@dimen/font_size_large"
+        android:layout_marginStart="@dimen/space_3x_large"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_header"
+        app:layout_constraintHorizontal_bias="0" />
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/et_nickname_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/space_x_large"
+        android:layout_marginTop="@dimen/space_small"
+        android:background="@drawable/bg_green_f0_radius_8dp"
+        app:boxBackgroundMode="none"
+        app:cursorColor="@color/black_18"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_nickname">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_book_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="@string/complete_nickname_et_hint"
+            android:maxLines="1"
+            android:textColor="@color/black_18" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/btn_create"
+        style="@style/BasicButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/basic_btn_height"
+        android:layout_marginTop="@dimen/space_small"
+        android:layout_marginHorizontal="@dimen/space_large"
+        android:layout_marginBottom="@dimen/space_small"
+        android:gravity="center"
+        android:text="@string/complete_nickname_btn_text"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
