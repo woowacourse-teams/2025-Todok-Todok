@@ -87,13 +87,19 @@ public class DiscussionCommandService {
         }
     }
 
-    private void validateSelfReport(final Discussion discussion, final Member member) {
+    private void validateSelfReport(
+            final Discussion discussion,
+            final Member member
+    ) {
         if (discussion.isOwnedBy(member)) {
             throw new IllegalArgumentException("자기 자신의 토론방을 신고할 수 없습니다");
         }
     }
 
-    private void validateNoteOwner(final Note note, final Member member) {
+    private void validateNoteOwner(
+            final Note note,
+            final Member member
+    ) {
         if (!note.isOwnedBy(member)) {
             throw new IllegalArgumentException("해당 기록의 소유자만 토론방을 생성할 수 있습니다");
         }
