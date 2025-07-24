@@ -305,3 +305,198 @@ VALUES
 'https://image.aladin.co.kr/product/33030/17/coversum/896626428x_2.jpg',
 CURRENT_TIME,
 CURRENT_TIME);
+
+--유저 1명
+INSERT INTO MEMBER (email, nickname, profile_image, profile_message, created_at, modified_at)
+VALUES
+('chanho680526@gmail.com',
+'페토',
+'https://user.png',
+'페토 상태 메시지 입니다',
+CURRENT_TIME,
+CURRENT_TIME);
+
+INSERT INTO MEMBER (email, nickname, profile_image, profile_message, created_at, modified_at)
+VALUES
+('wondroid.world@gmail.com',
+'모찌',
+'https://user.png',
+'모찌 상태 메시지 입니다',
+CURRENT_TIME,
+CURRENT_TIME);
+
+INSERT INTO MEMBER (email, nickname, profile_image, profile_message, created_at, modified_at)
+VALUES
+('donghyunyoon81@gmail.com',
+'동전',
+'https://user.png',
+'동전 상태 메시지 입니다',
+CURRENT_TIME,
+CURRENT_TIME);
+
+--유저 서재의 도서 목록 3개
+INSERT INTO SHELF (member_id, book_id, created_at, modified_at)
+VALUES
+(1, 1, CURRENT_TIME, CURRENT_TIME);
+
+INSERT INTO SHELF (member_id, book_id, created_at, modified_at)
+VALUES
+(1, 2, CURRENT_TIME, CURRENT_TIME);
+
+INSERT INTO SHELF (member_id, book_id, created_at, modified_at)
+VALUES
+(1, 3, CURRENT_TIME, CURRENT_TIME);
+
+INSERT INTO SHELF (member_id, book_id, created_at, modified_at)
+VALUES
+(2, 1, CURRENT_TIME, CURRENT_TIME);
+
+INSERT INTO SHELF (member_id, book_id, created_at, modified_at)
+VALUES
+(2, 2, CURRENT_TIME, CURRENT_TIME);
+
+INSERT INTO SHELF (member_id, book_id, created_at, modified_at)
+VALUES
+(2, 3, CURRENT_TIME, CURRENT_TIME);
+
+INSERT INTO SHELF (member_id, book_id, created_at, modified_at)
+VALUES
+(3, 1, CURRENT_TIME, CURRENT_TIME);
+
+INSERT INTO SHELF (member_id, book_id, created_at, modified_at)
+VALUES
+(3, 2, CURRENT_TIME, CURRENT_TIME);
+
+INSERT INTO SHELF (member_id, book_id, created_at, modified_at)
+VALUES
+(3, 3, CURRENT_TIME, CURRENT_TIME);
+
+--유저의 기록 3개
+INSERT INTO NOTE (snap, memo, book_id, member_id, created_at, modified_at)
+VALUES
+('코드 재사용을 위해서는 객체 합성이 클래스 상속보다 더 좋은 방법이다.1',
+'변경에 유연하게 대처할 수 있는 설계가 대부분 정답이다.1',
+1,
+1,
+CURRENT_TIME,
+CURRENT_TIME);
+
+INSERT INTO NOTE (snap, memo, book_id, member_id, created_at, modified_at)
+VALUES
+('코드 재사용을 위해서는 객체 합성이 클래스 상속보다 더 좋은 방법이다.2',
+'변경에 유연하게 대처할 수 있는 설계가 대부분 정답이다.2',
+1,
+2,
+CURRENT_TIME,
+CURRENT_TIME);
+
+INSERT INTO NOTE (snap, memo, book_id, member_id, created_at, modified_at)
+VALUES
+('코드 재사용을 위해서는 객체 합성이 클래스 상속보다 더 좋은 방법이다.3',
+'변경에 유연하게 대처할 수 있는 설계가 대부분 정답이다.3',
+1,
+3,
+CURRENT_TIME,
+CURRENT_TIME);
+
+INSERT INTO NOTE (snap, memo, book_id, member_id, created_at, modified_at)
+VALUES
+('코드 재사용을 위해서는 객체 합성이 클래스 상속보다 더 좋은 방법이다.1',
+'변경에 유연하게 대처할 수 있는 설계가 대부분 정답이다.1',
+2,
+1,
+CURRENT_TIME,
+CURRENT_TIME);
+
+INSERT INTO NOTE (snap, memo, book_id, member_id, created_at, modified_at)
+VALUES
+('코드 재사용을 위해서는 객체 합성이 클래스 상속보다 더 좋은 방법이다.2',
+'변경에 유연하게 대처할 수 있는 설계가 대부분 정답이다.2',
+2,
+2,
+CURRENT_TIME,
+CURRENT_TIME);
+
+INSERT INTO NOTE (snap, memo, book_id, member_id, created_at, modified_at)
+VALUES
+('코드 재사용을 위해서는 객체 합성이 클래스 상속보다 더 좋은 방법이다.3',
+'변경에 유연하게 대처할 수 있는 설계가 대부분 정답이다.3',
+2,
+3,
+CURRENT_TIME,
+CURRENT_TIME);
+
+INSERT INTO NOTE (snap, memo, book_id, member_id, created_at, modified_at)
+VALUES
+('코드 재사용을 위해서는 객체 합성이 클래스 상속보다 더 좋은 방법이다.1',
+'변경에 유연하게 대처할 수 있는 설계가 대부분 정답이다.1',
+3,
+1,
+CURRENT_TIME,
+CURRENT_TIME);
+
+INSERT INTO NOTE (snap, memo, book_id, member_id, created_at, modified_at)
+VALUES
+('코드 재사용을 위해서는 객체 합성이 클래스 상속보다 더 좋은 방법이다.2',
+'변경에 유연하게 대처할 수 있는 설계가 대부분 정답이다.2',
+3,
+2,
+CURRENT_TIME,
+CURRENT_TIME);
+
+INSERT INTO NOTE (snap, memo, book_id, member_id, created_at, modified_at)
+VALUES
+('코드 재사용을 위해서는 객체 합성이 클래스 상속보다 더 좋은 방법이다.3',
+'변경에 유연하게 대처할 수 있는 설계가 대부분 정답이다.3',
+3,
+3,
+CURRENT_TIME,
+CURRENT_TIME);
+
+--토론방 3개
+INSERT INTO DISCUSSION (title, content, member_id, book_id, note_id, created_at, modified_at)
+VALUES
+('상속과 조합의 차이',
+'코드 재사용에 있어 조합이 유리하다면, 상속의 목적은 무엇인가요?',
+1, 1, 1,
+CURRENT_TIME,
+CURRENT_TIME);
+
+INSERT INTO DISCUSSION (title, content, member_id, book_id, note_id, created_at, modified_at)
+VALUES
+('상속과 조합의 차이',
+'코드 재사용에 있어 조합이 유리하다면, 상속의 목적은 무엇인가요?',
+2, 1, 1,
+CURRENT_TIME,
+CURRENT_TIME);
+
+INSERT INTO DISCUSSION (title, content, member_id, book_id, note_id, created_at, modified_at)
+VALUES
+('상속과 조합의 차이',
+'코드 재사용에 있어 조합이 유리하다면, 상속의 목적은 무엇인가요?',
+3, 1, 1,
+CURRENT_TIME,
+CURRENT_TIME);
+
+--한 토론방 마다 댓글 0, 1, 2개
+INSERT INTO COMMENT (content, member_id, discussion_id, created_at, modified_at)
+VALUES
+('상속의 핵심 목적은 타입 계층의 구축입니다!',
+1, 2,
+CURRENT_TIME,
+CURRENT_TIME);
+
+INSERT INTO COMMENT (content, member_id, discussion_id, created_at, modified_at)
+VALUES
+('상속의 핵심 목적은 타입 계층의 구축입니다!',
+1, 3,
+CURRENT_TIME,
+CURRENT_TIME);
+
+
+INSERT INTO COMMENT (content, member_id, discussion_id, created_at, modified_at)
+VALUES
+('상속의 핵심 목적은 타입 계층의 구축입니다!',
+2, 3,
+CURRENT_TIME,
+CURRENT_TIME);
