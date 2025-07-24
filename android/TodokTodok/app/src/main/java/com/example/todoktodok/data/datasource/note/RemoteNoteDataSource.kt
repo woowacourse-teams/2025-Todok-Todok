@@ -9,4 +9,6 @@ class RemoteNoteDataSource(
     override suspend fun saveNote(request: NoteRequest) {
         noteService.saveNote(request)
     }
+
+    override suspend fun fetchNotesByBookId(bookId: Long?) = noteService.fetchNotesByBookId(bookId)
 }
