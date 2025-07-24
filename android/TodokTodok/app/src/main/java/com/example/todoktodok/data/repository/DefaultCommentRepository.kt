@@ -8,4 +8,8 @@ class DefaultCommentRepository(
     private val commentDataSource: CommentDataSource,
 ) : CommentRepository {
     override fun getCommentsByDiscussionRoomId(id: Long): List<Comment> = commentDataSource.getCommentsByDiscussionRoomId(id)
+
+    override fun saveComment(comment: Comment) {
+        commentDataSource.saveComment(comment)
+    }
 }

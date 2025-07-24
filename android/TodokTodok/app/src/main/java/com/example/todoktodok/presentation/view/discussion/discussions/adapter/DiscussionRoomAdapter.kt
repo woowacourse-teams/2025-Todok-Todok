@@ -1,9 +1,9 @@
-package com.example.todoktodok.presentation.view.discussion.adapter
+package com.example.todoktodok.presentation.view.discussion.discussions.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.example.domain.model.DiscussionRoom
-import com.example.todoktodok.presentation.view.discussion.adapter.DiscussionRoomViewHolder.Companion.DiscussionRoomViewHolder
+import com.example.todoktodok.presentation.view.discussion.discussions.adapter.DiscussionRoomViewHolder.Companion.DiscussionRoomViewHolder
 
 class DiscussionRoomAdapter(
     private val navigateDiscussionRoomClick: OnDiscussionRoomListener,

@@ -1,4 +1,4 @@
-package com.example.todoktodok.presentation.view.discussion.adapter
+package com.example.todoktodok.presentation.view.discussion.discussions.adapter
 
 import androidx.recyclerview.widget.DiffUtil
 import com.example.domain.model.DiscussionRoom

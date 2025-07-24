@@ -1,4 +1,4 @@
-package com.example.todoktodok.presentation.view.discussion.adapter
+package com.example.todoktodok.presentation.view.discussion.discussions.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
