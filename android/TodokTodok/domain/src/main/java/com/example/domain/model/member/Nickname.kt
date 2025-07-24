@@ -6,7 +6,12 @@ value class Nickname(
 ) {
     init {
         if (value.any { it == ' ' }) throw NickNameException.InvalidWhiteSpace
-        require(value.all { it.isLetterOrDigit() && (it in '가'..'힣' || it in 'a'..'z' || it in 'A'..'Z' || it.isDigit()) })
-        require(value.length in 1..8)
+        if (!value.all { it in '가'..'힣' || it.isLetterOrDigit() }) throw NickNameException.InvalidCharacters
+        if (value.length !in MIN_LENGTH..MAX_LENGTH) throw NickNameException.InvalidLength
+    }
+
+    companion object {
+        private const val MIN_LENGTH = 1
+        private const val MAX_LENGTH = 8
     }
 }
