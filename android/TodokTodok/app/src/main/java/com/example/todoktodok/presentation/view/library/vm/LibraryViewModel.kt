@@ -18,7 +18,7 @@ class LibraryViewModel(
         loadBooks()
     }
 
-    private fun loadBooks() {
+    fun loadBooks() {
         viewModelScope.launch {
             _books.value = bookRepository.getBooks()
         }

@@ -17,10 +17,10 @@ data class BookState(
     ) = Glide.with(context).load(image).into(imageView)
 }
 
-fun BookState.toDomain(): Book = Book(
-    id = id,
-    title = title,
-    author = author,
-    image = image,
-
+fun BookState.toDomain(): Book =
+    Book(
+        id = id,
+        title = title,
+        author = author,
+        image = image,
     )
