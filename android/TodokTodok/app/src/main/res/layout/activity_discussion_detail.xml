@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:paddingLeft="@dimen/space_x_large"
     android:paddingRight="@dimen/space_x_large"
-    tools:context=".presentation.view.discussion.detail.DiscussionRoomDetailActivity">
+    tools:context=".presentation.view.discussion.detail.DiscussionDetailActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/abl_discussion_detail"
@@ -17,10 +17,10 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/iv_discussion_room_detail_back"
+        android:id="@+id/iv_discussion_detail_back"
         android:layout_width="@dimen/space_2x_large"
         android:layout_height="@dimen/space_2x_large"
-        android:contentDescription="@string/content_description_discussion_room_detail_back"
+        android:contentDescription="@string/content_description_discussion_detail_back"
         android:src="@drawable/btn_back"
         app:layout_constraintBottom_toBottomOf="@id/abl_discussion_detail"
         app:layout_constraintStart_toStartOf="@id/abl_discussion_detail"
@@ -48,25 +48,25 @@
         tools:text="오브젝트" />
 
     <TextView
-        android:id="@+id/tv_discussion_room_title"
+        android:id="@+id/tv_discussion_title"
         style="@style/DiscussionDetailTitle"
         android:layout_width="@dimen/space_2x_small"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toStartOf="@id/tv_discussion_room_report"
+        app:layout_constraintEnd_toStartOf="@id/tv_discussion_report"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_book_title"
         tools:text="캡슐화 왜함?" />
 
     <TextView
-        android:id="@+id/tv_discussion_room_report"
+        android:id="@+id/tv_discussion_report"
         style="@style/DiscussionDetailSubContent"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/item_discussion_detail_meta_line_height"
         android:gravity="center"
         android:text="@string/all_report"
-        app:layout_constraintBottom_toBottomOf="@id/tv_discussion_room_title"
+        app:layout_constraintBottom_toBottomOf="@id/tv_discussion_title"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/tv_discussion_room_title"
+        app:layout_constraintStart_toEndOf="@id/tv_discussion_title"
         app:layout_constraintTop_toBottomOf="@id/tv_book_title" />
 
     <TextView
@@ -76,11 +76,11 @@
         android:layout_height="@dimen/item_discussion_detail_meta_line_height"
         android:gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_discussion_room_title"
+        app:layout_constraintTop_toBottomOf="@id/tv_discussion_title"
         tools:text="코드마스터 · 2024년 7월 20일" />
 
     <TextView
-        android:id="@+id/tv_discussion_room_note"
+        android:id="@+id/tv_discussion_note"
         style="@style/DiscussionDetailContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -88,7 +88,7 @@
         tools:text="캡슐화는 객체의 내부 상태와 데이터를 외부에서 직접 접근하지 못하도록 보호하는 것을 의미다." />
 
     <TextView
-        android:id="@+id/tv_discussion_room_opinion_title"
+        android:id="@+id/tv_discussion_opinion_title"
         style="@style/DiscussionDetailSubTitle"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/item_discussion_detail_meta_line_height"
@@ -96,14 +96,14 @@
         android:layout_marginTop="@dimen/space_x_small"
         android:text="@string/all_opinion"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_discussion_room_note" />
+        app:layout_constraintTop_toBottomOf="@id/tv_discussion_note" />
 
     <TextView
-        android:id="@+id/tv_discussion_room_opinion"
+        android:id="@+id/tv_discussion_opinion"
         style="@style/DiscussionDetailContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/tv_discussion_room_opinion_title"
+        app:layout_constraintTop_toBottomOf="@id/tv_discussion_opinion_title"
         tools:text="캡슐화를 하면 데이터를 보호할 수 있다는 것에는 동의하는데, 실제로 완벽히 캡슐화가 되는 지는 의문입니다.getter/setter 메서드를 통해 객체 내부의 데이터가 외부로 드러나는 것은 캡슐화가 잘 된 것이 맞을까요?" />
 
     <View
@@ -113,7 +113,7 @@
         android:layout_marginHorizontal="6dp"
         android:layout_marginTop="@dimen/space_large"
         android:background="@drawable/div_comment"
-        app:layout_constraintTop_toBottomOf="@id/tv_discussion_room_opinion" />
+        app:layout_constraintTop_toBottomOf="@id/tv_discussion_opinion" />
 
     <TextView
         android:id="@+id/tv_comment_title"

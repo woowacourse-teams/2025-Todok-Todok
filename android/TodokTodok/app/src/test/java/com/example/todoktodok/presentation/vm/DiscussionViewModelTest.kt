@@ -2,8 +2,8 @@ package com.example.todoktodok.presentation.vm
 
 import com.example.todoktodok.InstantTaskExecutorExtension
 import com.example.todoktodok.ext.getOrAwaitValue
-import com.example.todoktodok.fake.FakeDiscussionRoomRepository
-import com.example.todoktodok.fixture.DISCUSSION_ROOMS
+import com.example.todoktodok.fake.FakeDiscussionRepository
+import com.example.todoktodok.fixture.DISCUSSIONS
 import com.example.todoktodok.presentation.view.discussion.discussions.DiscussionUiEvent
 import com.example.todoktodok.presentation.view.discussion.discussions.vm.DiscussionViewModel
 import org.assertj.core.api.Assertions.assertThat
@@ -17,33 +17,33 @@ class DiscussionViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        discussionViewModel = DiscussionViewModel(FakeDiscussionRoomRepository())
+        discussionViewModel = DiscussionViewModel(FakeDiscussionRepository())
     }
 
     @Test
     fun `저장소에서 불러온 토론방 목록으로 값을 초기화 한다`() {
         // given
-        val expected = DISCUSSION_ROOMS
+        val expected = DISCUSSIONS
         // then
-        assertThat(discussionViewModel.discussionRooms.getOrAwaitValue()).isEqualTo(expected)
+        assertThat(discussionViewModel.discussions.getOrAwaitValue()).isEqualTo(expected)
     }
 
     @Test
-    fun `UiEvent를 NavigateAddDiscussionRoom으로 변경한다`() {
+    fun `UiEvent를 NavigateAddDiscussion으로 변경한다`() {
         // given
-        val expected = DiscussionUiEvent.NavigateToAddDiscussionRoom
+        val expected = DiscussionUiEvent.NavigateToAddDiscussion
         // when
-        discussionViewModel.onUiEvent(DiscussionUiEvent.NavigateToAddDiscussionRoom)
+        discussionViewModel.onUiEvent(DiscussionUiEvent.NavigateToAddDiscussion)
         // then
         assertThat(discussionViewModel.uiEvent.getOrAwaitValue()).isEqualTo(expected)
     }
 
     @Test
-    fun `UiEvent를 NavigateDiscussionRoom으로 변경한다`() {
+    fun `UiEvent를 NavigateDiscussion으로 변경한다`() {
         // given
-        val expected = DiscussionUiEvent.NavigateToDiscussionRoomDetail(1)
+        val expected = DiscussionUiEvent.NavigateToDiscussionDetail(1)
         // when
-        discussionViewModel.onUiEvent(DiscussionUiEvent.NavigateToDiscussionRoomDetail(1))
+        discussionViewModel.onUiEvent(DiscussionUiEvent.NavigateToDiscussionDetail(1))
         // then
         assertThat(discussionViewModel.uiEvent.getOrAwaitValue()).isEqualTo(expected)
     }

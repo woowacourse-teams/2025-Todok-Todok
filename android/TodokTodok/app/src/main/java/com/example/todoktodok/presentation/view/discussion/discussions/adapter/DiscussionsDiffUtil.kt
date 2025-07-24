@@ -1,17 +1,17 @@
 package com.example.todoktodok.presentation.view.discussion.discussions.adapter
 
 import androidx.recyclerview.widget.DiffUtil
-import com.example.domain.model.DiscussionRoom
+import com.example.domain.model.Discussion
 
-val discussionRoomsDiffUtil =
-    object : DiffUtil.ItemCallback<DiscussionRoom>() {
+val discussionsDiffUtil =
+    object : DiffUtil.ItemCallback<Discussion>() {
         override fun areItemsTheSame(
-            oldItem: DiscussionRoom,
-            newItem: DiscussionRoom,
+            oldItem: Discussion,
+            newItem: Discussion,
         ): Boolean = oldItem.id == newItem.id
 
         override fun areContentsTheSame(
-            oldItem: DiscussionRoom,
-            newItem: DiscussionRoom,
+            oldItem: Discussion,
+            newItem: Discussion,
         ): Boolean = oldItem == newItem
     }
