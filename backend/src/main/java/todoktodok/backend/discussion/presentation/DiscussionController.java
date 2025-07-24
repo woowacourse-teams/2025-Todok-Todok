@@ -65,6 +65,19 @@ public class DiscussionController {
                 .body(discussionQueryService.getDiscussion(memberId, discussionId));
     }
 
+    @Operation(summary = "토론방 신고 API")
+    @Auth(Role.USER)
+    @PostMapping("/{discussionId}/report")
+    public ResponseEntity<Void> report(
+            @LoginMember final Long memberId,
+            @PathVariable final Long discussionId
+    ) {
+        discussionCommandService.report(memberId, discussionId);
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .build();
+    }
+
     private URI createUri(final Long id) {
         return ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
