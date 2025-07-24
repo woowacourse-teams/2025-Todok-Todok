@@ -12,7 +12,6 @@ import todoktodok.backend.member.domain.repository.MemberRepository;
 import todoktodok.backend.note.application.dto.response.MyNoteResponse;
 import todoktodok.backend.note.domain.Note;
 import todoktodok.backend.note.domain.repository.NoteRepository;
-import todoktodok.backend.shelf.domain.repository.ShelfRepository;
 
 @Service
 @Transactional(readOnly = true)
@@ -22,7 +21,6 @@ public class NoteQueryService {
     private final NoteRepository noteRepository;
     private final MemberRepository memberRepository;
     private final BookRepository bookRepository;
-    private final ShelfRepository shelfRepository;
 
     public List<MyNoteResponse> getMyNotes(
             final Long memberId,
