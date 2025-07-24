@@ -68,6 +68,10 @@ public class Discussion extends TimeStamp {
         return new Discussion(null, title, content, member, book, note);
     }
 
+    public boolean isOwnedBy(final Member member) {
+        return this.member.equals(member);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
