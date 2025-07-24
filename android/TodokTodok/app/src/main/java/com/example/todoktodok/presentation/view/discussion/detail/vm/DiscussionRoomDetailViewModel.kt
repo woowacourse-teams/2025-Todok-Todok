@@ -28,6 +28,9 @@ class DiscussionRoomDetailViewModel(
     private val _comments = MutableLiveData<List<Comment>>(emptyList())
     val comments: LiveData<List<Comment>> = _comments
 
+    private val _commentText = MutableLiveData("")
+    val commentText: LiveData<String> = _commentText
+
     private val _uiEvent = MutableSingleLiveData<DiscussionRoomDetailUiEvent>()
     val uiEvent: SingleLiveData<DiscussionRoomDetailUiEvent> = _uiEvent
 
@@ -54,12 +57,16 @@ class DiscussionRoomDetailViewModel(
         commentRepository.saveComment(comment)
     }
 
+    fun onCommentChanged(text: CharSequence?) {
+        _commentText.value = text?.toString() ?: ""
+    }
+
     private fun loadDiscussionRoom() {
         _discussionRoom.value =
             discussionRoomRepository.getDiscussionRoom(discussionRoomId).getOrNull()
     }
 
-    private fun loadComments() {
+    fun loadComments() {
         _comments.value = commentRepository.getCommentsByDiscussionRoomId(discussionRoomId)
     }
 

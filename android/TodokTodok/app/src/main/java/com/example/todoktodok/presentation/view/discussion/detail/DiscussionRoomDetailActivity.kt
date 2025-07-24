@@ -3,15 +3,16 @@ package com.example.todoktodok.presentation.view.discussion.detail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.widget.addTextChangedListener
 import com.example.todoktodok.App
 import com.example.todoktodok.R
 import com.example.todoktodok.databinding.ActivityDiscussionRoomDetailBinding
+import com.example.todoktodok.presentation.view.discussion.detail.adapter.CommentAdapter
 import com.example.todoktodok.presentation.view.discussion.detail.vm.DiscussionRoomDetailViewModel
 import com.example.todoktodok.presentation.view.discussion.detail.vm.DiscussionRoomDetailViewModel.Companion.KEY_DISCUSSION_ID
 import com.example.todoktodok.presentation.view.discussion.detail.vm.DiscussionRoomDetailViewModelFactory
@@ -20,6 +21,7 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 class DiscussionRoomDetailActivity : AppCompatActivity() {
+    private val adapter by lazy { CommentAdapter() }
     private val viewModel by viewModels<DiscussionRoomDetailViewModel> {
         val repositoryModule = (application as App).container.repositoryModule
         DiscussionRoomDetailViewModelFactory(
@@ -36,10 +38,12 @@ class DiscussionRoomDetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initView()
+        initAdapter()
         setContentView(binding.root)
-        setupObserve()
         setupOnClickAddComment()
         setupOnClickNavigateUp()
+        setupOnChangeComment()
+        setupObserve()
     }
 
     private fun initView() {
@@ -54,6 +58,10 @@ class DiscussionRoomDetailActivity : AppCompatActivity() {
             )
             insets
         }
+    }
+
+    private fun initAdapter() {
+        binding.rvComments.adapter = adapter
     }
 
     private fun setupOnClickAddComment() {
@@ -74,6 +82,14 @@ class DiscussionRoomDetailActivity : AppCompatActivity() {
         }
     }
 
+    private fun setupOnChangeComment() {
+        with(binding) {
+            etTextCommentContent.addTextChangedListener { editable ->
+                viewModel.onCommentChanged(editable)
+            }
+        }
+    }
+
     private fun setupObserve() {
         viewModel.discussionRoom.observe(this) { value ->
             with(binding) {
@@ -87,6 +103,12 @@ class DiscussionRoomDetailActivity : AppCompatActivity() {
         }
         viewModel.uiEvent.observe(this) { value ->
             handleEvent(value)
+        }
+        viewModel.comments.observe(this) { value ->
+            adapter.submitList(value)
+        }
+        viewModel.commentText.observe(this) { value ->
+            binding.ivAddComment.isEnabled = value.isNotBlank()
         }
     }
 
@@ -106,12 +128,7 @@ class DiscussionRoomDetailActivity : AppCompatActivity() {
             DiscussionRoomDetailUiEvent.NavigateUp -> onBackPressedDispatcher.onBackPressed()
             is DiscussionRoomDetailUiEvent.AddComment -> {
                 viewModel.addComment(LocalDateTime.now(), discussionRoomDetailUiEvent.content)
-                Toast
-                    .makeText(
-                        this,
-                        "댓글:${discussionRoomDetailUiEvent.content}",
-                        Toast.LENGTH_SHORT,
-                    ).show()
+                viewModel.loadComments()
             }
         }
     }

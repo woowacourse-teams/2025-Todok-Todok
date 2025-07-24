@@ -7,6 +7,7 @@
     <string name="all_library">내 서재</string>
     <string name="all_book_search">도서 검색</string>
     <string name="all_report">신고</string>
+    <string name="all_report_or_block">신고/차단</string>
     <string name="book_image">책 이미지입니다</string>
     <string name="all_opinion">의견</string>
     <string name="all_comment">댓글</string>
