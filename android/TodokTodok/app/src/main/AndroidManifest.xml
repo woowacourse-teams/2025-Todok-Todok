@@ -15,8 +15,8 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".presentation.view.discussion.create.DiscussionRoomCreateActivity"
-            android:exported="false" />
+            android:name=".presentation.view.start.AuthActivity"
+            android:exported="true" />
         <activity
             android:name=".presentation.view.discussion.detail.DiscussionRoomDetailActivity"
             android:exported="false" />
@@ -25,14 +25,12 @@
             android:exported="false" />
         <activity
             android:name=".presentation.view.MainActivity"
-            android:exported="true"
-            android:windowSoftInputMode="adjustPan">
+            android:windowSoftInputMode="adjustPan"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>
-
 </manifest>
