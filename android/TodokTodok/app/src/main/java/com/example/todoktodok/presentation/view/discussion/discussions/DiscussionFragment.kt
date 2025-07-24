@@ -7,20 +7,20 @@ import androidx.fragment.app.viewModels
 import com.example.todoktodok.App
 import com.example.todoktodok.R
 import com.example.todoktodok.databinding.FragmentDiscussionBinding
-import com.example.todoktodok.presentation.view.discussion.create.DiscussionRoomCreateActivity
-import com.example.todoktodok.presentation.view.discussion.detail.DiscussionRoomDetailActivity
-import com.example.todoktodok.presentation.view.discussion.discussions.adapter.DiscussionRoomAdapter
+import com.example.todoktodok.presentation.view.discussion.create.DiscussionCreateActivity
+import com.example.todoktodok.presentation.view.discussion.detail.DiscussionDetailActivity
+import com.example.todoktodok.presentation.view.discussion.discussions.adapter.DiscussionAdapter
 import com.example.todoktodok.presentation.view.discussion.discussions.vm.DiscussionViewModel
 import com.example.todoktodok.presentation.view.discussion.discussions.vm.DiscussionViewModelFactory
 
 class DiscussionFragment : Fragment(R.layout.fragment_discussion) {
     private val viewModel: DiscussionViewModel by viewModels {
         val container = (requireActivity().application as App).container
-        DiscussionViewModelFactory(container.repositoryModule.discussionRoomRepository)
+        DiscussionViewModelFactory(container.repositoryModule.discussionRepository)
     }
     private val adapter by lazy {
-        DiscussionRoomAdapter { id ->
-            viewModel.onUiEvent(DiscussionUiEvent.NavigateToDiscussionRoomDetail(id))
+        DiscussionAdapter { id ->
+            viewModel.onUiEvent(DiscussionUiEvent.NavigateToDiscussionDetail(id))
         }
     }
 
@@ -30,14 +30,14 @@ class DiscussionFragment : Fragment(R.layout.fragment_discussion) {
     ) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentDiscussionBinding.bind(view)
-        binding.rvDiscussionRooms.adapter = adapter
+        binding.rvDiscussions.adapter = adapter
         setupObservers()
         setupOnClick(binding)
     }
 
     private fun setupObservers() {
-        viewModel.discussionRooms.observe(viewLifecycleOwner) { discussionRooms ->
-            adapter.submitList(discussionRooms)
+        viewModel.discussions.observe(viewLifecycleOwner) { discussions ->
+            adapter.submitList(discussions)
         }
         viewModel.uiEvent.observe(viewLifecycleOwner) { discussionUiEvent ->
             handleEvent(discussionUiEvent)
@@ -45,26 +45,25 @@ class DiscussionFragment : Fragment(R.layout.fragment_discussion) {
     }
 
     private fun setupOnClick(binding: FragmentDiscussionBinding) {
-        binding.ivAddDiscussionRoom.setOnClickListener {
-            viewModel.onUiEvent(DiscussionUiEvent.NavigateToAddDiscussionRoom)
+        binding.ivAddDiscussion.setOnClickListener {
+            viewModel.onUiEvent(DiscussionUiEvent.NavigateToAddDiscussion)
         }
     }
 
     private fun handleEvent(discussionUiEvent: DiscussionUiEvent) {
         when (discussionUiEvent) {
-            DiscussionUiEvent.NavigateToAddDiscussionRoom ->
-                {
-                    val intent = DiscussionRoomCreateActivity.Intent(requireActivity())
-                    startActivity(intent)
-                }
+            DiscussionUiEvent.NavigateToAddDiscussion -> {
+                val intent = DiscussionCreateActivity.Intent(requireActivity())
+                startActivity(intent)
+            }
 
-            is DiscussionUiEvent.NavigateToDiscussionRoomDetail ->
-                navigateToDiscussionRoomDetail(discussionUiEvent.discussionRoomId)
+            is DiscussionUiEvent.NavigateToDiscussionDetail ->
+                navigateToDiscussionDetail(discussionUiEvent.discussionId)
         }
     }
 
-    private fun navigateToDiscussionRoomDetail(discussionRoomId: Long) {
-        val intent = DiscussionRoomDetailActivity.Intent(requireContext(), discussionRoomId)
+    private fun navigateToDiscussionDetail(discussionId: Long) {
+        val intent = DiscussionDetailActivity.Intent(requireContext(), discussionId)
         startActivity(intent)
     }
 }

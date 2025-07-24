@@ -18,7 +18,7 @@
             android:name=".presentation.view.start.AuthActivity"
             android:exported="true" />
         <activity
-            android:name=".presentation.view.discussion.detail.DiscussionRoomDetailActivity"
+            android:name=".presentation.view.discussion.detail.DiscussionDetailActivity"
             android:exported="false" />
         <activity
             android:name=".presentation.view.searchbooks.SearchBooksActivity"

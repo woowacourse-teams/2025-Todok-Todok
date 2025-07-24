@@ -1,14 +1,14 @@
 package com.example.todoktodok.fixture
 
 import com.example.domain.model.Book
-import com.example.domain.model.DiscussionRoom
+import com.example.domain.model.Discussion
 import com.example.domain.model.member.Nickname
 import com.example.domain.model.member.User
 import java.time.LocalDateTime
 
-val DISCUSSION_ROOMS =
+val DISCUSSION =
     listOf(
-        DiscussionRoom(
+        Discussion(
             id = 1L,
             discussionTitle = "JPA 성능 최적화",
             book = Book(1L, "자바 ORM 표준 JPA 프로그래밍", "김영한", ""),
@@ -17,7 +17,7 @@ val DISCUSSION_ROOMS =
             snap = "왜 해야함",
             discussionOpinion = "fetch join을 남발하면 안됩니다.",
         ),
-        DiscussionRoom(
+        Discussion(
             id = 2L,
             discussionTitle = "코틀린 코루틴 완전 정복",
             book = Book(2L, "Kotlin in Action", "Dmitry Jemerov", ""),
@@ -26,7 +26,7 @@ val DISCUSSION_ROOMS =
             snap = "비동기 처리 어떻게?",
             discussionOpinion = "suspend fun과 launch 차이를 이해해야 합니다.",
         ),
-        DiscussionRoom(
+        Discussion(
             id = 3L,
             discussionTitle = "MVVM 구조 제대로 이해하기",
             book = Book(3L, "안드로이드 아키텍처 가이드", "구글", ""),
@@ -35,7 +35,7 @@ val DISCUSSION_ROOMS =
             snap = "ViewModel 왜 씀?",
             discussionOpinion = "UI와 로직을 분리해 유지보수가 쉬워집니다.",
         ),
-        DiscussionRoom(
+        Discussion(
             id = 4L,
             discussionTitle = "클린 코드란 무엇인가?",
             book = Book(4L, "Clean Code", "Robert C. Martin", ""),
@@ -44,7 +44,7 @@ val DISCUSSION_ROOMS =
             snap = "왜 깔끔해야 하나요",
             discussionOpinion = "의도를 드러내는 코드가 중요합니다.",
         ),
-        DiscussionRoom(
+        Discussion(
             id = 5L,
             discussionTitle = "디자인 패턴 다시 보기",
             book = Book(5L, "Head First Design Patterns", "Eric Freeman", ""),
@@ -53,7 +53,7 @@ val DISCUSSION_ROOMS =
             snap = "싱글턴 또 봐?",
             discussionOpinion = "상황에 맞는 패턴 선택이 중요합니다.",
         ),
-        DiscussionRoom(
+        Discussion(
             id = 6L,
             discussionTitle = "Gradle 제대로 쓰기",
             book = Book(6L, "Gradle in Action", "Benjamin Muschko", ""),
@@ -62,7 +62,7 @@ val DISCUSSION_ROOMS =
             snap = "build.gradle 무슨 뜻임?",
             discussionOpinion = "KTS와 Groovy의 차이를 아시나요?",
         ),
-        DiscussionRoom(
+        Discussion(
             id = 7L,
             discussionTitle = "Jetpack Compose vs XML",
             book = Book(7L, "Jetpack Compose Essentials", "John Smith", ""),
@@ -71,7 +71,7 @@ val DISCUSSION_ROOMS =
             snap = "진짜 Compose 써야해?",
             discussionOpinion = "미래는 Compose입니다.",
         ),
-        DiscussionRoom(
+        Discussion(
             id = 8L,
             discussionTitle = "테스트 코드 작성 전략",
             book = Book(8L, "Test-Driven Development", "Kent Beck", ""),
@@ -80,7 +80,7 @@ val DISCUSSION_ROOMS =
             snap = "언제 테스트 함?",
             discussionOpinion = "작은 단위부터 시작하세요.",
         ),
-        DiscussionRoom(
+        Discussion(
             id = 9L,
             discussionTitle = "Dependency Injection 원리",
             book = Book(9L, "안드로이드 DI 패턴", "Jake Wharton", ""),
@@ -89,7 +89,7 @@ val DISCUSSION_ROOMS =
             snap = "왜 Hilt 써야함?",
             discussionOpinion = "생성자 주입이 기본입니다.",
         ),
-        DiscussionRoom(
+        Discussion(
             id = 10L,
             discussionTitle = "Room DB 실전 활용법",
             book = Book(10L, "Android Room Guide", "Google", ""),
@@ -98,7 +98,7 @@ val DISCUSSION_ROOMS =
             snap = "쿼리 왜 안됨?",
             discussionOpinion = "LiveData나 Flow로 감싸세요.",
         ),
-        DiscussionRoom(
+        Discussion(
             id = 11L,
             discussionTitle = "API 에러 핸들링 전략",
             book = Book(11L, "RESTful API Design", "Mark Masse", ""),
@@ -107,7 +107,7 @@ val DISCUSSION_ROOMS =
             snap = "500에러 왜 나옴?",
             discussionOpinion = "에러 응답 스펙을 명확히 해야 합니다.",
         ),
-        DiscussionRoom(
+        Discussion(
             id = 12L,
             discussionTitle = "RxJava 완전정복",
             book = Book(12L, "RxJava 2", "Tomasz Nurkiewicz", ""),
@@ -116,7 +116,7 @@ val DISCUSSION_ROOMS =
             snap = "왜 아직도 Rx 씀?",
             discussionOpinion = "복잡한 흐름 제어에 유리합니다.",
         ),
-        DiscussionRoom(
+        Discussion(
             id = 13L,
             discussionTitle = "Paging3 실전 적용",
             book = Book(13L, "Jetpack Paging Guide", "Google", ""),
@@ -125,7 +125,7 @@ val DISCUSSION_ROOMS =
             snap = "null 왜 나와요?",
             discussionOpinion = "Placeholders와 LoadState를 확인하세요.",
         ),
-        DiscussionRoom(
+        Discussion(
             id = 14L,
             discussionTitle = "Flow와 StateFlow 차이",
             book = Book(14L, "Kotlin Flow Deep Dive", "JetBrains", ""),
@@ -134,7 +134,7 @@ val DISCUSSION_ROOMS =
             snap = "LiveData랑 뭐가 달라?",
             discussionOpinion = "콜드 스트림과 핫 스트림의 차이 이해 필요",
         ),
-        DiscussionRoom(
+        Discussion(
             id = 15L,
             discussionTitle = "유닛 테스트 vs 통합 테스트",
             book = Book(15L, "Effective Testing", "Lisa Crispin", ""),
@@ -143,7 +143,7 @@ val DISCUSSION_ROOMS =
             snap = "테스트 나눠야 하나요?",
             discussionOpinion = "단위 테스트는 빠르고 명확해야 합니다.",
         ),
-        DiscussionRoom(
+        Discussion(
             id = 16L,
             discussionTitle = "Compose에서 상태관리",
             book = Book(16L, "Compose State Management", "Android Team", ""),

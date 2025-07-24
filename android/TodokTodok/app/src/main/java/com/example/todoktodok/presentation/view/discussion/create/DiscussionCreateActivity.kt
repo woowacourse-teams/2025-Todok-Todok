@@ -7,11 +7,11 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.todoktodok.databinding.ActivityDiscussionRoomCreateBinding
+import com.example.todoktodok.databinding.ActivityDiscussionCreateBinding
 
-class DiscussionRoomCreateActivity : AppCompatActivity() {
-    val binding: ActivityDiscussionRoomCreateBinding by lazy {
-        ActivityDiscussionRoomCreateBinding.inflate(layoutInflater)
+class DiscussionCreateActivity : AppCompatActivity() {
+    val binding: ActivityDiscussionCreateBinding by lazy {
+        ActivityDiscussionCreateBinding.inflate(layoutInflater)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,10 +28,10 @@ class DiscussionRoomCreateActivity : AppCompatActivity() {
             )
             insets
         }
-        binding.ivDiscussionRoomCreateBack.setOnClickListener { finish() }
+        binding.ivDiscussionCreateBack.setOnClickListener { finish() }
     }
 
     companion object {
-        fun Intent(context: Context): Intent = Intent(context, DiscussionRoomCreateActivity::class.java)
+        fun Intent(context: Context): Intent = Intent(context, DiscussionCreateActivity::class.java)
     }
 }
