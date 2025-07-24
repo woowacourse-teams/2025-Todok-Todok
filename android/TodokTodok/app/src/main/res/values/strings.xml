@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">TodokTodok</string>
+    <string name="app_name_kr">토독토독</string>
     <string name="all_note">기록</string>
     <string name="all_discussion">토론</string>
     <string name="all_discussion_room">토론방</string>

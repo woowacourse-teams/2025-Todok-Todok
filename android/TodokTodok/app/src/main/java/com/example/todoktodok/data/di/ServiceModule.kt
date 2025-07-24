@@ -1,9 +1,8 @@
 package com.example.todoktodok.data.di
 
+import com.example.todoktodok.data.network.service.DiscussionService
 import com.example.todoktodok.data.network.service.MemberService
 import com.example.todoktodok.data.network.service.NoteService
-import kotlin.getValue
-import kotlin.jvm.java
 
 class ServiceModule(
     retrofit: RetrofitModule,
