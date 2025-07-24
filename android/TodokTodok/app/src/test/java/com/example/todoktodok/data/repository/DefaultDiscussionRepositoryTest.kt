@@ -1,7 +1,7 @@
 package com.example.todoktodok.data.repository
 
 import com.example.todoktodok.data.datasource.discussion.DiscussionRemoteDataSource
-import com.example.todoktodok.fake.FakeDiscussionRemoteDataSource
+import com.example.todoktodok.fake.datasource.FakeDiscussionRemoteDataSource
 import com.example.todoktodok.fixture.DISCUSSIONS
 import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat

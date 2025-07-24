@@ -5,7 +5,7 @@ agp = "8.9.0"
 # Kotlin
 kotlin = "2.2.0"
 kotlinx-serialization-json = "1.8.1"
-kotlinx-coroutines-core = "1.7.3"
+kotlinx-coroutines-core = "1.9.0"
 
 # AndroidX
 androidx-core-ktx = "1.16.0"
@@ -89,6 +89,7 @@ mannodermaus-junit5-runner = { group = "de.mannodermaus.junit5", name = "android
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 mockk-android = { module = "io.mockk:mockk-android", version.ref = "mockk" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines-core" }
 
 [bundles]
 androidx = [
@@ -128,6 +129,7 @@ test = [
     "junit",
     "mockk",
     "kotest-runner-junit5",
+    "kotlinx-coroutines-test"
 ]
 
 android-test = [

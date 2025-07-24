@@ -1,6 +1,5 @@
 package com.example.todoktodok.presentation.view.discussion.detail.vm
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -8,15 +7,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.model.Comment
 import com.example.domain.model.Discussion
-import com.example.domain.model.member.Nickname
-import com.example.domain.model.member.User
 import com.example.domain.repository.CommentRepository
 import com.example.domain.repository.DiscussionRepository
 import com.example.todoktodok.presentation.core.event.MutableSingleLiveData
 import com.example.todoktodok.presentation.core.event.SingleLiveData
 import com.example.todoktodok.presentation.view.discussion.detail.DiscussionDetailUiEvent
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
 
 class DiscussionDetailViewModel(
     savedStateHandle: SavedStateHandle,
@@ -48,18 +44,11 @@ class DiscussionDetailViewModel(
         _uiEvent.setValue(uiEvent)
     }
 
-    fun addComment(
-        currentDateTime: LocalDateTime,
-        content: String,
-    ) {
-        val comment =
-            Comment(
-                100,
-                content,
-                user,
-                currentDateTime,
-            )
-        commentRepository.saveComment(comment)
+    fun submitComment() {
+        viewModelScope.launch {
+            commentRepository.saveComment(discussionId, commentText.value ?: "")
+            loadComments()
+        }
     }
 
     fun onCommentChanged(text: CharSequence?) {
@@ -67,17 +56,17 @@ class DiscussionDetailViewModel(
     }
 
     private suspend fun loadDiscussionRoom() {
-        Log.d("12345", discussionId.toString())
         _discussion.value =
             discussionRepository.getDiscussion(discussionId).getOrNull()
     }
 
     fun loadComments() {
-        _comments.value = commentRepository.getCommentsByDiscussionRoomId(discussionId)
+        viewModelScope.launch {
+            _comments.value = commentRepository.getCommentsByDiscussionRoomId(discussionId)
+        }
     }
 
     companion object {
-        private val user = User(1, Nickname("동전"))
         const val KEY_DISCUSSION_ID = "discussionId"
     }
 }
