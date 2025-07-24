@@ -119,11 +119,12 @@ class DiscussionCommandServiceTest {
     void report_duplicated_fail() {
         // given
         databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setUserInfo("user123@gmail.com", "user123", "https://image.png", "message");
         databaseInitializer.setDefaultBookInfo();
         databaseInitializer.setDefaultNoteInfo();
         databaseInitializer.setDefaultDiscussionInfo();
 
-        final Long memberId = 1L;
+        final Long memberId = 2L;
         final Long discussionId = 1L;
 
         // when
@@ -146,7 +147,7 @@ class DiscussionCommandServiceTest {
 
         final Long memberId = 1L;
         final Long discussionId = 1L;
-        
+
         // when - then
         assertThatThrownBy(() -> discussionCommandService.report(memberId, discussionId))
                 .isInstanceOf(IllegalArgumentException.class)
