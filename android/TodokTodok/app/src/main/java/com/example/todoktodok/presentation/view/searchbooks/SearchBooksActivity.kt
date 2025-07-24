@@ -73,7 +73,12 @@ class SearchBooksActivity : AppCompatActivity() {
     private fun setupBooks() {
         viewModel.uiEvent.observe(this) { event ->
             when (event) {
-                is SearchBooksUiEvent.NavigateToLibrary -> finish()
+                is SearchBooksUiEvent.NavigateToLibrary -> {
+                    val intent = Intent()
+                    setResult(RESULT_OK, intent)
+                    finish()
+                }
+
                 is SearchBooksUiEvent.ShowDialog -> {
                     Toast.makeText(this, event.message, Toast.LENGTH_SHORT).show()
                     viewModel.clearUiState()

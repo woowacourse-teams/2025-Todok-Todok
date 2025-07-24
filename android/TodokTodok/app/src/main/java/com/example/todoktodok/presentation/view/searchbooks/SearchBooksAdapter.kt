@@ -2,7 +2,6 @@ package com.example.todoktodok.presentation.view.searchbooks
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
-import com.example.domain.model.Book
 import com.example.todoktodok.presentation.view.searchbooks.SearchBooksViewHolder.Companion.SearchBooksViewHolder
 import com.example.todoktodok.state.BookState
 
