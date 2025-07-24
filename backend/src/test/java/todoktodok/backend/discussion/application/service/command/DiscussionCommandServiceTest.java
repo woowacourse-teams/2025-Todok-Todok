@@ -113,4 +113,25 @@ class DiscussionCommandServiceTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("해당 기록의 소유자만 토론방을 생성할 수 있습니다");
     }
+
+    @Test
+    @DisplayName("같은 회원이 토론방을 중복 신고하면 예외가 발생한다")
+    void report_duplicated_fail() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultNoteInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+
+        final Long memberId = 1L;
+        final Long discussionId = 1L;
+
+        // when
+        discussionCommandService.report(memberId, discussionId);
+
+        // then
+        assertThatThrownBy(() -> discussionCommandService.report(memberId, discussionId))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("이미 신고한 토론방입니다");
+    }
 }
