@@ -15,22 +15,22 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_discussion_rooms"
+        android:id="@+id/rv_discussions"
         android:layout_width="match_parent"
         android:layout_height="@dimen/space_2x_small"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_header"
-        tools:listitem="@layout/item_discussion_room" />
+        tools:listitem="@layout/item_discussion" />
 
     <ImageView
-        android:id="@+id/iv_add_discussion_room"
+        android:id="@+id/iv_add_discussion"
         android:layout_width="@dimen/item_discussion_floating_button_size"
         android:layout_height="@dimen/item_discussion_floating_button_size"
         android:layout_marginEnd="@dimen/font_size_2x_large"
-        android:layout_marginBottom="@dimen/item_discussion_add_discussion_room_button_margin_bottom"
+        android:layout_marginBottom="@dimen/item_discussion_add_discussion_button_margin_bottom"
         android:background="@drawable/btn_floating"
-        android:contentDescription="@string/content_description_add_discussion_room"
+        android:contentDescription="@string/content_description_add_discussion"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

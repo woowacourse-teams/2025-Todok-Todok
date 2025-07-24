@@ -1,21 +1,25 @@
 package com.example.todoktodok.data.datasource
 
+import android.util.Log
 import com.example.domain.model.Book
 import com.example.todoktodok.data.network.request.SaveBookRequest
 import com.example.todoktodok.data.network.response.BookResponse
+import com.example.todoktodok.data.network.service.BookService
 import com.example.todoktodok.data.network.service.LibraryService
 
 class RemoteBookDataSource(
     private val libraryService: LibraryService,
+    private val bookService: BookService,
 ) : BookDataSource {
     override suspend fun fetchBooks(): List<Book> =
         libraryService.fetchBooks(token).map { bookResponse: BookResponse ->
             bookResponse.toDomain()
         }
 
-    override suspend fun fetchBooks(searchInput: String): List<Book> {
-        TODO("Not yet implemented")
-    }
+    override suspend fun fetchBooks(searchInput: String): List<Book> =
+        bookService
+            .fetchBooks(token, searchInput)
+            .map { bookResponse: BookResponse -> bookResponse.toDomain() }
 
     override suspend fun saveBook(bookId: Long) {
         libraryService.saveBook(token, SaveBookRequest(bookId))
@@ -23,5 +27,6 @@ class RemoteBookDataSource(
 
     companion object {
         val token = "Bearer"
+
     }
 }

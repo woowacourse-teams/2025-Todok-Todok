@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="@dimen/space_x_large"
-    android:background="@drawable/bg_white_radius_16dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <ImageView
@@ -11,6 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/bottom_sheet_header"
+        android:layout_marginBottom="@dimen/space_large"
         android:contentDescription="@string/content_description_bottom_sheet_drag"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -20,7 +20,6 @@
         android:id="@+id/rv_books"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/space_large"
         app:layout_constraintTop_toBottomOf="@id/iv_header"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -17,7 +17,15 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class OwnedBooksBottomSheet : BottomSheetDialogFragment(R.layout.owned_books_bottom_sheet) {
-    private val booksAdapter: BooksAdapter = BooksAdapter()
+    private val bookHandler =
+        object : BooksAdapter.Handler {
+            override fun onSelectBook(position: Int) {
+                setFragmentResult(REQUEST_KEY, bundleOf(RESULT_KEY to position))
+                dismiss()
+            }
+        }
+
+    private val booksAdapter: BooksAdapter = BooksAdapter(bookHandler)
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
@@ -31,12 +39,6 @@ class OwnedBooksBottomSheet : BottomSheetDialogFragment(R.layout.owned_books_bot
     ) {
         super.onViewCreated(view, savedInstanceState)
         val binding = OwnedBooksBottomSheetBinding.bind(view)
-
-        // TODO(리사이클러뷰 아이템 이벤트로 수정)
-        binding.root.setOnClickListener {
-            setFragmentResult(REQUEST_KEY, bundleOf(RESULT_KEY to "da"))
-            dismiss()
-        }
         initView(binding)
     }
 
@@ -84,7 +86,6 @@ class OwnedBooksBottomSheet : BottomSheetDialogFragment(R.layout.owned_books_bot
         halfScreenHeight: Int,
     ) {
         behavior.peekHeight = halfScreenHeight
-        behavior.isDraggable = false
     }
 
     companion object {

@@ -8,7 +8,7 @@ class BooksAdapter : ListAdapter<BookState, BooksViewHolder>(booksDiffUtil) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): BooksViewHolder = BooksViewHolder.create(parent)
+    ): BooksViewHolder = BooksViewHolder(parent, eventHandler)
 
     override fun onBindViewHolder(
         holder: BooksViewHolder,
@@ -16,4 +16,6 @@ class BooksAdapter : ListAdapter<BookState, BooksViewHolder>(booksDiffUtil) {
     ) {
         holder.bind(getItem(position))
     }
+
+    interface Handler : BooksViewHolder.Handler
 }
