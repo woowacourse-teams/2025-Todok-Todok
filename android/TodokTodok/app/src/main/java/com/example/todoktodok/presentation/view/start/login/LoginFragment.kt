@@ -36,7 +36,6 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             viewLifecycleOwner.lifecycleScope.launch {
                 googleLoginManager.startLogin(
                     onSuccessLogin = { email, nickname, profilePictureUri ->
-                        Log.d(TAG, "initView: $email")
                         viewModel.login(email, nickname, profilePictureUri)
                     },
                     onFailLogin = { showSnackBar(getString(R.string.login_fail_to_login)) },
@@ -47,9 +46,5 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
 
     private fun showSnackBar(message: String) {
         Snackbar.make(requireView(), message, Snackbar.LENGTH_SHORT).show()
-    }
-
-    companion object {
-        private const val TAG = "LoginFragment"
     }
 }
