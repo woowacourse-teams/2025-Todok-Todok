@@ -46,7 +46,7 @@ public class NoteController {
     @GetMapping("/mine")
     public ResponseEntity<List<MyNoteResponse>> getMyNotes(
             @LoginMember final Long memberId,
-            @RequestParam(value = "bookId", required = false) final Long bookId
+            @RequestParam(required = false) final Long bookId
     ) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(noteQueryService.getMyNotes(memberId, bookId));
