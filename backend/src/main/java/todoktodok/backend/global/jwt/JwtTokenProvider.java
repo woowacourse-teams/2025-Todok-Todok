@@ -20,8 +20,8 @@ public class JwtTokenProvider {
 
     private static final String JWT_EXCEPTION_MESSAGE = "잘못된 로그인 시도입니다. 다시 시도해 주세요.";
     private static final SecretKey SECRET_KEY = SIG.HS256.key().build();
-    private static final long validityInMilliseconds = 3600000;
-    private static final long validityTempUserInMilliseconds = 300000;
+    private static final long validityInMilliseconds = 605000000;
+    private static final long validityTempUserInMilliseconds = 605000000;
     private static final String TOKEN_PREFIX = "Bearer ";
 
     public String createToken(final Member member) {
