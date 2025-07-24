@@ -20,6 +20,12 @@ android {
             "BASE_URL",
             "\"${properties.getProperty("base_url")}\"",
         )
+
+        buildConfigField(
+            "String",
+            "GOOGLE_CLIENT_ID",
+            "\"${properties.getProperty("google_client_id")}\"",
+        )
     }
 
     namespace = "com.example.todoktodok"
