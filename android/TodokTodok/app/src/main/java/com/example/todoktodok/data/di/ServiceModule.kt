@@ -1,6 +1,7 @@
 package com.example.todoktodok.data.di
 
 import com.example.todoktodok.data.network.service.BookService
+import com.example.todoktodok.data.network.service.CommentService
 import com.example.todoktodok.data.network.service.DiscussionService
 import com.example.todoktodok.data.network.service.LibraryService
 import com.example.todoktodok.data.network.service.MemberService
