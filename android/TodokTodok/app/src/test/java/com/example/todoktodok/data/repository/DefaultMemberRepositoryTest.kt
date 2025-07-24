@@ -20,17 +20,19 @@ class DefaultMemberRepositoryTest {
     }
 
     @Test
-    fun `signUp 호출 시 remote 데이터소스를 통해 회원가입하고 Member 도메인을 반환한다`() =
+    fun `회원가입에 성공하면 회원 정보 응답값을 반환받는다`() =
         runTest {
             // given
-            val requestEmail = "test@email.com"
-            fakeDataSource.expectedRequest = requestEmail
-            fakeDataSource.response = SignUpResponse("페토", "", requestEmail)
+            val member = Member(email = "test@example.com", nickName = "테스트", profileImage = "")
+            val expectedResponse =
+                SignUpResponse(email = "test@example.com", nickName = "테스트", profileImage = "")
+            fakeDataSource.response = expectedResponse
 
             // when
-            val result = repository.signUp(requestEmail)
+            val result = repository.signUp(member)
 
             // then
-            assertEquals(Member("페토", "", requestEmail), result)
+            assertEquals(member.email, result.email)
+            assertEquals(member.nickName, result.nickName)
         }
 }
