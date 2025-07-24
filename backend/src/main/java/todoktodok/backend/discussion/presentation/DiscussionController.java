@@ -44,6 +44,7 @@ public class DiscussionController {
                 .build();
     }
 
+    @Operation(summary = "토론방 전체 조회 API")
     @Auth(Role.USER)
     @GetMapping
     public ResponseEntity<List<DiscussionResponse>> getDiscussions(
@@ -53,6 +54,7 @@ public class DiscussionController {
                 .body(discussionQueryService.getDiscussions(memberId));
     }
 
+    @Operation(summary = "토론방 단일 조회 API")
     @Auth(Role.USER)
     @GetMapping("/{discussionId}")
     public ResponseEntity<DiscussionResponse> getDiscussion(
