@@ -1,4 +1,4 @@
-package com.example.todoktodok.data.datasource
+package com.example.todoktodok.data.datasource.note
 
 import com.example.todoktodok.data.network.request.NoteRequest
 

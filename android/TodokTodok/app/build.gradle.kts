@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.serialization)
     alias(libs.plugins.ksp)
     id("kotlin-parcelize")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -18,6 +19,12 @@ android {
             "String",
             "BASE_URL",
             "\"${properties.getProperty("base_url")}\"",
+        )
+
+        buildConfigField(
+            "String",
+            "GOOGLE_CLIENT_ID",
+            "\"${properties.getProperty("google_client_id")}\"",
         )
     }
 
@@ -84,6 +91,7 @@ dependencies {
     implementation(libs.bundles.glide)
 
     testImplementation(libs.bundles.test)
+    testImplementation(libs.androidx.core.testing)
     androidTestImplementation(libs.bundles.android.test)
     androidTestRuntimeOnly(libs.mannodermaus.junit5.runner)
 }

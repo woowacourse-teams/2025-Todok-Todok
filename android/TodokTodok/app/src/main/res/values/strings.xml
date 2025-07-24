@@ -1,11 +1,13 @@
 <resources>
     <string name="app_name">TodokTodok</string>
+    <string name="app_name_kr">토독토독</string>
     <string name="all_note">기록</string>
     <string name="all_discussion">토론</string>
     <string name="all_discussion_room">토론방</string>
     <string name="all_library">내 서재</string>
     <string name="all_book_search">도서 검색</string>
     <string name="all_report">신고</string>
+    <string name="all_report_or_block">신고/차단</string>
     <string name="book_image">책 이미지입니다</string>
     <string name="all_opinion">의견</string>
     <string name="all_comment">댓글</string>
@@ -16,6 +18,7 @@
     <string name="note_book_content">책의 내용</string>
     <string name="note_create">생성하기</string>
     <string name="note_my_opinion">나의 생각</string>
+    <string name="note_not_has_selected_book">"선택된 책이 없어요 ! 책을 선택해 주세요"</string>
     <string name="content_description_bottom_sheet_drag">바텀시트를 드래그하려면 이곳을 사용하세요</string>
     <string name="content_description_book_search_layout">내 서재 검색 버튼입니다.</string>
 
@@ -47,4 +50,12 @@
     <string name="discussion_title">토론 제목</string>
     <string name="discussion_content">나의 의견</string>
     <string name="discussion_room_create">생성하기</string>
+
+    <!-- 로그인 페이지 -->
+    <string name="login_fail_to_login">로그인에 실패했어요. 다시 시도해주세요</string>
+
+    <!-- 닉네임 입력 페이지 -->
+    <string name="complete_nickname_text">닉네임 설정</string>
+    <string name="complete_nickname_btn_text">가입하기</string>
+    <string name="complete_nickname_et_hint">닉네임을 입력해주세요</string>
 </resources>

@@ -38,7 +38,10 @@ jobs:
 
       - name: Grant execute permission to gradlew
         run: chmod +x gradlew
-
+   
+      - name: Create google-services.json
+        run: echo '${{ secrets.GOOGLE_SERVICES_JSON }}' > ./app/google-services.json
+        
       - name: Clean Project
         run: ./gradlew clean
 
