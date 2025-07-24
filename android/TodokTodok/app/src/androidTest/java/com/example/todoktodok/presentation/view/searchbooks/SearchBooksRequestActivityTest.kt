@@ -26,7 +26,7 @@ class SearchBooksActivityTest {
         onView(withId(R.id.tv_book_search_title)).check(
             matches(
                 withText(
-                    R.string.book_search,
+                    R.string.all_book_search,
                 ),
             ),
         )
