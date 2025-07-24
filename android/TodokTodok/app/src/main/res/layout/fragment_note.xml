@@ -55,7 +55,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/iv_book_search"/>
+                app:layout_constraintEnd_toStartOf="@+id/iv_book_search" />
 
             <ImageView
                 android:id="@+id/iv_book_search"
@@ -65,11 +65,11 @@
                 android:src="@drawable/ic_search"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                app:layout_constraintBottom_toBottomOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
-            android:id="@+id/tv_snap"
+            android:id="@+id/tv_snap_summary"
             style="@style/BaseTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -91,7 +91,7 @@
             app:cursorColor="@color/black_18"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_snap">
+            app:layout_constraintTop_toBottomOf="@id/tv_snap_summary">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_snap"
