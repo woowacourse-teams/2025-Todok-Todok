@@ -46,6 +46,7 @@ class DiscussionDetailActivity : AppCompatActivity() {
         setupOnClickNavigateUp()
         setupOnChangeComment()
         setupObserve()
+        setPopBackStack()
     }
 
     private fun initView() {
@@ -138,8 +139,6 @@ class DiscussionDetailActivity : AppCompatActivity() {
     private fun setPopBackStack() {
         onBackPressedDispatcher.addCallback(this) {
             navigateUp()
-            startActivity(intent)
-            finish()
         }
     }
 
