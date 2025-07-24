@@ -1,4 +1,4 @@
-package com.example.todoktodok.presentation.view.start.vm
+package com.example.todoktodok.presentation.view.auth.vm
 
 import android.net.Uri
 import androidx.lifecycle.LiveData

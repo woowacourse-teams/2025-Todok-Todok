@@ -1,4 +1,4 @@
-package com.example.todoktodok.presentation.view.start.login
+package com.example.todoktodok.presentation.view.auth.login
 
 import android.content.Context
 import android.net.Uri

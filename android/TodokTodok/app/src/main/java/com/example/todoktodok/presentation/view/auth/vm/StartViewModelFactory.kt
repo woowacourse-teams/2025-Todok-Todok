@@ -1,4 +1,4 @@
-package com.example.todoktodok.presentation.view.start.vm
+package com.example.todoktodok.presentation.view.auth.vm
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

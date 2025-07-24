@@ -1,7 +1,6 @@
-package com.example.todoktodok.presentation.view.start.login
+package com.example.todoktodok.presentation.view.auth.login
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -9,8 +8,8 @@ import androidx.lifecycle.lifecycleScope
 import com.example.todoktodok.App
 import com.example.todoktodok.R
 import com.example.todoktodok.databinding.FragmentLoginBinding
-import com.example.todoktodok.presentation.view.start.vm.StartViewModel
-import com.example.todoktodok.presentation.view.start.vm.StartViewModelFactory
+import com.example.todoktodok.presentation.view.auth.vm.StartViewModel
+import com.example.todoktodok.presentation.view.auth.vm.StartViewModelFactory
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 
