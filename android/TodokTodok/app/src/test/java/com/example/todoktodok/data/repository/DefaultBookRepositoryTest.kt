@@ -15,42 +15,47 @@ class DefaultBookRepositoryTest {
 
     @BeforeEach
     fun setUp() {
-        fakeBookDataSource = FakeBookDataSource(
-            books = listOf(
-                Book(
-                    id = 1,
-                    title = "테스트용 책",
-                    author = "테스트 작가",
-                    image = "https://example.com/test.jpg"
-                )
+        fakeBookDataSource =
+            FakeBookDataSource(
+                books =
+                    listOf(
+                        Book(
+                            id = 1,
+                            title = "테스트용 책",
+                            author = "테스트 작가",
+                            image = "https://example.com/test.jpg",
+                        ),
+                    ),
             )
-        )
         defaultBookRepository = DefaultBookRepository(fakeBookDataSource)
     }
 
     @Test
-    fun `저장된 책을 가져온다`() = runTest {
-        // given
-        val expected = Book(
-            id = 1,
-            title = "테스트용 책",
-            author = "테스트 작가",
-            image = "https://example.com/test.jpg"
-        )
+    fun `저장된 책을 가져온다`() =
+        runTest {
+            // given
+            val expected =
+                Book(
+                    id = 1,
+                    title = "테스트용 책",
+                    author = "테스트 작가",
+                    image = "https://example.com/test.jpg",
+                )
 
-        // when
-        val actual = defaultBookRepository.getBooks()
+            // when
+            val actual = defaultBookRepository.getBooks()
 
-        // then
-        assertEquals(expected, actual.first())
-    }
+            // then
+            assertEquals(expected, actual.first())
+        }
 
     @Test
-    fun `책을 저장하면 ID가 기록된다`() = runTest {
-        // when
-        fakeBookDataSource.saveBook(100)
+    fun `책을 저장하면 ID가 기록된다`() =
+        runTest {
+            // when
+            fakeBookDataSource.saveBook(100)
 
-        // then
-        assertTrue(fakeBookDataSource.savedBookIds.contains(100))
-    }
+            // then
+            assertTrue(fakeBookDataSource.savedBookIds.contains(100))
+        }
 }
