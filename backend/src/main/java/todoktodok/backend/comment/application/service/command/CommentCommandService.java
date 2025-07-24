@@ -29,8 +29,8 @@ public class CommentCommandService {
             final Long discussionId,
             final CommentRequest commentRequest
     ) {
-        final Member member = getMember(memberId);
-        final Discussion discussion = getDiscussion(discussionId);
+        final Member member = findMember(memberId);
+        final Discussion discussion = findDiscussion(discussionId);
 
         final Comment comment = Comment.builder()
                 .content(commentRequest.content())
@@ -47,9 +47,9 @@ public class CommentCommandService {
             final Long discussionId,
             final Long commentId
     ) {
-        final Member member = getMember(memberId);
-        final Comment comment = getComment(commentId);
-        final Discussion discussion = getDiscussion(discussionId);
+        final Member member = findMember(memberId);
+        final Comment comment = findComment(commentId);
+        final Discussion discussion = findDiscussion(discussionId);
 
         comment.validateMatchWithDiscussion(discussion);
         comment.validateSelfReport(member);
@@ -64,17 +64,17 @@ public class CommentCommandService {
         commentReportRepository.save(commentReport);
     }
 
-    private Member getMember(final Long memberId) {
+    private Member findMember(final Long memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new NoSuchElementException("해당 회원을 찾을 수 없습니다"));
     }
 
-    private Comment getComment(final Long commentId) {
+    private Comment findComment(final Long commentId) {
         return commentRepository.findById(commentId)
                 .orElseThrow(() -> new NoSuchElementException("해당 댓글을 찾을 수 없습니다"));
     }
 
-    private Discussion getDiscussion(final Long discussionId) {
+    private Discussion findDiscussion(final Long discussionId) {
         return discussionRepository.findById(discussionId)
                 .orElseThrow(() -> new NoSuchElementException("해당 토론방을 찾을 수 없습니다"));
     }
