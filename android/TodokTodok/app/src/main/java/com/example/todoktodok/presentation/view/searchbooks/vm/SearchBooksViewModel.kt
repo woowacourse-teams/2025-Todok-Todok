@@ -12,35 +12,34 @@ import kotlinx.coroutines.launch
 class SearchBooksViewModel(
     private val bookRepository: BookRepository,
 ) : ViewModel() {
-    private val _uiState: MutableLiveData<SearchBooksUiState> = MutableLiveData()
-    val uiState: LiveData<SearchBooksUiState> get() = _uiState
+    private var uiState: SearchBooksUiState = SearchBooksUiState()
 
     private val _uiEvent: MutableLiveData<SearchBooksUiEvent> = MutableLiveData()
     val uiEvent: LiveData<SearchBooksUiEvent> get() = _uiEvent
 
     fun updateSearchInput(searchInput: String) {
-        val currentState = _uiState.value ?: SearchBooksUiState()
+        val currentState = uiState
         val updatedState = currentState.copy(searchInput = searchInput)
-        _uiState.value = updatedState
+        uiState = updatedState
     }
 
     fun searchBooks() {
-        val input = _uiState.value?.searchInput.orEmpty()
+        val input = uiState.searchInput.orEmpty()
         if (input.isEmpty()) {
-            _uiEvent.value = SearchBooksUiEvent.ShowDialog("검색어를 입력해주세요")
+            _uiEvent.value = SearchBooksUiEvent.ShowDialog(ERROR_EMPTY_SEARCH_INPUT)
             return
         }
 
-        _uiState.value = _uiState.value?.copy(isLoading = true)
+        uiState = uiState.copy(isLoading = true)
 
         viewModelScope.launch {
             val books = bookRepository.searchBooks(input)
             if (books.isEmpty()) {
-                _uiEvent.value = SearchBooksUiEvent.ShowDialog("검색 결과가 없습니다")
+                _uiEvent.value = SearchBooksUiEvent.ShowDialog(ERROR_NO_SEARCH_RESULTS)
                 return@launch
             }
-            _uiState.value = _uiState.value?.copy(isLoading = false, searchedBooks = books)
-            _uiEvent.value = _uiEvent.value ?: SearchBooksUiEvent.ShowSearchedBooks(books)
+            uiState = uiState.copy(isLoading = false, searchedBooks = books)
+            _uiEvent.value = SearchBooksUiEvent.ShowSearchedBooks(books)
         }
     }
 
@@ -49,29 +48,37 @@ class SearchBooksViewModel(
     }
 
     fun updateSelectedBook(selectedPosition: Int) {
-        val currentState = _uiState.value ?: SearchBooksUiState()
+        val currentState = uiState
         val updatedState = currentState.findSelectedBook(selectedPosition)
         if (updatedState.selectedBook == null) {
-            _uiEvent.value = _uiEvent.value ?: SearchBooksUiEvent.ShowDialog("책을 찾을 수 없습니다")
+            _uiEvent.value = _uiEvent.value ?: SearchBooksUiEvent.ShowDialog(ERROR_BOOK_NOT_FOUND)
             return
         }
-        _uiState.value = updatedState
+        uiState = updatedState
     }
 
     fun saveSelectedBook() {
-        val selectedBook = _uiState.value?.selectedBook
+        val selectedBook = uiState.selectedBook
         if (selectedBook == null) {
-            _uiEvent.value = _uiEvent.value ?: SearchBooksUiEvent.ShowDialog("선택된 책이 없습니다")
+            _uiEvent.value = _uiEvent.value ?: SearchBooksUiEvent.ShowDialog(ERROR_NO_SELECTED_BOOK)
             return
         }
         viewModelScope.launch {
             bookRepository.saveBook(selectedBook)
-            _uiEvent.value = _uiEvent.value ?: SearchBooksUiEvent.ShowDialog("책이 저장되었습니다")
+            _uiEvent.value = _uiEvent.value ?: SearchBooksUiEvent.ShowDialog(MESSAGE_BOOK_SAVED)
             _uiEvent.value = _uiEvent.value ?: SearchBooksUiEvent.NavigateToLibrary
         }
     }
 
     fun clearUiState() {
-        _uiState.value = null
+        _uiEvent.value = null
+    }
+
+    companion object {
+        private const val MESSAGE_BOOK_SAVED: String = "책이 저장되었습니다"
+        private const val ERROR_NO_SELECTED_BOOK: String = "선택된 책이 없습니다"
+        private const val ERROR_BOOK_NOT_FOUND: String = "책을 찾을 수 없습니다"
+        private const val ERROR_NO_SEARCH_RESULTS: String = "검색 결과가 없습니다"
+        private const val ERROR_EMPTY_SEARCH_INPUT: String = "검색어를 입력해주세요"
     }
 }

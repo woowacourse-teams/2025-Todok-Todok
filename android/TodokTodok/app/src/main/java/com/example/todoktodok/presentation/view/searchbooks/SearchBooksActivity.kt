@@ -2,8 +2,11 @@ package com.example.todoktodok.presentation.view.searchbooks
 
 import android.content.Context
 import android.content.Intent
+import android.hardware.lights.Light
 import android.os.Bundle
 import android.text.Editable
+import android.util.Log
+import android.view.KeyEvent
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -60,9 +63,14 @@ class SearchBooksActivity : AppCompatActivity() {
     private fun initView() {
         setContentView(binding.root)
         binding.rcBookSearchResult.adapter = adapter
-        binding.etBookSearchBar.addTextChangedListener { text: Editable? ->
-            viewModel.updateSearchInput(text.toString())
-            viewModel.searchBooks()
+        binding.etBookSearchBar.setOnKeyListener { v, keyCode, event ->
+            if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+                viewModel.updateSearchInput(binding.etBookSearchBar.text.toString())
+                viewModel.searchBooks()
+                true
+            } else {
+                false
+            }
         }
     }
 
@@ -72,12 +80,16 @@ class SearchBooksActivity : AppCompatActivity() {
                 is SearchBooksUiEvent.NavigateToLibrary -> finish()
                 is SearchBooksUiEvent.ShowDialog -> {
                     Toast.makeText(this, event.message, Toast.LENGTH_SHORT).show()
+                    viewModel.clearUiState()
                 }
+
                 is SearchBooksUiEvent.ShowSearchedBooks -> {
                     adapter.submitList(event.books)
+                    viewModel.clearUiState()
                 }
+
+                else -> Unit
             }
-            viewModel.clearUiState()
         }
     }
 
