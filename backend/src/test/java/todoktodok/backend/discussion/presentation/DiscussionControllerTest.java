@@ -83,4 +83,26 @@ class DiscussionControllerTest {
                 .statusCode(HttpStatus.OK.value())
                 .body("size()", is(1));
     }
+
+    @Test
+    @DisplayName("토론방을 신고한다")
+    void report() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setUserInfo("user123@gmail.com", "user123", "https://image.png", "message");
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultShelfInfo();
+        databaseInitializer.setDefaultNoteInfo();
+        databaseInitializer.setDiscussionInfo("토론방1", "토론방 내용", 2L, 1L, 1L);
+
+        final String token = MemberFixture.login("user@gmail.com");
+
+        // when - then
+        RestAssured.given().log().all()
+                .header("Authorization", token)
+                .contentType(ContentType.JSON)
+                .when().post("/api/v1/discussions/1/report")
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value());
+    }
 }
