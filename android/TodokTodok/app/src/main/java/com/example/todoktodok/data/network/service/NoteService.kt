@@ -6,7 +6,7 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface NoteService {
-    @POST("/api/v1/notes")
+    @POST("notes")
     suspend fun saveNote(
         @Body requestBody: NoteRequest,
     ): Response<Unit>

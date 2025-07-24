@@ -3,10 +3,13 @@ package com.example.todoktodok.presentation.view.note
 import android.app.Dialog
 import android.os.Bundle
 import android.view.View
+import androidx.core.os.bundleOf
+import androidx.fragment.app.setFragmentResult
 import com.example.todoktodok.R
 import com.example.todoktodok.databinding.OwnedBooksBottomSheetBinding
 import com.example.todoktodok.presentation.core.ext.getParcelableArrayListCompat
-import com.example.todoktodok.presentation.view.library.BooksAdapter
+import com.example.todoktodok.presentation.view.note.NoteFragment.Companion.REQUEST_KEY
+import com.example.todoktodok.presentation.view.note.adapter.MyLibraryBooksAdapter
 import com.example.todoktodok.presentation.view.serialization.SerializationBook
 import com.example.todoktodok.state.BookState
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -14,7 +17,15 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class OwnedBooksBottomSheet : BottomSheetDialogFragment(R.layout.owned_books_bottom_sheet) {
-    private val booksAdapter: BooksAdapter = BooksAdapter()
+    private val booksAdapter: MyLibraryBooksAdapter =
+        MyLibraryBooksAdapter(
+            object : MyLibraryBooksAdapter.Handler {
+                override fun onSelect(index: Int) {
+                    setFragmentResult(REQUEST_KEY, bundleOf(RESULT_KEY to index))
+                    dismiss()
+                }
+            },
+        )
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
