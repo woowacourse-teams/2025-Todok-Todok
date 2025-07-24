@@ -3,6 +3,7 @@ package com.example.todoktodok.presentation.view.discussion.detail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.addCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -12,6 +13,7 @@ import androidx.core.widget.addTextChangedListener
 import com.example.todoktodok.App
 import com.example.todoktodok.R
 import com.example.todoktodok.databinding.ActivityDiscussionDetailBinding
+import com.example.todoktodok.presentation.view.MainActivity
 import com.example.todoktodok.presentation.view.discussion.detail.adapter.CommentAdapter
 import com.example.todoktodok.presentation.view.discussion.detail.vm.DiscussionDetailViewModel
 import com.example.todoktodok.presentation.view.discussion.detail.vm.DiscussionDetailViewModel.Companion.KEY_DISCUSSION_ID
@@ -131,6 +133,23 @@ class DiscussionDetailActivity : AppCompatActivity() {
                 viewModel.loadComments()
             }
         }
+    }
+
+    private fun setPopBackStack() {
+        onBackPressedDispatcher.addCallback(this) {
+            navigateUp()
+            startActivity(intent)
+            finish()
+        }
+    }
+
+    private fun navigateUp() {
+        val intent =
+            Intent(this@DiscussionDetailActivity, MainActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+            }
+        startActivity(intent)
+        finish()
     }
 
     companion object {

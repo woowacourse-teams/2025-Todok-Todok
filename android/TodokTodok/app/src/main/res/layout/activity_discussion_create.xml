@@ -161,13 +161,15 @@
 
         <TextView
             android:id="@+id/tv_discussion_create"
-            style="@style/BasicButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="@dimen/discussion_create_button_height"
             android:layout_marginVertical="@dimen/space_x_large"
-            android:background="@drawable/bg_green_1a_radius_8dp"
+            android:background="@drawable/bg_create_discussion"
+            android:enabled="false"
             android:gravity="center"
             android:text="@string/discussion_create"
+            android:textSize="@dimen/font_size_large"
+            android:fontFamily="@font/pretendard_extra_bold"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"

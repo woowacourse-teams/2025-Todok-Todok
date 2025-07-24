@@ -3,16 +3,19 @@ package com.example.todoktodok.presentation.view.discussion.create
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.OnBackPressedDispatcher
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.lifecycleScope
 import com.example.todoktodok.App
 import com.example.todoktodok.databinding.ActivityDiscussionCreateBinding
 import com.example.todoktodok.presentation.view.discussion.create.vm.DiscussionCreateViewModel
 import com.example.todoktodok.presentation.view.discussion.create.vm.DiscussionCreateViewModelFactory
+import com.example.todoktodok.presentation.view.discussion.detail.DiscussionDetailActivity
 import kotlinx.coroutines.launch
 
 class DiscussionCreateActivity : AppCompatActivity() {
@@ -35,6 +38,9 @@ class DiscussionCreateActivity : AppCompatActivity() {
         binding.ivDiscussionCreateBack.setOnClickListener { finish() }
         setOnClickSearchNotes()
         setupObservers()
+        setupOnChangeDiscussionTitle()
+        setupOnChangeDiscussionOpinion()
+        setOnClickCreateDiscussion()
     }
 
     private fun initView() {
@@ -52,9 +58,27 @@ class DiscussionCreateActivity : AppCompatActivity() {
         }
     }
 
+    private fun setupOnChangeDiscussionTitle() {
+        binding.etDiscussionTitle.addTextChangedListener { editable ->
+            viewModel.updateDiscussionTitle(editable.toString())
+        }
+    }
+
+    private fun setupOnChangeDiscussionOpinion() {
+        binding.etDiscussionContent.addTextChangedListener { editable ->
+            viewModel.updateDiscussionOpinion(editable.toString())
+        }
+    }
+
     private fun setOnClickSearchNotes() {
         binding.tvNoteSearchBar.setOnClickListener {
             viewModel.onUiEvent(DiscussionCreateUiEvent.ShowOwnedNotes)
+        }
+    }
+
+    private fun setOnClickCreateDiscussion() {
+        binding.tvDiscussionCreate.setOnClickListener {
+            viewModel.onUiEvent(DiscussionCreateUiEvent.CreateDiscussion)
         }
     }
 
@@ -65,11 +89,25 @@ class DiscussionCreateActivity : AppCompatActivity() {
         viewModel.selectedNote.observe(this) { value ->
             binding.tvNoteSearchBar.text = value.snap
         }
+        viewModel.isCreateEnabled.observe(this) { value ->
+            binding.tvDiscussionCreate.isEnabled = value
+        }
     }
 
     private fun handleEvent(discussionCreateUiEvent: DiscussionCreateUiEvent) {
         when (discussionCreateUiEvent) {
-            DiscussionCreateUiEvent.CreateDiscussion -> viewModel.notes
+            DiscussionCreateUiEvent.CreateDiscussion -> {
+                this.lifecycleScope.launch {
+                    val discussionId = viewModel.saveNote()
+                    startActivity(
+                        DiscussionDetailActivity.Intent(
+                            this@DiscussionCreateActivity,
+                            discussionId,
+                        ),
+                    )
+                }
+            }
+
             DiscussionCreateUiEvent.ShowOwnedNotes -> {
                 this.lifecycleScope.launch {
                     viewModel.loadNotes()
@@ -81,6 +119,8 @@ class DiscussionCreateActivity : AppCompatActivity() {
                 viewModel.selectNote(discussionCreateUiEvent.note)
                 dismissBottomSheet()
             }
+
+            DiscussionCreateUiEvent.NavigateUp -> OnBackPressedDispatcher().onBackPressed()
         }
     }
 
