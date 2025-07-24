@@ -56,16 +56,17 @@
             android:layout_marginBottom="@dimen/space_x_small"
             android:gravity="start"
             android:text="@string/note_search"
-            app:layout_constraintBottom_toTopOf="@id/view_note_search_bar"
+            app:layout_constraintBottom_toTopOf="@id/tv_note_search_bar"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/abl_discussion_create" />
 
-        <View
-            android:id="@+id/view_note_search_bar"
+        <TextView
+            android:id="@+id/tv_note_search_bar"
             android:layout_width="match_parent"
             android:layout_height="@dimen/discussion_create_note_search_bar_height"
             android:background="@drawable/bg_green_f0_radius_8dp"
+            android:padding="@dimen/space_xs_small"
             app:layout_constraintBottom_toTopOf="@id/tv_discussion_title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -78,9 +79,9 @@
             android:layout_marginEnd="@dimen/space_x_small"
             android:contentDescription="@string/content_description_book_search_bar"
             android:src="@drawable/ic_search"
-            app:layout_constraintBottom_toBottomOf="@id/view_note_search_bar"
-            app:layout_constraintEnd_toEndOf="@id/view_note_search_bar"
-            app:layout_constraintTop_toTopOf="@id/view_note_search_bar" />
+            app:layout_constraintBottom_toBottomOf="@id/tv_note_search_bar"
+            app:layout_constraintEnd_toEndOf="@id/tv_note_search_bar"
+            app:layout_constraintTop_toTopOf="@id/tv_note_search_bar" />
 
         <TextView
             android:id="@+id/tv_discussion_title"
@@ -93,7 +94,7 @@
             android:text="@string/discussion_title"
             app:layout_constraintBottom_toTopOf="@id/view_discussion_title"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/view_note_search_bar" />
+            app:layout_constraintTop_toBottomOf="@id/tv_note_search_bar" />
 
         <View
             android:id="@+id/view_discussion_title"
@@ -160,13 +161,15 @@
 
         <TextView
             android:id="@+id/tv_discussion_create"
-            style="@style/BasicButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="@dimen/discussion_create_button_height"
             android:layout_marginVertical="@dimen/space_x_large"
-            android:background="@drawable/bg_green_1a_radius_8dp"
+            android:background="@drawable/bg_create_discussion"
+            android:enabled="false"
             android:gravity="center"
             android:text="@string/discussion_create"
+            android:textSize="@dimen/font_size_large"
+            android:fontFamily="@font/pretendard_extra_bold"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"

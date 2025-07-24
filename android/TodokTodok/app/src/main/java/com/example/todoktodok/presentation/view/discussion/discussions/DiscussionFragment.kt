@@ -35,6 +35,11 @@ class DiscussionFragment : Fragment(R.layout.fragment_discussion) {
         setupOnClick(binding)
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadDiscussions()
+    }
+
     private fun setupObservers() {
         viewModel.discussions.observe(viewLifecycleOwner) { discussions ->
             adapter.submitList(discussions)

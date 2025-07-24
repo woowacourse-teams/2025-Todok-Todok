@@ -21,16 +21,16 @@ class DiscussionViewModel(
     val uiEvent: SingleLiveData<DiscussionUiEvent> = _uiEvent
 
     init {
-        viewModelScope.launch {
-            loadDiscussions()
-        }
+        loadDiscussions()
     }
 
     fun onUiEvent(uiEvent: DiscussionUiEvent) {
         _uiEvent.postValue(uiEvent)
     }
 
-    private suspend fun loadDiscussions() {
-        _discussions.value = discussionRepository.getDiscussions()
+    fun loadDiscussions() {
+        viewModelScope.launch {
+            _discussions.value = discussionRepository.getDiscussions()
+        }
     }
 }

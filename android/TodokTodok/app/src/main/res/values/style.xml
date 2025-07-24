@@ -65,6 +65,23 @@
         <item name="android:fontFamily">@font/pretendard_semi_bold</item>
     </style>
 
+    <!--  토론방 생성 페이지에서 사용하는 textStyle  -->
+
+    <style name="CreateDiscussionNoteBookTitle" parent="BaseTextStyle">
+        <item name="android:textColor">@color/black_18</item>
+        <item name="android:textSize">@dimen/font_size_large</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:fontFamily">@font/pretendard_semi_bold</item>
+    </style>
+
+    <style name="CreateDiscussionNoteOpinionSummary" parent="BaseTextStyle">
+        <item name="android:textColor">@color/gray_66</item>
+        <item name="fontFamily">@font/pretendard_regular</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
     <!--  토론방 목록 상세 페이지에서 사용하는 textStyle  -->
     <style name="DiscussionDetailTitle" parent="BaseTextStyle">
         <item name="android:textColor">@color/black_18</item>

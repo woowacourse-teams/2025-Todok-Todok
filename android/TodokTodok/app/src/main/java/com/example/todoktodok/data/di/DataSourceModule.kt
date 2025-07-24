@@ -40,5 +40,10 @@ class DataSourceModule(
 
     val tokenDataSource: TokenDataSource by lazy { TokenDataSource(context) }
 
-    val remoteMemberDataSource: MemberDataSource by lazy { RemoteMemberDataSource(serviceModule.memberService, tokenDataSource) }
+    val remoteMemberDataSource: MemberDataSource by lazy {
+        RemoteMemberDataSource(
+            serviceModule.memberService,
+            tokenDataSource,
+        )
+    }
 }
