@@ -134,4 +134,22 @@ class DiscussionCommandServiceTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("이미 신고한 토론방입니다");
     }
+
+    @Test
+    @DisplayName("회원이 자신의 토론방을 신고하면 예외가 발생한다")
+    void validateDuplicatedReportTest() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultNoteInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+
+        final Long memberId = 1L;
+        final Long discussionId = 1L;
+        
+        // when - then
+        assertThatThrownBy(() -> discussionCommandService.report(memberId, discussionId))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("자기 자신의 토론방을 신고할 수 없습니다");
+    }
 }

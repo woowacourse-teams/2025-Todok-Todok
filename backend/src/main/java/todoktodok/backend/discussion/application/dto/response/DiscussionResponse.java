@@ -15,7 +15,7 @@ public record DiscussionResponse(
         String discussionTitle,
         String discussionOpinion
 ) {
-    public DiscussionResponse(Discussion discussion) {
+    public DiscussionResponse(final Discussion discussion) {
         this(
                 discussion.getId(),
                 new BookResponse(discussion.getBook()),

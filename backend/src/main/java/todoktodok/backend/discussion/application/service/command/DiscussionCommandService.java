@@ -53,6 +53,7 @@ public class DiscussionCommandService {
         final Member member = findMember(memberId);
 
         validateDuplicatedReport(discussion, member);
+        validateSelfReport(discussion, member);
 
         final DiscussionReport discussionReport = DiscussionReport.builder()
                 .discussion(discussion)
@@ -62,13 +63,19 @@ public class DiscussionCommandService {
         discussionReportRepository.save(discussionReport);
     }
 
-    private void validateDuplicatedReport(Discussion discussion, Member member) {
+    private void validateDuplicatedReport(final Discussion discussion, final Member member) {
         if (discussionReportRepository.existsByDiscussionAndMember(discussion, member)) {
             throw new IllegalArgumentException("이미 신고한 토론방입니다");
         }
     }
 
-    private void validateNoteOwner(Note note, Member member) {
+    private void validateSelfReport(final Discussion discussion, final Member member) {
+        if (discussion.isOwnedBy(member)) {
+            throw new IllegalArgumentException("자기 자신의 토론방을 신고할 수 없습니다");
+        }
+    }
+
+    private void validateNoteOwner(final Note note, final Member member) {
         if (!note.isOwnedBy(member)) {
             throw new IllegalArgumentException("해당 기록의 소유자만 토론방을 생성할 수 있습니다");
         }
