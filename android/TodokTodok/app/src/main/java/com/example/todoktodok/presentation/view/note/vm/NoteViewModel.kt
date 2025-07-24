@@ -42,6 +42,7 @@ class NoteViewModel(
     ) {
         viewModelScope.launch {
             defaultNoteRepository.saveNote(selectedBookId, snap, memo)
+            onUiEvent(NoteUiEvent.OnCompleteSaveNote)
         }
     }
 

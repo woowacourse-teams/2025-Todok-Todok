@@ -24,7 +24,7 @@ class DataSourceModule(
         )
     }
 
-    val noteDataSource: NoteDataSource by lazy { RemoteNoteDataSource() }
+    val noteDataSource: NoteDataSource by lazy { RemoteNoteDataSource(serviceModule.noteService) }
 
     val discussionRemoteDataSource: DiscussionRemoteDataSource by lazy {
         DefaultDiscussionRemoteDataSource(

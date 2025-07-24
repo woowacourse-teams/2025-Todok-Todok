@@ -8,4 +8,6 @@ sealed interface NoteUiEvent {
     ) : NoteUiEvent
 
     data object NotHasSelectedBook : NoteUiEvent
+
+    data object OnCompleteSaveNote : NoteUiEvent
 }

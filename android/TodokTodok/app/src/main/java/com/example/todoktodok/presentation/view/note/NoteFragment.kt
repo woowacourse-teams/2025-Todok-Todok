@@ -75,6 +75,11 @@ class NoteFragment : Fragment(R.layout.fragment_note) {
                     val message = getString(R.string.note_not_has_selected_book)
                     showToast(message)
                 }
+
+                NoteUiEvent.OnCompleteSaveNote ->
+                    showToast(
+                        "새 기록 추가 완료",
+                    )
             }
         }
     }
