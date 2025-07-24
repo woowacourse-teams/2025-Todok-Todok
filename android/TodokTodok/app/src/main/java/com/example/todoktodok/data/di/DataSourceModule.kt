@@ -3,9 +3,9 @@ package com.example.todoktodok.data.di
 import com.example.todoktodok.data.datasource.CommentDataSource
 import com.example.todoktodok.data.datasource.DefaultCommentDataSource
 import com.example.todoktodok.data.datasource.DefaultDiscussionRoomDataSource
-import com.example.todoktodok.data.datasource.RemoteBookDataSource
 import com.example.todoktodok.data.datasource.DiscussionRoomDataSource
 import com.example.todoktodok.data.datasource.NoteDataSource
+import com.example.todoktodok.data.datasource.RemoteBookDataSource
 import com.example.todoktodok.data.datasource.RemoteNoteDataSource
 
 class DataSourceModule(
