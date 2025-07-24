@@ -14,7 +14,10 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class OwnedNotesBottomSheet : BottomSheetDialogFragment(R.layout.owned_books_bottom_sheet) {
     private val viewModel by activityViewModels<DiscussionCreateViewModel>()
-    private val noteAdapter: NoteAdapter = NoteAdapter()
+    private val noteAdapter: NoteAdapter =
+        NoteAdapter { note ->
+            viewModel.onUiEvent(DiscussionCreateUiEvent.SelectNote(note))
+        }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog

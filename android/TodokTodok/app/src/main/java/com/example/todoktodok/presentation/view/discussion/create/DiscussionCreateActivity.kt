@@ -27,6 +27,8 @@ class DiscussionCreateActivity : AppCompatActivity() {
         ActivityDiscussionCreateBinding.inflate(layoutInflater)
     }
 
+    private var bottomSheet: OwnedNotesBottomSheet? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initView()
@@ -51,7 +53,7 @@ class DiscussionCreateActivity : AppCompatActivity() {
     }
 
     private fun setOnClickSearchNotes() {
-        binding.viewNoteSearchBar.setOnClickListener {
+        binding.tvNoteSearchBar.setOnClickListener {
             viewModel.onUiEvent(DiscussionCreateUiEvent.ShowOwnedNotes)
         }
     }
@@ -59,6 +61,9 @@ class DiscussionCreateActivity : AppCompatActivity() {
     private fun setupObservers() {
         viewModel.uiEvent.observe(this) { value ->
             handleEvent(value)
+        }
+        viewModel.selectedNote.observe(this) { value ->
+            binding.tvNoteSearchBar.text = value.snap
         }
     }
 
@@ -68,13 +73,27 @@ class DiscussionCreateActivity : AppCompatActivity() {
             DiscussionCreateUiEvent.ShowOwnedNotes -> {
                 this.lifecycleScope.launch {
                     viewModel.loadNotes()
-                    OwnedNotesBottomSheet().show(
-                        supportFragmentManager,
-                        "",
-                    )
+                    showBottomSheet()
                 }
             }
+
+            is DiscussionCreateUiEvent.SelectNote -> {
+                viewModel.selectNote(discussionCreateUiEvent.note)
+                dismissBottomSheet()
+            }
         }
+    }
+
+    private fun showBottomSheet() {
+        if (bottomSheet?.isVisible != true) {
+            bottomSheet = OwnedNotesBottomSheet()
+            bottomSheet?.show(supportFragmentManager, "owned_notes")
+        }
+    }
+
+    private fun dismissBottomSheet() {
+        bottomSheet?.dismissAllowingStateLoss()
+        bottomSheet = null
     }
 
     companion object {

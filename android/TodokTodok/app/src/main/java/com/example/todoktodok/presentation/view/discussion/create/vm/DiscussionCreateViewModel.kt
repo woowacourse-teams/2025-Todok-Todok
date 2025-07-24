@@ -14,6 +14,9 @@ class DiscussionCreateViewModel(
     private val discussionRepository: DiscussionRepository,
     private val notesRepository: NoteRepository,
 ) : ViewModel() {
+    private val _selectedNote = MutableLiveData<Note>()
+    val selectedNote: LiveData<Note> = _selectedNote
+
     private val _notes = MutableLiveData<List<Note>>()
     val notes: LiveData<List<Note>> = _notes
 
@@ -26,5 +29,9 @@ class DiscussionCreateViewModel(
 
     suspend fun loadNotes() {
         _notes.value = notesRepository.fetchNotesByBookId(null)
+    }
+
+    fun selectNote(note: Note) {
+        _selectedNote.value = note
     }
 }

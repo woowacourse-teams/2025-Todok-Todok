@@ -9,6 +9,7 @@ import com.example.todoktodok.databinding.ItemNoteBinding
 
 class NoteViewHolder private constructor(
     private val binding: ItemNoteBinding,
+    private val onClickListener: NoteAdapter.OnClickListener,
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(note: Note) {
         with(binding) {
@@ -17,15 +18,19 @@ class NoteViewHolder private constructor(
             tvSnapSummary.text = note.snap
             tvMemoSummary.text = note.memo
             root.setOnClickListener {
+                onClickListener.selectNote(note)
             }
         }
     }
 
     companion object {
-        fun NoteViewHolder(parent: ViewGroup): NoteViewHolder {
+        fun NoteViewHolder(
+            parent: ViewGroup,
+            onClickListener: NoteAdapter.OnClickListener,
+        ): NoteViewHolder {
             val layoutInflater = LayoutInflater.from(parent.context)
             val binding = ItemNoteBinding.inflate(layoutInflater, parent, false)
-            return NoteViewHolder(binding)
+            return NoteViewHolder(binding, onClickListener)
         }
     }
 }
