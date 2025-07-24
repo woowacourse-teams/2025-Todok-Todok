@@ -1,5 +1,6 @@
 package com.example.todoktodok.presentation.view.discussion.detail.vm
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -22,7 +23,7 @@ class DiscussionDetailViewModel(
     private val discussionRepository: DiscussionRepository,
     private val commentRepository: CommentRepository,
 ) : ViewModel() {
-    private val discussionRoomId =
+    private val discussionId =
         savedStateHandle.get<Long>(KEY_DISCUSSION_ID) ?: throw IllegalStateException()
     private val _discussion = MutableLiveData<Discussion>()
     val discussion: LiveData<Discussion> = _discussion
@@ -66,12 +67,13 @@ class DiscussionDetailViewModel(
     }
 
     private suspend fun loadDiscussionRoom() {
+        Log.d("12345", discussionId.toString())
         _discussion.value =
-            discussionRepository.getDiscussion(discussionRoomId).getOrNull()
+            discussionRepository.getDiscussion(discussionId).getOrNull()
     }
 
     fun loadComments() {
-        _comments.value = commentRepository.getCommentsByDiscussionRoomId(discussionRoomId)
+        _comments.value = commentRepository.getCommentsByDiscussionRoomId(discussionId)
     }
 
     companion object {
