@@ -6,4 +6,6 @@ sealed interface NoteUiEvent {
     data class ShowOwnBooks(
         val books: List<SerializationBook>,
     ) : NoteUiEvent
+
+    data object NotHasSelectedBook : NoteUiEvent
 }

@@ -4,15 +4,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.domain.model.Book
+import com.example.domain.model.Books
 import com.example.domain.repository.BookRepository
 import kotlinx.coroutines.launch
 
 class LibraryViewModel(
     private val bookRepositoryImpl: BookRepository,
 ) : ViewModel() {
-    private val _books: MutableLiveData<List<Book>> = MutableLiveData(emptyList())
-    val books: LiveData<List<Book>> = _books
+    private val _books: MutableLiveData<Books> = MutableLiveData(Books(emptyList()))
+    val books: LiveData<Books> get() = _books
 
     init {
         loadBooks()
