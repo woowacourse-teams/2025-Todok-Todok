@@ -13,13 +13,12 @@ class AuthInterceptor(
         val builder = request.newBuilder()
         val accessToken = runBlocking { tokenDataSource.getAccessToken() }
 
-        builder.addHeader(AUTHORIZATION_NAME, "$AUTHORIZATION_HEADER $accessToken")
+        builder.addHeader(AUTHORIZATION_NAME, accessToken)
 
         return chain.proceed(builder.build())
     }
 
     companion object {
         const val AUTHORIZATION_NAME = "Authorization"
-        private const val AUTHORIZATION_HEADER = "Bearer "
     }
 }
