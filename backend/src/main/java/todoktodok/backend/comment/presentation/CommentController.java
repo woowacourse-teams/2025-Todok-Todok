@@ -1,6 +1,7 @@
 package todoktodok.backend.comment.presentation;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
@@ -34,7 +35,7 @@ public class CommentController {
     @Auth(value = Role.USER)
     @PostMapping
     public ResponseEntity<Void> createComment(
-            @LoginMember final Long memberId,
+            @Parameter(hidden = true) @LoginMember final Long memberId,
             @PathVariable final Long discussionId,
             @RequestBody @Valid final CommentRequest commentRequest
     ) {
@@ -49,7 +50,7 @@ public class CommentController {
     @Auth(value = Role.USER)
     @PostMapping("/{commentId}/report")
     public ResponseEntity<Void> report(
-            @LoginMember final Long memberId,
+            @Parameter(hidden = true) @LoginMember final Long memberId,
             @PathVariable final Long discussionId,
             @PathVariable final Long commentId
     ) {
@@ -63,7 +64,7 @@ public class CommentController {
     @Auth(value = Role.USER)
     @GetMapping
     public ResponseEntity<List<CommentResponse>> getComments(
-            @LoginMember final Long memberId,
+            @Parameter(hidden = true) @LoginMember final Long memberId,
             @PathVariable final Long discussionId
     ) {
         return ResponseEntity.status(HttpStatus.OK)
