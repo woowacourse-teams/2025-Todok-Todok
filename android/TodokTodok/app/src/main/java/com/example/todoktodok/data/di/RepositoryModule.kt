@@ -5,8 +5,6 @@ import com.example.domain.repository.CommentRepository
 import com.example.domain.repository.DiscussionRepository
 import com.example.domain.repository.MemberRepository
 import com.example.domain.repository.NoteRepository
-import com.example.todoktodok.data.datasource.BookDataSource
-import com.example.todoktodok.data.datasource.RemoteBookDataSource
 import com.example.todoktodok.data.repository.DefaultBookRepository
 import com.example.todoktodok.data.repository.DefaultCommentRepository
 import com.example.todoktodok.data.repository.DefaultDiscussionRepository

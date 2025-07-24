@@ -3,13 +3,10 @@ package com.example.todoktodok.presentation.view.note
 import android.app.Dialog
 import android.os.Bundle
 import android.view.View
-import androidx.core.os.bundleOf
-import androidx.fragment.app.setFragmentResult
 import com.example.todoktodok.R
 import com.example.todoktodok.databinding.OwnedBooksBottomSheetBinding
 import com.example.todoktodok.presentation.core.ext.getParcelableArrayListCompat
 import com.example.todoktodok.presentation.view.library.BooksAdapter
-import com.example.todoktodok.presentation.view.note.NoteFragment.Companion.REQUEST_KEY
 import com.example.todoktodok.presentation.view.serialization.SerializationBook
 import com.example.todoktodok.state.BookState
 import com.google.android.material.bottomsheet.BottomSheetBehavior

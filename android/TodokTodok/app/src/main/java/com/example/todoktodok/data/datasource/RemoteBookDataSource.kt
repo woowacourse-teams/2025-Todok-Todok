@@ -1,6 +1,5 @@
 package com.example.todoktodok.data.datasource
 
-import android.util.Log
 import com.example.domain.model.Book
 import com.example.todoktodok.data.network.request.SaveBookRequest
 import com.example.todoktodok.data.network.response.BookResponse
@@ -27,6 +26,5 @@ class RemoteBookDataSource(
 
     companion object {
         val token = "Bearer"
-
     }
 }

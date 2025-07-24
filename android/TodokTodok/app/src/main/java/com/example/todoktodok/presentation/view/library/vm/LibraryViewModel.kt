@@ -4,8 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.domain.model.Book
-import com.example.domain.model.Books
 import com.example.domain.repository.BookRepository
 import com.example.todoktodok.state.BookState
 import kotlinx.coroutines.launch

@@ -1,7 +1,6 @@
 package com.example.todoktodok.presentation.view.note
 
 import com.example.domain.model.Book
-import com.example.domain.model.Books
 
 data class NoteState(
     val snap: String = INITIALIZE_STING_VALUE,

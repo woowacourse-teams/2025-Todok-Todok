@@ -18,9 +18,7 @@ class BooksViewHolder private constructor(
     }
 
     companion object {
-        fun BooksViewHolder(
-            parent: ViewGroup,
-        ): BooksViewHolder {
+        fun BooksViewHolder(parent: ViewGroup): BooksViewHolder {
             val layoutInflater = LayoutInflater.from(parent.context)
             val binding = ItemBookBinding.inflate(layoutInflater, parent, false)
             return BooksViewHolder(binding)

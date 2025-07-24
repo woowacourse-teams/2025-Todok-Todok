@@ -1,7 +1,6 @@
 package com.example.todoktodok.presentation.view.library
 
 import androidx.recyclerview.widget.DiffUtil
-import com.example.domain.model.Book
 import com.example.todoktodok.state.BookState
 
 val booksDiffUtil =
