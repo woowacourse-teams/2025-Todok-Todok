@@ -32,12 +32,12 @@ class NoteViewModelTest {
     private lateinit var noteRepository: NoteRepository
     private lateinit var viewModel: NoteViewModel
 
-    private val testBook = BOOKS_FIXTURES.items.first()
+    private val testBook = BOOKS_FIXTURES.first()
     private val testSelectedBookState =
         NoteState(selectedBook = testBook, savedBooks = BOOKS_FIXTURES)
 
     private val result =
-        BOOKS_FIXTURES.items.map {
+        BOOKS_FIXTURES.map {
             SerializationBook(
                 id = it.id,
                 title = it.title,
