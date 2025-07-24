@@ -1,10 +1,10 @@
 package com.example.todoktodok.data.di
 
 import android.content.Context
-import com.example.todoktodok.data.datasource.BookDataSource
-import com.example.todoktodok.data.datasource.CommentRemoteDataSource
-import com.example.todoktodok.data.datasource.DefaultCommentRemoteDataSource
-import com.example.todoktodok.data.datasource.RemoteBookDataSource
+import com.example.todoktodok.data.datasource.book.BookDataSource
+import com.example.todoktodok.data.datasource.book.RemoteBookDataSource
+import com.example.todoktodok.data.datasource.comment.CommentRemoteDataSource
+import com.example.todoktodok.data.datasource.comment.DefaultCommentRemoteDataSource
 import com.example.todoktodok.data.datasource.discussion.DefaultDiscussionRemoteDataSource
 import com.example.todoktodok.data.datasource.discussion.DiscussionRemoteDataSource
 import com.example.todoktodok.data.datasource.member.MemberDataSource

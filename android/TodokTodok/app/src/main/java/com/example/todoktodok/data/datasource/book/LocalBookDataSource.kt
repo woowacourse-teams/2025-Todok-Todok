@@ -1,6 +1,7 @@
-package com.example.todoktodok.data.datasource
+package com.example.todoktodok.data.datasource.book
 
 import com.example.domain.model.Book
+import com.example.todoktodok.data.datasource.book.BookDataSource
 
 class LocalBookDataSource : BookDataSource {
     override suspend fun fetchBooks(): List<Book> {

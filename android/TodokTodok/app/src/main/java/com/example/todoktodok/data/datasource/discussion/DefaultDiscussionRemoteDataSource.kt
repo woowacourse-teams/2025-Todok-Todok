@@ -11,6 +11,5 @@ class DefaultDiscussionRemoteDataSource(
             discussionService.fetchDiscussion(id)
         }
 
-    override suspend fun getDiscussions(): List<DiscussionResponse> =
-        discussionService.fetchDiscussions()
+    override suspend fun getDiscussions(): List<DiscussionResponse> = discussionService.fetchDiscussions()
 }

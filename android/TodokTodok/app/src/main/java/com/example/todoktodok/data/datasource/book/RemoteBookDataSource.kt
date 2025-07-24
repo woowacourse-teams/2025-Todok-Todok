@@ -1,6 +1,7 @@
-package com.example.todoktodok.data.datasource
+package com.example.todoktodok.data.datasource.book
 
 import com.example.domain.model.Book
+import com.example.todoktodok.data.datasource.book.BookDataSource
 import com.example.todoktodok.data.network.request.SaveBookRequest
 import com.example.todoktodok.data.network.response.BookResponse
 import com.example.todoktodok.data.network.service.BookService

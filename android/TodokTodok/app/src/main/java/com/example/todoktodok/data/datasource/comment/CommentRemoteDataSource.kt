@@ -1,4 +1,4 @@
-package com.example.todoktodok.data.datasource
+package com.example.todoktodok.data.datasource.comment
 
 import com.example.todoktodok.data.network.request.CommentRequest
 import com.example.todoktodok.data.network.response.comment.CommentResponse
