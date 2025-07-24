@@ -36,7 +36,7 @@ public class NoteQueryService {
         return getMyNotesByBookId(member, bookId);
     }
 
-    public MyNoteResponse getNoteById(
+    public MyNoteResponse getMyNote(
             final Long memberId,
             final Long noteId
     ) {

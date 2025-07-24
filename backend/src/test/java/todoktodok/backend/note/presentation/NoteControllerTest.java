@@ -120,7 +120,7 @@ class NoteControllerTest {
 
     @Test
     @DisplayName("기록을 단일 조회한다")
-    void getNoteByIdTest() {
+    void getMyNoteTest() {
         //given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();

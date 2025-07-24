@@ -55,11 +55,11 @@ public class NoteController {
     @Operation(summary = "기록 단일 조회 API")
     @Auth(value = Role.USER)
     @GetMapping("/{noteId}")
-    public ResponseEntity<MyNoteResponse> getNoteById(
+    public ResponseEntity<MyNoteResponse> getMyNote(
             @LoginMember final Long memberId,
             @PathVariable final Long noteId
     ) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(noteQueryService.getNoteById(memberId, noteId));
+                .body(noteQueryService.getMyNote(memberId, noteId));
     }
 }
