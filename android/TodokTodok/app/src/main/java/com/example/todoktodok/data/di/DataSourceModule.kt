@@ -6,12 +6,13 @@ import com.example.todoktodok.data.datasource.DefaultCommentDataSource
 import com.example.todoktodok.data.datasource.DefaultDiscussionRoomDataSource
 import com.example.todoktodok.data.datasource.DiscussionRoomDataSource
 import com.example.todoktodok.data.datasource.NoteDataSource
+import com.example.todoktodok.data.datasource.RemoteBookDataSource
 import com.example.todoktodok.data.datasource.RemoteNoteDataSource
 
 class DataSourceModule(
     serviceModule: ServiceModule,
 ) {
-    val bookDataSource: BookDataSource by lazy { BookDataSource() }
+    val bookDataSource: BookDataSource by lazy { RemoteBookDataSource(serviceModule.libraryService) }
 
     val noteDataSource: NoteDataSource by lazy { RemoteNoteDataSource() }
 
