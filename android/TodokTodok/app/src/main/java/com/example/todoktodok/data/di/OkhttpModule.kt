@@ -1,10 +1,13 @@
 package com.example.todoktodok.data.di
 
 import com.example.todoktodok.BuildConfig
+import com.example.todoktodok.data.network.auth.AuthInterceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 
-class OkhttpModule {
+class OkhttpModule(
+    authInterceptor: AuthInterceptor,
+) {
     private val logger =
         HttpLoggingInterceptor().let {
             if (BuildConfig.DEBUG) {
@@ -17,6 +20,7 @@ class OkhttpModule {
     val instance =
         OkHttpClient
             .Builder()
+            .addInterceptor(authInterceptor)
             .addInterceptor(logger)
             .build()
 }
