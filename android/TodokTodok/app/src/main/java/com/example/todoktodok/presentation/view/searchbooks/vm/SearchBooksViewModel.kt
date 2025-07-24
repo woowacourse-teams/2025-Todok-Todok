@@ -4,9 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.domain.model.Book
 import com.example.domain.repository.BookRepository
 import com.example.todoktodok.presentation.view.searchbooks.SearchBooksUiEvent
 import com.example.todoktodok.presentation.view.searchbooks.SearchBooksUiState
+import com.example.todoktodok.state.BookState
+import com.example.todoktodok.state.toDomain
 import kotlinx.coroutines.launch
 
 class SearchBooksViewModel(
@@ -34,12 +37,14 @@ class SearchBooksViewModel(
 
         viewModelScope.launch {
             val books = bookRepository.searchBooks(input)
-            if (books.isEmpty()) {
+            val booksState =
+                books.map { book: Book -> BookState(book.id, book.title, book.author, book.image) }
+            if (booksState.isEmpty()) {
                 _uiEvent.value = SearchBooksUiEvent.ShowDialog(ERROR_NO_SEARCH_RESULTS)
                 return@launch
             }
-            uiState = uiState.copy(isLoading = false, searchedBooks = books)
-            _uiEvent.value = SearchBooksUiEvent.ShowSearchedBooks(books)
+            uiState = uiState.copy(isLoading = false, searchedBooks = booksState)
+            _uiEvent.value = SearchBooksUiEvent.ShowSearchedBooks(booksState)
         }
     }
 
@@ -58,11 +63,12 @@ class SearchBooksViewModel(
     }
 
     fun saveSelectedBook() {
-        val selectedBook = uiState.selectedBook
+        val selectedBook: Book? = uiState.selectedBook?.toDomain()
         if (selectedBook == null) {
             _uiEvent.value = _uiEvent.value ?: SearchBooksUiEvent.ShowDialog(ERROR_NO_SELECTED_BOOK)
             return
         }
+
         viewModelScope.launch {
             bookRepository.saveBook(selectedBook)
             _uiEvent.value = _uiEvent.value ?: SearchBooksUiEvent.ShowDialog(MESSAGE_BOOK_SAVED)

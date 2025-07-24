@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.domain.model.Book
 import com.example.todoktodok.databinding.ItemBookSearchBinding
+import com.example.todoktodok.state.BookState
 
 class SearchBooksViewHolder private constructor(
     private val binding: ItemBookSearchBinding,
@@ -18,10 +19,11 @@ class SearchBooksViewHolder private constructor(
         }
     }
 
-    fun bind(book: Book) {
+    fun bind(book: BookState) {
         with(binding) {
             tvBookTitle.text = book.title
             tvBookAuthor.text = book.author
+            book.bookImage(ivBookCover, root.context)
         }
     }
 
