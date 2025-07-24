@@ -9,9 +9,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import todoktodok.backend.global.auth.Auth;
+import todoktodok.backend.global.auth.Role;
 import todoktodok.backend.global.jwt.JwtTokenProvider;
 import todoktodok.backend.global.jwt.TokenInfo;
-import todoktodok.backend.global.auth.Role;
 
 @Slf4j
 @Component

@@ -1,6 +1,5 @@
 package todoktodok.backend.member.domain.repository;
 
-import jakarta.validation.constraints.Email;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import todoktodok.backend.member.domain.Member;

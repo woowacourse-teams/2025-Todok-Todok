@@ -1,7 +1,7 @@
 package todoktodok.backend.discussion.application.service.command;
 
+import java.util.NoSuchElementException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -55,7 +55,7 @@ class DiscussionCommandServiceTest {
 
         // when - then
         assertThatThrownBy(() -> discussionCommandService.createDiscussion(memberId, discussionRequest))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(NoSuchElementException.class)
                 .hasMessage("해당 회원을 찾을 수 없습니다");
     }
 
@@ -80,7 +80,7 @@ class DiscussionCommandServiceTest {
         assertThatThrownBy(
                 () -> discussionCommandService.createDiscussion(memberId, discussionRequest)
         )
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(NoSuchElementException.class)
                 .hasMessage("해당 기록을 찾을 수 없습니다");
     }
 

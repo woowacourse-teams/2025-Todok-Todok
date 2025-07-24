@@ -1,14 +1,13 @@
 package todoktodok.backend.comment.domain;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import todoktodok.backend.book.domain.Book;
 import todoktodok.backend.book.presentation.fixture.BookFixture;
 import todoktodok.backend.comment.domain.fixture.CommentFixture;
-import todoktodok.backend.discussion.domain.fixture.DiscussionFixture;
 import todoktodok.backend.discussion.domain.Discussion;
+import todoktodok.backend.discussion.domain.fixture.DiscussionFixture;
 import todoktodok.backend.member.domain.Member;
 import todoktodok.backend.member.presentation.fixture.MemberFixture;
 import todoktodok.backend.note.domain.Note;
