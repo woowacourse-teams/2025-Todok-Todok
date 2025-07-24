@@ -1,4 +1,4 @@
-package com.example.todoktodok.presentation.view.start
+package com.example.todoktodok.presentation.view.auth
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge

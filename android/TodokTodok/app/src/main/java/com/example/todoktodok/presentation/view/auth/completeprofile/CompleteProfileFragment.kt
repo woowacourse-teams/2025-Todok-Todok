@@ -1,4 +1,4 @@
-package com.example.todoktodok.presentation.view.start.completeprofile
+package com.example.todoktodok.presentation.view.auth.completeprofile
 
 import android.os.Bundle
 import android.view.LayoutInflater

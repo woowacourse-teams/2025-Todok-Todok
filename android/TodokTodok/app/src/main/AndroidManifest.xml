@@ -15,7 +15,7 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".presentation.view.start.AuthActivity"
+            android:name=".presentation.view.auth.AuthActivity"
             android:exported="true" />
         <activity
             android:name=".presentation.view.discussion.detail.DiscussionDetailActivity"
