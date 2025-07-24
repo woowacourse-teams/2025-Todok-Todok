@@ -41,7 +41,7 @@ public class NoteController {
                 .build();
     }
 
-    @Operation(summary = "도서별 내 기록 조회")
+    @Operation(summary = "도서별 내 기록 조회 API")
     @Auth(value = Role.USER)
     @GetMapping("/mine")
     public ResponseEntity<List<MyNoteResponse>> getMyNotes(
@@ -52,7 +52,7 @@ public class NoteController {
                 .body(noteQueryService.getMyNotes(memberId, bookId));
     }
 
-    @Operation(summary = "기록 단일 조회")
+    @Operation(summary = "기록 단일 조회 API")
     @Auth(value = Role.USER)
     @GetMapping("/{noteId}")
     public ResponseEntity<MyNoteResponse> getNoteById(
