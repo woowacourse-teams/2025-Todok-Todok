@@ -11,26 +11,26 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.widget.addTextChangedListener
 import com.example.todoktodok.App
 import com.example.todoktodok.R
-import com.example.todoktodok.databinding.ActivityDiscussionRoomDetailBinding
+import com.example.todoktodok.databinding.ActivityDiscussionDetailBinding
 import com.example.todoktodok.presentation.view.discussion.detail.adapter.CommentAdapter
-import com.example.todoktodok.presentation.view.discussion.detail.vm.DiscussionRoomDetailViewModel
-import com.example.todoktodok.presentation.view.discussion.detail.vm.DiscussionRoomDetailViewModel.Companion.KEY_DISCUSSION_ID
-import com.example.todoktodok.presentation.view.discussion.detail.vm.DiscussionRoomDetailViewModelFactory
+import com.example.todoktodok.presentation.view.discussion.detail.vm.DiscussionDetailViewModel
+import com.example.todoktodok.presentation.view.discussion.detail.vm.DiscussionDetailViewModel.Companion.KEY_DISCUSSION_ID
+import com.example.todoktodok.presentation.view.discussion.detail.vm.DiscussionDetailViewModelFactory
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
-class DiscussionRoomDetailActivity : AppCompatActivity() {
+class DiscussionDetailActivity : AppCompatActivity() {
     private val adapter by lazy { CommentAdapter() }
-    private val viewModel by viewModels<DiscussionRoomDetailViewModel> {
+    private val viewModel by viewModels<DiscussionDetailViewModel> {
         val repositoryModule = (application as App).container.repositoryModule
-        DiscussionRoomDetailViewModelFactory(
-            repositoryModule.discussionRoomRepository,
+        DiscussionDetailViewModelFactory(
+            repositoryModule.discussionRepository,
             repositoryModule.commentRepository,
         )
     }
-    private val binding: ActivityDiscussionRoomDetailBinding by lazy {
-        ActivityDiscussionRoomDetailBinding.inflate(
+    private val binding: ActivityDiscussionDetailBinding by lazy {
+        ActivityDiscussionDetailBinding.inflate(
             layoutInflater,
         )
     }
@@ -67,7 +67,7 @@ class DiscussionRoomDetailActivity : AppCompatActivity() {
     private fun setupOnClickAddComment() {
         with(binding) {
             ivAddComment.setOnClickListener {
-                viewModel.onUiEvent(DiscussionRoomDetailUiEvent.AddComment(etTextCommentContent.text.toString()))
+                viewModel.onUiEvent(DiscussionDetailUiEvent.AddComment(etTextCommentContent.text.toString()))
                 etTextCommentContent.text?.clear()
                 etTextCommentContent.clearFocus()
             }
@@ -76,8 +76,8 @@ class DiscussionRoomDetailActivity : AppCompatActivity() {
 
     private fun setupOnClickNavigateUp() {
         with(binding) {
-            ivDiscussionRoomDetailBack.setOnClickListener {
-                viewModel.onUiEvent(DiscussionRoomDetailUiEvent.NavigateUp)
+            ivDiscussionDetailBack.setOnClickListener {
+                viewModel.onUiEvent(DiscussionDetailUiEvent.NavigateUp)
             }
         }
     }
@@ -91,14 +91,14 @@ class DiscussionRoomDetailActivity : AppCompatActivity() {
     }
 
     private fun setupObserve() {
-        viewModel.discussionRoom.observe(this) { value ->
+        viewModel.discussion.observe(this) { value ->
             with(binding) {
                 tvBookTitle.text = value.book.title
-                tvDiscussionRoomTitle.text = value.discussionTitle
+                tvDiscussionTitle.text = value.discussionTitle
                 tvUserContent.text =
                     formatAuthorAndDate(value.writer.nickname.value, value.createAt)
-                tvDiscussionRoomNote.text = value.snap
-                tvDiscussionRoomOpinion.text = value.discussionOpinion
+                tvDiscussionNote.text = value.snap
+                tvDiscussionOpinion.text = value.discussionOpinion
             }
         }
         viewModel.uiEvent.observe(this) { value ->
@@ -123,11 +123,11 @@ class DiscussionRoomDetailActivity : AppCompatActivity() {
         return this.getString(R.string.author_and_date_format, author, formattedDate)
     }
 
-    private fun handleEvent(discussionRoomDetailUiEvent: DiscussionRoomDetailUiEvent) {
-        when (discussionRoomDetailUiEvent) {
-            DiscussionRoomDetailUiEvent.NavigateUp -> onBackPressedDispatcher.onBackPressed()
-            is DiscussionRoomDetailUiEvent.AddComment -> {
-                viewModel.addComment(LocalDateTime.now(), discussionRoomDetailUiEvent.content)
+    private fun handleEvent(discussionDetailUiEvent: DiscussionDetailUiEvent) {
+        when (discussionDetailUiEvent) {
+            DiscussionDetailUiEvent.NavigateUp -> onBackPressedDispatcher.onBackPressed()
+            is DiscussionDetailUiEvent.AddComment -> {
+                viewModel.addComment(LocalDateTime.now(), discussionDetailUiEvent.content)
                 viewModel.loadComments()
             }
         }
@@ -138,7 +138,7 @@ class DiscussionRoomDetailActivity : AppCompatActivity() {
             context: Context,
             discussionId: Long,
         ): Intent =
-            Intent(context, DiscussionRoomDetailActivity::class.java).putExtra(
+            Intent(context, DiscussionDetailActivity::class.java).putExtra(
                 KEY_DISCUSSION_ID,
                 discussionId,
             )

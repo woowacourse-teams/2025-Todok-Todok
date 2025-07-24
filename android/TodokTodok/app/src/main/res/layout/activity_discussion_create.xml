@@ -15,7 +15,7 @@
         android:paddingRight="@dimen/space_x_large">
 
         <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/abl_discussion_room_create"
+            android:id="@+id/abl_discussion_create"
             android:layout_width="match_parent"
             android:layout_height="@dimen/toolbar_height"
             android:background="@color/white"
@@ -24,14 +24,14 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/iv_discussion_room_create_back"
+            android:id="@+id/iv_discussion_create_back"
             android:layout_width="@dimen/space_2x_large"
             android:layout_height="@dimen/space_2x_large"
-            android:contentDescription="@string/content_description_discussion_room_create_back"
+            android:contentDescription="@string/content_description_discussion_create_back"
             android:src="@drawable/btn_back"
-            app:layout_constraintBottom_toBottomOf="@id/abl_discussion_room_create"
-            app:layout_constraintStart_toStartOf="@id/abl_discussion_room_create"
-            app:layout_constraintTop_toTopOf="@id/abl_discussion_room_create" />
+            app:layout_constraintBottom_toBottomOf="@id/abl_discussion_create"
+            app:layout_constraintStart_toStartOf="@id/abl_discussion_create"
+            app:layout_constraintTop_toTopOf="@id/abl_discussion_create" />
 
         <TextView
             android:id="@+id/tv_book_search_title"
@@ -40,11 +40,11 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/space_x_small"
             android:gravity="center"
-            android:text="@string/discussion_room_title"
-            app:layout_constraintBottom_toBottomOf="@id/abl_discussion_room_create"
-            app:layout_constraintEnd_toEndOf="@id/abl_discussion_room_create"
-            app:layout_constraintStart_toStartOf="@id/abl_discussion_room_create"
-            app:layout_constraintTop_toTopOf="@id/abl_discussion_room_create" />
+            android:text="@string/discussion_create_title"
+            app:layout_constraintBottom_toBottomOf="@id/abl_discussion_create"
+            app:layout_constraintEnd_toEndOf="@id/abl_discussion_create"
+            app:layout_constraintStart_toStartOf="@id/abl_discussion_create"
+            app:layout_constraintTop_toTopOf="@id/abl_discussion_create" />
 
         <TextView
             android:id="@+id/tv_note_search"
@@ -59,12 +59,12 @@
             app:layout_constraintBottom_toTopOf="@id/view_note_search_bar"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/abl_discussion_room_create" />
+            app:layout_constraintTop_toBottomOf="@id/abl_discussion_create" />
 
         <View
             android:id="@+id/view_note_search_bar"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/discussion_room_create_note_search_bar_height"
+            android:layout_height="@dimen/discussion_create_note_search_bar_height"
             android:background="@drawable/bg_green_f0_radius_8dp"
             app:layout_constraintBottom_toTopOf="@id/tv_discussion_title"
             app:layout_constraintEnd_toEndOf="parent"
@@ -98,7 +98,7 @@
         <View
             android:id="@+id/view_discussion_title"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/discussion_room_create_note_search_bar_height"
+            android:layout_height="@dimen/discussion_create_note_search_bar_height"
             android:background="@drawable/bg_green_f0_radius_8dp"
             app:layout_constraintBottom_toTopOf="@id/tv_discussion_content"
             app:layout_constraintEnd_toEndOf="parent"
@@ -162,11 +162,11 @@
             android:id="@+id/tv_discussion_create"
             style="@style/BasicButtonStyle"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/discussion_room_create_button_height"
+            android:layout_height="@dimen/discussion_create_button_height"
             android:layout_marginVertical="@dimen/space_x_large"
             android:background="@drawable/bg_green_1a_radius_8dp"
             android:gravity="center"
-            android:text="@string/discussion_room_create"
+            android:text="@string/discussion_create"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"

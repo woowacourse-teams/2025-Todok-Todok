@@ -4,26 +4,28 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.domain.model.Comment
-import com.example.domain.model.DiscussionRoom
+import com.example.domain.model.Discussion
 import com.example.domain.model.member.Nickname
 import com.example.domain.model.member.User
 import com.example.domain.repository.CommentRepository
-import com.example.domain.repository.DiscussionRoomRepository
+import com.example.domain.repository.DiscussionRepository
 import com.example.todoktodok.presentation.core.event.MutableSingleLiveData
 import com.example.todoktodok.presentation.core.event.SingleLiveData
-import com.example.todoktodok.presentation.view.discussion.detail.DiscussionRoomDetailUiEvent
+import com.example.todoktodok.presentation.view.discussion.detail.DiscussionDetailUiEvent
+import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
-class DiscussionRoomDetailViewModel(
+class DiscussionDetailViewModel(
     savedStateHandle: SavedStateHandle,
-    private val discussionRoomRepository: DiscussionRoomRepository,
+    private val discussionRepository: DiscussionRepository,
     private val commentRepository: CommentRepository,
 ) : ViewModel() {
     private val discussionRoomId =
         savedStateHandle.get<Long>(KEY_DISCUSSION_ID) ?: throw IllegalStateException()
-    private val _discussionRoom = MutableLiveData<DiscussionRoom>()
-    val discussionRoom: LiveData<DiscussionRoom> = _discussionRoom
+    private val _discussion = MutableLiveData<Discussion>()
+    val discussion: LiveData<Discussion> = _discussion
 
     private val _comments = MutableLiveData<List<Comment>>(emptyList())
     val comments: LiveData<List<Comment>> = _comments
@@ -31,15 +33,17 @@ class DiscussionRoomDetailViewModel(
     private val _commentText = MutableLiveData("")
     val commentText: LiveData<String> = _commentText
 
-    private val _uiEvent = MutableSingleLiveData<DiscussionRoomDetailUiEvent>()
-    val uiEvent: SingleLiveData<DiscussionRoomDetailUiEvent> = _uiEvent
+    private val _uiEvent = MutableSingleLiveData<DiscussionDetailUiEvent>()
+    val uiEvent: SingleLiveData<DiscussionDetailUiEvent> = _uiEvent
 
     init {
-        loadDiscussionRoom()
+        viewModelScope.launch {
+            loadDiscussionRoom()
+        }
         loadComments()
     }
 
-    fun onUiEvent(uiEvent: DiscussionRoomDetailUiEvent) {
+    fun onUiEvent(uiEvent: DiscussionDetailUiEvent) {
         _uiEvent.setValue(uiEvent)
     }
 
@@ -61,9 +65,9 @@ class DiscussionRoomDetailViewModel(
         _commentText.value = text?.toString() ?: ""
     }
 
-    private fun loadDiscussionRoom() {
-        _discussionRoom.value =
-            discussionRoomRepository.getDiscussionRoom(discussionRoomId).getOrNull()
+    private suspend fun loadDiscussionRoom() {
+        _discussion.value =
+            discussionRepository.getDiscussion(discussionRoomId).getOrNull()
     }
 
     fun loadComments() {

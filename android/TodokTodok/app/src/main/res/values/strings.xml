@@ -23,11 +23,11 @@
     <string name="content_description_book_search_layout">내 서재 검색 버튼입니다.</string>
 
     <!--  토론 목록 페이지  -->
-    <string name="content_description_add_discussion_room">토론방 추가 화면으로 이동합니다</string>
+    <string name="content_description_add_discussion">토론방 추가 화면으로 이동합니다</string>
     <string name="content_description_book_image">책 이미지입니다</string>
 
     <!--  상세 토론방 페이지  -->
-    <string name="content_description_discussion_room_detail_back">토론 상세 화면에서 뒤로가는 버튼</string>
+    <string name="content_description_discussion_detail_back">토론 상세 화면에서 뒤로가는 버튼</string>
     <string name="comment_input_hint">댓글 입력</string>
     <string name="content_description_add_comment">댓글을 추가합니다</string>
     <string name="author_and_date_format">%1$s · %2$s</string>
@@ -42,13 +42,15 @@
 
     <!-- 내 서재 페이지 -->
     <string name="content_description_navigate_to_book_search">도서 검색 화면으로 이동합니다</string>
-    <string name="discussion_room_title">토론방 생성</string>
-    <string name="content_description_discussion_room_create_back">토론방 목록으로 이동합니다</string>
+
     <string name="note_search">기록 검색</string>
 
     <!--  토론방 생성 페이지  -->
+    <string name="discussion_create_title">토론방 생성</string>
+    <string name="content_description_discussion_create_back">토론방 목록으로 이동합니다</string>
     <string name="discussion_title">토론 제목</string>
     <string name="discussion_content">나의 의견</string>
+    <string name="discussion_create">생성하기</string>
     <string name="discussion_room_create">생성하기</string>
 
     <!-- 로그인 페이지 -->

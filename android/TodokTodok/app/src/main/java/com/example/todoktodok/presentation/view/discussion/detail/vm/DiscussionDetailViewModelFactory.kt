@@ -5,10 +5,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.domain.repository.CommentRepository
-import com.example.domain.repository.DiscussionRoomRepository
+import com.example.domain.repository.DiscussionRepository
 
-class DiscussionRoomDetailViewModelFactory(
-    private val discussionRoomRepository: DiscussionRoomRepository,
+class DiscussionDetailViewModelFactory(
+    private val discussionRepository: DiscussionRepository,
     private val commentRepository: CommentRepository,
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(
@@ -16,10 +16,10 @@ class DiscussionRoomDetailViewModelFactory(
         extras: CreationExtras,
     ): T {
         val savedStateHandle = extras.createSavedStateHandle()
-        if (modelClass.isAssignableFrom(DiscussionRoomDetailViewModel::class.java)) {
-            return DiscussionRoomDetailViewModel(
+        if (modelClass.isAssignableFrom(DiscussionDetailViewModel::class.java)) {
+            return DiscussionDetailViewModel(
                 savedStateHandle,
-                discussionRoomRepository,
+                discussionRepository,
                 commentRepository,
             ) as T
         } else {

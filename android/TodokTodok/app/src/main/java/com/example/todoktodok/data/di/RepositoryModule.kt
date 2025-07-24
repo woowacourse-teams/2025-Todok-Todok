@@ -2,21 +2,21 @@ package com.example.todoktodok.data.di
 
 import com.example.domain.repository.BookRepository
 import com.example.domain.repository.CommentRepository
-import com.example.domain.repository.DiscussionRoomRepository
+import com.example.domain.repository.DiscussionRepository
 import com.example.domain.repository.MemberRepository
 import com.example.domain.repository.NoteRepository
 import com.example.todoktodok.data.repository.DefaultBookRepository
 import com.example.todoktodok.data.repository.DefaultCommentRepository
-import com.example.todoktodok.data.repository.DefaultDiscussionRoomRepository
+import com.example.todoktodok.data.repository.DefaultDiscussionRepository
 import com.example.todoktodok.data.repository.DefaultMemberRepository
 import com.example.todoktodok.data.repository.DefaultNoteRepository
 
 class RepositoryModule(
     dataSourceModule: DataSourceModule,
 ) {
-    val discussionRoomRepository: DiscussionRoomRepository by lazy {
-        DefaultDiscussionRoomRepository(
-            dataSourceModule.discussionRoomDataSource,
+    val discussionRepository: DiscussionRepository by lazy {
+        DefaultDiscussionRepository(
+            dataSourceModule.discussionRemoteDataSource,
         )
     }
     val bookRepository: BookRepository by lazy { DefaultBookRepository(dataSourceModule.bookDataSource) }
