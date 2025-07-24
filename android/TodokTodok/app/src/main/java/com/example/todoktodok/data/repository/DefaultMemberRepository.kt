@@ -8,7 +8,7 @@ import com.example.todoktodok.data.network.request.toRequest
 class DefaultMemberRepository(
     private val remoteMemberDataSource: MemberDataSource,
 ) : MemberRepository {
-    override suspend fun login(email: String) = remoteMemberDataSource.login(email)
+    override suspend fun login(email: String): String = remoteMemberDataSource.login(email)
 
     override suspend fun signUp(request: Member): Member {
         val response = remoteMemberDataSource.signUp(request.toRequest())

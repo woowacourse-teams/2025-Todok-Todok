@@ -1,5 +1,7 @@
 package com.example.todoktodok.presentation.view
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -57,5 +59,9 @@ class MainActivity : AppCompatActivity() {
                 MainScreen.LIBRARY -> replace<LibraryFragment>(R.id.fcv_container)
             }
         }
+    }
+
+    companion object {
+        fun Intent(context: Context): Intent = Intent(context, MainActivity::class.java)
     }
 }
