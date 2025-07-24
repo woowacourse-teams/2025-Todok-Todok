@@ -2,10 +2,7 @@ package com.example.todoktodok.presentation.view.searchbooks
 
 import android.content.Context
 import android.content.Intent
-import android.hardware.lights.Light
 import android.os.Bundle
-import android.text.Editable
-import android.util.Log
 import android.view.KeyEvent
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -13,7 +10,6 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.widget.addTextChangedListener
 import com.example.todoktodok.App
 import com.example.todoktodok.databinding.ActivitySearchBooksBinding
 import com.example.todoktodok.presentation.view.searchbooks.vm.SearchBooksViewModel

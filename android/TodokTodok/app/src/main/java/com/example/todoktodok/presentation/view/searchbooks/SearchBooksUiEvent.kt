@@ -4,6 +4,7 @@ import com.example.domain.model.Book
 
 sealed interface SearchBooksUiEvent {
     data object NavigateToLibrary : SearchBooksUiEvent
+
     data class ShowSearchedBooks(
         val books: List<Book>,
     ) : SearchBooksUiEvent

@@ -3,8 +3,8 @@ package com.example.todoktodok.data.datasource
 import com.example.domain.model.Book
 
 class RemoteBookDataSource : BookDataSource {
-    override suspend fun fetchBooks(): List<Book> {
-        return listOf(
+    override suspend fun fetchBooks(): List<Book> =
+        listOf(
             Book(
                 id = 1L,
                 title = "클린 코드",
@@ -66,10 +66,9 @@ class RemoteBookDataSource : BookDataSource {
                 image = "https://image.aladin.co.kr/product/35641/30/cover500/k122036609_1.jpg",
             ),
         )
-    }
 
-    override suspend fun fetchBooks(searchInput: String): List<Book> {
-        return listOf(
+    override suspend fun fetchBooks(searchInput: String): List<Book> =
+        listOf(
             Book(
                 id = 1L,
                 title = "클린 코드",
@@ -131,7 +130,6 @@ class RemoteBookDataSource : BookDataSource {
                 image = "https://image.aladin.co.kr/product/35641/30/cover500/k122036609_1.jpg",
             ),
         )
-    }
 
     override suspend fun saveBook(bookId: Long) {
         TODO("Not yet implemented")
