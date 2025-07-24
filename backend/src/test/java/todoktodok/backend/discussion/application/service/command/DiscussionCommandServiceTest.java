@@ -138,7 +138,7 @@ class DiscussionCommandServiceTest {
 
     @Test
     @DisplayName("회원이 자신의 토론방을 신고하면 예외가 발생한다")
-    void validateDuplicatedReportTest() {
+    void report_selfReport_fail() {
         // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
