@@ -28,8 +28,7 @@ public class NoteQueryService {
             final Long memberId,
             final Long bookId
     ) {
-        final Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new NoSuchElementException("해당하는 회원을 찾을 수 없습니다"));
+        final Member member = findMember(memberId);
 
         if (bookId == null) {
             return getMyNotesAll(member);
@@ -37,24 +36,12 @@ public class NoteQueryService {
         return getMyNotesByBookId(member, bookId);
     }
 
-    private List<MyNoteResponse> getMyNotesByBookId(
-            final Member member,
-            final Long bookId
-    ) {
-        Book book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new NoSuchElementException("해당하는 도서를 찾을 수 없습니다"));
-        return noteRepository.findNotesByMemberAndBook(member, book).stream()
-                .map(MyNoteResponse::new)
-                .toList();
-    }
-
     public MyNoteResponse getNoteById(
             final Long memberId,
             final Long noteId
     ) {
-        Note note = noteRepository.findById(noteId)
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 기록을 찾을 수 없습니다"));
-        validateNoteMine(note, memberId);
+        Note note = findNote(noteId);
+        validateIsMyNote(note, memberId);
 
         return new MyNoteResponse(note);
     }
@@ -65,12 +52,39 @@ public class NoteQueryService {
                 .toList();
     }
 
-    private void validateNoteMine(
+    private List<MyNoteResponse> getMyNotesByBookId(
+            final Member member,
+            final Long bookId
+    ) {
+        Book book = findBook(bookId);
+
+        return noteRepository.findNotesByMemberAndBook(member, book).stream()
+                .map(MyNoteResponse::new)
+                .toList();
+    }
+
+    private void validateIsMyNote(
             final Note note,
             final Long memberId
     ) {
-        if (!note.getMember().getId().equals(memberId)) {
+        Member member = findMember(memberId);
+        if (!note.isOwnedBy(member)) {
             throw new IllegalArgumentException("자신의 기록만 조회 가능합니다");
         }
+    }
+
+    private Member findMember(Long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new NoSuchElementException("해당하는 회원을 찾을 수 없습니다"));
+    }
+
+    private Note findNote(Long noteId) {
+        return noteRepository.findById(noteId)
+                .orElseThrow(() -> new IllegalArgumentException("해당하는 기록을 찾을 수 없습니다"));
+    }
+
+    private Book findBook(Long bookId) {
+        return bookRepository.findById(bookId)
+                .orElseThrow(() -> new NoSuchElementException("해당하는 도서를 찾을 수 없습니다"));
     }
 }

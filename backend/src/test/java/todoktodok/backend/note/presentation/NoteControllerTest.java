@@ -39,7 +39,7 @@ class NoteControllerTest {
     @Test
     @DisplayName("기록을 생성한다")
     void createNoteTest() {
-        //given
+        // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
         databaseInitializer.setDefaultShelfInfo();
@@ -51,7 +51,7 @@ class NoteControllerTest {
         );
         final String token = MemberFixture.login("user@gmail.com");
 
-        //when - then
+        // when - then
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .header("Authorization", token)
@@ -64,7 +64,7 @@ class NoteControllerTest {
     @Test
     @DisplayName("내 기록들을 조회한다")
     void getMyNotesTest() {
-        //given
+        // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
         databaseInitializer.setDefaultShelfInfo();
@@ -72,7 +72,7 @@ class NoteControllerTest {
 
         final String token = MemberFixture.login("user@gmail.com");
 
-        //when - then
+        // when - then
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .header("Authorization", token)
@@ -85,7 +85,7 @@ class NoteControllerTest {
     @Test
     @DisplayName("도서 별 내 기록들을 조회한다")
     void getMyNotesByBookTest() {
-        //given
+        // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
         databaseInitializer.setBookInfo(

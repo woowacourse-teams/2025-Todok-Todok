@@ -12,7 +12,7 @@ class NoteTest {
     @Test
     @DisplayName("기록 생성 시 스냅과 메모가 모두 입력되지 않으면 예외가 발생한다")
     void validateBlankSnapAndMemoTest() {
-        //given
+        // given
         final Member member = Member.builder()
                 .email("user@gmail.com")
                 .nickname("user")
@@ -25,7 +25,7 @@ class NoteTest {
                 .isbn("1234")
                 .build();
 
-        //when - then
+        // when - then
         assertThatThrownBy(() -> Note.builder()
                 .snap("")
                 .memo("")
