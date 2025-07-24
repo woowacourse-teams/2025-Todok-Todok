@@ -1,5 +1,6 @@
 package com.example.todoktodok.data.di
 
+import android.content.Context
 import com.example.todoktodok.data.datasource.BookDataSource
 import com.example.todoktodok.data.datasource.CommentRemoteDataSource
 import com.example.todoktodok.data.datasource.DefaultCommentRemoteDataSource
@@ -10,9 +11,11 @@ import com.example.todoktodok.data.datasource.member.MemberDataSource
 import com.example.todoktodok.data.datasource.member.RemoteMemberDataSource
 import com.example.todoktodok.data.datasource.note.NoteDataSource
 import com.example.todoktodok.data.datasource.note.RemoteNoteDataSource
+import com.example.todoktodok.data.datasource.token.TokenDataSource
 
 class DataSourceModule(
     serviceModule: ServiceModule,
+    context: Context,
 ) {
     val remoteBookDataSource: BookDataSource by lazy {
         RemoteBookDataSource(
@@ -35,5 +38,7 @@ class DataSourceModule(
         )
     }
 
-    val remoteMemberDataSource: MemberDataSource by lazy { RemoteMemberDataSource(serviceModule.memberService) }
+    val tokenDataSource: TokenDataSource by lazy { TokenDataSource(context) }
+
+    val remoteMemberDataSource: MemberDataSource by lazy { RemoteMemberDataSource(serviceModule.memberService, tokenDataSource) }
 }

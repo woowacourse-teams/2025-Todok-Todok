@@ -8,10 +8,22 @@ import com.example.todoktodok.data.network.request.toRequest
 class DefaultMemberRepository(
     private val remoteMemberDataSource: MemberDataSource,
 ) : MemberRepository {
-    override suspend fun login(email: String) = remoteMemberDataSource.login(email)
+    private var cachedMember: Member? = null
 
-    override suspend fun signUp(request: Member): Member {
-        val response = remoteMemberDataSource.signUp(request.toRequest())
-        return response.toDomain()
+    override suspend fun login(
+        email: String,
+        nickname: String,
+        profileImage: String,
+    ): String {
+        cachedMember = Member(nickname, profileImage, email)
+
+        return remoteMemberDataSource.login(email)
+    }
+
+    override suspend fun signUp(nickname: String) {
+        cachedMember?.let {
+            val request = it.copy(nickName = nickname).toRequest()
+            remoteMemberDataSource.signUp(request)
+        }
     }
 }
