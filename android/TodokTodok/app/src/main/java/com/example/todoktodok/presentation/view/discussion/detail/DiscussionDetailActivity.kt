@@ -127,7 +127,7 @@ class DiscussionDetailActivity : AppCompatActivity() {
         when (discussionDetailUiEvent) {
             DiscussionDetailUiEvent.NavigateUp -> onBackPressedDispatcher.onBackPressed()
             is DiscussionDetailUiEvent.AddComment -> {
-                viewModel.addComment(LocalDateTime.now(), discussionDetailUiEvent.content)
+                viewModel.submitComment()
                 viewModel.loadComments()
             }
         }

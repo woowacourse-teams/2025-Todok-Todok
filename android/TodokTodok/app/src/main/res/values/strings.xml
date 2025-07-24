@@ -53,6 +53,7 @@
     <string name="discussion_content">나의 의견</string>
     <string name="discussion_create">생성하기</string>
     <string name="discussion_room_create">생성하기</string>
+    <string name="library_list">도서 목록</string>
 
     <!-- 로그인 페이지 -->
     <string name="login_fail_to_login">로그인에 실패했어요. 다시 시도해주세요</string>

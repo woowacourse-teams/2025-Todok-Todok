@@ -89,7 +89,6 @@ dependencies {
     implementation(libs.bundles.network)
     implementation(libs.bundles.google)
     implementation(libs.bundles.glide)
-
     testImplementation(libs.bundles.test)
     testImplementation(libs.androidx.core.testing)
     androidTestImplementation(libs.bundles.android.test)

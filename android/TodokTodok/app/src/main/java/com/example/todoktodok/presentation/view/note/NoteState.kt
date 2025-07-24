@@ -1,17 +1,16 @@
 package com.example.todoktodok.presentation.view.note
 
 import com.example.domain.model.Book
-import com.example.domain.model.Books
 
 data class NoteState(
     val snap: String = INITIALIZE_STING_VALUE,
     val memo: String = INITIALIZE_STING_VALUE,
-    val savedBooks: Books? = null,
+    val savedBooks: List<Book>? = null,
     val selectedBook: Book? = null,
 ) {
     fun modifySelectedBook(index: Int): NoteState {
         val selectedBook =
-            savedBooks?.items?.get(index) ?: throw IllegalArgumentException(CANNOT_FOUND_BOOK)
+            savedBooks?.get(index) ?: throw IllegalArgumentException(CANNOT_FOUND_BOOK)
         return this.copy(selectedBook = selectedBook)
     }
 

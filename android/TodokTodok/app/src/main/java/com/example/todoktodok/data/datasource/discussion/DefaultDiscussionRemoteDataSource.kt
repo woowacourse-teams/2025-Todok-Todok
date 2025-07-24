@@ -11,6 +11,7 @@ class DefaultDiscussionRemoteDataSource(
         runCatching {
             discussionService.fetchDiscussion(
                 AUTH_KEY,
+                id,
             )
         }
 
