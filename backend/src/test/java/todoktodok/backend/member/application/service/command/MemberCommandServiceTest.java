@@ -2,7 +2,6 @@ package todoktodok.backend.member.application.service.command;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -118,11 +117,11 @@ class MemberCommandServiceTest {
     @Test
     @DisplayName("소셜 로그인을 하지 않은 유저가 회원가입을 시도할 경우 예외가 발생한다")
     void validateEmailWithTokenEmailTest() {
-        //given
+        // given
         final String email = "user@gmail.com";
         final SignupRequest signupRequest = new SignupRequest("user", "https://user.png", email);
 
-        //when - then
+        // when - then
         assertThatThrownBy(() -> memberCommandService.signup(signupRequest, "notLoginUser@gmail.com"))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("소셜 로그인을 하지 않은 이메일입니다");
@@ -131,12 +130,12 @@ class MemberCommandServiceTest {
     @Test
     @DisplayName("자기 자신을 차단하면 예외가 발생한다")
     void validateSelfBlockTest() {
-        //given
+        // given
         databaseInitializer.setDefaultUserInfo();
 
         Long memberId = 1L;
 
-        //when - then
+        // when - then
         assertThatThrownBy(() -> memberCommandService.block(memberId, memberId))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("자기 자신을 차단할 수 없습니다");
@@ -145,12 +144,12 @@ class MemberCommandServiceTest {
     @Test
     @DisplayName("자기 자신을 신고하면 예외가 발생한다")
     void validateSelfReportTest() {
-        //given
+        // given
         databaseInitializer.setDefaultUserInfo();
 
         Long memberId = 1L;
 
-        //when - then
+        // when - then
         assertThatThrownBy(() -> memberCommandService.report(memberId, memberId))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("자기 자신을 신고할 수 없습니다");
@@ -159,7 +158,7 @@ class MemberCommandServiceTest {
     @Test
     @DisplayName("이미 자신이 차단한 회원을 중복 차단하면 예외가 발생한다")
     void validateDuplicatedBlockTest() {
-        //given
+        // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setUserInfo("user2@gmail.com", "user", "https://image.png", "");
         Long memberId = 1L;
@@ -167,7 +166,7 @@ class MemberCommandServiceTest {
 
         memberCommandService.block(memberId, targetId);
 
-        //when - then
+        // when - then
         assertThatThrownBy(() -> memberCommandService.block(memberId, targetId))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("이미 차단한 회원입니다");
@@ -176,7 +175,7 @@ class MemberCommandServiceTest {
     @Test
     @DisplayName("이미 자신이 신고한 회원을 중복 신고하면 예외가 발생한다")
     void validateDuplicatedReportTest() {
-        //given
+        // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setUserInfo("user2@gmail.com", "user", "https://image.png", "");
         Long memberId = 1L;
@@ -184,7 +183,7 @@ class MemberCommandServiceTest {
 
         memberCommandService.report(memberId, targetId);
 
-        //when - then
+        // when - then
         assertThatThrownBy(() -> memberCommandService.report(memberId, targetId))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("이미 신고한 회원입니다");

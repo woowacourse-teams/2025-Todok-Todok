@@ -55,8 +55,8 @@ public class MemberCommandService {
             final Long memberId,
             final Long targetId
     ) {
-        final Member member = getMember(memberId);
-        final Member target = getMember(targetId);
+        final Member member = findMember(memberId);
+        final Member target = findMember(targetId);
 
         validateSelfBlock(member, target);
         validateDuplicatedBlock(member, target);
@@ -72,8 +72,8 @@ public class MemberCommandService {
             final Long memberId,
             final Long targetId
     ) {
-        final Member member = getMember(memberId);
-        final Member target = getMember(targetId);
+        final Member member = findMember(memberId);
+        final Member target = findMember(targetId);
 
         validateSelfReport(member, target);
         validateDuplicatedReport(member, target);
@@ -106,7 +106,7 @@ public class MemberCommandService {
         }
     }
 
-    private Member getMember(final Long memberId) {
+    private Member findMember(final Long memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new NoSuchElementException("해당하는 회원을 찾을 수 없습니다"));
     }

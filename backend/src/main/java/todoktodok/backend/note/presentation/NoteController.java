@@ -7,9 +7,11 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import todoktodok.backend.global.auth.Auth;
 import todoktodok.backend.global.auth.Role;
@@ -39,13 +41,25 @@ public class NoteController {
                 .build();
     }
 
-    @Operation(summary = "내 기록 조회 API")
+    @Operation(summary = "도서별 내 기록 조회 API")
     @Auth(value = Role.USER)
     @GetMapping("/mine")
     public ResponseEntity<List<MyNoteResponse>> getMyNotes(
-            @LoginMember final Long memberId
+            @LoginMember final Long memberId,
+            @RequestParam(required = false) final Long bookId
     ) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(noteQueryService.getMyNotes(memberId));
+                .body(noteQueryService.getMyNotes(memberId, bookId));
+    }
+
+    @Operation(summary = "기록 단일 조회 API")
+    @Auth(value = Role.USER)
+    @GetMapping("/{noteId}")
+    public ResponseEntity<MyNoteResponse> getMyNote(
+            @LoginMember final Long memberId,
+            @PathVariable final Long noteId
+    ) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(noteQueryService.getMyNote(memberId, noteId));
     }
 }

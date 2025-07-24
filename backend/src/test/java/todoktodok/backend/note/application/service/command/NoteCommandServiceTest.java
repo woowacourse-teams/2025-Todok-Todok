@@ -1,7 +1,6 @@
 package todoktodok.backend.note.application.service.command;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,7 +34,7 @@ class NoteCommandServiceTest {
     @Test
     @DisplayName("서재에 없는 도서에 대한 기록을 생성할 경우 예외가 발생한다")
     void createNoteTest_fail() {
-        //given
+        // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
 
@@ -45,7 +44,7 @@ class NoteCommandServiceTest {
                 "Spring의 동작 원리를 이해하는 데 큰 도움이 됐다."
         );
 
-        //when - then
+        // when - then
         assertThatThrownBy(() -> noteCommandService.createNote(1L, noteRequest))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("서재 등록한 도서만 기록 가능합니다");

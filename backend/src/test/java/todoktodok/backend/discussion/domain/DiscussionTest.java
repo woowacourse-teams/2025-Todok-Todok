@@ -1,7 +1,6 @@
 package todoktodok.backend.discussion.domain;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import todoktodok.backend.book.domain.Book;
@@ -49,7 +48,7 @@ class DiscussionTest {
                         .note(note)
                         .build()
         ).isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("토론방 제목은 1자 이상, 50자 이하여야 합니다.");
+                .hasMessage("토론방 제목은 1자 이상, 50자 이하여야 합니다");
     }
 
     @Test
@@ -88,7 +87,7 @@ class DiscussionTest {
                         .note(note)
                         .build()
         ).isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("토론방 제목은 1자 이상, 50자 이하여야 합니다.");
+                .hasMessage("토론방 제목은 1자 이상, 50자 이하여야 합니다");
     }
 
     @Test
@@ -127,7 +126,7 @@ class DiscussionTest {
                         .note(note)
                         .build()
         ).isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("토론방 내용은 1자 이상, 2500자 이하여야 합니다.");
+                .hasMessage("토론방 내용은 1자 이상, 2500자 이하여야 합니다");
     }
 
     @Test
@@ -166,6 +165,6 @@ class DiscussionTest {
                         .note(note)
                         .build()
         ).isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("토론방 내용은 1자 이상, 2500자 이하여야 합니다.");
+                .hasMessage("토론방 내용은 1자 이상, 2500자 이하여야 합니다");
     }
 }

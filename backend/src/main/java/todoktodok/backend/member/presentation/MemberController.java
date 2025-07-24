@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import todoktodok.backend.global.auth.Auth;
+import todoktodok.backend.global.auth.Role;
 import todoktodok.backend.global.resolver.LoginMember;
 import todoktodok.backend.global.resolver.TempMember;
 import todoktodok.backend.member.application.dto.request.LoginRequest;
 import todoktodok.backend.member.application.dto.request.SignupRequest;
 import todoktodok.backend.member.application.service.command.MemberCommandService;
-import todoktodok.backend.global.auth.Role;
 
 @RestController
 @AllArgsConstructor
@@ -50,10 +50,10 @@ public class MemberController {
 
     @Operation(summary = "작성자 차단 API")
     @Auth(value = Role.USER)
-    @PostMapping("/{id}/block")
+    @PostMapping("/{memberId}/block")
     public ResponseEntity<Void> block(
             @LoginMember final Long memberId,
-            @PathVariable("id") final Long targetId
+            @PathVariable("memberId") final Long targetId
     ) {
         memberCommandService.block(memberId, targetId);
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -62,10 +62,10 @@ public class MemberController {
 
     @Operation(summary = "작성자 신고 API")
     @Auth(value = Role.USER)
-    @PostMapping("/{id}/report")
+    @PostMapping("/{memberId}/report")
     public ResponseEntity<Void> report(
             @LoginMember final Long memberId,
-            @PathVariable("id") final Long targetId
+            @PathVariable("memberId") final Long targetId
     ) {
         memberCommandService.report(memberId, targetId);
         return ResponseEntity.status(HttpStatus.CREATED)

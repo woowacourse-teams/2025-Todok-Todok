@@ -2,6 +2,7 @@ package todoktodok.backend.discussion.presentation;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import static org.hamcrest.Matchers.is;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,7 +36,7 @@ class DiscussionControllerTest {
     }
 
     @Test
-    @DisplayName("토론방 생성 요청 시 201 CREATED 응답을 반환한다")
+    @DisplayName("토론방을 생성한다")
     void createDiscussion() {
         // given
         databaseInitializer.setDefaultUserInfo();
@@ -59,5 +60,27 @@ class DiscussionControllerTest {
                 .when().post("/api/v1/discussions")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
+    }
+
+    @Test
+    @DisplayName("전체 토론방을 조회한다")
+    void getDiscussions() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultShelfInfo();
+        databaseInitializer.setDefaultNoteInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+
+        final String token = MemberFixture.login("user@gmail.com");
+
+        // when - then
+        RestAssured.given().log().all()
+                .header("Authorization", token)
+                .contentType(ContentType.JSON)
+                .when().get("/api/v1/discussions")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("size()", is(1));
     }
 }
