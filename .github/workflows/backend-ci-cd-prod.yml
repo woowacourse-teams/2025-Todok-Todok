@@ -64,12 +64,29 @@ jobs:
 
       - name: Pull Docker image
         run: |
+          echo "Docker 이미지 pull 시작"
           docker pull woowajeff/todoktodok:latest
+          echo "Docker 이미지 pull 완료"
+
+      - name: Stop running Container
+        run: |
+          echo "포트 80에서 실행 중인 컨테이너 확인 중..."
+          container_id=$(docker ps --filter "publish=80" --format "{{.ID}}")
+          if [ -n "$container_id" ]; then
+            echo "컨테이너 중지: $container_id"
+            docker stop $container_id
+          else
+            echo "중지할 컨테이너 없음 (포트 80)"
+          fi
 
       - name: Run docker image
         run: |
+          echo "새 Docker 컨테이너 실행 중..."
           docker run -d -p 80:8080 woowajeff/todoktodok
+          echo "컨테이너 실행 완료"
 
       - name: Docker image Prune
         run: |
+          echo "사용하지 않는 Docker 이미지 정리 중..."
           sudo docker image prune -af
+          echo "이미지 정리 완료"
