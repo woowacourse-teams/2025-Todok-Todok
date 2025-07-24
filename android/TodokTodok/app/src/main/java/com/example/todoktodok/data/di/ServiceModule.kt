@@ -1,11 +1,11 @@
 package com.example.todoktodok.data.di
 
 import com.example.todoktodok.data.network.service.BookService
-import com.example.todoktodok.data.network.service.LibraryService
-import kotlin.getValue
 import com.example.todoktodok.data.network.service.DiscussionService
+import com.example.todoktodok.data.network.service.LibraryService
 import com.example.todoktodok.data.network.service.MemberService
 import com.example.todoktodok.data.network.service.NoteService
+import kotlin.getValue
 
 class ServiceModule(
     retrofit: RetrofitModule,
@@ -15,7 +15,6 @@ class ServiceModule(
     }
     val discussionService: DiscussionService by lazy {
         retrofit.instance.create(DiscussionService::class.java)
-
     }
 
     val memberService: MemberService by lazy {

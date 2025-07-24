@@ -8,7 +8,6 @@ import com.example.todoktodok.state.BookState
 
 class BooksViewHolder private constructor(
     private val binding: ItemBookBinding,
-    private val handler: Handler,
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(item: BookState) {
         with(binding) {
@@ -19,17 +18,10 @@ class BooksViewHolder private constructor(
     }
 
     companion object {
-        fun BooksViewHolder(
-            parent: ViewGroup,
-            handler: Handler,
-        ): BooksViewHolder {
+        fun BooksViewHolder(parent: ViewGroup): BooksViewHolder {
             val layoutInflater = LayoutInflater.from(parent.context)
             val binding = ItemBookBinding.inflate(layoutInflater, parent, false)
-            return BooksViewHolder(binding, handler)
+            return BooksViewHolder(binding)
         }
-    }
-
-    interface Handler {
-        fun onSelectBook(position: Int)
     }
 }
