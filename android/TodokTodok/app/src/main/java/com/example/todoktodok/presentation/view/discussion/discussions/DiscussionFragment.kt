@@ -2,12 +2,12 @@ package com.example.todoktodok.presentation.view.discussion.discussions
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.todoktodok.App
 import com.example.todoktodok.R
 import com.example.todoktodok.databinding.FragmentDiscussionBinding
+import com.example.todoktodok.presentation.view.discussion.create.DiscussionRoomCreateActivity
 import com.example.todoktodok.presentation.view.discussion.detail.DiscussionRoomDetailActivity
 import com.example.todoktodok.presentation.view.discussion.discussions.adapter.DiscussionRoomAdapter
 import com.example.todoktodok.presentation.view.discussion.discussions.vm.DiscussionViewModel
@@ -53,12 +53,10 @@ class DiscussionFragment : Fragment(R.layout.fragment_discussion) {
     private fun handleEvent(discussionUiEvent: DiscussionUiEvent) {
         when (discussionUiEvent) {
             DiscussionUiEvent.NavigateToAddDiscussionRoom ->
-                Toast
-                    .makeText(
-                        requireContext(),
-                        "토론방 추가",
-                        Toast.LENGTH_SHORT,
-                    ).show()
+                {
+                    val intent = DiscussionRoomCreateActivity.Intent(requireActivity())
+                    startActivity(intent)
+                }
 
             is DiscussionUiEvent.NavigateToDiscussionRoomDetail ->
                 navigateToDiscussionRoomDetail(discussionUiEvent.discussionRoomId)
