@@ -63,6 +63,21 @@ public class DiscussionCommandService {
         discussionReportRepository.save(discussionReport);
     }
 
+    private Member findMember(final Long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new NoSuchElementException("해당 회원을 찾을 수 없습니다"));
+    }
+
+    private Note findNote(final DiscussionRequest discussionRequest) {
+        return noteRepository.findById(discussionRequest.noteId())
+                .orElseThrow(() -> new NoSuchElementException("해당 기록을 찾을 수 없습니다"));
+    }
+
+    private Discussion findDiscussion(final Long discussionId) {
+        return discussionRepository.findById(discussionId)
+                .orElseThrow(() -> new NoSuchElementException("해당 토론방을 찾을 수 없습니다"));
+    }
+
     private void validateDuplicatedReport(
             final Discussion discussion,
             final Member member
@@ -82,20 +97,5 @@ public class DiscussionCommandService {
         if (!note.isOwnedBy(member)) {
             throw new IllegalArgumentException("해당 기록의 소유자만 토론방을 생성할 수 있습니다");
         }
-    }
-
-    private Member findMember(final Long memberId) {
-        return memberRepository.findById(memberId)
-                .orElseThrow(() -> new NoSuchElementException("해당 회원을 찾을 수 없습니다"));
-    }
-
-    private Note findNote(final DiscussionRequest discussionRequest) {
-        return noteRepository.findById(discussionRequest.noteId())
-                .orElseThrow(() -> new NoSuchElementException("해당 기록을 찾을 수 없습니다"));
-    }
-
-    private Discussion findDiscussion(final Long discussionId) {
-        return discussionRepository.findById(discussionId)
-                .orElseThrow(() -> new NoSuchElementException("해당 토론방을 찾을 수 없습니다"));
     }
 }
