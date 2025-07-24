@@ -47,7 +47,7 @@ class NoteQueryServiceTest {
         databaseInitializer.setDefaultNoteInfo();
 
         // when - then
-        assertThatThrownBy(() -> noteQueryService.getNoteById(2L, 1L))
+        assertThatThrownBy(() -> noteQueryService.getMyNote(2L, 1L))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("자신의 기록만 조회 가능합니다");
     }
