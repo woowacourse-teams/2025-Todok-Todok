@@ -8,10 +8,11 @@ kotlinx-serialization-json = "1.8.1"
 kotlinx-coroutines-core = "1.7.3"
 
 # AndroidX
-andoridx-core-ktx = "1.16.0"
+androidx-core-ktx = "1.16.0"
 androidx-appcompat = "1.7.1"
 androidx-activity-ktx = "1.10.1"
 androidx-fragment-ktx = "1.8.8"
+androidx-recyclerview = "1.4.0"
 
 # Network
 retrofit = "3.0.0"
@@ -24,11 +25,14 @@ glide = "4.16.0"
 
 # Google
 google-material = "1.12.0"
+google-play-services-auth = "21.3.0"
+google-services = "4.4.3"
+googleid = "1.1.1"
 
 # Ktlint
 ktlint = "13.0.0"
 
-# Ksp
+# KSP
 ksp = "2.2.0-2.0.2"
 
 # Test
@@ -43,32 +47,34 @@ junit-jupiter = "5.12.0"
 kotest-runner-junit5 = "5.9.1"
 mockk = "1.13.8"
 junit = "4.12"
-recycelerview = "1.2.0"
 
 [libraries]
-# Androidx
-androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "andoridx-core-ktx" }
-androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "androidx-activity-ktx" }
-androidx-fragment = { module = "androidx.fragment:fragment-ktx", version.ref = "androidx-fragment-ktx" }
+# AndroidX
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidx-core-ktx" }
+androidx-activity = { group = "androidx.activity", name = "activity-ktx", version.ref = "androidx-activity-ktx" }
+androidx-fragment = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "androidx-fragment-ktx" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }
-androidx-recycelerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recycelerview" }
+androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "androidx-recyclerview" }
 
 # Kotlin
-kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization-json" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization-json" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines-core" }
 kotlinx-coroutines-core-jvm = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core-jvm", version.ref = "kotlinx-coroutines-core" }
 
 # Network
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
-retrofit-kotlinx-serialization-converter = { module = "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter", version.ref = "retrofit-kotlinx-serialization-converter" }
+retrofit-kotlinx-serialization-converter = { group = "com.jakewharton.retrofit", name = "retrofit2-kotlinx-serialization-converter", version.ref = "retrofit-kotlinx-serialization-converter" }
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
 logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "logging-interceptor" }
 
 # Google
 google-material = { group = "com.google.android.material", name = "material", version.ref = "google-material" }
+play-services-auth = { group = "com.google.android.gms", name = "play-services-auth", version.ref = "google-play-services-auth" }
+google-services = { group = "com.google.gms", name = "google-services", version.ref = "google-services" }
+googleid = { group = "com.google.android.libraries.identity.googleid", name = "googleid", version.ref = "googleid" }
 
 # Glide
-glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
+glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
 
 # Test
 androidx-core-testing = { module = "androidx.arch.core:core-testing", version.ref = "core-testing" }
@@ -90,7 +96,7 @@ androidx = [
     "androidx-activity",
     "androidx-fragment",
     "androidx-appcompat",
-    "androidx-recycelerview",
+    "androidx-recyclerview"
 ]
 
 kotlin = [
@@ -107,7 +113,9 @@ network = [
 ]
 
 google = [
-    "google-material"
+    "google-material",
+    "play-services-auth",
+    "googleid"
 ]
 
 glide = [

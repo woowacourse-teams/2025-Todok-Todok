@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/space_x_large"
+    android:paddingRight="@dimen/space_x_large"
+    tools:context=".presentation.view.discussion.detail.DiscussionRoomDetailActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/abl_discussion_detail"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_height"
+        android:background="@color/white"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_discussion_room_detail_back"
+        android:layout_width="@dimen/space_2x_large"
+        android:layout_height="@dimen/space_2x_large"
+        android:contentDescription="@string/content_description_discussion_room_detail_back"
+        android:src="@drawable/btn_back"
+        app:layout_constraintBottom_toBottomOf="@id/abl_discussion_detail"
+        app:layout_constraintStart_toStartOf="@id/abl_discussion_detail"
+        app:layout_constraintTop_toTopOf="@id/abl_discussion_detail" />
+
+    <TextView
+        style="@style/HeaderTitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/space_x_small"
+        android:text="@string/all_discussion_room"
+        app:layout_constraintBottom_toBottomOf="@id/abl_discussion_detail"
+        app:layout_constraintEnd_toEndOf="@id/abl_discussion_detail"
+        app:layout_constraintStart_toStartOf="@id/abl_discussion_detail"
+        app:layout_constraintTop_toTopOf="@id/abl_discussion_detail" />
+
+    <TextView
+        android:id="@+id/tv_book_title"
+        style="@style/DiscussionDetailSubContent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_x_small"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/abl_discussion_detail"
+        tools:text="오브젝트" />
+
+    <TextView
+        android:id="@+id/tv_discussion_room_title"
+        style="@style/DiscussionDetailTitle"
+        android:layout_width="@dimen/space_2x_small"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toStartOf="@id/tv_discussion_room_report"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_book_title"
+        tools:text="캡슐화 왜함?" />
+
+    <TextView
+        android:id="@+id/tv_discussion_room_report"
+        style="@style/DiscussionDetailSubContent"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/item_discussion_detail_meta_line_height"
+        android:gravity="center"
+        android:text="@string/all_report"
+        app:layout_constraintBottom_toBottomOf="@id/tv_discussion_room_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tv_discussion_room_title"
+        app:layout_constraintTop_toBottomOf="@id/tv_book_title" />
+
+    <TextView
+        android:id="@+id/tv_user_content"
+        style="@style/DiscussionDetailSubContent"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/item_discussion_detail_meta_line_height"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_discussion_room_title"
+        tools:text="코드마스터 · 2024년 7월 20일" />
+
+    <TextView
+        android:id="@+id/tv_discussion_room_note"
+        style="@style/DiscussionDetailContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/tv_user_content"
+        tools:text="캡슐화는 객체의 내부 상태와 데이터를 외부에서 직접 접근하지 못하도록 보호하는 것을 의미다." />
+
+    <TextView
+        android:id="@+id/tv_discussion_room_opinion_title"
+        style="@style/DiscussionDetailSubTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/item_discussion_detail_meta_line_height"
+        android:layout_marginStart="@dimen/space_x_small"
+        android:layout_marginTop="@dimen/space_x_small"
+        android:text="@string/all_opinion"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_discussion_room_note" />
+
+    <TextView
+        android:id="@+id/tv_discussion_room_opinion"
+        style="@style/DiscussionDetailContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/tv_discussion_room_opinion_title"
+        tools:text="캡슐화를 하면 데이터를 보호할 수 있다는 것에는 동의하는데, 실제로 완벽히 캡슐화가 되는 지는 의문입니다.getter/setter 메서드를 통해 객체 내부의 데이터가 외부로 드러나는 것은 캡슐화가 잘 된 것이 맞을까요?" />
+
+    <View
+        android:id="@+id/view_comments_divider"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/space_x_small"
+        android:layout_marginHorizontal="6dp"
+        android:layout_marginTop="@dimen/space_large"
+        android:background="@drawable/div_comment"
+        app:layout_constraintTop_toBottomOf="@id/tv_discussion_room_opinion" />
+
+    <TextView
+        android:id="@+id/tv_comment_title"
+        style="@style/DiscussionDetailSubTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/item_discussion_detail_meta_line_height"
+        android:layout_marginTop="6dp"
+        android:text="@string/all_comment"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view_comments_divider" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_comments"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toTopOf="@id/til_text_comment_content"
+        app:layout_constraintTop_toBottomOf="@id/tv_comment_title"
+        tools:listitem="@layout/item_comment" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_text_comment_content"
+        android:layout_width="@dimen/space_2x_small"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/space_x_large"
+        android:background="@drawable/bg_green_f0_radius_8dp"
+        android:minHeight="48dp"
+        android:paddingVertical="8dp"
+        app:boxBackgroundMode="none"
+        app:cursorColor="@color/black_18"
+        app:hintEnabled="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/iv_add_comment"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_text_comment_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="start|center"
+            android:hint="@string/comment_input_hint"
+            android:inputType="textMultiLine"
+            android:textColor="@color/gray_76" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <ImageView
+        android:id="@+id/iv_add_comment"
+        android:layout_width="@dimen/space_2x_large"
+        android:layout_height="@dimen/space_2x_large"
+        android:background="@drawable/btn_comment_background"
+        android:contentDescription="@string/content_description_add_comment"
+        app:layout_constraintBottom_toBottomOf="@id/til_text_comment_content"
+        app:layout_constraintEnd_toEndOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

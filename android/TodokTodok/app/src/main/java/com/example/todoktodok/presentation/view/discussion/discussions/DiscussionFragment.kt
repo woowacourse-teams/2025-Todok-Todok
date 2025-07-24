@@ -1,16 +1,17 @@
-package com.example.todoktodok.presentation.view.discussion
+package com.example.todoktodok.presentation.view.discussion.discussions
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.todoktodok.App
 import com.example.todoktodok.R
 import com.example.todoktodok.databinding.FragmentDiscussionBinding
-import com.example.todoktodok.presentation.view.discussion.adapter.DiscussionRoomAdapter
-import com.example.todoktodok.presentation.view.discussion.vm.DiscussionViewModel
-import com.example.todoktodok.presentation.view.discussion.vm.DiscussionViewModelFactory
+import com.example.todoktodok.presentation.view.discussion.create.DiscussionRoomCreateActivity
+import com.example.todoktodok.presentation.view.discussion.detail.DiscussionRoomDetailActivity
+import com.example.todoktodok.presentation.view.discussion.discussions.adapter.DiscussionRoomAdapter
+import com.example.todoktodok.presentation.view.discussion.discussions.vm.DiscussionViewModel
+import com.example.todoktodok.presentation.view.discussion.discussions.vm.DiscussionViewModelFactory
 
 class DiscussionFragment : Fragment(R.layout.fragment_discussion) {
     private val viewModel: DiscussionViewModel by viewModels {
@@ -19,7 +20,7 @@ class DiscussionFragment : Fragment(R.layout.fragment_discussion) {
     }
     private val adapter by lazy {
         DiscussionRoomAdapter { id ->
-            viewModel.onUiEvent(DiscussionUiEvent.NavigateDiscussionRoom(id))
+            viewModel.onUiEvent(DiscussionUiEvent.NavigateToDiscussionRoomDetail(id))
         }
     }
 
@@ -45,27 +46,25 @@ class DiscussionFragment : Fragment(R.layout.fragment_discussion) {
 
     private fun setupOnClick(binding: FragmentDiscussionBinding) {
         binding.ivAddDiscussionRoom.setOnClickListener {
-            viewModel.onUiEvent(DiscussionUiEvent.NavigateAddDiscussionRoom)
+            viewModel.onUiEvent(DiscussionUiEvent.NavigateToAddDiscussionRoom)
         }
     }
 
     private fun handleEvent(discussionUiEvent: DiscussionUiEvent) {
         when (discussionUiEvent) {
-            DiscussionUiEvent.NavigateAddDiscussionRoom ->
-                Toast
-                    .makeText(
-                        requireContext(),
-                        "토론방 추가",
-                        Toast.LENGTH_SHORT,
-                    ).show()
+            DiscussionUiEvent.NavigateToAddDiscussionRoom ->
+                {
+                    val intent = DiscussionRoomCreateActivity.Intent(requireActivity())
+                    startActivity(intent)
+                }
 
-            is DiscussionUiEvent.NavigateDiscussionRoom ->
-                Toast
-                    .makeText(
-                        requireContext(),
-                        "토론방 이동",
-                        Toast.LENGTH_SHORT,
-                    ).show()
+            is DiscussionUiEvent.NavigateToDiscussionRoomDetail ->
+                navigateToDiscussionRoomDetail(discussionUiEvent.discussionRoomId)
         }
+    }
+
+    private fun navigateToDiscussionRoomDetail(discussionRoomId: Long) {
+        val intent = DiscussionRoomDetailActivity.Intent(requireContext(), discussionRoomId)
+        startActivity(intent)
     }
 }

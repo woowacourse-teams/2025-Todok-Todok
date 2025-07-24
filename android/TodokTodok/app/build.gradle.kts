@@ -1,3 +1,4 @@
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
@@ -6,9 +7,27 @@ plugins {
     alias(libs.plugins.serialization)
     alias(libs.plugins.ksp)
     id("kotlin-parcelize")
+    id("com.google.gms.google-services")
 }
 
 android {
+    val properties = Properties()
+    properties.load(project.rootProject.file("local.properties").inputStream())
+
+    defaultConfig {
+        buildConfigField(
+            "String",
+            "BASE_URL",
+            "\"${properties.getProperty("base_url")}\"",
+        )
+
+        buildConfigField(
+            "String",
+            "GOOGLE_CLIENT_ID",
+            "\"${properties.getProperty("google_client_id")}\"",
+        )
+    }
+
     namespace = "com.example.todoktodok"
     compileSdk = 35
 
@@ -37,13 +56,20 @@ android {
             )
         }
     }
+
+    buildFeatures {
+        buildConfig = true
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
     }
-    kotlinOptions {
-        jvmTarget = "21"
+    kotlin {
+        jvmToolchain {
+            languageVersion.set(JavaLanguageVersion.of(21))
+        }
     }
+
     packaging {
         resources {
             excludes += "META-INF/**"
@@ -65,6 +91,7 @@ dependencies {
     implementation(libs.bundles.glide)
 
     testImplementation(libs.bundles.test)
+    testImplementation(libs.androidx.core.testing)
     androidTestImplementation(libs.bundles.android.test)
     androidTestRuntimeOnly(libs.mannodermaus.junit5.runner)
 }

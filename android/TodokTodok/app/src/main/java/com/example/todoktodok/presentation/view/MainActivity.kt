@@ -10,7 +10,7 @@ import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import com.example.todoktodok.R
 import com.example.todoktodok.databinding.ActivityMainBinding
-import com.example.todoktodok.presentation.view.discussion.DiscussionFragment
+import com.example.todoktodok.presentation.view.discussion.discussions.DiscussionFragment
 import com.example.todoktodok.presentation.view.library.LibraryFragment
 import com.example.todoktodok.presentation.view.note.NoteFragment
 
