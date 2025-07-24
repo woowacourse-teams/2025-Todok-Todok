@@ -3,11 +3,13 @@ package com.example.todoktodok.presentation.view.discussion.discussions.vm
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.domain.model.Discussion
 import com.example.domain.repository.DiscussionRepository
 import com.example.todoktodok.presentation.core.event.MutableSingleLiveData
 import com.example.todoktodok.presentation.core.event.SingleLiveData
 import com.example.todoktodok.presentation.view.discussion.discussions.DiscussionUiEvent
+import kotlinx.coroutines.launch
 
 class DiscussionViewModel(
     private val discussionRepository: DiscussionRepository,
@@ -19,14 +21,16 @@ class DiscussionViewModel(
     val uiEvent: SingleLiveData<DiscussionUiEvent> = _uiEvent
 
     init {
-        loadDiscussions()
+        viewModelScope.launch {
+            loadDiscussions()
+        }
     }
 
     fun onUiEvent(uiEvent: DiscussionUiEvent) {
         _uiEvent.postValue(uiEvent)
     }
 
-    private fun loadDiscussions() {
+    private suspend fun loadDiscussions() {
         _discussions.value = discussionRepository.getDiscussions()
     }
 }

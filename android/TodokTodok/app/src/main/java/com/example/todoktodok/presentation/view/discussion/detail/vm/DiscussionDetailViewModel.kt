@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.domain.model.Comment
 import com.example.domain.model.Discussion
 import com.example.domain.model.member.Nickname
@@ -13,6 +14,7 @@ import com.example.domain.repository.DiscussionRepository
 import com.example.todoktodok.presentation.core.event.MutableSingleLiveData
 import com.example.todoktodok.presentation.core.event.SingleLiveData
 import com.example.todoktodok.presentation.view.discussion.detail.DiscussionDetailUiEvent
+import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
 class DiscussionDetailViewModel(
@@ -35,7 +37,9 @@ class DiscussionDetailViewModel(
     val uiEvent: SingleLiveData<DiscussionDetailUiEvent> = _uiEvent
 
     init {
-        loadDiscussionRoom()
+        viewModelScope.launch {
+            loadDiscussionRoom()
+        }
         loadComments()
     }
 
@@ -61,7 +65,7 @@ class DiscussionDetailViewModel(
         _commentText.value = text?.toString() ?: ""
     }
 
-    private fun loadDiscussionRoom() {
+    private suspend fun loadDiscussionRoom() {
         _discussion.value =
             discussionRepository.getDiscussion(discussionRoomId).getOrNull()
     }

@@ -3,7 +3,7 @@ package com.example.todoktodok.presentation.vm
 import com.example.todoktodok.InstantTaskExecutorExtension
 import com.example.todoktodok.ext.getOrAwaitValue
 import com.example.todoktodok.fake.FakeDiscussionRepository
-import com.example.todoktodok.fixture.DISCUSSION
+import com.example.todoktodok.fixture.DISCUSSIONS
 import com.example.todoktodok.presentation.view.discussion.discussions.DiscussionUiEvent
 import com.example.todoktodok.presentation.view.discussion.discussions.vm.DiscussionViewModel
 import org.assertj.core.api.Assertions.assertThat
@@ -23,7 +23,7 @@ class DiscussionViewModelTest {
     @Test
     fun `저장소에서 불러온 토론방 목록으로 값을 초기화 한다`() {
         // given
-        val expected = DISCUSSION
+        val expected = DISCUSSIONS
         // then
         assertThat(discussionViewModel.discussions.getOrAwaitValue()).isEqualTo(expected)
     }

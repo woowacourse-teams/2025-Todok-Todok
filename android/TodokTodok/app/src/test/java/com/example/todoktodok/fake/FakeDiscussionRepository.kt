@@ -2,15 +2,15 @@ package com.example.todoktodok.fake
 
 import com.example.domain.model.Discussion
 import com.example.domain.repository.DiscussionRepository
-import com.example.todoktodok.fixture.DISCUSSION
+import com.example.todoktodok.fixture.DISCUSSIONS
 
 class FakeDiscussionRepository : DiscussionRepository {
-    private val discussionRooms = DISCUSSION
+    private val discussions = DISCUSSIONS
 
-    override fun getDiscussion(id: Long): Result<Discussion> =
+    override suspend fun getDiscussion(id: Long): Result<Discussion> =
         runCatching {
-            DISCUSSION.find { id == it.id } ?: throw IllegalArgumentException()
+            discussions.find { id == it.id } ?: throw IllegalArgumentException()
         }
 
-    override fun getDiscussions(): List<Discussion> = discussionRooms
+    override suspend fun getDiscussions(): List<Discussion> = discussions
 }
