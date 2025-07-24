@@ -11,6 +11,7 @@ import com.example.todoktodok.presentation.core.ext.getParcelableArrayListCompat
 import com.example.todoktodok.presentation.view.library.BooksAdapter
 import com.example.todoktodok.presentation.view.note.NoteFragment.Companion.REQUEST_KEY
 import com.example.todoktodok.presentation.view.serialization.SerializationBook
+import com.example.todoktodok.state.BookState
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -45,7 +46,16 @@ class OwnedBooksBottomSheet : BottomSheetDialogFragment(R.layout.owned_books_bot
         binding.rvBooks.adapter = booksAdapter
 
         val books = requireArguments().getParcelableArrayListCompat<SerializationBook>(KEY_BOOKS)
-        booksAdapter.submitList(books.map { it.toDomain() })
+        booksAdapter.submitList(
+            books.map { book: SerializationBook ->
+                BookState(
+                    book.id,
+                    book.title,
+                    book.author,
+                    book.image,
+                )
+            },
+        )
     }
 
     private fun setOnShowDialogListener(dialog: BottomSheetDialog) {

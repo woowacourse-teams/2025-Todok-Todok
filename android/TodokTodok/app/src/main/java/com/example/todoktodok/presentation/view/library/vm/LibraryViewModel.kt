@@ -6,13 +6,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.model.Books
 import com.example.domain.repository.BookRepository
+import com.example.todoktodok.state.BookState
 import kotlinx.coroutines.launch
 
 class LibraryViewModel(
     private val bookRepository: BookRepository,
 ) : ViewModel() {
-    private val _books: MutableLiveData<Books> = MutableLiveData(Books(emptyList()))
-    val books: LiveData<Books> get() = _books
+    private val _books: MutableLiveData<List<BookState>> = MutableLiveData(emptyList())
+    val books: LiveData<List<BookState>> = _books
+
 
     init {
         loadBooks()
@@ -20,7 +22,16 @@ class LibraryViewModel(
 
     fun loadBooks() {
         viewModelScope.launch {
-            _books.value = bookRepository.getBooks()
+            _books.value =
+                bookRepository.getBooks().map { book: Book ->
+                    BookState(
+                        id = book.id,
+                        title = book.title,
+                        author = book.author,
+                        image = book.image,
+                    )
+                }
+
         }
     }
 }

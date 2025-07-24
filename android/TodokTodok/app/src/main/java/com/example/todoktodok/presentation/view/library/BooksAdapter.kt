@@ -2,12 +2,9 @@ package com.example.todoktodok.presentation.view.library
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
-import com.example.domain.model.Book
-import com.example.todoktodok.presentation.view.library.BooksViewHolder.Companion.BooksViewHolder
+import com.example.todoktodok.state.BookState
 
-class BooksAdapter(
-    private val eventHandler: Handler,
-) : ListAdapter<Book, BooksViewHolder>(booksDiffUtil) {
+class BooksAdapter : ListAdapter<BookState, BooksViewHolder>(booksDiffUtil) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,

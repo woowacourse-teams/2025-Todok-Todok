@@ -22,12 +22,11 @@ class RemoteBookDataSource(
             .map { bookResponse: BookResponse -> bookResponse.toDomain() }
 
     override suspend fun saveBook(bookId: Long) {
-        Log.d("test", "호출1")
         libraryService.saveBook(token, SaveBookRequest(bookId))
     }
 
     companion object {
-        val token =
-            "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwicm9sZSI6IlVTRVIiLCJleHAiOjE3NTM5NDg1MDh9.cJCjodXTn0Tu5RrWt8fmgL4K9YZwQJpDrjgmnmz5OC0"
+        val token = "Bearer"
+
     }
 }

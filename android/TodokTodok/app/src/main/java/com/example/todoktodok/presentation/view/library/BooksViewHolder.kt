@@ -3,23 +3,18 @@ package com.example.todoktodok.presentation.view.library
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.domain.model.Book
 import com.example.todoktodok.databinding.ItemBookBinding
+import com.example.todoktodok.state.BookState
 
 class BooksViewHolder private constructor(
     private val binding: ItemBookBinding,
     private val handler: Handler,
 ) : RecyclerView.ViewHolder(binding.root) {
-    init {
-        binding.root.setOnClickListener {
-            handler.onSelectBook(bindingAdapterPosition)
-        }
-    }
-
-    fun bind(item: Book) {
+    fun bind(item: BookState) {
         with(binding) {
             tvBookTitle.text = item.title
             tvBookAuthor.text = item.author
+            item.bookImage(ivBookCover, root.context)
         }
     }
 
