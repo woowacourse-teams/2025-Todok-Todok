@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">TodokTodok</string>
-    <string name="app_name_kr">토독토독</string>
     <string name="all_note">기록</string>
     <string name="all_discussion">토론</string>
     <string name="all_discussion_room">토론방</string>
@@ -40,14 +39,6 @@
 
     <!-- 내 서재 페이지 -->
     <string name="content_description_navigate_to_book_search">도서 검색 화면으로 이동합니다</string>
-    <string name="discussion_room_title">토론방 생성</string>
-    <string name="content_description_discussion_room_create_back">토론방 목록으로 이동합니다</string>
-    <string name="note_search">기록 검색</string>
-
-    <!--  토론방 생성 페이지  -->
-    <string name="discussion_title">토론 제목</string>
-    <string name="discussion_content">나의 의견</string>
-    <string name="discussion_room_create">생성하기</string>
 
     <!-- 로그인 페이지 -->
     <string name="login_fail_to_login">로그인에 실패했어요. 다시 시도해주세요</string>
@@ -56,4 +47,12 @@
     <string name="complete_nickname_text">닉네임 설정</string>
     <string name="complete_nickname_btn_text">가입하기</string>
     <string name="complete_nickname_et_hint">닉네임을 입력해주세요</string>
+    <string name="discussion_room_title">토론방 생성</string>
+    <string name="content_description_discussion_room_create_back">토론방 목록으로 이동합니다</string>
+    <string name="note_search">기록 검색</string>
+
+    <!--  토론방 생성 페이지  -->
+    <string name="discussion_title">토론 제목</string>
+    <string name="discussion_content">나의 의견</string>
+    <string name="discussion_room_create">생성하기</string>
 </resources>
