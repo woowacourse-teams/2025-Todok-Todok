@@ -1,6 +1,5 @@
 package com.example.todoktodok.data.network.request
 
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
