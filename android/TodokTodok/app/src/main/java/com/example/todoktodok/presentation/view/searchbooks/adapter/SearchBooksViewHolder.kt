@@ -1,9 +1,10 @@
-package com.example.todoktodok.presentation.view.searchbooks
+package com.example.todoktodok.presentation.view.searchbooks.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todoktodok.databinding.ItemBookSearchBinding
+import com.example.todoktodok.presentation.view.searchbooks.adapter.OnSelectBookListener
 import com.example.todoktodok.state.BookState
 
 class SearchBooksViewHolder private constructor(

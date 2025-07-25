@@ -12,6 +12,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.todoktodok.App
 import com.example.todoktodok.databinding.ActivitySearchBooksBinding
+import com.example.todoktodok.presentation.view.searchbooks.adapter.SearchBooksAdapter
 import com.example.todoktodok.presentation.view.searchbooks.vm.SearchBooksViewModel
 import com.example.todoktodok.presentation.view.searchbooks.vm.SearchBooksViewModelFactory
 

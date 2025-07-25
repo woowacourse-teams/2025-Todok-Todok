@@ -1,4 +1,4 @@
-package com.example.todoktodok.presentation.view.library
+package com.example.todoktodok.presentation.view.library.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

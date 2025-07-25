@@ -1,4 +1,4 @@
-package com.example.todoktodok.presentation.view.searchbooks
+package com.example.todoktodok.presentation.view.searchbooks.adapter
 
 import androidx.recyclerview.widget.DiffUtil
 import com.example.todoktodok.state.BookState

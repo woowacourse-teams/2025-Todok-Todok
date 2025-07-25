@@ -1,4 +1,4 @@
-package com.example.todoktodok.presentation.view.library
+package com.example.todoktodok.presentation.view.library.adapter
 
 import androidx.recyclerview.widget.DiffUtil
 import com.example.todoktodok.state.BookState
