@@ -13,4 +13,12 @@ class FakeDiscussionRepository : DiscussionRepository {
         }
 
     override suspend fun getDiscussions(): List<Discussion> = discussions
+
+    override suspend fun saveDiscussion(
+        noteId: Long,
+        discussionOpinion: String,
+        discussionTitle: String,
+    ): Long {
+        TODO("Not yet implemented")
+    }
 }
