@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingHorizontal="@dimen/space_x_large"
+    android:paddingHorizontal="@dimen/space_24"
     tools:context=".presentation.view.note.NoteFragment">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -32,9 +32,9 @@
         style="@style/BaseTextStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/space_x_small"
-        android:layout_marginTop="@dimen/space_large"
-        android:layout_marginBottom="@dimen/space_x_small"
+        android:layout_marginStart="@dimen/space_8"
+        android:layout_marginTop="@dimen/space_20"
+        android:layout_marginBottom="@dimen/space_8"
         android:gravity="start"
         android:text="@string/library_list"
         app:layout_constraintTop_toBottomOf="@id/abl_library"
@@ -56,7 +56,7 @@
         android:id="@+id/iv_library_navigation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/space_x_large"
+        android:layout_marginBottom="@dimen/space_24"
         android:background="@drawable/btn_plus_oval"
         android:contentDescription="@string/content_description_navigate_to_book_search"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/item_book_height"
-    android:paddingVertical="@dimen/space_x_small">
+    android:paddingVertical="@dimen/space_8">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cv_book_cover"
-        android:layout_width="@dimen/space_9x_large"
-        android:layout_height="@dimen/space_9x_large"
-        app:cardCornerRadius="@dimen/space_x_small"
+        android:layout_width="@dimen/space_56"
+        android:layout_height="@dimen/space_56"
+        app:cardCornerRadius="@dimen/space_8"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -27,9 +27,9 @@
     <TextView
         android:id="@+id/tv_book_title"
         style="@style/LibraryBookTitleTextStyle"
-        android:layout_width="@dimen/space_2x_small"
+        android:layout_width="@dimen/space_0"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/space_median"
+        android:layout_marginStart="@dimen/space_16"
         android:layout_marginTop="@dimen/item_book_search_information_margin"
         android:ellipsize="end"
         android:gravity="start"
@@ -43,7 +43,7 @@
     <TextView
         android:id="@+id/tv_book_author"
         style="@style/LibraryBookAuthorTextStyle"
-        android:layout_width="@dimen/space_2x_small"
+        android:layout_width="@dimen/space_0"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/item_book_search_information_margin"
         android:ellipsize="end"
@@ -57,9 +57,9 @@
 
     <ImageView
         android:id="@+id/iv_book_plus"
-        android:layout_width="@dimen/space_x_large"
-        android:layout_height="@dimen/space_x_large"
-        android:layout_marginStart="@dimen/space_median"
+        android:layout_width="@dimen/space_24"
+        android:layout_height="@dimen/space_24"
+        android:layout_marginStart="@dimen/space_16"
         android:background="@drawable/btn_green_f0_oval"
         android:contentDescription="@string/content_description_book_search_plus"
         android:src="@drawable/btn_plus"

@@ -10,7 +10,7 @@
         android:id="@+id/cv_book_cover"
         android:layout_width="56dp"
         android:layout_height="56dp"
-        app:cardCornerRadius="@dimen/space_x_small"
+        app:cardCornerRadius="@dimen/space_8"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 

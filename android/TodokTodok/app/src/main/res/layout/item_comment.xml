@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/space_small">
+    android:layout_marginBottom="@dimen/space_12">
 
     <TextView
         android:id="@+id/tv_user_nickname"
@@ -19,7 +19,7 @@
     <TextView
         android:id="@+id/tv_comment_create_at"
         style="@style/DiscussionDetailSubContent"
-        android:layout_width="@dimen/space_2x_small"
+        android:layout_width="@dimen/space_0"
         android:layout_height="@dimen/item_discussion_detail_meta_line_height"
         android:layout_marginStart="6dp"
         android:gravity="center"

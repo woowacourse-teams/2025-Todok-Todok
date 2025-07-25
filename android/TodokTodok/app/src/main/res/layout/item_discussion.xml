@@ -4,14 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="@dimen/space_x_large"
-    android:layout_marginVertical="@dimen/space_small">
+    android:layout_marginHorizontal="@dimen/space_24"
+    android:layout_marginVertical="@dimen/space_12">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cv_book_cover"
         android:layout_width="@dimen/item_discussion_book_cover_size"
         android:layout_height="@dimen/item_discussion_book_cover_size"
-        app:cardCornerRadius="@dimen/space_x_small"
+        app:cardCornerRadius="@dimen/space_8"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -27,10 +27,10 @@
     <TextView
         android:id="@+id/tv_book_title"
         style="@style/DiscussionBookTitle"
-        android:layout_width="@dimen/space_2x_small"
+        android:layout_width="@dimen/space_0"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/space_median"
-        android:layout_marginTop="@dimen/space_small"
+        android:layout_marginStart="@dimen/space_16"
+        android:layout_marginTop="@dimen/space_12"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/cv_book_cover"
         app:layout_constraintTop_toTopOf="parent"
@@ -39,7 +39,7 @@
     <TextView
         android:id="@+id/tv_title"
         style="@style/DiscussionTitle"
-        android:layout_width="@dimen/space_2x_small"
+        android:layout_width="@dimen/space_0"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@id/tv_opinion_summary"
         app:layout_constraintEnd_toEndOf="parent"
@@ -50,9 +50,9 @@
     <TextView
         android:id="@+id/tv_opinion_summary"
         style="@style/DiscussionOpinionSummary"
-        android:layout_width="@dimen/space_2x_small"
+        android:layout_width="@dimen/space_0"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/space_small"
+        android:layout_marginBottom="@dimen/space_12"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@id/tv_book_title"
