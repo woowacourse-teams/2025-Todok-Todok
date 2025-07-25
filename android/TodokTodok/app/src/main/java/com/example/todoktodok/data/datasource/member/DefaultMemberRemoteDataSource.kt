@@ -1,16 +1,16 @@
 package com.example.todoktodok.data.datasource.member
 
+import com.example.todoktodok.data.core.JwtUtils
 import com.example.todoktodok.data.datasource.token.TokenDataSource
 import com.example.todoktodok.data.network.auth.AuthInterceptor.Companion.AUTHORIZATION_NAME
 import com.example.todoktodok.data.network.request.LoginRequest
 import com.example.todoktodok.data.network.request.SignUpRequest
 import com.example.todoktodok.data.network.service.MemberService
-import com.example.todoktodok.data.util.JwtUtils
 
-class RemoteMemberDataSource(
+class DefaultMemberRemoteDataSource(
     private val memberService: MemberService,
     private val tokenDataSource: TokenDataSource,
-) : MemberDataSource {
+) : MemberRemoteDataSource {
     override suspend fun login(email: String): String {
         val response = memberService.login(LoginRequest(email))
         val token = response.headers()[AUTHORIZATION_NAME] ?: throw IllegalArgumentException()

@@ -1,30 +1,30 @@
 package com.example.todoktodok.data.di
 
 import android.content.Context
-import com.example.todoktodok.data.datasource.book.BookDataSource
-import com.example.todoktodok.data.datasource.book.RemoteBookDataSource
+import com.example.todoktodok.data.datasource.book.BookRemoteDataSource
+import com.example.todoktodok.data.datasource.book.DefaultBookRemoteDataSource
 import com.example.todoktodok.data.datasource.comment.CommentRemoteDataSource
 import com.example.todoktodok.data.datasource.comment.DefaultCommentRemoteDataSource
 import com.example.todoktodok.data.datasource.discussion.DefaultDiscussionRemoteDataSource
 import com.example.todoktodok.data.datasource.discussion.DiscussionRemoteDataSource
-import com.example.todoktodok.data.datasource.member.MemberDataSource
-import com.example.todoktodok.data.datasource.member.RemoteMemberDataSource
-import com.example.todoktodok.data.datasource.note.NoteDataSource
-import com.example.todoktodok.data.datasource.note.RemoteNoteDataSource
+import com.example.todoktodok.data.datasource.member.DefaultMemberRemoteDataSource
+import com.example.todoktodok.data.datasource.member.MemberRemoteDataSource
+import com.example.todoktodok.data.datasource.note.DefaultNoteRemoteDataSource
+import com.example.todoktodok.data.datasource.note.NoteRemoteDataSource
 import com.example.todoktodok.data.datasource.token.TokenDataSource
 
 class DataSourceModule(
     serviceModule: ServiceModule,
     context: Context,
 ) {
-    val remoteBookDataSource: BookDataSource by lazy {
-        RemoteBookDataSource(
+    val bookRemoteDataSource: BookRemoteDataSource by lazy {
+        DefaultBookRemoteDataSource(
             serviceModule.libraryService,
             serviceModule.bookService,
         )
     }
 
-    val noteDataSource: NoteDataSource by lazy { RemoteNoteDataSource(serviceModule.noteService) }
+    val noteRemoteDataSource: NoteRemoteDataSource by lazy { DefaultNoteRemoteDataSource(serviceModule.noteService) }
 
     val discussionRemoteDataSource: DiscussionRemoteDataSource by lazy {
         DefaultDiscussionRemoteDataSource(
@@ -40,8 +40,8 @@ class DataSourceModule(
 
     val tokenDataSource: TokenDataSource by lazy { TokenDataSource(context) }
 
-    val remoteMemberDataSource: MemberDataSource by lazy {
-        RemoteMemberDataSource(
+    val memberRemoteDataSource: MemberRemoteDataSource by lazy {
+        DefaultMemberRemoteDataSource(
             serviceModule.memberService,
             tokenDataSource,
         )

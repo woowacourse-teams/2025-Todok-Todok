@@ -2,7 +2,7 @@ package com.example.todoktodok.presentation.view.note.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
-import com.example.todoktodok.presentation.view.library.booksDiffUtil
+import com.example.todoktodok.presentation.view.library.adapter.booksDiffUtil
 import com.example.todoktodok.presentation.view.note.adapter.MyLibraryBooksViewHolder.Companion.MyLibraryBooksViewHolder
 import com.example.todoktodok.state.BookState
 

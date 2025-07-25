@@ -2,7 +2,7 @@ package com.example.todoktodok.data.datasource.book
 
 import com.example.domain.model.Book
 
-interface BookDataSource {
+interface BookRemoteDataSource {
     suspend fun fetchBooks(): List<Book>
 
     suspend fun fetchBooks(searchInput: String): List<Book>

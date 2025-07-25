@@ -1,16 +1,15 @@
 package com.example.todoktodok.data.datasource.book
 
 import com.example.domain.model.Book
-import com.example.todoktodok.data.datasource.book.BookDataSource
 import com.example.todoktodok.data.network.request.SaveBookRequest
 import com.example.todoktodok.data.network.response.BookResponse
 import com.example.todoktodok.data.network.service.BookService
 import com.example.todoktodok.data.network.service.LibraryService
 
-class RemoteBookDataSource(
+class DefaultBookRemoteDataSource(
     private val libraryService: LibraryService,
     private val bookService: BookService,
-) : BookDataSource {
+) : BookRemoteDataSource {
     override suspend fun fetchBooks(): List<Book> =
         libraryService.fetchBooks().map { bookResponse: BookResponse ->
             bookResponse.toDomain()

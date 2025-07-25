@@ -5,8 +5,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="@dimen/space_x_large"
-    android:paddingRight="@dimen/space_x_large"
+    android:paddingLeft="@dimen/space_24"
+    android:paddingRight="@dimen/space_24"
     tools:context=".presentation.view.discussion.detail.DiscussionDetailActivity">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -18,8 +18,8 @@
 
     <ImageView
         android:id="@+id/iv_discussion_detail_back"
-        android:layout_width="@dimen/space_2x_large"
-        android:layout_height="@dimen/space_2x_large"
+        android:layout_width="@dimen/space_28"
+        android:layout_height="@dimen/space_28"
         android:contentDescription="@string/content_description_discussion_detail_back"
         android:src="@drawable/btn_back"
         app:layout_constraintBottom_toBottomOf="@id/abl_discussion_detail"
@@ -30,7 +30,7 @@
         style="@style/HeaderTitleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/space_x_small"
+        android:layout_marginHorizontal="@dimen/space_8"
         android:text="@string/all_discussion_room"
         app:layout_constraintBottom_toBottomOf="@id/abl_discussion_detail"
         app:layout_constraintEnd_toEndOf="@id/abl_discussion_detail"
@@ -42,7 +42,7 @@
         style="@style/DiscussionDetailSubContent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/space_x_small"
+        android:layout_marginTop="@dimen/space_8"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/abl_discussion_detail"
         tools:text="오브젝트" />
@@ -50,7 +50,7 @@
     <TextView
         android:id="@+id/tv_discussion_title"
         style="@style/DiscussionDetailTitle"
-        android:layout_width="@dimen/space_2x_small"
+        android:layout_width="@dimen/space_0"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toStartOf="@id/tv_discussion_report"
         app:layout_constraintStart_toStartOf="parent"
@@ -92,8 +92,8 @@
         style="@style/DiscussionDetailSubTitle"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/item_discussion_detail_meta_line_height"
-        android:layout_marginStart="@dimen/space_x_small"
-        android:layout_marginTop="@dimen/space_x_small"
+        android:layout_marginStart="@dimen/space_8"
+        android:layout_marginTop="@dimen/space_8"
         android:text="@string/all_opinion"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_discussion_note" />
@@ -109,9 +109,9 @@
     <View
         android:id="@+id/view_comments_divider"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/space_x_small"
+        android:layout_height="@dimen/space_8"
         android:layout_marginHorizontal="6dp"
-        android:layout_marginTop="@dimen/space_large"
+        android:layout_marginTop="@dimen/space_20"
         android:background="@drawable/div_comment"
         app:layout_constraintTop_toBottomOf="@id/tv_discussion_opinion" />
 
@@ -136,9 +136,9 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_text_comment_content"
-        android:layout_width="@dimen/space_2x_small"
+        android:layout_width="@dimen/space_0"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/space_x_large"
+        android:layout_marginBottom="@dimen/space_24"
         android:background="@drawable/bg_green_f0_radius_8dp"
         android:minHeight="48dp"
         android:paddingVertical="8dp"
@@ -161,8 +161,8 @@
 
     <ImageView
         android:id="@+id/iv_add_comment"
-        android:layout_width="@dimen/space_2x_large"
-        android:layout_height="@dimen/space_2x_large"
+        android:layout_width="@dimen/space_28"
+        android:layout_height="@dimen/space_28"
         android:background="@drawable/btn_comment_background"
         android:contentDescription="@string/content_description_add_comment"
         app:layout_constraintBottom_toBottomOf="@id/til_text_comment_content"

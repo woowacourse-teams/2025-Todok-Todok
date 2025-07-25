@@ -2,7 +2,7 @@ package com.example.todoktodok.data.repository
 
 import com.example.domain.model.Book
 import com.example.domain.repository.BookRepository
-import com.example.todoktodok.fake.datasource.FakeBookDataSource
+import com.example.todoktodok.fake.datasource.FakeBookRemoteDataSource
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -10,13 +10,13 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class DefaultBookRepositoryTest {
-    private lateinit var fakeBookDataSource: FakeBookDataSource
+    private lateinit var fakeBookDataSource: FakeBookRemoteDataSource
     private lateinit var defaultBookRepository: BookRepository
 
     @BeforeEach
     fun setUp() {
         fakeBookDataSource =
-            FakeBookDataSource(
+            FakeBookRemoteDataSource(
                 books =
                     listOf(
                         Book(

@@ -5,8 +5,8 @@
         android:height="@dimen/library_navigate_btn_size"
         android:drawable="@drawable/btn_green_1a_oval" />
     <item
-        android:width="@dimen/space_median"
-        android:height="@dimen/space_median"
+        android:width="@dimen/space_16"
+        android:height="@dimen/space_16"
         android:drawable="@drawable/btn_plus_white"
         android:gravity="center" />
 </layer-list>

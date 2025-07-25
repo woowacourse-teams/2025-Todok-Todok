@@ -7,17 +7,17 @@
     <dimen name="font_size_x_large">20sp</dimen>
     <dimen name="font_size_2x_large">24sp</dimen>
 
-    <dimen name="space_2x_small">0dp</dimen>
-    <dimen name="space_xs_small">4dp</dimen>
-    <dimen name="space_x_small">8dp</dimen>
-    <dimen name="space_small">12dp</dimen>
-    <dimen name="space_median">16dp</dimen>
-    <dimen name="space_s_large">18dp</dimen>
-    <dimen name="space_large">20dp</dimen>
-    <dimen name="space_x_large">24dp</dimen>
-    <dimen name="space_2x_large">28dp</dimen>
-    <dimen name="space_3x_large">32dp</dimen>
-    <dimen name="space_9x_large">56dp</dimen>
+    <dimen name="space_0">0dp</dimen>
+    <dimen name="space_4">4dp</dimen>
+    <dimen name="space_8">8dp</dimen>
+    <dimen name="space_12">12dp</dimen>
+    <dimen name="space_16">16dp</dimen>
+    <dimen name="space_18">18dp</dimen>
+    <dimen name="space_20">20dp</dimen>
+    <dimen name="space_24">24dp</dimen>
+    <dimen name="space_28">28dp</dimen>
+    <dimen name="space_32">32dp</dimen>
+    <dimen name="space_56">56dp</dimen>
 
     <dimen name="toolbar_height">56dp</dimen>
     <dimen name="basic_btn_height">56dp</dimen>

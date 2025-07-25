@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import com.example.todoktodok.App
 import com.example.todoktodok.R
 import com.example.todoktodok.databinding.FragmentLibraryBinding
+import com.example.todoktodok.presentation.view.library.adapter.BooksAdapter
 import com.example.todoktodok.presentation.view.library.vm.LibraryViewModel
 import com.example.todoktodok.presentation.view.library.vm.LibraryViewModelFactory
 import com.example.todoktodok.presentation.view.searchbooks.SearchBooksActivity
