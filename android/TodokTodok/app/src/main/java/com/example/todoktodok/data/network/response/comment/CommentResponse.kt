@@ -9,13 +9,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class CommentResponse(
-    @SerialName("commentId")
     val commentId: Long,
-    @SerialName("content")
     val content: String,
-    @SerialName("createdAt")
     val createdAt: String,
-    @SerialName("member")
     val member: MemberResponse,
 )
 

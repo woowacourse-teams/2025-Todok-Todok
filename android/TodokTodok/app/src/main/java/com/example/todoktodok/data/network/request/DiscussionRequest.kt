@@ -5,10 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class DiscussionRequest(
-    @SerialName("discussionOpinion")
     val discussionOpinion: String,
-    @SerialName("discussionTitle")
     val discussionTitle: String,
-    @SerialName("noteId")
     val noteId: Long,
 )

@@ -17,7 +17,7 @@ class DataSourceModule(
     serviceModule: ServiceModule,
     context: Context,
 ) {
-    val defaultBookRemoteDataSource: BookRemoteDataSource by lazy {
+    val bookRemoteDataSource: BookRemoteDataSource by lazy {
         DefaultBookRemoteDataSource(
             serviceModule.libraryService,
             serviceModule.bookService,
@@ -40,7 +40,7 @@ class DataSourceModule(
 
     val tokenDataSource: TokenDataSource by lazy { TokenDataSource(context) }
 
-    val defaultMemberRemoteDataSource: MemberRemoteDataSource by lazy {
+    val memberRemoteDataSource: MemberRemoteDataSource by lazy {
         DefaultMemberRemoteDataSource(
             serviceModule.memberService,
             tokenDataSource,
