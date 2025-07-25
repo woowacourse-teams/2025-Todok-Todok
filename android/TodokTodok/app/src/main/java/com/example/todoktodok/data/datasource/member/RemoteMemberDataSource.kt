@@ -5,7 +5,7 @@ import com.example.todoktodok.data.network.auth.AuthInterceptor.Companion.AUTHOR
 import com.example.todoktodok.data.network.request.LoginRequest
 import com.example.todoktodok.data.network.request.SignUpRequest
 import com.example.todoktodok.data.network.service.MemberService
-import com.example.todoktodok.data.util.JwtUtils
+import com.example.todoktodok.data.core.JwtUtils
 
 class RemoteMemberDataSource(
     private val memberService: MemberService,

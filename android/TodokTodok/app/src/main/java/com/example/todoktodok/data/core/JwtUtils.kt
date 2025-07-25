@@ -1,4 +1,4 @@
-package com.example.todoktodok.data.util
+package com.example.todoktodok.data.core
 
 import android.util.Base64
 import org.json.JSONObject
