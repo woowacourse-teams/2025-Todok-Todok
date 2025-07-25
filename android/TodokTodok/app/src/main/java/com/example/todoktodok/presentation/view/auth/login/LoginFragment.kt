@@ -65,8 +65,8 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
     }
 
     private fun moveToSignUp() {
-        childFragmentManager.commit {
-            replace(R.id.fcv_container, SignUpFragment())
+        parentFragmentManager.commit {
+            replace(R.id.fcv_container_auth, SignUpFragment())
         }
     }
 

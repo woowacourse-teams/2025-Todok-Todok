@@ -5,14 +5,14 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class SignUpRequest(
-    val nickName: String,
+    val nickname: String,
     val profileImage: String,
     val email: String,
 )
 
 fun Member.toRequest() =
     SignUpRequest(
-        nickName = nickName,
+        nickname = nickName,
         profileImage = profileImage,
         email = email,
     )

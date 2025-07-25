@@ -4,7 +4,6 @@ import com.example.todoktodok.data.datasource.token.TokenDataSource
 import com.example.todoktodok.data.network.auth.AuthInterceptor.Companion.AUTHORIZATION_NAME
 import com.example.todoktodok.data.network.request.LoginRequest
 import com.example.todoktodok.data.network.request.SignUpRequest
-import com.example.todoktodok.data.network.response.SignUpResponse
 import com.example.todoktodok.data.network.service.MemberService
 import com.example.todoktodok.data.util.JwtUtils
 
@@ -21,9 +20,10 @@ class RemoteMemberDataSource(
         return role
     }
 
-    override suspend fun signUp(request: SignUpRequest): SignUpResponse =
+    override suspend fun signUp(request: SignUpRequest) {
         memberService.signUp(
             request.email,
             request,
         )
+    }
 }

@@ -9,7 +9,7 @@
     tools:context=".presentation.view.auth.AuthActivity">
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fcv_container"
+        android:id="@+id/fcv_container_auth"
         android:name="com.example.todoktodok.presentation.view.auth.login.LoginFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

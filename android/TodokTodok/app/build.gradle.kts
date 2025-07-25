@@ -92,6 +92,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.livedata.ktx)
     testImplementation(libs.bundles.test)
     testImplementation(libs.androidx.core.testing)
+
     androidTestImplementation(libs.bundles.android.test)
     androidTestRuntimeOnly(libs.mannodermaus.junit5.runner)
 }
