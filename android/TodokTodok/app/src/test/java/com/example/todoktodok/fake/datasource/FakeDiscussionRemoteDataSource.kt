@@ -1,6 +1,7 @@
 package com.example.todoktodok.fake.datasource
 
 import com.example.todoktodok.data.datasource.discussion.DiscussionRemoteDataSource
+import com.example.todoktodok.data.network.request.DiscussionRequest
 import com.example.todoktodok.data.network.response.discussion.BookResponse
 import com.example.todoktodok.data.network.response.discussion.DiscussionResponse
 import com.example.todoktodok.data.network.response.discussion.MemberResponse
@@ -92,4 +93,8 @@ class FakeDiscussionRemoteDataSource : DiscussionRemoteDataSource {
         }
 
     override suspend fun getDiscussions(): List<DiscussionResponse> = discussionResponses
+
+    override suspend fun saveDiscussion(discussionRequest: DiscussionRequest): Long {
+        TODO("Not yet implemented")
+    }
 }
