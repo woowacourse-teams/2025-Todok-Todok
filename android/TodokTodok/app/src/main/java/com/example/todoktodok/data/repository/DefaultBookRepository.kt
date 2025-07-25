@@ -2,16 +2,16 @@ package com.example.todoktodok.data.repository
 
 import com.example.domain.model.Book
 import com.example.domain.repository.BookRepository
-import com.example.todoktodok.data.datasource.book.BookDataSource
+import com.example.todoktodok.data.datasource.book.BookRemoteDataSource
 
 class DefaultBookRepository(
-    private val remoteBookDataSource: BookDataSource,
+    private val remoteBookRemoteDataSource: BookRemoteDataSource,
 ) : BookRepository {
-    override suspend fun searchBooks(searchInput: String): List<Book> = remoteBookDataSource.fetchBooks(searchInput)
+    override suspend fun searchBooks(searchInput: String): List<Book> = remoteBookRemoteDataSource.fetchBooks(searchInput)
 
-    override suspend fun getBooks(): List<Book> = remoteBookDataSource.fetchBooks()
+    override suspend fun getBooks(): List<Book> = remoteBookRemoteDataSource.fetchBooks()
 
     override suspend fun saveBook(book: Book) {
-        remoteBookDataSource.saveBook(book.id)
+        remoteBookRemoteDataSource.saveBook(book.id)
     }
 }

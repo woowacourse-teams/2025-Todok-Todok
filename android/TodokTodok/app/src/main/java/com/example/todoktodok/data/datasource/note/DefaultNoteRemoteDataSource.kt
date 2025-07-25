@@ -3,9 +3,9 @@ package com.example.todoktodok.data.datasource.note
 import com.example.todoktodok.data.network.request.NoteRequest
 import com.example.todoktodok.data.network.service.NoteService
 
-class RemoteNoteDataSource(
+class DefaultNoteRemoteDataSource(
     private val noteService: NoteService,
-) : NoteDataSource {
+) : NoteRemoteDataSource {
     override suspend fun saveNote(request: NoteRequest) {
         noteService.saveNote(request)
     }
