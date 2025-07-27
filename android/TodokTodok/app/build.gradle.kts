@@ -28,7 +28,7 @@ android {
         )
     }
 
-    namespace = "com.example.todoktodok"
+    namespace = "com.team.todoktodok"
     compileSdk = 35
 
     lint {
@@ -36,7 +36,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.todoktodok"
+        applicationId = "com.team.todoktodok"
         minSdk = 30
         targetSdk = 35
         versionCode = 1

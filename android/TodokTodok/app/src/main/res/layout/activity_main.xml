@@ -9,7 +9,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fcv_container"
-        android:name="com.example.todoktodok.presentation.view.note.NoteFragment"
+        android:name="com.team.todoktodok.presentation.view.note.NoteFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@id/bnv_container"
