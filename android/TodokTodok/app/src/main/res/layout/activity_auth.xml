@@ -10,7 +10,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fcv_container_auth"
-        android:name="com.example.todoktodok.presentation.view.auth.login.LoginFragment"
+        android:name="com.team.todoktodok.presentation.view.auth.login.LoginFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
