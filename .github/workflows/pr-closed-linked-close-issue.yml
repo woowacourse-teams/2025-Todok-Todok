@@ -22,6 +22,7 @@ jobs:
             
             if (!prBody) {
                 console.log('PR body is empty.');
+                return;
             }
 
             const issuePattern = /\b(close[sd]?|fix(e[ds])?|resolve[sd]?)\s+#(\d+)/gi;
@@ -30,16 +31,16 @@ jobs:
             if (matches.length === 0) {
               console.log('No linked issues found.');
               return;
-              }
-        
-              for (const match of matches) {
+            }
+            
+            for (const match of matches) {
               const issueNumber = match[3];
               console.log(`Closing issue #${issueNumber}`);
               
               await github.rest.issues.update({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: Number(issueNumber),
-              state: 'closed',
-            });
-          }
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: Number(issueNumber),
+                state: 'closed',
+              });
+            }
