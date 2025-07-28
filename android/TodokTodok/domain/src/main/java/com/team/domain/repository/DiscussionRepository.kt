@@ -9,7 +9,7 @@ interface DiscussionRepository {
 
     suspend fun saveDiscussion(
         noteId: Long,
-        discussionOpinion: String,
         discussionTitle: String,
+        discussionOpinion: String,
     ): Long
 }
