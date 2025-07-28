@@ -15,12 +15,18 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".presentation.view.auth.AuthActivity"
+            android:name=".presentation.utview.discussions.DiscussionsActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".presentation.view.auth.AuthActivity"
+            android:exported="true">
+
         </activity>
         <activity
             android:name=".presentation.view.discussion.create.DiscussionCreateActivity"
@@ -34,7 +40,7 @@
         <activity
             android:name=".presentation.view.MainActivity"
             android:exported="true"
-            android:windowSoftInputMode="adjustPan">
-        </activity>
+            android:windowSoftInputMode="adjustPan"></activity>
     </application>
+
 </manifest>

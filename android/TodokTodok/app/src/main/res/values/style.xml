@@ -40,6 +40,7 @@
 
     <style name="HintTextStyle" parent="TextAppearance.MaterialComponents.Body1">
         <item name="android:textSize">@dimen/font_size_small</item>
+        <item name="fontFamily">@font/pretendard_regular</item>
         <item name="android:textColor">@color/gray_76</item>
     </style>
 
