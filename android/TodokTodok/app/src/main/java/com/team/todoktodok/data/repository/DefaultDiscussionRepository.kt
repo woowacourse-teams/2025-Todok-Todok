@@ -15,13 +15,13 @@ class DefaultDiscussionRepository(
 
     override suspend fun saveDiscussion(
         noteId: Long,
-        discussionOpinion: String,
         discussionTitle: String,
+        discussionOpinion: String,
     ): Long =
         discussionRemoteDataSource.saveDiscussion(
             DiscussionRequest(
-                discussionOpinion,
                 discussionTitle,
+                discussionOpinion,
                 noteId,
             ),
         )

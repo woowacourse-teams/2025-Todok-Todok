@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class DiscussionRequest(
-    val discussionOpinion: String,
     val discussionTitle: String,
+    val discussionOpinion: String,
     val noteId: Long,
 )
