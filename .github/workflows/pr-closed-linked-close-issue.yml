@@ -1,0 +1,45 @@
+name: PR Closed Linked Close Issue
+
+on:
+  pull_request:
+    types:
+      - closed
+
+jobs:
+  close_issue:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+      issues: write
+
+    steps:
+      - name: Close linked issues
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const prBody = context.payload.pull_request.body || '';
+            
+            if (!prBody) {
+                console.log('PR body is empty.');
+            }
+
+            const issuePattern = /\b(close[sd]?|fix(e[ds])?|resolve[sd]?)\s+#(\d+)/gi;
+            const matches = [...prBody.matchAll(issuePattern)];
+            
+            if (matches.length === 0) {
+              console.log('No linked issues found.');
+              return;
+              }
+        
+              for (const match of matches) {
+              const issueNumber = match[3];
+              console.log(`Closing issue #${issueNumber}`);
+              
+              await github.rest.issues.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: Number(issueNumber),
+              state: 'closed',
+            });
+          }
