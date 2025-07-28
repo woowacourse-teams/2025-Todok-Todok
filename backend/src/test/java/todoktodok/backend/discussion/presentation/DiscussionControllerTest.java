@@ -3,6 +3,8 @@ package todoktodok.backend.discussion.presentation;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -57,6 +59,47 @@ class DiscussionControllerTest {
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body("size()", is(1));
+    }
+
+    @Test
+    @DisplayName("특정 토론방을 조회한다")
+    void getDiscussion() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultShelfInfo();
+        databaseInitializer.setDefaultNoteInfo();
+        databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L, 1L);
+
+        final String token = MemberFixture.login("user@gmail.com");
+
+        // when - then
+        RestAssured.given().log().all()
+                .header("Authorization", token)
+                .contentType(ContentType.JSON)
+                .when().get("/api/v1/discussions/1")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
+    }
+
+    @Test
+    @DisplayName("특정 토론방에 기록이 없을 경우 기록은 빈 값으로 조회된다")
+    void getDiscussion_noRecord_success() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L, null);
+
+        final String token = MemberFixture.login("user@gmail.com");
+
+        // when - then
+        RestAssured.given().log().all()
+                .header("Authorization", token)
+                .contentType(ContentType.JSON)
+                .when().get("/api/v1/discussions/1")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("note", is(nullValue()));
     }
 
     @Test

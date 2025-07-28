@@ -8,10 +8,10 @@ import todoktodok.backend.note.application.dto.response.MyNoteResponse;
 
 public record DiscussionResponse(
         Long discussionId,
-        BookResponse bookResponse,
-        MemberResponse memberResponse,
+        BookResponse book,
+        MemberResponse member,
         LocalDateTime createdAt,
-        MyNoteResponse noteResponse,
+        MyNoteResponse note,
         String discussionTitle,
         String discussionOpinion
 ) {
@@ -21,7 +21,7 @@ public record DiscussionResponse(
                 new BookResponse(discussion.getBook()),
                 new MemberResponse(discussion.getMember()),
                 discussion.getCreatedAt(),
-                new MyNoteResponse(discussion.getNote()),
+                discussion.getNote() != null ? new MyNoteResponse(discussion.getNote()) : null,
                 discussion.getTitle(),
                 discussion.getContent()
         );
