@@ -11,8 +11,6 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
 
     List<Discussion> findDiscussionsByMember(Member member);
 
-    List<Discussion> findDiscussionsByTitleContainingIgnoreCaseOrBook_TitleIsContainingIgnoreCase(String title, String bookTitle);
-
     @Query("""
         select d from Discussion d
         where upper(d.title) like upper(concat('%', :keyword, '%'))
