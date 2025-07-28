@@ -45,17 +45,20 @@ public class DiscussionQueryService {
             final String keyword,
             final DiscussionFilterType type
     ) {
-        Member member = findMember(memberId);
+        final Member member = findMember(memberId);
+
         if (keyword == null || keyword.isBlank()) {
             if (type.isTypeMine()) {
                 return getMyDiscussions(member);
             }
             return getDiscussions(memberId);
         }
+
         if (type.isTypeMine()) {
             return getMyDiscussionsByKeyword(keyword, member);
         }
-        return getDiscussionsByKeyword(keyword, type);
+
+        return getDiscussionsByKeyword(keyword);
     }
 
     private void validateMember(final Long memberId) {
@@ -91,8 +94,7 @@ public class DiscussionQueryService {
     }
 
     private List<DiscussionResponse> getDiscussionsByKeyword(
-            final String keyword,
-            final DiscussionFilterType type
+            final String keyword
     ) {
         return discussionRepository.searchByKeyword(keyword).stream()
                 .map(DiscussionResponse::new)

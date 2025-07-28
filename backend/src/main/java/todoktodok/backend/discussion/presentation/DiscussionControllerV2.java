@@ -47,7 +47,7 @@ public class DiscussionControllerV2 {
                 .build();
     }
 
-    @Operation(summary = "토론방 필터 API")
+    @Operation(summary = "토론방 필터링 API")
     @Auth(value = Role.USER)
     @GetMapping
     public ResponseEntity<List<DiscussionResponse>> getDiscussionsByKeywordAndType(
@@ -58,5 +58,4 @@ public class DiscussionControllerV2 {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(discussionQueryService.getDiscussionsByKeywordAndType(memberId, keyword, type));
     }
-
 }
