@@ -37,14 +37,7 @@ public class DiscussionControllerV2 {
         final Long discussionId = discussionCommandService.createDiscussionV2(memberId, discussionRequestV2);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .location(createUri(discussionId))
+                .location(URI.create("/api/v1/discussions/" + discussionId))
                 .build();
-    }
-
-    private URI createUri(final Long id) {
-        return ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(id)
-                .toUri();
     }
 }
