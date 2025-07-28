@@ -44,7 +44,7 @@ class DiscussionCommandServiceTest {
     @Test
     @DisplayName("존재하지 않는 회원으로 토론방 생성 시 예외가 발생한다")
     void createDiscussion_memberNotFound_fail() {
-        //given
+        // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
 
@@ -66,7 +66,7 @@ class DiscussionCommandServiceTest {
     @Test
     @DisplayName("존재하지 않는 도서로 토론방 생성 시 예외가 발생한다")
     void createDiscussion_NoteNotFound_fail() {
-        //given
+        // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
 
@@ -134,7 +134,7 @@ class DiscussionCommandServiceTest {
         @Test
         @DisplayName("존재하지 않는 회원으로 토론방 생성 시 예외가 발생한다")
         void createDiscussion_memberNotFound_fail() {
-            //given
+            // given
             databaseInitializer.setDefaultUserInfo();
             databaseInitializer.setDefaultBookInfo();
 
@@ -155,7 +155,7 @@ class DiscussionCommandServiceTest {
         @Test
         @DisplayName("존재하지 않는 기록으로 토론방 생성 시 예외가 발생한다")
         void createDiscussion_NoteNotFound_fail() {
-            //given
+            // given
             databaseInitializer.setDefaultUserInfo();
             databaseInitializer.setDefaultBookInfo();
             databaseInitializer.setDefaultNoteInfo();
@@ -180,7 +180,7 @@ class DiscussionCommandServiceTest {
         @Test
         @DisplayName("기록 소유자가 아닌 경우 토론방 생성 시 예외가 발생한다")
         void createDiscussion_whenNoteNotOwnedByMember_fail() {
-            //given
+            // given
             databaseInitializer.setDefaultUserInfo();
             databaseInitializer.setDefaultBookInfo();
             databaseInitializer.setDefaultNoteInfo();
