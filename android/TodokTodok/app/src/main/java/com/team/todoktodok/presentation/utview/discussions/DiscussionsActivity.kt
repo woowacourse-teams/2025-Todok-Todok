@@ -33,3 +33,29 @@ class DiscussionsActivity : AppCompatActivity() {
         with(binding) {
             val hint = getString(R.string.ut_discussion_search_bar_hint)
             etSearchDiscussion.clearHintOnFocus(binding.etSearchDiscussionLayout, hint)
+
+            btnSearch.setOnClickListener {
+                setUpTab(binding)
+            }
+        }
+    }
+
+    private fun setUpTab(binding: ActivityDiscussionsBinding) {
+        with(binding) {
+            val changeAbleTab = tabLayout.getTabAt(CHANGEABLE_TAB_POSITION)
+
+            val currentTab = tabLayout.selectedTabPosition
+            val searchText = etSearchDiscussion.text.toString()
+            if (searchText.isNotEmpty()) {
+                changeAbleTab?.text = searchText
+                if (currentTab != CHANGEABLE_TAB_POSITION) {
+                    tabLayout.selectTab(changeAbleTab)
+                }
+            }
+        }
+    }
+
+    companion object {
+        private const val CHANGEABLE_TAB_POSITION = 0
+    }
+}
