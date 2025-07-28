@@ -2,6 +2,7 @@ package todoktodok.backend.discussion.presentation;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
@@ -23,6 +24,7 @@ import todoktodok.backend.global.auth.Auth;
 import todoktodok.backend.global.auth.Role;
 import todoktodok.backend.global.resolver.LoginMember;
 
+@Tag(name = "discussion-controller")
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/v1/discussions")
@@ -31,6 +33,7 @@ public class DiscussionController {
     private final DiscussionCommandService discussionCommandService;
     private final DiscussionQueryService discussionQueryService;
 
+    @Deprecated
     @Operation(summary = "토론방 생성 API")
     @Auth(value = Role.USER)
     @PostMapping

@@ -39,7 +39,7 @@ public class SwaggerConfig {
         return GroupedOpenApi.builder()
                 .group("authorization")
                 .pathsToExclude("/api/v1/members/login")
-                .pathsToMatch("/api/v1/**")
+                .pathsToMatch("/api/**")
                 .addOpenApiCustomizer(buildSecurityOpenApi())
                 .build();
     }
