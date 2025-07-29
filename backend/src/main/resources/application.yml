@@ -1,8 +1,3 @@
-config:
-  import:
-    - security/aladin.yml
-    - security/jwt.yml
-
 spring:
   h2:
     console:
@@ -22,6 +17,11 @@ spring:
     hibernate:
       ddl-auto: create-drop
     defer-datasource-initialization: true
+
+  config:
+    import:
+      - submodule/security/aladin.yml
+      - submodule/security/jwt.yml
 
 aladin:
   base-url: ${aladin.base-url}
