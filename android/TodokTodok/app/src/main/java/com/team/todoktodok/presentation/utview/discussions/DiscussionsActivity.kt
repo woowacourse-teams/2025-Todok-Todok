@@ -56,15 +56,7 @@ class DiscussionsActivity : AppCompatActivity() {
                 // TODO : 검색 기능 구현
             }
 
-            etSearchDiscussion.setOnEditorActionListener(object : TextView.OnEditorActionListener {
-                override fun onEditorAction(
-                    v: TextView?,
-                    actionId: Int,
-                    event: KeyEvent?,
-                ): Boolean {
-                    TODO("검색 기능 구현")
-                }
-            })
+            etSearchDiscussion.setOnEditorActionListener { v, actionId, event -> TODO("검색 기능 구현") }
             tabLayout.addOnTabSelectedListener(
                 object : TabLayout.OnTabSelectedListener {
                     override fun onTabSelected(tab: TabLayout.Tab?) {
