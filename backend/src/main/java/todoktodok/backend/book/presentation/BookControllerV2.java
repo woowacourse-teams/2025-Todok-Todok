@@ -29,13 +29,13 @@ public class BookControllerV2 {
     @Operation(summary = "도서 생성 API")
     @Auth(value = Role.USER)
     @PostMapping
-    public ResponseEntity<Void> createBook(
+    public ResponseEntity<Long> createBook(
             @Parameter(hidden = true) @LoginMember final Long memberId,
             @RequestBody @Valid final BookRequest bookRequest
     ) {
-        bookCommandService.createBook(memberId, bookRequest);
+        Long bookId = bookCommandService.createBook(memberId, bookRequest);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .build();
+                .body(bookId);
     }
 }
