@@ -306,7 +306,19 @@ VALUES
 CURRENT_TIME,
 CURRENT_TIME);
 
---유저 1명
+-- 29
+INSERT INTO BOOK (title, summary, author, publisher, isbn, image, created_at, modified_at)
+VALUES
+('엘레강트 오브젝트 - 새로운 관점에서 바라본 객체지향',
+'기본적으로 객체지향 프로그래밍((Object-Oriented Programming, OOP)에 관한 책이다. 이 책은 전통적인 OOP의 모범 사례에 전면적으로 반기를 들고 전통적인 코딩 표준에서 벗어나 훨씬 깨끗한 코드 작성을 위한 조력자임을 자처한다.',
+'Yegor Bugayenko (지은이), 조영호 (옮긴이)',
+'지&선(지앤선)',
+'9791187497219',
+'https://image.aladin.co.kr/product/25837/40/coversum/k762736538_1.jpg',
+CURRENT_TIME,
+CURRENT_TIME);
+
+--유저
 INSERT INTO MEMBER (email, nickname, profile_image, profile_message, created_at, modified_at)
 VALUES
 ('chanho680526@gmail.com',
@@ -316,6 +328,7 @@ VALUES
 CURRENT_TIME,
 CURRENT_TIME);
 
+-- 2
 INSERT INTO MEMBER (email, nickname, profile_image, profile_message, created_at, modified_at)
 VALUES
 ('wondroid.world@gmail.com',
@@ -334,7 +347,43 @@ VALUES
 CURRENT_TIME,
 CURRENT_TIME);
 
---유저 서재의 도서 목록 3개
+INSERT INTO MEMBER (email, nickname, profile_image, profile_message, created_at, modified_at)
+VALUES
+('ljhee92.sist@gmail.com',
+'듀이',
+'https://user.png',
+'듀이 상태 메시지 입니다',
+CURRENT_TIME,
+CURRENT_TIME);
+
+INSERT INTO MEMBER (email, nickname, profile_image, profile_message, created_at, modified_at)
+VALUES
+('kingjh1125@gmail.com',
+'링크',
+'https://user.png',
+'링크 상태 메시지 입니다',
+CURRENT_TIME,
+CURRENT_TIME);
+
+INSERT INTO MEMBER (email, nickname, profile_image, profile_message, created_at, modified_at)
+VALUES
+('chaeyoung0714@gmail.com',
+'모다',
+'https://user.png',
+'모다 상태 메시지 입니다',
+CURRENT_TIME,
+CURRENT_TIME);
+
+INSERT INTO MEMBER (email, nickname, profile_image, profile_message, created_at, modified_at)
+VALUES
+('quantumjump10@gmail.com',
+'제프',
+'https://user.png',
+'제프 상태 메시지 입니다',
+CURRENT_TIME,
+CURRENT_TIME);
+
+--유저 서재의 도서 목록
 INSERT INTO SHELF (member_id, book_id, created_at, modified_at)
 VALUES
 (1, 1, CURRENT_TIME, CURRENT_TIME);
@@ -347,17 +396,32 @@ INSERT INTO SHELF (member_id, book_id, created_at, modified_at)
 VALUES
 (1, 3, CURRENT_TIME, CURRENT_TIME);
 
-INSERT INTO SHELF (member_id, book_id, created_at, modified_at)
-VALUES
-(2, 1, CURRENT_TIME, CURRENT_TIME);
+--INSERT INTO SHELF (member_id, book_id, created_at, modified_at)
+--VALUES
+--(2, 1, CURRENT_TIME, CURRENT_TIME);
 
-INSERT INTO SHELF (member_id, book_id, created_at, modified_at)
-VALUES
-(2, 2, CURRENT_TIME, CURRENT_TIME);
+--INSERT INTO SHELF (member_id, book_id, created_at, modified_at)
+--VALUES
+--(2, 2, CURRENT_TIME, CURRENT_TIME);
 
+--INSERT INTO SHELF (member_id, book_id, created_at, modified_at)
+--VALUES
+--(2, 3, CURRENT_TIME, CURRENT_TIME);
+
+-- 4
 INSERT INTO SHELF (member_id, book_id, created_at, modified_at)
 VALUES
-(2, 3, CURRENT_TIME, CURRENT_TIME);
+(2, 29, CURRENT_TIME, CURRENT_TIME);
+
+-- 5
+INSERT INTO SHELF (member_id, book_id, created_at, modified_at)
+VALUES
+(5, 29, CURRENT_TIME, CURRENT_TIME);
+
+-- 6
+INSERT INTO SHELF (member_id, book_id, created_at, modified_at)
+VALUES
+(1, 29, CURRENT_TIME, CURRENT_TIME);
 
 INSERT INTO SHELF (member_id, book_id, created_at, modified_at)
 VALUES
@@ -371,7 +435,7 @@ INSERT INTO SHELF (member_id, book_id, created_at, modified_at)
 VALUES
 (3, 3, CURRENT_TIME, CURRENT_TIME);
 
---유저의 기록 3개
+--유저의 기록
 INSERT INTO NOTE (snap, memo, book_id, member_id, created_at, modified_at)
 VALUES
 ('코드 재사용을 위해서는 객체 합성이 클래스 상속보다 더 좋은 방법이다.1',
@@ -381,14 +445,14 @@ VALUES
 CURRENT_TIME,
 CURRENT_TIME);
 
-INSERT INTO NOTE (snap, memo, book_id, member_id, created_at, modified_at)
-VALUES
-('코드 재사용을 위해서는 객체 합성이 클래스 상속보다 더 좋은 방법이다.2',
-'변경에 유연하게 대처할 수 있는 설계가 대부분 정답이다.2',
-1,
-2,
-CURRENT_TIME,
-CURRENT_TIME);
+--INSERT INTO NOTE (snap, memo, book_id, member_id, created_at, modified_at)
+--VALUES
+--('코드 재사용을 위해서는 객체 합성이 클래스 상속보다 더 좋은 방법이다.2',
+--'변경에 유연하게 대처할 수 있는 설계가 대부분 정답이다.2',
+--1,
+--2,
+--CURRENT_TIME,
+--CURRENT_TIME);
 
 INSERT INTO NOTE (snap, memo, book_id, member_id, created_at, modified_at)
 VALUES
@@ -408,14 +472,14 @@ VALUES
 CURRENT_TIME,
 CURRENT_TIME);
 
-INSERT INTO NOTE (snap, memo, book_id, member_id, created_at, modified_at)
-VALUES
-('코드 재사용을 위해서는 객체 합성이 클래스 상속보다 더 좋은 방법이다.2',
-'변경에 유연하게 대처할 수 있는 설계가 대부분 정답이다.2',
-2,
-2,
-CURRENT_TIME,
-CURRENT_TIME);
+--INSERT INTO NOTE (snap, memo, book_id, member_id, created_at, modified_at)
+--VALUES
+--('코드 재사용을 위해서는 객체 합성이 클래스 상속보다 더 좋은 방법이다.2',
+--'변경에 유연하게 대처할 수 있는 설계가 대부분 정답이다.2',
+--2,
+--2,
+--CURRENT_TIME,
+--CURRENT_TIME);
 
 INSERT INTO NOTE (snap, memo, book_id, member_id, created_at, modified_at)
 VALUES
@@ -435,14 +499,14 @@ VALUES
 CURRENT_TIME,
 CURRENT_TIME);
 
-INSERT INTO NOTE (snap, memo, book_id, member_id, created_at, modified_at)
-VALUES
-('코드 재사용을 위해서는 객체 합성이 클래스 상속보다 더 좋은 방법이다.2',
-'변경에 유연하게 대처할 수 있는 설계가 대부분 정답이다.2',
-3,
-2,
-CURRENT_TIME,
-CURRENT_TIME);
+--INSERT INTO NOTE (snap, memo, book_id, member_id, created_at, modified_at)
+--VALUES
+--('코드 재사용을 위해서는 객체 합성이 클래스 상속보다 더 좋은 방법이다.2',
+--'변경에 유연하게 대처할 수 있는 설계가 대부분 정답이다.2',
+--3,
+--2,
+--CURRENT_TIME,
+--CURRENT_TIME);
 
 INSERT INTO NOTE (snap, memo, book_id, member_id, created_at, modified_at)
 VALUES
@@ -453,50 +517,154 @@ VALUES
 CURRENT_TIME,
 CURRENT_TIME);
 
---토론방 3개
-INSERT INTO DISCUSSION (title, content, member_id, book_id, note_id, created_at, modified_at)
+-- 7
+INSERT INTO NOTE (snap, memo, book_id, member_id, created_at, modified_at)
 VALUES
-('상속과 조합의 차이',
-'코드 재사용에 있어 조합이 유리하다면, 상속의 목적은 무엇인가요?',
-1, 1, 1,
+('생성자에서 객체를 초기화할 때에는 코드가 없어야하고 인자를 건드려서는 안된다. 대신, 필요하다면 인자를 다른 타입의 객체로 감싸거나 가공하지 않은 형식으로 캡슐화해야한다. 예를 들어 다음과 같은 것은 잘못된 방법이다.',
+'',
+29,
+2,
 CURRENT_TIME,
 CURRENT_TIME);
 
-INSERT INTO DISCUSSION (title, content, member_id, book_id, note_id, created_at, modified_at)
+-- 8
+INSERT INTO NOTE (snap, memo, book_id, member_id, created_at, modified_at)
 VALUES
-('상속과 조합의 차이',
-'코드 재사용에 있어 조합이 유리하다면, 상속의 목적은 무엇인가요?',
-2, 1, 1,
+('객체의 필드는 객체의 상태이자 식별자이다. 어떤 것도 캡슐화하지 않은 클래스의 모든 객체는 동일하다. 프로퍼티가 없는 클래스는 정적 메서드와 유사하다. 이 클래스는 아무런 상태와 식별자도 가지지 않고 오직 행동만을 포함한다. 정적 메서드가 존재하지 않고 인스턴스 생성과 실행을 엄격하게 분리하는 순수한 객체지향에서는 기술적으로 프로퍼티가 없는 클래스를 만들 수 없다.',
+'',
+29,
+5,
 CURRENT_TIME,
 CURRENT_TIME);
 
+-- 9
+INSERT INTO NOTE (snap, memo, book_id, member_id, created_at, modified_at)
+VALUES
+('객체 간의 관계를 형성하기 위해서는 결합이 필요하다. 하지만 수 십개의 객체가 관계를 형성하기 위해 결합을 맺는다면, 강한 결합도가 문제가 된다. 따라서 우리는 객체 간의 관계를 맞을 수 있도록 하며, 객체를 분리하기 위해 인터페이스를 사용할 수 있다. 인터페이스는 다른 객체와 소통하기 위한 계약이라고 볼 수 있다. 특정 인터페이스를 구현하는 것은, 그 인터페이스에 담긴 계약을 준수한다고 보면 된다. 더불어 클래스 안의 모든 퍼블릭 메서드가 인터페이스를 구현하도록 만들어야한다. 올바르게 설계된 클래스라면 최소한 하나의 인터페이스라도 구현하지 않는 퍼블릭 메서드를 포함시켜서는 안된다.',
+'',
+29,
+5,
+CURRENT_TIME,
+CURRENT_TIME);
+
+-- 10
+INSERT INTO NOTE (snap, memo, book_id, member_id, created_at, modified_at)
+VALUES
+('getter와 setter를 사용하지 마세요.',
+'',
+29,
+6,
+CURRENT_TIME,
+CURRENT_TIME);
+
+--토론방
+--INSERT INTO DISCUSSION (title, content, member_id, book_id, note_id, created_at, modified_at)
+--VALUES
+--('상속과 조합의 차이',
+--'코드 재사용에 있어 조합이 유리하다면, 상속의 목적은 무엇인가요?',
+--1, 1, 1,
+--CURRENT_TIME,
+--CURRENT_TIME);
+--
+--INSERT INTO DISCUSSION (title, content, member_id, book_id, note_id, created_at, modified_at)
+--VALUES
+--('상속과 조합의 차이',
+--'코드 재사용에 있어 조합이 유리하다면, 상속의 목적은 무엇인가요?',
+--2, 1, 1,
+--CURRENT_TIME,
+--CURRENT_TIME);
+--
+--INSERT INTO DISCUSSION (title, content, member_id, book_id, note_id, created_at, modified_at)
+--VALUES
+--('상속과 조합의 차이',
+--'코드 재사용에 있어 조합이 유리하다면, 상속의 목적은 무엇인가요?',
+--3, 1, 1,
+--CURRENT_TIME,
+--CURRENT_TIME);
+
+-- 1
 INSERT INTO DISCUSSION (title, content, member_id, book_id, note_id, created_at, modified_at)
 VALUES
-('상속과 조합의 차이',
-'코드 재사용에 있어 조합이 유리하다면, 상속의 목적은 무엇인가요?',
-3, 1, 1,
+('엘강오 생성자 관련 토론',
+'저는 주로 생성자에서 검증을 하는 편인데, 코드를 넣지 말라고 하면 객체 필드에 대한 검증 로직은 어디에 들어가는 게 적합할까요?',
+2, 29, 7,
+CURRENT_TIME,
+CURRENT_TIME);
+
+-- 2
+INSERT INTO DISCUSSION (title, content, member_id, book_id, note_id, created_at, modified_at)
+VALUES
+('필드가 없는 클래스 == 객체?',
+'엘강오에서는 최소한 뭔가는 캡슐화하라고 했는데, 그렇다면 캡슐화할 필드가 없는 클래스는 객체라고 불릴 수 없는걸까요?',
+5, 29, 8,
+CURRENT_TIME,
+CURRENT_TIME);
+
+-- 3
+INSERT INTO DISCUSSION (title, content, member_id, book_id, note_id, created_at, modified_at)
+VALUES
+('확장성과 복잡성의 트레이드 오프에 대해',
+'모든 상황에서 확장성을 고려하여 인터페이스를 사용해야 할까요? 인터페이스를 사용하는 것이 오버 엔지니어링은 아닐까요? 확장성과 복잡성의 트레이드 오프를 어느 정도까지 잡아야 할지 모르겠습니다.',
+5, 29, 9,
+CURRENT_TIME,
+CURRENT_TIME);
+
+-- 4
+INSERT INTO DISCUSSION (title, content, member_id, book_id, note_id, created_at, modified_at)
+VALUES
+('getter는 절대 사용하면 안 되는가?',
+'getter를 절대 사용하지 않는다면 서로 책임을 넘기느라 객체 그래프가 과도하게 깊어져 오히려 복잡성이 늘어나는 경우가 생기는데, 이런 경우에도 쓰지 않는 것이 좋을까요? 어느 정도까지 getter를 쓰지 않는 것을 고려해야 할까요?',
+1, 29, 10,
 CURRENT_TIME,
 CURRENT_TIME);
 
 --한 토론방 마다 댓글 0, 1, 2개
+--INSERT INTO COMMENT (content, member_id, discussion_id, created_at, modified_at)
+--VALUES
+--('상속의 핵심 목적은 타입 계층의 구축입니다!',
+--1, 2,
+--CURRENT_TIME,
+--CURRENT_TIME);
+--
+--INSERT INTO COMMENT (content, member_id, discussion_id, created_at, modified_at)
+--VALUES
+--('상속의 핵심 목적은 타입 계층의 구축입니다!',
+--1, 3,
+--CURRENT_TIME,
+--CURRENT_TIME);
+--
+--
+--INSERT INTO COMMENT (content, member_id, discussion_id, created_at, modified_at)
+--VALUES
+--('상속의 핵심 목적은 타입 계층의 구축입니다!',
+--2, 3,
+--CURRENT_TIME,
+--CURRENT_TIME);
+
 INSERT INTO COMMENT (content, member_id, discussion_id, created_at, modified_at)
 VALUES
-('상속의 핵심 목적은 타입 계층의 구축입니다!',
-1, 2,
+('어차피 캡슐화를 생각한다면 밖에서는 필드의 존재를 몰라야 하는 게 맞고, 메세지로만 객체가 행동하기 때문에 객체라고 불릴 수 있다고 생각해요. 다른 분들의 의견은 어떤가요?',
+3, 2,
 CURRENT_TIME,
 CURRENT_TIME);
 
 INSERT INTO COMMENT (content, member_id, discussion_id, created_at, modified_at)
 VALUES
-('상속의 핵심 목적은 타입 계층의 구축입니다!',
-1, 3,
+('그래도 항상 인터페이스를 사용하는 것이 좋지 않을까요? 언제, 어디서 요구사항이 바뀔지 모르는데 이에 대한 대비를 해두는 것은 향후 유지보수성에 좋다고 여겨집니다.',
+3, 3,
 CURRENT_TIME,
 CURRENT_TIME);
 
+INSERT INTO COMMENT (content, member_id, discussion_id, created_at, modified_at)
+VALUES
+('저는 간단한 프로그램임에도 인터페이스를 넣으니 오히려 불편했어요. 확실히 확장성이 없다고 느껴지는데도 굳이 인터페이스를 넣어야 할까요?',
+4, 3,
+CURRENT_TIME,
+CURRENT_TIME);
 
 INSERT INTO COMMENT (content, member_id, discussion_id, created_at, modified_at)
 VALUES
-('상속의 핵심 목적은 타입 계층의 구축입니다!',
-2, 3,
+('getter를 "절대"사용하지 않아야 한다는 것은 말이 안 되는 것 같아요. 편하자고 정해둔 것일 뿐, 목적에 따라 적절히 사용해도 괜찮다고 생각합니다.',
+3, 4,
 CURRENT_TIME,
 CURRENT_TIME);
