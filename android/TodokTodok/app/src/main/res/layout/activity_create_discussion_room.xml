@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingHorizontal="@dimen/space_24"
+    tools:context=".presentation.utview.CreateDiscussionRoomActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/abl_create_discussion_room"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_height"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_back"
+        android:contentDescription="@string/content_description_discussion_create_back"
+        app:layout_constraintBottom_toBottomOf="@id/abl_create_discussion_room"
+        app:layout_constraintStart_toStartOf="@id/abl_create_discussion_room"
+        app:layout_constraintTop_toTopOf="@id/abl_create_discussion_room" />
+
+    <TextView
+        android:id="@+id/tv_title"
+        style="@style/HeaderTitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/discussion_create_title"
+        app:layout_constraintBottom_toBottomOf="@id/abl_create_discussion_room"
+        app:layout_constraintEnd_toEndOf="@id/abl_create_discussion_room"
+        app:layout_constraintStart_toStartOf="@id/abl_create_discussion_room"
+        app:layout_constraintTop_toTopOf="@id/abl_create_discussion_room" />
+
+    <TextView
+        android:id="@+id/tv_book_search"
+        style="@style/CreateDiscussionNoteBookTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/space_8"
+        android:layout_marginVertical="@dimen/space_8"
+        android:text="@string/search_book"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/abl_create_discussion_room" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="책 제목을 입력해주세요"
+        app:boxBackgroundColor="@color/green_F0"
+        app:boxBackgroundMode="filled"
+        app:boxCornerRadiusBottomEnd="8dp"
+        app:boxCornerRadiusBottomStart="8dp"
+        app:boxCornerRadiusTopEnd="8dp"
+        app:boxCornerRadiusTopStart="8dp"
+        app:hintTextColor="@color/gray_76"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_book_search">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

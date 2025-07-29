@@ -50,6 +50,8 @@ kotest-runner-junit5 = "5.9.1"
 mockk = "1.13.8"
 junit = "4.12"
 lifecycle-livedata-ktx = "2.9.2"
+activity = "1.10.1"
+constraintlayout = "2.2.1"
 
 [libraries]
 # AndroidX
@@ -97,6 +99,8 @@ mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 mockk-android = { module = "io.mockk:mockk-android", version.ref = "mockk" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines-core" }
+activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
+androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 
 [bundles]
 androidx = [
