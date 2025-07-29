@@ -9,10 +9,10 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.widget.addTextChangedListener
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.UtActivityDiscussionDetailBinding
+import com.team.todoktodok.presentation.utview.discussiondetail.CommentCreateBottomSheet.Companion.TAG
 import com.team.todoktodok.presentation.utview.discussiondetail.adapter.CommentAdapter
 import com.team.todoktodok.presentation.utview.discussiondetail.vm.DiscussionDetailViewModel
 import com.team.todoktodok.presentation.utview.discussiondetail.vm.DiscussionDetailViewModel.Companion.KEY_DISCUSSION_ID
@@ -42,27 +42,29 @@ class DiscussionDetailActivity : AppCompatActivity() {
         initView()
         initAdapter()
         setContentView(binding.root)
-        setupOnClickAddComment()
         setupOnClickNavigateUp()
-        setupOnChangeComment()
         setupObserve()
         setPopBackStack()
+        supportFragmentManager.setFragmentResultListener(
+            CommentCreateBottomSheet.COMMENT_REQUEST_KEY,
+            this,
+        ) { _, bundle ->
+            val result = bundle.getBoolean(CommentCreateBottomSheet.COMMENT_CREATED_RESULT_KEY)
+            if (result) {
+                viewModel.commentsReload()
+            }
+        }
     }
 
     private fun initView() {
         enableEdgeToEdge()
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
-            val ime = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-
-            val bottom =
-                if (insets.isVisible(WindowInsetsCompat.Type.ime())) ime else systemBars.bottom
-
             v.setPadding(
-                v.paddingLeft,
+                binding.root.paddingLeft,
                 systemBars.top,
-                v.paddingRight,
-                bottom,
+                binding.root.paddingRight,
+                systemBars.bottom,
             )
             insets
         }
@@ -72,28 +74,13 @@ class DiscussionDetailActivity : AppCompatActivity() {
         binding.rvComments.adapter = adapter
     }
 
-    private fun setupOnClickAddComment() {
-        with(binding) {
-            ivAddComment.setOnClickListener {
-                viewModel.submitComment()
-                etTextCommentContent.text?.clear()
-                etTextCommentContent.clearFocus()
-            }
-        }
-    }
-
     private fun setupOnClickNavigateUp() {
         with(binding) {
             ivDiscussionDetailBack.setOnClickListener {
                 viewModel.onBackPressed()
             }
-        }
-    }
-
-    private fun setupOnChangeComment() {
-        with(binding) {
-            etTextCommentContent.addTextChangedListener { editable ->
-                viewModel.onCommentChanged(editable)
+            tvInputComment.setOnClickListener {
+                viewModel.showBottomSheet()
             }
         }
     }
@@ -114,9 +101,6 @@ class DiscussionDetailActivity : AppCompatActivity() {
         viewModel.comments.observe(this) { value ->
             adapter.submitList(value)
         }
-        viewModel.commentText.observe(this) { value ->
-            binding.ivAddComment.isEnabled = value.isNotBlank()
-        }
     }
 
     private fun LocalDateTime.formatDate(): String {
@@ -128,8 +112,9 @@ class DiscussionDetailActivity : AppCompatActivity() {
     private fun handleEvent(discussionDetailUiEvent: DiscussionDetailUiEvent) {
         when (discussionDetailUiEvent) {
             DiscussionDetailUiEvent.NavigateUp -> onBackPressedDispatcher.onBackPressed()
-            is DiscussionDetailUiEvent.AddComment -> {
-                viewModel.submitComment()
+            is DiscussionDetailUiEvent.ShowCreateComment -> {
+                val bottomSheet = CommentCreateBottomSheet.newInstance(viewModel.discussionId)
+                bottomSheet.show(supportFragmentManager, TAG)
             }
         }
     }

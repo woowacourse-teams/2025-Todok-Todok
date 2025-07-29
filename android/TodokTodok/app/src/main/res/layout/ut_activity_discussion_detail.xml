@@ -75,8 +75,8 @@
         android:layout_height="@dimen/item_discussion_detail_meta_line_height"
         android:gravity="center"
         android:text="@string/all_divider_dot"
-        app:layout_constraintEnd_toStartOf="@id/tv_discussion_create_at"
         app:layout_constraintBottom_toBottomOf="@id/tv_user_nickname"
+        app:layout_constraintEnd_toStartOf="@id/tv_discussion_create_at"
         tools:text=" · " />
 
     <TextView
@@ -85,8 +85,8 @@
         android:layout_width="wrap_content"
         android:layout_height="@dimen/item_discussion_detail_meta_line_height"
         android:gravity="center"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="@id/tv_user_nickname"
+        app:layout_constraintEnd_toEndOf="parent"
         tools:text="2024년 7월 20일" />
 
     <TextView
@@ -111,40 +111,17 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toTopOf="@id/til_text_comment_content"
+        app:layout_constraintBottom_toTopOf="@id/tv_input_comment"
         app:layout_constraintTop_toBottomOf="@id/view_comments_divider" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_text_comment_content"
+    <TextView
+        android:id="@+id/tv_input_comment"
         android:layout_width="@dimen/space_0"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/space_24"
         android:background="@drawable/bg_green_f0_radius_8dp"
-        android:minHeight="48dp"
-        android:paddingVertical="8dp"
-        app:boxBackgroundMode="none"
-        app:cursorColor="@color/black_18"
-        app:hintEnabled="false"
+        android:text="@string/comment_input_hint"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/iv_add_comment"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_text_comment_content"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="start|center"
-            android:hint="@string/comment_input_hint"
-            android:inputType="textMultiLine"
-            android:textColor="@color/gray_76" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <ImageView
-        android:id="@+id/iv_add_comment"
-        android:layout_width="@dimen/space_28"
-        android:layout_height="@dimen/space_28"
-        android:background="@drawable/btn_comment_background"
-        android:contentDescription="@string/content_description_add_comment"
-        app:layout_constraintBottom_toBottomOf="@id/til_text_comment_content"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
