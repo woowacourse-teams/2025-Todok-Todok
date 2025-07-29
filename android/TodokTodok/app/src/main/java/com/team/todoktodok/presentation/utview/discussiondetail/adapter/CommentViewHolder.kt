@@ -5,11 +5,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.team.domain.model.Comment
 import com.team.todoktodok.R
-import com.team.todoktodok.databinding.ItemCommentBinding
+import com.team.todoktodok.databinding.UtItemCommentBinding
 import com.team.todoktodok.presentation.core.ext.formatWithResource
 
 class CommentViewHolder private constructor(
-    private val binding: ItemCommentBinding,
+    private val binding: UtItemCommentBinding,
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(comment: Comment) {
         with(binding) {
@@ -26,7 +26,7 @@ class CommentViewHolder private constructor(
     companion object {
         fun CommentViewHolder(parent: ViewGroup): CommentViewHolder {
             val layoutInflater = LayoutInflater.from(parent.context)
-            val binding = ItemCommentBinding.inflate(layoutInflater, parent, false)
+            val binding = UtItemCommentBinding.inflate(layoutInflater, parent, false)
             return CommentViewHolder(binding)
         }
     }
