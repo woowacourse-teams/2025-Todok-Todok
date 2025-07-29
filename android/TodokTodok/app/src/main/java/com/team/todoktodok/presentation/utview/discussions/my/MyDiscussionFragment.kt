@@ -7,6 +7,7 @@ import androidx.fragment.app.activityViewModels
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentMyDiscussionBinding
+import com.team.todoktodok.presentation.utview.discussions.DiscussionsUiEvent
 import com.team.todoktodok.presentation.utview.discussions.all.adapter.DiscussionAdapter
 import com.team.todoktodok.presentation.utview.discussions.vm.DiscussionsViewModel
 import com.team.todoktodok.presentation.utview.discussions.vm.DiscussionsViewModelFactory
@@ -28,6 +29,7 @@ class MyDiscussionFragment : Fragment(R.layout.fragment_my_discussion) {
         val binding = FragmentMyDiscussionBinding.bind(view)
 
         initView(binding)
+        setUpUiEvent(binding)
         setUpUiState()
     }
 
@@ -43,6 +45,25 @@ class MyDiscussionFragment : Fragment(R.layout.fragment_my_discussion) {
             discussionAdapter.submitList(value.myDiscussions)
         }
     }
+
+    private fun setUpUiEvent(binding: FragmentMyDiscussionBinding) =
+        with(binding) {
+            viewModel.uiEvent.observe(viewLifecycleOwner) { event ->
+                when (event) {
+                    DiscussionsUiEvent.ShowNotHasMyDiscussions -> {
+                        tvNoResult.visibility = View.VISIBLE
+                        rvDiscussions.visibility = View.GONE
+                    }
+
+                    DiscussionsUiEvent.ShowHasMyDiscussions -> {
+                        tvNoResult.visibility = View.GONE
+                        rvDiscussions.visibility = View.VISIBLE
+                    }
+
+                    else -> Unit
+                }
+            }
+        }
 
     private val adapterHandler =
         object : DiscussionAdapter.Handler {

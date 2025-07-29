@@ -7,6 +7,7 @@ import androidx.fragment.app.activityViewModels
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentAllDiscussionBinding
+import com.team.todoktodok.presentation.utview.discussions.DiscussionsUiEvent
 import com.team.todoktodok.presentation.utview.discussions.all.adapter.DiscussionAdapter
 import com.team.todoktodok.presentation.utview.discussions.vm.DiscussionsViewModel
 import com.team.todoktodok.presentation.utview.discussions.vm.DiscussionsViewModelFactory
@@ -29,7 +30,7 @@ class AllDiscussionFragment : Fragment(R.layout.fragment_all_discussion) {
 
         initView(binding)
         setUpUiState()
-        setUpUiEvent()
+        setUpUiEvent(binding)
     }
 
     private fun initView(binding: FragmentAllDiscussionBinding) {
@@ -45,8 +46,24 @@ class AllDiscussionFragment : Fragment(R.layout.fragment_all_discussion) {
         }
     }
 
-    private fun setUpUiEvent() {
-    }
+    private fun setUpUiEvent(binding: FragmentAllDiscussionBinding) =
+        with(binding) {
+            viewModel.uiEvent.observe(viewLifecycleOwner) { event ->
+                when (event) {
+                    DiscussionsUiEvent.ShowNotHasAllDiscussions -> {
+                        tvNoResult.visibility = View.VISIBLE
+                        binding.rvDiscussions.visibility = View.GONE
+                    }
+
+                    DiscussionsUiEvent.ShowHasAllDiscussions -> {
+                        tvNoResult.visibility = View.GONE
+                        binding.rvDiscussions.visibility = View.VISIBLE
+                    }
+
+                    else -> Unit
+                }
+            }
+        }
 
     private val adapterHandler =
         object : DiscussionAdapter.Handler {

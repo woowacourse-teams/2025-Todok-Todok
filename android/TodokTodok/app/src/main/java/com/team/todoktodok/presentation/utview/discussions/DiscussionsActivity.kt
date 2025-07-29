@@ -73,7 +73,7 @@ class DiscussionsActivity : AppCompatActivity() {
 
             etSearchDiscussion.doAfterTextChanged {
                 if (it?.isEmpty() == true) {
-                    viewModel.loadDiscussions()
+                    viewModel.loadSearchedDiscussions(it.toString())
                 }
             }
 
