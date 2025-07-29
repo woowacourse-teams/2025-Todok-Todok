@@ -1,6 +1,7 @@
 package com.team.todoktodok.data.network.service
 
 import com.team.todoktodok.data.network.request.DiscussionRequest
+import com.team.todoktodok.data.network.request.DiscussionRoomRequest
 import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
 import retrofit2.Response
 import retrofit2.http.Body
@@ -20,5 +21,10 @@ interface DiscussionService {
     @POST("discussions")
     suspend fun saveDiscussion(
         @Body request: DiscussionRequest,
+    ): Response<Unit>
+
+    @POST("v2/discussions")
+    suspend fun saveDiscussionRoom(
+        @Body request: DiscussionRoomRequest,
     ): Response<Unit>
 }

@@ -5,8 +5,9 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingHorizontal="@dimen/space_24"
-    tools:context=".presentation.utview.CreateDiscussionRoomActivity">
+    android:paddingLeft="@dimen/space_24"
+    android:paddingRight="@dimen/space_24"
+    tools:context=".presentation.utview.creatediscussionroom.CreateDiscussionRoomActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/abl_create_discussion_room"
@@ -44,25 +45,29 @@
         android:layout_marginHorizontal="@dimen/space_8"
         android:layout_marginVertical="@dimen/space_12"
         android:text="@string/search_book"
-        app:layout_constraintBottom_toTopOf="@id/til_search_book"
+        app:layout_constraintBottom_toTopOf="@id/etl_search_book"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/abl_create_discussion_room" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_search_book"
+        android:id="@+id/etl_search_book"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="책 제목을 입력해주세요"
+        android:imeOptions="actionDone"
+        android:inputType="text"
         app:boxBackgroundMode="none"
+
         app:hintTextColor="@color/gray_76"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_search_book">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/tiet_search_book"
+            android:id="@+id/et_search_book"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_green_f0_radius_8dp" />
+            android:background="@drawable/bg_green_f0_radius_8dp"
+            android:singleLine="true" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -73,9 +78,9 @@
         android:layout_marginTop="@dimen/space_8"
         android:layout_marginRight="@dimen/space_12"
         android:background="@drawable/ic_search"
-        app:layout_constraintBottom_toBottomOf="@id/til_search_book"
-        app:layout_constraintEnd_toEndOf="@id/til_search_book"
-        app:layout_constraintTop_toTopOf="@id/til_search_book" />
+        app:layout_constraintBottom_toBottomOf="@id/etl_search_book"
+        app:layout_constraintEnd_toEndOf="@id/etl_search_book"
+        app:layout_constraintTop_toTopOf="@id/etl_search_book" />
 
     <TextView
         android:id="@+id/tv_discussion_title"
@@ -85,10 +90,10 @@
         android:layout_marginHorizontal="@dimen/space_8"
         android:layout_marginVertical="@dimen/space_20"
         android:text="토론 제목"
-        app:layout_constraintTop_toBottomOf="@id/til_search_book" />
+        app:layout_constraintTop_toBottomOf="@id/etl_search_book" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_discussion_title"
+        android:id="@+id/etl_discussion_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:boxBackgroundMode="none"
@@ -97,11 +102,12 @@
         app:layout_constraintTop_toBottomOf="@id/tv_discussion_title">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/tiet_discussion_title"
+            android:id="@+id/et_discussion_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_green_f0_radius_8dp"
             android:gravity="start|top"
+            android:singleLine="true"
             android:textColor="@color/black_18" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -116,10 +122,10 @@
         android:layout_marginVertical="@dimen/space_20"
         android:text="토론 내용"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/til_discussion_title" />
+        app:layout_constraintTop_toBottomOf="@id/etl_discussion_title" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_discussion_content"
+        android:id="@+id/etl_discussion_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:boxBackgroundMode="none"
@@ -128,7 +134,7 @@
         app:layout_constraintTop_toBottomOf="@id/tv_discussion_content">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/tiet_discussion_content"
+            android:id="@+id/et_discussion_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_green_f0_radius_8dp"
