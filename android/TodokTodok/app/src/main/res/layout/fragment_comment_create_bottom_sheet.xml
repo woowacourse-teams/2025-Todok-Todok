@@ -10,7 +10,7 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_text_comment_content"
         android:layout_width="@dimen/space_0"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/space_28"
         android:layout_marginBottom="@dimen/space_24"
         android:background="@drawable/bg_green_f0_radius_8dp"
         app:boxBackgroundMode="none"
@@ -29,8 +29,9 @@
             android:includeFontPadding="false"
             android:inputType="textMultiLine"
             android:lineSpacingExtra="0dp"
-            android:paddingTop="6dp"
-            android:paddingBottom="6dp"
+            android:paddingStart="10dp"
+            android:paddingTop="@dimen/space_4"
+            android:paddingBottom="2dp"
             android:textColor="@color/gray_76"
             android:textSize="@dimen/font_size_normal" />
     </com.google.android.material.textfield.TextInputLayout>
