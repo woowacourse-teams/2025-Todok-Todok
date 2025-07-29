@@ -41,7 +41,7 @@ public class AladinRestClient {
                     .retrieve()
                     .body(AladinItemResponses.class);
         } catch (RestClientException e) {
-            throw new RuntimeException("[ERROR] API 통신 중 문재 발생");
+            throw new RuntimeException("[ERROR] API 통신 중 문제 발생");
         }
     }
 
@@ -52,7 +52,7 @@ public class AladinRestClient {
                     .retrieve()
                     .body(AladinItemResponses.class);
         } catch (RestClientException e) {
-            throw new RuntimeException("[ERROR] API 통신 중 문재 발생");
+            throw new RuntimeException("[ERROR] API 통신 중 문제 발생");
         }
     }
 

@@ -1,6 +1,7 @@
 package todoktodok.backend.book.presentation;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,7 @@ import todoktodok.backend.book.application.service.query.BookQueryService;
 import todoktodok.backend.global.auth.Auth;
 import todoktodok.backend.global.auth.Role;
 
+@Tag(name = "book-controller")
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/v1/books")
