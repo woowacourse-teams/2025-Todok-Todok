@@ -22,6 +22,8 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          submodules: recursive
+          token: ${{ secrets.SECRETS_SUBMODULE_ACCESS_TOKEN }}
 
       - name: Set up JDK 21
         uses: actions/setup-java@v3
