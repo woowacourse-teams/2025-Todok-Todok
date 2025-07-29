@@ -91,6 +91,38 @@ class DiscussionQueryServiceTest {
     }
 
     @Test
+    @DisplayName("특정 토론방에 기록이 없을 경우 기록은 빈 값으로 조회된다")
+    void getDiscussion_noRecord_success() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+
+        final Long memberId = 1L;
+        final Long bookId = 1L;
+
+        databaseInitializer.setDiscussionInfo(
+                "클린코드에 대해 논의해볼까요",
+                "클린코드만세",
+                memberId,
+                bookId,
+                null
+        );
+
+        final Long discussionId = 1L;
+
+        // when
+        final DiscussionResponse discussionResponse = discussionQueryService.getDiscussion(memberId, discussionId);
+
+        // then
+        assertAll(
+                () -> assertThat(discussionResponse.discussionId()).isEqualTo(discussionId),
+                () -> assertThat(discussionResponse.discussionTitle()).isEqualTo("클린코드에 대해 논의해볼까요"),
+                () -> assertThat(discussionResponse.discussionOpinion()).isEqualTo("클린코드만세"),
+                () -> assertThat(discussionResponse.note()).isNull()
+        );
+    }
+
+    @Test
     @DisplayName("특정 토론방을 찾을 수 없는 경우 예외가 발생한다")
     void getDiscussion_notFound_fail() {
         // given
