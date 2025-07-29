@@ -1,8 +1,6 @@
 package com.team.todoktodok.presentation.utview.discussions
 
 import android.os.Bundle
-import android.view.KeyEvent
-import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -71,7 +69,6 @@ class DiscussionsActivity : AppCompatActivity() {
                     override fun onTabReselected(tab: TabLayout.Tab?) {}
                 },
             )
-
         }
     }
 

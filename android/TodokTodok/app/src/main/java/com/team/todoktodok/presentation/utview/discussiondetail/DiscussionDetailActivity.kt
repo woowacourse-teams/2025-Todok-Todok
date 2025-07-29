@@ -17,7 +17,7 @@ import com.team.todoktodok.presentation.utview.discussiondetail.adapter.CommentA
 import com.team.todoktodok.presentation.utview.discussiondetail.vm.DiscussionDetailViewModel
 import com.team.todoktodok.presentation.utview.discussiondetail.vm.DiscussionDetailViewModel.Companion.KEY_DISCUSSION_ID
 import com.team.todoktodok.presentation.utview.discussiondetail.vm.DiscussionDetailViewModelFactory
-import com.team.todoktodok.presentation.view.MainActivity
+import com.team.todoktodok.presentation.utview.discussions.DiscussionsActivity
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -142,7 +142,7 @@ class DiscussionDetailActivity : AppCompatActivity() {
 
     private fun navigateUp() {
         val intent =
-            Intent(this@DiscussionDetailActivity, MainActivity::class.java).apply {
+            Intent(this@DiscussionDetailActivity, DiscussionsActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
             }
         startActivity(intent)
