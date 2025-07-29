@@ -11,4 +11,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+    <TextView
+        android:id="@+id/tv_no_result"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:drawablePadding="16dp"
+        android:gravity="center"
+        android:visibility="gone"
+        android:fontFamily="@font/pretendard_semi_bold"
+        android:textSize="@dimen/font_size_x_large"
+        android:text="@string/ut_discussion_no_search_result"
+        app:drawableTopCompat="@drawable/img_mascort" />
 </FrameLayout>

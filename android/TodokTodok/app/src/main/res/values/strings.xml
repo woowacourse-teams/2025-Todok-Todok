@@ -70,5 +70,6 @@
     <string name="ut_discussion_search_bar_hint">책 제목 또는 키워드를 입력해주세요.</string>
     <string name="ut_discussion_tab_title_all">전체</string>
     <string name="ut_discussion_tab_title_my">내 토론방</string>
+    <string name="ut_discussion_no_search_result">검색결과가 없어요\n다른 검색어를 입력해 주세요 !</string>
     <string name="content_description_ut_discussion_img">토론방 책 이미지</string>
 </resources>
