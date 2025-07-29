@@ -101,6 +101,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/space_24"
+        android:layout_marginEnd="@dimen/space_12"
         android:background="@drawable/btn_plus_oval"
         android:contentDescription="@string/content_description_navigate_to_book_search"
         app:layout_constraintBottom_toBottomOf="parent"
