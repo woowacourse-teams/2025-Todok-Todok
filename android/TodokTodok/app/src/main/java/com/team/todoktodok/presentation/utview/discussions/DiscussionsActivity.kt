@@ -1,11 +1,12 @@
 package com.team.todoktodok.presentation.utview.discussions
 
 import android.os.Bundle
+import android.view.KeyEvent
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import com.google.android.material.tabs.TabLayout
@@ -52,9 +53,18 @@ class DiscussionsActivity : AppCompatActivity() {
             etSearchDiscussion.clearHintOnFocus(binding.etSearchDiscussionLayout, hint)
 
             btnSearch.setOnClickListener {
-                setUpTab(binding)
+                // TODO : 검색 기능 구현
             }
 
+            etSearchDiscussion.setOnEditorActionListener(object : TextView.OnEditorActionListener {
+                override fun onEditorAction(
+                    v: TextView?,
+                    actionId: Int,
+                    event: KeyEvent?,
+                ): Boolean {
+                    TODO("검색 기능 구현")
+                }
+            })
             tabLayout.addOnTabSelectedListener(
                 object : TabLayout.OnTabSelectedListener {
                     override fun onTabSelected(tab: TabLayout.Tab?) {
@@ -70,35 +80,6 @@ class DiscussionsActivity : AppCompatActivity() {
                 },
             )
 
-            etSearchDiscussion.doAfterTextChanged { text ->
-                setUpSearchBar(text.toString(), tabLayout)
-            }
-        }
-    }
-
-    private fun setUpTab(binding: ActivityDiscussionsBinding) {
-        with(binding) {
-            val changeAbleTab = tabLayout.getTabAt(CHANGEABLE_TAB_POSITION)
-
-            val currentTab = tabLayout.selectedTabPosition
-            val searchText = etSearchDiscussion.text.toString()
-            if (searchText.isNotEmpty()) {
-                changeAbleTab?.text = searchText
-                if (currentTab != CHANGEABLE_TAB_POSITION) {
-                    tabLayout.selectTab(changeAbleTab)
-                }
-            }
-        }
-    }
-
-    private fun setUpSearchBar(
-        searchText: String?,
-        tabLayout: TabLayout,
-    ) {
-        if (searchText?.isEmpty() == true) {
-            val changeAbleTab = tabLayout.getTabAt(CHANGEABLE_TAB_POSITION)
-            val origin = getString(R.string.ut_discussion_tab_title_all)
-            changeAbleTab?.text = origin
         }
     }
 
