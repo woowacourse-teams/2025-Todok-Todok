@@ -94,19 +94,16 @@ class CreateDiscussionRoomViewModel(
                 _uiEvent.value = CreateDiscussionRoomUiEvent.ShowDialog(ERROR_BOOK_NOT_FOUND)
                 return@launch
             }
-            val saveBookId: Deferred<Long> = async { bookRepository.saveBook(selectedBook) }
-            val bookId = saveBookId.await()
-            discussionRepository.saveDiscussion(
+            val saveBookId: Deferred<Long?> =
+                async { bookRepository.saveSelectedBook(selectedBook) }
+            val bookId = saveBookId.await() ?: -1
+            discussionRepository.saveDiscussionRoom(
                 bookId,
                 discussionTitle,
                 discussionContent,
             )
             _uiEvent.value =
-                CreateDiscussionRoomUiEvent.CreateDiscussionRoom(
-                    discussionTitle,
-                    discussionContent,
-                    selectedBook,
-                )
+                CreateDiscussionRoomUiEvent.NavigateToBack
         }
     }
 

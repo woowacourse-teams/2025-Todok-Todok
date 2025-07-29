@@ -1,6 +1,7 @@
 package com.team.todoktodok.data.datasource.discussion
 
 import com.team.todoktodok.data.network.request.DiscussionRequest
+import com.team.todoktodok.data.network.request.DiscussionRoomRequest
 import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
 import com.team.todoktodok.data.network.service.DiscussionService
 import retrofit2.Response
@@ -17,6 +18,10 @@ class DefaultDiscussionRemoteDataSource(
 
     override suspend fun saveDiscussion(discussionRequest: DiscussionRequest): Long =
         discussionService.saveDiscussion(discussionRequest).extractCartItemId()
+
+    override suspend fun saveDiscussionRoom(discussionRequest: DiscussionRoomRequest) {
+        discussionService.saveDiscussionRoom(discussionRequest)
+    }
 
     private fun Response<*>.extractCartItemId(): Long {
         val locationHeader = this.headers()[HEADER_LOCATION]
