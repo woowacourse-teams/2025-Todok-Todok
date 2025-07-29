@@ -37,34 +37,116 @@
         app:layout_constraintTop_toTopOf="@id/abl_create_discussion_room" />
 
     <TextView
-        android:id="@+id/tv_book_search"
+        android:id="@+id/tv_search_book"
         style="@style/CreateDiscussionNoteBookTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/space_8"
-        android:layout_marginVertical="@dimen/space_8"
+        android:layout_marginVertical="@dimen/space_12"
         android:text="@string/search_book"
+        app:layout_constraintBottom_toTopOf="@id/til_search_book"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/abl_create_discussion_room" />
 
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_search_book"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="책 제목을 입력해주세요"
-        app:boxBackgroundColor="@color/green_F0"
-        app:boxBackgroundMode="filled"
-        app:boxCornerRadiusBottomEnd="8dp"
-        app:boxCornerRadiusBottomStart="8dp"
-        app:boxCornerRadiusTopEnd="8dp"
-        app:boxCornerRadiusTopStart="8dp"
+        app:boxBackgroundMode="none"
         app:hintTextColor="@color/gray_76"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_book_search">
+        app:layout_constraintTop_toBottomOf="@id/tv_search_book">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/tiet_search_book"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@null" />
+            android:background="@drawable/bg_green_f0_radius_8dp" />
 
     </com.google.android.material.textfield.TextInputLayout>
+
+    <ImageView
+        android:id="@+id/iv_search_book"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_8"
+        android:layout_marginRight="@dimen/space_12"
+        android:background="@drawable/ic_search"
+        app:layout_constraintBottom_toBottomOf="@id/til_search_book"
+        app:layout_constraintEnd_toEndOf="@id/til_search_book"
+        app:layout_constraintTop_toTopOf="@id/til_search_book" />
+
+    <TextView
+        android:id="@+id/tv_discussion_title"
+        style="@style/CreateDiscussionNoteBookTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/space_8"
+        android:layout_marginVertical="@dimen/space_20"
+        android:text="토론 제목"
+        app:layout_constraintTop_toBottomOf="@id/til_search_book" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_discussion_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:boxBackgroundMode="none"
+        app:hintTextColor="@color/gray_76"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_discussion_title">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/tiet_discussion_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_green_f0_radius_8dp"
+            android:gravity="start|top"
+            android:textColor="@color/black_18" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <TextView
+        android:id="@+id/tv_discussion_content"
+        style="@style/CreateDiscussionNoteBookTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/space_8"
+        android:layout_marginVertical="@dimen/space_20"
+        android:text="토론 내용"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/til_discussion_title" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_discussion_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:boxBackgroundMode="none"
+        app:hintTextColor="@color/gray_76"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_discussion_content">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/tiet_discussion_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_green_f0_radius_8dp"
+            android:gravity="start|top"
+            android:inputType="textMultiLine"
+            android:maxLength="1000"
+            android:minLines="10"
+            android:textColor="@color/black_18" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/tv_create_discussion_room"
+        style="@style/BasicButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/space_56"
+        android:background="@drawable/bg_green_1a_radius_8dp"
+        android:text="생성하기"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
