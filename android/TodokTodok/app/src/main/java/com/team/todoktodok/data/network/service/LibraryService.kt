@@ -7,10 +7,10 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 
 interface LibraryService {
-    @GET("shelves")
+    @GET("v1/shelves")
     suspend fun fetchBooks(): List<BookResponse>
 
-    @POST("shelves")
+    @POST("v1/shelves")
     suspend fun saveBook(
         @Body requestBody: SaveBookRequest,
     )

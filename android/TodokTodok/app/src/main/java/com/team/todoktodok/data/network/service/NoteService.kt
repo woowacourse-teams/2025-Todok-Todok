@@ -9,12 +9,12 @@ import retrofit2.http.POST
 import retrofit2.http.Query
 
 interface NoteService {
-    @POST("notes")
+    @POST("v1/notes")
     suspend fun saveNote(
         @Body requestBody: NoteRequest,
     ): Response<Unit>
 
-    @GET("notes/mine")
+    @GET("v1/notes/mine")
     suspend fun fetchNotesByBookId(
         @Query("bookId") bookId: Long?,
     ): List<NoteResponse>
