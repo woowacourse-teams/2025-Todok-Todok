@@ -84,8 +84,4 @@ class DiscussionsActivity : AppCompatActivity() {
             hide(hideFragment)
         }
     }
-
-    companion object {
-        private const val CHANGEABLE_TAB_POSITION = 0
-    }
 }
