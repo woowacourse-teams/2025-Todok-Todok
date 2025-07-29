@@ -5,19 +5,33 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
+import com.google.android.material.tabs.TabLayout
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivityDiscussionsBinding
 import com.team.todoktodok.presentation.core.ext.clearHintOnFocus
+import com.team.todoktodok.presentation.utview.discussions.all.AllDiscussionFragment
+import com.team.todoktodok.presentation.utview.discussions.my.MyDiscussionFragment
 
 class DiscussionsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDiscussionsBinding
+    private val allDiscussionFragment = AllDiscussionFragment()
+    private val myDiscussionFragment = MyDiscussionFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDiscussionsBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setUpSystemBars()
+        initFragments()
         initView(binding)
+    }
+
+    private fun initFragments() {
+        supportFragmentManager.commit {
+            add(R.id.fragmentContainerView, myDiscussionFragment, "MY").hide(myDiscussionFragment)
+        }
     }
 
     private fun setUpSystemBars() {
@@ -37,6 +51,21 @@ class DiscussionsActivity : AppCompatActivity() {
             btnSearch.setOnClickListener {
                 setUpTab(binding)
             }
+
+            tabLayout.addOnTabSelectedListener(
+                object : TabLayout.OnTabSelectedListener {
+                    override fun onTabSelected(tab: TabLayout.Tab?) {
+                        when (tab?.position) {
+                            0 -> changeFragment(allDiscussionFragment, myDiscussionFragment)
+                            1 -> changeFragment(myDiscussionFragment, allDiscussionFragment)
+                        }
+                    }
+
+                    override fun onTabUnselected(tab: TabLayout.Tab?) {}
+
+                    override fun onTabReselected(tab: TabLayout.Tab?) {}
+                },
+            )
         }
     }
 
@@ -52,6 +81,16 @@ class DiscussionsActivity : AppCompatActivity() {
                     tabLayout.selectTab(changeAbleTab)
                 }
             }
+        }
+    }
+
+    private fun changeFragment(
+        showFragment: Fragment,
+        hideFragment: Fragment,
+    ) {
+        supportFragmentManager.commit {
+            show(showFragment)
+            hide(hideFragment)
         }
     }
 
