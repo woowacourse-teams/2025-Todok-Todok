@@ -1,0 +1,3 @@
+[submodule "submodule"]
+	path = backend/src/main/resources/submodule
+	url = https://github.com/Chaeyoung714/Todok-Todok-secrets.git
