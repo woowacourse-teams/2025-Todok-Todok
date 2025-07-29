@@ -1,4 +1,4 @@
-package com.team.todoktodok.presentation.utview.creatediscussionroom
+package com.team.todoktodok.presentation.utview.discussion
 
 import android.content.Context
 import android.content.Intent
@@ -15,8 +15,8 @@ import androidx.core.widget.addTextChangedListener
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivityCreateDiscussionRoomBinding
-import com.team.todoktodok.presentation.utview.creatediscussionroom.vm.CreateDiscussionRoomViewModel
-import com.team.todoktodok.presentation.utview.creatediscussionroom.vm.CreateDiscussionRoomViewModelFactory
+import com.team.todoktodok.presentation.utview.discussion.vm.CreateDiscussionRoomViewModel
+import com.team.todoktodok.presentation.utview.discussion.vm.CreateDiscussionRoomViewModelFactory
 import com.team.todoktodok.presentation.view.note.NoteFragment.Companion.REQUEST_KEY
 import com.team.todoktodok.presentation.view.note.OwnedBooksBottomSheet
 import com.team.todoktodok.presentation.view.note.OwnedBooksBottomSheet.Companion.RESULT_KEY

@@ -7,5 +7,5 @@ interface BookRepository {
 
     suspend fun getBooks(): List<Book>
 
-    suspend fun saveBook(book: Book)
+    suspend fun saveBook(book: Book): Long
 }

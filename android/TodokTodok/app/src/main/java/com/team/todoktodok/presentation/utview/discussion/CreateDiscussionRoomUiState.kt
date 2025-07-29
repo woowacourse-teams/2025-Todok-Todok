@@ -1,4 +1,4 @@
-package com.team.todoktodok.presentation.utview.creatediscussionroom
+package com.team.todoktodok.presentation.utview.discussion
 
 import com.team.domain.model.Book
 

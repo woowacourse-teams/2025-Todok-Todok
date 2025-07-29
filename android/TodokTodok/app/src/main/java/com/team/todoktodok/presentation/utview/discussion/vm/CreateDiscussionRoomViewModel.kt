@@ -1,4 +1,4 @@
-package com.team.todoktodok.presentation.utview.creatediscussionroom.vm
+package com.team.todoktodok.presentation.utview.discussion.vm
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -7,9 +7,11 @@ import androidx.lifecycle.viewModelScope
 import com.team.domain.model.Book
 import com.team.domain.repository.BookRepository
 import com.team.domain.repository.DiscussionRepository
-import com.team.todoktodok.presentation.utview.creatediscussionroom.CreateDiscussionRoomUiEvent
-import com.team.todoktodok.presentation.utview.creatediscussionroom.CreateDiscussionRoomUiState
+import com.team.todoktodok.presentation.utview.discussion.CreateDiscussionRoomUiEvent
+import com.team.todoktodok.presentation.utview.discussion.CreateDiscussionRoomUiState
 import com.team.todoktodok.presentation.view.serialization.SerializationBook
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 class CreateDiscussionRoomViewModel(
@@ -92,8 +94,10 @@ class CreateDiscussionRoomViewModel(
                 _uiEvent.value = CreateDiscussionRoomUiEvent.ShowDialog(ERROR_BOOK_NOT_FOUND)
                 return@launch
             }
+            val saveBookId: Deferred<Long> = async { bookRepository.saveBook(selectedBook) }
+            val bookId = saveBookId.await()
             discussionRepository.saveDiscussion(
-                selectedBook.id,
+                bookId,
                 discussionTitle,
                 discussionContent,
             )

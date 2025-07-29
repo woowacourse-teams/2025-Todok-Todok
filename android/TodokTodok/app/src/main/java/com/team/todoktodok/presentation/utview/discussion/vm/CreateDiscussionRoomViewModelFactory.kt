@@ -1,4 +1,4 @@
-package com.team.todoktodok.presentation.utview.creatediscussionroom.vm
+package com.team.todoktodok.presentation.utview.discussion.vm
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
