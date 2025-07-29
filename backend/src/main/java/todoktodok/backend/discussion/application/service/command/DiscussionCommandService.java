@@ -4,7 +4,10 @@ import java.util.NoSuchElementException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import todoktodok.backend.book.domain.Book;
+import todoktodok.backend.book.domain.repository.BookRepository;
 import todoktodok.backend.discussion.application.dto.request.DiscussionRequest;
+import todoktodok.backend.discussion.application.dto.request.DiscussionRequestV2;
 import todoktodok.backend.discussion.domain.Discussion;
 import todoktodok.backend.discussion.domain.DiscussionReport;
 import todoktodok.backend.discussion.domain.repository.DiscussionReportRepository;
@@ -22,6 +25,7 @@ public class DiscussionCommandService {
     private final DiscussionRepository discussionRepository;
     private final MemberRepository memberRepository;
     private final NoteRepository noteRepository;
+    private final BookRepository bookRepository;
     private final DiscussionReportRepository discussionReportRepository;
 
     public Long createDiscussion(
@@ -29,7 +33,7 @@ public class DiscussionCommandService {
             final DiscussionRequest discussionRequest
     ) {
         final Member member = findMember(memberId);
-        final Note note = findNote(discussionRequest);
+        final Note note = findNote(discussionRequest.noteId());
 
         validateNoteOwner(note, member);
 
@@ -39,6 +43,24 @@ public class DiscussionCommandService {
                 .member(member)
                 .book(note.getBook())
                 .note(note)
+                .build();
+
+        final Discussion savedDiscussion = discussionRepository.save(discussion);
+        return savedDiscussion.getId();
+    }
+
+    public Long createDiscussionV2(
+            final Long memberId,
+            final DiscussionRequestV2 discussionRequestV2
+    ) {
+        final Member member = findMember(memberId);
+        final Book book = findBook(discussionRequestV2.bookId());
+
+        final Discussion discussion = Discussion.builder()
+                .title(discussionRequestV2.discussionTitle())
+                .content(discussionRequestV2.discussionOpinion())
+                .member(member)
+                .book(book)
                 .build();
 
         final Discussion savedDiscussion = discussionRepository.save(discussion);
@@ -68,9 +90,14 @@ public class DiscussionCommandService {
                 .orElseThrow(() -> new NoSuchElementException("해당 회원을 찾을 수 없습니다"));
     }
 
-    private Note findNote(final DiscussionRequest discussionRequest) {
-        return noteRepository.findById(discussionRequest.noteId())
+    private Note findNote(final Long noteId) {
+        return noteRepository.findById(noteId)
                 .orElseThrow(() -> new NoSuchElementException("해당 기록을 찾을 수 없습니다"));
+    }
+
+    private Book findBook(final Long bookId) {
+        return bookRepository.findById(bookId)
+                .orElseThrow(() -> new NoSuchElementException("해당 도서를 찾을 수 없습니다"));
     }
 
     private Discussion findDiscussion(final Long discussionId) {

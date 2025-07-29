@@ -17,5 +17,5 @@ public interface ShelfRepository extends JpaRepository<Shelf, Long> {
     """)
     List<Book> findBookByMemberId(@Param("memberId") final Long memberId);
 
-    boolean existsByBookAndMember(Book book, Member member);
+    boolean existsByBookAndMember(final Book book, final Member member);
 }

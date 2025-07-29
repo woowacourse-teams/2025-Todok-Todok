@@ -1,0 +1,106 @@
+name: Issue Opened
+
+on:
+  issues:
+    types:
+      - opened
+
+jobs:
+  setup_issue:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      contents: read
+      repository-projects: write
+
+    steps:
+      - name: Set Issue assignees
+        continue-on-error: true
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { issue, repository } = context.payload;
+            const author = issue.user.login;
+            
+            if (!author) return;
+
+            await github.rest.issues.addAssignees({
+              owner: repository.owner.login,
+              repo: repository.name,
+              issue_number: issue.number,
+              assignees: [author],
+            });
+
+      - name: Set Team labels
+        continue-on-error: true
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { issue, repository } = context.payload;
+            const author = issue.user.login;
+            
+            const be = ['horizonpioneer', 'sonjh919', 'Chaeyoung714', 'ljhee92'];
+            const an = ['chanho0908', 'wondroid-world', 'donghyun81'];
+
+            const isAuthorBe = be.includes(author);
+            const isAuthorAn = an.includes(author);
+
+            let authorLabel = null;
+            if (isAuthorBe) {
+             authorLabel = '⚙️ backend';
+            } else if (isAuthorAn) {
+             authorLabel = '🤖 android';
+            }
+
+            if (authorLabel) {
+              await github.rest.issues.addLabels({
+                owner: repository.owner.login,
+                repo: repository.name,
+                issue_number: issue.number,
+                labels: [authorLabel],
+              });
+            }
+
+      - name: Set Project v2
+        continue-on-error: true
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.PROJECT_V2_TOKEN }}
+          script: |
+            const { issue } = context.payload;
+            const projectNodeId = 'PVT_kwDOA_44FM4A9RVr';
+            const addItemResponse = await github.graphql(`
+              mutation($projectId: ID!, $contentId: ID!) {
+                addProjectV2ItemById(input: { projectId: $projectId, contentId: $contentId }) {
+                  item { id }
+                }
+              }
+            `, {
+              projectId: projectNodeId,
+              contentId: issue.node_id,
+            });
+
+            const itemId = addItemResponse.addProjectV2ItemById.item.id;
+
+            const statusFieldId = 'PVTSSF_lADOA_44FM4A9RVrzgxBaSI';
+            const todoOptionId = 'f75ad846';
+
+            await github.graphql(`
+              mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $optionId: String!) {
+                updateProjectV2ItemFieldValue(input: {
+                  projectId: $projectId,
+                  itemId: $itemId,
+                  fieldId: $fieldId,
+                  value: { singleSelectOptionId: $optionId }
+                }) {
+                  projectV2Item { id }
+                }
+              }
+            `, {
+              projectId: projectNodeId,
+              itemId,
+              fieldId: statusFieldId,
+              optionId: todoOptionId,
+            });
