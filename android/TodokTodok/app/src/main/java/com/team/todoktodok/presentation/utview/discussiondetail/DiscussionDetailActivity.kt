@@ -103,8 +103,8 @@ class DiscussionDetailActivity : AppCompatActivity() {
             with(binding) {
                 tvBookTitle.text = value.book.title
                 tvDiscussionTitle.text = value.discussionTitle
-                tvUserContent.text =
-                    formatAuthorAndDate(value.writer.nickname.value, value.createAt)
+                tvUserNickname.text = value.writer.nickname.value
+                tvDiscussionCreateAt.text = value.createAt.formatDate()
                 tvDiscussionOpinion.text = value.discussionOpinion
             }
         }
@@ -119,15 +119,10 @@ class DiscussionDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun formatAuthorAndDate(
-        author: String,
-        date: LocalDateTime,
-    ): String {
-        val pattern = this.getString(R.string.date_format_pattern)
+    private fun LocalDateTime.formatDate(): String {
+        val pattern = this@DiscussionDetailActivity.getString(R.string.date_format_pattern)
         val formatter = DateTimeFormatter.ofPattern(pattern, Locale.KOREA)
-        val formattedDate = date.format(formatter)
-
-        return this.getString(R.string.author_and_date_format, author, formattedDate)
+        return format(formatter)
     }
 
     private fun handleEvent(discussionDetailUiEvent: DiscussionDetailUiEvent) {

@@ -58,24 +58,43 @@
         app:layout_constraintTop_toBottomOf="@id/tv_book_title"
         tools:text="캡슐화 왜함?" />
 
+    <TextView
+        android:id="@+id/tv_user_nickname"
+        style="@style/DiscussionDetailSubContent"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/item_discussion_detail_meta_line_height"
+        android:gravity="center"
+        app:layout_constraintEnd_toStartOf="@id/tv_divider_dot"
+        app:layout_constraintTop_toBottomOf="@id/tv_discussion_title"
+        tools:text="코드마스터" />
 
     <TextView
-        android:id="@+id/tv_user_content"
+        android:id="@+id/tv_divider_dot"
+        style="@style/DiscussionDetailSubContent"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/item_discussion_detail_meta_line_height"
+        android:gravity="center"
+        android:text="@string/all_divider_dot"
+        app:layout_constraintEnd_toStartOf="@id/tv_discussion_create_at"
+        app:layout_constraintBottom_toBottomOf="@id/tv_user_nickname"
+        tools:text=" · " />
+
+    <TextView
+        android:id="@+id/tv_discussion_create_at"
         style="@style/DiscussionDetailSubContent"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/item_discussion_detail_meta_line_height"
         android:gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_discussion_title"
-        tools:text="코드마스터 · 2024년 7월 20일" />
-
+        app:layout_constraintBottom_toBottomOf="@id/tv_user_nickname"
+        tools:text="2024년 7월 20일" />
 
     <TextView
         android:id="@+id/tv_discussion_opinion"
         style="@style/DiscussionDetailContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/tv_user_content"
+        app:layout_constraintTop_toBottomOf="@id/tv_user_nickname"
         tools:text="캡슐화를 하면 데이터를 보호할 수 있다는 것에는 동의하는데, 실제로 완벽히 캡슐화가 되는 지는 의문입니다.getter/setter 메서드를 통해 객체 내부의 데이터가 외부로 드러나는 것은 캡슐화가 잘 된 것이 맞을까요?" />
 
     <View
