@@ -33,9 +33,6 @@
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".presentation.view.auth.AuthActivity"
-            android:exported="true"></activity>
-        <activity
             android:name=".presentation.view.discussion.create.DiscussionCreateActivity"
             android:exported="false" />
         <activity
@@ -47,7 +44,7 @@
         <activity
             android:name=".presentation.view.MainActivity"
             android:exported="true"
-            android:windowSoftInputMode="adjustPan">
-        </activity>
+            android:windowSoftInputMode="adjustPan" />
     </application>
+
 </manifest>
