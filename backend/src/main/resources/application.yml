@@ -27,7 +27,7 @@ aladin:
   base-url: ${aladin.base-url}
   item-search-uri: ${aladin.item-search-uri}
   api-key: ${aladin.api-key}
-  item-lookup-uri: ${aladin.api-key}
+  item-lookup-uri: ${aladin.item-lookup-uri}
 
 jwt:
   access-token:
