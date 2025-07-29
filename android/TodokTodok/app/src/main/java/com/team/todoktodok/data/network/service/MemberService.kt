@@ -8,12 +8,12 @@ import retrofit2.http.POST
 import retrofit2.http.Query
 
 interface MemberService {
-    @POST("members/login")
+    @POST("v1/members/login")
     suspend fun login(
         @Body requestBody: LoginRequest,
     ): Response<Unit>
 
-    @POST("members/signup")
+    @POST("v1/members/signup")
     suspend fun signUp(
         @Query("memberEmail") request: String,
         @Body requestBody: SignUpRequest,
