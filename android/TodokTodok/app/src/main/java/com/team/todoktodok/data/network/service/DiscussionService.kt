@@ -7,6 +7,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface DiscussionService {
     @GET("v1/discussions/{discussionId}")
@@ -14,8 +15,11 @@ interface DiscussionService {
         @Path("discussionId") discussionId: Long,
     ): DiscussionResponse
 
-    @GET("v1/discussions")
-    suspend fun fetchDiscussions(): List<DiscussionResponse>
+    @GET("v2/discussions")
+    suspend fun fetchDiscussions(
+        @Query("keyword") keyword: String?,
+        @Query("type") type: String,
+    ): List<DiscussionResponse>
 
     @POST("v2/discussions")
     suspend fun saveDiscussion(
