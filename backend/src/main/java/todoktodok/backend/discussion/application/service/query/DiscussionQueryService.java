@@ -47,11 +47,8 @@ public class DiscussionQueryService {
     ) {
         final Member member = findMember(memberId);
 
-        if (keyword == null || keyword.isBlank()) {
-            if (type.isTypeMine()) {
-                return getMyDiscussions(member);
-            }
-            return getDiscussions(memberId);
+        if (isKeywordBlank(keyword)) {
+            return getDiscussionsByType(memberId, type, member);
         }
 
         if (type.isTypeMine()) {
@@ -59,6 +56,10 @@ public class DiscussionQueryService {
         }
 
         return getDiscussionsByKeyword(keyword);
+    }
+
+    private static boolean isKeywordBlank(String keyword) {
+        return keyword == null || keyword.isBlank();
     }
 
     private void validateMember(final Long memberId) {
@@ -74,7 +75,14 @@ public class DiscussionQueryService {
 
     private Member findMember(final Long memberId) {
         return memberRepository.findById(memberId)
-                .orElseThrow(() -> new NoSuchElementException("해당하는 회원을 찾을 수 없습니다"));
+                .orElseThrow(() -> new NoSuchElementException("해당 회원을 찾을 수 없습니다"));
+    }
+
+    private List<DiscussionResponse> getDiscussionsByType(Long memberId, DiscussionFilterType type, Member member) {
+        if (type.isTypeMine()) {
+            return getMyDiscussions(member);
+        }
+        return getDiscussions(memberId);
     }
 
     private List<DiscussionResponse> getMyDiscussions(final Member member) {

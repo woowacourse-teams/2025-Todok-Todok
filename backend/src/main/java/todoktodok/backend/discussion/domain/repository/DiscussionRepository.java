@@ -9,38 +9,38 @@ import todoktodok.backend.member.domain.Member;
 
 public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
 
-    List<Discussion> findDiscussionsByMember(Member member);
+    List<Discussion> findDiscussionsByMember(final Member member);
 
     @Query("""
-        select d from Discussion d
-        where upper(d.title) like upper(concat('%', :keyword, '%'))
-        and d.deletedAt is null
-        union
-        select d from Discussion d
-        join d.book b
-        where upper(b.title) like upper(concat('%', :keyword, '%'))
-        and d.deletedAt is null
-        and b.deletedAt is null
+        SELECT d FROM Discussion d
+        WHERE UPPER(d.title) LIKE UPPER(CONCAT('%', :keyword, '%'))
+        AND d.deletedAt IS NULL
+        UNION
+        SELECT d FROM Discussion d
+        JOIN d.book b
+        WHERE UPPER(b.title) LIKE UPPER(CONCAT('%', :keyword, '%'))
+        AND d.deletedAt IS NULL
+        AND b.deletedAt IS NULL
     """)
     List<Discussion> searchByKeyword(
-            @Param("keyword") String keyword
+            @Param("keyword") final String keyword
     );
 
     @Query("""
-        select d from Discussion d
-        where upper(d.title) like upper(concat('%', :keyword, '%'))
-        and d.deletedAt is null
-        and d.member = :member
-        union
-        select d from Discussion d
-        join d.book b
-        where upper(b.title) like upper(concat('%', :keyword, '%'))
-        and d.deletedAt is null
-        and b.deletedAt is null
-        and d.member = :member
+        SELECT d FROM Discussion d
+        WHERE UPPER(d.title) LIKE UPPER(CONCAT('%', :keyword, '%'))
+        AND d.deletedAt IS NULL
+        AND d.member = :member
+        UNION
+        SELECT d FROM Discussion d
+        JOIN d.book b
+        WHERE UPPER(b.title) LIKE UPPER(CONCAT('%', :keyword, '%'))
+        AND d.deletedAt IS NULL
+        AND b.deletedAt IS NULL
+        AND d.member = :member
     """)
     List<Discussion> searchByKeywordAndMember(
-            @Param("keyword") String keyword,
-            @Param("member") Member member
+            @Param("keyword") final String keyword,
+            @Param("member") final Member member
     );
 }

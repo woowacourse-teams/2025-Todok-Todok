@@ -117,20 +117,20 @@ class DiscussionQueryServiceTest {
             );
 
             databaseInitializer.setBookInfo(
-                    "오브젝트v1", "book1입니다", "book1Author", "book1Publisher", "1233", ""
+                    "조영호의 오브젝트-v1", "book1입니다", "book1Author", "book1Publisher", "1233", ""
             );
             databaseInitializer.setBookInfo(
-                    "book2", "book2입니다", "book2Author", "book2Publisher", "1234", ""
+                    "클린코드", "book2입니다", "book2Author", "book2Publisher", "1234", ""
             );
 
             databaseInitializer.setDiscussionInfo(
-                    "user1의 book1 토론", "토론1입니다", 1L, 1L, null
+                    "user1의 객체 지향 토론", "book1에 대한 토론입니다", 1L, 1L, null
             );
             databaseInitializer.setDiscussionInfo(
-                    "user1의 클린코드 토론", "토론1입니다", 1L, 2L, null
+                    "user1의 메서드 분리 토론", "boo2에 대한 토론입니다", 1L, 2L, null
             );
             databaseInitializer.setDiscussionInfo(
-                    "user2의 클린코드 토론", "토론2입니다", 2L, 2L, null
+                    "user2의 메서드 분리 토론", "boo2에 대한 토론입니다", 2L, 2L, null
             );
         }
 
@@ -149,78 +149,99 @@ class DiscussionQueryServiceTest {
         @Test
         @DisplayName("전체 토론방을 대상으로 키워드로 조회할 수 있다")
         void getAllDiscussionsByKeywordTest() {
-            // given - when
+            // given
+            final String keyword = "객체 지향";
+
+            // when
             final List<DiscussionResponse> discussions = discussionQueryService.getDiscussionsByKeywordAndType(
-                    1L, "book2", DiscussionFilterType.ALL
+                    1L, keyword, DiscussionFilterType.ALL
             );
 
             // then
             assertAll(
-                    () -> assertThat(discussions).hasSize(2),
-                    () -> assertThat(discussions.get(0).discussionId()).isEqualTo(2L),
-                    () -> assertThat(discussions.get(1).discussionId()).isEqualTo(3L)
+                    () -> assertThat(discussions).hasSize(1),
+                    () -> assertThat(discussions.get(0).discussionId()).isEqualTo(1L),
+                    () -> assertThat(discussions.get(0).discussionTitle()).contains(keyword)
             );
         }
 
         @Test
         @DisplayName("나의 토론방을 조회할 수 있다")
         void getMyDiscussionsTest() {
-            // given - when
+            // given
+            final Long memberId = 1L;
+
+            //when
             final List<DiscussionResponse> discussions = discussionQueryService.getDiscussionsByKeywordAndType(
-                    1L, null, DiscussionFilterType.MINE
+                    memberId, null, DiscussionFilterType.MINE
             );
 
             // then
             assertAll(
                     () -> assertThat(discussions).hasSize(2),
                     () -> assertThat(discussions.get(0).discussionId()).isEqualTo(1L),
-                    () -> assertThat(discussions.get(1).discussionId()).isEqualTo(2L)
+                    () -> assertThat(discussions.get(1).discussionId()).isEqualTo(2L),
+                    () -> assertThat(discussions.get(0).member().memberId()).isEqualTo(memberId),
+                    () -> assertThat(discussions.get(1).member().memberId()).isEqualTo(memberId)
             );
         }
 
         @Test
         @DisplayName("나의 토론방을 대상으로 키워드로 조회할 수 있다")
         void getMyDiscussionsByKeywordTest() {
-            // given - when
+            // given
+            final String keyword = "객체 지향";
+
+            // when
             final List<DiscussionResponse> discussions = discussionQueryService.getDiscussionsByKeywordAndType(
-                    1L, "클린코드", DiscussionFilterType.MINE
+                    1L, keyword, DiscussionFilterType.MINE
             );
 
             // then
             assertAll(
                     () -> assertThat(discussions).hasSize(1),
-                    () -> assertThat(discussions.get(0).discussionId()).isEqualTo(2L)
+                    () -> assertThat(discussions.get(0).discussionId()).isEqualTo(1L),
+                    () -> assertThat(discussions.get(0).discussionTitle()).contains(keyword)
             );
         }
 
         @Test
         @DisplayName("키워드 조회 시 책 제목에 키워드가 포함되면 조회된다")
         void getDiscussionsByBookTitleKeywordTest() {
-            // given - when
+            // given
+            final String keyword = "오브젝트";
+
+            // when
             final List<DiscussionResponse> discussions = discussionQueryService.getDiscussionsByKeywordAndType(
-                    1L, "오브젝트", DiscussionFilterType.ALL
+                    1L, keyword, DiscussionFilterType.ALL
             );
 
             // then
             assertAll(
                     () -> assertThat(discussions).hasSize(1),
-                    () -> assertThat(discussions.get(0).discussionId()).isEqualTo(1L)
+                    () -> assertThat(discussions.get(0).discussionId()).isEqualTo(1L),
+                    () -> assertThat(discussions.get(0).book().bookTitle()).contains(keyword)
             );
         }
 
         @Test
         @DisplayName("키워드 조회 시 토론방 제목에 키워드가 포함되면 조회된다")
         void getDiscussionsByDiscussionTitleKeywordTest() {
-            // given - when
+            // given
+            final String keyword = "메서드";
+
+            // when
             final List<DiscussionResponse> discussions = discussionQueryService.getDiscussionsByKeywordAndType(
-                    1L, "클린코드", DiscussionFilterType.ALL
+                    1L, keyword, DiscussionFilterType.ALL
             );
 
             // then
             assertAll(
                     () -> assertThat(discussions).hasSize(2),
                     () -> assertThat(discussions.get(0).discussionId()).isEqualTo(2L),
-                    () -> assertThat(discussions.get(1).discussionId()).isEqualTo(3L)
+                    () -> assertThat(discussions.get(1).discussionId()).isEqualTo(3L),
+                    () -> assertThat(discussions.get(0).discussionTitle()).contains(keyword),
+                    () -> assertThat(discussions.get(1).discussionTitle()).contains(keyword)
             );
         }
     }

@@ -43,7 +43,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<String> handleMethodArgumentTypeMismatchException(final MethodArgumentTypeMismatchException e) {
         return ResponseEntity.badRequest()
-                .body(PREFIX + String.format("유효하지 않은 %s의 값입니다", e.getRequiredType().getName()));
+                .body(PREFIX + String.format("유효하지 않은 %s의 값입니다", e.getRequiredType().getSimpleName()));
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
