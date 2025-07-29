@@ -26,5 +26,5 @@ interface DiscussionService {
     @POST("v2/discussions")
     suspend fun saveDiscussionRoom(
         @Body request: DiscussionRoomRequest,
-    ): Response<Unit>
+    )
 }
