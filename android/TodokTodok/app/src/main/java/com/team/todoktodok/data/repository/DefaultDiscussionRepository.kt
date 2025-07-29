@@ -30,14 +30,14 @@ class DefaultDiscussionRepository(
     override suspend fun saveDiscussionRoom(
         bookId: Long,
         discussionTitle: String,
-        discussionOpinion: String
+        discussionOpinion: String,
     ) {
         discussionRemoteDataSource.saveDiscussionRoom(
             DiscussionRoomRequest(
                 bookId,
                 discussionTitle,
                 discussionOpinion,
-            )
+            ),
         )
     }
 }
