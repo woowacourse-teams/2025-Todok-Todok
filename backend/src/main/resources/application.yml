@@ -1,3 +1,8 @@
+config:
+  import:
+    - security/aladin.yml
+    - security/jwt.yml
+
 spring:
   h2:
     console:
@@ -17,3 +22,15 @@ spring:
     hibernate:
       ddl-auto: create-drop
     defer-datasource-initialization: true
+
+aladin:
+  base-url: ${aladin.base-url}
+  item-search-uri: ${aladin.item-search-uri}
+  api-key: ${aladin.api-key}
+  item-lookup-uri: ${aladin.api-key}
+
+jwt:
+  access-token:
+    expire-mills: ${jwt.access-token.expire-mills}
+  temp-token:
+    expire-mills: ${jwt.temp-token.expire-mills}
