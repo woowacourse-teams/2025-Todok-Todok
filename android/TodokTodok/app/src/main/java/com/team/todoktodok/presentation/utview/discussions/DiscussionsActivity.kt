@@ -5,6 +5,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import com.google.android.material.tabs.TabLayout
@@ -30,7 +31,9 @@ class DiscussionsActivity : AppCompatActivity() {
 
     private fun initFragments() {
         supportFragmentManager.commit {
-            add(R.id.fragmentContainerView, myDiscussionFragment, "MY").hide(myDiscussionFragment)
+            add(R.id.fragmentContainerView, allDiscussionFragment, "ALL")
+            add(R.id.fragmentContainerView, myDiscussionFragment, "MY")
+            hide(myDiscussionFragment)
         }
     }
 
@@ -66,6 +69,10 @@ class DiscussionsActivity : AppCompatActivity() {
                     override fun onTabReselected(tab: TabLayout.Tab?) {}
                 },
             )
+
+            etSearchDiscussion.doAfterTextChanged { text ->
+                setUpSearchBar(text.toString(), tabLayout)
+            }
         }
     }
 
@@ -81,6 +88,17 @@ class DiscussionsActivity : AppCompatActivity() {
                     tabLayout.selectTab(changeAbleTab)
                 }
             }
+        }
+    }
+
+    private fun setUpSearchBar(
+        searchText: String?,
+        tabLayout: TabLayout,
+    ) {
+        if (searchText?.isEmpty() == true) {
+            val changeAbleTab = tabLayout.getTabAt(CHANGEABLE_TAB_POSITION)
+            val origin = getString(R.string.ut_discussion_tab_title_all)
+            changeAbleTab?.text = origin
         }
     }
 
