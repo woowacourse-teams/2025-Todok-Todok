@@ -9,12 +9,12 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface CommentService {
-    @GET("discussions/{discussionId}/comments")
+    @GET("v1/discussions/{discussionId}/comments")
     suspend fun fetchComments(
         @Path("discussionId") discussionId: Long,
     ): List<CommentResponse>
 
-    @POST("discussions/{discussionId}/comments")
+    @POST("v1/discussions/{discussionId}/comments")
     suspend fun saveComment(
         @Path("discussionId") discussionId: Long,
         @Body commentRequest: CommentRequest,

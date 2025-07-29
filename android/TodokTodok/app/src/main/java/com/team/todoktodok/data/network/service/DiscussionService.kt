@@ -10,15 +10,15 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface DiscussionService {
-    @GET("discussions/{discussionId}")
+    @GET("v1/discussions/{discussionId}")
     suspend fun fetchDiscussion(
         @Path("discussionId") discussionId: Long,
     ): DiscussionResponse
 
-    @GET("discussions")
+    @GET("v1/discussions")
     suspend fun fetchDiscussions(): List<DiscussionResponse>
 
-    @POST("discussions")
+    @POST("v2/discussions")
     suspend fun saveDiscussion(
         @Body request: DiscussionRequest,
     ): Response<Unit>

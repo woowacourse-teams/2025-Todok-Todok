@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".presentation.utview.discussions.DiscussionsActivity">
+
+    <ImageView
+        android:id="@+id/iv_header_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/img_main_logo"
+        android:layout_marginStart="@dimen/space_8"
+        android:layout_marginTop="@dimen/space_24"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/et_search_discussion_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginStart="@dimen/space_16"
+        android:layout_marginEnd="@dimen/space_8"
+        app:endIconMode="clear_text"
+        app:cursorColor="@color/black_18"
+        app:hintTextAppearance="@style/HintTextStyle"
+        android:hint="@string/ut_discussion_search_bar_hint"
+        app:layout_constraintTop_toTopOf="@id/iv_header_logo"
+        app:layout_constraintBottom_toBottomOf="@id/iv_header_logo"
+        app:layout_constraintStart_toEndOf="@id/iv_header_logo"
+        app:layout_constraintEnd_toStartOf="@id/btn_search">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_search_discussion"
+            android:background="@drawable/bg_green_f0_radius_8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:imeOptions="actionDone"
+            android:textSize="@dimen/font_size_small"
+            android:textColor="@color/black_18"
+            android:fontFamily="@font/pretendard_regular" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <ImageView
+        android:id="@+id/btn_search"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/btn_search"
+        android:layout_marginEnd="@dimen/space_8"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/et_search_discussion_layout"
+        app:layout_constraintBottom_toBottomOf="@id/et_search_discussion_layout"
+        />
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tab_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:elevation="1dp"
+        android:layout_marginTop="@dimen/space_8"
+        android:paddingStart="@dimen/space_20"
+        app:tabTextColor="@color/gray_9F"
+        app:tabIndicatorColor="@color/green_1A"
+        app:tabSelectedTextColor="@color/black_18"
+        app:tabIndicatorFullWidth="true"
+        app:tabIndicatorHeight="3dp"
+        app:tabMode="scrollable"
+        app:layout_constraintTop_toBottomOf="@id/et_search_discussion_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ut_discussion_tab_title_all" />
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ut_discussion_tab_title_my" />
+    </com.google.android.material.tabs.TabLayout>
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragmentContainerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tab_layout" />
+
+    <ImageView
+        android:id="@+id/iv_discussion_navigation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/space_24"
+        android:layout_marginEnd="@dimen/space_12"
+        android:background="@drawable/btn_plus_oval"
+        android:contentDescription="@string/content_description_navigate_to_book_search"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
