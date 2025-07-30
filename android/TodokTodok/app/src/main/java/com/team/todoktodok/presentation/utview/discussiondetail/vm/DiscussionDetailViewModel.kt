@@ -19,16 +19,13 @@ class DiscussionDetailViewModel(
     private val discussionRepository: DiscussionRepository,
     private val commentRepository: CommentRepository,
 ) : ViewModel() {
-    private val discussionId =
+    val discussionId =
         savedStateHandle.get<Long>(KEY_DISCUSSION_ID) ?: throw IllegalStateException()
     private val _discussion = MutableLiveData<Discussion>()
     val discussion: LiveData<Discussion> = _discussion
 
     private val _comments = MutableLiveData<List<Comment>>(emptyList())
     val comments: LiveData<List<Comment>> = _comments
-
-    private val _commentText = MutableLiveData("")
-    val commentText: LiveData<String> = _commentText
 
     private val _uiEvent = MutableSingleLiveData<DiscussionDetailUiEvent>()
     val uiEvent: SingleLiveData<DiscussionDetailUiEvent> = _uiEvent
@@ -40,19 +37,18 @@ class DiscussionDetailViewModel(
         }
     }
 
-    fun submitComment() {
-        viewModelScope.launch {
-            commentRepository.saveComment(discussionId, commentText.value ?: "")
-            loadComments()
-        }
-    }
-
-    fun onCommentChanged(text: CharSequence?) {
-        _commentText.value = text?.toString() ?: ""
+    fun showBottomSheet() {
+        _uiEvent.setValue(DiscussionDetailUiEvent.ShowCreateComment)
     }
 
     fun onBackPressed() {
         onUiEvent(DiscussionDetailUiEvent.NavigateUp)
+    }
+
+    fun commentsReload() {
+        viewModelScope.launch {
+            loadComments()
+        }
     }
 
     private suspend fun loadDiscussionRoom() {
