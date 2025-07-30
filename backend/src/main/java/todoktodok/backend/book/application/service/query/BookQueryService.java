@@ -21,7 +21,7 @@ public class BookQueryService {
         }
 
         final String cleanKeyword = keyword.trim();
-        final AladinItemResponses searchedBooks = aladinRestClient.searchBooks(cleanKeyword);
+        final AladinItemResponses searchedBooks = aladinRestClient.searchBooksByKeyword(cleanKeyword);
 
         return searchedBooks.item().stream()
                 .map(AladinBookResponse::new)

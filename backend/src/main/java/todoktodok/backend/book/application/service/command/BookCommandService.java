@@ -63,13 +63,13 @@ public class BookCommandService {
     }
 
     private String getSummaryFromAladin(final String isbn) {
-        final AladinItemResponses responses = aladinRestClient.searchBook(isbn);
+        final AladinItemResponses responses = aladinRestClient.searchBookByIsbn(isbn);
         final AladinItemResponse response = responses.item().getFirst();
         return response.description();
     }
 
     private String getPublisherFromAladin(final String isbn) {
-        final AladinItemResponses responses = aladinRestClient.searchBook(isbn);
+        final AladinItemResponses responses = aladinRestClient.searchBookByIsbn(isbn);
         final AladinItemResponse response = responses.item().getFirst();
         return response.publisher();
     }

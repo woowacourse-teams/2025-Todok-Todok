@@ -35,7 +35,7 @@ public class AladinRestClient {
         this.restClient = restClientBuilder.baseUrl(aladinBaseUrl).build();
     }
 
-    public AladinItemResponses searchBooks(final String searchBookKeyword) {
+    public AladinItemResponses searchBooksByKeyword(final String searchBookKeyword) {
         try {
             return restClient.get()
                     .uri(createSearchBooksUri(searchBookKeyword))
@@ -46,7 +46,7 @@ public class AladinRestClient {
         }
     }
 
-    public AladinItemResponses searchBook(final String isbn) {
+    public AladinItemResponses searchBookByIsbn(final String isbn) {
         try {
             return restClient.get()
                     .uri(createSearchBookUri(isbn))
