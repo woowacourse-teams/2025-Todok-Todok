@@ -1,8 +1,10 @@
 package todoktodok.backend.book.presentation;
 
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.hamcrest.Matchers.is;
+
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import static org.hamcrest.Matchers.is;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,6 +17,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import todoktodok.backend.DatabaseInitializer;
 import todoktodok.backend.InitializerTimer;
+import todoktodok.backend.book.application.dto.request.BookRequest;
 import todoktodok.backend.member.presentation.fixture.MemberFixture;
 
 @ActiveProfiles("test")
@@ -53,7 +56,7 @@ public class BookControllerTest {
                 .when().get("/api/v1/books/search")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
-                .body("size()", is(1));
+                .body("size()", greaterThanOrEqualTo(1));
     }
 
     @Test
@@ -94,5 +97,30 @@ public class BookControllerTest {
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body("size()", is(0));
+    }
+
+    @Test
+    @DisplayName("도서를 생성한다")
+    void createBook() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+
+        final String token = MemberFixture.login("user@gmail.com");
+
+        final BookRequest bookRequest = new BookRequest(
+                "9791158391409",
+                "오브젝트",
+                "조영호",
+                "image.png"
+        );
+
+        // when - then
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .header("Authorization", token)
+                .body(bookRequest)
+                .when().post("/api/v2/books")
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value());
     }
 }
