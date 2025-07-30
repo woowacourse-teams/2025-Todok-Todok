@@ -46,15 +46,7 @@ class DiscussionDetailActivity : AppCompatActivity() {
         setupOnClickNavigateUp()
         setupObserve()
         setPopBackStack()
-        supportFragmentManager.setFragmentResultListener(
-            CommentCreateBottomSheet.COMMENT_REQUEST_KEY,
-            this,
-        ) { _, bundle ->
-            val result = bundle.getBoolean(CommentCreateBottomSheet.COMMENT_CREATED_RESULT_KEY)
-            if (result) {
-                viewModel.commentsReload()
-            }
-        }
+        setupFragmentResultListener()
     }
 
     private fun initView() {
@@ -104,12 +96,6 @@ class DiscussionDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun LocalDateTime.formatDate(): String {
-        val pattern = this@DiscussionDetailActivity.getString(R.string.date_format_pattern)
-        val formatter = DateTimeFormatter.ofPattern(pattern, Locale.KOREA)
-        return format(formatter)
-    }
-
     private fun handleEvent(discussionDetailUiEvent: DiscussionDetailUiEvent) {
         when (discussionDetailUiEvent) {
             DiscussionDetailUiEvent.NavigateUp -> onBackPressedDispatcher.onBackPressed()
@@ -148,6 +134,24 @@ class DiscussionDetailActivity : AppCompatActivity() {
             }
         startActivity(intent)
         finish()
+    }
+
+    private fun setupFragmentResultListener() {
+        supportFragmentManager.setFragmentResultListener(
+            CommentCreateBottomSheet.COMMENT_REQUEST_KEY,
+            this,
+        ) { _, bundle ->
+            val result = bundle.getBoolean(CommentCreateBottomSheet.COMMENT_CREATED_RESULT_KEY)
+            if (result) {
+                viewModel.commentsReload()
+            }
+        }
+    }
+
+    private fun LocalDateTime.formatDate(): String {
+        val pattern = this@DiscussionDetailActivity.getString(R.string.date_format_pattern)
+        val formatter = DateTimeFormatter.ofPattern(pattern, Locale.KOREA)
+        return format(formatter)
     }
 
     companion object {
