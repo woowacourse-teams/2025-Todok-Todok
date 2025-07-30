@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
 data class DiscussionResponse(
     @SerialName("createdAt")
     val createdAt: String,
-    @SerialName("bookResponse")
+    @SerialName("book")
     val bookResponse: BookResponse,
     @SerialName("discussionId")
     val discussionId: Long,
@@ -17,9 +17,9 @@ data class DiscussionResponse(
     val discussionOpinion: String,
     @SerialName("discussionTitle")
     val discussionTitle: String,
-    @SerialName("memberResponse")
+    @SerialName("member")
     val memberResponse: MemberResponse,
-    @SerialName("noteResponse")
+    @SerialName("note")
     val noteResponse: NoteResponse,
 )
 

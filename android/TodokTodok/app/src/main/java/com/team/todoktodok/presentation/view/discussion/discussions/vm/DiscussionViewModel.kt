@@ -30,7 +30,7 @@ class DiscussionViewModel(
 
     fun loadDiscussions() {
         viewModelScope.launch {
-            _discussions.value = discussionRepository.getDiscussions()
+            // _discussions.value = discussionRepository.getDiscussions()
         }
     }
 }
