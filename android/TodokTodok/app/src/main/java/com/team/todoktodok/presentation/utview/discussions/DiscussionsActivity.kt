@@ -92,13 +92,10 @@ class DiscussionsActivity : AppCompatActivity() {
     }
 
     private fun triggerSearch() {
-        val keyword =
-            binding.etSearchDiscussion.text
-                ?.toString()
-                ?.trim()
-        if (!keyword.isNullOrEmpty()) {
-            viewModel.loadSearchedDiscussions(keyword)
-        }
+        val editableText = binding.etSearchDiscussion.text
+        val keyword = editableText?.toString()?.trim()
+        val isKeywordNotEmpty = !keyword.isNullOrEmpty()
+        if (isKeywordNotEmpty) viewModel.loadSearchedDiscussions(keyword)
     }
 
     private fun changeTab(tab: TabLayout.Tab) {
