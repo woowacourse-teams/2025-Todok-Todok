@@ -56,18 +56,31 @@ public class BookCommandServiceTest {
     void createOrUpdateBook_duplicateUpdate_success() {
         // given
         databaseInitializer.setDefaultUserInfo();
-        databaseInitializer.setDefaultBookInfo();
+
+        final String isbn = "1234567890123";
+        final String author = "조영호";
+
+        databaseInitializer.setBookInfo(
+                "오브젝트",
+                "오브젝트 내용",
+                author,
+                "인사이트",
+                isbn,
+                "image.png"
+        );
+
+        final String updatedTitle = "업데이트된 오브젝트";
+        final String updatedImage = "image2.png";
 
         final Long memberId = 1L;
-
         final BookRequest bookRequest = new BookRequest(
-                "9791158391409", "업데이트된 오브젝트", "조영호2", "image2.png"
+                isbn, updatedTitle, author, updatedImage
         );
 
         // when
         final Long bookId = bookCommandService.createOrUpdateBook(memberId, bookRequest);
 
         // then
-        assertThat(bookId).isEqualTo(memberId);
+        assertThat(bookId).isEqualTo(1L);
     }
 }
