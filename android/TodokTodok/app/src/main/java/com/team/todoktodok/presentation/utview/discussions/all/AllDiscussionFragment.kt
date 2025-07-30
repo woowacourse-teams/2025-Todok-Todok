@@ -7,6 +7,7 @@ import androidx.fragment.app.viewModels
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentAllDiscussionBinding
+import com.team.todoktodok.presentation.utview.discussiondetail.DiscussionDetailActivity
 import com.team.todoktodok.presentation.utview.discussions.all.adapter.DiscussionAdapter
 import com.team.todoktodok.presentation.utview.discussions.all.vm.AllDiscussionViewModel
 import com.team.todoktodok.presentation.utview.discussions.all.vm.AllDiscussionViewModelFactory
@@ -50,7 +51,8 @@ class AllDiscussionFragment : Fragment(R.layout.fragment_all_discussion) {
         viewModel.uiEvent.observe(viewLifecycleOwner) { value ->
             when (value) {
                 is AllDiscussionUiEvent.NavigateToDetail -> {
-                    // TODO: 상세 페이지로 이동
+                    val intent = DiscussionDetailActivity.Intent(requireContext(), value.id)
+                    startActivity(intent)
                 }
             }
         }
