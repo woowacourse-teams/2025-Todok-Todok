@@ -25,7 +25,7 @@ class DiscussionsViewModel(
     }
 
     private fun loadDiscussionsForCurrentTab(keywordToSearch: String?) {
-        val currentTab = _uiState.value?.tab ?: DiscussionFilter.ALL
+        val currentTab = _uiState.value?.filter ?: DiscussionFilter.ALL
         val keyword = keywordToSearch ?: _uiState.value?.searchKeyword
 
         viewModelScope.launch {
@@ -79,7 +79,7 @@ class DiscussionsViewModel(
     }
 
     fun updateTab(newTab: DiscussionFilter) {
-        _uiState.value = _uiState.value?.copy(tab = newTab)
+        _uiState.value = _uiState.value?.copy(filter = newTab)
         loadDiscussionsForCurrentTab(null)
     }
 }
