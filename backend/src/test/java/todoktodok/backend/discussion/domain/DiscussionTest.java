@@ -28,7 +28,7 @@ class DiscussionTest {
                 "클린코드",
                 "로버트마틴",
                 "피어슨",
-                "123"
+                "1234567890123"
         );
 
         final Note note = NoteFixture.create(
@@ -67,7 +67,7 @@ class DiscussionTest {
                 "클린코드",
                 "로버트마틴",
                 "피어슨",
-                "123"
+                "1234567890123"
         );
 
         final Note note = NoteFixture.create(
@@ -106,7 +106,7 @@ class DiscussionTest {
                 "클린코드",
                 "로버트마틴",
                 "피어슨",
-                "123"
+                "1234567890123"
         );
 
         final Note note = NoteFixture.create(
@@ -145,7 +145,7 @@ class DiscussionTest {
                 "클린코드",
                 "로버트마틴",
                 "피어슨",
-                "123"
+                "1234567890123"
         );
 
         final Note note = NoteFixture.create(
