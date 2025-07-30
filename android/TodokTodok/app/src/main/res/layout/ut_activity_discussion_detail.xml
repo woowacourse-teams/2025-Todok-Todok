@@ -125,6 +125,8 @@
         android:paddingTop="@dimen/space_4"
         android:paddingBottom="2dp"
         android:text="@string/comment_input_hint"
+        android:textColor="@color/black_18"
+        android:textSize="@dimen/font_size_large"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
