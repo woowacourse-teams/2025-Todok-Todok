@@ -113,6 +113,7 @@ class FakeDiscussionRemoteDataSource : DiscussionRemoteDataSource {
         }
 
     override suspend fun saveDiscussion(discussionRequest: DiscussionRequest): Long = 0
+
     override suspend fun saveDiscussionRoom(discussionRequest: DiscussionRoomRequest) {
         TODO("Not yet implemented")
     }

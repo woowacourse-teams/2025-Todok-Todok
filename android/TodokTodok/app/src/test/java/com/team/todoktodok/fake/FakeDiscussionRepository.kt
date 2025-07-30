@@ -29,7 +29,7 @@ class FakeDiscussionRepository : DiscussionRepository {
     override suspend fun saveDiscussionRoom(
         noteId: Long,
         discussionTitle: String,
-        discussionOpinion: String
+        discussionOpinion: String,
     ) {
         TODO("Not yet implemented")
     }
