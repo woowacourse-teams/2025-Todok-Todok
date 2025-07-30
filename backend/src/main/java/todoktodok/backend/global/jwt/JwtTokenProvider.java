@@ -10,6 +10,7 @@ import io.jsonwebtoken.UnsupportedJwtException;
 import java.util.Date;
 import javax.crypto.SecretKey;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import todoktodok.backend.global.auth.Role;
 import todoktodok.backend.member.domain.Member;
@@ -19,10 +20,14 @@ import todoktodok.backend.member.domain.Member;
 public class JwtTokenProvider {
 
     private static final String JWT_EXCEPTION_MESSAGE = "잘못된 로그인 시도입니다. 다시 시도해 주세요.";
-    private static final SecretKey SECRET_KEY = SIG.HS256.key().build();
-    private static final long validityInMilliseconds = 605000000;
-    private static final long validityTempUserInMilliseconds = 605000000;
     private static final String TOKEN_PREFIX = "Bearer ";
+    private static final SecretKey SECRET_KEY = SIG.HS256.key().build();
+
+    @Value("${jwt.access-token.expire-mills}")
+    private long validityInMilliseconds;
+
+    @Value("${jwt.temp-token.expire-mills}")
+    private long validityTempUserInMilliseconds;
 
     public String createToken(final Member member) {
         final Date now = new Date();
