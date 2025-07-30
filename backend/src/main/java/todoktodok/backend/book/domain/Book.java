@@ -103,7 +103,11 @@ public class Book extends TimeStamp {
         updateIfChanged(this.image, image, newValue -> this.image = newValue);
     }
 
-    private <T> void updateIfChanged(T oldValue, T newValue, Consumer<T> setter) {
+    private <T> void updateIfChanged(
+            final T oldValue,
+            final T newValue,
+            final Consumer<T> setter
+    ) {
         if (!Objects.equals(oldValue, newValue)) {
             setter.accept(newValue);
         }
