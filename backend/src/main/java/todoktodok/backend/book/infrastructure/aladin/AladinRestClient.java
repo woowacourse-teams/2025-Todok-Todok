@@ -64,7 +64,7 @@ public class AladinRestClient {
                 .queryParam("Query", searchBookKeyword)
                 .queryParam("MaxResults", MAX_RESULT)
                 .queryParam("CategoryId", DOMESTIC_COMPUTER_CATEGORY_ID)
-                .queryParam("output", OUTPUT)
+                .queryParam("Output", OUTPUT)
                 .queryParam("Version", LATEST_VERSION)
                 .build();
     }
@@ -73,9 +73,9 @@ public class AladinRestClient {
         return uriBuilder -> uriBuilder
                 .path(aladinItemLookupUri)
                 .queryParam("ttbkey", aladinApiKey)
-                .queryParam("itemIdType", SEARCH_TYPE)
+                .queryParam("ItemIdType", SEARCH_TYPE)
                 .queryParam("ItemId", isbn)
-                .queryParam("output", OUTPUT)
+                .queryParam("Output", OUTPUT)
                 .queryParam("Version", LATEST_VERSION)
                 .build();
     }
