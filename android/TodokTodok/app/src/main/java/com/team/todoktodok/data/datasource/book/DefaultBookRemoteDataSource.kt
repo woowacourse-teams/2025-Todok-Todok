@@ -1,7 +1,6 @@
 package com.team.todoktodok.data.datasource.book
 
 import com.team.domain.model.Book
-import com.team.todoktodok.data.network.request.CreateBookRequest
 import com.team.todoktodok.data.network.request.SaveBookRequest
 import com.team.todoktodok.data.network.request.toRequest
 import com.team.todoktodok.data.network.response.BookResponse
@@ -29,7 +28,7 @@ class DefaultBookRemoteDataSource(
     override suspend fun saveSelectedBook(book: Book): Long {
         val response =
             libraryService.createBook(
-                book.toRequest()
+                book.toRequest(),
             )
         if (!response.isSuccessful) {
             throw IllegalStateException("서버 응답이 실패했습니다")

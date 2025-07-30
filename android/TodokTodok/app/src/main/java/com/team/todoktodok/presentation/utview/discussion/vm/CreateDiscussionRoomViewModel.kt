@@ -115,4 +115,3 @@ class CreateDiscussionRoomViewModel(
         _uiEvent.value = null
     }
 }
-
