@@ -49,12 +49,13 @@
     <!--  토론방 생성 페이지  -->
     <string name="discussion_create_title">토론방 생성</string>
     <string name="content_description_discussion_create_back">토론방 목록으로 이동합니다</string>
-    <string name="discussion_title">토론 제목</string>
+    <string name="discussion_title">토론 내용</string>
     <string name="discussion_content">나의 의견</string>
     <string name="discussion_create">생성하기</string>
     <string name="discussion_room_create">생성하기</string>
     <string name="search_book">도서 검색</string>
     <string name="library_list">도서 검색</string>
+    <string name="book_search_hing">책 제목을 입력해주세요</string>
 
     <!-- 로그인 페이지 -->
     <string name="login_fail_to_login">로그인에 실패했어요. 다시 시도해주세요</string>

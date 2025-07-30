@@ -53,7 +53,7 @@
         android:id="@+id/etl_search_book"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="책 제목을 입력해주세요"
+        android:hint="@string/book_search_hint"
         android:imeOptions="actionDone"
         android:inputType="text"
         app:boxBackgroundMode="none"
@@ -89,7 +89,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/space_8"
         android:layout_marginVertical="@dimen/space_20"
-        android:text="토론 제목"
+        android:text="@string/discussion_title"
         app:layout_constraintTop_toBottomOf="@id/etl_search_book" />
 
     <com.google.android.material.textfield.TextInputLayout
@@ -120,7 +120,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/space_8"
         android:layout_marginVertical="@dimen/space_20"
-        android:text="토론 내용"
+        android:text="@string/discussion_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/etl_discussion_title" />
 
@@ -152,7 +152,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/space_56"
         android:background="@drawable/bg_green_1a_radius_8dp"
-        android:text="생성하기"
+        android:text="@string/discussion_room_create"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
