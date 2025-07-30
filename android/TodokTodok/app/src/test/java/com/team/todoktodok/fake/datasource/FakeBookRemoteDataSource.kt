@@ -16,4 +16,8 @@ class FakeBookRemoteDataSource(
     override suspend fun saveBook(bookId: Long) {
         savedBookIds.add(bookId)
     }
+
+    override suspend fun saveSelectedBook(book: Book): Long {
+        TODO("Not yet implemented")
+    }
 }
