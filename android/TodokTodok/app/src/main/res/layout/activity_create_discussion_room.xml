@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/space_24"
+    android:paddingRight="@dimen/space_24"
+    tools:context=".presentation.utview.discussion.CreateDiscussionRoomActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/abl_create_discussion_room"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_height"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_back"
+        android:contentDescription="@string/content_description_discussion_create_back"
+        app:layout_constraintBottom_toBottomOf="@id/abl_create_discussion_room"
+        app:layout_constraintStart_toStartOf="@id/abl_create_discussion_room"
+        app:layout_constraintTop_toTopOf="@id/abl_create_discussion_room" />
+
+    <TextView
+        android:id="@+id/tv_title"
+        style="@style/HeaderTitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/discussion_create_title"
+        app:layout_constraintBottom_toBottomOf="@id/abl_create_discussion_room"
+        app:layout_constraintEnd_toEndOf="@id/abl_create_discussion_room"
+        app:layout_constraintStart_toStartOf="@id/abl_create_discussion_room"
+        app:layout_constraintTop_toTopOf="@id/abl_create_discussion_room" />
+
+    <TextView
+        android:id="@+id/tv_search_book"
+        style="@style/CreateDiscussionNoteBookTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/space_8"
+        android:layout_marginVertical="@dimen/space_12"
+        android:text="@string/search_book"
+        app:layout_constraintBottom_toTopOf="@id/etl_search_book"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/abl_create_discussion_room" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/etl_search_book"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/book_search_hint"
+        android:imeOptions="actionDone"
+        android:inputType="text"
+        app:boxBackgroundMode="none"
+
+        app:hintTextColor="@color/gray_76"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_search_book">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_search_book"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_green_f0_radius_8dp"
+            android:singleLine="true" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <ImageView
+        android:id="@+id/iv_search_book"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_8"
+        android:layout_marginRight="@dimen/space_12"
+        android:background="@drawable/ic_search"
+        app:layout_constraintBottom_toBottomOf="@id/etl_search_book"
+        app:layout_constraintEnd_toEndOf="@id/etl_search_book"
+        app:layout_constraintTop_toTopOf="@id/etl_search_book" />
+
+    <TextView
+        android:id="@+id/tv_discussion_title"
+        style="@style/CreateDiscussionNoteBookTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/space_8"
+        android:layout_marginVertical="@dimen/space_20"
+        android:text="@string/discussion_title"
+        app:layout_constraintTop_toBottomOf="@id/etl_search_book" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/etl_discussion_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:boxBackgroundMode="none"
+        app:hintTextColor="@color/gray_76"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_discussion_title">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_discussion_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_green_f0_radius_8dp"
+            android:gravity="start|top"
+            android:singleLine="true"
+            android:textColor="@color/black_18" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <TextView
+        android:id="@+id/tv_discussion_content"
+        style="@style/CreateDiscussionNoteBookTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/space_8"
+        android:layout_marginVertical="@dimen/space_20"
+        android:text="@string/discussion_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/etl_discussion_title" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/etl_discussion_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:boxBackgroundMode="none"
+        app:hintTextColor="@color/gray_76"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_discussion_content">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_discussion_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_green_f0_radius_8dp"
+            android:gravity="start|top"
+            android:inputType="textMultiLine"
+            android:maxLength="1000"
+            android:minLines="10"
+            android:textColor="@color/black_18" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/tv_create_discussion_room"
+        style="@style/BasicButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/space_56"
+        android:background="@drawable/bg_green_1a_radius_8dp"
+        android:text="@string/discussion_room_create"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
