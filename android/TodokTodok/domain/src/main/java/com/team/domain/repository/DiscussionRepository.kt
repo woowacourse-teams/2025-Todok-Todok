@@ -16,10 +16,4 @@ interface DiscussionRepository {
         discussionTitle: String,
         discussionOpinion: String,
     ): Long
-
-    suspend fun saveDiscussionRoom(
-        noteId: Long,
-        discussionTitle: String,
-        discussionOpinion: String,
-    )
 }

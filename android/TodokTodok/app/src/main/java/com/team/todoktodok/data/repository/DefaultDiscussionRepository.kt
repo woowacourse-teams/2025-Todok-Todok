@@ -5,7 +5,6 @@ import com.team.domain.model.DiscussionFilter
 import com.team.domain.repository.DiscussionRepository
 import com.team.todoktodok.data.datasource.discussion.DiscussionRemoteDataSource
 import com.team.todoktodok.data.network.request.DiscussionRequest
-import com.team.todoktodok.data.network.request.DiscussionRoomRequest
 import com.team.todoktodok.data.network.response.discussion.toDomain
 
 class DefaultDiscussionRepository(
@@ -30,18 +29,4 @@ class DefaultDiscussionRepository(
                 noteId,
             ),
         )
-
-    override suspend fun saveDiscussionRoom(
-        bookId: Long,
-        discussionTitle: String,
-        discussionOpinion: String,
-    ) {
-        discussionRemoteDataSource.saveDiscussionRoom(
-            DiscussionRoomRequest(
-                bookId,
-                discussionTitle,
-                discussionOpinion,
-            ),
-        )
-    }
 }

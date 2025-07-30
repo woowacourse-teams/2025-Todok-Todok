@@ -14,9 +14,4 @@ class DefaultBookRepository(
     override suspend fun saveBook(book: Book) {
         remoteBookRemoteDataSource.saveBook(book.id)
     }
-
-    override suspend fun saveSelectedBook(book: Book): Long {
-        val newBookId = remoteBookRemoteDataSource.saveSelectedBook(book)
-        return newBookId
-    }
 }
