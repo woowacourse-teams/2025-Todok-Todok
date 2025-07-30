@@ -4,27 +4,27 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import todoktodok.backend.book.application.dto.response.BookResponse;
-import todoktodok.backend.book.domain.Book;
-import todoktodok.backend.book.domain.repository.BookRepository;
+import todoktodok.backend.book.application.dto.response.AladinBookResponse;
+import todoktodok.backend.book.infrastructure.aladin.AladinItemResponses;
+import todoktodok.backend.book.infrastructure.aladin.AladinRestClient;
 
 @Service
 @Transactional(readOnly = true)
 @AllArgsConstructor
 public class BookQueryService {
 
-    private final BookRepository bookRepository;
+    private final AladinRestClient aladinRestClient;
 
-    public List<BookResponse> search(final String keyword) {
+    public List<AladinBookResponse> search(final String keyword) {
         if (keyword == null || keyword.isBlank()) {
             return List.of();
         }
 
         final String cleanKeyword = keyword.trim();
-        final List<Book> matchedBooks = bookRepository.findByTitleContainingIgnoreCase(cleanKeyword);
+        final AladinItemResponses searchedBooks = aladinRestClient.searchBooksByKeyword(cleanKeyword);
 
-        return matchedBooks.stream()
-                .map(BookResponse::new)
+        return searchedBooks.item().stream()
+                .map(AladinBookResponse::new)
                 .toList();
     }
 }

@@ -1,7 +1,8 @@
 package todoktodok.backend.book.application.service.query;
 
-import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,7 +15,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.DatabaseInitializer;
 import todoktodok.backend.InitializerTimer;
-import todoktodok.backend.book.application.dto.response.BookResponse;
+import todoktodok.backend.book.application.dto.response.AladinBookResponse;
 
 @ActiveProfiles("test")
 @Transactional
@@ -37,38 +38,35 @@ public class BookQueryServiceTest {
     @ValueSource(strings = {"오브젝트", " 오브젝트", "오브젝트 ", "오", "오브", "오브젝"})
     @DisplayName("검색어로 도서를 검색한다")
     void searchTest(String keyword) {
-        // given
-        databaseInitializer.setDefaultBookInfo();
-
-        // when
-        final List<BookResponse> books = bookQueryService.search(keyword);
+        // given - when
+        final List<AladinBookResponse> searchedBooks = bookQueryService.search(keyword);
 
         // then
-        assertThat(books).hasSize(1);
+        assertThat(searchedBooks).hasSizeGreaterThan(1);
     }
 
     @Test
     @DisplayName("도서 검색 시 일치하는 책이 없으면 빈 리스트를 반환한다")
     void searchTest_notFound() {
         // given
-        final String keyword = "오브젝트";
+        final String keyword = "notFound";
 
         // when
-        final List<BookResponse> books = bookQueryService.search(keyword);
+        final List<AladinBookResponse> emptyBooks = bookQueryService.search(keyword);
 
         // then
-        assertThat(books).isEmpty();
+        assertThat(emptyBooks).isEmpty();
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"", " "})
     @DisplayName("도서 검색 시 검색어가 입력되지 않으면 빈 리스트를 반환한다")
     void searchTest_isEmpty(final String keyword) {
-        // when
-        final List<BookResponse> books = bookQueryService.search(keyword);
+        // given - when
+        final List<AladinBookResponse> emptyBooks = bookQueryService.search(keyword);
 
         // then
-        assertThat(books).isEmpty();
+        assertThat(emptyBooks).isEmpty();
     }
 
     @Test
@@ -78,9 +76,9 @@ public class BookQueryServiceTest {
         final String keyword = null;
 
         // when
-        final List<BookResponse> books = bookQueryService.search(keyword);
+        final List<AladinBookResponse> emptyBooks = bookQueryService.search(keyword);
 
         // then
-        assertThat(books).isEmpty();
+        assertThat(emptyBooks).isEmpty();
     }
 }

@@ -21,7 +21,7 @@ class NoteTest {
                 .title("오브젝트")
                 .author("조영호")
                 .publisher("우아한형제들")
-                .isbn("1234")
+                .isbn("1234567890123")
                 .build();
 
         // when - then
