@@ -24,6 +24,7 @@ public class BookQueryService {
         final AladinItemResponses searchedBooks = aladinRestClient.searchBooksByKeyword(cleanKeyword);
 
         return searchedBooks.item().stream()
+                .filter(book -> book.isbn13() != null && !book.isbn13().isEmpty())
                 .map(AladinBookResponse::new)
                 .toList();
     }
