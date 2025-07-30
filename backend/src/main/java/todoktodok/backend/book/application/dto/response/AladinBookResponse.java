@@ -9,7 +9,7 @@ public record AladinBookResponse(
         String bookImage
 ) {
 
-    public AladinBookResponse(AladinItemResponse aladinItemResponse) {
+    public AladinBookResponse(final AladinItemResponse aladinItemResponse) {
         this(
                 aladinItemResponse.isbn13(),
                 aladinItemResponse.title(),
