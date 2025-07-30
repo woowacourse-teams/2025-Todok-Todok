@@ -1,6 +1,7 @@
 package com.team.todoktodok.presentation.utview.discussion
 
 import com.team.domain.model.Book
+import com.team.todoktodok.presentation.utview.discussion.vm.SearchBookErrorType
 import com.team.todoktodok.presentation.view.serialization.SerializationBook
 
 sealed interface CreateDiscussionRoomUiEvent {
@@ -15,7 +16,7 @@ sealed interface CreateDiscussionRoomUiEvent {
     ) : CreateDiscussionRoomUiEvent
 
     data class ShowDialog(
-        val message: String,
+        val errorType: SearchBookErrorType,
     ) : CreateDiscussionRoomUiEvent
 
     data class CreateDiscussionRoom(

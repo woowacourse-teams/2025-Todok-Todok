@@ -72,4 +72,10 @@
     <string name="ut_discussion_tab_title_all">전체</string>
     <string name="ut_discussion_tab_title_my">내 토론방</string>
     <string name="content_description_ut_discussion_img">토론방 책 이미지</string>
+
+    <string name="error_no_selected_book">선택된 책이 없습니다</string>
+    <string name="error_book_not_found">책을 찾을 수 없습니다</string>
+    <string name="error_no_search_results">검색 결과가 없습니다</string>
+    <string name="error_empty_search_input">검색어를 입력해주세요</string>
+
 </resources>

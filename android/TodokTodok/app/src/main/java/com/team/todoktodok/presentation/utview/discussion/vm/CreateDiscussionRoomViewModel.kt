@@ -43,7 +43,7 @@ class CreateDiscussionRoomViewModel(
     fun searchBooks() {
         val input = uiState.searchInput.orEmpty()
         if (input.isEmpty()) {
-            _uiEvent.value = CreateDiscussionRoomUiEvent.ShowDialog(ERROR_EMPTY_SEARCH_INPUT)
+            _uiEvent.value = CreateDiscussionRoomUiEvent.ShowDialog(SearchBookErrorType.EMPTY_SEARCH_INPUT)
             return
         }
 
@@ -52,7 +52,7 @@ class CreateDiscussionRoomViewModel(
         viewModelScope.launch {
             val books = bookRepository.searchBooks(input)
             if (books.isEmpty()) {
-                _uiEvent.value = CreateDiscussionRoomUiEvent.ShowDialog(ERROR_NO_SEARCH_RESULTS)
+                _uiEvent.value = CreateDiscussionRoomUiEvent.ShowDialog(SearchBookErrorType.NO_SEARCH_RESULTS)
                 return@launch
             }
             val serializationBooks =
@@ -83,15 +83,15 @@ class CreateDiscussionRoomViewModel(
         val discussionContent = uiState.discussionContent
         viewModelScope.launch {
             if (selectedBook == null) {
-                _uiEvent.value = CreateDiscussionRoomUiEvent.ShowDialog(ERROR_NO_SELECTED_BOOK)
+                _uiEvent.value = CreateDiscussionRoomUiEvent.ShowDialog(SearchBookErrorType.NO_SELECTED_BOOK)
                 return@launch
             }
             if (discussionTitle == null) {
-                _uiEvent.value = CreateDiscussionRoomUiEvent.ShowDialog(ERROR_BOOK_NOT_FOUND)
+                _uiEvent.value = CreateDiscussionRoomUiEvent.ShowDialog(SearchBookErrorType.BOOK_NOT_FOUND)
                 return@launch
             }
             if (discussionContent == null) {
-                _uiEvent.value = CreateDiscussionRoomUiEvent.ShowDialog(ERROR_BOOK_NOT_FOUND)
+                _uiEvent.value = CreateDiscussionRoomUiEvent.ShowDialog(SearchBookErrorType.BOOK_NOT_FOUND)
                 return@launch
             }
             val saveBookId: Deferred<Long?> =
@@ -114,12 +114,11 @@ class CreateDiscussionRoomViewModel(
     fun clearUiState() {
         _uiEvent.value = null
     }
+}
 
-    companion object {
-        private const val MESSAGE_BOOK_SAVED: String = "책이 저장되었습니다"
-        private const val ERROR_NO_SELECTED_BOOK: String = "선택된 책이 없습니다"
-        private const val ERROR_BOOK_NOT_FOUND: String = "책을 찾을 수 없습니다"
-        private const val ERROR_NO_SEARCH_RESULTS: String = "검색 결과가 없습니다"
-        private const val ERROR_EMPTY_SEARCH_INPUT: String = "검색어를 입력해주세요"
-    }
+enum class SearchBookErrorType {
+    NO_SELECTED_BOOK,
+    BOOK_NOT_FOUND,
+    NO_SEARCH_RESULTS,
+    EMPTY_SEARCH_INPUT,
 }

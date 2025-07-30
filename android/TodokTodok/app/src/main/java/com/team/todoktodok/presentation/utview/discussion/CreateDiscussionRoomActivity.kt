@@ -17,6 +17,7 @@ import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivityCreateDiscussionRoomBinding
 import com.team.todoktodok.presentation.utview.discussion.vm.CreateDiscussionRoomViewModel
 import com.team.todoktodok.presentation.utview.discussion.vm.CreateDiscussionRoomViewModelFactory
+import com.team.todoktodok.presentation.utview.discussion.vm.SearchBookErrorType
 import com.team.todoktodok.presentation.view.note.NoteFragment.Companion.REQUEST_KEY
 import com.team.todoktodok.presentation.view.note.OwnedBooksBottomSheet
 import com.team.todoktodok.presentation.view.note.OwnedBooksBottomSheet.Companion.RESULT_KEY
@@ -37,7 +38,7 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initView()
+        setUpSystemBar()
         setup()
 
         supportFragmentManager
@@ -83,7 +84,7 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
             .show(supportFragmentManager, OWNED_BOOKS_BOTTOM_SHEET_TAG)
     }
 
-    private fun initView() {
+    private fun setUpSystemBar() {
         enableEdgeToEdge()
         setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
@@ -106,7 +107,14 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
                 }
 
                 is CreateDiscussionRoomUiEvent.ShowDialog -> {
-                    Toast.makeText(this, event.message, Toast.LENGTH_SHORT).show()
+                    val message =
+                        when (event.errorType) {
+                            SearchBookErrorType.NO_SELECTED_BOOK -> R.string.error_no_selected_book
+                            SearchBookErrorType.BOOK_NOT_FOUND -> R.string.error_book_not_found
+                            SearchBookErrorType.NO_SEARCH_RESULTS -> R.string.error_no_search_results
+                            SearchBookErrorType.EMPTY_SEARCH_INPUT -> R.string.error_empty_search_input
+                        }
+                    Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
                     viewModel.clearUiState()
                 }
 
