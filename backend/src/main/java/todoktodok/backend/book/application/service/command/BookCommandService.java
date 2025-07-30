@@ -74,7 +74,10 @@ public class BookCommandService {
         return response.publisher();
     }
 
-    private Book createNewBook(final BookRequest bookRequest, final String isbn) {
+    private Book createNewBook(
+            final BookRequest bookRequest,
+            final String isbn
+    ) {
         return Book.builder()
                 .title(bookRequest.bookTitle())
                 .summary(getSummaryFromAladin(isbn))
