@@ -10,6 +10,7 @@ import org.springframework.web.util.UriBuilder;
 
 @Component
 public class AladinRestClient {
+
     private static final int MAX_RESULT = 100;
     private static final int DOMESTIC_COMPUTER_CATEGORY_ID = 351;
     private static final String SEARCH_TYPE = "ISBN13";
