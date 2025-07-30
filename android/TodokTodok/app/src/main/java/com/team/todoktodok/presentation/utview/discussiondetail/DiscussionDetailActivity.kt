@@ -3,6 +3,7 @@ package com.team.todoktodok.presentation.utview.discussiondetail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.activity.addCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -112,11 +113,26 @@ class DiscussionDetailActivity : AppCompatActivity() {
     private fun handleEvent(discussionDetailUiEvent: DiscussionDetailUiEvent) {
         when (discussionDetailUiEvent) {
             DiscussionDetailUiEvent.NavigateUp -> onBackPressedDispatcher.onBackPressed()
-            is DiscussionDetailUiEvent.ShowCreateComment -> {
-                val bottomSheet = CommentCreateBottomSheet.newInstance(viewModel.discussionId)
-                bottomSheet.show(supportFragmentManager, TAG)
-            }
+            is DiscussionDetailUiEvent.ShowCreateComment -> showCommentBottomSheet()
         }
+    }
+
+    private fun showCommentBottomSheet() {
+        val bottomSheet =
+            CommentCreateBottomSheet.newInstance(discussionId = viewModel.discussionId)
+
+        bottomSheet.setVisibilityListener(
+            object : BottomSheetVisibilityListener {
+                override fun onBottomSheetShown() {
+                    binding.tvInputComment.visibility = View.GONE
+                }
+
+                override fun onBottomSheetDismissed() {
+                    binding.tvInputComment.visibility = View.VISIBLE
+                }
+            },
+        )
+        bottomSheet.show(supportFragmentManager, TAG)
     }
 
     private fun setPopBackStack() {

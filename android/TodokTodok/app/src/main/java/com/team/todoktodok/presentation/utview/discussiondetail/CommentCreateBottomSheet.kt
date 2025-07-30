@@ -2,6 +2,7 @@ package com.team.todoktodok.presentation.utview.discussiondetail
 
 import android.app.Dialog
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -22,10 +23,21 @@ class CommentCreateBottomSheet : BottomSheetDialogFragment(R.layout.fragment_com
         CommentCreateViewModelFactory(repositoryModule.commentRepository)
     }
 
+    private var visibilityListener: BottomSheetVisibilityListener? = null
+
+    fun setVisibilityListener(listener: BottomSheetVisibilityListener) {
+        visibilityListener = listener
+    }
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         super.onCreateDialog(savedInstanceState).apply {
             window?.setDimAmount(0f)
         }
+
+    override fun onStart() {
+        super.onStart()
+        visibilityListener?.onBottomSheetShown()
+    }
 
     override fun onViewCreated(
         view: View,
@@ -37,6 +49,11 @@ class CommentCreateBottomSheet : BottomSheetDialogFragment(R.layout.fragment_com
         setupOnClickAddComment(binding)
         setupOnChangeComment(binding)
         setupObserve(binding)
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        visibilityListener?.onBottomSheetDismissed()
     }
 
     private fun initView(binding: FragmentCommentCreateBottomSheetBinding) {
