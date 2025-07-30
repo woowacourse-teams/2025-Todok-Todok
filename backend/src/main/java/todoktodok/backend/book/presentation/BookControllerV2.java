@@ -4,7 +4,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import java.net.URI;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +32,7 @@ public class BookControllerV2 {
             @Parameter(hidden = true) @LoginMember final Long memberId,
             @RequestBody @Valid final BookRequest bookRequest
     ) {
-        Long bookId = bookCommandService.createBook(memberId, bookRequest);
+        Long bookId = bookCommandService.createOrUpdateBook(memberId, bookRequest);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(bookId);

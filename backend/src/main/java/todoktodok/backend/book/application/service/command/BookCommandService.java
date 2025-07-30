@@ -21,7 +21,7 @@ public class BookCommandService {
     private final MemberRepository memberRepository;
     private final AladinRestClient aladinRestClient;
 
-    public Long createBook(
+    public Long createOrUpdateBook(
             final Long memberId,
             final BookRequest bookRequest
     ) {

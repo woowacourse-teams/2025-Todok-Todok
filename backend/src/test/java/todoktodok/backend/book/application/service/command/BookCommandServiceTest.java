@@ -35,7 +35,7 @@ public class BookCommandServiceTest {
 
     @Test
     @DisplayName("존재하지 않는 회원이 도서를 생성하면 예외가 발생한다")
-    void createBook_memberNotFound_fail() {
+    void createOrUpdateBook_memberNotFound_fail() {
         // given
         databaseInitializer.setDefaultUserInfo();
 
@@ -46,14 +46,14 @@ public class BookCommandServiceTest {
         );
 
         // when - then
-        assertThatThrownBy(() -> bookCommandService.createBook(memberId, bookRequest))
+        assertThatThrownBy(() -> bookCommandService.createOrUpdateBook(memberId, bookRequest))
                 .isInstanceOf(NoSuchElementException.class)
                 .hasMessage("해당 회원을 찾을 수 없습니다");
     }
 
     @Test
     @DisplayName("이미 존재하는 도서를 생성하면 수정된 정보만 업데이트된다")
-    void createBook_duplicateUpdate_success() {
+    void createOrUpdateBook_duplicateUpdate_success() {
         // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
@@ -65,7 +65,7 @@ public class BookCommandServiceTest {
         );
 
         // when
-        final Long bookId = bookCommandService.createBook(memberId, bookRequest);
+        final Long bookId = bookCommandService.createOrUpdateBook(memberId, bookRequest);
 
         // then
         assertThat(bookId).isEqualTo(memberId);
