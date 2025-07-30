@@ -9,6 +9,7 @@ import com.team.domain.repository.BookRepository
 import com.team.domain.repository.DiscussionRepository
 import com.team.todoktodok.presentation.utview.discussion.CreateDiscussionRoomUiEvent
 import com.team.todoktodok.presentation.utview.discussion.CreateDiscussionRoomUiState
+import com.team.todoktodok.presentation.utview.discussion.SearchBookErrorType
 import com.team.todoktodok.presentation.view.serialization.SerializationBook
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async

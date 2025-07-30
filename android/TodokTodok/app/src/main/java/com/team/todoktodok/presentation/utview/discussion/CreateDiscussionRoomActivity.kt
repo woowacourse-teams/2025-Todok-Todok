@@ -17,7 +17,6 @@ import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivityCreateDiscussionRoomBinding
 import com.team.todoktodok.presentation.utview.discussion.vm.CreateDiscussionRoomViewModel
 import com.team.todoktodok.presentation.utview.discussion.vm.CreateDiscussionRoomViewModelFactory
-import com.team.todoktodok.presentation.utview.discussion.vm.SearchBookErrorType
 import com.team.todoktodok.presentation.view.note.NoteFragment.Companion.REQUEST_KEY
 import com.team.todoktodok.presentation.view.note.OwnedBooksBottomSheet
 import com.team.todoktodok.presentation.view.note.OwnedBooksBottomSheet.Companion.RESULT_KEY
