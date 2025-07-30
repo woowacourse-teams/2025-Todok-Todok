@@ -20,16 +20,16 @@ data class DiscussionResponse(
     @SerialName("member")
     val memberResponse: MemberResponse,
     @SerialName("note")
-    val noteResponse: NoteResponse,
+    val noteResponse: NoteResponse?,
 )
 
 fun DiscussionResponse.toDomain() =
     Discussion(
         id = discussionId,
         discussionTitle = discussionTitle,
-        book = noteResponse.book.toDomain(),
+        book = bookResponse.toDomain(),
         writer = memberResponse.toDomain(),
         createAt = createdAt.toLocalDateTime(),
-        snap = noteResponse.snap,
+        snap = noteResponse?.snap,
         discussionOpinion = discussionOpinion,
     )

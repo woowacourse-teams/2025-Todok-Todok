@@ -15,6 +15,7 @@ import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivityDiscussionsBinding
 import com.team.todoktodok.presentation.core.ext.clearHintOnFocus
+import com.team.todoktodok.presentation.utview.discussion.CreateDiscussionRoomActivity
 import com.team.todoktodok.presentation.utview.discussions.all.AllDiscussionFragment
 import com.team.todoktodok.presentation.utview.discussions.my.MyDiscussionFragment
 import com.team.todoktodok.presentation.utview.discussions.vm.DiscussionsViewModel
@@ -88,17 +89,18 @@ class DiscussionsActivity : AppCompatActivity() {
                     override fun onTabReselected(tab: TabLayout.Tab?) {}
                 },
             )
+
+            ivDiscussionNavigation.setOnClickListener {
+                startActivity(CreateDiscussionRoomActivity.Intent(this@DiscussionsActivity))
+            }
         }
     }
 
     private fun triggerSearch() {
-        val keyword =
-            binding.etSearchDiscussion.text
-                ?.toString()
-                ?.trim()
-        if (!keyword.isNullOrEmpty()) {
-            viewModel.loadSearchedDiscussions(keyword)
-        }
+        val editableText = binding.etSearchDiscussion.text
+        val keyword = editableText?.toString()?.trim()
+        val isKeywordNotEmpty = !keyword.isNullOrEmpty()
+        if (isKeywordNotEmpty) viewModel.loadSearchedDiscussions(keyword)
     }
 
     private fun changeTab(tab: TabLayout.Tab) {

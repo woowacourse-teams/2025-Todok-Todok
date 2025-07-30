@@ -7,6 +7,7 @@ import androidx.fragment.app.activityViewModels
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentMyDiscussionBinding
+import com.team.todoktodok.presentation.utview.discussiondetail.DiscussionDetailActivity
 import com.team.todoktodok.presentation.utview.discussions.DiscussionsUiEvent
 import com.team.todoktodok.presentation.utview.discussions.all.adapter.DiscussionAdapter
 import com.team.todoktodok.presentation.utview.discussions.vm.DiscussionsViewModel
@@ -68,6 +69,13 @@ class MyDiscussionFragment : Fragment(R.layout.fragment_my_discussion) {
     private val adapterHandler =
         object : DiscussionAdapter.Handler {
             override fun onItemClick(index: Int) {
+                val discussion = discussionAdapter.currentList[index]
+                startActivity(
+                    DiscussionDetailActivity.Intent(
+                        requireContext(),
+                        discussion.id,
+                    ),
+                )
             }
         }
 }
