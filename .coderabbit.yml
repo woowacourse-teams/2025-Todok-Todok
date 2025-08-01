@@ -22,18 +22,6 @@ reviews:
   auto_assign_reviewers: false        # 자동 리뷰어 할당 비활성화
   poem: true                          # 리뷰 완료 후 시 작성 활성화 (재미 요소)
 
-  # 브랜치별 리뷰 설정
-  branch_rules:
-    - branch: "an"                    # 안드로이드 브랜치
-      enabled: true                   # 리뷰 활성화
-      high_level_summary: true        # 전체 요약 제공
-      request_changes_workflow: true  # 변경 요청 워크플로우 활성화
-
-    - branch: "be"                    # 백엔드 브랜치
-      enabled: true                   # 리뷰 활성화
-      high_level_summary: true        # 전체 요약 제공
-      request_changes_workflow: true  # 변경 요청 워크플로우 활성화
-
   # 특정 경로별 상세 리뷰 지침 설정
   path_instructions:
     - path: android/app/src/main/java/**           # 안드로이드 메인 소스코드 경로
