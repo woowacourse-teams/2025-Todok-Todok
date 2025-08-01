@@ -9,10 +9,9 @@ import com.team.domain.model.member.NickNameException
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentSignupBinding
-import com.team.todoktodok.presentation.view.MainActivity
 import com.team.todoktodok.presentation.view.auth.signup.vm.SignUpViewModel
 import com.team.todoktodok.presentation.view.auth.signup.vm.SignUpViewModelFactory
-import kotlin.getValue
+import com.team.todoktodok.presentation.view.discussions.DiscussionsActivity
 
 class SignUpFragment : Fragment(R.layout.fragment_signup) {
     private val viewModel: SignUpViewModel by viewModels {
@@ -61,7 +60,7 @@ class SignUpFragment : Fragment(R.layout.fragment_signup) {
     }
 
     private fun moveToMain() {
-        val intent = MainActivity.Intent(requireContext())
+        val intent = DiscussionsActivity.Intent(requireContext())
         startActivity(intent)
         requireActivity().finish()
     }

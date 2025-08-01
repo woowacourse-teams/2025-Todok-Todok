@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:width="@dimen/library_navigate_btn_size"
-        android:height="@dimen/library_navigate_btn_size"
+        android:width="48dp"
+        android:height="48dp"
         android:drawable="@drawable/btn_green_1a_oval" />
     <item
         android:width="@dimen/space_16"

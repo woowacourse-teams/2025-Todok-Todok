@@ -1,7 +1,13 @@
 package com.team.todoktodok.presentation.view.auth.login
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.os.Bundle
 import android.view.View
+import android.view.animation.AccelerateInterpolator
+import android.view.animation.DecelerateInterpolator
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
@@ -10,10 +16,10 @@ import com.google.android.material.snackbar.Snackbar
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentLoginBinding
-import com.team.todoktodok.presentation.view.MainActivity
 import com.team.todoktodok.presentation.view.auth.signup.SignUpFragment
 import com.team.todoktodok.presentation.view.auth.vm.AuthViewModel
 import com.team.todoktodok.presentation.view.auth.vm.AuthViewModelFactory
+import com.team.todoktodok.presentation.view.discussions.DiscussionsActivity
 import kotlinx.coroutines.launch
 
 class LoginFragment : Fragment(R.layout.fragment_login) {
@@ -30,6 +36,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentLoginBinding.bind(view)
         googleLoginManager = GoogleLoginManager(requireContext())
+        showAnimation(binding)
         initView(binding)
         setUpUiEvent()
     }
@@ -49,6 +56,34 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         }
     }
 
+    private fun showAnimation(binding: FragmentLoginBinding) {
+        val upAnimator =
+            ObjectAnimator.ofFloat(binding.ivLogo, "translationY", 0f, -100f).apply {
+                duration = 600
+                interpolator = AccelerateInterpolator()
+            }
+
+        val downAnimator =
+            ObjectAnimator.ofFloat(binding.ivLogo, "translationY", -100f, 0f).apply {
+                duration = 1000
+                interpolator = DecelerateInterpolator()
+            }
+
+        val animatorSet =
+            AnimatorSet().apply {
+                playSequentially(upAnimator, downAnimator)
+                addListener(
+                    object : AnimatorListenerAdapter() {
+                        override fun onAnimationEnd(animation: Animator) {
+                            start()
+                        }
+                    },
+                )
+            }
+
+        animatorSet.start()
+    }
+
     private fun setUpUiEvent() {
         viewModel.uiEvent.observe(viewLifecycleOwner) {
             when (it) {
@@ -59,7 +94,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
     }
 
     private fun moveToMain() {
-        val intent = MainActivity.Intent(requireContext())
+        val intent = DiscussionsActivity.Intent(requireContext())
         startActivity(intent)
         requireActivity().finish()
     }

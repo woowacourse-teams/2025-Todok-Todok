@@ -8,4 +8,6 @@ interface BookRemoteDataSource {
     suspend fun fetchBooks(searchInput: String): List<Book>
 
     suspend fun saveBook(bookId: Long)
+
+    suspend fun saveSelectedBook(book: Book): Long
 }

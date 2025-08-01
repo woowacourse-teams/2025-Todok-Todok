@@ -15,20 +15,6 @@
         <item name="android:letterSpacing">0</item>
     </style>
 
-    <style name="BottomNavigationText" parent="BaseTextStyle">
-        <item name="android:textSize">@dimen/font_size_x_small</item>
-        <item name="android:fontFamily">@font/pretendard_regular</item>
-        <item name="android:lineSpacingMultiplier">1.0</item>
-        <item name="android:textColor">@color/gray_76</item>
-        <item name="android:letterSpacing">0</item>
-    </style>
-
-    <!--  서재 페이지에서 사용하는 textStyle  -->
-    <style name="LibraryBookTitleTextStyle" parent="BaseTextStyle">
-        <item name="fontFamily">@font/pretendard_bold</item>
-        <item name="android:textSize">@dimen/font_size_large</item>
-    </style>
-
     <style name="BasicButtonStyle" parent="@style/Widget.Material3.Button">
         <item name="android:background">@drawable/bg_green_1a_radius_8dp</item>
         <item name="backgroundTint">@color/green_1A</item>
@@ -40,80 +26,7 @@
 
     <style name="HintTextStyle" parent="TextAppearance.MaterialComponents.Body1">
         <item name="android:textSize">@dimen/font_size_small</item>
+        <item name="fontFamily">@font/pretendard_regular</item>
         <item name="android:textColor">@color/gray_76</item>
-    </style>
-
-    <style name="LibraryBookAuthorTextStyle" parent="BaseTextStyle">
-        <item name="fontFamily">@font/pretendard_regular</item>
-        <item name="android:textSize">@dimen/font_size_normal</item>
-    </style>
-
-    <!--  토론방 목록 페이지에서 사용하는 textStyle  -->
-    <style name="DiscussionBookHeader" parent="HeaderTitleText">
-        <item name="android:gravity">center</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="DiscussionBookTitle" parent="BaseTextStyle">
-        <item name="android:textColor">@color/gray_66</item>
-        <item name="fontFamily">@font/pretendard_medium</item>
-    </style>
-
-    <style name="DiscussionTitle" parent="BaseTextStyle">
-        <item name="android:textColor">@color/black_18</item>
-        <item name="android:textSize">@dimen/font_size_large</item>
-        <item name="android:fontFamily">@font/pretendard_semi_bold</item>
-    </style>
-
-    <!--  토론방 생성 페이지에서 사용하는 textStyle  -->
-
-    <style name="CreateDiscussionNoteBookTitle" parent="BaseTextStyle">
-        <item name="android:textColor">@color/black_18</item>
-        <item name="android:textSize">@dimen/font_size_large</item>
-        <item name="android:maxLines">1</item>
-        <item name="android:ellipsize">end</item>
-        <item name="android:fontFamily">@font/pretendard_semi_bold</item>
-    </style>
-
-    <style name="CreateDiscussionNoteOpinionSummary" parent="BaseTextStyle">
-        <item name="android:textColor">@color/gray_66</item>
-        <item name="fontFamily">@font/pretendard_regular</item>
-        <item name="android:maxLines">1</item>
-        <item name="android:ellipsize">end</item>
-    </style>
-
-    <!--  토론방 목록 상세 페이지에서 사용하는 textStyle  -->
-    <style name="DiscussionDetailTitle" parent="BaseTextStyle">
-        <item name="android:textColor">@color/black_18</item>
-        <item name="android:textSize">@dimen/font_size_2x_large</item>
-        <item name="android:fontFamily">@font/pretendard_bold</item>
-    </style>
-
-    <style name="DiscussionDetailSubContent" parent="BaseTextStyle">
-        <item name="android:textColor">@color/gray_76</item>
-        <item name="android:fontFamily">@font/pretendard_regular</item>
-    </style>
-
-    <style name="DiscussionDetailContent" parent="BaseTextStyle">
-        <item name="android:fontFamily">@font/pretendard_regular</item>
-    </style>
-
-    <style name="DiscussionDetailSubTitle" parent="BaseTextStyle">
-        <item name="android:gravity">center</item>
-        <item name="android:fontFamily">@font/pretendard_semi_bold</item>
-    </style>
-
-    <style name="DiscussionOpinionSummary" parent="BaseTextStyle">
-        <item name="android:textColor">@color/gray_66</item>
-        <item name="fontFamily">@font/pretendard_regular</item>
-        <item name="android:maxLines">1</item>
-        <item name="android:ellipsize">end</item>
-    </style>
-
-    <!--  도서 검색 페이지에서 사용하는 textStyle  -->
-    <style name="BookSearchBarTextStyle" parent="BaseTextStyle">
-        <item name="fontFamily">@font/pretendard_regular</item>
-        <item name="android:textSize">@dimen/font_size_small</item>
-        <item name="color">@color/gray_76</item>
     </style>
 </resources>

@@ -9,6 +9,6 @@ data class Discussion(
     val book: Book,
     val writer: User,
     val createAt: LocalDateTime,
-    val snap: String,
+    val snap: String?,
     val discussionOpinion: String,
 )

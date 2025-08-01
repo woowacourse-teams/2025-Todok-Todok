@@ -1,7 +1,9 @@
 package com.team.todoktodok.fake.datasource
 
+import com.team.domain.model.DiscussionFilter
 import com.team.todoktodok.data.datasource.discussion.DiscussionRemoteDataSource
 import com.team.todoktodok.data.network.request.DiscussionRequest
+import com.team.todoktodok.data.network.request.DiscussionRoomRequest
 import com.team.todoktodok.data.network.response.discussion.BookResponse
 import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
 import com.team.todoktodok.data.network.response.discussion.MemberResponse
@@ -92,9 +94,27 @@ class FakeDiscussionRemoteDataSource : DiscussionRemoteDataSource {
             discussionResponses.find { id == it.discussionId } ?: throw IllegalArgumentException()
         }
 
-    override suspend fun getDiscussions(): List<DiscussionResponse> = discussionResponses
+    override suspend fun getDiscussions(
+        type: DiscussionFilter,
+        keyword: String?,
+    ): List<DiscussionResponse> =
+        discussionResponses.filter { discussion ->
+            val matchesKeyword =
+                keyword.isNullOrBlank() ||
+                    discussion.discussionTitle.contains(keyword, ignoreCase = true)
 
-    override suspend fun saveDiscussion(discussionRequest: DiscussionRequest): Long {
+            val matchesType =
+                when (type) {
+                    DiscussionFilter.ALL -> true
+                    DiscussionFilter.MINE -> discussion.memberResponse.memberId == 1L
+                }
+
+            matchesKeyword && matchesType
+        }
+
+    override suspend fun saveDiscussion(discussionRequest: DiscussionRequest): Long = 0
+
+    override suspend fun saveDiscussionRoom(discussionRequest: DiscussionRoomRequest) {
         TODO("Not yet implemented")
     }
 }

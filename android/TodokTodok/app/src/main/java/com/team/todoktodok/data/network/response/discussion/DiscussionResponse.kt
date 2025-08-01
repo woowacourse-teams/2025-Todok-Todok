@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
 data class DiscussionResponse(
     @SerialName("createdAt")
     val createdAt: String,
-    @SerialName("bookResponse")
+    @SerialName("book")
     val bookResponse: BookResponse,
     @SerialName("discussionId")
     val discussionId: Long,
@@ -17,19 +17,19 @@ data class DiscussionResponse(
     val discussionOpinion: String,
     @SerialName("discussionTitle")
     val discussionTitle: String,
-    @SerialName("memberResponse")
+    @SerialName("member")
     val memberResponse: MemberResponse,
-    @SerialName("noteResponse")
-    val noteResponse: NoteResponse,
+    @SerialName("note")
+    val noteResponse: NoteResponse?,
 )
 
 fun DiscussionResponse.toDomain() =
     Discussion(
         id = discussionId,
         discussionTitle = discussionTitle,
-        book = noteResponse.book.toDomain(),
+        book = bookResponse.toDomain(),
         writer = memberResponse.toDomain(),
         createAt = createdAt.toLocalDateTime(),
-        snap = noteResponse.snap,
+        snap = noteResponse?.snap,
         discussionOpinion = discussionOpinion,
     )

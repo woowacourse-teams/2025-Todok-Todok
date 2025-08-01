@@ -1,6 +1,7 @@
 package com.team.todoktodok.fake
 
 import com.team.domain.model.Discussion
+import com.team.domain.model.DiscussionFilter
 import com.team.domain.repository.DiscussionRepository
 import com.team.todoktodok.fixture.DISCUSSIONS
 
@@ -12,13 +13,24 @@ class FakeDiscussionRepository : DiscussionRepository {
             discussions.find { id == it.id } ?: throw IllegalArgumentException()
         }
 
-    override suspend fun getDiscussions(): List<Discussion> = discussions
+    override suspend fun getDiscussions(
+        type: DiscussionFilter,
+        keyword: String?,
+    ): List<Discussion> = discussions
 
     override suspend fun saveDiscussion(
         noteId: Long,
         discussionOpinion: String,
         discussionTitle: String,
     ): Long {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun saveDiscussionRoom(
+        noteId: Long,
+        discussionTitle: String,
+        discussionOpinion: String,
+    ) {
         TODO("Not yet implemented")
     }
 }
