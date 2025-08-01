@@ -3,6 +3,7 @@ package com.team.todoktodok.presentation.view.discussions
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -44,12 +45,22 @@ class DiscussionsActivity : AppCompatActivity() {
         setUpSystemBars()
         initFragments()
         initView(binding)
+
+        viewModel.uiState.observe(this) { value ->
+            val allDiscussionTab = binding.tabLayout.getTabAt(ALL_DISCUSSION_TAB_POSITION)
+            allDiscussionTab?.text =
+                getString(R.string.discussion_tab_title_all).format(value.allDiscussionsSize)
+
+            val myDiscussionTab = binding.tabLayout.getTabAt(MY_DISCUSSION_TAB_POSITION)
+            myDiscussionTab?.text =
+                getString(R.string.discussion_tab_title_my).format(value.myDiscussionsSize)
+        }
     }
 
     private fun initFragments() {
         supportFragmentManager.commit {
-            add(R.id.fragmentContainerView, allDiscussionFragment, "ALL")
-            add(R.id.fragmentContainerView, myDiscussionFragment, "MY")
+            add(R.id.fragmentContainerView, allDiscussionFragment, ALL_DISCUSSION_FRAGMENT_TAG)
+            add(R.id.fragmentContainerView, myDiscussionFragment, MY_DISCUSSION_FRAGMENT_TAG)
             hide(myDiscussionFragment)
         }
     }
@@ -67,10 +78,6 @@ class DiscussionsActivity : AppCompatActivity() {
         with(binding) {
             val hint = getString(R.string.discussion_search_bar_hint)
             etSearchDiscussion.clearHintOnFocus(binding.etSearchDiscussionLayout, hint)
-
-            btnSearch.setOnClickListener {
-                etSearchDiscussion.text?.let { viewModel.loadSearchedDiscussions(it.toString()) }
-            }
 
             etSearchDiscussion.setOnEditorActionListener { v, actionId, event ->
                 triggerSearch()
@@ -144,6 +151,12 @@ class DiscussionsActivity : AppCompatActivity() {
     }
 
     companion object {
+        private const val ALL_DISCUSSION_TAB_POSITION = 0
+        private const val ALL_DISCUSSION_FRAGMENT_TAG = "ALL"
+
+        private const val MY_DISCUSSION_TAB_POSITION = 1
+        private const val MY_DISCUSSION_FRAGMENT_TAG = "MY"
+
         fun Intent(context: Context) = Intent(context, DiscussionsActivity::class.java)
     }
 }

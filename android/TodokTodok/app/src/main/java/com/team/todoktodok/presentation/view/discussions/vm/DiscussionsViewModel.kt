@@ -20,66 +20,62 @@ class DiscussionsViewModel(
     private val _uiEvent = MutableLiveData<DiscussionsUiEvent>()
     val uiEvent: LiveData<DiscussionsUiEvent> get() = _uiEvent
 
-    init {
-        loadDiscussionsForCurrentTab(null)
-    }
-
-    private fun loadDiscussionsForCurrentTab(keywordToSearch: String?) {
-        val currentTab = _uiState.value?.filter ?: DiscussionFilter.ALL
-        val keyword = keywordToSearch ?: _uiState.value?.searchKeyword
-
-        viewModelScope.launch {
-            val discussions = discussionRepository.getDiscussions(currentTab, keyword)
-
-            if (discussions.isEmpty()) {
-                handleDiscussionNotExistUiEvent(currentTab)
-                return@launch
-            }
-
-            handleDiscussionExistUiEvent(currentTab)
-            updateUiState(currentTab, discussions)
-        }
-    }
-
-    private fun handleDiscussionNotExistUiEvent(filter: DiscussionFilter) {
-        val event =
-            when (filter) {
-                DiscussionFilter.ALL -> DiscussionsUiEvent.ShowNotHasAllDiscussions
-                DiscussionFilter.MINE -> DiscussionsUiEvent.ShowNotHasMyDiscussions
-            }
-        _uiEvent.value = event
-    }
-
-    private fun handleDiscussionExistUiEvent(filter: DiscussionFilter) {
-        val event =
-            when (filter) {
-                DiscussionFilter.ALL -> DiscussionsUiEvent.ShowHasAllDiscussions
-                DiscussionFilter.MINE -> DiscussionsUiEvent.ShowHasMyDiscussions
-            }
-        _uiEvent.value = event
-    }
-
-    private fun updateUiState(
-        filter: DiscussionFilter,
-        discussions: List<Discussion>,
-    ) {
-        val currentState = _uiState.value ?: DiscussionsUiState()
-
-        val newState =
-            when (filter) {
-                DiscussionFilter.ALL -> currentState.copy(allDiscussions = discussions)
-                DiscussionFilter.MINE -> currentState.copy(myDiscussions = discussions)
-            }
-        _uiState.value = newState
+    fun updateTab(newTab: DiscussionFilter) {
+        _uiState.value = _uiState.value?.copy(filter = newTab)
+        loadDiscussions()
     }
 
     fun loadSearchedDiscussions(keyword: String) {
         _uiState.value = _uiState.value?.copy(searchKeyword = keyword)
-        loadDiscussionsForCurrentTab(keyword)
+        loadDiscussions()
     }
 
-    fun updateTab(newTab: DiscussionFilter) {
-        _uiState.value = _uiState.value?.copy(filter = newTab)
-        loadDiscussionsForCurrentTab(null)
+    fun loadDiscussions() {
+        val currentState = _uiState.value ?: return
+        val currentFilter = currentState.filter
+        val keyword = currentState.searchKeyword
+
+        DiscussionFilter.entries.forEach { filter ->
+            /**
+             * 토론 개수를 알기 위해 화면에 보이지 않는 탭의 정보까지 호출한다.
+             * API 트래픽 최적화를 위해서 필터를 받아 개수를 반환하는 API를 구현하는 것은 어떨까 ?
+             *
+             * */
+            viewModelScope.launch {
+                val discussions = discussionRepository.getDiscussions(filter, keyword)
+                updateDiscussions(filter, discussions)
+
+                if (filter == currentFilter) {
+                    onUiEvent(discussions, filter)
+                }
+            }
+        }
+    }
+
+    private fun updateDiscussions(
+        filter: DiscussionFilter,
+        discussions: List<Discussion>,
+    ) {
+        _uiState.value =
+            _uiState.value?.let {
+                when (filter) {
+                    DiscussionFilter.ALL -> it.copy(allDiscussions = discussions)
+                    DiscussionFilter.MINE -> it.copy(myDiscussions = discussions)
+                }
+            }
+    }
+
+    private fun onUiEvent(
+        discussions: List<Discussion>,
+        filter: DiscussionFilter,
+    ) {
+        _uiEvent.value =
+            when {
+                discussions.isEmpty() && filter == DiscussionFilter.ALL -> DiscussionsUiEvent.ShowNotHasAllDiscussions
+                discussions.isEmpty() && filter == DiscussionFilter.MINE -> DiscussionsUiEvent.ShowNotHasMyDiscussions
+                filter == DiscussionFilter.ALL -> DiscussionsUiEvent.ShowHasAllDiscussions
+                filter == DiscussionFilter.MINE -> DiscussionsUiEvent.ShowHasMyDiscussions
+                else -> throw IllegalArgumentException()
+            }
     }
 }
