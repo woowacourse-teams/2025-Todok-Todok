@@ -30,6 +30,8 @@ class DiscussionsActivity : AppCompatActivity() {
         DiscussionsViewModelFactory(repositoryModule.discussionRepository)
     }
 
+    private lateinit var manager: InputMethodManager
+
     private val allDiscussionFragment = AllDiscussionFragment()
     private val myDiscussionFragment = MyDiscussionFragment()
 
@@ -37,6 +39,8 @@ class DiscussionsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityDiscussionsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        manager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+
         setUpSystemBars()
         initFragments()
         initView(binding)
@@ -74,8 +78,9 @@ class DiscussionsActivity : AppCompatActivity() {
             }
 
             etSearchDiscussion.doAfterTextChanged {
-                if (it?.isEmpty() == true) {
+                if (it.isNullOrEmpty()) {
                     viewModel.loadSearchedDiscussions(it.toString())
+                    hideSoftKeyboard()
                 }
             }
 
@@ -100,7 +105,10 @@ class DiscussionsActivity : AppCompatActivity() {
         val editableText = binding.etSearchDiscussion.text
         val keyword = editableText?.toString()?.trim()
         val isKeywordNotEmpty = !keyword.isNullOrEmpty()
-        if (isKeywordNotEmpty) viewModel.loadSearchedDiscussions(keyword)
+        if (isKeywordNotEmpty) {
+            viewModel.loadSearchedDiscussions(keyword)
+            hideSoftKeyboard()
+        }
     }
 
     private fun changeTab(tab: TabLayout.Tab) {
@@ -121,6 +129,18 @@ class DiscussionsActivity : AppCompatActivity() {
             show(showFragment)
             hide(hideFragment)
         }
+    }
+
+    private fun hideSoftKeyboard() {
+        manager.hideSoftInputFromWindow(
+            currentFocus?.windowToken,
+            InputMethodManager.HIDE_NOT_ALWAYS,
+        )
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadDiscussions()
     }
 
     companion object {
