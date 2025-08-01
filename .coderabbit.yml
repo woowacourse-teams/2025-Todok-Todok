@@ -146,13 +146,22 @@ reviews:
         - 8. 리뷰가 너무 많아서 피로감을 줄 수 있으니, 꼭 필요한 부분에 집중해주세요.
         - 9. 보안 상 치명적이거나, 추후 문제가 발생할 가능성이 높은 부분에 리뷰를 집중해주세요.
 
-# 자동 리뷰 기능 설정
-abort_on_close: true               # PR이 닫히면 리뷰 중지
-disable_cache: false               # 빠르고 효율적인 리뷰를 위해 캐시 기능 활성화
-auto_review:
-  enabled: true                    # 자동 리뷰 활성화
-  auto_incremental_review: true    # 증분 리뷰 활성화 (새로 바뀐 부분만 리뷰 활성화)
-  base_branches: ["an", "be"]
+  # 자동 리뷰 기능 설정
+  abort_on_close: true               # PR이 닫히면 리뷰 중지
+  disable_cache: false               # 빠르고 효율적인 리뷰를 위해 캐시 기능 활성화
+  auto_review:
+    enabled: true                    # 자동 리뷰 활성화
+    auto_incremental_review: true    # 증분 리뷰 활성화 (새로 바뀐 부분만 리뷰 활성화)
+    base_branches: ["an", "be"]
+
+  # 코드 분석 도구(Tools)
+  tools:
+    hadolint: # Dockerfile 분석
+      enabled: true
+    gitleaks: # 민감정보 포함여부 확인
+      enabled: true
+    sqlfluff: # SQL 분석
+      enabled: true
 
 # 채팅 및 상호작용 설정
 chat:
@@ -276,12 +285,3 @@ code_generation:
         instructions: |
           - Controller는 인수테스트(API 엔드포인트 통합 테스트) 나머지 영역은 함수/클래스 단위의 단위 테스트
           - given-when-then 패턴을 적용
-
-# 코드 분석 도구(Tools)
-tools:
-  hadolint:                           # Dockerfile 분석
-    enabled: true
-  gitleaks:                           # 민감정보 포함여부 확인
-    enabled: true
-  sqlfluff:                           # SQL 분석
-    enabled: true
