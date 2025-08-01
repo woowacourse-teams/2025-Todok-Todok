@@ -4,59 +4,71 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="@dimen/space_24"
-    android:layout_marginVertical="@dimen/space_12">
+    android:paddingHorizontal="@dimen/space_24"
+    android:paddingVertical="@dimen/space_12">
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cv_book_cover"
-        android:layout_width="@dimen/item_discussion_book_cover_size"
-        android:layout_height="@dimen/item_discussion_book_cover_size"
-        app:cardCornerRadius="@dimen/space_8"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:id="@+id/iv_book_container"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        >
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/iv_book_image"
+            android:id="@+id/iv_book"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:contentDescription="@string/content_description_book_image" />
+            android:contentDescription="@string/content_description_ut_discussion_img"
+            android:scaleType="centerCrop" />
     </androidx.cardview.widget.CardView>
 
     <TextView
         android:id="@+id/tv_book_title"
-        style="@style/DiscussionBookTitle"
-        android:layout_width="@dimen/space_0"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/space_16"
-        android:layout_marginTop="@dimen/space_12"
+        android:ellipsize="end"
+        android:fontFamily="@font/pretendard_medium"
+        android:maxLines="1"
+        android:textColor="@color/gray_66"
+        android:textSize="@dimen/font_size_normal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/cv_book_cover"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="오브젝트" />
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toEndOf="@id/iv_book_container"
+        app:layout_constraintTop_toTopOf="@id/iv_book_container"
+        tools:text="김수한무 거북이와 두루미 삼천갑자 동방삭 치치카포 사리사리센타 워리워리 세드리벤 슬뫼 이무드리 샘이나리 시프네르 보르무스 베르무스 삼사무기 가필리아 구름에 달 가듯이" />
 
     <TextView
-        android:id="@+id/tv_title"
-        style="@style/DiscussionTitle"
-        android:layout_width="@dimen/space_0"
+        android:id="@+id/tv_discussion_title"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@id/tv_opinion_summary"
+        android:layout_marginStart="@dimen/space_16"
+        android:ellipsize="end"
+        android:fontFamily="@font/pretendard_semi_bold"
+        android:maxLines="1"
+        android:textColor="@color/black_18"
+        android:textSize="@dimen/font_size_large"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@id/tv_book_title"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toEndOf="@id/iv_book_container"
         app:layout_constraintTop_toBottomOf="@id/tv_book_title"
-        tools:text="캡슐화 왜함?" />
+        tools:text="김수한무 거북이와 두루미 삼천갑자 동방삭 치치카포 사리사리센타 워리워리 세드리벤 슬뫼 이무드리 샘이나리 시프네르 보르무스 베르무스 삼사무기 가필리아 구름에 달 가듯이" />
 
     <TextView
-        android:id="@+id/tv_opinion_summary"
-        style="@style/DiscussionOpinionSummary"
-        android:layout_width="@dimen/space_0"
+        android:id="@+id/tv_discussion_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/space_12"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="@dimen/space_16"
+        android:ellipsize="end"
+        android:fontFamily="@font/pretendard_regular"
+        android:maxLines="1"
+        android:textColor="@color/gray_66"
+        android:textSize="@dimen/font_size_normal"
+        app:layout_constraintBottom_toBottomOf="@id/iv_book_container"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@id/tv_book_title"
-        app:layout_constraintTop_toBottomOf="@id/tv_title"
-        tools:text="캡슐화하는 사람들 진짜진짜진짜진짜 캡슐화하는 사람들 진짜진짜진짜진짜" />
-
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toEndOf="@id/iv_book_container"
+        app:layout_constraintTop_toBottomOf="@id/tv_discussion_title"
+        tools:text="김수한무 거북이와 두루미 삼천갑자 동방삭 치치카포 사리사리센타 워리워리 세드리벤 슬뫼 이무드리 샘이나리 시프네르 보르무스 베르무스 삼사무기 가필리아 구름에 달 가듯이" />
 </androidx.constraintlayout.widget.ConstraintLayout>

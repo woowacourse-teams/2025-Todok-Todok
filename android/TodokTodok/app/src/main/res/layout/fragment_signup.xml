@@ -8,7 +8,7 @@
 
     <TextView
         android:id="@+id/tv_header"
-        style="@style/DiscussionBookHeader"
+        style="@style/HeaderTitleText"
         android:layout_width="match_parent"
         android:layout_height="@dimen/toolbar_height"
         android:text="@string/app_name_kr"

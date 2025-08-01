@@ -15,12 +15,8 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".presentation.utview.discussion.CreateDiscussionRoomActivity"
+            android:name=".presentation.view.discussions.DiscussionsActivity"
             android:exported="false" />
-        <activity
-            android:name=".presentation.utview.discussions.DiscussionsActivity"
-            android:exported="false">
-        </activity>
         <activity
             android:name=".presentation.view.auth.AuthActivity"
             android:exported="true">
@@ -31,21 +27,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".presentation.utview.discussiondetail.DiscussionDetailActivity"
+            android:name=".presentation.view.discussiondetail.DiscussionDetailActivity"
             android:exported="false" />
-        <activity
-            android:name=".presentation.view.discussion.create.DiscussionCreateActivity"
-            android:exported="false" />
-        <activity
-            android:name=".presentation.view.discussion.detail.DiscussionDetailActivity"
-            android:exported="false" />
-        <activity
-            android:name=".presentation.view.searchbooks.SearchBooksActivity"
-            android:exported="false" />
-        <activity
-            android:name=".presentation.view.MainActivity"
-            android:exported="true"
-            android:windowSoftInputMode="adjustPan" />
     </application>
-
 </manifest>

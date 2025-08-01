@@ -5,9 +5,10 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:paddingLeft="@dimen/space_24"
     android:paddingRight="@dimen/space_24"
-    tools:context=".presentation.view.discussion.detail.DiscussionDetailActivity">
+    tools:context=".presentation.view.discussiondetail.DiscussionDetailActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/abl_discussion_detail"
@@ -37,9 +38,9 @@
         app:layout_constraintStart_toStartOf="@id/abl_discussion_detail"
         app:layout_constraintTop_toTopOf="@id/abl_discussion_detail" />
 
+
     <TextView
         android:id="@+id/tv_book_title"
-        style="@style/DiscussionDetailSubContent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/space_8"
@@ -49,61 +50,46 @@
 
     <TextView
         android:id="@+id/tv_discussion_title"
-        style="@style/DiscussionDetailTitle"
         android:layout_width="@dimen/space_0"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toStartOf="@id/tv_discussion_report"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_book_title"
         tools:text="캡슐화 왜함?" />
 
     <TextView
-        android:id="@+id/tv_discussion_report"
-        style="@style/DiscussionDetailSubContent"
+        android:id="@+id/tv_user_nickname"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/item_discussion_detail_meta_line_height"
         android:gravity="center"
-        android:text="@string/all_report"
-        app:layout_constraintBottom_toBottomOf="@id/tv_discussion_title"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/tv_discussion_title"
-        app:layout_constraintTop_toBottomOf="@id/tv_book_title" />
-
-    <TextView
-        android:id="@+id/tv_user_content"
-        style="@style/DiscussionDetailSubContent"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/item_discussion_detail_meta_line_height"
-        android:gravity="center"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/tv_divider_dot"
         app:layout_constraintTop_toBottomOf="@id/tv_discussion_title"
-        tools:text="코드마스터 · 2024년 7월 20일" />
+        tools:text="코드마스터" />
 
     <TextView
-        android:id="@+id/tv_discussion_note"
-        style="@style/DiscussionDetailContent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/tv_user_content"
-        tools:text="캡슐화는 객체의 내부 상태와 데이터를 외부에서 직접 접근하지 못하도록 보호하는 것을 의미다." />
-
-    <TextView
-        android:id="@+id/tv_discussion_opinion_title"
-        style="@style/DiscussionDetailSubTitle"
+        android:id="@+id/tv_divider_dot"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/item_discussion_detail_meta_line_height"
-        android:layout_marginStart="@dimen/space_8"
-        android:layout_marginTop="@dimen/space_8"
-        android:text="@string/all_opinion"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_discussion_note" />
+        android:gravity="center"
+        android:text="@string/all_divider_dot"
+        app:layout_constraintBottom_toBottomOf="@id/tv_user_nickname"
+        app:layout_constraintEnd_toStartOf="@id/tv_discussion_create_at"
+        tools:text=" · " />
+
+    <TextView
+        android:id="@+id/tv_discussion_create_at"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/item_discussion_detail_meta_line_height"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="@id/tv_user_nickname"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="2024년 7월 20일" />
 
     <TextView
         android:id="@+id/tv_discussion_opinion"
-        style="@style/DiscussionDetailContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/tv_discussion_opinion_title"
+        app:layout_constraintTop_toBottomOf="@id/tv_user_nickname"
         tools:text="캡슐화를 하면 데이터를 보호할 수 있다는 것에는 동의하는데, 실제로 완벽히 캡슐화가 되는 지는 의문입니다.getter/setter 메서드를 통해 객체 내부의 데이터가 외부로 드러나는 것은 캡슐화가 잘 된 것이 맞을까요?" />
 
     <View
@@ -115,56 +101,26 @@
         android:background="@drawable/div_comment"
         app:layout_constraintTop_toBottomOf="@id/tv_discussion_opinion" />
 
-    <TextView
-        android:id="@+id/tv_comment_title"
-        style="@style/DiscussionDetailSubTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/item_discussion_detail_meta_line_height"
-        android:layout_marginTop="6dp"
-        android:text="@string/all_comment"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/view_comments_divider" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_comments"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toTopOf="@id/til_text_comment_content"
-        app:layout_constraintTop_toBottomOf="@id/tv_comment_title"
-        tools:listitem="@layout/item_comment" />
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_text_comment_content"
-        android:layout_width="@dimen/space_0"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/space_24"
-        android:background="@drawable/bg_green_f0_radius_8dp"
-        android:minHeight="48dp"
-        android:paddingVertical="8dp"
-        app:boxBackgroundMode="none"
-        app:cursorColor="@color/black_18"
-        app:hintEnabled="false"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/iv_add_comment"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintTop_toBottomOf="@id/view_comments_divider" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_text_comment_content"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="start|center"
-            android:hint="@string/comment_input_hint"
-            android:inputType="textMultiLine"
-            android:textColor="@color/gray_76" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <ImageView
-        android:id="@+id/iv_add_comment"
-        android:layout_width="@dimen/space_28"
+    <TextView
+        android:id="@+id/tv_input_comment"
+        android:layout_width="@dimen/space_0"
         android:layout_height="@dimen/space_28"
-        android:background="@drawable/btn_comment_background"
-        android:contentDescription="@string/content_description_add_comment"
-        app:layout_constraintBottom_toBottomOf="@id/til_text_comment_content"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:background="@drawable/bg_green_f0_radius_8dp"
+        android:gravity="center_vertical"
+        android:paddingStart="10dp"
+        android:paddingTop="@dimen/space_4"
+        android:paddingBottom="2dp"
+        android:text="@string/comment_input_hint"
+        android:textColor="@color/black_18"
+        android:textSize="@dimen/font_size_large"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

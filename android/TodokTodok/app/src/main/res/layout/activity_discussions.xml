@@ -15,8 +15,7 @@
         android:layout_marginStart="@dimen/space_8"
         android:layout_marginTop="@dimen/space_24"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/et_search_discussion_layout"
@@ -28,7 +27,7 @@
         app:endIconMode="clear_text"
         app:cursorColor="@color/black_18"
         app:hintTextAppearance="@style/HintTextStyle"
-        android:hint="@string/ut_discussion_search_bar_hint"
+        android:hint="@string/discussion_search_bar_hint"
         app:layout_constraintTop_toTopOf="@id/iv_header_logo"
         app:layout_constraintBottom_toBottomOf="@id/iv_header_logo"
         app:layout_constraintStart_toEndOf="@id/iv_header_logo"
@@ -51,12 +50,10 @@
         android:id="@+id/btn_search"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:src="@drawable/btn_search"
         android:layout_marginEnd="@dimen/space_8"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/et_search_discussion_layout"
-        app:layout_constraintBottom_toBottomOf="@id/et_search_discussion_layout"
-        />
+        app:layout_constraintBottom_toBottomOf="@id/et_search_discussion_layout" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tab_layout"
@@ -79,12 +76,12 @@
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/ut_discussion_tab_title_all" />
+            android:text="@string/discussion_tab_title_all" />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/ut_discussion_tab_title_my" />
+            android:text="@string/discussion_tab_title_my" />
     </com.google.android.material.tabs.TabLayout>
 
     <androidx.fragment.app.FragmentContainerView

@@ -13,15 +13,8 @@
     <string name="all_comment">댓글</string>
     <string name="all_unknown_exception">알 수 없는 오류가 발생했어요</string>
     <string name="date_format_pattern">yyyy년 M월 d일</string>
+    <string name="all_divider_dot">" · "</string>
 
-    <!-- 기록 추가 페이지  -->
-    <string name="note_owned_search_hint">내 서재에 있는 책 찾기</string>
-    <string name="note_book_content">책의 내용</string>
-    <string name="note_create">생성하기</string>
-    <string name="note_my_opinion">나의 생각</string>
-    <string name="note_not_has_selected_book">"선택된 책이 없어요 ! 책을 선택해 주세요"</string>
-    <string name="content_description_bottom_sheet_drag">바텀시트를 드래그하려면 이곳을 사용하세요</string>
-    <string name="content_description_book_search_layout">내 서재 검색 버튼입니다.</string>
 
     <!--  토론 목록 페이지  -->
     <string name="content_description_add_discussion">토론방 추가 화면으로 이동합니다</string>
@@ -31,31 +24,9 @@
     <string name="content_description_discussion_detail_back">토론 상세 화면에서 뒤로가는 버튼</string>
     <string name="comment_input_hint">댓글 입력</string>
     <string name="content_description_add_comment">댓글을 추가합니다</string>
-    <string name="author_and_date_format">%1$s · %2$s</string>
-
-    <!--  도서 검색 페이지  -->
-    <string name="book_search_hint">도서 이름을 입력해주세요</string>
-    <string name="content_description_book_search_back">내 서재로 이동합니다</string>
-    <string name="content_description_book_search_bar">도서명을 입력해 책을 검색하세요</string>
-    <string name="content_description_book_search_cover">책 이미지입니다</string>
-    <string name="content_description_book_search_plus">책을 내 서재에 추가합니다</string>
-    <string name="content_description_book_search_result">도서 검색 결과 목록</string>
 
     <!-- 내 서재 페이지 -->
     <string name="content_description_navigate_to_book_search">도서 검색 화면으로 이동합니다</string>
-
-    <string name="note_search">기록 검색</string>
-
-    <!--  토론방 생성 페이지  -->
-    <string name="discussion_create_title">토론방 생성</string>
-    <string name="content_description_discussion_create_back">토론방 목록으로 이동합니다</string>
-    <string name="discussion_title">토론 내용</string>
-    <string name="discussion_content">나의 의견</string>
-    <string name="discussion_create">생성하기</string>
-    <string name="discussion_room_create">생성하기</string>
-    <string name="search_book">도서 검색</string>
-    <string name="library_list">도서 검색</string>
-    <string name="book_search_hing">책 제목을 입력해주세요</string>
 
     <!-- 로그인 페이지 -->
     <string name="login_fail_to_login">로그인에 실패했어요. 다시 시도해주세요</string>
@@ -68,19 +39,10 @@
     <string name="signup_invalid_nickname_message_character">한글, 영문, 숫자만 입력할 수 있어요.</string>
     <string name="signup_invalid_nickname_message_length">1자 이상 8자 이하로 입력해주세요.</string>
 
-    <!-- ut version 토론 화면 -->
-    <string name="ut_discussion_search_bar_hint">책 제목 또는 키워드를 입력해주세요.</string>
-    <string name="ut_discussion_tab_title_all">전체</string>
-    <string name="ut_discussion_tab_title_my">내 토론방</string>
-    <string name="ut_discussion_no_search_result">검색결과가 없어요\n다른 검색어를 입력해 주세요 !</string>
+    <!-- 토론 화면 -->
+    <string name="discussion_search_bar_hint">책 제목 또는 키워드를 입력해주세요.</string>
+    <string name="discussion_tab_title_all">전체</string>
+    <string name="discussion_tab_title_my">내 토론방</string>
+    <string name="discussion_no_search_result">검색결과가 없어요\n다른 검색어를 입력해 주세요 !</string>
     <string name="content_description_ut_discussion_img">토론방 책 이미지</string>
-
-    <!-- UT -->
-    <string name="all_divider_dot">" · "</string>
-
-    <string name="error_no_selected_book">선택된 책이 없습니다</string>
-    <string name="error_book_not_found">책을 찾을 수 없습니다</string>
-    <string name="error_no_search_results">검색 결과가 없습니다</string>
-    <string name="error_empty_search_input">검색어를 입력해주세요</string>
-
 </resources>

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".presentation.utview.discussions.all.AllDiscussionFragment">
+    tools:context=".presentation.view.discussions.all.AllDiscussionFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_discussions"
@@ -22,7 +22,7 @@
         android:visibility="gone"
         android:fontFamily="@font/pretendard_semi_bold"
         android:textSize="@dimen/font_size_x_large"
-        android:text="@string/ut_discussion_no_search_result"
+        android:text="@string/discussion_no_search_result"
         app:drawableTopCompat="@drawable/img_mascort" />
 
 </FrameLayout>

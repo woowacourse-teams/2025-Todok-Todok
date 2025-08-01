@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation.utview.discussions.my.MyDiscussionFragment">
+    tools:context=".presentation.view.discussions.my.MyDiscussionFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_discussions"
@@ -22,6 +22,6 @@
         android:visibility="gone"
         android:fontFamily="@font/pretendard_semi_bold"
         android:textSize="@dimen/font_size_x_large"
-        android:text="@string/ut_discussion_no_search_result"
+        android:text="@string/discussion_no_search_result"
         app:drawableTopCompat="@drawable/img_mascort" />
 </FrameLayout>

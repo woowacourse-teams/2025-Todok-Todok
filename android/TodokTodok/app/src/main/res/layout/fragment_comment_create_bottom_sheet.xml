@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingHorizontal="@dimen/space_28"
-    tools:context=".presentation.utview.discussiondetail.CommentCreateBottomSheet">
+    tools:context=".presentation.view.discussiondetail.CommentCreateBottomSheet">
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_text_comment_content"

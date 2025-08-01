@@ -4,7 +4,6 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.animation.AccelerateInterpolator
@@ -17,10 +16,10 @@ import com.google.android.material.snackbar.Snackbar
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentLoginBinding
-import com.team.todoktodok.presentation.view.MainActivity
 import com.team.todoktodok.presentation.view.auth.signup.SignUpFragment
 import com.team.todoktodok.presentation.view.auth.vm.AuthViewModel
 import com.team.todoktodok.presentation.view.auth.vm.AuthViewModelFactory
+import com.team.todoktodok.presentation.view.discussions.DiscussionsActivity
 import kotlinx.coroutines.launch
 
 class LoginFragment : Fragment(R.layout.fragment_login) {
@@ -95,7 +94,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
     }
 
     private fun moveToMain() {
-        val intent = MainActivity.Intent(requireContext())
+        val intent = DiscussionsActivity.Intent(requireContext())
         startActivity(intent)
         requireActivity().finish()
     }

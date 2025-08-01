@@ -9,8 +9,8 @@ import com.team.todoktodok.fake.FakeCommentRepository
 import com.team.todoktodok.fake.FakeDiscussionRepository
 import com.team.todoktodok.fixture.COMMENTS
 import com.team.todoktodok.fixture.DISCUSSIONS
-import com.team.todoktodok.presentation.view.discussion.detail.vm.DiscussionDetailViewModel
-import com.team.todoktodok.presentation.view.discussion.detail.vm.DiscussionDetailViewModel.Companion.KEY_DISCUSSION_ID
+import com.team.todoktodok.presentation.view.discussiondetail.vm.DiscussionDetailViewModel
+import com.team.todoktodok.presentation.view.discussiondetail.vm.DiscussionDetailViewModel.Companion.KEY_DISCUSSION_ID
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
