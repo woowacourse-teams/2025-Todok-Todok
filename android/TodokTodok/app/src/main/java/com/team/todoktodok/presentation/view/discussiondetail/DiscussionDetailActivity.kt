@@ -40,27 +40,8 @@ class DiscussionDetailActivity : AppCompatActivity() {
         )
     }
 
-    private val popupWindow by lazy { setupPopUpView() }
-
-    private fun setupPopUpView(): PopupWindow =
-        if (viewModel.isMyDiscussion) {
-            val binding = MenuOwnedDiscussionBinding.inflate(layoutInflater)
-            binding.tvEdit.setOnClickListener { viewModel.updateDiscussion() }
-            binding.tvDelete.setOnClickListener { viewModel.deleteDiscussion() }
-            createPopUpView(binding.root)
-        } else {
-            val binding = MenuExternalDiscussionBinding.inflate(layoutInflater)
-            binding.tvReport.setOnClickListener { viewModel.reportDiscussion() }
-            createPopUpView(binding.root)
-        }
-
-    private fun createPopUpView(popupView: View) =
-        PopupWindow(
-            popupView,
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            true,
-        )
+    private var _popupWindow: PopupWindow? = null
+    val popupWindow get() = _popupWindow ?: throw IllegalStateException()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,6 +50,12 @@ class DiscussionDetailActivity : AppCompatActivity() {
         setupOnClick()
         setupObserve()
         setPopBackStack()
+    }
+
+    override fun onDestroy() {
+        _popupWindow?.dismiss()
+        _popupWindow = null
+        super.onDestroy()
     }
 
     private fun initView() {
@@ -109,6 +96,9 @@ class DiscussionDetailActivity : AppCompatActivity() {
 
     private fun setupPopUpDiscussionClick() {
         binding.ivDiscussionOption.setOnClickListener {
+            if (_popupWindow == null) {
+                _popupWindow = getPopUpView()
+            }
             if (popupWindow.isShowing) {
                 popupWindow.dismiss()
             } else {
@@ -116,6 +106,26 @@ class DiscussionDetailActivity : AppCompatActivity() {
             }
         }
     }
+
+    private fun getPopUpView(): PopupWindow =
+        if (viewModel.isMyDiscussion) {
+            val binding = MenuOwnedDiscussionBinding.inflate(layoutInflater)
+            binding.tvEdit.setOnClickListener { viewModel.updateDiscussion() }
+            binding.tvDelete.setOnClickListener { viewModel.deleteDiscussion() }
+            createPopUpView(binding.root)
+        } else {
+            val binding = MenuExternalDiscussionBinding.inflate(layoutInflater)
+            binding.tvReport.setOnClickListener { viewModel.reportDiscussion() }
+            createPopUpView(binding.root)
+        }
+
+    private fun createPopUpView(popupView: View) =
+        PopupWindow(
+            popupView,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            true,
+        )
 
     private fun setupObserve() {
         viewModel.discussion.observe(this) { value ->
