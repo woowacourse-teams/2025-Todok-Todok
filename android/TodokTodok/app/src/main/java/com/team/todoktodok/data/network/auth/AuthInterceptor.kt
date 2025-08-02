@@ -13,10 +13,7 @@ class AuthInterceptor(
         val builder = request.newBuilder()
         val accessToken = runBlocking { tokenDataSource.getAccessToken() }
 
-        builder.addHeader(
-            AUTHORIZATION_NAME,
-            "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzIiwicm9sZSI6IlVTRVIiLCJleHAiOjE3NTQzNzcwODJ9.jawMkRtNH3Y4JdHvzDXwXAe_kbhJP8FVOzNLzYFhUpk",
-        )
+        builder.addHeader(AUTHORIZATION_NAME, accessToken)
 
         return chain.proceed(builder.build())
     }
