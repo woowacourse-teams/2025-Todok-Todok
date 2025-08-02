@@ -36,11 +36,6 @@ class DiscussionsViewModel(
         val keyword = currentState.searchKeyword
 
         DiscussionFilter.entries.forEach { filter ->
-            /**
-             * 토론 개수를 알기 위해 화면에 보이지 않는 탭의 정보까지 호출한다.
-             * API 트래픽 최적화를 위해서 필터를 받아 개수를 반환하는 API를 구현하는 것은 어떨까 ?
-             *
-             * */
             viewModelScope.launch {
                 val discussions = discussionRepository.getDiscussions(filter, keyword)
                 updateDiscussions(filter, discussions)
