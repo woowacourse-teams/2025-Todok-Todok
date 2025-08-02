@@ -38,7 +38,6 @@ class DiscussionsViewModelTest {
         runTest {
             // Given
             val newTab = DiscussionFilter.MINE
-            viewModel.updateTab(newTab)
 
             DiscussionFilter.entries.forEach { filter ->
                 coEvery {
@@ -123,7 +122,7 @@ class DiscussionsViewModelTest {
             viewModel.loadDiscussions()
 
             // Then
-            assertThat(viewModel.uiState.value?.myDiscussions).isEqualTo(mockDiscussions)
+            assertEquals(viewModel.uiState.value?.myDiscussions, mockDiscussions)
             assertEquals(
                 viewModel.uiEvent.getOrAwaitValue(),
                 DiscussionsUiEvent.ShowHasAllDiscussions,
@@ -131,7 +130,7 @@ class DiscussionsViewModelTest {
         }
 
     @Test
-    fun `내 토론 필터이고 토론 목록이 있을 때_ShowHasMyDiscussions 이벤트 발생하고 myDiscussions에 추가된다`() =
+    fun `내 토론 필터이고 토론 목록이 있을 때_ShowHasMyDiscussions 이벤트가 발생하고 myDiscussions에 추가된다`() =
         runTest {
             // Given
             val mockDiscussions = DISCUSSIONS
@@ -148,7 +147,7 @@ class DiscussionsViewModelTest {
             viewModel.loadDiscussions()
 
             // Then
-            assertThat(viewModel.uiState.value?.myDiscussions).isEqualTo(mockDiscussions)
+            assertEquals(viewModel.uiState.value?.myDiscussions, mockDiscussions)
             assertEquals(
                 viewModel.uiEvent.getOrAwaitValue(),
                 DiscussionsUiEvent.ShowHasMyDiscussions,
