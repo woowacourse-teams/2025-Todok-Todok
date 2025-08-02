@@ -11,6 +11,10 @@ plugins {
 }
 
 android {
+    tasks.named("build") {
+        dependsOn("ktlintCheck")
+    }
+
     val properties = Properties()
     properties.load(project.rootProject.file("local.properties").inputStream())
 
