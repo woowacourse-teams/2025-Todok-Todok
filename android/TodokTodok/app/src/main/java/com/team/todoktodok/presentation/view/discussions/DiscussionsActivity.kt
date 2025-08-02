@@ -124,7 +124,7 @@ class DiscussionsActivity : AppCompatActivity() {
     private fun changeTab(tab: TabLayout.Tab) {
         val index = tab.position
         val selectedFilter = DiscussionFilter.entries[index]
-        viewModel.updateTab(selectedFilter)
+        viewModel.updateTab(selectedFilter, THROTTLE_DURATION)
         changeFragment(
             showFragment = if (selectedFilter == DiscussionFilter.ALL) allDiscussionFragment else myDiscussionFragment,
             hideFragment = if (selectedFilter == DiscussionFilter.ALL) myDiscussionFragment else allDiscussionFragment,
@@ -159,6 +159,8 @@ class DiscussionsActivity : AppCompatActivity() {
 
         private const val MY_DISCUSSION_TAB_POSITION = 1
         private const val MY_DISCUSSION_FRAGMENT_TAG = "MY"
+
+        private const val THROTTLE_DURATION = 2000L
 
         fun Intent(context: Context) = Intent(context, DiscussionsActivity::class.java)
     }

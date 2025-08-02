@@ -9,6 +9,8 @@ import com.team.domain.model.DiscussionFilter
 import com.team.domain.repository.DiscussionRepository
 import com.team.todoktodok.presentation.view.discussions.DiscussionsUiEvent
 import com.team.todoktodok.presentation.view.discussions.DiscussionsUiState
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class DiscussionsViewModel(
@@ -20,9 +22,20 @@ class DiscussionsViewModel(
     private val _uiEvent = MutableLiveData<DiscussionsUiEvent>()
     val uiEvent: LiveData<DiscussionsUiEvent> get() = _uiEvent
 
-    fun updateTab(newTab: DiscussionFilter) {
-        _uiState.value = _uiState.value?.copy(filter = newTab)
-        loadDiscussions()
+    private var loadJob: Job? = null
+
+    fun updateTab(
+        newFilter: DiscussionFilter,
+        duration: Long,
+    ) {
+        _uiState.value = _uiState.value?.copy(filter = newFilter)
+
+        loadJob?.cancel()
+        loadJob =
+            viewModelScope.launch {
+                delay(duration)
+                loadDiscussions()
+            }
     }
 
     fun loadSearchedDiscussions(keyword: String) {

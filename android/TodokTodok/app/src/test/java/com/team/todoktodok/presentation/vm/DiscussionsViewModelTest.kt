@@ -46,7 +46,7 @@ class DiscussionsViewModelTest {
             }
 
             // When
-            viewModel.updateTab(newTab)
+            viewModel.updateTab(newTab, 0L)
 
             // Then
             assertEquals(viewModel.uiState.value?.filter, newTab)
@@ -86,7 +86,7 @@ class DiscussionsViewModelTest {
     fun `모든 토론 필터이고 토론 목록이_비어있으면 ShowNotHasAllDiscussions 이벤트가 발생한다,`() =
         runTest {
             // Given
-            viewModel.updateTab(DiscussionFilter.ALL)
+            viewModel.updateTab(DiscussionFilter.ALL, 0L)
             DiscussionFilter.entries.forEach { filter ->
                 coEvery {
                     mockDiscussionRepository.getDiscussions(filter, any())
@@ -110,7 +110,7 @@ class DiscussionsViewModelTest {
             // Given
             val mockDiscussions = DISCUSSIONS
 
-            viewModel.updateTab(DiscussionFilter.ALL)
+            viewModel.updateTab(DiscussionFilter.ALL, 0L)
 
             DiscussionFilter.entries.forEach { filter ->
                 coEvery {
@@ -135,7 +135,7 @@ class DiscussionsViewModelTest {
             // Given
             val mockDiscussions = DISCUSSIONS
 
-            viewModel.updateTab(DiscussionFilter.MINE)
+            viewModel.updateTab(DiscussionFilter.MINE, 0L)
 
             DiscussionFilter.entries.forEach { filter ->
                 coEvery {
@@ -158,7 +158,7 @@ class DiscussionsViewModelTest {
     fun `내 토론 필터이고 토론 목록이 없을 때 ShowNotHasMyDiscussions 이벤트 발생하고 myDiscussions에 추가된다`() =
         runTest {
             // Given
-            viewModel.updateTab(DiscussionFilter.MINE)
+            viewModel.updateTab(DiscussionFilter.MINE, 0L)
 
             DiscussionFilter.entries.forEach { filter ->
                 coEvery {
