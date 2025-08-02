@@ -160,7 +160,7 @@ class DiscussionsActivity : AppCompatActivity() {
         private const val MY_DISCUSSION_TAB_POSITION = 1
         private const val MY_DISCUSSION_FRAGMENT_TAG = "MY"
 
-        private const val THROTTLE_DURATION = 2000L
+        private const val THROTTLE_DURATION = 500L
 
         fun Intent(context: Context) = Intent(context, DiscussionsActivity::class.java)
     }
