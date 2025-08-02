@@ -44,17 +44,8 @@ class DiscussionsActivity : AppCompatActivity() {
 
         setUpSystemBars()
         initFragments()
+        setUpUiState()
         initView(binding)
-
-        viewModel.uiState.observe(this) { value ->
-            val allDiscussionTab = binding.tabLayout.getTabAt(ALL_DISCUSSION_TAB_POSITION)
-            allDiscussionTab?.text =
-                getString(R.string.discussion_tab_title_all).format(value.allDiscussionsSize)
-
-            val myDiscussionTab = binding.tabLayout.getTabAt(MY_DISCUSSION_TAB_POSITION)
-            myDiscussionTab?.text =
-                getString(R.string.discussion_tab_title_my).format(value.myDiscussionsSize)
-        }
     }
 
     private fun initFragments() {
@@ -71,6 +62,18 @@ class DiscussionsActivity : AppCompatActivity() {
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
+        }
+    }
+
+    private fun setUpUiState() {
+        viewModel.uiState.observe(this) { value ->
+            val allDiscussionTab = binding.tabLayout.getTabAt(ALL_DISCUSSION_TAB_POSITION)
+            allDiscussionTab?.text =
+                getString(R.string.discussion_tab_title_all).format(value.allDiscussionsSize)
+
+            val myDiscussionTab = binding.tabLayout.getTabAt(MY_DISCUSSION_TAB_POSITION)
+            myDiscussionTab?.text =
+                getString(R.string.discussion_tab_title_my).format(value.myDiscussionsSize)
         }
     }
 
