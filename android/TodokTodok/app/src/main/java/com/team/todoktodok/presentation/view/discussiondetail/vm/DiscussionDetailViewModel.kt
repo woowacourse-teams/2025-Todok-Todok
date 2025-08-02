@@ -17,7 +17,6 @@ import kotlinx.coroutines.launch
 class DiscussionDetailViewModel(
     savedStateHandle: SavedStateHandle,
     private val discussionRepository: DiscussionRepository,
-    private val commentRepository: CommentRepository,
 ) : ViewModel() {
     val discussionId =
         savedStateHandle.get<Long>(KEY_DISCUSSION_ID) ?: throw IllegalStateException()

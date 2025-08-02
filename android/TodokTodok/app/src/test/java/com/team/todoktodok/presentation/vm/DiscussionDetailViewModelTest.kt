@@ -1,11 +1,9 @@
 package com.team.todoktodok.presentation.vm
 
 import androidx.lifecycle.SavedStateHandle
-import com.team.domain.repository.CommentRepository
 import com.team.domain.repository.DiscussionRepository
 import com.team.todoktodok.InstantTaskExecutorExtension
 import com.team.todoktodok.ext.getOrAwaitValue
-import com.team.todoktodok.fake.FakeCommentRepository
 import com.team.todoktodok.fake.FakeDiscussionRepository
 import com.team.todoktodok.fixture.COMMENTS
 import com.team.todoktodok.fixture.DISCUSSIONS
@@ -28,7 +26,6 @@ import org.junit.jupiter.api.extension.ExtendWith
 class DiscussionDetailViewModelTest {
     private lateinit var discussionDetailViewModel: DiscussionDetailViewModel
     private lateinit var discussionRepository: DiscussionRepository
-    private lateinit var commentRepository: CommentRepository
     private val testDispatcher = StandardTestDispatcher()
 
     @BeforeEach
@@ -37,12 +34,10 @@ class DiscussionDetailViewModelTest {
         Dispatchers.setMain(testDispatcher)
 
         discussionRepository = FakeDiscussionRepository()
-        commentRepository = FakeCommentRepository()
         discussionDetailViewModel =
             DiscussionDetailViewModel(
                 state,
                 discussionRepository,
-                commentRepository,
             )
     }
 
