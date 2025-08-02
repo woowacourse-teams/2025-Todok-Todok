@@ -5,55 +5,54 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation.utview.discussions.DiscussionsActivity">
+    tools:context=".presentation.view.discussions.DiscussionsActivity">
 
-    <ImageView
-        android:id="@+id/iv_header_logo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/img_main_logo"
-        android:layout_marginStart="@dimen/space_8"
-        android:layout_marginTop="@dimen/space_24"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_height"
+        android:background="@android:color/transparent"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:menu="@menu/discussion_list_menu">
+
+        <include
+            layout="@layout/item_toolbar_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </androidx.appcompat.widget.Toolbar>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/et_search_discussion_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginStart="@dimen/space_16"
-        android:layout_marginEnd="@dimen/space_8"
-        app:endIconMode="clear_text"
-        app:cursorColor="@color/black_18"
-        app:hintTextAppearance="@style/HintTextStyle"
+        android:layout_marginHorizontal="@dimen/space_16"
         android:hint="@string/discussion_search_bar_hint"
-        app:layout_constraintTop_toTopOf="@id/iv_header_logo"
-        app:layout_constraintBottom_toBottomOf="@id/iv_header_logo"
-        app:layout_constraintStart_toEndOf="@id/iv_header_logo"
-        app:layout_constraintEnd_toStartOf="@id/btn_search">
+        android:orientation="horizontal"
+        app:cursorColor="@color/black_18"
+        app:endIconMode="clear_text"
+        app:hintTextAppearance="@style/HintTextStyle"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_search_discussion"
-            android:background="@drawable/bg_green_f0_radius_8dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:singleLine="true"
+            android:background="@drawable/bg_green_f0_radius_8dp"
+            android:fontFamily="@font/pretendard_regular"
             android:imeOptions="actionDone"
-            android:textSize="@dimen/font_size_small"
+            android:singleLine="true"
             android:textColor="@color/black_18"
-            android:fontFamily="@font/pretendard_regular" />
+            android:textSize="@dimen/font_size_small" />
 
     </com.google.android.material.textfield.TextInputLayout>
-
-    <ImageView
-        android:id="@+id/btn_search"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginEnd="@dimen/space_8"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/et_search_discussion_layout"
-        app:layout_constraintBottom_toBottomOf="@id/et_search_discussion_layout" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tab_layout"

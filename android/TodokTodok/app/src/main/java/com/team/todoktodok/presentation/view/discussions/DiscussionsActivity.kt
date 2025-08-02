@@ -3,6 +3,7 @@ package com.team.todoktodok.presentation.view.discussions
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -30,6 +31,8 @@ class DiscussionsActivity : AppCompatActivity() {
         DiscussionsViewModelFactory(repositoryModule.discussionRepository)
     }
 
+    private lateinit var manager: InputMethodManager
+
     private val allDiscussionFragment = AllDiscussionFragment()
     private val myDiscussionFragment = MyDiscussionFragment()
 
@@ -37,15 +40,18 @@ class DiscussionsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityDiscussionsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        manager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+
         setUpSystemBars()
         initFragments()
+        setUpUiState()
         initView(binding)
     }
 
     private fun initFragments() {
         supportFragmentManager.commit {
-            add(R.id.fragmentContainerView, allDiscussionFragment, "ALL")
-            add(R.id.fragmentContainerView, myDiscussionFragment, "MY")
+            add(R.id.fragmentContainerView, allDiscussionFragment, ALL_DISCUSSION_FRAGMENT_TAG)
+            add(R.id.fragmentContainerView, myDiscussionFragment, MY_DISCUSSION_FRAGMENT_TAG)
             hide(myDiscussionFragment)
         }
     }
@@ -59,14 +65,22 @@ class DiscussionsActivity : AppCompatActivity() {
         }
     }
 
+    private fun setUpUiState() {
+        viewModel.uiState.observe(this) { value ->
+            val allDiscussionTab = binding.tabLayout.getTabAt(ALL_DISCUSSION_TAB_POSITION)
+            allDiscussionTab?.text =
+                getString(R.string.discussion_tab_title_all).format(value.allDiscussionsSize)
+
+            val myDiscussionTab = binding.tabLayout.getTabAt(MY_DISCUSSION_TAB_POSITION)
+            myDiscussionTab?.text =
+                getString(R.string.discussion_tab_title_my).format(value.myDiscussionsSize)
+        }
+    }
+
     private fun initView(binding: ActivityDiscussionsBinding) {
         with(binding) {
             val hint = getString(R.string.discussion_search_bar_hint)
             etSearchDiscussion.clearHintOnFocus(binding.etSearchDiscussionLayout, hint)
-
-            btnSearch.setOnClickListener {
-                etSearchDiscussion.text?.let { viewModel.loadSearchedDiscussions(it.toString()) }
-            }
 
             etSearchDiscussion.setOnEditorActionListener { v, actionId, event ->
                 triggerSearch()
@@ -74,8 +88,9 @@ class DiscussionsActivity : AppCompatActivity() {
             }
 
             etSearchDiscussion.doAfterTextChanged {
-                if (it?.isEmpty() == true) {
+                if (it.isNullOrEmpty()) {
                     viewModel.loadSearchedDiscussions(it.toString())
+                    hideSoftKeyboard()
                 }
             }
 
@@ -100,13 +115,16 @@ class DiscussionsActivity : AppCompatActivity() {
         val editableText = binding.etSearchDiscussion.text
         val keyword = editableText?.toString()?.trim()
         val isKeywordNotEmpty = !keyword.isNullOrEmpty()
-        if (isKeywordNotEmpty) viewModel.loadSearchedDiscussions(keyword)
+        if (isKeywordNotEmpty) {
+            viewModel.loadSearchedDiscussions(keyword)
+            hideSoftKeyboard()
+        }
     }
 
     private fun changeTab(tab: TabLayout.Tab) {
         val index = tab.position
         val selectedFilter = DiscussionFilter.entries[index]
-        viewModel.updateTab(selectedFilter)
+        viewModel.updateTab(selectedFilter, THROTTLE_DURATION)
         changeFragment(
             showFragment = if (selectedFilter == DiscussionFilter.ALL) allDiscussionFragment else myDiscussionFragment,
             hideFragment = if (selectedFilter == DiscussionFilter.ALL) myDiscussionFragment else allDiscussionFragment,
@@ -123,7 +141,27 @@ class DiscussionsActivity : AppCompatActivity() {
         }
     }
 
+    private fun hideSoftKeyboard() {
+        manager.hideSoftInputFromWindow(
+            currentFocus?.windowToken,
+            InputMethodManager.HIDE_NOT_ALWAYS,
+        )
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadDiscussions()
+    }
+
     companion object {
+        private const val ALL_DISCUSSION_TAB_POSITION = 0
+        private const val ALL_DISCUSSION_FRAGMENT_TAG = "ALL"
+
+        private const val MY_DISCUSSION_TAB_POSITION = 1
+        private const val MY_DISCUSSION_FRAGMENT_TAG = "MY"
+
+        private const val THROTTLE_DURATION = 500L
+
         fun Intent(context: Context) = Intent(context, DiscussionsActivity::class.java)
     }
 }
