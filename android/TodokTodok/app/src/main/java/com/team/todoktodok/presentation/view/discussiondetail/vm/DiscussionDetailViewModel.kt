@@ -21,6 +21,8 @@ class DiscussionDetailViewModel(
 ) : ViewModel() {
     val discussionId =
         savedStateHandle.get<Long>(KEY_DISCUSSION_ID) ?: throw IllegalStateException()
+
+    val isMyDiscussion = true
     private val _discussion = MutableLiveData<Discussion>()
     val discussion: LiveData<Discussion> = _discussion
 
@@ -33,30 +35,35 @@ class DiscussionDetailViewModel(
     init {
         viewModelScope.launch {
             loadDiscussionRoom()
-            loadComments()
         }
     }
 
     fun showBottomSheet() {
-        _uiEvent.setValue(DiscussionDetailUiEvent.ShowCreateComment)
+        _uiEvent.setValue(DiscussionDetailUiEvent.ShowComments)
     }
 
     fun onBackPressed() {
         onUiEvent(DiscussionDetailUiEvent.NavigateUp)
     }
 
-    fun commentsReload() {
-        viewModelScope.launch {
-            loadComments()
-        }
+    fun reportDiscussion() {
+        _uiEvent.setValue(DiscussionDetailUiEvent.ReportDiscussion(discussionId))
+    }
+
+    fun updateDiscussion() {
+        _uiEvent.setValue(DiscussionDetailUiEvent.UpdateDiscussion(discussionId))
+    }
+
+    fun deleteDiscussion() {
+        _uiEvent.setValue(DiscussionDetailUiEvent.DeleteDiscussion(discussionId))
+    }
+
+    fun toggleLike() {
+        _uiEvent.setValue(DiscussionDetailUiEvent.ToggleLikeOnDiscussion(discussionId))
     }
 
     private suspend fun loadDiscussionRoom() {
         _discussion.value = discussionRepository.getDiscussion(discussionId).getOrNull()
-    }
-
-    private suspend fun loadComments() {
-        _comments.value = commentRepository.getCommentsByDiscussionRoomId(discussionId)
     }
 
     private fun onUiEvent(uiEvent: DiscussionDetailUiEvent) {

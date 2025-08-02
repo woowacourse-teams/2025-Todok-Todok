@@ -4,6 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
+import android.widget.PopupWindow
+import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -13,8 +16,8 @@ import androidx.core.view.WindowInsetsCompat
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivityDiscussionDetailBinding
-import com.team.todoktodok.presentation.view.discussiondetail.CommentCreateBottomSheet.Companion.TAG
-import com.team.todoktodok.presentation.view.discussiondetail.adapter.CommentAdapter
+import com.team.todoktodok.databinding.MenuExternalDiscussionBinding
+import com.team.todoktodok.databinding.MenuOwnedDiscussionBinding
 import com.team.todoktodok.presentation.view.discussiondetail.vm.DiscussionDetailViewModel
 import com.team.todoktodok.presentation.view.discussiondetail.vm.DiscussionDetailViewModel.Companion.KEY_DISCUSSION_ID
 import com.team.todoktodok.presentation.view.discussiondetail.vm.DiscussionDetailViewModelFactory
@@ -24,7 +27,6 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 class DiscussionDetailActivity : AppCompatActivity() {
-    private val adapter by lazy { CommentAdapter() }
     private val viewModel by viewModels<DiscussionDetailViewModel> {
         val repositoryModule = (application as App).container.repositoryModule
         DiscussionDetailViewModelFactory(
@@ -38,15 +40,35 @@ class DiscussionDetailActivity : AppCompatActivity() {
         )
     }
 
+    private val popupWindow by lazy { setupPopUpView() }
+
+    private fun setupPopUpView(): PopupWindow =
+        if (viewModel.isMyDiscussion) {
+            val binding = MenuOwnedDiscussionBinding.inflate(layoutInflater)
+            binding.tvEdit.setOnClickListener { viewModel.updateDiscussion() }
+            binding.tvDelete.setOnClickListener { viewModel.deleteDiscussion() }
+            createPopUpView(binding.root)
+        } else {
+            val binding = MenuExternalDiscussionBinding.inflate(layoutInflater)
+            binding.tvReport.setOnClickListener { viewModel.reportDiscussion() }
+            createPopUpView(binding.root)
+        }
+
+    private fun createPopUpView(popupView: View) =
+        PopupWindow(
+            popupView,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            true,
+        )
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initView()
-        initAdapter()
         setContentView(binding.root)
-        setupOnClickNavigateUp()
+        setupOnClick()
         setupObserve()
         setPopBackStack()
-        setupFragmentResultListener()
     }
 
     private fun initView() {
@@ -63,17 +85,34 @@ class DiscussionDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun initAdapter() {
-        binding.rvComments.adapter = adapter
-    }
-
-    private fun setupOnClickNavigateUp() {
+    private fun setupOnClick() {
         with(binding) {
             ivDiscussionDetailBack.setOnClickListener {
                 viewModel.onBackPressed()
             }
-            tvInputComment.setOnClickListener {
+            ivComment.setOnClickListener {
                 viewModel.showBottomSheet()
+            }
+            setupPopUpDiscussionClick()
+            setupLickClick()
+        }
+    }
+
+    private fun setupLickClick() {
+        with(binding) {
+            ivLike.setOnClickListener {
+                ivLike.isSelected = !ivLike.isSelected
+                viewModel.toggleLike()
+            }
+        }
+    }
+
+    private fun setupPopUpDiscussionClick() {
+        binding.ivDiscussionOption.setOnClickListener {
+            if (popupWindow.isShowing) {
+                popupWindow.dismiss()
+            } else {
+                popupWindow.showAsDropDown(it)
             }
         }
     }
@@ -91,34 +130,21 @@ class DiscussionDetailActivity : AppCompatActivity() {
         viewModel.uiEvent.observe(this) { value ->
             handleEvent(value)
         }
-        viewModel.comments.observe(this) { value ->
-            adapter.submitList(value)
-        }
     }
 
     private fun handleEvent(discussionDetailUiEvent: DiscussionDetailUiEvent) {
         when (discussionDetailUiEvent) {
             DiscussionDetailUiEvent.NavigateUp -> onBackPressedDispatcher.onBackPressed()
-            is DiscussionDetailUiEvent.ShowCreateComment -> showCommentBottomSheet()
+            is DiscussionDetailUiEvent.ShowComments -> showToast("댓글 보이기")
+            is DiscussionDetailUiEvent.ToggleLikeOnDiscussion -> showToast("좋아요 클릭")
+            is DiscussionDetailUiEvent.DeleteDiscussion -> showToast("토론 삭제")
+            is DiscussionDetailUiEvent.ReportDiscussion -> showToast("토론 신고")
+            is DiscussionDetailUiEvent.UpdateDiscussion -> showToast("토론 수정")
         }
     }
 
-    private fun showCommentBottomSheet() {
-        val bottomSheet =
-            CommentCreateBottomSheet.newInstance(discussionId = viewModel.discussionId)
-
-        bottomSheet.setVisibilityListener(
-            object : BottomSheetVisibilityListener {
-                override fun onBottomSheetShown() {
-                    binding.tvInputComment.visibility = View.GONE
-                }
-
-                override fun onBottomSheetDismissed() {
-                    binding.tvInputComment.visibility = View.VISIBLE
-                }
-            },
-        )
-        bottomSheet.show(supportFragmentManager, TAG)
+    private fun showToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
     private fun setPopBackStack() {
@@ -134,18 +160,6 @@ class DiscussionDetailActivity : AppCompatActivity() {
             }
         startActivity(intent)
         finish()
-    }
-
-    private fun setupFragmentResultListener() {
-        supportFragmentManager.setFragmentResultListener(
-            CommentCreateBottomSheet.COMMENT_REQUEST_KEY,
-            this,
-        ) { _, bundle ->
-            val result = bundle.getBoolean(CommentCreateBottomSheet.COMMENT_CREATED_RESULT_KEY)
-            if (result) {
-                viewModel.commentsReload()
-            }
-        }
     }
 
     private fun LocalDateTime.formatDate(): String {
