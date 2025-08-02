@@ -5,9 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.team.domain.model.Comment
 import com.team.domain.model.Discussion
-import com.team.domain.repository.CommentRepository
 import com.team.domain.repository.DiscussionRepository
 import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
 import com.team.todoktodok.presentation.core.event.SingleLiveData
@@ -18,15 +16,12 @@ class DiscussionDetailViewModel(
     savedStateHandle: SavedStateHandle,
     private val discussionRepository: DiscussionRepository,
 ) : ViewModel() {
-    val discussionId =
+    private val discussionId =
         savedStateHandle.get<Long>(KEY_DISCUSSION_ID) ?: throw IllegalStateException()
 
     val isMyDiscussion = true
     private val _discussion = MutableLiveData<Discussion>()
     val discussion: LiveData<Discussion> = _discussion
-
-    private val _comments = MutableLiveData<List<Comment>>(emptyList())
-    val comments: LiveData<List<Comment>> = _comments
 
     private val _uiEvent = MutableSingleLiveData<DiscussionDetailUiEvent>()
     val uiEvent: SingleLiveData<DiscussionDetailUiEvent> = _uiEvent
