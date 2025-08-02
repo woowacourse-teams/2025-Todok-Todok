@@ -31,7 +31,6 @@ class DiscussionDetailActivity : AppCompatActivity() {
         val repositoryModule = (application as App).container.repositoryModule
         DiscussionDetailViewModelFactory(
             repositoryModule.discussionRepository,
-            repositoryModule.commentRepository,
         )
     }
     private val binding: ActivityDiscussionDetailBinding by lazy {
