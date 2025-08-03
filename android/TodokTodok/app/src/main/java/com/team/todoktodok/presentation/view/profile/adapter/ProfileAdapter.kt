@@ -21,25 +21,25 @@ class ProfileAdapter(
     ): RecyclerView.ViewHolder {
         val viewType = ProfileItems.ViewType.entries[viewType]
         return when (viewType) {
-            ProfileItems.ViewType.VIEW_TYPE_HEADER ->
+            ProfileItems.ViewType.HEADER ->
                 UserProfileHeaderViewHolder(
                     parent,
                     handler,
                 )
 
-            ProfileItems.ViewType.VIEW_TYPE_INFORMATION ->
+            ProfileItems.ViewType.INFORMATION ->
                 UserInformationViewHolder(
                     parent,
                     handler,
                 )
 
-            ProfileItems.ViewType.VIEW_TYPE_TAB ->
+            ProfileItems.ViewType.TAB ->
                 UserTabViewHolder(
                     parent,
                     handler,
                 )
 
-            ProfileItems.ViewType.VIEW_TYPE_CONTENT ->
+            ProfileItems.ViewType.CONTENT ->
                 UserContentViewHolder(
                     parent,
                     handler,

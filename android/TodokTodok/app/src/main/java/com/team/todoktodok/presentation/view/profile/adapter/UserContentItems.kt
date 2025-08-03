@@ -8,19 +8,19 @@ sealed class UserContentItems(
 ) {
     data class BookItem(
         val value: Book,
-    ) : UserContentItems(ViewType.VIEW_TYPE_ACTIVATED_BOOKS)
+    ) : UserContentItems(ViewType.ACTIVATED_BOOKS)
 
     data class CreatedItem(
         val value: Discussion,
-    ) : UserContentItems(ViewType.VIEW_TYPE_CREATED_DISCUSSION_ROOMS)
+    ) : UserContentItems(ViewType.CREATED_DISCUSSION_ROOMS)
 
     data class JoinedItem(
         val value: Discussion,
-    ) : UserContentItems(ViewType.VIEW_TYPE_JOINED_DISCUSSION_ROOMS)
+    ) : UserContentItems(ViewType.JOINED_DISCUSSION_ROOMS)
 
     enum class ViewType {
-        VIEW_TYPE_ACTIVATED_BOOKS,
-        VIEW_TYPE_CREATED_DISCUSSION_ROOMS,
-        VIEW_TYPE_JOINED_DISCUSSION_ROOMS,
+        ACTIVATED_BOOKS,
+        CREATED_DISCUSSION_ROOMS,
+        JOINED_DISCUSSION_ROOMS,
     }
 }
