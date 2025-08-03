@@ -41,9 +41,13 @@
 
     <TextView
         android:id="@+id/tv_book_title"
+        style="@style/BaseTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/space_8"
+        android:fontFamily="@font/pretendard_medium"
+        android:textColor="@color/gray_66"
+        android:textSize="@dimen/font_size_normal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/abl_discussion_detail"
         tools:text="오브젝트" />
@@ -52,10 +56,21 @@
         android:id="@+id/tv_discussion_title"
         android:layout_width="@dimen/space_0"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:fontFamily="@font/pretendard_bold"
+        android:textSize="@dimen/font_size_2x_large"
+        app:layout_constraintEnd_toStartOf="@id/iv_discussion_option"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_book_title"
-        tools:text="캡슐화 왜함?" />
+        tools:text="캡슐화 왜함?캡슐화 왜함?캡슐화 왜함?캡슐화 왜함?캡슐화 왜함?캡슐화 왜함?캡슐화 왜함?캡슐화 왜함?" />
+
+    <ImageView
+        android:id="@+id/iv_discussion_option"
+        android:layout_width="@dimen/space_24"
+        android:layout_height="@dimen/space_24"
+        android:src="@drawable/btn_option"
+        app:layout_constraintBottom_toBottomOf="@id/tv_discussion_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_discussion_title" />
 
     <TextView
         android:id="@+id/tv_user_nickname"
@@ -92,35 +107,43 @@
         app:layout_constraintTop_toBottomOf="@id/tv_user_nickname"
         tools:text="캡슐화를 하면 데이터를 보호할 수 있다는 것에는 동의하는데, 실제로 완벽히 캡슐화가 되는 지는 의문입니다.getter/setter 메서드를 통해 객체 내부의 데이터가 외부로 드러나는 것은 캡슐화가 잘 된 것이 맞을까요?" />
 
-    <View
-        android:id="@+id/view_comments_divider"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/space_8"
-        android:layout_marginHorizontal="6dp"
-        android:layout_marginTop="@dimen/space_20"
-        android:background="@drawable/div_comment"
-        app:layout_constraintTop_toBottomOf="@id/tv_discussion_opinion" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_comments"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintTop_toBottomOf="@id/view_comments_divider" />
+    <ImageView
+        android:id="@+id/iv_like"
+        android:layout_width="@dimen/space_24"
+        android:layout_height="@dimen/space_24"
+        android:layout_marginBottom="36dp"
+        android:background="@drawable/btn_heart_background"
+        android:contentDescription="@null"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/tv_input_comment"
-        android:layout_width="@dimen/space_0"
-        android:layout_height="@dimen/space_28"
-        android:background="@drawable/bg_green_f0_radius_8dp"
-        android:gravity="center_vertical"
-        android:paddingStart="10dp"
-        android:paddingTop="@dimen/space_4"
-        android:paddingBottom="2dp"
-        android:text="@string/comment_input_hint"
-        android:textColor="@color/black_18"
-        android:textSize="@dimen/font_size_large"
+        android:id="@+id/tv_heart_count"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/space_24"
+        android:layout_marginStart="@dimen/space_8"
+        app:layout_constraintBottom_toBottomOf="@id/iv_like"
+        app:layout_constraintStart_toEndOf="@id/iv_like"
+        app:layout_constraintTop_toTopOf="@id/iv_like"
+        tools:text="20" />
+
+    <ImageView
+        android:id="@+id/iv_comment"
+        android:layout_width="@dimen/space_24"
+        android:layout_height="@dimen/space_24"
+        android:layout_marginStart="@dimen/space_20"
+        android:layout_marginBottom="36dp"
+        android:contentDescription="@null"
+        android:src="@drawable/btn_comment"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toEndOf="@id/tv_heart_count" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/space_24"
+        android:layout_marginStart="@dimen/space_8"
+        app:layout_constraintBottom_toBottomOf="@id/iv_comment"
+        app:layout_constraintStart_toEndOf="@id/iv_comment"
+        app:layout_constraintTop_toTopOf="@id/iv_comment"
+        tools:text="20" />
 </androidx.constraintlayout.widget.ConstraintLayout>
