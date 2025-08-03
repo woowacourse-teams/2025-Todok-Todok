@@ -23,9 +23,5 @@ class ContentPagerAdapter(
         }
     }
 
-    override fun getItemCount(): Int = TAB_COUNT
-
-    private companion object {
-        private const val TAB_COUNT = 3
-    }
+    override fun getItemCount(): Int = UserProfileTab.entries.size
 }
