@@ -40,16 +40,22 @@
     <string name="signup_invalid_nickname_message_character">한글, 영문, 숫자만 입력할 수 있어요.</string>
     <string name="signup_invalid_nickname_message_length">1자 이상 8자 이하로 입력해주세요.</string>
 
-    <!-- 토론 화면 -->
+    <!-- 토론 목록 화면 -->
     <string name="discussion_search_bar_hint">책 제목 또는 키워드를 입력해주세요.</string>
-    <string name="discussion_tab_title_all">전체</string>
-    <string name="discussion_tab_title_my">내 토론방</string>
+    <string name="discussion_tab_title_all">전체 (%d)</string>
+    <string name="discussion_tab_title_my">내 토론방 (%d)</string>
     <string name="discussion_no_search_result">검색결과가 없어요\n다른 검색어를 입력해 주세요 !</string>
-    <string name="content_description_ut_discussion_img">토론방 책 이미지</string>
+    <string name="content_description_discussion_img">토론방 책 이미지</string>
+
     <!-- 프로필 화면 -->
     <string name="profile_setting">설정</string>
     <string name="profile_active_books">활동 도서</string>
     <string name="profile_created_discussion_room">생성한 토론방</string>
     <string name="profile_joined_discussion_room">참여한 토론방</string>
     <string name="content_description_profile_setting">설정 버튼</string>
+
+    <string name="discussion_menu_alarm">알람</string>
+    <string name="discussion_menu_profile">내정보</string>
+    <string name="content_description_discussion_img">토론방 책 이미지</string>
+
 </resources>
