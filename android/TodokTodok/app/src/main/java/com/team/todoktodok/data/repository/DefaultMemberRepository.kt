@@ -1,6 +1,7 @@
 package com.team.todoktodok.data.repository
 
 import com.team.domain.model.Member
+import com.team.domain.model.member.Profile
 import com.team.domain.repository.MemberRepository
 import com.team.todoktodok.data.datasource.member.MemberRemoteDataSource
 import com.team.todoktodok.data.network.request.toRequest
@@ -26,4 +27,6 @@ class DefaultMemberRepository(
             remoteMemberRemoteDataSource.signUp(request)
         }
     }
+
+    override suspend fun getProfile(): Profile = remoteMemberRemoteDataSource.fetchProfile()
 }
