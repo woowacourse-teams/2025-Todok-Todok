@@ -29,7 +29,6 @@ class ProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        profileAdapter = ProfileAdapter(profileAdapterHandler)
 
         setUpSystemBar()
         initView(binding)
@@ -46,6 +45,8 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun initView(binding: ActivityProfileBinding) {
+        profileAdapter = ProfileAdapter(profileAdapterHandler)
+
         with(binding) {
             rvProfile.adapter = profileAdapter
         }
@@ -57,7 +58,7 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
-    val profileAdapterHandler =
+    private val profileAdapterHandler =
         object : ProfileAdapter.Handler {
             override fun onClickSetting() {
                 // 설정 화면 이동 기능 추가
