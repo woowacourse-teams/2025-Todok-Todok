@@ -11,7 +11,7 @@ class UserProfileHeaderViewHolder private constructor(
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
         with(binding) {
-            ivLogo.setOnClickListener {
+            ivLogo.root.setOnClickListener {
                 handler.onClickLogo()
             }
 

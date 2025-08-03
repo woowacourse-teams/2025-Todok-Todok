@@ -9,14 +9,11 @@
     android:layout_marginHorizontal="@dimen/space_20"
     tools:context=".presentation.view.profile.ProfileActivity">
 
-    <ImageView
+    <include
         android:id="@+id/iv_logo"
+        layout="@layout/item_toolbar_logo"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/img_main_logo"
-        android:contentDescription="@string/all_content_description_app_logo"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        android:layout_height="wrap_content"/>
 
     <ImageView
         android:id="@+id/iv_setting"
@@ -27,5 +24,6 @@
         app:layout_constraintHorizontal_bias="1"
         app:layout_constraintStart_toEndOf="@id/iv_logo"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
