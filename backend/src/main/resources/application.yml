@@ -23,6 +23,16 @@ spring:
       - submodule/security/aladin.yml
       - submodule/security/jwt.yml
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
 aladin:
   base-url: ${aladin.base-url}
   item-search-uri: ${aladin.item-search-uri}
