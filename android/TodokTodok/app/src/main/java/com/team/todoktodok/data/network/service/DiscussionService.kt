@@ -1,12 +1,7 @@
 package com.team.todoktodok.data.network.service
 
-import com.team.todoktodok.data.network.request.DiscussionRequest
-import com.team.todoktodok.data.network.request.DiscussionRoomRequest
 import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
-import retrofit2.Response
-import retrofit2.http.Body
 import retrofit2.http.GET
-import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -21,14 +16,4 @@ interface DiscussionService {
         @Query("keyword") keyword: String?,
         @Query("type") type: String,
     ): List<DiscussionResponse>
-
-    @POST("v2/discussions")
-    suspend fun saveDiscussion(
-        @Body request: DiscussionRequest,
-    ): Response<Unit>
-
-    @POST("v2/discussions")
-    suspend fun saveDiscussionRoom(
-        @Body request: DiscussionRoomRequest,
-    )
 }
