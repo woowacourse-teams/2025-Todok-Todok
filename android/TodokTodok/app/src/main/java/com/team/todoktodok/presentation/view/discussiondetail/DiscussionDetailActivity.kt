@@ -74,10 +74,10 @@ class DiscussionDetailActivity : AppCompatActivity() {
     private fun setupOnClick() {
         with(binding) {
             ivDiscussionDetailBack.setOnClickListener {
-                viewModel.onBackPressed()
+                navigateUp()
             }
             ivComment.setOnClickListener {
-                viewModel.showBottomSheet()
+                showToast("댓글 보이기")
             }
             setupPopUpDiscussionClick()
             setupLickClick()
@@ -143,8 +143,6 @@ class DiscussionDetailActivity : AppCompatActivity() {
 
     private fun handleEvent(discussionDetailUiEvent: DiscussionDetailUiEvent) {
         when (discussionDetailUiEvent) {
-            DiscussionDetailUiEvent.NavigateUp -> onBackPressedDispatcher.onBackPressed()
-            is DiscussionDetailUiEvent.ShowComments -> showToast("댓글 보이기")
             is DiscussionDetailUiEvent.ToggleLikeOnDiscussion -> showToast("좋아요 클릭")
             is DiscussionDetailUiEvent.DeleteDiscussion -> showToast("토론 삭제")
             is DiscussionDetailUiEvent.ReportDiscussion -> showToast("토론 신고")

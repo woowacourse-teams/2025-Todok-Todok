@@ -53,26 +53,6 @@ class DiscussionDetailViewModelTest {
         }
 
     @Test
-    fun `바텀 시트를 보여주는 이벤트를 발생시킨다`() {
-        // given
-        val expected = DiscussionDetailUiEvent.ShowComments
-        // when
-        discussionDetailViewModel.showBottomSheet()
-        // then
-        assertThat(discussionDetailViewModel.uiEvent.getOrAwaitValue()).isEqualTo(expected)
-    }
-
-    @Test
-    fun `뒤로 가기 이벤트를 발생시킨다`() {
-        // given
-        val expected = DiscussionDetailUiEvent.NavigateUp
-        // when
-        discussionDetailViewModel.onBackPressed()
-        // then
-        assertThat(discussionDetailViewModel.uiEvent.getOrAwaitValue()).isEqualTo(expected)
-    }
-
-    @Test
     fun `토론방을 신고 이벤트를 발생시킨다`() {
         // given
         val expected = DiscussionDetailUiEvent.ReportDiscussion(DISCUSSION_ID)

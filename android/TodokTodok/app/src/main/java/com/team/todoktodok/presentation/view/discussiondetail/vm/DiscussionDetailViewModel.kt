@@ -32,28 +32,20 @@ class DiscussionDetailViewModel(
         }
     }
 
-    fun showBottomSheet() {
-        _uiEvent.setValue(DiscussionDetailUiEvent.ShowComments)
-    }
-
-    fun onBackPressed() {
-        onUiEvent(DiscussionDetailUiEvent.NavigateUp)
-    }
-
     fun reportDiscussion() {
-        _uiEvent.setValue(DiscussionDetailUiEvent.ReportDiscussion(discussionId))
+        onUiEvent(DiscussionDetailUiEvent.ReportDiscussion(discussionId))
     }
 
     fun updateDiscussion() {
-        _uiEvent.setValue(DiscussionDetailUiEvent.UpdateDiscussion(discussionId))
+        onUiEvent(DiscussionDetailUiEvent.UpdateDiscussion(discussionId))
     }
 
     fun deleteDiscussion() {
-        _uiEvent.setValue(DiscussionDetailUiEvent.DeleteDiscussion(discussionId))
+        onUiEvent(DiscussionDetailUiEvent.DeleteDiscussion(discussionId))
     }
 
     fun toggleLike() {
-        _uiEvent.setValue(DiscussionDetailUiEvent.ToggleLikeOnDiscussion(discussionId))
+        onUiEvent(DiscussionDetailUiEvent.ToggleLikeOnDiscussion(discussionId))
     }
 
     private suspend fun loadDiscussionRoom() {
