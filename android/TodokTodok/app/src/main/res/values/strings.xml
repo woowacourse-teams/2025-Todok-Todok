@@ -52,4 +52,9 @@
     <string name="profile_created_discussion_room">생성한 토론방</string>
     <string name="profile_joined_discussion_room">참여한 토론방</string>
     <string name="content_description_profile_setting">설정 버튼</string>
+
+    <string name="discussion_menu_alarm">알람</string>
+    <string name="discussion_menu_profile">내정보</string>
+    <string name="content_description_discussion_img">토론방 책 이미지</string>
+
 </resources>
