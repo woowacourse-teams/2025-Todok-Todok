@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.team.todoktodok.databinding.ItemUserInformationBinding
-import com.team.todoktodok.presentation.view.profile.UserInformationState
+import com.team.todoktodok.presentation.view.profile.adapter.ProfileItems
 
 class UserInformationViewHolder private constructor(
     private val binding: ItemUserInformationBinding,
@@ -19,14 +19,15 @@ class UserInformationViewHolder private constructor(
         }
     }
 
-    fun bind(item: UserInformationState) {
+    fun bind(item: ProfileItems.InformationItem) {
+        val content = item.value
         with(binding) {
-            tvNickname.text = item.nickname
-            tvDescription.text = item.description
+            tvNickname.text = content.nickname
+            tvDescription.text = content.description
 
             Glide
                 .with(binding.root)
-                .load(item.profileImageUrl)
+                .load(content.profileImageUrl)
                 .into(ivProfile)
         }
     }
