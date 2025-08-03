@@ -1,14 +1,12 @@
 package com.team.todoktodok.presentation.vm
 
 import androidx.lifecycle.SavedStateHandle
-import com.team.domain.repository.CommentRepository
 import com.team.domain.repository.DiscussionRepository
 import com.team.todoktodok.InstantTaskExecutorExtension
 import com.team.todoktodok.ext.getOrAwaitValue
-import com.team.todoktodok.fake.FakeCommentRepository
 import com.team.todoktodok.fake.FakeDiscussionRepository
-import com.team.todoktodok.fixture.COMMENTS
 import com.team.todoktodok.fixture.DISCUSSIONS
+import com.team.todoktodok.presentation.view.discussiondetail.DiscussionDetailUiEvent
 import com.team.todoktodok.presentation.view.discussiondetail.vm.DiscussionDetailViewModel
 import com.team.todoktodok.presentation.view.discussiondetail.vm.DiscussionDetailViewModel.Companion.KEY_DISCUSSION_ID
 import kotlinx.coroutines.Dispatchers
@@ -28,21 +26,18 @@ import org.junit.jupiter.api.extension.ExtendWith
 class DiscussionDetailViewModelTest {
     private lateinit var discussionDetailViewModel: DiscussionDetailViewModel
     private lateinit var discussionRepository: DiscussionRepository
-    private lateinit var commentRepository: CommentRepository
     private val testDispatcher = StandardTestDispatcher()
 
     @BeforeEach
     fun setUp() {
-        val state = SavedStateHandle(mapOf(KEY_DISCUSSION_ID to 2L))
+        val state = SavedStateHandle(mapOf(KEY_DISCUSSION_ID to DISCUSSION_ID))
         Dispatchers.setMain(testDispatcher)
 
         discussionRepository = FakeDiscussionRepository()
-        commentRepository = FakeCommentRepository()
         discussionDetailViewModel =
             DiscussionDetailViewModel(
                 state,
                 discussionRepository,
-                commentRepository,
             )
     }
 
@@ -50,7 +45,7 @@ class DiscussionDetailViewModelTest {
     fun `저장소에서 불러온 토론방을 가진다`() =
         runTest {
             // given
-            val expected = DISCUSSIONS.find { it.id == 2L }
+            val expected = DISCUSSIONS.find { it.id == DISCUSSION_ID }
             // then
             assertThat(discussionDetailViewModel.discussion.getOrAwaitValue()).isEqualTo(
                 expected,
@@ -58,18 +53,51 @@ class DiscussionDetailViewModelTest {
         }
 
     @Test
-    fun `저장소에서 불러온 댓글들을 가진다`() =
-        runTest {
-            // given
-            val expected = COMMENTS
-            // then
-            assertThat(discussionDetailViewModel.comments.getOrAwaitValue()).isEqualTo(
-                expected,
-            )
-        }
+    fun `토론방을 신고 이벤트를 발생시킨다`() {
+        // given
+        val expected = DiscussionDetailUiEvent.ReportDiscussion(DISCUSSION_ID)
+        // when
+        discussionDetailViewModel.reportDiscussion()
+        // then
+        assertThat(discussionDetailViewModel.uiEvent.getOrAwaitValue()).isEqualTo(expected)
+    }
+
+    @Test
+    fun `토론방 수정 이벤트를 발생시킨다`() {
+        // given
+        val expected = DiscussionDetailUiEvent.UpdateDiscussion(DISCUSSION_ID)
+        // when
+        discussionDetailViewModel.updateDiscussion()
+        // then
+        assertThat(discussionDetailViewModel.uiEvent.getOrAwaitValue()).isEqualTo(expected)
+    }
+
+    @Test
+    fun `토론방을 삭제하는 이벤트를 발생시킨다`() {
+        // given
+        val expected = DiscussionDetailUiEvent.DeleteDiscussion(DISCUSSION_ID)
+        // when
+        discussionDetailViewModel.deleteDiscussion()
+        // then
+        assertThat(discussionDetailViewModel.uiEvent.getOrAwaitValue()).isEqualTo(expected)
+    }
+
+    @Test
+    fun `토론방 좋아요를 전환하는 이벤트를 발생시킨다 `() {
+        // given
+        val expected = DiscussionDetailUiEvent.ToggleLikeOnDiscussion(DISCUSSION_ID)
+        // when
+        discussionDetailViewModel.toggleLike()
+        // then
+        assertThat(discussionDetailViewModel.uiEvent.getOrAwaitValue()).isEqualTo(expected)
+    }
 
     @AfterEach
     fun tearDown() {
         Dispatchers.resetMain()
+    }
+
+    companion object {
+        private const val DISCUSSION_ID = 2L
     }
 }

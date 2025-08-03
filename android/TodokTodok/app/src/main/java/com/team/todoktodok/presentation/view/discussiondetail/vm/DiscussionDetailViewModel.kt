@@ -5,9 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.team.domain.model.Comment
 import com.team.domain.model.Discussion
-import com.team.domain.repository.CommentRepository
 import com.team.domain.repository.DiscussionRepository
 import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
 import com.team.todoktodok.presentation.core.event.SingleLiveData
@@ -17,15 +15,13 @@ import kotlinx.coroutines.launch
 class DiscussionDetailViewModel(
     savedStateHandle: SavedStateHandle,
     private val discussionRepository: DiscussionRepository,
-    private val commentRepository: CommentRepository,
 ) : ViewModel() {
-    val discussionId =
+    private val discussionId =
         savedStateHandle.get<Long>(KEY_DISCUSSION_ID) ?: throw IllegalStateException()
+
+    val isMyDiscussion = true
     private val _discussion = MutableLiveData<Discussion>()
     val discussion: LiveData<Discussion> = _discussion
-
-    private val _comments = MutableLiveData<List<Comment>>(emptyList())
-    val comments: LiveData<List<Comment>> = _comments
 
     private val _uiEvent = MutableSingleLiveData<DiscussionDetailUiEvent>()
     val uiEvent: SingleLiveData<DiscussionDetailUiEvent> = _uiEvent
@@ -33,30 +29,27 @@ class DiscussionDetailViewModel(
     init {
         viewModelScope.launch {
             loadDiscussionRoom()
-            loadComments()
         }
     }
 
-    fun showBottomSheet() {
-        _uiEvent.setValue(DiscussionDetailUiEvent.ShowCreateComment)
+    fun reportDiscussion() {
+        onUiEvent(DiscussionDetailUiEvent.ReportDiscussion(discussionId))
     }
 
-    fun onBackPressed() {
-        onUiEvent(DiscussionDetailUiEvent.NavigateUp)
+    fun updateDiscussion() {
+        onUiEvent(DiscussionDetailUiEvent.UpdateDiscussion(discussionId))
     }
 
-    fun commentsReload() {
-        viewModelScope.launch {
-            loadComments()
-        }
+    fun deleteDiscussion() {
+        onUiEvent(DiscussionDetailUiEvent.DeleteDiscussion(discussionId))
+    }
+
+    fun toggleLike() {
+        onUiEvent(DiscussionDetailUiEvent.ToggleLikeOnDiscussion(discussionId))
     }
 
     private suspend fun loadDiscussionRoom() {
         _discussion.value = discussionRepository.getDiscussion(discussionId).getOrNull()
-    }
-
-    private suspend fun loadComments() {
-        _comments.value = commentRepository.getCommentsByDiscussionRoomId(discussionId)
     }
 
     private fun onUiEvent(uiEvent: DiscussionDetailUiEvent) {

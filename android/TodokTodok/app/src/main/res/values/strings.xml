@@ -14,7 +14,9 @@
     <string name="all_unknown_exception">알 수 없는 오류가 발생했어요</string>
     <string name="date_format_pattern">yyyy년 M월 d일</string>
     <string name="all_divider_dot">" · "</string>
-
+    <string name="all_delete_action">삭제하기</string>
+    <string name="all_update_action">수정하기</string>
+    <string name="all_report_action">신고하기</string>
 
     <!--  토론 목록 페이지  -->
     <string name="content_description_add_discussion">토론방 추가 화면으로 이동합니다</string>
