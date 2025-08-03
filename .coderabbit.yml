@@ -8,7 +8,7 @@ tone_instructions: >
 # 코드 리뷰 설정
 reviews:
   profile: chill                      # 리뷰 스타일: 편안하고 친근한 톤
-  request_changes_workflow: true      # 중요한 이슈에 대해 변경 요청 활성화
+  request_changes_workflow: false     # Request Change 요청시 병합 비활성화 해제
   high_level_summary: true            # PR 전체 요약 제공
   changed_files_summary: false        # 개별 파일 요약은 비활성화 (중복 방지)
   sequence_diagrams: false            # 시퀀스 다이어그램 생성 비활성화
