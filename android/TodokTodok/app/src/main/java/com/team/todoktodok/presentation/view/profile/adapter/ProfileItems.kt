@@ -13,14 +13,9 @@ sealed class ProfileItems(
 
     data object TabItem : ProfileItems(ViewType.TAB)
 
-    data class ContentItem(
-        val value: List<ContentItems>,
-    ) : ProfileItems(ViewType.CONTENT)
-
     enum class ViewType {
         HEADER,
         INFORMATION,
         TAB,
-        CONTENT,
     }
 }

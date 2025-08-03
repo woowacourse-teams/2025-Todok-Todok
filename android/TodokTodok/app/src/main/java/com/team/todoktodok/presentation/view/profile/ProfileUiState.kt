@@ -26,7 +26,6 @@ data class ProfileUiState(
                         ),
                     ),
                     ProfileItems.TabItem,
-                    ProfileItems.ContentItem(emptyList()),
                 )
             return ProfileUiState(items = initialItems)
         }

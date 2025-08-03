@@ -1,9 +1,14 @@
 package com.team.todoktodok.presentation.view.profile
 
-enum class UserProfileTab {
-    ACTIVATED_BOOKS,
-    CREATED_DISCUSSIONS,
-    JOINED_DISCUSSIONS,
+import androidx.annotation.StringRes
+import com.team.todoktodok.R
+
+enum class UserProfileTab(
+    @field:StringRes val titleResourceId: Int,
+) {
+    ACTIVATED_BOOKS(R.string.profile_active_books),
+    CREATED_DISCUSSIONS(R.string.profile_created_discussion_room),
+    JOINED_DISCUSSIONS(R.string.profile_joined_discussion_room),
     ;
 
     companion object {

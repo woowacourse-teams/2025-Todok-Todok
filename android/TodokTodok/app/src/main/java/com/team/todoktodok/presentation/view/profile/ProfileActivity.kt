@@ -10,6 +10,7 @@ import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivityProfileBinding
 import com.team.todoktodok.presentation.view.discussions.DiscussionsActivity
+import com.team.todoktodok.presentation.view.profile.adapter.ContentPagerAdapter
 import com.team.todoktodok.presentation.view.profile.adapter.ProfileAdapter
 import com.team.todoktodok.presentation.view.profile.vm.ProfileViewModel
 import com.team.todoktodok.presentation.view.profile.vm.ProfileViewModelFactory
@@ -45,7 +46,8 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun initView(binding: ActivityProfileBinding) {
-        profileAdapter = ProfileAdapter(profileAdapterHandler)
+        val viewPagerAdapter = ContentPagerAdapter(supportFragmentManager, lifecycle)
+        profileAdapter = ProfileAdapter(profileAdapterHandler, viewPagerAdapter)
 
         with(binding) {
             rvProfile.adapter = profileAdapter
@@ -71,10 +73,6 @@ class ProfileActivity : AppCompatActivity() {
 
             override fun onClickProfileImage() {
                 // 이미지 수정 기능 추가
-            }
-
-            override fun onSelectTab(tab: UserProfileTab) {
-                TODO("Not yet implemented")
             }
         }
 }

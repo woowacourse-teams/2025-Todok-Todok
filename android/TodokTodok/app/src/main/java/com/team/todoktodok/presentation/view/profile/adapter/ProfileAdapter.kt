@@ -3,8 +3,7 @@ package com.team.todoktodok.presentation.view.profile.adapter
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.team.todoktodok.presentation.view.profile.viewholder.UserContentViewHolder
-import com.team.todoktodok.presentation.view.profile.viewholder.UserContentViewHolder.Companion.UserContentViewHolder
+import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.team.todoktodok.presentation.view.profile.viewholder.UserInformationViewHolder
 import com.team.todoktodok.presentation.view.profile.viewholder.UserInformationViewHolder.Companion.UserInformationViewHolder
 import com.team.todoktodok.presentation.view.profile.viewholder.UserProfileHeaderViewHolder
@@ -14,6 +13,7 @@ import com.team.todoktodok.presentation.view.profile.viewholder.UserTabViewHolde
 
 class ProfileAdapter(
     private val handler: Handler,
+    private val viewPagerAdapter: FragmentStateAdapter,
 ) : ListAdapter<ProfileItems, RecyclerView.ViewHolder>(ProfileDiffUtil()) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -21,29 +21,9 @@ class ProfileAdapter(
     ): RecyclerView.ViewHolder {
         val viewType = ProfileItems.ViewType.entries[viewType]
         return when (viewType) {
-            ProfileItems.ViewType.HEADER ->
-                UserProfileHeaderViewHolder(
-                    parent,
-                    handler,
-                )
-
-            ProfileItems.ViewType.INFORMATION ->
-                UserInformationViewHolder(
-                    parent,
-                    handler,
-                )
-
-            ProfileItems.ViewType.TAB ->
-                UserTabViewHolder(
-                    parent,
-                    handler,
-                )
-
-            ProfileItems.ViewType.CONTENT ->
-                UserContentViewHolder(
-                    parent,
-                    handler,
-                )
+            ProfileItems.ViewType.HEADER -> UserProfileHeaderViewHolder(parent, handler)
+            ProfileItems.ViewType.INFORMATION -> UserInformationViewHolder(parent, handler)
+            ProfileItems.ViewType.TAB -> UserTabViewHolder(parent, viewPagerAdapter)
         }
     }
 
@@ -54,17 +34,13 @@ class ProfileAdapter(
         position: Int,
     ) {
         when (val item = getItem(position)) {
-            ProfileItems.HeaderItem,
-            ProfileItems.TabItem,
-            -> return
+            ProfileItems.HeaderItem -> return
+            is ProfileItems.TabItem -> (holder as UserTabViewHolder).bind()
             is ProfileItems.InformationItem -> (holder as UserInformationViewHolder).bind(item)
-            is ProfileItems.ContentItem -> (holder as UserContentViewHolder).bind(item)
         }
     }
 
     interface Handler :
         UserProfileHeaderViewHolder.Handler,
-        UserInformationViewHolder.Handler,
-        UserTabViewHolder.Handler,
-        UserContentViewHolder.Handler
+        UserInformationViewHolder.Handler
 }

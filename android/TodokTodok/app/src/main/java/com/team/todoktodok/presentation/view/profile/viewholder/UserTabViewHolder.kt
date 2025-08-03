@@ -3,42 +3,39 @@ package com.team.todoktodok.presentation.view.profile.viewholder
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import com.team.todoktodok.databinding.ItemUserTabBinding
-import com.team.todoktodok.presentation.view.profile.UserProfileTab
 import com.team.todoktodok.presentation.view.profile.UserProfileTab.Companion.UserProfileTab
 
 class UserTabViewHolder private constructor(
+    private val viewPagerAdapter: FragmentStateAdapter,
     binding: ItemUserTabBinding,
-    private val handler: Handler,
 ) : RecyclerView.ViewHolder(binding.root) {
-    init {
-        binding.tab.addOnTabSelectedListener(
-            object : TabLayout.OnTabSelectedListener {
-                override fun onTabSelected(tab: TabLayout.Tab?) {
-                    val selectedTab = UserProfileTab(tab?.position)
-                    handler.onSelectTab(selectedTab)
-                }
+    private val context = binding.root.context
 
-                override fun onTabUnselected(tab: TabLayout.Tab?) {}
+    private val tabLayout: TabLayout = binding.tab
+    private val viewPager: ViewPager2 = binding.viewPager
 
-                override fun onTabReselected(tab: TabLayout.Tab?) {}
-            },
-        )
+    fun bind() {
+        viewPager.adapter = viewPagerAdapter
+
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            val tabTitle = context.getString(UserProfileTab(position).titleResourceId)
+            tab.text = tabTitle
+        }.attach()
     }
 
     companion object {
         fun UserTabViewHolder(
             parent: ViewGroup,
-            handler: Handler,
+            viewPagerAdapter: FragmentStateAdapter,
         ): UserTabViewHolder {
             val inflater = LayoutInflater.from(parent.context)
             val binding = ItemUserTabBinding.inflate(inflater, parent, false)
-            return UserTabViewHolder(binding, handler)
+            return UserTabViewHolder(viewPagerAdapter, binding)
         }
-    }
-
-    interface Handler {
-        fun onSelectTab(tab: UserProfileTab)
     }
 }
