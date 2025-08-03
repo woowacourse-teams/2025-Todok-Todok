@@ -39,8 +39,7 @@ class DiscussionDetailActivity : AppCompatActivity() {
         )
     }
 
-    private var _popupWindow: PopupWindow? = null
-    val popupWindow get() = _popupWindow ?: throw IllegalStateException()
+    private var popupWindow: PopupWindow? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,8 +51,8 @@ class DiscussionDetailActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        _popupWindow?.dismiss()
-        _popupWindow = null
+        popupWindow?.dismiss()
+        popupWindow = null
         super.onDestroy()
     }
 
@@ -95,13 +94,11 @@ class DiscussionDetailActivity : AppCompatActivity() {
 
     private fun setupPopUpDiscussionClick() {
         binding.ivDiscussionOption.setOnClickListener {
-            if (_popupWindow == null) {
-                _popupWindow = getPopUpView()
-            }
-            if (popupWindow.isShowing) {
-                popupWindow.dismiss()
+            if (popupWindow == null) popupWindow = getPopUpView()
+            if (popupWindow?.isShowing == true) {
+                popupWindow?.dismiss()
             } else {
-                popupWindow.showAsDropDown(it)
+                popupWindow?.showAsDropDown(it)
             }
         }
     }
