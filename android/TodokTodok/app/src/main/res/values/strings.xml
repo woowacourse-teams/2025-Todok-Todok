@@ -58,4 +58,12 @@
     <string name="discussion_menu_alarm">알람</string>
     <string name="discussion_menu_profile">내정보</string>
 
+    <!-- 토론방 책 선택 화면 -->
+    <string name="content_description_ut_discussion_img">토론방 책 이미지</string>
+    <string name="create_discussion_room">토론방 생성</string>
+    <string name="content_description_btn_back">메인 페이지로 이동합니다</string>
+    <string name="content_description_book_cover">책 이미지입니다</string>
+    <string name="select_book">토론방 도서 선택</string>
+    <string name="content_description_search_keyword">도서 검색을 합니다</string>
+    <string name="hint_search_keyword">책 제목 또는 저자를 입력해주세요</string>
 </resources>
