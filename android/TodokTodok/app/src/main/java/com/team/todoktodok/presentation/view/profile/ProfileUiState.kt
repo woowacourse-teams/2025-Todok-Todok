@@ -1,6 +1,5 @@
 package com.team.todoktodok.presentation.view.profile
 
-import com.team.domain.model.Books
 import com.team.domain.model.member.Profile
 import com.team.todoktodok.presentation.view.profile.adapter.ProfileItems
 
@@ -27,13 +26,7 @@ data class ProfileUiState(
                         ),
                     ),
                     ProfileItems.TabItem,
-                    ProfileItems.HistoryItem(
-                        UserHistoryState(
-                            Books(emptyList()),
-                            emptyList(),
-                            emptyList(),
-                        ),
-                    ),
+                    ProfileItems.ContentItem(emptyList()),
                 )
             return ProfileUiState(items = initialItems)
         }

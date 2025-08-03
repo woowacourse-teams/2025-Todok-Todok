@@ -3,8 +3,8 @@ package com.team.todoktodok.presentation.view.profile.adapter
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.team.todoktodok.presentation.view.profile.viewholder.UserHistoryViewHolder
-import com.team.todoktodok.presentation.view.profile.viewholder.UserHistoryViewHolder.Companion.UserHistoryViewHolder
+import com.team.todoktodok.presentation.view.profile.viewholder.UserContentViewHolder
+import com.team.todoktodok.presentation.view.profile.viewholder.UserContentViewHolder.Companion.UserContentViewHolder
 import com.team.todoktodok.presentation.view.profile.viewholder.UserInformationViewHolder
 import com.team.todoktodok.presentation.view.profile.viewholder.UserInformationViewHolder.Companion.UserInformationViewHolder
 import com.team.todoktodok.presentation.view.profile.viewholder.UserProfileHeaderViewHolder
@@ -39,8 +39,8 @@ class ProfileAdapter(
                     handler,
                 )
 
-            ProfileItems.ViewType.VIEW_TYPE_HISTORY ->
-                UserHistoryViewHolder(
+            ProfileItems.ViewType.VIEW_TYPE_CONTENT ->
+                UserContentViewHolder(
                     parent,
                     handler,
                 )
@@ -56,10 +56,9 @@ class ProfileAdapter(
         when (val item = getItem(position)) {
             ProfileItems.HeaderItem,
             ProfileItems.TabItem,
-            -> Unit
-
+            -> return
             is ProfileItems.InformationItem -> (holder as UserInformationViewHolder).bind(item)
-            is ProfileItems.HistoryItem -> (holder as UserHistoryViewHolder).bind(item)
+            is ProfileItems.ContentItem -> (holder as UserContentViewHolder).bind(item)
         }
     }
 
@@ -67,5 +66,5 @@ class ProfileAdapter(
         UserProfileHeaderViewHolder.Handler,
         UserInformationViewHolder.Handler,
         UserTabViewHolder.Handler,
-        UserHistoryViewHolder.Handler
+        UserContentViewHolder.Handler
 }

@@ -1,7 +1,7 @@
 package com.team.todoktodok.presentation.view.profile
 
 enum class UserProfileTab {
-    ACTIVE_BOOKS,
+    ACTIVATED_BOOKS,
     CREATED_DISCUSSIONS,
     JOINED_DISCUSSIONS,
     ;
@@ -9,7 +9,7 @@ enum class UserProfileTab {
     companion object {
         fun UserProfileTab(index: Int?): UserProfileTab =
             when (index) {
-                0 -> ACTIVE_BOOKS
+                0 -> ACTIVATED_BOOKS
                 1 -> CREATED_DISCUSSIONS
                 2 -> JOINED_DISCUSSIONS
                 else -> throw IllegalArgumentException(INVALID_INDEX__EXCEPTION_MESSAGE.format(index))
