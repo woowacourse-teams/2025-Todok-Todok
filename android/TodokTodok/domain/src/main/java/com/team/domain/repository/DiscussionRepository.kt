@@ -10,16 +10,4 @@ interface DiscussionRepository {
         type: DiscussionFilter,
         keyword: String? = null,
     ): List<Discussion>
-
-    suspend fun saveDiscussion(
-        noteId: Long,
-        discussionTitle: String,
-        discussionOpinion: String,
-    ): Long
-
-    suspend fun saveDiscussionRoom(
-        noteId: Long,
-        discussionTitle: String,
-        discussionOpinion: String,
-    )
 }
