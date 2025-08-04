@@ -103,4 +103,28 @@ public class CommentCommandServiceTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("이미 신고한 댓글입니다");
     }
+
+    @Test
+    @DisplayName("자신의 것이 아닌 댓글을 수정하면 예외가 발생한다")
+    void validateCommentMemberTest() {
+        //given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+
+        databaseInitializer.setUserInfo("user2@gmail.com", "user", "https://image.png", "프로필 메시지");
+        databaseInitializer.setCommentInfo("상속의 핵심 목적은 타입 계층의 구축입니다!", 2L, 1L);
+
+        final Long memberId = 1L;
+        final Long discussionId = 1L;
+        final Long commentId = 1L;
+        final CommentRequest commentRequest = new CommentRequest(
+                "member1L의 댓글입니다"
+        );
+
+        //when - then
+        assertThatThrownBy(() ->commentCommandService.updateComment(memberId, commentId, commentRequest))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("자기 자신의 댓글만 수정 가능합니다");
+    }
 }

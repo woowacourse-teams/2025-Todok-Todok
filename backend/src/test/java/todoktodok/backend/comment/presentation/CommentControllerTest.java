@@ -101,4 +101,31 @@ public class CommentControllerTest {
                 .statusCode(HttpStatus.OK.value())
                 .body("size()", is(2));
     }
+
+    @Test
+    @DisplayName("댓글을 수정한다")
+    void updateCommentTest() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+
+        databaseInitializer.setCommentInfo("상속의 핵심 목적은 타입 계층의 구축입니다!", 1L, 1L);
+
+        final String updatedContent = "아니다, 생각해보니 상속의 핵심 목적은 아니네요.";
+        final CommentRequest commentRequest = new CommentRequest(
+                updatedContent
+        );
+
+        final String token = MemberFixture.login("user@gmail.com");
+
+        // when - then
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .header("Authorization", token)
+                .body(commentRequest)
+                .when().put("/api/v1/discussions/1/comments/1")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
+    }
 }
