@@ -1,4 +1,4 @@
-package com.team.todoktodok.presentation.view.profile
+package com.team.todoktodok.presentation.view.profile.joined
 
 import androidx.fragment.app.Fragment
 import com.team.todoktodok.R

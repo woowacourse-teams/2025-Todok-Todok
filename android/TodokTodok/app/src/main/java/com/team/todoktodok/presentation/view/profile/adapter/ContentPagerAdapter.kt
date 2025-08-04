@@ -4,11 +4,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.team.todoktodok.presentation.view.profile.ActivatedBooksFragment
-import com.team.todoktodok.presentation.view.profile.CreatedDiscussionsRoomFragment
-import com.team.todoktodok.presentation.view.profile.JoinedDiscussionsRoomFragment
 import com.team.todoktodok.presentation.view.profile.UserProfileTab
 import com.team.todoktodok.presentation.view.profile.UserProfileTab.Companion.UserProfileTab
+import com.team.todoktodok.presentation.view.profile.activated.ActivatedBooksFragment
+import com.team.todoktodok.presentation.view.profile.created.CreatedDiscussionsRoomFragment
+import com.team.todoktodok.presentation.view.profile.joined.JoinedDiscussionsRoomFragment
 
 class ContentPagerAdapter(
     fragmentManager: FragmentManager,
