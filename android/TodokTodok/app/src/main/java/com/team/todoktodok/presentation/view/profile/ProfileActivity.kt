@@ -19,10 +19,7 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProfileBinding
     private val viewModel: ProfileViewModel by viewModels {
         val repositoryModule = (application as App).container.repositoryModule
-        ProfileViewModelFactory(
-            repositoryModule.memberRepository,
-            repositoryModule.discussionRepository,
-        )
+        ProfileViewModelFactory(repositoryModule.memberRepository)
     }
     private lateinit var profileAdapter: ProfileAdapter
 
