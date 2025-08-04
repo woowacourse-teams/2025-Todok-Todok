@@ -35,7 +35,7 @@ class CommentsBottomSheet : BottomSheetDialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         BottomSheetDialog(requireContext(), theme).apply {
             window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
-            window?.setDimAmount(0f)
+            window?.setDimAmount(DIM_AMOUNT_NONE)
         }
 
     override fun onCreateView(
@@ -131,7 +131,7 @@ class CommentsBottomSheet : BottomSheetDialogFragment() {
         when (commentsUiEvent) {
             is CommentsUiEvent.ShowCommentCreate -> showCommentCreate(commentsUiEvent.discussionId)
             CommentsUiEvent.ShowNewComment -> {
-                binding.rvComments.smoothScrollToPosition(0)
+                binding.rvComments.smoothScrollToPosition(COMMENT_CREATE_POSITION)
             }
         }
     }
@@ -167,6 +167,8 @@ class CommentsBottomSheet : BottomSheetDialogFragment() {
 
     companion object {
         const val TAG = "COMMENTS_BOTTOM_SHEET"
+        private const val COMMENT_CREATE_POSITION = 0
+        private const val DIM_AMOUNT_NONE = 0f
 
         fun newInstance(discussionId: Long): CommentsBottomSheet =
             CommentsBottomSheet().apply {
