@@ -1,4 +1,4 @@
-package com.team.todoktodok.presentation.view.discussiondetail.vm
+package com.team.todoktodok.presentation.view.discussiondetail.commentcreate.vm
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -14,8 +14,8 @@ class CommentCreateViewModelFactory(
         extras: CreationExtras,
     ): T {
         val savedStateHandle = extras.createSavedStateHandle()
-        if (modelClass.isAssignableFrom(com.team.todoktodok.presentation.view.discussiondetail.vm.CommentCreateViewModel::class.java)) {
-            return com.team.todoktodok.presentation.view.discussiondetail.vm.CommentCreateViewModel(
+        if (modelClass.isAssignableFrom(CommentCreateViewModel::class.java)) {
+            return CommentCreateViewModel(
                 savedStateHandle,
                 commentRepository,
             ) as T
