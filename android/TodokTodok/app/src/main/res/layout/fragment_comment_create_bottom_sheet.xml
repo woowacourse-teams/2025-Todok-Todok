@@ -3,15 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingHorizontal="@dimen/space_28"
-    tools:context=".presentation.view.discussiondetail.CommentCreateBottomSheet">
+    android:layout_height="wrap_content"
+    android:paddingHorizontal="@dimen/space_24"
+    tools:context=".presentation.view.discussiondetail.comments.CommentsBottomSheet">
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_text_comment_content"
         android:layout_width="@dimen/space_0"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/space_24"
+        android:layout_marginTop="@dimen/space_16"
+        android:layout_marginBottom="@dimen/space_8"
         android:background="@drawable/bg_green_f0_radius_8dp"
         app:boxBackgroundMode="none"
         app:cursorColor="@color/black_18"
@@ -25,10 +26,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="start|center"
+            style="@style/BaseTextStyle"
             android:hint="@string/comment_input_hint"
             android:includeFontPadding="false"
             android:inputType="textMultiLine"
-            android:lineSpacingExtra="0dp"
             android:maxLines="8"
             android:overScrollMode="always"
             android:paddingStart="10dp"
@@ -43,8 +44,10 @@
         android:id="@+id/iv_add_comment"
         android:layout_width="@dimen/space_28"
         android:layout_height="@dimen/space_28"
+        android:layout_marginStart="10dp"
         android:background="@drawable/btn_comment_background"
         android:contentDescription="@string/content_description_add_comment"
+        app:layout_constraintStart_toEndOf="@id/til_text_comment_content"
         app:layout_constraintBottom_toBottomOf="@id/til_text_comment_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/til_text_comment_content" />
