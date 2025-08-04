@@ -36,7 +36,7 @@ class CommentCreateBottomSheet : BottomSheetDialogFragment(R.layout.fragment_com
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         BottomSheetDialog(requireContext(), theme).apply {
-            window?.setDimAmount(0f)
+            window?.setDimAmount(DIM_AMOUNT_NONE)
         }
 
     override fun onStart() {
@@ -112,6 +112,8 @@ class CommentCreateBottomSheet : BottomSheetDialogFragment(R.layout.fragment_com
         const val COMMENT_REQUEST_KEY = "comment_create_result"
         const val COMMENT_CREATED_RESULT_KEY = "IS_COMMENT_CREATED"
         const val TAG = "COMMENTS_BOTTOM_SHEET"
+
+        private const val DIM_AMOUNT_NONE = 0f
 
         fun newInstance(discussionId: Long): CommentCreateBottomSheet =
             CommentCreateBottomSheet().apply {
