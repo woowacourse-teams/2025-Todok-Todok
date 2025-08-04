@@ -12,16 +12,14 @@ class BooksViewHolder private constructor(
     private val binding: ItemActivatedBookBinding,
     handler: Handler,
 ) : RecyclerView.ViewHolder(binding.root) {
-
     init {
+        adjustItemSize()
         binding.root.setOnClickListener {
             handler.onSelectBook(absoluteAdapterPosition)
         }
     }
 
     fun bind(item: Book) {
-        adjustItemSize()
-
         Glide
             .with(binding.root)
             .load("https://image.aladin.co.kr/product/33413/26/coversum/k582938339_1.jpg")
@@ -33,7 +31,7 @@ class BooksViewHolder private constructor(
         val displayMetrics = resource.displayMetrics
         val screenWidth = displayMetrics.widthPixels
 
-        val spanCount = 3
+        val spanCount = SPAN_COUNT
         val spacing = resource.getDimensionPixelSize(R.dimen.space_12)
         val totalSpacing = spacing * (spanCount + 1)
         val itemWidth = (screenWidth - totalSpacing) / spanCount
@@ -41,7 +39,7 @@ class BooksViewHolder private constructor(
         itemView.layoutParams =
             itemView.layoutParams.apply {
                 width = itemWidth
-                height = (itemWidth * 1.2).toInt()
+                height = (itemWidth * BOOK_ASPECT_RATIO).toInt()
             }
     }
 
@@ -54,6 +52,9 @@ class BooksViewHolder private constructor(
             val binding = ItemActivatedBookBinding.inflate(inflater, parent, false)
             return BooksViewHolder(binding, handler)
         }
+
+        private const val BOOK_ASPECT_RATIO = 1.2f
+        private const val SPAN_COUNT = 3
     }
 
     fun interface Handler {
