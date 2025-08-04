@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentActivatedBooksBinding
+import com.team.todoktodok.presentation.view.profile.activated.adapter.BooksAdapter
 import com.team.todoktodok.presentation.view.profile.activated.vm.ActivatedBooksViewModel
 import com.team.todoktodok.presentation.view.profile.activated.vm.ActivatedBooksViewModelFactory
 
