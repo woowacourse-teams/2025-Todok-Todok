@@ -1,6 +1,8 @@
 package todoktodok.backend.comment.application.service.command;
 
 import java.util.NoSuchElementException;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -61,6 +63,47 @@ public class CommentCommandServiceTest {
         assertThatThrownBy(() -> commentCommandService.createComment(2L, 1L, commentRequest))
                 .isInstanceOf(NoSuchElementException.class)
                 .hasMessage("해당 회원을 찾을 수 없습니다");
+    }
+
+    @Test
+    @DisplayName("좋아요를 누르지 않았던 댓글에 좋아요를 생성한다")
+    void commentLikeTest() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+        databaseInitializer.setDefaultCommentInfo();
+
+        final Long memberId = 1L;
+        final Long discussionId = 1L;
+        final Long commentId = 1L;
+
+        // when
+        boolean isLiked = commentCommandService.like(memberId, discussionId, commentId);
+
+        // then
+        assertThat(isLiked).isTrue();
+    }
+
+    @Test
+    @DisplayName("좋아요를 눌렀던 댓글에 좋아요를 생성한다")
+    void commentLikeDeleteTest() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+        databaseInitializer.setDefaultCommentInfo();
+        databaseInitializer.setCommentLikeInfo(1L, 1L);
+
+        final Long memberId = 1L;
+        final Long discussionId = 1L;
+        final Long commentId = 1L;
+
+        // when
+        boolean isLiked = commentCommandService.like(memberId, discussionId, commentId);
+
+        // then
+        assertThat(isLiked).isFalse();
     }
 
     @Test
@@ -150,7 +193,7 @@ public class CommentCommandServiceTest {
         //when - then
         assertThatThrownBy(() ->commentCommandService.updateComment(memberId, discussionId, commentId, commentRequest))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("토론방과 댓글이 일치하지 않습니다");
+                .hasMessage("해당 토론방에 있는 댓글이 아닙니다");
     }
 
     @Test
@@ -175,7 +218,7 @@ public class CommentCommandServiceTest {
     }
 
     @Test
-    @DisplayName("수정하는 댓글과 토론방이 일치하지 않으면 예외가 발생한다")
+    @DisplayName("삭제하는 댓글과 토론방이 일치하지 않으면 예외가 발생한다")
     void validateDiscussionCommentDeleteTest() {
         //given
         databaseInitializer.setDefaultUserInfo();
@@ -193,6 +236,6 @@ public class CommentCommandServiceTest {
         //when - then
         assertThatThrownBy(() ->commentCommandService.deleteComment(memberId, discussionId, commentId))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("토론방과 댓글이 일치하지 않습니다");
+                .hasMessage("해당 토론방에 있는 댓글이 아닙니다");
     }
 }
