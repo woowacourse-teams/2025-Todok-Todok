@@ -10,7 +10,7 @@ import com.team.todoktodok.presentation.view.book.loadImage
 class SearchBooksViewHolder private constructor(
     private val binding: ItemBookBinding,
     private val selectBook: SelectBookClickListener,
-) : RecyclerView.ViewHolder(binding.book) {
+) : RecyclerView.ViewHolder(binding.root) {
     init {
         binding.root.setOnClickListener {
             selectBook.onClick(absoluteAdapterPosition)
