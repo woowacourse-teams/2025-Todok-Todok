@@ -4,6 +4,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.team.todoktodok.presentation.view.profile.adapter.ProfileItems.ViewType.Companion.ViewType
 import com.team.todoktodok.presentation.view.profile.viewholder.UserInformationViewHolder
 import com.team.todoktodok.presentation.view.profile.viewholder.UserInformationViewHolder.Companion.UserInformationViewHolder
 import com.team.todoktodok.presentation.view.profile.viewholder.UserProfileHeaderViewHolder
@@ -18,14 +19,12 @@ class ProfileAdapter(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): RecyclerView.ViewHolder {
-        val viewType = ProfileItems.ViewType.entries[viewType]
-        return when (viewType) {
+    ): RecyclerView.ViewHolder =
+        when (ViewType(viewType)) {
             ProfileItems.ViewType.HEADER -> UserProfileHeaderViewHolder(parent, handler)
             ProfileItems.ViewType.INFORMATION -> UserInformationViewHolder(parent, handler)
             ProfileItems.ViewType.TAB -> UserTabViewHolder(parent, viewPagerAdapter)
         }
-    }
 
     override fun getItemViewType(position: Int): Int = getItem(position).viewType.sequence
 
