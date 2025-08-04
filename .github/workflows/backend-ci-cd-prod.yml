@@ -83,7 +83,7 @@ jobs:
       - name: Run docker image
         run: |
           echo "새 Docker 컨테이너 실행 중..."
-          docker run -d -p 80:8080 woowajeff/todoktodok
+          docker run -d -p 80:8080 woowajeff/todoktodok:prod
           echo "컨테이너 실행 완료"
 
       - name: Docker image Prune
