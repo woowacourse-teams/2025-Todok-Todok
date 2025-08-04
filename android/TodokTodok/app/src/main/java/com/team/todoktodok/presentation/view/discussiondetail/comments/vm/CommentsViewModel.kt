@@ -34,6 +34,7 @@ class CommentsViewModel(
     fun commentsReload() {
         viewModelScope.launch {
             loadComments()
+            showNewComment()
         }
     }
 
@@ -41,8 +42,14 @@ class CommentsViewModel(
         _uiEvent.setValue(CommentsUiEvent.ShowCommentCreate(discussionId))
     }
 
+    private fun showNewComment() {
+        _uiEvent.setValue(CommentsUiEvent.ShowNewComment)
+    }
+
     private suspend fun loadComments() {
-        _comments.value = commentRepository.getCommentsByDiscussionRoomId(discussionId)
+        _comments.value =
+            commentRepository
+                .getCommentsByDiscussionRoomId(discussionId)
     }
 
     companion object {
