@@ -2,7 +2,7 @@ name: Backend CI/CD
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "dev" ]
 
 jobs:
   ci:
@@ -51,7 +51,7 @@ jobs:
 
       - name: Docker Image Build & Push
         run: |
-          docker buildx build --platform linux/arm64 -t woowajeff/todoktodok:prod --push .
+          docker buildx build --platform linux/arm64 -t woowajeff/todoktodok:dev --push .
 
   cd:
     needs: ci
@@ -66,7 +66,7 @@ jobs:
       - name: Pull Docker image
         run: |
           echo "Docker 이미지 pull 시작"
-          docker pull woowajeff/todoktodok:prod
+          docker pull woowajeff/todoktodok:dev
           echo "Docker 이미지 pull 완료"
 
       - name: Stop running Container

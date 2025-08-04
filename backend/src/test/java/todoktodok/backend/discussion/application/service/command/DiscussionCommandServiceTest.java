@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.DatabaseInitializer;
 import todoktodok.backend.InitializerTimer;
 import todoktodok.backend.discussion.application.dto.request.DiscussionRequest;
-import todoktodok.backend.discussion.application.dto.request.DiscussionRequestV2;
 import todoktodok.backend.member.domain.Member;
 import todoktodok.backend.member.domain.repository.MemberRepository;
 import todoktodok.backend.member.presentation.fixture.MemberFixture;
@@ -51,14 +50,14 @@ class DiscussionCommandServiceTest {
         final Long memberId = 999L;
         final Long bookId = 1L;
 
-        final DiscussionRequestV2 discussionRequestV2 = new DiscussionRequestV2(
+        final DiscussionRequest discussionRequest = new DiscussionRequest(
                 bookId,
                 "이 책의 의존성 주입 방식에 대한 생각",
                 "스프링의 DI 방식은 유지보수에 정말 큰 도움이 된다고 느꼈습니다."
         );
 
         // when - then
-        assertThatThrownBy(() -> discussionCommandService.createDiscussionV2(memberId, discussionRequestV2))
+        assertThatThrownBy(() -> discussionCommandService.createDiscussion(memberId, discussionRequest))
                 .isInstanceOf(NoSuchElementException.class)
                 .hasMessage("해당 회원을 찾을 수 없습니다");
     }
@@ -73,7 +72,7 @@ class DiscussionCommandServiceTest {
         final Long memberId = 1L;
         final Long bookId = 999L;
 
-        final DiscussionRequestV2 discussionRequestV2 = new DiscussionRequestV2(
+        final DiscussionRequest discussionRequest = new DiscussionRequest(
                 bookId,
                 "이 책의 의존성 주입 방식에 대한 생각",
                 "스프링의 DI 방식은 유지보수에 정말 큰 도움이 된다고 느꼈습니다."
@@ -81,7 +80,7 @@ class DiscussionCommandServiceTest {
 
         // when - then
         assertThatThrownBy(
-                () -> discussionCommandService.createDiscussionV2(memberId, discussionRequestV2)
+                () -> discussionCommandService.createDiscussion(memberId, discussionRequest)
         )
                 .isInstanceOf(NoSuchElementException.class)
                 .hasMessage("해당 도서를 찾을 수 없습니다");
@@ -94,7 +93,6 @@ class DiscussionCommandServiceTest {
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setUserInfo("user123@gmail.com", "user123", "https://image.png", "message");
         databaseInitializer.setDefaultBookInfo();
-        databaseInitializer.setDefaultNoteInfo();
         databaseInitializer.setDefaultDiscussionInfo();
 
         final Long memberId = 2L;
@@ -115,7 +113,6 @@ class DiscussionCommandServiceTest {
         // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
-        databaseInitializer.setDefaultNoteInfo();
         databaseInitializer.setDefaultDiscussionInfo();
 
         final Long memberId = 1L;
@@ -158,7 +155,6 @@ class DiscussionCommandServiceTest {
             // given
             databaseInitializer.setDefaultUserInfo();
             databaseInitializer.setDefaultBookInfo();
-            databaseInitializer.setDefaultNoteInfo();
 
             final Long memberId = 1L;
             final Long noteId = 999L;
@@ -183,7 +179,6 @@ class DiscussionCommandServiceTest {
             // given
             databaseInitializer.setDefaultUserInfo();
             databaseInitializer.setDefaultBookInfo();
-            databaseInitializer.setDefaultNoteInfo();
 
             final Member member = MemberFixture.create(
                     "user12@gmail.com",

@@ -99,72 +99,12 @@ public class DatabaseInitializer {
     }
 
     @Transactional
-    public void setDefaultShelfInfo() {
-        em.createNativeQuery(
-                """
-                        INSERT INTO SHELF (member_id, book_id, created_at, modified_at)
-                        VALUES
-                        (1, 1, CURRENT_TIME, CURRENT_TIME)
-                        """
-        ).executeUpdate();
-    }
-
-    @Transactional
-    public void setShelfInfo(
-            final Long memberId,
-            final Long bookId
-    ) {
-        em.createNativeQuery(
-                        """
-                                INSERT INTO SHELF (member_id, book_id, created_at, modified_at)
-                                VALUES 
-                                (:memberId, :bookId, CURRENT_TIME, CURRENT_TIME)
-                                """
-                )
-                .setParameter("memberId", memberId)
-                .setParameter("bookId", bookId)
-                .executeUpdate();
-    }
-
-    @Transactional
-    public void setDefaultNoteInfo() {
-        em.createNativeQuery(
-                """
-                        INSERT INTO NOTE (snap, memo, book_id, member_id, created_at, modified_at)
-                        VALUES
-                        ('코드 재사용을 위해서는 객체 합성이 클래스 상속보다 더 좋은 방법이다.', '변경에 유연하게 대처할 수 있는 설계가 대부분 정답이다.', 1L, 1L, CURRENT_TIME, CURRENT_TIME)
-                        """
-        ).executeUpdate();
-    }
-
-    @Transactional
-    public void setNoteInfo(
-            final String snap,
-            final String memo,
-            final Long bookId,
-            final Long memberId
-    ) {
-        em.createNativeQuery(
-                        """
-                                INSERT INTO NOTE (snap, memo, book_id, member_id, created_at, modified_at)
-                                VALUES 
-                                (:snap, :memo, :bookId, :memberId, CURRENT_TIME, CURRENT_TIME)
-                                """
-                )
-                .setParameter("snap", snap)
-                .setParameter("memo", memo)
-                .setParameter("bookId", bookId)
-                .setParameter("memberId", memberId)
-                .executeUpdate();
-    }
-
-    @Transactional
     public void setDefaultDiscussionInfo() {
         em.createNativeQuery(
                 """
-                        INSERT INTO DISCUSSION (title, content, member_id, book_id, note_id, created_at, modified_at)
+                        INSERT INTO DISCUSSION (title, content, member_id, book_id, created_at, modified_at)
                         VALUES 
-                        ('상속과 조합의 차이', '코드 재사용에 있어 조합이 유리하다면, 상속의 목적은 무엇인가요?', 1L, 1L, 1L, CURRENT_TIME, CURRENT_TIME)
+                        ('상속과 조합의 차이', '코드 재사용에 있어 조합이 유리하다면, 상속의 목적은 무엇인가요?', 1L, 1L, CURRENT_TIME, CURRENT_TIME)
                         """
         ).executeUpdate();
     }
@@ -174,21 +114,19 @@ public class DatabaseInitializer {
             final String title,
             final String content,
             final Long memberId,
-            final Long bookId,
-            final Long noteId
+            final Long bookId
     ) {
         em.createNativeQuery(
                         """
-                                INSERT INTO DISCUSSION (title, content, member_id, book_id, note_id, created_at, modified_at)
+                                INSERT INTO DISCUSSION (title, content, member_id, book_id, created_at, modified_at)
                                 VALUES 
-                                (:title, :content, :memberId, :bookId, :noteId, CURRENT_TIME, CURRENT_TIME)
+                                (:title, :content, :memberId, :bookId, CURRENT_TIME, CURRENT_TIME)
                                 """
                 )
                 .setParameter("title", title)
                 .setParameter("content", content)
                 .setParameter("memberId", memberId)
                 .setParameter("bookId", bookId)
-                .setParameter("noteId", noteId)
                 .executeUpdate();
     }
 

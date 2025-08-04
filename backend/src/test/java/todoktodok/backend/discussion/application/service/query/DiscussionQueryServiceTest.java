@@ -1,12 +1,11 @@
 package todoktodok.backend.discussion.application.service.query;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import java.util.List;
+import java.util.NoSuchElementException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -45,7 +44,6 @@ class DiscussionQueryServiceTest {
         // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
-        databaseInitializer.setDefaultNoteInfo();
         databaseInitializer.setDefaultDiscussionInfo();
 
         final Long memberId = 1L;
@@ -63,18 +61,15 @@ class DiscussionQueryServiceTest {
         // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
-        databaseInitializer.setDefaultNoteInfo();
 
         final Long memberId = 1L;
         final Long bookId = 1L;
-        final Long noteId = 1L;
 
         databaseInitializer.setDiscussionInfo(
                 "클린코드에 대해 논의해볼까요",
                 "클린코드만세",
                 memberId,
-                bookId,
-                noteId
+                bookId
         );
 
         final Long discussionId = 1L;
@@ -87,38 +82,6 @@ class DiscussionQueryServiceTest {
                 () -> assertThat(discussionResponse.discussionId()).isEqualTo(discussionId),
                 () -> assertThat(discussionResponse.discussionTitle()).isEqualTo("클린코드에 대해 논의해볼까요"),
                 () -> assertThat(discussionResponse.discussionOpinion()).isEqualTo("클린코드만세")
-        );
-    }
-
-    @Test
-    @DisplayName("특정 토론방에 기록이 없을 경우 기록은 빈 값으로 조회된다")
-    void getDiscussion_noRecord_success() {
-        // given
-        databaseInitializer.setDefaultUserInfo();
-        databaseInitializer.setDefaultBookInfo();
-
-        final Long memberId = 1L;
-        final Long bookId = 1L;
-
-        databaseInitializer.setDiscussionInfo(
-                "클린코드에 대해 논의해볼까요",
-                "클린코드만세",
-                memberId,
-                bookId,
-                null
-        );
-
-        final Long discussionId = 1L;
-
-        // when
-        final DiscussionResponse discussionResponse = discussionQueryService.getDiscussion(memberId, discussionId);
-
-        // then
-        assertAll(
-                () -> assertThat(discussionResponse.discussionId()).isEqualTo(discussionId),
-                () -> assertThat(discussionResponse.discussionTitle()).isEqualTo("클린코드에 대해 논의해볼까요"),
-                () -> assertThat(discussionResponse.discussionOpinion()).isEqualTo("클린코드만세"),
-                () -> assertThat(discussionResponse.note()).isNull()
         );
     }
 
@@ -156,13 +119,13 @@ class DiscussionQueryServiceTest {
             );
 
             databaseInitializer.setDiscussionInfo(
-                    "user1의 객체 지향 토론", "book1에 대한 토론입니다", 1L, 1L, null
+                    "user1의 객체 지향 토론", "book1에 대한 토론입니다", 1L, 1L
             );
             databaseInitializer.setDiscussionInfo(
-                    "user1의 메서드 분리 토론", "boo2에 대한 토론입니다", 1L, 2L, null
+                    "user1의 메서드 분리 토론", "boo2에 대한 토론입니다", 1L, 2L
             );
             databaseInitializer.setDiscussionInfo(
-                    "user2의 메서드 분리 토론", "boo2에 대한 토론입니다", 2L, 2L, null
+                    "user2의 메서드 분리 토론", "boo2에 대한 토론입니다", 2L, 2L
             );
         }
 
