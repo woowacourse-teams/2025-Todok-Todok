@@ -13,9 +13,11 @@ sealed class ProfileItems(
 
     data object TabItem : ProfileItems(ViewType.TAB)
 
-    enum class ViewType {
-        HEADER,
-        INFORMATION,
-        TAB,
+    enum class ViewType(
+        val sequence: Int,
+    ) {
+        HEADER(0),
+        INFORMATION(1),
+        TAB(2),
     }
 }

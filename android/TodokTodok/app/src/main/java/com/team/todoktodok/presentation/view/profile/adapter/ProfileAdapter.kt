@@ -27,7 +27,7 @@ class ProfileAdapter(
         }
     }
 
-    override fun getItemViewType(position: Int): Int = getItem(position).viewType.ordinal
+    override fun getItemViewType(position: Int): Int = getItem(position).viewType.sequence
 
     override fun onBindViewHolder(
         holder: RecyclerView.ViewHolder,
