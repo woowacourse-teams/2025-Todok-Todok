@@ -383,288 +383,106 @@ VALUES
 CURRENT_TIME,
 CURRENT_TIME);
 
---유저 서재의 도서 목록
-INSERT INTO SHELF (member_id, book_id, created_at, modified_at)
-VALUES
-(1, 1, CURRENT_TIME, CURRENT_TIME);
-
-INSERT INTO SHELF (member_id, book_id, created_at, modified_at)
-VALUES
-(1, 2, CURRENT_TIME, CURRENT_TIME);
-
-INSERT INTO SHELF (member_id, book_id, created_at, modified_at)
-VALUES
-(1, 3, CURRENT_TIME, CURRENT_TIME);
-
---INSERT INTO SHELF (member_id, book_id, created_at, modified_at)
---VALUES
---(2, 1, CURRENT_TIME, CURRENT_TIME);
-
---INSERT INTO SHELF (member_id, book_id, created_at, modified_at)
---VALUES
---(2, 2, CURRENT_TIME, CURRENT_TIME);
-
---INSERT INTO SHELF (member_id, book_id, created_at, modified_at)
---VALUES
---(2, 3, CURRENT_TIME, CURRENT_TIME);
-
--- 4
-INSERT INTO SHELF (member_id, book_id, created_at, modified_at)
-VALUES
-(2, 29, CURRENT_TIME, CURRENT_TIME);
-
--- 5
-INSERT INTO SHELF (member_id, book_id, created_at, modified_at)
-VALUES
-(5, 29, CURRENT_TIME, CURRENT_TIME);
-
--- 6
-INSERT INTO SHELF (member_id, book_id, created_at, modified_at)
-VALUES
-(1, 29, CURRENT_TIME, CURRENT_TIME);
-
-INSERT INTO SHELF (member_id, book_id, created_at, modified_at)
-VALUES
-(3, 1, CURRENT_TIME, CURRENT_TIME);
-
-INSERT INTO SHELF (member_id, book_id, created_at, modified_at)
-VALUES
-(3, 2, CURRENT_TIME, CURRENT_TIME);
-
-INSERT INTO SHELF (member_id, book_id, created_at, modified_at)
-VALUES
-(3, 3, CURRENT_TIME, CURRENT_TIME);
-
---유저의 기록
-INSERT INTO NOTE (snap, memo, book_id, member_id, created_at, modified_at)
-VALUES
-('코드 재사용을 위해서는 객체 합성이 클래스 상속보다 더 좋은 방법이다.1',
-'변경에 유연하게 대처할 수 있는 설계가 대부분 정답이다.1',
-1,
-1,
-CURRENT_TIME,
-CURRENT_TIME);
-
---INSERT INTO NOTE (snap, memo, book_id, member_id, created_at, modified_at)
---VALUES
---('코드 재사용을 위해서는 객체 합성이 클래스 상속보다 더 좋은 방법이다.2',
---'변경에 유연하게 대처할 수 있는 설계가 대부분 정답이다.2',
---1,
---2,
---CURRENT_TIME,
---CURRENT_TIME);
-
-INSERT INTO NOTE (snap, memo, book_id, member_id, created_at, modified_at)
-VALUES
-('코드 재사용을 위해서는 객체 합성이 클래스 상속보다 더 좋은 방법이다.3',
-'변경에 유연하게 대처할 수 있는 설계가 대부분 정답이다.3',
-1,
-3,
-CURRENT_TIME,
-CURRENT_TIME);
-
-INSERT INTO NOTE (snap, memo, book_id, member_id, created_at, modified_at)
-VALUES
-('코드 재사용을 위해서는 객체 합성이 클래스 상속보다 더 좋은 방법이다.1',
-'변경에 유연하게 대처할 수 있는 설계가 대부분 정답이다.1',
-2,
-1,
-CURRENT_TIME,
-CURRENT_TIME);
-
---INSERT INTO NOTE (snap, memo, book_id, member_id, created_at, modified_at)
---VALUES
---('코드 재사용을 위해서는 객체 합성이 클래스 상속보다 더 좋은 방법이다.2',
---'변경에 유연하게 대처할 수 있는 설계가 대부분 정답이다.2',
---2,
---2,
---CURRENT_TIME,
---CURRENT_TIME);
-
-INSERT INTO NOTE (snap, memo, book_id, member_id, created_at, modified_at)
-VALUES
-('코드 재사용을 위해서는 객체 합성이 클래스 상속보다 더 좋은 방법이다.3',
-'변경에 유연하게 대처할 수 있는 설계가 대부분 정답이다.3',
-2,
-3,
-CURRENT_TIME,
-CURRENT_TIME);
-
-INSERT INTO NOTE (snap, memo, book_id, member_id, created_at, modified_at)
-VALUES
-('코드 재사용을 위해서는 객체 합성이 클래스 상속보다 더 좋은 방법이다.1',
-'변경에 유연하게 대처할 수 있는 설계가 대부분 정답이다.1',
-3,
-1,
-CURRENT_TIME,
-CURRENT_TIME);
-
---INSERT INTO NOTE (snap, memo, book_id, member_id, created_at, modified_at)
---VALUES
---('코드 재사용을 위해서는 객체 합성이 클래스 상속보다 더 좋은 방법이다.2',
---'변경에 유연하게 대처할 수 있는 설계가 대부분 정답이다.2',
---3,
---2,
---CURRENT_TIME,
---CURRENT_TIME);
-
-INSERT INTO NOTE (snap, memo, book_id, member_id, created_at, modified_at)
-VALUES
-('코드 재사용을 위해서는 객체 합성이 클래스 상속보다 더 좋은 방법이다.3',
-'변경에 유연하게 대처할 수 있는 설계가 대부분 정답이다.3',
-3,
-3,
-CURRENT_TIME,
-CURRENT_TIME);
-
--- 7
-INSERT INTO NOTE (snap, memo, book_id, member_id, created_at, modified_at)
-VALUES
-('생성자에서 객체를 초기화할 때에는 코드가 없어야하고 인자를 건드려서는 안된다. 대신, 필요하다면 인자를 다른 타입의 객체로 감싸거나 가공하지 않은 형식으로 캡슐화해야한다. 예를 들어 다음과 같은 것은 잘못된 방법이다.',
-'',
-29,
-2,
-CURRENT_TIME,
-CURRENT_TIME);
-
--- 8
-INSERT INTO NOTE (snap, memo, book_id, member_id, created_at, modified_at)
-VALUES
-('객체의 필드는 객체의 상태이자 식별자이다. 어떤 것도 캡슐화하지 않은 클래스의 모든 객체는 동일하다. 프로퍼티가 없는 클래스는 정적 메서드와 유사하다. 이 클래스는 아무런 상태와 식별자도 가지지 않고 오직 행동만을 포함한다. 정적 메서드가 존재하지 않고 인스턴스 생성과 실행을 엄격하게 분리하는 순수한 객체지향에서는 기술적으로 프로퍼티가 없는 클래스를 만들 수 없다.',
-'',
-29,
-5,
-CURRENT_TIME,
-CURRENT_TIME);
-
--- 9
-INSERT INTO NOTE (snap, memo, book_id, member_id, created_at, modified_at)
-VALUES
-('객체 간의 관계를 형성하기 위해서는 결합이 필요하다. 하지만 수 십개의 객체가 관계를 형성하기 위해 결합을 맺는다면, 강한 결합도가 문제가 된다. 따라서 우리는 객체 간의 관계를 맞을 수 있도록 하며, 객체를 분리하기 위해 인터페이스를 사용할 수 있다. 인터페이스는 다른 객체와 소통하기 위한 계약이라고 볼 수 있다. 특정 인터페이스를 구현하는 것은, 그 인터페이스에 담긴 계약을 준수한다고 보면 된다. 더불어 클래스 안의 모든 퍼블릭 메서드가 인터페이스를 구현하도록 만들어야한다. 올바르게 설계된 클래스라면 최소한 하나의 인터페이스라도 구현하지 않는 퍼블릭 메서드를 포함시켜서는 안된다.',
-'',
-29,
-5,
-CURRENT_TIME,
-CURRENT_TIME);
-
--- 10
-INSERT INTO NOTE (snap, memo, book_id, member_id, created_at, modified_at)
-VALUES
-('getter와 setter를 사용하지 마세요.',
-'',
-29,
-6,
-CURRENT_TIME,
-CURRENT_TIME);
-
 --토론방
---INSERT INTO DISCUSSION (title, content, member_id, book_id, note_id, created_at, modified_at)
---VALUES
---('상속과 조합의 차이',
---'코드 재사용에 있어 조합이 유리하다면, 상속의 목적은 무엇인가요?',
---1, 1, 1,
---CURRENT_TIME,
---CURRENT_TIME);
---
---INSERT INTO DISCUSSION (title, content, member_id, book_id, note_id, created_at, modified_at)
---VALUES
---('상속과 조합의 차이',
---'코드 재사용에 있어 조합이 유리하다면, 상속의 목적은 무엇인가요?',
---2, 1, 1,
---CURRENT_TIME,
---CURRENT_TIME);
---
---INSERT INTO DISCUSSION (title, content, member_id, book_id, note_id, created_at, modified_at)
---VALUES
---('상속과 조합의 차이',
---'코드 재사용에 있어 조합이 유리하다면, 상속의 목적은 무엇인가요?',
---3, 1, 1,
---CURRENT_TIME,
---CURRENT_TIME);
-
 -- 1
-INSERT INTO DISCUSSION (title, content, member_id, book_id, note_id, created_at, modified_at)
+INSERT INTO DISCUSSION (title, content, member_id, book_id, created_at, modified_at)
 VALUES
 ('엘강오 생성자 관련 토론',
 '저는 주로 생성자에서 검증을 하는 편인데, 코드를 넣지 말라고 하면 객체 필드에 대한 검증 로직은 어디에 들어가는 게 적합할까요?',
-2, 29, 7,
+2, 29,
 CURRENT_TIME,
 CURRENT_TIME);
 
 -- 2
-INSERT INTO DISCUSSION (title, content, member_id, book_id, note_id, created_at, modified_at)
+INSERT INTO DISCUSSION (title, content, member_id, book_id, created_at, modified_at)
 VALUES
 ('필드가 없는 클래스 == 객체?',
 '엘강오에서는 최소한 뭔가는 캡슐화하라고 했는데, 그렇다면 캡슐화할 필드가 없는 클래스는 객체라고 불릴 수 없는걸까요?',
-5, 29, 8,
+5, 29,
 CURRENT_TIME,
 CURRENT_TIME);
 
 -- 3
-INSERT INTO DISCUSSION (title, content, member_id, book_id, note_id, created_at, modified_at)
+INSERT INTO DISCUSSION (title, content, member_id, book_id, created_at, modified_at)
 VALUES
 ('확장성과 복잡성의 트레이드 오프에 대해',
 '모든 상황에서 확장성을 고려하여 인터페이스를 사용해야 할까요? 인터페이스를 사용하는 것이 오버 엔지니어링은 아닐까요? 확장성과 복잡성의 트레이드 오프를 어느 정도까지 잡아야 할지 모르겠습니다.',
-5, 29, 9,
+5, 29,
 CURRENT_TIME,
 CURRENT_TIME);
 
 -- 4
-INSERT INTO DISCUSSION (title, content, member_id, book_id, note_id, created_at, modified_at)
+INSERT INTO DISCUSSION (title, content, member_id, book_id, created_at, modified_at)
 VALUES
 ('getter는 절대 사용하면 안 되는가?',
 'getter를 절대 사용하지 않는다면 서로 책임을 넘기느라 객체 그래프가 과도하게 깊어져 오히려 복잡성이 늘어나는 경우가 생기는데, 이런 경우에도 쓰지 않는 것이 좋을까요? 어느 정도까지 getter를 쓰지 않는 것을 고려해야 할까요?',
-1, 29, 10,
+1, 29,
 CURRENT_TIME,
 CURRENT_TIME);
 
-INSERT INTO DISCUSSION (title, content, member_id, book_id, note_id, created_at, modified_at)
+INSERT INTO DISCUSSION (title, content, member_id, book_id, created_at, modified_at)
 VALUES
 ('데이터와 프로세스를 한 단위에서 묶는 것이 어째서 편협한 시각일까?',
 '28P\n"객체 지향 프로그래밍을 흔히 데이터와 프로세스를 하나의 단위로 통합해 놓은 방식으로 표현하기도 한다.\n비록, 이 관점이 객체지향을 구현 관점에서 바라본 지극히 편협한 시각인 것은 맞지만, (~이하 생략)"\n\n오브젝트에선 데이터와 프로세스를 한 단위로 묶는 것을, 객체 지향을 구현 관점으로만 본 편협한 시각이라 이야기합니다.\n\n객체 지향을 구현함에 있어 자주 잊어버리는 실수라 생각합니다.\n그렇기에 이 문제를 정의하고 넘어가면 좋다고 생각했어요. 😎',
-1, 1, null, CURRENT_TIME, CURRENT_TIME);
+1, 1,
+CURRENT_TIME,
+CURRENT_TIME);
 
-INSERT INTO DISCUSSION (title, content, member_id, book_id, note_id, created_at, modified_at)
+INSERT INTO DISCUSSION (title, content, member_id, book_id, created_at, modified_at)
 VALUES
 ('객체는 어느 정도까지 의인화할가?',
 '객체지향에서 객체를 살아 숨쉬는 존재로 보기 때문에 객체를 의인화 한다고 표현하는데요.\n여러분은 객체를 어느 정도까지 의인화하시는지 궁금합니다.\n\n프리코스 때 자동차 경주에서는 자동차가 움직이도록 의인화했는데, 저는 이번 장기 미션에서는 기물이 스스로 움직일 수 없습니다.\n대신 기물은 스스로 움직일 수 있는 경로를 탐색하는 책임이 있고, 보드가 기물을 움직이는 책임을 갖고 있습니다.\n즉, 객체의 의인화는 반드시 해야 하는 것은 아니며, 객체를 행동(책임) 관점에서 바라보기 위함이라고 생각합니다.\n여러분은 어느 정도까지 객체를 의인화 시키시는지 궁금합니다.',
-2, 1, null, CURRENT_TIME, CURRENT_TIME);
+2, 1,
+CURRENT_TIME,
+CURRENT_TIME);
 
-INSERT INTO DISCUSSION (title, content, member_id, book_id, note_id, created_at, modified_at)
+INSERT INTO DISCUSSION (title, content, member_id, book_id, created_at, modified_at)
 VALUES
 ('변경에 유연한 코드란 무엇일까?',
- '변경에 유연한 코드란 무엇을 의미할까요?\n변경을 예측하여 작성한 코드와는 다른 것일까요?\n\n❓ 이유\n저는 변경에 유연한 코드와 변경(미래)을 예측하여 작성한 코드는 전혀 다르다고 생각합니다.\n\n제가 생각하는 변경에 유연한 코드를 작성하는 방법 중 하나는 static 클래스를 지양하는 것입니다.\n저는 주로 OutputView와 같은 클래스를 static하게 작성했는데요.\n하지만 추후 콘솔이 아닌 모니터에 출력해야 한다면, 혹은 상황에 따라 출력 방식이 달라진다면 어떻게 해야할까요?\n출력에 관한 여러 구현체를 만들어야하고 필요에 따라 구현체를 갈아 끼워 넣어야할 것입니다.\n\n만약 OutputView를 객체로 생성하여 사용했다면 추후 어떤 변경이 생기던 간에 새로운 구현체를 생성해 넣어줌으로써 변경에 쉽게 대처할 수 있을 것입니다.\n이러한 이유로 static하게 작성된 클래스는 객체지향스럽지 못하고 변경에 유연하지 못하다고 생각합니다.',
- 3, 1, null, CURRENT_TIME, CURRENT_TIME);
+'변경에 유연한 코드란 무엇을 의미할까요?\n변경을 예측하여 작성한 코드와는 다른 것일까요?\n\n❓ 이유\n저는 변경에 유연한 코드와 변경(미래)을 예측하여 작성한 코드는 전혀 다르다고 생각합니다.\n\n제가 생각하는 변경에 유연한 코드를 작성하는 방법 중 하나는 static 클래스를 지양하는 것입니다.\n저는 주로 OutputView와 같은 클래스를 static하게 작성했는데요.\n하지만 추후 콘솔이 아닌 모니터에 출력해야 한다면, 혹은 상황에 따라 출력 방식이 달라진다면 어떻게 해야할까요?\n출력에 관한 여러 구현체를 만들어야하고 필요에 따라 구현체를 갈아 끼워 넣어야할 것입니다.\n\n만약 OutputView를 객체로 생성하여 사용했다면 추후 어떤 변경이 생기던 간에 새로운 구현체를 생성해 넣어줌으로써 변경에 쉽게 대처할 수 있을 것입니다.\n이러한 이유로 static하게 작성된 클래스는 객체지향스럽지 못하고 변경에 유연하지 못하다고 생각합니다.',
+3, 1,
+CURRENT_TIME,
+CURRENT_TIME);
 
- INSERT INTO DISCUSSION (title, content, member_id, book_id, note_id, created_at, modified_at)
+ INSERT INTO DISCUSSION (title, content, member_id, book_id, created_at, modified_at)
  VALUES
  ('메세지와 메서드의 차이가 무엇인가요?',
 '메시지(message)와 메서드(method)의 차이점은 무엇일까요?\n\n저는 지금까지 메시지와 메서드를 구분하지 않고 사용하고 있었던 것 같아요.\n그래서 다형성에 대한 이해도가 낮았던 것 같습니다.\nch2를 읽고 메시지와 메서드의 차이점에 대해 다시 한 번 생각해보게 되었고, 그 차이점을 알고 나니 다형성을 제 언어로 정의할 수 있게 되었습니다.\n여러분도 메시지와 메서드의 차이점, 그리고 다형성에 대해 제대로 이해하고 계시는지 이야기 나누어보면 좋을 것 같습니다.\n\n📖 관련 페이지\np.49 협력에 관한 짧은 이야기',
-4, 1, null, CURRENT_TIME, CURRENT_TIME);
+4, 1,
+CURRENT_TIME,
+CURRENT_TIME);
 
-INSERT INTO DISCUSSION (title, content, member_id, book_id, note_id, created_at, modified_at)
+INSERT INTO DISCUSSION (title, content, member_id, book_id, created_at, modified_at)
 VALUES
 ('객체지향 패러다임이 강력한 이유?',
 '41p [도메인의 구조를 따르는 프로그램 구조]\n"객체지향 패러다임이 강력한 이유는 ~~ 매끄럽게 연결될 수 있다."\n\n-> 저는 객체지향 패러다임이 왜 강력한지에 대한 설명이 이해되지 않습니다.\n이 내용이 어떤 의미를 담고 있는지, 대화를 통해 함께 풀어보고 싶습니다.',
-1, 1, null, CURRENT_TIME, CURRENT_TIME);
+1, 1,
+CURRENT_TIME,
+CURRENT_TIME);
 
-INSERT INTO DISCUSSION (title, content, member_id, book_id, note_id, created_at, modified_at)
+INSERT INTO DISCUSSION (title, content, member_id, book_id, created_at, modified_at)
 VALUES
 ('컴파일 의존성과 실행 의존성이 다르면 유연한 설계일까?',
 '책을 읽던 중 모호한 부분이 생겨서 이슈를 올립니다!\n\n73p "유연한 객체지향 프로그램을 위해서는 컴파일 시간 의존성과 실행 시간 의존성이 달라야 한다는 사실 역시 알게 됐다."\n\n책에서는 "유연한 객체지향 프로그램을 위해서는 ~~ 의존성이 달라야 한다는 사실" 이라고 적혀있습니다. 뭔가, "유연한 설계는 컴파일, 런타임 시간 의존성이 달라야 하나?" 라는 생각이 들며 어색했습니다. 이에 내용을 읽고 느낀 여러분의 의견이 궁금합니다.',
-1, 1, null, CURRENT_TIME, CURRENT_TIME);
+1, 1,
+CURRENT_TIME,
+CURRENT_TIME);
 
-INSERT INTO DISCUSSION (title, content, member_id, book_id, note_id, created_at, modified_at)
+INSERT INTO DISCUSSION (title, content, member_id, book_id, created_at, modified_at)
 VALUES
 ('메세지가 객체를 결정하게 하는 것이 맞을까?',
 'ch4를 읽다가 메시지를 먼저 정의하고, 객체를 결정하는 방식의 설계에 대해 의문이 생겼습니다.\n\n저는 보통 요구사항을 분석한 뒤, 필요한 행동들을 먼저 도출하고, 그 행동들을 묶어서 객체를 설계하는 방식으로 진행해왔습니다. 반면 저자는 메시지를 먼저 정의하고, 그 메시지를 전달받아 처리할 객체를 선택하는 흐름으로 설계합니다. 이 방식이 객체를 더 작고 유연하게 만들 수 있다는 장점은 있지만, 책임이 작게 나누게 되면 복잡도가 증가하는 게 아닌가라는 의문이 들었습니다. 그래서 제가 궁금하게 된 것은 다음과 같습니다.\n\n객체를 잘게 나누었다가 합친 경우가 있다면, 객체를 합치는 기준은 무엇인가요?\n\n메시지 기반으로 설계를 해본 경우가 있다면, 기존의 미션이나 설계에서 어떠한 생각의 흐름으로 되었는지 궁금합니다.메시지의 방식으로는 설계의 흐름을 잡기가 어렵다고 느껴져서 다른 사람들은 어떻게 적용하는지 궁금합니다. 메시지를 어떻게 만들어내고 객체를 설계했다는 예시가 있다면 감사하겠습니다!',
-1, 1, null, CURRENT_TIME, CURRENT_TIME);
+1, 1,
+CURRENT_TIME,
+CURRENT_TIME);
 
-INSERT INTO DISCUSSION (title, content, member_id, book_id, note_id, created_at, modified_at)
+INSERT INTO DISCUSSION (title, content, member_id, book_id, created_at, modified_at)
 VALUES
 ('응집도와 결합도의 차이?',
 '응집도와 결합도가 어떤 차이를 가지는 지에 대한 다른 분들의 생각이 궁금합니다.\n응집도는 내부에 얼마나 비슷한 책임들이 모여있는가, 결합도는 책임이 얼마나 외부에 새어 나가지 않았는가라는 관점의 차이만 존재한다고 느꼈습니다.\n\n제가 인지하지 못한 추가적인 차이가 존재할까요?',
-1, 1, null, CURRENT_TIME, CURRENT_TIME);
+1, 1,
+CURRENT_TIME,
+CURRENT_TIME);
 
 --한 토론방 마다 댓글 0, 1, 2개
 --INSERT INTO COMMENT (content, member_id, discussion_id, created_at, modified_at)

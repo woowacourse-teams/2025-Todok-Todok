@@ -1,6 +1,7 @@
 package todoktodok.backend.comment.domain;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import todoktodok.backend.book.domain.Book;
@@ -10,8 +11,6 @@ import todoktodok.backend.discussion.domain.Discussion;
 import todoktodok.backend.discussion.domain.fixture.DiscussionFixture;
 import todoktodok.backend.member.domain.Member;
 import todoktodok.backend.member.presentation.fixture.MemberFixture;
-import todoktodok.backend.note.domain.Note;
-import todoktodok.backend.note.presentation.fixture.NoteFixture;
 
 public class CommentTest {
 
@@ -34,19 +33,11 @@ public class CommentTest {
                 "1234567890123"
         );
 
-        final Note note = NoteFixture.create(
-                "코드는 다른 사람이 읽을 수도 있다는 사실을 항상 염두에 두어야 한다.",
-                "함수명 하나 짓는 데 시간을 들이는 이유가 명확해졌다.",
-                book,
-                member
-        );
-
         final Discussion discussion = DiscussionFixture.create(
                 "클린코드",
                 "네이밍은 언제나 중요하다",
                 member,
-                book,
-                note
+                book
         );
 
         // when - then
@@ -79,19 +70,11 @@ public class CommentTest {
                 "1234567890123"
         );
 
-        final Note note = NoteFixture.create(
-                "코드는 다른 사람이 읽을 수도 있다는 사실을 항상 염두에 두어야 한다.",
-                "함수명 하나 짓는 데 시간을 들이는 이유가 명확해졌다.",
-                book,
-                member
-        );
-
         final Discussion discussion = DiscussionFixture.create(
                 "클린코드",
                 "네이밍은 언제나 중요하다",
                 member,
-                book,
-                note
+                book
         );
 
         // when - then
@@ -122,19 +105,11 @@ public class CommentTest {
                 "1234567890123"
         );
 
-        final Note note = NoteFixture.create(
-                "코드는 다른 사람이 읽을 수도 있다는 사실을 항상 염두에 두어야 한다.",
-                "함수명 하나 짓는 데 시간을 들이는 이유가 명확해졌다.",
-                book,
-                member
-        );
-
         final Discussion discussion = DiscussionFixture.create(
                 "클린코드",
                 "네이밍은 언제나 중요하다",
                 member,
-                book,
-                note
+                book
         );
 
         final Comment comment = CommentFixture.create(
@@ -147,8 +122,7 @@ public class CommentTest {
                 "오브젝트",
                 "상속보다 합성을 사용하자",
                 member,
-                book,
-                note
+                book
         );
 
         // when - then
@@ -174,19 +148,11 @@ public class CommentTest {
                 "1234567890123"
         );
 
-        final Note note = NoteFixture.create(
-                "코드는 다른 사람이 읽을 수도 있다는 사실을 항상 염두에 두어야 한다.",
-                "함수명 하나 짓는 데 시간을 들이는 이유가 명확해졌다.",
-                book,
-                member
-        );
-
         final Discussion discussion = DiscussionFixture.create(
                 "클린코드",
                 "네이밍은 언제나 중요하다",
                 member,
-                book,
-                note
+                book
         );
 
         final Comment comment = CommentFixture.create(

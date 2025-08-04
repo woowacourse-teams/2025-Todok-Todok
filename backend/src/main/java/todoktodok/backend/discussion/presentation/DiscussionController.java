@@ -2,7 +2,6 @@ package todoktodok.backend.discussion.presentation;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
@@ -14,17 +13,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import todoktodok.backend.discussion.application.dto.request.DiscussionRequest;
 import todoktodok.backend.discussion.application.dto.response.DiscussionResponse;
 import todoktodok.backend.discussion.application.service.command.DiscussionCommandService;
 import todoktodok.backend.discussion.application.service.query.DiscussionQueryService;
+import todoktodok.backend.discussion.domain.DiscussionFilterType;
 import todoktodok.backend.global.auth.Auth;
 import todoktodok.backend.global.auth.Role;
 import todoktodok.backend.global.resolver.LoginMember;
 
-@Tag(name = "discussion-controller")
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/v1/discussions")
@@ -33,7 +33,6 @@ public class DiscussionController {
     private final DiscussionCommandService discussionCommandService;
     private final DiscussionQueryService discussionQueryService;
 
-    @Deprecated
     @Operation(summary = "토론방 생성 API")
     @Auth(value = Role.USER)
     @PostMapping
@@ -46,16 +45,6 @@ public class DiscussionController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .location(createUri(discussionId))
                 .build();
-    }
-
-    @Operation(summary = "토론방 전체 조회 API")
-    @Auth(Role.USER)
-    @GetMapping
-    public ResponseEntity<List<DiscussionResponse>> getDiscussions(
-            @Parameter(hidden = true) @LoginMember final Long memberId
-    ) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(discussionQueryService.getDiscussions(memberId));
     }
 
     @Operation(summary = "토론방 단일 조회 API")
@@ -80,6 +69,18 @@ public class DiscussionController {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .build();
+    }
+
+    @Operation(summary = "토론방 필터링 조회 API")
+    @Auth(value = Role.USER)
+    @GetMapping
+    public ResponseEntity<List<DiscussionResponse>> getDiscussionsByKeywordAndType(
+            @Parameter(hidden = true) @LoginMember final Long memberId,
+            @RequestParam(required = false) final String keyword,
+            @RequestParam final DiscussionFilterType type
+    ) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(discussionQueryService.getDiscussionsByKeywordAndType(memberId, keyword, type));
     }
 
     private URI createUri(final Long id) {

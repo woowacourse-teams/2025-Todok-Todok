@@ -2,11 +2,7 @@ package todoktodok.backend.discussion.presentation;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
-
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -40,25 +36,28 @@ class DiscussionControllerTest {
     }
 
     @Test
-    @DisplayName("전체 토론방을 조회한다")
-    void getDiscussions() {
+    @DisplayName("토론방을 생성한다")
+    void createDiscussion() {
         // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
-        databaseInitializer.setDefaultShelfInfo();
-        databaseInitializer.setDefaultNoteInfo();
-        databaseInitializer.setDefaultDiscussionInfo();
 
         final String token = MemberFixture.login("user@gmail.com");
 
+        final DiscussionRequest discussionRequest = new DiscussionRequest(
+                1L,
+                "이 책의 의존성 주입 방식에 대한 생각",
+                "스프링의 DI 방식은 유지보수에 정말 큰 도움이 된다고 느꼈습니다."
+        );
+
         // when - then
         RestAssured.given().log().all()
-                .header("Authorization", token)
                 .contentType(ContentType.JSON)
-                .when().get("/api/v1/discussions")
+                .header("Authorization", token)
+                .body(discussionRequest)
+                .when().post("/api/v1/discussions")
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .body("size()", is(1));
+                .statusCode(HttpStatus.CREATED.value());
     }
 
     @Test
@@ -67,9 +66,7 @@ class DiscussionControllerTest {
         // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
-        databaseInitializer.setDefaultShelfInfo();
-        databaseInitializer.setDefaultNoteInfo();
-        databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L, 1L);
+        databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
 
         final String token = MemberFixture.login("user@gmail.com");
 
@@ -83,35 +80,13 @@ class DiscussionControllerTest {
     }
 
     @Test
-    @DisplayName("특정 토론방에 기록이 없을 경우 기록은 빈 값으로 조회된다")
-    void getDiscussion_noRecord_success() {
-        // given
-        databaseInitializer.setDefaultUserInfo();
-        databaseInitializer.setDefaultBookInfo();
-        databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L, null);
-
-        final String token = MemberFixture.login("user@gmail.com");
-
-        // when - then
-        RestAssured.given().log().all()
-                .header("Authorization", token)
-                .contentType(ContentType.JSON)
-                .when().get("/api/v1/discussions/1")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .body("note", is(nullValue()));
-    }
-
-    @Test
     @DisplayName("토론방을 신고한다")
     void report() {
         // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setUserInfo("user123@gmail.com", "user123", "https://image.png", "message");
         databaseInitializer.setDefaultBookInfo();
-        databaseInitializer.setDefaultShelfInfo();
-        databaseInitializer.setDefaultNoteInfo();
-        databaseInitializer.setDiscussionInfo("토론방1", "토론방 내용", 2L, 1L, 1L);
+        databaseInitializer.setDiscussionInfo("토론방1", "토론방 내용", 2L, 1L);
 
         final String token = MemberFixture.login("user@gmail.com");
 
@@ -124,35 +99,67 @@ class DiscussionControllerTest {
                 .statusCode(HttpStatus.CREATED.value());
     }
 
+    @Test
+    @DisplayName("토론방을 필터링한다")
+    void filterDiscussions() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDiscussionInfo("오브젝트", "오브젝트 토론입니다", 1L, 1L);
+
+        final String token = MemberFixture.login("user@gmail.com");
+
+        // when - then
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .header("Authorization", token)
+                .when().get("/api/v1/discussions?keyword=오브젝트&type=ALL")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
+    }
+
     @Nested
-    @Disabled
-    @DisplayName("미사용 테스트")
-    class DisabledTest {
+    @DisplayName("토론방 필터링 실패 테스트")
+    class FilterDiscussionsFailTest {
+
         @Test
-        @DisplayName("토론방을 생성한다")
-        void createDiscussion() {
+        @DisplayName("토론방을 필터링할 때 type을 명시하지 않으면 예외가 발생한다")
+        void fail_filterDiscussions_noType() {
             // given
             databaseInitializer.setDefaultUserInfo();
             databaseInitializer.setDefaultBookInfo();
-            databaseInitializer.setDefaultShelfInfo();
-            databaseInitializer.setDefaultNoteInfo();
+            databaseInitializer.setDiscussionInfo("오브젝트", "오브젝트 토론입니다", 1L, 1L);
 
             final String token = MemberFixture.login("user@gmail.com");
-
-            final DiscussionRequest discussionRequest = new DiscussionRequest(
-                    1L,
-                    "이 책의 의존성 주입 방식에 대한 생각",
-                    "스프링의 DI 방식은 유지보수에 정말 큰 도움이 된다고 느꼈습니다."
-            );
+            final String uri = "/api/v1/discussions?keyword=오브젝트";
 
             // when - then
             RestAssured.given().log().all()
                     .contentType(ContentType.JSON)
                     .header("Authorization", token)
-                    .body(discussionRequest)
-                    .when().post("/api/v1/discussions")
+                    .when().get(uri)
                     .then().log().all()
-                    .statusCode(HttpStatus.CREATED.value());
+                    .statusCode(HttpStatus.BAD_REQUEST.value());
+        }
+
+        @Test
+        @DisplayName("토론방을 필터링할 때 type에 정해지지 않는 값을 추가하면 예외가 발생한다")
+        void fail_filterDiscussions_invalidType() {
+            // given
+            databaseInitializer.setDefaultUserInfo();
+            databaseInitializer.setDefaultBookInfo();
+            databaseInitializer.setDiscussionInfo("오브젝트", "오브젝트 토론입니다", 1L, 1L);
+
+            final String token = MemberFixture.login("user@gmail.com");
+            final String uri = "/api/v1/discussions?keyword=오브젝트&type=HELLO";
+
+            // when - then
+            RestAssured.given().log().all()
+                    .contentType(ContentType.JSON)
+                    .header("Authorization", token)
+                    .when().get(uri)
+                    .then().log().all()
+                    .statusCode(HttpStatus.BAD_REQUEST.value());
         }
     }
 }
