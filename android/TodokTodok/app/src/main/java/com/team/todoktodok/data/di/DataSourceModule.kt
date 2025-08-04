@@ -1,6 +1,8 @@
 package com.team.todoktodok.data.di
 
 import android.content.Context
+import com.team.todoktodok.data.datasource.book.BookRemoteDataSource
+import com.team.todoktodok.data.datasource.book.DefaultBookRemoteDataSource
 import com.team.todoktodok.data.datasource.comment.CommentRemoteDataSource
 import com.team.todoktodok.data.datasource.comment.DefaultCommentRemoteDataSource
 import com.team.todoktodok.data.datasource.discussion.DefaultDiscussionRemoteDataSource
@@ -33,4 +35,6 @@ class DataSourceModule(
             tokenDataSource,
         )
     }
+
+    val bookRemoteDataSource: BookRemoteDataSource by lazy { DefaultBookRemoteDataSource(serviceModule.bookService) }
 }

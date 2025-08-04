@@ -1,5 +1,6 @@
 package com.team.todoktodok.data.di
 
+import com.team.todoktodok.data.network.service.BookService
 import com.team.todoktodok.data.network.service.CommentService
 import com.team.todoktodok.data.network.service.DiscussionService
 import com.team.todoktodok.data.network.service.MemberService
@@ -22,5 +23,9 @@ class ServiceModule(
 
     val commentService: CommentService by lazy {
         retrofit.instance.create(CommentService::class.java)
+    }
+
+    val bookService: BookService by lazy {
+        retrofit.instance.create(BookService::class.java)
     }
 }
