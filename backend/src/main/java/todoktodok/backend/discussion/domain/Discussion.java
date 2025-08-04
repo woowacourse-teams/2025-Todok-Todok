@@ -19,7 +19,6 @@ import org.hibernate.annotations.SQLRestriction;
 import todoktodok.backend.book.domain.Book;
 import todoktodok.backend.global.common.TimeStamp;
 import todoktodok.backend.member.domain.Member;
-import todoktodok.backend.note.domain.Note;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -51,21 +50,17 @@ public class Discussion extends TimeStamp {
     @JoinColumn(nullable = false)
     private Book book;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Note note;
-
     @Builder
     public static Discussion create(
             final String title,
             final String content,
             final Member member,
-            final Book book,
-            final Note note
+            final Book book
     ) {
         validateTitle(title);
         validateContent(content);
 
-        return new Discussion(null, title, content, member, book, note);
+        return new Discussion(null, title, content, member, book);
     }
 
     public boolean isOwnedBy(final Member member) {
@@ -74,12 +69,18 @@ public class Discussion extends TimeStamp {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null) {
+            return false;
+        }
 
         Class<?> thisClass = org.hibernate.Hibernate.getClass(this);
         Class<?> thatClass = org.hibernate.Hibernate.getClass(o);
-        if (thisClass != thatClass) return false;
+        if (thisClass != thatClass) {
+            return false;
+        }
 
         Discussion that = (Discussion) o;
         return getId() != null && getId().equals(that.getId());

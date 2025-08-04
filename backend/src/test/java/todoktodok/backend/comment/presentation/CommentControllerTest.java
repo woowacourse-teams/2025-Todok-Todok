@@ -41,7 +41,6 @@ public class CommentControllerTest {
         //given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
-        databaseInitializer.setDefaultNoteInfo();
         databaseInitializer.setDefaultDiscussionInfo();
 
         final CommentRequest commentRequest = new CommentRequest("상속의 핵심 목적은 타입 계층의 구축입니다!");
@@ -66,7 +65,6 @@ public class CommentControllerTest {
         databaseInitializer.setUserInfo("user2@gmail.com", "user2", "https://user2.png", "user");
 
         databaseInitializer.setDefaultBookInfo();
-        databaseInitializer.setDefaultNoteInfo();
         databaseInitializer.setDefaultDiscussionInfo();
         databaseInitializer.setCommentInfo("상속의 핵심 목적은 타입 계층의 구축입니다!", 2L, 1L);
 
@@ -87,7 +85,6 @@ public class CommentControllerTest {
         // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
-        databaseInitializer.setDefaultNoteInfo();
         databaseInitializer.setDefaultDiscussionInfo();
 
         databaseInitializer.setCommentInfo("상속의 핵심 목적은 타입 계층의 구축입니다!", 1L, 1L);

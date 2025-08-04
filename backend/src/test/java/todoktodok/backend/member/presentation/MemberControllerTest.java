@@ -17,7 +17,6 @@ import todoktodok.backend.InitializerTimer;
 import todoktodok.backend.global.jwt.JwtTokenProvider;
 import todoktodok.backend.member.application.dto.request.LoginRequest;
 import todoktodok.backend.member.application.dto.request.SignupRequest;
-import todoktodok.backend.member.application.service.command.MemberCommandService;
 import todoktodok.backend.member.presentation.fixture.MemberFixture;
 
 @ActiveProfiles("test")
@@ -30,9 +29,6 @@ class MemberControllerTest {
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
-
-    @Autowired
-    private MemberCommandService memberCommandService;
 
     @LocalServerPort
     int port;

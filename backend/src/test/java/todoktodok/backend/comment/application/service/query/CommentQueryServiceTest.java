@@ -37,7 +37,6 @@ public class CommentQueryServiceTest {
         // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
-        databaseInitializer.setDefaultNoteInfo();
 
         final Long memberId = 1L;
         final Long discussionId = 1L;
@@ -54,7 +53,6 @@ public class CommentQueryServiceTest {
         // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
-        databaseInitializer.setDefaultNoteInfo();
         databaseInitializer.setDefaultDiscussionInfo();
         databaseInitializer.setDefaultCommentInfo();
 
