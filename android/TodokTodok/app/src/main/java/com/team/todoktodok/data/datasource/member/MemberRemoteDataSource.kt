@@ -8,5 +8,5 @@ interface MemberRemoteDataSource {
 
     suspend fun signUp(request: SignUpRequest)
 
-    suspend fun fetchProfile(): Profile
+    suspend fun fetchProfile(request: String?): Profile
 }

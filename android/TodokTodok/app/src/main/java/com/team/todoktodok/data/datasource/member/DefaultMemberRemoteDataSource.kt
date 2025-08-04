@@ -12,8 +12,9 @@ class DefaultMemberRemoteDataSource(
     private val memberService: MemberService,
     private val tokenDataSource: TokenDataSource,
 ) : MemberRemoteDataSource {
-    override suspend fun login(email: String): String {
-        val response = memberService.login(LoginRequest(email))
+
+    override suspend fun login(request: String): String {
+        val response = memberService.login(LoginRequest(request))
         val token = response.headers()[AUTHORIZATION_NAME] ?: throw IllegalArgumentException()
 
         val parser = JwtParser(token)
@@ -31,13 +32,11 @@ class DefaultMemberRemoteDataSource(
         )
     }
 
-    override suspend fun fetchProfile(): Profile {
-        val dummyProfile =
-            Profile(
-                nickname = "페토페토정페토",
-                profileImageUrl = "",
-                description = "안녕 나는 페토야",
-            )
-        return dummyProfile
-    }
+    override suspend fun fetchProfile(request: String?): Profile =
+        request?.let {
+            memberService.fetchProfile(it).toDomain()
+        } ?: run {
+            val memberId = tokenDataSource.getMemberId()
+            memberService.fetchProfile(memberId).toDomain()
+        }
 }

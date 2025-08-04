@@ -11,5 +11,5 @@ interface MemberRepository {
 
     suspend fun signUp(nickname: String)
 
-    suspend fun getProfile(): Profile
+    suspend fun getProfile(memberId: String?): Profile
 }

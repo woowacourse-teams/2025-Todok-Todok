@@ -2,8 +2,10 @@ package com.team.todoktodok.data.network.service
 
 import com.team.todoktodok.data.network.request.LoginRequest
 import com.team.todoktodok.data.network.request.SignUpRequest
+import com.team.todoktodok.data.network.response.ProfileResponse
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
 
@@ -18,4 +20,9 @@ interface MemberService {
         @Query("memberEmail") request: String,
         @Body requestBody: SignUpRequest,
     )
+
+    @GET("v1/members/{memberId}/profile")
+    fun fetchProfile(
+        @Query("memberId") memberId: String,
+    ): ProfileResponse
 }
