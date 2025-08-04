@@ -1,6 +1,7 @@
 package com.team.todoktodok.presentation.view.book
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
@@ -125,6 +126,11 @@ class SelectBookActivity : AppCompatActivity() {
         val inputMethodManager: InputMethodManager =
             this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
+    companion object {
+        fun Intent(context: Context): Intent =
+            Intent(context, SelectBookActivity::class.java)
     }
 }
 
