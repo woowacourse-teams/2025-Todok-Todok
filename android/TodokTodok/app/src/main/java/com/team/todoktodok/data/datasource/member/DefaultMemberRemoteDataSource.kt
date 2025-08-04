@@ -12,7 +12,6 @@ class DefaultMemberRemoteDataSource(
     private val memberService: MemberService,
     private val tokenDataSource: TokenDataSource,
 ) : MemberRemoteDataSource {
-
     override suspend fun login(request: String): String {
         val response = memberService.login(LoginRequest(request))
         val token = response.headers()[AUTHORIZATION_NAME] ?: throw IllegalArgumentException()
