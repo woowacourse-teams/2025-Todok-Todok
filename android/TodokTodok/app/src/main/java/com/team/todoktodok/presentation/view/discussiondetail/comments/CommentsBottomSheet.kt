@@ -130,6 +130,9 @@ class CommentsBottomSheet : BottomSheetDialogFragment() {
     private fun handleEvent(commentsUiEvent: CommentsUiEvent) {
         when (commentsUiEvent) {
             is CommentsUiEvent.ShowCommentCreate -> showCommentCreate(commentsUiEvent.discussionId)
+            CommentsUiEvent.ShowNewComment -> {
+                binding.rvComments.smoothScrollToPosition(0)
+            }
         }
     }
 
