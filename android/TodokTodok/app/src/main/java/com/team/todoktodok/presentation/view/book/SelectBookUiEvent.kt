@@ -1,6 +1,5 @@
 package com.team.todoktodok.presentation.view.book
 
-import android.view.View
 import com.team.domain.model.Book
 import com.team.domain.model.Books
 

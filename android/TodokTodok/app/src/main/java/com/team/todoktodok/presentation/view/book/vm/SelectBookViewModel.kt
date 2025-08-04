@@ -1,9 +1,5 @@
 package com.team.todoktodok.presentation.view.book.vm
 
-import android.util.Log
-import android.view.View
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.team.domain.model.Books
