@@ -43,7 +43,6 @@ public class BookControllerTest {
         // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
-        databaseInitializer.setDefaultShelfInfo();
 
         final String token = MemberFixture.login("user@gmail.com");
         final String keyword = "오브젝트";
@@ -119,7 +118,7 @@ public class BookControllerTest {
                 .contentType(ContentType.JSON)
                 .header("Authorization", token)
                 .body(bookRequest)
-                .when().post("/api/v2/books")
+                .when().post("/api/v1/books")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
     }
