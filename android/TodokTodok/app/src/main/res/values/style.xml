@@ -29,4 +29,10 @@
         <item name="fontFamily">@font/pretendard_regular</item>
         <item name="android:textColor">@color/gray_76</item>
     </style>
+
+    <!-- 원형 이미지 -->
+    <style name="circleImageView" >
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
 </resources>

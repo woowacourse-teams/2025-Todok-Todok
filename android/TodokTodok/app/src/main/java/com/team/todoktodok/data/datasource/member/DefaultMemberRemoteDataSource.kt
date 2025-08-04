@@ -1,5 +1,6 @@
 package com.team.todoktodok.data.datasource.member
 
+import com.team.domain.model.member.Profile
 import com.team.todoktodok.data.core.JwtUtils
 import com.team.todoktodok.data.datasource.token.TokenDataSource
 import com.team.todoktodok.data.network.auth.AuthInterceptor.Companion.AUTHORIZATION_NAME
@@ -25,5 +26,15 @@ class DefaultMemberRemoteDataSource(
             request.email,
             request,
         )
+    }
+
+    override suspend fun fetchProfile(): Profile {
+        val dummyProfile =
+            Profile(
+                nickname = "페토페토정페토",
+                profileImageUrl = "",
+                description = "안녕 나는 페토야",
+            )
+        return dummyProfile
     }
 }
