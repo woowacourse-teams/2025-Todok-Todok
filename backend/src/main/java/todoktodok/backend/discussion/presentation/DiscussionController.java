@@ -73,7 +73,7 @@ public class DiscussionController {
                 .build();
     }
 
-    @Operation(summary = "토론방 필터링 API")
+    @Operation(summary = "토론방 필터링 조회 API")
     @Auth(value = Role.USER)
     @GetMapping
     public ResponseEntity<List<DiscussionResponse>> getDiscussionsByKeywordAndType(
