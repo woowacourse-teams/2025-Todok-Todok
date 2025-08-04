@@ -33,7 +33,7 @@ class SelectBookViewModel(
 
     fun onSearchAction(keyword: String) {
         if (keyword.isEmpty()) {
-            SelectBookUiEvent.ShowDialog(R.string.error_empty_keyword)
+            _uiEvent.setValue(SelectBookUiEvent.ShowDialog(R.string.error_empty_keyword))
             return
         }
         _uiEvent.setValue(SelectBookUiEvent.HideKeyboard)
