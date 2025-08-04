@@ -1,6 +1,10 @@
 package com.team.todoktodok.presentation.view.discussiondetail
 
 sealed interface DiscussionDetailUiEvent {
+    data class ShowComments(
+        val discussionId: Long,
+    ) : DiscussionDetailUiEvent
+
     data class ToggleLikeOnDiscussion(
         val discussionId: Long,
     ) : DiscussionDetailUiEvent

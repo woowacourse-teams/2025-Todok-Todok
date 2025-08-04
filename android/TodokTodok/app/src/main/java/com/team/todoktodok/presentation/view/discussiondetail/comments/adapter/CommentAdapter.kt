@@ -1,9 +1,9 @@
-package com.team.todoktodok.presentation.view.discussiondetail.adapter
+package com.team.todoktodok.presentation.view.discussiondetail.comments.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.team.domain.model.Comment
-import com.team.todoktodok.presentation.view.discussiondetail.adapter.CommentViewHolder.Companion.CommentViewHolder
+import com.team.todoktodok.presentation.view.discussiondetail.comments.adapter.CommentViewHolder.Companion.CommentViewHolder
 
 class CommentAdapter :
     ListAdapter<Comment, CommentViewHolder>(

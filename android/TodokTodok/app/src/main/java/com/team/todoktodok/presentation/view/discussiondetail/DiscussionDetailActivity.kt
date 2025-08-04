@@ -18,6 +18,7 @@ import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivityDiscussionDetailBinding
 import com.team.todoktodok.databinding.MenuExternalDiscussionBinding
 import com.team.todoktodok.databinding.MenuOwnedDiscussionBinding
+import com.team.todoktodok.presentation.view.discussiondetail.comments.CommentsBottomSheet
 import com.team.todoktodok.presentation.view.discussiondetail.vm.DiscussionDetailViewModel
 import com.team.todoktodok.presentation.view.discussiondetail.vm.DiscussionDetailViewModel.Companion.KEY_DISCUSSION_ID
 import com.team.todoktodok.presentation.view.discussiondetail.vm.DiscussionDetailViewModelFactory
@@ -76,7 +77,7 @@ class DiscussionDetailActivity : AppCompatActivity() {
                 navigateUp()
             }
             ivComment.setOnClickListener {
-                showToast("댓글 보이기")
+                viewModel.showComments()
             }
             setupPopUpDiscussionClick()
             setupLickClick()
@@ -140,6 +141,7 @@ class DiscussionDetailActivity : AppCompatActivity() {
 
     private fun handleEvent(discussionDetailUiEvent: DiscussionDetailUiEvent) {
         when (discussionDetailUiEvent) {
+            is DiscussionDetailUiEvent.ShowComments -> showComments(discussionDetailUiEvent.discussionId)
             is DiscussionDetailUiEvent.ToggleLikeOnDiscussion -> showToast("좋아요 클릭")
             is DiscussionDetailUiEvent.DeleteDiscussion -> showToast("토론 삭제")
             is DiscussionDetailUiEvent.ReportDiscussion -> showToast("토론 신고")
@@ -164,6 +166,11 @@ class DiscussionDetailActivity : AppCompatActivity() {
             }
         startActivity(intent)
         finish()
+    }
+
+    private fun showComments(discussionId: Long) {
+        val bottomSheet = CommentsBottomSheet.newInstance(discussionId)
+        bottomSheet.show(supportFragmentManager, CommentsBottomSheet.TAG)
     }
 
     private fun LocalDateTime.formatDate(): String {
