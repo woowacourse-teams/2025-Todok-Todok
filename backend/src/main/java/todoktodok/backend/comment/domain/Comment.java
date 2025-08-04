@@ -64,8 +64,12 @@ public class Comment extends TimeStamp {
         this.content = content;
     }
 
-    public boolean isOwnedBy(Member member) {
+    public boolean isOwnedBy(final Member member) {
         return this.member.equals(member);
+    }
+
+    public boolean matchesDiscussion(final Discussion discussion) {
+        return this.discussion.equals(discussion);
     }
 
     public void validateMatchWithDiscussion(final Discussion discussion) {

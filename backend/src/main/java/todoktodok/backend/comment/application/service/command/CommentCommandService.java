@@ -66,13 +66,16 @@ public class CommentCommandService {
 
     public void updateComment(
             final Long memberId,
+            final Long discussionId,
             final Long commentId,
             final CommentRequest commentRequest
     ) {
         final Comment comment = findComment(commentId);
         final Member member = findMember(memberId);
+        final Discussion discussion = findDiscussion(discussionId);
 
         validateCommentMember(comment, member);
+        validateDiscussionComment(comment, discussion);
 
         comment.updateContent(commentRequest.content());
     }
@@ -107,6 +110,15 @@ public class CommentCommandService {
     ) {
         if (!comment.isOwnedBy(member)) {
             throw new IllegalArgumentException("자기 자신의 댓글만 수정 가능합니다");
+        }
+    }
+
+    private void validateDiscussionComment(
+            final Comment comment,
+            final Discussion discussion
+    ) {
+        if (!comment.matchesDiscussion(discussion)) {
+            throw new IllegalArgumentException("토론방과 댓글이 일치하지 않습니다");
         }
     }
 }
