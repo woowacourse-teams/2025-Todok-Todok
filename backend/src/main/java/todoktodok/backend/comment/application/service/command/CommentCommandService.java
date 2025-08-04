@@ -64,6 +64,19 @@ public class CommentCommandService {
         commentReportRepository.save(commentReport);
     }
 
+    public void updateComment(
+            final Long memberId,
+            final Long commentId,
+            final CommentRequest commentRequest
+    ) {
+        final Comment comment = findComment(commentId);
+        final Member member = findMember(memberId);
+
+        validateCommentMember(comment, member);
+
+        comment.updateContent(commentRequest.content());
+    }
+
     private Member findMember(final Long memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new NoSuchElementException("해당 회원을 찾을 수 없습니다"));
@@ -85,6 +98,15 @@ public class CommentCommandService {
     ) {
         if (commentReportRepository.existsByMemberAndComment(member, comment)) {
             throw new IllegalArgumentException("이미 신고한 댓글입니다");
+        }
+    }
+
+    private void validateCommentMember(
+            final Comment comment,
+            final Member member
+    ) {
+        if (!comment.isOwnedBy(member)) {
+            throw new IllegalArgumentException("자기 자신의 댓글만 수정 가능합니다");
         }
     }
 }

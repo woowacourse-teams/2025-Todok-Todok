@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -69,6 +70,21 @@ public class CommentController {
     ) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(commentQueryService.getComments(memberId, discussionId));
+    }
+
+    @Operation(summary = "댓글 수정 API")
+    @Auth(value = Role.USER)
+    @PutMapping("/{commentId}")
+    public ResponseEntity<Void> updateComment(
+            @Parameter(hidden = true) @LoginMember final Long memberId,
+            @PathVariable final Long commentId,
+            @RequestBody final CommentRequest commentRequest
+    ) {
+        commentCommandService.updateComment(memberId, commentId, commentRequest);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .location(ServletUriComponentsBuilder.fromCurrentRequest().build().toUri())
+                .build();
     }
 
     private URI createUri(final Long id) {
