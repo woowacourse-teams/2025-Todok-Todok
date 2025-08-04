@@ -29,5 +29,7 @@
         <activity
             android:name=".presentation.view.discussiondetail.DiscussionDetailActivity"
             android:exported="false" />
+        <activity android:name=".presentation.view.book.SelectBookActivity"
+            android:exported="false" />
     </application>
 </manifest>
