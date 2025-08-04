@@ -23,6 +23,7 @@ data class ProfileUiState(
                             INITIALIZE_VALUE,
                             INITIALIZE_VALUE,
                             INITIALIZE_VALUE,
+                            INITIALIZE_VALUE,
                         ),
                     ),
                     ProfileItems.TabItem,

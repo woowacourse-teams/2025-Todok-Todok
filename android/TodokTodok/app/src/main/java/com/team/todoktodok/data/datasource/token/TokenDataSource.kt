@@ -14,6 +14,8 @@ class TokenDataSource(
 
     suspend fun getAccessToken(): String = dataStore.data.first().accessToken
 
+    suspend fun getMemberId(): String = dataStore.data.first().memberId
+
     suspend fun saveToken(
         accessToken: String,
         refreshToken: String = "",
