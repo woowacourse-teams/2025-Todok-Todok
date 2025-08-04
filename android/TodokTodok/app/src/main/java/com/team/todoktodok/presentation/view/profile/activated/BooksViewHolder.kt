@@ -12,8 +12,11 @@ class BooksViewHolder private constructor(
     private val binding: ItemActivatedBookBinding,
     handler: Handler,
 ) : RecyclerView.ViewHolder(binding.root) {
+
     init {
-        handler.onSelectBook(absoluteAdapterPosition)
+        binding.root.setOnClickListener {
+            handler.onSelectBook(absoluteAdapterPosition)
+        }
     }
 
     fun bind(item: Book) {
