@@ -21,6 +21,7 @@ import com.team.todoktodok.presentation.view.discussiondetail.comments.vm.Commen
 import com.team.todoktodok.presentation.view.discussiondetail.comments.vm.CommentsViewModelFactory
 
 class CommentsBottomSheet : BottomSheetDialogFragment() {
+    @Suppress("ktlint:standard:backing-property-naming")
     private var _binding: FragmentCommentsBottomSheetBinding? = null
     private val binding get() = _binding!!
     private val adapter by lazy { CommentAdapter() }
