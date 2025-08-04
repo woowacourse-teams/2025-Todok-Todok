@@ -1,12 +1,15 @@
 package todoktodok.backend.comment.application.service.command;
 
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.comment.application.dto.request.CommentRequest;
 import todoktodok.backend.comment.domain.Comment;
+import todoktodok.backend.comment.domain.CommentLike;
 import todoktodok.backend.comment.domain.CommentReport;
+import todoktodok.backend.comment.domain.repository.CommentLikeRepository;
 import todoktodok.backend.comment.domain.repository.CommentReportRepository;
 import todoktodok.backend.comment.domain.repository.CommentRepository;
 import todoktodok.backend.discussion.domain.Discussion;
@@ -23,6 +26,7 @@ public class CommentCommandService {
     private final DiscussionRepository discussionRepository;
     private final CommentRepository commentRepository;
     private final CommentReportRepository commentReportRepository;
+    private final CommentLikeRepository commentLikeRepository;
 
     public Long createComment(
             final Long memberId,
@@ -40,6 +44,31 @@ public class CommentCommandService {
 
         final Comment savedComment = commentRepository.save(comment);
         return savedComment.getId();
+    }
+
+    public boolean like(
+            final Long memberId,
+            final Long discussionId,
+            final Long commentId
+    ) {
+        final Member member = findMember(memberId);
+        final Comment comment = findComment(commentId);
+        final Discussion discussion = findDiscussion(discussionId);
+
+        comment.validateMatchWithDiscussion(discussion);
+
+        final Optional<CommentLike> existingCommentLike = commentLikeRepository.findByMemberAndComment(member, comment);
+        if (existingCommentLike.isPresent()) {
+             commentLikeRepository.delete(existingCommentLike.get());
+            return false;
+        }
+
+        final CommentLike commentLike = CommentLike.builder()
+                .comment(comment)
+                .member(member)
+                .build();
+        commentLikeRepository.save(commentLike);
+        return true;
     }
 
     public void report(
@@ -75,7 +104,7 @@ public class CommentCommandService {
         final Discussion discussion = findDiscussion(discussionId);
 
         validateCommentMember(comment, member);
-        validateDiscussionComment(comment, discussion);
+        comment.validateMatchWithDiscussion(discussion);
 
         comment.updateContent(commentRequest.content());
     }
@@ -90,7 +119,7 @@ public class CommentCommandService {
         final Discussion discussion = findDiscussion(discussionId);
 
         validateCommentMember(comment, member);
-        validateDiscussionComment(comment, discussion);
+        comment.validateMatchWithDiscussion(discussion);
 
         commentRepository.delete(comment);
     }
@@ -125,15 +154,6 @@ public class CommentCommandService {
     ) {
         if (!comment.isOwnedBy(member)) {
             throw new IllegalArgumentException("자기 자신의 댓글만 수정/삭제 가능합니다");
-        }
-    }
-
-    private void validateDiscussionComment(
-            final Comment comment,
-            final Discussion discussion
-    ) {
-        if (!comment.matchesDiscussion(discussion)) {
-            throw new IllegalArgumentException("토론방과 댓글이 일치하지 않습니다");
         }
     }
 }

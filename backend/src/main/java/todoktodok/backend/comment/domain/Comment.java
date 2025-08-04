@@ -68,10 +68,6 @@ public class Comment extends TimeStamp {
         return this.member.equals(member);
     }
 
-    public boolean matchesDiscussion(final Discussion discussion) {
-        return this.discussion.equals(discussion);
-    }
-
     public void validateMatchWithDiscussion(final Discussion discussion) {
         if (!this.discussion.equals(discussion)) {
             throw new IllegalArgumentException("해당 토론방에 있는 댓글이 아닙니다");

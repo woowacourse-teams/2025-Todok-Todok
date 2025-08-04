@@ -48,6 +48,22 @@ public class CommentController {
                 .build();
     }
 
+    @Operation(summary = "댓글 좋아요 API")
+    @Auth(value = Role.USER)
+    @PostMapping("/{commentId}/like")
+    public ResponseEntity<Void> like(
+            @Parameter(hidden = true) @LoginMember final Long memberId,
+            @PathVariable final Long discussionId,
+            @PathVariable final Long commentId
+    ) {
+        final boolean isLiked = commentCommandService.like(memberId, discussionId, commentId);
+
+        if (isLiked) {
+            return ResponseEntity.status(HttpStatus.CREATED).build();
+        }
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
     @Operation(summary = "댓글 신고 API")
     @Auth(value = Role.USER)
     @PostMapping("/{commentId}/report")
@@ -80,7 +96,7 @@ public class CommentController {
             @Parameter(hidden = true) @LoginMember final Long memberId,
             @PathVariable final Long discussionId,
             @PathVariable final Long commentId,
-            @RequestBody final CommentRequest commentRequest
+            @RequestBody @Valid final CommentRequest commentRequest
     ) {
         commentCommandService.updateComment(memberId, discussionId, commentId, commentRequest);
 
