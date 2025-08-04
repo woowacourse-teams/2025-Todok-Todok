@@ -1,7 +1,7 @@
 package com.team.todoktodok.data.datasource.member
 
 import com.team.domain.model.member.Profile
-import com.team.todoktodok.data.core.JwtUtils
+import com.team.todoktodok.data.core.JwtParser
 import com.team.todoktodok.data.datasource.token.TokenDataSource
 import com.team.todoktodok.data.network.auth.AuthInterceptor.Companion.AUTHORIZATION_NAME
 import com.team.todoktodok.data.network.request.LoginRequest
@@ -15,10 +15,13 @@ class DefaultMemberRemoteDataSource(
     override suspend fun login(email: String): String {
         val response = memberService.login(LoginRequest(email))
         val token = response.headers()[AUTHORIZATION_NAME] ?: throw IllegalArgumentException()
-        tokenDataSource.saveToken(accessToken = token)
-        val role = JwtUtils.getRoleFromJwt(token) ?: throw IllegalArgumentException()
 
-        return role
+        val parser = JwtParser(token)
+        val memberType = parser.parseMemberType()
+        val memberId = parser.parseMemberId()
+        tokenDataSource.saveToken(accessToken = token, memberId = memberId)
+
+        return memberType
     }
 
     override suspend fun signUp(request: SignUpRequest) {

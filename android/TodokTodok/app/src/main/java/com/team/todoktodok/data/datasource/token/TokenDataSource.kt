@@ -17,11 +17,13 @@ class TokenDataSource(
     suspend fun saveToken(
         accessToken: String,
         refreshToken: String = "",
+        memberId: String,
     ) {
         dataStore.updateData {
             it.copy(
                 accessToken,
                 "", // 리프레시 토큰 구현
+                memberId,
             )
         }
     }
