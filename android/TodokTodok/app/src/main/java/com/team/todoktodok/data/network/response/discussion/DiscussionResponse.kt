@@ -19,8 +19,6 @@ data class DiscussionResponse(
     val discussionTitle: String,
     @SerialName("member")
     val memberResponse: MemberResponse,
-    @SerialName("note")
-    val noteResponse: NoteResponse?,
 )
 
 fun DiscussionResponse.toDomain() =
@@ -30,6 +28,5 @@ fun DiscussionResponse.toDomain() =
         book = bookResponse.toDomain(),
         writer = memberResponse.toDomain(),
         createAt = createdAt.toLocalDateTime(),
-        snap = noteResponse?.snap,
         discussionOpinion = discussionOpinion,
     )

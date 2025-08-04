@@ -10,7 +10,10 @@ class DefaultCommentRepository(
     private val commentRemoteDataSource: CommentRemoteDataSource,
 ) : CommentRepository {
     override suspend fun getCommentsByDiscussionRoomId(id: Long): List<Comment> =
-        commentRemoteDataSource.fetchCommentsByDiscussionRoomId(id).map { it.toDomain() }
+        commentRemoteDataSource
+            .fetchCommentsByDiscussionRoomId(id)
+            .map { it.toDomain() }
+            .sortedByDescending { it.createAt }
 
     override suspend fun saveComment(
         discussionId: Long,

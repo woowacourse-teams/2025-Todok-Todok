@@ -17,7 +17,7 @@ interface LibraryService {
         @Body requestBody: SaveBookRequest,
     )
 
-    @POST("v2/books")
+    @POST("v1/books")
     suspend fun createBook(
         @Body requestBody: CreateBookRequest,
     ): Response<Long>
