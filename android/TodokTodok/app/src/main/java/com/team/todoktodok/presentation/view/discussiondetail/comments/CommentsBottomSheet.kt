@@ -1,12 +1,15 @@
 package com.team.todoktodok.presentation.view.discussiondetail.comments
 
+import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.team.todoktodok.App
 import com.team.todoktodok.R
@@ -28,6 +31,12 @@ class CommentsBottomSheet : BottomSheetDialogFragment() {
             repositoryModule.commentRepository,
         )
     }
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
+        BottomSheetDialog(requireContext(), theme).apply {
+            window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+            window?.setDimAmount(0f)
+        }
 
     override fun onCreateView(
         inflater: LayoutInflater,

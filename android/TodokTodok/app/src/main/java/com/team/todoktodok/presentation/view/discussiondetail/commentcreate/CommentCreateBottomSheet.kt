@@ -1,5 +1,6 @@
 package com.team.todoktodok.presentation.view.discussiondetail.commentcreate
 
+import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
@@ -9,6 +10,7 @@ import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.team.todoktodok.App
 import com.team.todoktodok.R
@@ -31,6 +33,11 @@ class CommentCreateBottomSheet : BottomSheetDialogFragment(R.layout.fragment_com
     fun setVisibilityListener(listener: BottomSheetVisibilityListener) {
         visibilityListener = listener
     }
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
+        BottomSheetDialog(requireContext(), theme).apply {
+            window?.setDimAmount(0f)
+        }
 
     override fun onStart() {
         super.onStart()
