@@ -8,6 +8,7 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -77,14 +78,28 @@ public class CommentController {
     @PutMapping("/{commentId}")
     public ResponseEntity<Void> updateComment(
             @Parameter(hidden = true) @LoginMember final Long memberId,
+            @PathVariable final Long discussionId,
             @PathVariable final Long commentId,
             @RequestBody final CommentRequest commentRequest
     ) {
-        commentCommandService.updateComment(memberId, commentId, commentRequest);
+        commentCommandService.updateComment(memberId, discussionId, commentId, commentRequest);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .location(ServletUriComponentsBuilder.fromCurrentRequest().build().toUri())
                 .build();
+    }
+
+    @Operation(summary = "댓글 삭제 API")
+    @Auth(value = Role.USER)
+    @DeleteMapping("/{commentId}")
+    public ResponseEntity<Void> deleteComment(
+            @Parameter(hidden = true) @LoginMember final Long memberId,
+            @PathVariable final Long discussionId,
+            @PathVariable final Long commentId
+    ) {
+        commentCommandService.deleteComment(memberId, discussionId, commentId);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     private URI createUri(final Long id) {
