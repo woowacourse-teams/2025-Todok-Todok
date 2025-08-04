@@ -106,7 +106,7 @@ public class CommentCommandServiceTest {
 
     @Test
     @DisplayName("자신의 것이 아닌 댓글을 수정하면 예외가 발생한다")
-    void validateCommentMemberTest() {
+    void validateCommentMemberUpdateTest() {
         //given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
@@ -125,12 +125,12 @@ public class CommentCommandServiceTest {
         //when - then
         assertThatThrownBy(() ->commentCommandService.updateComment(memberId, discussionId, commentId, commentRequest))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("자기 자신의 댓글만 수정 가능합니다");
+                .hasMessage("자기 자신의 댓글만 수정/삭제 가능합니다");
     }
 
     @Test
     @DisplayName("수정하는 댓글과 토론방이 일치하지 않으면 예외가 발생한다")
-    void validateDiscussionCommentTest() {
+    void validateDiscussionCommentUpdateTest() {
         //given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
@@ -149,6 +149,49 @@ public class CommentCommandServiceTest {
 
         //when - then
         assertThatThrownBy(() ->commentCommandService.updateComment(memberId, discussionId, commentId, commentRequest))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("토론방과 댓글이 일치하지 않습니다");
+    }
+
+    @Test
+    @DisplayName("자신의 것이 아닌 댓글을 삭제하면 예외가 발생한다")
+    void validateCommentMemberDeleteTest() {
+        //given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+
+        databaseInitializer.setUserInfo("user2@gmail.com", "user", "https://image.png", "프로필 메시지");
+        databaseInitializer.setCommentInfo("상속의 핵심 목적은 타입 계층의 구축입니다!", 2L, 1L);
+
+        final Long memberId = 1L;
+        final Long discussionId = 1L;
+        final Long commentId = 1L;
+
+        //when - then
+        assertThatThrownBy(() ->commentCommandService.deleteComment(memberId, discussionId, commentId))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("자기 자신의 댓글만 수정/삭제 가능합니다");
+    }
+
+    @Test
+    @DisplayName("수정하는 댓글과 토론방이 일치하지 않으면 예외가 발생한다")
+    void validateDiscussionCommentDeleteTest() {
+        //given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+
+        databaseInitializer.setDefaultDiscussionInfo();
+        databaseInitializer.setDiscussionInfo("오브젝트", "오브젝트 토론입니다", 1L, 1L);
+
+        databaseInitializer.setCommentInfo("상속의 핵심 목적은 타입 계층의 구축입니다!", 1L, 1L);
+
+        final Long memberId = 1L;
+        final Long discussionId = 2L;
+        final Long commentId = 1L;
+
+        //when - then
+        assertThatThrownBy(() ->commentCommandService.deleteComment(memberId, discussionId, commentId))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("토론방과 댓글이 일치하지 않습니다");
     }

@@ -128,4 +128,25 @@ public class CommentControllerTest {
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }
+
+    @Test
+    @DisplayName("댓글을 삭제한다")
+    void deleteCommentTest() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+
+        databaseInitializer.setCommentInfo("상속의 핵심 목적은 타입 계층의 구축입니다!", 1L, 1L);
+
+        final String token = MemberFixture.login("user@gmail.com");
+
+        // when - then
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .header("Authorization", token)
+                .when().delete("/api/v1/discussions/1/comments/1")
+                .then().log().all()
+                .statusCode(HttpStatus.NO_CONTENT.value());
+    }
 }
