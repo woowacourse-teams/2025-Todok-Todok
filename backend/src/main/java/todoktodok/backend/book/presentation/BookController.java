@@ -2,7 +2,6 @@ package todoktodok.backend.book.presentation;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -22,7 +21,6 @@ import todoktodok.backend.global.auth.Auth;
 import todoktodok.backend.global.auth.Role;
 import todoktodok.backend.global.resolver.LoginMember;
 
-@Tag(name = "book-controller")
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/v1/books")
@@ -30,7 +28,7 @@ public class BookController {
 
     private final BookCommandService bookCommandService;
     private final BookQueryService bookQueryService;
-    
+
     @Operation(summary = "도서 생성 API")
     @Auth(value = Role.USER)
     @PostMapping
