@@ -33,6 +33,7 @@ class SelectBookActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(binding.main)
         initSystemBar()
         initView()
         setupUiEvent()
@@ -47,7 +48,6 @@ class SelectBookActivity : AppCompatActivity() {
 
     private fun initSystemBar() {
         enableEdgeToEdge()
-        setContentView(binding.main)
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(
