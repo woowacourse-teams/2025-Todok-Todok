@@ -10,8 +10,10 @@ class DefaultBookRemoteDataSource(
     private val bookService: BookService,
 ) : BookRemoteDataSource {
     override suspend fun fetchBooks(keyword: String): Books {
-        val value: List<Book> = bookService.fetchBooks(keyword)
-            .map { bookResponse: BookResponse -> bookResponse.toDomain() }
+        val value: List<Book> =
+            bookService
+                .fetchBooks(keyword)
+                .map { bookResponse: BookResponse -> bookResponse.toDomain() }
         return Books(value)
     }
 }
