@@ -59,7 +59,7 @@ public class CommentCommandService {
 
         final Optional<CommentLike> existingCommentLike = commentLikeRepository.findByMemberAndComment(member, comment);
         if (existingCommentLike.isPresent()) {
-             commentLikeRepository.delete(existingCommentLike.get());
+            commentLikeRepository.delete(existingCommentLike.get());
             return false;
         }
 
@@ -67,6 +67,7 @@ public class CommentCommandService {
                 .comment(comment)
                 .member(member)
                 .build();
+
         commentLikeRepository.save(commentLike);
         return true;
     }

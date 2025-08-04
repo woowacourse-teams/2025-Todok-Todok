@@ -4,6 +4,7 @@ import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -79,7 +80,7 @@ public class CommentCommandServiceTest {
         final Long commentId = 1L;
 
         // when
-        boolean isLiked = commentCommandService.like(memberId, discussionId, commentId);
+        final boolean isLiked = commentCommandService.like(memberId, discussionId, commentId);
 
         // then
         assertThat(isLiked).isTrue();
@@ -100,7 +101,7 @@ public class CommentCommandServiceTest {
         final Long commentId = 1L;
 
         // when
-        boolean isLiked = commentCommandService.like(memberId, discussionId, commentId);
+        final boolean isLiked = commentCommandService.like(memberId, discussionId, commentId);
 
         // then
         assertThat(isLiked).isFalse();
@@ -109,7 +110,7 @@ public class CommentCommandServiceTest {
     @Test
     @DisplayName("자기 자신을 신고하면 예외가 발생한다")
     void validateSelfReportTest() {
-        //given
+        // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
         databaseInitializer.setDefaultDiscussionInfo();
@@ -119,7 +120,7 @@ public class CommentCommandServiceTest {
         final Long discussionId = 1L;
         final Long commentId = 1L;
 
-        //when - then
+        // when - then
         assertThatThrownBy(() -> commentCommandService.report(memberId, discussionId, commentId))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("자기 자신이 작성한 댓글을 신고할 수 없습니다");
@@ -128,7 +129,7 @@ public class CommentCommandServiceTest {
     @Test
     @DisplayName("이미 자신이 신고한 댓글을 중복 신고하면 예외가 발생한다")
     void validateDuplicatedReportTest() {
-        //given
+        // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setUserInfo("user2@gmail.com", "user", "https://image.png", "프로필 메시지");
         databaseInitializer.setDefaultBookInfo();
@@ -141,7 +142,7 @@ public class CommentCommandServiceTest {
 
         commentCommandService.report(memberId, discussionId, commentId);
 
-        //when - then
+        // when - then
         assertThatThrownBy(() -> commentCommandService.report(memberId, discussionId, commentId))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("이미 신고한 댓글입니다");
@@ -150,13 +151,13 @@ public class CommentCommandServiceTest {
     @Test
     @DisplayName("자신의 것이 아닌 댓글을 수정하면 예외가 발생한다")
     void validateCommentMemberUpdateTest() {
-        //given
+        // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
         databaseInitializer.setDefaultDiscussionInfo();
 
         databaseInitializer.setUserInfo("user2@gmail.com", "user", "https://image.png", "프로필 메시지");
-        databaseInitializer.setCommentInfo("상속의 핵심 목적은 타입 계층의 구축입니다!", 2L, 1L);
+        databaseInitializer.setCommentInfo("member 2L의 댓글입니다", 2L, 1L);
 
         final Long memberId = 1L;
         final Long discussionId = 1L;
@@ -165,8 +166,8 @@ public class CommentCommandServiceTest {
                 "member1L의 댓글입니다"
         );
 
-        //when - then
-        assertThatThrownBy(() ->commentCommandService.updateComment(memberId, discussionId, commentId, commentRequest))
+        // when - then
+        assertThatThrownBy(() -> commentCommandService.updateComment(memberId, discussionId, commentId, commentRequest))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("자기 자신의 댓글만 수정/삭제 가능합니다");
     }
@@ -174,7 +175,7 @@ public class CommentCommandServiceTest {
     @Test
     @DisplayName("수정하는 댓글과 토론방이 일치하지 않으면 예외가 발생한다")
     void validateDiscussionCommentUpdateTest() {
-        //given
+        // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
 
@@ -190,8 +191,8 @@ public class CommentCommandServiceTest {
                 "discussion 1L의 댓글입니다"
         );
 
-        //when - then
-        assertThatThrownBy(() ->commentCommandService.updateComment(memberId, discussionId, commentId, commentRequest))
+        // when - then
+        assertThatThrownBy(() -> commentCommandService.updateComment(memberId, discussionId, commentId, commentRequest))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("해당 토론방에 있는 댓글이 아닙니다");
     }
@@ -199,7 +200,7 @@ public class CommentCommandServiceTest {
     @Test
     @DisplayName("자신의 것이 아닌 댓글을 삭제하면 예외가 발생한다")
     void validateCommentMemberDeleteTest() {
-        //given
+        // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
         databaseInitializer.setDefaultDiscussionInfo();
@@ -211,8 +212,8 @@ public class CommentCommandServiceTest {
         final Long discussionId = 1L;
         final Long commentId = 1L;
 
-        //when - then
-        assertThatThrownBy(() ->commentCommandService.deleteComment(memberId, discussionId, commentId))
+        // when - then
+        assertThatThrownBy(() -> commentCommandService.deleteComment(memberId, discussionId, commentId))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("자기 자신의 댓글만 수정/삭제 가능합니다");
     }
@@ -220,7 +221,7 @@ public class CommentCommandServiceTest {
     @Test
     @DisplayName("삭제하는 댓글과 토론방이 일치하지 않으면 예외가 발생한다")
     void validateDiscussionCommentDeleteTest() {
-        //given
+        // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
 
@@ -233,8 +234,8 @@ public class CommentCommandServiceTest {
         final Long discussionId = 2L;
         final Long commentId = 1L;
 
-        //when - then
-        assertThatThrownBy(() ->commentCommandService.deleteComment(memberId, discussionId, commentId))
+        // when - then
+        assertThatThrownBy(() -> commentCommandService.deleteComment(memberId, discussionId, commentId))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("해당 토론방에 있는 댓글이 아닙니다");
     }
