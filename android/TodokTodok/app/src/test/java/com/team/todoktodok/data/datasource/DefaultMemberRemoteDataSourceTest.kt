@@ -69,7 +69,7 @@ class DefaultMemberRemoteDataSourceTest {
             val profileResponse = mockk<ProfileResponse>()
             val profile = mockk<Profile>()
 
-            every { memberService.fetchProfile(memberId) } returns profileResponse
+            coEvery { memberService.fetchProfile(memberId) } returns profileResponse
             every { profileResponse.toDomain() } returns profile
 
             val result = dataSource.fetchProfile(memberId)
@@ -85,7 +85,7 @@ class DefaultMemberRemoteDataSourceTest {
             val profile = mockk<Profile>()
 
             coEvery { tokenDataSource.getMemberId() } returns memberId
-            every { memberService.fetchProfile(memberId) } returns profileResponse
+            coEvery { memberService.fetchProfile(memberId) } returns profileResponse
             every { profileResponse.toDomain() } returns profile
 
             val result = dataSource.fetchProfile(null)
