@@ -3,7 +3,6 @@ package com.team.todoktodok.presentation.view.book
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -129,10 +128,6 @@ class SelectBookActivity : AppCompatActivity() {
     }
 
     companion object {
-        fun Intent(context: Context): Intent =
-            Intent(context, SelectBookActivity::class.java)
+        fun Intent(context: Context): Intent = Intent(context, SelectBookActivity::class.java)
     }
 }
-
-
-
