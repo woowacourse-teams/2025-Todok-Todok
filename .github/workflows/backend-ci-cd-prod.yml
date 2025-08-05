@@ -51,7 +51,7 @@ jobs:
 
       - name: Docker Image Build & Push
         run: |
-          docker buildx build --platform linux/arm64 -t woowajeff/todoktodok:prod --push .
+          docker buildx build -f Dockerfile.prod --platform linux/arm64 -t woowajeff/todoktodok:prod --push .
 
   cd:
     needs: ci
