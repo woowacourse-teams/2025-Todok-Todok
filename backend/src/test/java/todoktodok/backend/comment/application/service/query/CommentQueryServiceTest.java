@@ -1,7 +1,12 @@
 package todoktodok.backend.comment.application.service.query;
 
+import java.util.List;
 import java.util.NoSuchElementException;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,6 +18,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.DatabaseInitializer;
 import todoktodok.backend.InitializerTimer;
+import todoktodok.backend.comment.application.dto.response.CommentResponse;
 
 @ActiveProfiles("test")
 @Transactional
@@ -29,6 +35,33 @@ public class CommentQueryServiceTest {
     @BeforeEach
     void setUp() {
         databaseInitializer.clear();
+    }
+
+    @Test
+    @DisplayName("토론방별 댓글 목록 조회 시 댓글의 좋아요수와 답글수를 반환한다")
+    void createCommentTest_likeCountAndReplyCount() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+        databaseInitializer.setDefaultCommentInfo();
+
+        databaseInitializer.setDefaultReplyInfo();
+        databaseInitializer.setDefaultReplyInfo();
+        databaseInitializer.setCommentLikeInfo(1L, 1L);
+
+        final Long memberId = 1L;
+        final Long discussionId = 1L;
+
+        // when
+        final List<CommentResponse> comments = commentQueryService.getComments(memberId, discussionId);
+        final CommentResponse comment = comments.getFirst();
+
+        // when - then
+        assertAll(
+                () -> assertThat(comment.replyCount()).isEqualTo(2),
+                () -> assertThat(comment.likeCount()).isEqualTo(1)
+        );
     }
 
     @Test
