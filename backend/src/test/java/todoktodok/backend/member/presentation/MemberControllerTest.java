@@ -1,5 +1,7 @@
 package todoktodok.backend.member.presentation;
 
+import static org.hamcrest.Matchers.equalTo;
+
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
@@ -153,7 +155,8 @@ class MemberControllerTest {
                 .body(new ProfileUpdateRequest(newNickname, profileMessage))
                 .when().put("/api/v1/members/profile")
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.OK.value())
+                .body("nickname", equalTo(newNickname));
     }
 
     @Test
@@ -173,6 +176,7 @@ class MemberControllerTest {
                 .body(new ProfileUpdateRequest(nickname, newProfileMessage))
                 .when().put("/api/v1/members/profile")
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.OK.value())
+                .body("profileMessage", equalTo(newProfileMessage));
     }
 }
