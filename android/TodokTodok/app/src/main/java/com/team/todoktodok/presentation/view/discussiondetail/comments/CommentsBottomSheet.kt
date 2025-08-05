@@ -31,7 +31,7 @@ class CommentsBottomSheet : BottomSheetDialogFragment(R.layout.fragment_comments
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         BottomSheetDialog(requireContext(), theme).apply {
             window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
-            window?.setDimAmount(DIM_AMOUNT_NONE)
+            window?.setDimAmount(DIM_AMOUNT)
         }
 
     override fun onViewCreated(
@@ -162,7 +162,7 @@ class CommentsBottomSheet : BottomSheetDialogFragment(R.layout.fragment_comments
     companion object {
         const val TAG = "COMMENTS_BOTTOM_SHEET"
         private const val COMMENT_CREATE_POSITION = 0
-        private const val DIM_AMOUNT_NONE = 0f
+        private const val DIM_AMOUNT = 0.001f
 
         fun newInstance(discussionId: Long): CommentsBottomSheet =
             CommentsBottomSheet().apply {
