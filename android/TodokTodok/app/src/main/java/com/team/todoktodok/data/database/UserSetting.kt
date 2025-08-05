@@ -13,6 +13,7 @@ import java.io.OutputStream
 data class UserSetting(
     val accessToken: String = "",
     val refreshToken: String = "",
+    val memberId: String = "",
 )
 
 object UserSettingSerializer : Serializer<UserSetting> {
