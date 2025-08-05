@@ -1,6 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/space_16"
+    android:paddingHorizontal="@dimen/space_24">
+
+    <TextView
+        android:id="@+id/tv_user_nickname"
+        style="@style/BaseTextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="34dp"
+        android:gravity="center_vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="코드마스터" />
+
+    <TextView
+        android:id="@+id/tv_discussion_create_at"
+        style="@style/HintTextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/item_discussion_detail_meta_line_height"
+        android:layout_marginStart="6dp"
+        android:gravity="center_vertical"
+        android:textSize="@dimen/font_size_x_small"
+        app:layout_constraintBottom_toBottomOf="@id/tv_user_nickname"
+        app:layout_constraintStart_toEndOf="@id/tv_user_nickname"
+        tools:text="2024년 7월 20일" />
+
+    <ImageView
+        android:layout_width="@dimen/space_24"
+        android:layout_height="@dimen/space_24"
+        android:src="@drawable/btn_option"
+        app:layout_constraintBottom_toBottomOf="@id/tv_user_nickname"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_user_nickname" />
+
+    <TextView
+        android:id="@+id/tv_discussion_opinion"
+        style="@style/BaseTextStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/pretendard_regular"
+        android:textSize="@dimen/font_size_large"
+        app:layout_constraintTop_toBottomOf="@id/tv_user_nickname"
+        tools:text="캡슐화를 하면 데이터를 보호할 수 있다는 것에는 동의하는데, 실제로 완벽히 캡슐화가 되는 지는 의문입니다.getter/setter 메서드를 통해 객체 내부의 데이터가 외부로 드러나는 것은 캡슐화가 잘 된 것이 맞을까요?" />
+
+    <ImageView
+        android:id="@+id/iv_like"
+        android:layout_width="@dimen/space_24"
+        android:layout_height="@dimen/space_24"
+        android:layout_marginTop="@dimen/space_8"
+        android:layout_marginBottom="36dp"
+        android:background="@drawable/btn_heart_background"
+        android:contentDescription="@null"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_discussion_opinion" />
+
+    <TextView
+        android:id="@+id/tv_heart_count"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/space_24"
+        android:layout_marginStart="@dimen/space_8"
+        app:layout_constraintBottom_toBottomOf="@id/iv_like"
+        app:layout_constraintStart_toEndOf="@id/iv_like"
+        app:layout_constraintTop_toTopOf="@id/iv_like"
+        tools:text="20" />
+
+    <ImageView
+        android:id="@+id/iv_comment"
+        android:layout_width="@dimen/space_24"
+        android:layout_height="@dimen/space_24"
+        android:layout_marginStart="@dimen/space_20"
+        android:layout_marginBottom="36dp"
+        android:contentDescription="@null"
+        android:src="@drawable/btn_comment"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tv_heart_count" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/space_24"
+        android:layout_marginStart="@dimen/space_8"
+        app:layout_constraintBottom_toBottomOf="@id/iv_comment"
+        app:layout_constraintStart_toEndOf="@id/iv_comment"
+        app:layout_constraintTop_toTopOf="@id/iv_comment"
+        tools:text="20" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

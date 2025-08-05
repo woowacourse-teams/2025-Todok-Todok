@@ -32,6 +32,10 @@ class DiscussionDetailViewModel(
         }
     }
 
+    fun showComments() {
+        onUiEvent(DiscussionDetailUiEvent.ShowComments(discussionId))
+    }
+
     fun reportDiscussion() {
         onUiEvent(DiscussionDetailUiEvent.ReportDiscussion(discussionId))
     }

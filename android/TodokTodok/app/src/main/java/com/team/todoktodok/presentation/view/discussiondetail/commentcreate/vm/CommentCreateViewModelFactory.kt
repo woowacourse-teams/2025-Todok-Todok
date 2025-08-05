@@ -1,4 +1,4 @@
-package com.team.todoktodok.presentation.view.discussiondetail.vm
+package com.team.todoktodok.presentation.view.discussiondetail.commentcreate.vm
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

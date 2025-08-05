@@ -1,4 +1,4 @@
-package com.team.todoktodok.presentation.view.discussiondetail
+package com.team.todoktodok.presentation.view.discussiondetail.commentcreate
 
 import android.app.Dialog
 import android.content.Context
@@ -10,12 +10,15 @@ import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentCommentCreateBottomSheetBinding
-import com.team.todoktodok.presentation.view.discussiondetail.vm.CommentCreateViewModel
-import com.team.todoktodok.presentation.view.discussiondetail.vm.CommentCreateViewModelFactory
+import com.team.todoktodok.presentation.view.discussiondetail.BottomSheetVisibilityListener
+import com.team.todoktodok.presentation.view.discussiondetail.CommentCreateUiEvent
+import com.team.todoktodok.presentation.view.discussiondetail.commentcreate.vm.CommentCreateViewModel
+import com.team.todoktodok.presentation.view.discussiondetail.commentcreate.vm.CommentCreateViewModelFactory
 
 class CommentCreateBottomSheet : BottomSheetDialogFragment(R.layout.fragment_comment_create_bottom_sheet) {
     private val viewModel by viewModels<CommentCreateViewModel> {
@@ -32,8 +35,8 @@ class CommentCreateBottomSheet : BottomSheetDialogFragment(R.layout.fragment_com
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
-        super.onCreateDialog(savedInstanceState).apply {
-            window?.setDimAmount(0f)
+        BottomSheetDialog(requireContext(), theme).apply {
+            window?.setDimAmount(DIM_AMOUNT)
         }
 
     override fun onStart() {
@@ -58,6 +61,8 @@ class CommentCreateBottomSheet : BottomSheetDialogFragment(R.layout.fragment_com
         visibilityListener?.onBottomSheetDismissed()
     }
 
+    override fun getTheme(): Int = R.style.BottomSheetDialogTheme
+
     private fun initView(binding: FragmentCommentCreateBottomSheetBinding) {
         with(binding) {
             etTextCommentContent.requestFocus()
@@ -78,10 +83,10 @@ class CommentCreateBottomSheet : BottomSheetDialogFragment(R.layout.fragment_com
     }
 
     private fun setupObserve(binding: FragmentCommentCreateBottomSheetBinding) {
-        viewModel.uiEvent.observe(this) { value ->
+        viewModel.uiEvent.observe(viewLifecycleOwner) { value ->
             handleUiEvent(value)
         }
-        viewModel.commentText.observe(this) { value ->
+        viewModel.commentText.observe(viewLifecycleOwner) { value ->
             binding.ivAddComment.isEnabled = value.isNotBlank()
         }
     }
@@ -106,7 +111,9 @@ class CommentCreateBottomSheet : BottomSheetDialogFragment(R.layout.fragment_com
     companion object {
         const val COMMENT_REQUEST_KEY = "comment_create_result"
         const val COMMENT_CREATED_RESULT_KEY = "IS_COMMENT_CREATED"
-        const val TAG = "COMMENT_CREATE_BOTTOM_SHEET"
+        const val TAG = "COMMENTS_BOTTOM_SHEET"
+
+        private const val DIM_AMOUNT = 0.001f
 
         fun newInstance(discussionId: Long): CommentCreateBottomSheet =
             CommentCreateBottomSheet().apply {

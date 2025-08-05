@@ -102,6 +102,9 @@
 
     <TextView
         android:id="@+id/tv_discussion_opinion"
+        style="@style/BaseTextStyle"
+        android:fontFamily="@font/pretendard_regular"
+        android:textSize="@dimen/font_size_large"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/tv_user_nickname"
@@ -109,8 +112,8 @@
 
     <ImageView
         android:id="@+id/iv_like"
-        android:layout_width="@dimen/space_24"
-        android:layout_height="@dimen/space_24"
+        android:layout_width="@dimen/space_32"
+        android:layout_height="@dimen/space_32"
         android:layout_marginBottom="36dp"
         android:background="@drawable/btn_heart_background"
         android:contentDescription="@null"
@@ -120,17 +123,17 @@
     <TextView
         android:id="@+id/tv_heart_count"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/space_24"
+        android:layout_height="@dimen/space_32"
         android:layout_marginStart="@dimen/space_8"
         app:layout_constraintBottom_toBottomOf="@id/iv_like"
         app:layout_constraintStart_toEndOf="@id/iv_like"
         app:layout_constraintTop_toTopOf="@id/iv_like"
-        tools:text="20" />
+        tools:text="1341354135134513" />
 
     <ImageView
         android:id="@+id/iv_comment"
-        android:layout_width="@dimen/space_24"
-        android:layout_height="@dimen/space_24"
+        android:layout_width="@dimen/space_32"
+        android:layout_height="@dimen/space_32"
         android:layout_marginStart="@dimen/space_20"
         android:layout_marginBottom="36dp"
         android:contentDescription="@null"
@@ -140,10 +143,10 @@
 
     <TextView
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/space_24"
+        android:layout_height="@dimen/space_32"
         android:layout_marginStart="@dimen/space_8"
         app:layout_constraintBottom_toBottomOf="@id/iv_comment"
         app:layout_constraintStart_toEndOf="@id/iv_comment"
         app:layout_constraintTop_toTopOf="@id/iv_comment"
-        tools:text="20" />
+        tools:text="23333" />
 </androidx.constraintlayout.widget.ConstraintLayout>

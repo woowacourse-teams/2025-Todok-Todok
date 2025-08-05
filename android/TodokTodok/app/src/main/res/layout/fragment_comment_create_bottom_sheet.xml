@@ -3,32 +3,33 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingHorizontal="@dimen/space_28"
-    tools:context=".presentation.view.discussiondetail.CommentCreateBottomSheet">
+    android:layout_height="wrap_content"
+    android:paddingHorizontal="@dimen/space_24"
+    tools:context=".presentation.view.discussiondetail.comments.CommentsBottomSheet">
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_text_comment_content"
         android:layout_width="@dimen/space_0"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/space_24"
+        android:layout_marginVertical="@dimen/space_16"
         android:background="@drawable/bg_green_f0_radius_8dp"
         app:boxBackgroundMode="none"
         app:cursorColor="@color/black_18"
         app:hintEnabled="false"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/iv_add_comment"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_text_comment_content"
+            style="@style/BaseTextStyle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="start|center"
             android:hint="@string/comment_input_hint"
             android:includeFontPadding="false"
             android:inputType="textMultiLine"
-            android:lineSpacingExtra="0dp"
             android:maxLines="8"
             android:overScrollMode="always"
             android:paddingStart="10dp"
@@ -36,16 +37,18 @@
             android:paddingBottom="2dp"
             android:scrollbars="vertical"
             android:textColor="@color/black_18"
-            android:textSize="@dimen/font_size_large" />
+            android:textSize="@dimen/font_size_x_large" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <ImageView
         android:id="@+id/iv_add_comment"
         android:layout_width="@dimen/space_28"
         android:layout_height="@dimen/space_28"
+        android:layout_marginStart="10dp"
         android:background="@drawable/btn_comment_background"
         android:contentDescription="@string/content_description_add_comment"
         app:layout_constraintBottom_toBottomOf="@id/til_text_comment_content"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/til_text_comment_content"
         app:layout_constraintTop_toTopOf="@id/til_text_comment_content" />
 </androidx.constraintlayout.widget.ConstraintLayout>
