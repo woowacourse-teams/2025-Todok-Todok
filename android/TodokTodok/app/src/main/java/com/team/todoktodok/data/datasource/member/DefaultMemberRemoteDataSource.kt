@@ -1,11 +1,13 @@
 package com.team.todoktodok.data.datasource.member
 
+import com.team.domain.model.member.MemberDiscussionType
 import com.team.todoktodok.data.core.JwtParser
 import com.team.todoktodok.data.datasource.token.TokenDataSource
 import com.team.todoktodok.data.network.auth.AuthInterceptor.Companion.AUTHORIZATION_NAME
 import com.team.todoktodok.data.network.request.LoginRequest
 import com.team.todoktodok.data.network.request.SignUpRequest
 import com.team.todoktodok.data.network.response.ProfileResponse
+import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
 import com.team.todoktodok.data.network.service.MemberService
 
 class DefaultMemberRemoteDataSource(
@@ -38,5 +40,15 @@ class DefaultMemberRemoteDataSource(
             val memberId = tokenDataSource.getMemberId()
             memberService.fetchProfile(memberId)
         }
+
+    override suspend fun fetchMemberDiscussionRooms(
+        memberId: String?,
+        type: MemberDiscussionType,
+    ): List<DiscussionResponse> =
+        memberId?.let {
+            memberService.fetchMemberDiscussionRooms(it, type.name)
+        } ?: run {
+            val memberId = tokenDataSource.getMemberId()
+            memberService.fetchMemberDiscussionRooms(memberId, type.name)
         }
 }

@@ -1,11 +1,13 @@
 package com.team.todoktodok.data.datasource
 
+import com.team.domain.model.member.MemberDiscussionType
 import com.team.todoktodok.data.core.JwtParser
 import com.team.todoktodok.data.datasource.member.DefaultMemberRemoteDataSource
 import com.team.todoktodok.data.datasource.token.TokenDataSource
 import com.team.todoktodok.data.network.auth.AuthInterceptor.Companion.AUTHORIZATION_NAME
 import com.team.todoktodok.data.network.request.LoginRequest
 import com.team.todoktodok.data.network.response.ProfileResponse
+import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
 import com.team.todoktodok.data.network.service.MemberService
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -91,5 +93,40 @@ class DefaultMemberRemoteDataSourceTest {
 
             // then
             assertEquals(profileResponse, result)
+        }
+
+    @Test
+    fun `토론방 목록 조회시 memberId가 주어지면 해당 memberId로 요청한다`() =
+        runTest {
+            // given
+            val memberId = "5"
+            val type = MemberDiscussionType.CREATED.name
+            val response = mockk<List<DiscussionResponse>>()
+
+            coEvery { memberService.fetchMemberDiscussionRooms(memberId, type) } returns response
+
+            // when
+            val result = dataSource.fetchMemberDiscussionRooms(memberId, MemberDiscussionType.CREATED)
+
+            // then
+            assertEquals(response, result)
+        }
+
+    @Test
+    fun `토론방 목록 조회시 memberId가 null이면 TokenDataSource에서 가져온다`() =
+        runTest {
+            // given
+            val memberId = "10"
+            val type = MemberDiscussionType.PARTICIPATED
+            val response = mockk<List<DiscussionResponse>>()
+
+            coEvery { tokenDataSource.getMemberId() } returns memberId
+            coEvery { memberService.fetchMemberDiscussionRooms(memberId, type.name) } returns response
+
+            // when
+            val result = dataSource.fetchMemberDiscussionRooms(null, type)
+
+            // then
+            assertEquals(response, result)
         }
 }
