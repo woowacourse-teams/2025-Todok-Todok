@@ -7,5 +7,5 @@ import com.team.todoktodok.data.datasource.book.BookRemoteDataSource
 class DefaultBookRepository(
     private val bookRemoteDataSource: BookRemoteDataSource,
 ) : BookRepository {
-    override suspend fun getBooks(keyword: String): Books = bookRemoteDataSource.fetchBooks(keyword)
+    override suspend fun fetchBooks(keyword: String): Books = bookRemoteDataSource.fetchBooks(keyword)
 }
