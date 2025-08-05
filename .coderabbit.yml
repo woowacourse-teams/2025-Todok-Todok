@@ -139,7 +139,7 @@ reviews:
   disable_cache: false               # 빠르고 효율적인 리뷰를 위해 캐시 기능 활성화
   auto_review:
     enabled: true                    # 자동 리뷰 활성화
-    auto_incremental_review: true    # 증분 리뷰 활성화 (새로 바뀐 부분만 리뷰 활성화)
+    auto_incremental_review: false    # 증분 리뷰 비활성화 (PR 이후 커밋/변경에 대해서는 리뷰하지 않도록 비활성화)
     base_branches: ["an", "be"]
 
   # 코드 분석 도구(Tools)
