@@ -70,4 +70,5 @@
     <string name="error_delete_keyword">검색어를 삭제했습니다</string>
     <string name="error_empty_keyword">검색어를 입력해주세요</string>
     <string name="error_no_selected_book">책을 선택해주세요</string>
+    <string name="error_network">네트워크 에러가 발생했어요</string>
 </resources>

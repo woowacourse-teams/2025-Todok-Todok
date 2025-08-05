@@ -68,13 +68,17 @@ class SelectBookViewModel(
         uiState = uiState.copy(isLoading = true)
         isLoading()
         viewModelScope.launch {
-            val books: Books =
-                withContext(Dispatchers.IO) {
-                    bookRepository.fetchBooks(keyword)
-                }
-            uiState = uiState.copy(isLoading = false, searchedBooks = books)
-            isLoading()
-            _uiEvent.setValue(SelectBookUiEvent.ShowSearchResult(uiState.searchedBooks))
+            try {
+                val books: Books =
+                    withContext(Dispatchers.IO) {
+                        bookRepository.fetchBooks(keyword)
+                    }
+                uiState = uiState.copy(isLoading = false, searchedBooks = books)
+                isLoading()
+                _uiEvent.setValue(SelectBookUiEvent.ShowSearchResult(uiState.searchedBooks))
+            } catch (e: Exception) {
+                _uiEvent.setValue(SelectBookUiEvent.ShowDialog(R.string.error_network))
+            }
         }
     }
 
