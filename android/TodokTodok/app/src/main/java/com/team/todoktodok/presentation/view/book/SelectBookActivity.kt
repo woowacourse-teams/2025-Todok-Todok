@@ -66,7 +66,7 @@ class SelectBookActivity : AppCompatActivity() {
         binding.apply {
             rvSearchedBooks.adapter = adapter
             btnBack.setOnClickListener {
-                viewModel.navigateToBack()
+                finish()
             }
             etlSearchKeyword.setEndIconOnClickListener {
                 binding.etSearchKeyword.text = null
@@ -98,10 +98,6 @@ class SelectBookActivity : AppCompatActivity() {
 
                 is SelectBookUiEvent.FinishLoading -> {
                     // 로딩 중 스페너 치우기
-                }
-
-                is SelectBookUiEvent.NavigateToBack -> {
-                    finish()
                 }
 
                 is SelectBookUiEvent.NavigateToCreateDiscussionRoom -> {

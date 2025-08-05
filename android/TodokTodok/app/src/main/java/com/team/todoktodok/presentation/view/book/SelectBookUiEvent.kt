@@ -12,8 +12,6 @@ sealed class SelectBookUiEvent {
 
     data object RevealKeyboard : SelectBookUiEvent()
 
-    data object NavigateToBack : SelectBookUiEvent()
-
     data class NavigateToCreateDiscussionRoom(
         val book: Book,
     ) : SelectBookUiEvent()
