@@ -22,8 +22,6 @@ spring:
     activate:
       on-profile: prod
     import:
-      - submodule/security/aladin.yml
-      - submodule/security/jwt.yml
       - submodule/security/database.yml
 
 management:
@@ -35,15 +33,3 @@ management:
     export:
       prometheus:
         enabled: true
-
-aladin:
-  base-url: ${aladin.base-url}
-  item-search-uri: ${aladin.item-search-uri}
-  api-key: ${aladin.api-key}
-  item-lookup-uri: ${aladin.item-lookup-uri}
-
-jwt:
-  access-token:
-    expire-mills: ${jwt.access-token.expire-mills}
-  temp-token:
-    expire-mills: ${jwt.temp-token.expire-mills}

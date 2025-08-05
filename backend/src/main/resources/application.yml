@@ -1,3 +1,19 @@
 spring:
   profiles:
     active: dev
+  config:
+    import:
+      - submodule/security/aladin.yml
+      - submodule/security/jwt.yml
+
+aladin:
+  base-url: ${aladin.base-url}
+  item-search-uri: ${aladin.item-search-uri}
+  api-key: ${aladin.api-key}
+  item-lookup-uri: ${aladin.item-lookup-uri}
+
+jwt:
+  access-token:
+    expire-mills: ${jwt.access-token.expire-mills}
+  temp-token:
+    expire-mills: ${jwt.temp-token.expire-mills}
