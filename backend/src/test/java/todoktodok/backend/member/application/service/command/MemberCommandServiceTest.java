@@ -226,16 +226,18 @@ class MemberCommandServiceTest {
     }
 
     @Test
-    @DisplayName("정보수정 시 이전의 내 닉네임과 동일한 닉네임이면 예외가 발생하지 않는다")
+    @DisplayName("정보수정 시 이전의 내 정보와 동일한 정보라면 예외가 발생하지 않는다")
     void updateProfileTest_isMyNickname_success() {
         // given
-        databaseInitializer.setUserInfo("user@gmail.com", "nickname", "https://image.png", "profileMessage");
+        final String nickname = "nickname";
+        final String profileMessage = "profileMessage";
+        databaseInitializer.setUserInfo("user@gmail.com", nickname, "https://image.png", profileMessage);
 
         final Long memberId = 1L;
-        final ProfileUpdateRequest profileUpdateRequest = new ProfileUpdateRequest("nickname", "newProfileMessage");
+        final ProfileUpdateRequest profileUpdateRequest = new ProfileUpdateRequest(nickname, profileMessage);
 
         // when
-        final ProfileUpdateResponse expected = new ProfileUpdateResponse("nickname", "newProfileMessage");
+        final ProfileUpdateResponse expected = new ProfileUpdateResponse(nickname, profileMessage);
 
         // then
         assertThat(memberCommandService.updateProfile(memberId, profileUpdateRequest)).isEqualTo(expected);
