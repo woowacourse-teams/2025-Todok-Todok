@@ -40,7 +40,7 @@ public class CommentControllerTest {
     @Test
     @DisplayName("댓글을 생성한다")
     void createCommentTest() {
-        //given
+        // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
         databaseInitializer.setDefaultDiscussionInfo();
