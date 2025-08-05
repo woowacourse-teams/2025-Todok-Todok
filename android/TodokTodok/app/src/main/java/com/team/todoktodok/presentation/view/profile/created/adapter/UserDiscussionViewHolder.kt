@@ -10,6 +10,12 @@ class UserDiscussionViewHolder private constructor(
     private val binding: ItemUserDiscussionBinding,
     val handler: Handler,
 ) : RecyclerView.ViewHolder(binding.root) {
+    init {
+        binding.root.setOnClickListener {
+            handler.onSelectDiscussion(absoluteAdapterPosition)
+        }
+    }
+
     fun bind(item: Discussion) {
         with(binding) {
             tvDiscussionTitle.text = item.discussionTitle
