@@ -18,6 +18,7 @@ import todoktodok.backend.DatabaseInitializer;
 import todoktodok.backend.InitializerTimer;
 import todoktodok.backend.global.jwt.JwtTokenProvider;
 import todoktodok.backend.member.application.dto.request.LoginRequest;
+import todoktodok.backend.member.application.dto.request.ProfileUpdateRequest;
 import todoktodok.backend.member.application.dto.request.SignupRequest;
 import todoktodok.backend.member.presentation.fixture.MemberFixture;
 
@@ -131,6 +132,46 @@ class MemberControllerTest {
                 .contentType(ContentType.JSON)
                 .header("Authorization", token)
                 .when().get(uri)
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
+    }
+
+    @Test
+    @DisplayName("닉네임을 수정한다")
+    void updateProfileTest_nickname() {
+        // given
+        databaseInitializer.setUserInfo("user@gmail.com", "user", "https://user.png", "user");
+
+        final String token = MemberFixture.login("user@gmail.com");
+        final String updatedNickname = "newUser";
+        final String profileMessage = "user";
+
+        // when - then
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .header("Authorization", token)
+                .body(new ProfileUpdateRequest(updatedNickname, profileMessage))
+                .when().put("/api/v1/members/profile")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
+    }
+
+    @Test
+    @DisplayName("상태메세지를 수정한다")
+    void updateProfileTest_profileMessage() {
+        // given
+        databaseInitializer.setUserInfo("user@gmail.com", "user", "https://user.png", "user");
+
+        final String token = MemberFixture.login("user@gmail.com");
+        final String nickname = "user";
+        final String updatedProfileMessage = "newProfileMessage";
+
+        // when - then
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .header("Authorization", token)
+                .body(new ProfileUpdateRequest(nickname, updatedProfileMessage))
+                .when().put("/api/v1/members/profile")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }

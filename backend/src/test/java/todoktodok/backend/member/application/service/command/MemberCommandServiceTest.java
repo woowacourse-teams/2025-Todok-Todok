@@ -2,12 +2,15 @@ package todoktodok.backend.member.application.service.command;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+import java.util.NoSuchElementException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.context.annotation.Profile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +20,9 @@ import todoktodok.backend.global.auth.Role;
 import todoktodok.backend.global.jwt.JwtTokenProvider;
 import todoktodok.backend.global.jwt.TokenInfo;
 import todoktodok.backend.member.application.dto.request.LoginRequest;
+import todoktodok.backend.member.application.dto.request.ProfileUpdateRequest;
 import todoktodok.backend.member.application.dto.request.SignupRequest;
+import todoktodok.backend.member.application.dto.response.ProfileUpdateResponse;
 
 @ActiveProfiles("test")
 @Transactional
@@ -187,5 +192,50 @@ class MemberCommandServiceTest {
         assertThatThrownBy(() -> memberCommandService.report(memberId, targetId))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("이미 신고한 회원입니다");
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 회원의 정보를 수정하려고 하면 예외가 발생한다")
+    void updateProfileTest_memberNotFound_fail() {
+        // given
+        final Long notExistsMemberId = 1L;
+        final ProfileUpdateRequest profileUpdateRequest = new ProfileUpdateRequest("nickname", "profileMessage");
+
+        // when - then
+        assertThatThrownBy(() -> memberCommandService.updateProfile(notExistsMemberId, profileUpdateRequest))
+                .isInstanceOf(NoSuchElementException.class)
+                .hasMessage("해당 회원을 찾을 수 없습니다");
+    }
+
+    @Test
+    @DisplayName("정보수정 시 다른사람과 중복된 닉네임을 입력하면 예외가 발생한다")
+    void updateProfileTest_validateDuplicateNickname_fail() {
+        // given
+        databaseInitializer.setUserInfo("user@gmail.com", "nick", "https://image.png", "profileMessage");
+        databaseInitializer.setUserInfo("user2@gmail.com", "nickname", "https://image.png", "profileMessage");
+
+        final Long memberId = 1L;
+        final ProfileUpdateRequest profileUpdateRequest = new ProfileUpdateRequest("nickname", "updatedProfileMessage");
+
+        // when - then
+        assertThatThrownBy(() -> memberCommandService.updateProfile(memberId, profileUpdateRequest))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("이미 존재하는 닉네임입니다");
+    }
+
+    @Test
+    @DisplayName("정보수정 시 이전의 내 닉네임과 동일한 닉네임이면 예외가 발생하지 않는다")
+    void updateProfileTest_isMyNickname_success() {
+        // given
+        databaseInitializer.setUserInfo("user@gmail.com", "nickname", "https://image.png", "profileMessage");
+
+        final Long memberId = 1L;
+        final ProfileUpdateRequest profileUpdateRequest = new ProfileUpdateRequest("nickname", "updatedProfileMessage");
+
+        // when
+        final ProfileUpdateResponse expected = new ProfileUpdateResponse("nickname", "updatedProfileMessage");
+
+        // then
+        assertThat(memberCommandService.updateProfile(memberId, profileUpdateRequest)).isEqualTo(expected);
     }
 }
