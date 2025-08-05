@@ -81,7 +81,7 @@ public class CommentControllerTest {
 
     @Test
     @DisplayName("댓글 좋아요를 삭제한다")
-    void delteCommentLikeTest() {
+    void deleteCommentLikeTest() {
         // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();

@@ -156,4 +156,46 @@ public class ReplyTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("해당 댓글에 있는 대댓글이 아닙니다");
     }
+
+    @Test
+    @DisplayName("자기 자신이 작성한 대댓글을 신고하려 하면 예외가 발생한다")
+    void validateReply_report_fail() {
+        // given
+        final Member member = MemberFixture.create(
+                "user@gmail.com",
+                "user",
+                "https://image.jpg"
+        );
+
+        final Book book = BookFixture.create(
+                "클린코드",
+                "로버트마틴",
+                "피어슨",
+                "1234567890123"
+        );
+
+        final Discussion discussion = DiscussionFixture.create(
+                "클린코드",
+                "네이밍은 언제나 중요하다",
+                member,
+                book
+        );
+
+        final Comment comment = CommentFixture.create(
+                "네이밍에 너무 많은 시간을 쓸 필요가 있을까요?",
+                member,
+                discussion
+        );
+
+        final Reply reply = ReplyFixture.create(
+                "저도 그 의견에 동의합니다!",
+                member,
+                comment
+        );
+
+        // when - then
+        assertThatThrownBy(() -> reply.validateSelfReport(member))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("자기 자신이 작성한 대댓글을 신고할 수 없습니다");
+    }
 }
