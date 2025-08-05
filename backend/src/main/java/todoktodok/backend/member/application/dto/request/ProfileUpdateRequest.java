@@ -8,6 +8,7 @@ public record ProfileUpdateRequest(
         @Size(min = 1, max = 8, message = "닉네임은 1자 이상, 8자 이하여야 합니다")
         String nickname,
 
+        @Size(max = 40, message = "상태메세지는 40자 이하여야 합니다")
         String profileMessage
 ) {
 }
