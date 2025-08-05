@@ -16,18 +16,18 @@ interface DiscussionService {
         @Path("discussionId") discussionId: Long,
     ): DiscussionResponse
 
-    @GET("v2/discussions")
+    @GET("v1/discussions")
     suspend fun fetchDiscussions(
         @Query("keyword") keyword: String?,
         @Query("type") type: String,
     ): List<DiscussionResponse>
 
-    @POST("v2/discussions")
+    @POST("v1/discussions")
     suspend fun saveDiscussion(
         @Body request: DiscussionRequest,
     ): Response<Unit>
 
-    @POST("v2/discussions")
+    @POST("v1/discussions")
     suspend fun saveDiscussionRoom(
         @Body request: DiscussionRoomRequest,
     )

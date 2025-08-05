@@ -7,7 +7,6 @@ import com.team.todoktodok.data.network.request.DiscussionRoomRequest
 import com.team.todoktodok.data.network.response.discussion.BookResponse
 import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
 import com.team.todoktodok.data.network.response.discussion.MemberResponse
-import com.team.todoktodok.data.network.response.discussion.NoteResponse
 
 class FakeDiscussionRemoteDataSource : DiscussionRemoteDataSource {
     val discussionResponses =
@@ -19,13 +18,6 @@ class FakeDiscussionRemoteDataSource : DiscussionRemoteDataSource {
                 discussionOpinion = "fetch join을 남발하면 안됩니다.",
                 createdAt = "2025-07-12T12:00:00",
                 memberResponse = MemberResponse(1, "홍길동"),
-                noteResponse =
-                    NoteResponse(
-                        noteId = 101,
-                        memo = "엔티티 직접 반환 주의",
-                        snap = "노트 스냅샷 1",
-                        book = BookResponse("김영한", 1, "", "자바 ORM 표준 JPA 프로그래밍"),
-                    ),
             ),
             DiscussionResponse(
                 discussionId = 2,
@@ -34,13 +26,6 @@ class FakeDiscussionRemoteDataSource : DiscussionRemoteDataSource {
                 discussionOpinion = "suspend fun과 launch 차이를 이해해야 합니다.",
                 createdAt = "2025-07-13T12:00:00",
                 memberResponse = MemberResponse(2, "박코루틴"),
-                noteResponse =
-                    NoteResponse(
-                        noteId = 102,
-                        memo = "코루틴 컨텍스트 정리 필요",
-                        snap = "노트 스냅샷 2",
-                        book = BookResponse("Dmitry Jemerov", 2, "", "Kotlin in Action"),
-                    ),
             ),
             DiscussionResponse(
                 discussionId = 3,
@@ -49,13 +34,6 @@ class FakeDiscussionRemoteDataSource : DiscussionRemoteDataSource {
                 discussionOpinion = "UI와 로직을 분리해 유지보수가 쉬워집니다.",
                 createdAt = "2025-07-14T12:00:00",
                 memberResponse = MemberResponse(3, "김아키텍처"),
-                noteResponse =
-                    NoteResponse(
-                        noteId = 103,
-                        memo = "MVVM 계층 구조 정리",
-                        snap = "노트 스냅샷 3",
-                        book = BookResponse("구글", 3, "", "안드로이드 아키텍처 가이드"),
-                    ),
             ),
             DiscussionResponse(
                 discussionId = 4,
@@ -64,13 +42,6 @@ class FakeDiscussionRemoteDataSource : DiscussionRemoteDataSource {
                 discussionOpinion = "의도를 드러내는 코드가 중요합니다.",
                 createdAt = "2025-07-15T12:00:00",
                 memberResponse = MemberResponse(4, "이클린"),
-                noteResponse =
-                    NoteResponse(
-                        noteId = 104,
-                        memo = "클린 코드 원칙 요약",
-                        snap = "노트 스냅샷 4",
-                        book = BookResponse("Robert C. Martin", 4, "", "Clean Code"),
-                    ),
             ),
             DiscussionResponse(
                 discussionId = 5,
@@ -79,13 +50,6 @@ class FakeDiscussionRemoteDataSource : DiscussionRemoteDataSource {
                 discussionOpinion = "상황에 맞는 패턴 선택이 중요합니다.",
                 createdAt = "2025-07-16T12:00:00",
                 memberResponse = MemberResponse(5, "정디자인"),
-                noteResponse =
-                    NoteResponse(
-                        noteId = 105,
-                        memo = "디자인 패턴 종류 정리",
-                        snap = "노트 스냅샷 5",
-                        book = BookResponse("Eric Freeman", 5, "", "Head First Design Patterns"),
-                    ),
             ),
         )
 

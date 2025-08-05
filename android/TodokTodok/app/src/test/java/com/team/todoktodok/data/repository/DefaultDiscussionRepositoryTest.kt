@@ -59,10 +59,15 @@ class DefaultDiscussionRepositoryTest {
                     Discussion(
                         id = 1,
                         discussionTitle = "JPA 성능 최적화",
-                        book = Book(id = 1, title = "자바 ORM 표준 JPA 프로그래밍", author = "김영한", image = ""),
+                        book =
+                            Book(
+                                id = 1,
+                                title = "자바 ORM 표준 JPA 프로그래밍",
+                                author = "김영한",
+                                image = "",
+                            ),
                         writer = User(id = 1, nickname = Nickname(value = "홍길동")),
                         createAt = LocalDateTime.of(2025, 7, 12, 12, 0),
-                        snap = "노트 스냅샷 1",
                         discussionOpinion = "fetch join을 남발하면 안됩니다.",
                     ),
                 )
@@ -101,7 +106,6 @@ class DefaultDiscussionRepositoryTest {
                         book = Book(1L, "자바 ORM 표준 JPA 프로그래밍", "김영한", ""),
                         writer = User(1L, Nickname("홍길동")),
                         createAt = LocalDateTime.of(2025, 7, 12, 12, 0),
-                        snap = "노트 스냅샷 1",
                         discussionOpinion = "fetch join을 남발하면 안됩니다.",
                     ),
                 )
