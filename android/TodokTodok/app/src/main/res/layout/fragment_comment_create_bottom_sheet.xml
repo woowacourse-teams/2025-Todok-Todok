@@ -23,10 +23,10 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_text_comment_content"
+            style="@style/BaseTextStyle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="start|center"
-            style="@style/BaseTextStyle"
             android:hint="@string/comment_input_hint"
             android:includeFontPadding="false"
             android:inputType="textMultiLine"
@@ -37,7 +37,7 @@
             android:paddingBottom="2dp"
             android:scrollbars="vertical"
             android:textColor="@color/black_18"
-            android:textSize="@dimen/font_size_large" />
+            android:textSize="@dimen/font_size_2x_large" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <ImageView
@@ -47,8 +47,8 @@
         android:layout_marginStart="10dp"
         android:background="@drawable/btn_comment_background"
         android:contentDescription="@string/content_description_add_comment"
-        app:layout_constraintStart_toEndOf="@id/til_text_comment_content"
         app:layout_constraintBottom_toBottomOf="@id/til_text_comment_content"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/til_text_comment_content"
         app:layout_constraintTop_toTopOf="@id/til_text_comment_content" />
 </androidx.constraintlayout.widget.ConstraintLayout>
