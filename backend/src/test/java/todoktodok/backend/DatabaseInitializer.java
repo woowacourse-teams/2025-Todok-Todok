@@ -159,4 +159,21 @@ public class DatabaseInitializer {
                 .setParameter("discussionId", discussionId)
                 .executeUpdate();
     }
+
+    @Transactional
+    public void setCommentLikeInfo(
+            final Long memberId,
+            final Long commentId
+    ) {
+        em.createNativeQuery(
+                        """
+                                INSERT INTO COMMENT_LIKE (member_id, comment_id, created_at, modified_at)
+                                VALUES 
+                                (:memberId, :commentId, CURRENT_TIME, CURRENT_TIME)
+                                """
+                )
+                .setParameter("memberId", memberId)
+                .setParameter("commentId", commentId)
+                .executeUpdate();
+    }
 }

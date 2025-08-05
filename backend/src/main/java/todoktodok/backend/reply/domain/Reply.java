@@ -1,4 +1,4 @@
-package todoktodok.backend.comment.domain;
+package todoktodok.backend.reply.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,7 +15,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
-import todoktodok.backend.discussion.domain.Discussion;
+import todoktodok.backend.comment.domain.Comment;
 import todoktodok.backend.global.common.TimeStamp;
 import todoktodok.backend.member.domain.Member;
 
@@ -25,8 +25,8 @@ import todoktodok.backend.member.domain.Member;
 
 @Entity
 @SQLRestriction("deleted_at is NULL")
-@SQLDelete(sql = "UPDATE comment SET deleted_at = NOW() WHERE id = ?")
-public class Comment extends TimeStamp {
+@SQLDelete(sql = "UPDATE reply SET deleted_at = NOW() WHERE id = ?")
+public class Reply extends TimeStamp {
 
     public static final int CONTENT_MAX_LENGTH = 1500;
 
@@ -43,45 +43,37 @@ public class Comment extends TimeStamp {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
-    private Discussion discussion;
+    private Comment comment;
 
     @Builder
-    public static Comment create(
+    public static Reply create(
             final String content,
             final Member member,
-            final Discussion discussion
+            final Comment comment
     ) {
         validateContent(content);
 
-        return new Comment(
-                null, content, member, discussion
+        return new Reply(
+                null, content, member, comment
         );
     }
 
-    public void updateContent(final String content) {
-        validateContent(content);
-        this.content = content;
-    }
-
-    public boolean isOwnedBy(final Member member) {
-        return this.member.equals(member);
-    }
-
-    public void validateMatchWithDiscussion(final Discussion discussion) {
-        if (!this.discussion.equals(discussion)) {
-            throw new IllegalArgumentException("해당 토론방에 있는 댓글이 아닙니다");
+    public void validateMatchWithComment(final Comment comment) {
+        if (!this.comment.equals(comment)) {
+            throw new IllegalArgumentException("해당 댓글에 있는 대댓글이 아닙니다");
         }
     }
 
     public void validateSelfReport(final Member member) {
         if (this.member.equals(member)) {
-            throw new IllegalArgumentException("자기 자신이 작성한 댓글을 신고할 수 없습니다");
+            throw new IllegalArgumentException("자기 자신이 작성한 대댓글을 신고할 수 없습니다");
         }
     }
 
     private static void validateContent(final String content) {
         if (content.isEmpty() || content.length() > CONTENT_MAX_LENGTH) {
-            throw new IllegalArgumentException("댓글 내용은 1자 이상, 1500자 이하여야 합니다");
+            throw new IllegalArgumentException("대댓글 내용은 1자 이상, 1500자 이하여야 합니다");
         }
     }
 }
+
