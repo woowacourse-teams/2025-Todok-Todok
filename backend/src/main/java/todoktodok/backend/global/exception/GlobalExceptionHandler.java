@@ -23,10 +23,14 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PREFIX + e.getMessage());
     }
 
-    @ExceptionHandler({IllegalArgumentException.class, NoSuchElementException.class,
-            DateTimeException.class})
+    @ExceptionHandler({IllegalArgumentException.class, DateTimeException.class})
     public ResponseEntity<String> handleBadRequestException(final RuntimeException e) {
         return ResponseEntity.badRequest().body(PREFIX + e.getMessage());
+    }
+
+    @ExceptionHandler(NoSuchElementException.class)
+    public ResponseEntity<String> handleNotFoundException(NoSuchElementException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(PREFIX + e.getMessage());
     }
 
     @ExceptionHandler(IllegalStateException.class)

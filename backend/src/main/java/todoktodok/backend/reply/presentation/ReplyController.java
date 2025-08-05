@@ -42,6 +42,21 @@ public class ReplyController {
                 .build();
     }
 
+    @Operation(summary = "대댓글 신고 API")
+    @Auth(value = Role.USER)
+    @PostMapping("/{replyId}/report")
+    public ResponseEntity<Void> report(
+            @Parameter(hidden = true) @LoginMember final Long memberId,
+            @PathVariable final Long discussionId,
+            @PathVariable final Long commentId,
+            @PathVariable final Long replyId
+    ) {
+        replyCommandService.report(memberId, discussionId, commentId, replyId);
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .build();
+    }
+
     private URI createUri(final Long id) {
         return ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")

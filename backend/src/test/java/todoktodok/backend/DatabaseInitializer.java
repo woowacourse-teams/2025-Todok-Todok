@@ -176,4 +176,33 @@ public class DatabaseInitializer {
                 .setParameter("commentId", commentId)
                 .executeUpdate();
     }
+
+    @Transactional
+    public void setDefaultReplyInfo() {
+        em.createNativeQuery(
+                """
+                INSERT INTO REPLY (content, member_id, comment_id, created_at, modified_at)
+                VALUES ('저도 같은 의견입니다!', 1L, 1L, CURRENT_TIME, CURRENT_TIME)
+                """
+        ).executeUpdate();
+    }
+
+    @Transactional
+    public void setReplyInfo(
+            final String content,
+            final Long memberId,
+            final Long commentId
+    ) {
+        em.createNativeQuery(
+                        """
+                        INSERT INTO REPLY (content, member_id, comment_id, created_at, modified_at)
+                        VALUES (:content, :memberId, :commentId, CURRENT_TIME, CURRENT_TIME)
+                        """
+                )
+                .setParameter("content", content)
+                .setParameter("memberId", memberId)
+                .setParameter("commentId", commentId)
+                .executeUpdate();
+    }
+
 }

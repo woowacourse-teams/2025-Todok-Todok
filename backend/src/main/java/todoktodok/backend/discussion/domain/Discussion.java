@@ -39,7 +39,7 @@ public class Discussion extends TimeStamp {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false, length = 512)
+    @Column(nullable = false, length = 2550)
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)

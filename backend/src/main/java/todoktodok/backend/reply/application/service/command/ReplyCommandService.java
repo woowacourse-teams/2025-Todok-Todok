@@ -12,6 +12,8 @@ import todoktodok.backend.member.domain.Member;
 import todoktodok.backend.member.domain.repository.MemberRepository;
 import todoktodok.backend.reply.application.dto.request.ReplyRequest;
 import todoktodok.backend.reply.domain.Reply;
+import todoktodok.backend.reply.domain.ReplyReport;
+import todoktodok.backend.reply.domain.repository.ReplyReportRepository;
 import todoktodok.backend.reply.domain.repository.ReplyRepository;
 
 @Service
@@ -20,6 +22,7 @@ import todoktodok.backend.reply.domain.repository.ReplyRepository;
 public class ReplyCommandService {
 
     private final ReplyRepository replyRepository;
+    private final ReplyReportRepository replyReportRepository;
     private final MemberRepository memberRepository;
     private final DiscussionRepository discussionRepository;
     private final CommentRepository commentRepository;
@@ -46,6 +49,30 @@ public class ReplyCommandService {
         return savedReply.getId();
     }
 
+    public void report(
+            final Long memberId,
+            final Long discussionId,
+            final Long commentId,
+            final Long replyId
+    ) {
+        final Member member = findMember(memberId);
+        final Discussion discussion = findDiscussion(discussionId);
+        final Comment comment = findComment(commentId);
+        final Reply reply = findReply(replyId);
+
+        comment.validateMatchWithDiscussion(discussion);
+        reply.validateMatchWithComment(comment);
+        reply.validateSelfReport(member);
+
+        validateDuplicatedReport(member, reply);
+
+        final ReplyReport replyReport = ReplyReport.builder()
+                .reply(reply)
+                .member(member)
+                .build();
+
+        replyReportRepository.save(replyReport);
+    }
 
     private Member findMember(final Long memberId) {
         return memberRepository.findById(memberId)
@@ -60,5 +87,19 @@ public class ReplyCommandService {
     private Comment findComment(final Long commentId) {
         return commentRepository.findById(commentId)
                 .orElseThrow(() -> new NoSuchElementException("해당 댓글을 찾을 수 없습니다"));
+    }
+
+    private Reply findReply(final Long replyId) {
+        return replyRepository.findById(replyId)
+                .orElseThrow(() -> new NoSuchElementException("해당 대댓글을 찾을 수 없습니다"));
+    }
+
+    private void validateDuplicatedReport(
+            final Member member,
+            final Reply reply
+    ) {
+        if (replyReportRepository.existsByMemberAndReply(member, reply)) {
+            throw new IllegalArgumentException("이미 신고한 대댓글입니다");
+        }
     }
 }
