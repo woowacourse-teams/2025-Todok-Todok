@@ -10,8 +10,6 @@ import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentCreatedDiscussionsRoomBinding
 import com.team.todoktodok.presentation.view.profile.ProfileActivity.Companion.ARG_MEMBER_ID
 import com.team.todoktodok.presentation.view.profile.created.adapter.UserDiscussionAdapter
-import com.team.todoktodok.presentation.view.profile.created.vm.CreatedDiscussionsViewModel
-import com.team.todoktodok.presentation.view.profile.created.vm.CreatedDiscussionsViewModelFactory
 import com.team.todoktodok.presentation.view.profile.joined.vm.JoinedDiscussionsViewModel
 import com.team.todoktodok.presentation.view.profile.joined.vm.JoinedDiscussionsViewModelFactory
 import kotlin.getValue
