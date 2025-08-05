@@ -8,10 +8,13 @@ import androidx.fragment.app.viewModels
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentCommentDetailBinding
+import com.team.todoktodok.presentation.view.discussiondetail.commentdetail.adapter.CommentDetailAdapter
 import com.team.todoktodok.presentation.view.discussiondetail.commentdetail.vm.CommentDetailViewModel
 import com.team.todoktodok.presentation.view.discussiondetail.commentdetail.vm.CommentDetailViewModelFactory
 
 class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
+    private val adapter by lazy { CommentDetailAdapter() }
+
     private val viewModel: CommentDetailViewModel by viewModels {
         val repositoryModule = (requireActivity().application as App).container.repositoryModule
         CommentDetailViewModelFactory(
@@ -26,6 +29,18 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentCommentDetailBinding.bind(view)
         setOnNavigateUp(binding)
+        initAdapter(binding)
+        setupObserve()
+    }
+
+    fun initAdapter(binding: FragmentCommentDetailBinding) {
+        binding.rvItems.adapter = adapter
+    }
+
+    fun setupObserve() {
+        viewModel.uiState.observe(viewLifecycleOwner) { value ->
+            adapter.submitList(value?.getCommentDetailItems() ?: emptyList())
+        }
     }
 
     fun setOnNavigateUp(binding: FragmentCommentDetailBinding) {
