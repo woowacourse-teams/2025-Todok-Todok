@@ -29,7 +29,6 @@ class CreatedDiscussionsViewModel(
                         book = Book(1L, "자바 ORM 표준 JPA 프로그래밍", "김영한", ""),
                         writer = User(1L, Nickname("홍길동")),
                         createAt = LocalDateTime.of(2025, 7, 12, 12, 0),
-                        snap = "노트 스냅샷 1",
                         discussionOpinion = "fetch join을 남발하면 안됩니다.",
                     ),
                     Discussion(
@@ -38,7 +37,6 @@ class CreatedDiscussionsViewModel(
                         book = Book(2L, "Kotlin in Action", "Dmitry Jemerov", ""),
                         writer = User(2L, Nickname("박코루틴")),
                         createAt = LocalDateTime.of(2025, 7, 13, 12, 0),
-                        snap = "노트 스냅샷 2",
                         discussionOpinion = "suspend fun과 launch 차이를 이해해야 합니다.",
                     ),
                 )
