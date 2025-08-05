@@ -57,7 +57,8 @@
 
     <string name="discussion_menu_alarm">알람</string>
     <string name="discussion_menu_profile">내정보</string>
-    <string name="text_menu_report">신고하기</string>
-    <string name="text_menu_block">차단하기</string>
-
+    <string name="profile_menu_block">차단하기</string>
+    <string name="profile_report_dialog_title">해당 회원을 신고하시겠습니까?</string>
+    <string name="profile_block_dialog_title">해당 회원을 차단하시겠습니까?</string>
+    <string name="profile_complete_support">%s 완료되었습니다."</string>
 </resources>
