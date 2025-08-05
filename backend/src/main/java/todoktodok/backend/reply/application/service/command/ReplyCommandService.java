@@ -1,11 +1,9 @@
 package todoktodok.backend.reply.application.service.command;
 
-import jakarta.validation.Valid;
 import java.util.NoSuchElementException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import todoktodok.backend.comment.application.dto.request.CommentRequest;
 import todoktodok.backend.comment.domain.Comment;
 import todoktodok.backend.comment.domain.repository.CommentRepository;
 import todoktodok.backend.discussion.domain.Discussion;
@@ -93,6 +91,24 @@ public class ReplyCommandService {
         reply.validateMatchWithComment(comment);
 
         reply.updateContent(replyRequest.content());
+    }
+
+    public void deleteReply(
+            final Long memberId,
+            final Long discussionId,
+            final Long commentId,
+            final Long replyId
+    ) {
+        final Member member = findMember(memberId);
+        final Comment comment = findComment(commentId);
+        final Discussion discussion = findDiscussion(discussionId);
+        final Reply reply = findReply(replyId);
+
+        validateReplyMember(reply, member);
+        comment.validateMatchWithDiscussion(discussion);
+        reply.validateMatchWithComment(comment);
+
+        replyRepository.delete(reply);
     }
 
     private Member findMember(final Long memberId) {

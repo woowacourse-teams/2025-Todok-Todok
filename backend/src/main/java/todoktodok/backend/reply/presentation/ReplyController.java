@@ -77,6 +77,20 @@ public class ReplyController {
                 .build();
     }
 
+    @Operation(summary = "대댓글 삭제 API")
+    @Auth(value = Role.USER)
+    @DeleteMapping("/{replyId}")
+    public ResponseEntity<Void> deleteReply(
+            @Parameter(hidden = true) @LoginMember final Long memberId,
+            @PathVariable final Long discussionId,
+            @PathVariable final Long commentId,
+            @PathVariable final Long replyId
+    ) {
+        replyCommandService.deleteReply(memberId, discussionId, commentId, replyId);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
     private URI createUri(final Long id) {
         return ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
