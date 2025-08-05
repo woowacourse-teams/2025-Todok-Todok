@@ -19,7 +19,7 @@ sealed class SelectBookUiEvent {
     ) : SelectBookUiEvent()
 
     data class ShowDialog(
-        val message: Int,
+        val error: ErrorSelectBookType,
     ) : SelectBookUiEvent()
 
     data class ShowSearchResult(
