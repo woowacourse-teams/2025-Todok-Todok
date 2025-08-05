@@ -11,12 +11,12 @@
         android:id="@+id/til_text_comment_content"
         android:layout_width="@dimen/space_0"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/space_16"
-        android:layout_marginBottom="@dimen/space_8"
+        android:layout_marginVertical="@dimen/space_16"
         android:background="@drawable/bg_green_f0_radius_8dp"
         app:boxBackgroundMode="none"
         app:cursorColor="@color/black_18"
         app:hintEnabled="false"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/iv_add_comment"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -37,7 +37,7 @@
             android:paddingBottom="2dp"
             android:scrollbars="vertical"
             android:textColor="@color/black_18"
-            android:textSize="@dimen/font_size_2x_large" />
+            android:textSize="@dimen/font_size_x_large" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <ImageView

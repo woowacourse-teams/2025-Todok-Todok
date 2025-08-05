@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:paddingHorizontal="@dimen/space_24">
 
     <ImageView
@@ -30,7 +30,7 @@
         android:id="@+id/tv_input_comment"
         style="@style/HintTextStyle"
         android:layout_width="@dimen/space_0"
-        android:layout_height="@dimen/space_28"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/space_20"
         android:background="@drawable/bg_green_f0_radius_8dp"
         android:gravity="center_vertical"
@@ -38,7 +38,7 @@
         android:paddingTop="@dimen/space_4"
         android:paddingBottom="2dp"
         android:text="@string/comment_input_hint"
-        android:textSize="@dimen/font_size_x_small"
+        android:textSize="@dimen/font_size_x_large"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
