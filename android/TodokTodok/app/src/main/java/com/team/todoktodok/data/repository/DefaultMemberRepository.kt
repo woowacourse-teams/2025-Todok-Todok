@@ -28,5 +28,7 @@ class DefaultMemberRepository(
         }
     }
 
-    override suspend fun getProfile(request: String?): Profile = remoteMemberRemoteDataSource.fetchProfile(request)
+    override suspend fun getProfile(request: String?): Profile {
+        return remoteMemberRemoteDataSource.fetchProfile(request).toDomain()
+    }
 }

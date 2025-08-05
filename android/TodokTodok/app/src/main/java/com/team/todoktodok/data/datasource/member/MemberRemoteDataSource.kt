@@ -1,6 +1,5 @@
 package com.team.todoktodok.data.datasource.member
 
-import com.team.domain.model.member.Profile
 import com.team.todoktodok.data.network.request.SignUpRequest
 
 interface MemberRemoteDataSource {
@@ -8,5 +7,5 @@ interface MemberRemoteDataSource {
 
     suspend fun signUp(request: SignUpRequest)
 
-    suspend fun fetchProfile(request: String?): Profile
+    suspend fun fetchProfile(request: String?): ProfileResponse
 }

@@ -1,11 +1,11 @@
 package com.team.todoktodok.data.datasource.member
 
-import com.team.domain.model.member.Profile
 import com.team.todoktodok.data.core.JwtParser
 import com.team.todoktodok.data.datasource.token.TokenDataSource
 import com.team.todoktodok.data.network.auth.AuthInterceptor.Companion.AUTHORIZATION_NAME
 import com.team.todoktodok.data.network.request.LoginRequest
 import com.team.todoktodok.data.network.request.SignUpRequest
+import com.team.todoktodok.data.network.response.ProfileResponse
 import com.team.todoktodok.data.network.service.MemberService
 
 class DefaultMemberRemoteDataSource(
@@ -31,11 +31,12 @@ class DefaultMemberRemoteDataSource(
         )
     }
 
-    override suspend fun fetchProfile(request: String?): Profile =
+    override suspend fun fetchProfile(request: String?): ProfileResponse =
         request?.let {
-            memberService.fetchProfile(it).toDomain()
+            memberService.fetchProfile(it)
         } ?: run {
             val memberId = tokenDataSource.getMemberId()
-            memberService.fetchProfile(memberId).toDomain()
+            memberService.fetchProfile(memberId)
+        }
         }
 }

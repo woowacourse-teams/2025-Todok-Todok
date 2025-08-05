@@ -1,6 +1,5 @@
 package com.team.todoktodok.data.datasource
 
-import com.team.domain.model.member.Profile
 import com.team.todoktodok.data.core.JwtParser
 import com.team.todoktodok.data.datasource.member.DefaultMemberRemoteDataSource
 import com.team.todoktodok.data.datasource.token.TokenDataSource
@@ -65,31 +64,32 @@ class DefaultMemberRemoteDataSourceTest {
     @Test
     fun `유저 정보 API를 호출할 때 MemberId를 전달 받았으면 전달받은 memberID를 사용해 API를 호출한다`() =
         runTest {
+            // given
             val memberId = "1"
             val profileResponse = mockk<ProfileResponse>()
-            val profile = mockk<Profile>()
 
             coEvery { memberService.fetchProfile(memberId) } returns profileResponse
-            every { profileResponse.toDomain() } returns profile
 
+            // when
             val result = dataSource.fetchProfile(memberId)
 
-            assertEquals(profile, result)
+            // then
+            assertEquals(profileResponse, result)
         }
 
     @Test
     fun `유저 정보 API를 호출할 때 MemberId가 없다면 TokenDataSource를 호출해 memberID를 받아와 API를 호출한다`() =
         runTest {
+            // given
             val memberId = "2"
             val profileResponse = mockk<ProfileResponse>()
-            val profile = mockk<Profile>()
-
             coEvery { tokenDataSource.getMemberId() } returns memberId
             coEvery { memberService.fetchProfile(memberId) } returns profileResponse
-            every { profileResponse.toDomain() } returns profile
 
+            // when
             val result = dataSource.fetchProfile(null)
 
-            assertEquals(profile, result)
+            // then
+            assertEquals(profileResponse, result)
         }
 }
