@@ -14,7 +14,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import todoktodok.backend.DatabaseInitializer;
 import todoktodok.backend.InitializerTimer;
-import todoktodok.backend.comment.application.dto.request.CommentRequest;
 import todoktodok.backend.member.presentation.fixture.MemberFixture;
 import todoktodok.backend.reply.application.dto.request.ReplyRequest;
 
@@ -84,7 +83,7 @@ public class ReplyControllerTest {
 
     @Test
     @DisplayName("대댓글을 수정한다")
-    void updateCommentTest() {
+    void updateReplyTest() {
         // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
@@ -108,5 +107,26 @@ public class ReplyControllerTest {
                 .when().patch("/api/v1/discussions/1/comments/1/replies/1")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
+    }
+
+    @Test
+    @DisplayName("대댓글을 삭제한다")
+    void deleteReplyTest() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+        databaseInitializer.setDefaultCommentInfo();
+        databaseInitializer.setDefaultReplyInfo();
+
+        final String token = MemberFixture.login("user@gmail.com");
+
+        // when - then
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .header("Authorization", token)
+                .when().delete("/api/v1/discussions/1/comments/1/replies/1")
+                .then().log().all()
+                .statusCode(HttpStatus.NO_CONTENT.value());
     }
 }

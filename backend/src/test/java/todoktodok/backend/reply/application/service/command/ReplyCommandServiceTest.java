@@ -14,7 +14,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.DatabaseInitializer;
 import todoktodok.backend.InitializerTimer;
-import todoktodok.backend.comment.application.dto.request.CommentRequest;
 import todoktodok.backend.reply.application.dto.request.ReplyRequest;
 
 @ActiveProfiles("test")
@@ -172,7 +171,8 @@ public class ReplyCommandServiceTest {
         );
 
         // when - then
-        assertThatThrownBy(() -> replyCommandService.updateReply(memberId, discussionId, commentId, replyId, replyRequest))
+        assertThatThrownBy(
+                () -> replyCommandService.updateReply(memberId, discussionId, commentId, replyId, replyRequest))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("자기 자신의 대댓글만 수정/삭제 가능합니다");
     }
@@ -199,7 +199,8 @@ public class ReplyCommandServiceTest {
         );
 
         // when - then
-        assertThatThrownBy(() -> replyCommandService.updateReply(memberId, discussionId, commentId, replyId, replyRequest))
+        assertThatThrownBy(
+                () -> replyCommandService.updateReply(memberId, discussionId, commentId, replyId, replyRequest))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("해당 토론방에 있는 댓글이 아닙니다");
     }
@@ -226,7 +227,79 @@ public class ReplyCommandServiceTest {
         );
 
         // when - then
-        assertThatThrownBy(() -> replyCommandService.updateReply(memberId, discussionId, commentId, replyId, replyRequest))
+        assertThatThrownBy(
+                () -> replyCommandService.updateReply(memberId, discussionId, commentId, replyId, replyRequest))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("해당 댓글에 있는 대댓글이 아닙니다");
+    }
+
+    @Test
+    @DisplayName("자신의 것이 아닌 대댓글을 삭제하면 예외가 발생한다")
+    void validateReplyMemberDeleteTest() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+        databaseInitializer.setDefaultCommentInfo();
+        databaseInitializer.setDefaultReplyInfo();
+
+        databaseInitializer.setUserInfo("user2@gmail.com", "user", "https://image.png", "프로필 메시지");
+        databaseInitializer.setReplyInfo("저는 다르게 생각합니다!", 2L, 1L);
+
+        final Long memberId = 1L;
+        final Long discussionId = 1L;
+        final Long commentId = 1L;
+        final Long replyId = 2L;
+
+        // when - then
+        assertThatThrownBy(() -> replyCommandService.deleteReply(memberId, discussionId, commentId, replyId))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("자기 자신의 대댓글만 수정/삭제 가능합니다");
+    }
+
+    @Test
+    @DisplayName("삭제하는 댓글과 토론방이 일치하지 않으면 예외가 발생한다")
+    void validateDiscussionCommentDeleteTest() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+
+        databaseInitializer.setDefaultDiscussionInfo();
+        databaseInitializer.setDiscussionInfo("오브젝트", "오브젝트 토론입니다", 1L, 1L);
+
+        databaseInitializer.setCommentInfo("상속의 핵심 목적은 타입 계층의 구축입니다!", 1L, 1L);
+        databaseInitializer.setDefaultReplyInfo();
+
+        final Long memberId = 1L;
+        final Long discussionId = 2L;
+        final Long commentId = 1L;
+        final Long replyId = 1L;
+
+        // when - then
+        assertThatThrownBy(() -> replyCommandService.deleteReply(memberId, discussionId, commentId, replyId))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("해당 토론방에 있는 댓글이 아닙니다");
+    }
+
+    @Test
+    @DisplayName("삭제하는 대댓글과 댓글이 일치하지 않으면 예외가 발생한다")
+    void validateReplyCommentDeleteTest() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+
+        databaseInitializer.setDefaultCommentInfo();
+        databaseInitializer.setCommentInfo("상속의 핵심 목적은 타입 계층의 구축입니다!", 1L, 1L);
+        databaseInitializer.setDefaultReplyInfo();
+
+        final Long memberId = 1L;
+        final Long discussionId = 1L;
+        final Long commentId = 2L;
+        final Long replyId = 1L;
+
+        // when - then
+        assertThatThrownBy(() -> replyCommandService.deleteReply(memberId, discussionId, commentId, replyId))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("해당 댓글에 있는 대댓글이 아닙니다");
     }
