@@ -61,6 +61,7 @@ public class Comment extends TimeStamp {
     }
 
     public void updateContent(final String content) {
+        validateContent(content);
         this.content = content;
     }
 
