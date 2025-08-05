@@ -46,6 +46,8 @@ class ProfileActivity : AppCompatActivity() {
 
     private fun initView(binding: ActivityProfileBinding) {
         val memberId: String? = intent?.getStringExtra(ARG_MEMBER_ID)
+        viewModel.loadProfile(memberId)
+
         val viewPagerAdapter = ContentPagerAdapter(memberId, supportFragmentManager, lifecycle)
         profileAdapter = ProfileAdapter(profileAdapterHandler, viewPagerAdapter)
 
@@ -73,6 +75,14 @@ class ProfileActivity : AppCompatActivity() {
 
             override fun onClickProfileImage() {
                 // 이미지 수정 기능 추가
+            }
+
+            override fun onClickReport() {
+                TODO("Not yet implemented")
+            }
+
+            override fun onClickBlock() {
+                TODO("Not yet implemented")
             }
         }
 
