@@ -18,13 +18,9 @@ class JoinedDiscussionsViewModel(
     private val _discussion = MutableLiveData(emptyList<Discussion>())
     val discussion: LiveData<List<Discussion>> get() = _discussion
 
-    init {
-        loadDiscussions()
-    }
-
-    fun loadDiscussions() {
+    fun loadDiscussions(memberId: String?) {
         viewModelScope.launch {
-//            val result = memberRepository.getMemberDiscussionRooms("1", MemberDiscussionType.PARTICIPATED)
+            // val result = memberRepository.getMemberDiscussionRooms(memberId, MemberDiscussionType.PARTICIPATED)
             _discussion.value =
                 listOf(
                     Discussion(

@@ -18,11 +18,7 @@ class CreatedDiscussionsViewModel(
     private val _discussion = MutableLiveData(emptyList<Discussion>())
     val discussion: LiveData<List<Discussion>> get() = _discussion
 
-    init {
-        loadDiscussions()
-    }
-
-    fun loadDiscussions() {
+    fun loadDiscussions(memberId: String?) {
         viewModelScope.launch {
 //            val result = memberRepository.getMemberDiscussionRooms("1", MemberDiscussionType.CREATED)
             _discussion.value =

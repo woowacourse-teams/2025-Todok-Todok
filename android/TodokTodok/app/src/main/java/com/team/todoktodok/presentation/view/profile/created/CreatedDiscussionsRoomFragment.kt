@@ -2,11 +2,13 @@ package com.team.todoktodok.presentation.view.profile.created
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentCreatedDiscussionsRoomBinding
+import com.team.todoktodok.presentation.view.profile.ProfileActivity.Companion.ARG_MEMBER_ID
 import com.team.todoktodok.presentation.view.profile.created.adapter.UserDiscussionAdapter
 import com.team.todoktodok.presentation.view.profile.created.vm.CreatedDiscussionsViewModel
 import com.team.todoktodok.presentation.view.profile.created.vm.CreatedDiscussionsViewModelFactory
@@ -31,6 +33,10 @@ class CreatedDiscussionsRoomFragment : Fragment(R.layout.fragment_created_discus
 
     private fun initView(binding: FragmentCreatedDiscussionsRoomBinding) {
         discussionAdapter = UserDiscussionAdapter(userDiscussionAdapterHandler)
+
+        val memberId: String? = arguments?.getString(ARG_MEMBER_ID)
+        viewModel.loadDiscussions(memberId)
+
         binding.rvDiscussions.adapter = discussionAdapter
     }
 
@@ -46,4 +52,13 @@ class CreatedDiscussionsRoomFragment : Fragment(R.layout.fragment_created_discus
                 TODO("Not yet implemented")
             }
         }
+
+    companion object {
+        fun newInstance(memberId: String?): CreatedDiscussionsRoomFragment =
+            CreatedDiscussionsRoomFragment().apply {
+                memberId?.let {
+                    arguments = bundleOf(it to ARG_MEMBER_ID)
+                }
+            }
+    }
 }

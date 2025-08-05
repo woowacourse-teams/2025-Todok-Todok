@@ -2,11 +2,13 @@ package com.team.todoktodok.presentation.view.profile.joined
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentCreatedDiscussionsRoomBinding
+import com.team.todoktodok.presentation.view.profile.ProfileActivity.Companion.ARG_MEMBER_ID
 import com.team.todoktodok.presentation.view.profile.created.adapter.UserDiscussionAdapter
 import com.team.todoktodok.presentation.view.profile.created.vm.CreatedDiscussionsViewModel
 import com.team.todoktodok.presentation.view.profile.created.vm.CreatedDiscussionsViewModelFactory
@@ -32,6 +34,10 @@ class JoinedDiscussionsRoomFragment : Fragment(R.layout.fragment_joined_discussi
 
     private fun initView(binding: FragmentCreatedDiscussionsRoomBinding) {
         discussionAdapter = UserDiscussionAdapter(userDiscussionAdapterHandler)
+
+        val memberId: String? = arguments?.getString(ARG_MEMBER_ID)
+        viewModel.loadDiscussions(memberId)
+
         binding.rvDiscussions.adapter = discussionAdapter
     }
 
@@ -47,4 +53,12 @@ class JoinedDiscussionsRoomFragment : Fragment(R.layout.fragment_joined_discussi
                 TODO("Not yet implemented")
             }
         }
+
+    companion object {
+        // API 연동 완료시 제거
+        fun newInstance(memberId: String? = "1"): JoinedDiscussionsRoomFragment =
+            JoinedDiscussionsRoomFragment().apply {
+                arguments = bundleOf(ARG_MEMBER_ID to memberId)
+            }
+    }
 }

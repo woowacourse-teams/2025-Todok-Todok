@@ -15,11 +15,12 @@ import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentCommentCreateBottomSheetBinding
 import com.team.todoktodok.presentation.view.discussiondetail.vm.CommentCreateViewModel
+import com.team.todoktodok.presentation.view.discussiondetail.vm.CommentCreateViewModelFactory
 
 class CommentCreateBottomSheet : BottomSheetDialogFragment(R.layout.fragment_comment_create_bottom_sheet) {
     private val viewModel by viewModels<CommentCreateViewModel> {
         val repositoryModule = (requireActivity().application as App).container.repositoryModule
-        com.team.todoktodok.presentation.view.discussiondetail.vm.CommentCreateViewModelFactory(
+        CommentCreateViewModelFactory(
             repositoryModule.commentRepository,
         )
     }

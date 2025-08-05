@@ -1,5 +1,7 @@
 package com.team.todoktodok.presentation.view.profile
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -43,7 +45,8 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun initView(binding: ActivityProfileBinding) {
-        val viewPagerAdapter = ContentPagerAdapter(supportFragmentManager, lifecycle)
+        val memberId: String? = intent?.getStringExtra(ARG_MEMBER_ID)
+        val viewPagerAdapter = ContentPagerAdapter(memberId, supportFragmentManager, lifecycle)
         profileAdapter = ProfileAdapter(profileAdapterHandler, viewPagerAdapter)
 
         with(binding) {
@@ -72,4 +75,16 @@ class ProfileActivity : AppCompatActivity() {
                 // 이미지 수정 기능 추가
             }
         }
+
+    companion object {
+        fun Intent(
+            context: Context,
+            memberId: String? = null,
+        ): Intent =
+            Intent(context, ProfileActivity::class.java).apply {
+                memberId?.let { putExtra(ARG_MEMBER_ID, it) }
+            }
+
+        const val ARG_MEMBER_ID = "member_id"
+    }
 }
