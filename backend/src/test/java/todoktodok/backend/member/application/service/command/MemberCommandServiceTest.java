@@ -133,7 +133,7 @@ class MemberCommandServiceTest {
         // given
         databaseInitializer.setDefaultUserInfo();
 
-        Long memberId = 1L;
+        final Long memberId = 1L;
 
         // when - then
         assertThatThrownBy(() -> memberCommandService.block(memberId, memberId))
@@ -147,7 +147,7 @@ class MemberCommandServiceTest {
         // given
         databaseInitializer.setDefaultUserInfo();
 
-        Long memberId = 1L;
+        final Long memberId = 1L;
 
         // when - then
         assertThatThrownBy(() -> memberCommandService.report(memberId, memberId))
@@ -161,8 +161,8 @@ class MemberCommandServiceTest {
         // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setUserInfo("user2@gmail.com", "user", "https://image.png", "");
-        Long memberId = 1L;
-        Long targetId = 2L;
+        final Long memberId = 1L;
+        final Long targetId = 2L;
 
         memberCommandService.block(memberId, targetId);
 
@@ -178,8 +178,8 @@ class MemberCommandServiceTest {
         // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setUserInfo("user2@gmail.com", "user", "https://image.png", "");
-        Long memberId = 1L;
-        Long targetId = 2L;
+        final Long memberId = 1L;
+        final Long targetId = 2L;
 
         memberCommandService.report(memberId, targetId);
 
