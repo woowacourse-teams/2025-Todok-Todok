@@ -38,8 +38,6 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
         setupFragmentResultListener()
     }
 
-    override fun getTheme(): Int = R.style.BottomSheetDialogTheme
-
     private fun initAdapter(binding: FragmentCommentsBinding) {
         binding.rvComments.adapter = adapter
     }
