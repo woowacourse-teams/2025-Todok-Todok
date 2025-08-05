@@ -5,6 +5,8 @@ import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -109,5 +111,27 @@ class MemberControllerTest {
                 .when().post("/api/v1/members/2/report")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
+    }
+
+    @ParameterizedTest
+    @ValueSource(longs = {1, 2})
+    @DisplayName("프로필을 조회한다")
+    void getProfileTest(final Long memberId) {
+        // given
+        databaseInitializer.setUserInfo("user@gmail.com", "user", "https://user.png", "user");
+        databaseInitializer.setUserInfo("user2@gmail.com", "user2", "https://user2.png", "user2");
+
+        final String token = MemberFixture.login("user@gmail.com");
+
+        // when
+        final String uri = String.format("/api/v1/members/%d/profile", memberId);
+
+        // then
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .header("Authorization", token)
+                .when().get(uri)
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
     }
 }
