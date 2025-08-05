@@ -1,0 +1,35 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${database.url}
+    username: ${database.username}
+    password: ${database.password}
+  sql:
+    init:
+      mode: always
+      schema-locations:
+      data-locations:
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    hibernate:
+      ddl-auto: validate
+    defer-datasource-initialization: false
+
+  config:
+    activate:
+      on-profile: prod
+    import:
+      - submodule/security/database.yml
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus
+  metrics:
+    export:
+      prometheus:
+        enabled: true
