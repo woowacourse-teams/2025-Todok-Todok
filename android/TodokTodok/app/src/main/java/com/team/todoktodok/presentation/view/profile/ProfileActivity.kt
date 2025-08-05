@@ -61,6 +61,7 @@ class ProfileActivity : AppCompatActivity() {
 
     private fun setUpUiState() {
         viewModel.uiState.observe(this) { value ->
+            Log.d("dasdas", "${value.isMyProfilePage}: ")
             profileAdapter.submitList(value.items)
         }
     }
