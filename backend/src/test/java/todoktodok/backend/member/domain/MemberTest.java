@@ -97,12 +97,12 @@ class MemberTest {
                 "profileImage"
         );
 
-        final String updatedNickname = "nicknick";
-        final String updatedProfileMessage = "a".repeat(41);
+        final String newNickname = "nicknick";
+        final String newProfileMessage = "a".repeat(41);
 
         // when - then
         assertThatThrownBy(() -> {
-            member.updateNicknameOrProfileMessage(updatedNickname, updatedProfileMessage);
+            member.updateNicknameOrProfileMessage(newNickname, newProfileMessage);
         }).isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("상태메세지는 40자 이하여야 합니다");
     }

@@ -143,14 +143,14 @@ class MemberControllerTest {
         databaseInitializer.setUserInfo("user@gmail.com", "user", "https://user.png", "user");
 
         final String token = MemberFixture.login("user@gmail.com");
-        final String updatedNickname = "newUser";
+        final String newNickname = "newUser";
         final String profileMessage = "user";
 
         // when - then
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .header("Authorization", token)
-                .body(new ProfileUpdateRequest(updatedNickname, profileMessage))
+                .body(new ProfileUpdateRequest(newNickname, profileMessage))
                 .when().put("/api/v1/members/profile")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
@@ -164,13 +164,13 @@ class MemberControllerTest {
 
         final String token = MemberFixture.login("user@gmail.com");
         final String nickname = "user";
-        final String updatedProfileMessage = "newProfileMessage";
+        final String newProfileMessage = "newProfileMessage";
 
         // when - then
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .header("Authorization", token)
-                .body(new ProfileUpdateRequest(nickname, updatedProfileMessage))
+                .body(new ProfileUpdateRequest(nickname, newProfileMessage))
                 .when().put("/api/v1/members/profile")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());

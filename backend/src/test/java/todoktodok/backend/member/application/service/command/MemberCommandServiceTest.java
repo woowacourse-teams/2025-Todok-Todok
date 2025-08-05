@@ -217,7 +217,7 @@ class MemberCommandServiceTest {
         databaseInitializer.setUserInfo("user2@gmail.com", "nickname", "https://image.png", "profileMessage");
 
         final Long memberId = 1L;
-        final ProfileUpdateRequest profileUpdateRequest = new ProfileUpdateRequest("nickname", "updatedProfileMessage");
+        final ProfileUpdateRequest profileUpdateRequest = new ProfileUpdateRequest("nickname", "newProfileMessage");
 
         // when - then
         assertThatThrownBy(() -> memberCommandService.updateProfile(memberId, profileUpdateRequest))
@@ -232,10 +232,10 @@ class MemberCommandServiceTest {
         databaseInitializer.setUserInfo("user@gmail.com", "nickname", "https://image.png", "profileMessage");
 
         final Long memberId = 1L;
-        final ProfileUpdateRequest profileUpdateRequest = new ProfileUpdateRequest("nickname", "updatedProfileMessage");
+        final ProfileUpdateRequest profileUpdateRequest = new ProfileUpdateRequest("nickname", "newProfileMessage");
 
         // when
-        final ProfileUpdateResponse expected = new ProfileUpdateResponse("nickname", "updatedProfileMessage");
+        final ProfileUpdateResponse expected = new ProfileUpdateResponse("nickname", "newProfileMessage");
 
         // then
         assertThat(memberCommandService.updateProfile(memberId, profileUpdateRequest)).isEqualTo(expected);
