@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.team.domain.model.Book
 import com.team.todoktodok.databinding.ItemBookBinding
-import com.team.todoktodok.presentation.view.book.loadImage
+import com.team.todoktodok.presentation.core.ext.loadImage
 
 class SearchBooksViewHolder private constructor(
     private val binding: ItemBookBinding,
