@@ -3,11 +3,13 @@ package com.team.todoktodok.presentation.view.profile
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.team.domain.model.Support
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivityProfileBinding
@@ -33,6 +35,7 @@ class ProfileActivity : AppCompatActivity() {
         setUpSystemBar()
         initView(binding)
         setUpUiState()
+        setUpUiEvent()
     }
 
     private fun setUpSystemBar() {
@@ -62,6 +65,16 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
+    private fun setUpUiEvent() {
+        viewModel.uiEvent.observe(this) { value ->
+            when (value) {
+                ProfileUiEvent.OnCompleteSupport -> {
+                    Log.d("ProfileActivity", "OnCompleteSupport")
+                }
+            }
+        }
+    }
+
     private val profileAdapterHandler =
         object : ProfileAdapter.Handler {
             override fun onClickSetting() {
@@ -77,12 +90,8 @@ class ProfileActivity : AppCompatActivity() {
                 // 이미지 수정 기능 추가
             }
 
-            override fun onClickReport() {
-                TODO("Not yet implemented")
-            }
-
-            override fun onClickBlock() {
-                TODO("Not yet implemented")
+            override fun onClickSupport(type: Support) {
+                viewModel.supportMember(type)
             }
         }
 
