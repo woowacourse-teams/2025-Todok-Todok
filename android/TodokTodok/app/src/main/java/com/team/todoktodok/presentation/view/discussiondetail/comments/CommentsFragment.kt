@@ -1,25 +1,23 @@
 package com.team.todoktodok.presentation.view.discussiondetail.comments
 
-import android.app.Dialog
 import android.os.Bundle
 import android.view.View
-import android.view.WindowManager
 import androidx.core.os.bundleOf
+import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.team.todoktodok.App
 import com.team.todoktodok.R
-import com.team.todoktodok.databinding.FragmentCommentsBottomSheetBinding
+import com.team.todoktodok.databinding.FragmentCommentsBinding
 import com.team.todoktodok.presentation.view.discussiondetail.BottomSheetVisibilityListener
 import com.team.todoktodok.presentation.view.discussiondetail.commentcreate.CommentCreateBottomSheet
+import com.team.todoktodok.presentation.view.discussiondetail.commentdetail.CommentDetailFragment
 import com.team.todoktodok.presentation.view.discussiondetail.comments.adapter.CommentAdapter
 import com.team.todoktodok.presentation.view.discussiondetail.comments.vm.CommentsViewModel
 import com.team.todoktodok.presentation.view.discussiondetail.comments.vm.CommentsViewModelFactory
 
-class CommentsBottomSheet : BottomSheetDialogFragment(R.layout.fragment_comments_bottom_sheet) {
-    private val adapter by lazy { CommentAdapter() }
+class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
+    private val adapter by lazy { CommentAdapter(adapterHandler) }
 
     private val viewModel by viewModels<CommentsViewModel> {
         val repositoryModule = (requireActivity().application as App).container.repositoryModule
@@ -28,80 +26,31 @@ class CommentsBottomSheet : BottomSheetDialogFragment(R.layout.fragment_comments
         )
     }
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
-        BottomSheetDialog(requireContext(), theme).apply {
-            window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
-            window?.setDimAmount(DIM_AMOUNT)
-        }
-
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
-        val binding = FragmentCommentsBottomSheetBinding.bind(view)
+        val binding = FragmentCommentsBinding.bind(view)
         initAdapter(binding)
         setupOnClickAddComment(binding)
         setupObserve(binding)
         setupFragmentResultListener()
     }
 
-    override fun onStart() {
-        super.onStart()
-        adjustBottomSheetBelowAnchor()
-    }
-
-    private fun adjustBottomSheetBelowAnchor() {
-        val bottomSheet =
-            dialog?.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
-        val activityRoot = activity?.window?.decorView?.findViewById<View>(android.R.id.content)
-        val anchorView = activity?.findViewById<View>(R.id.tv_discussion_create_at)
-
-        activityRoot?.post {
-            if (isAdded && anchorView != null && bottomSheet != null) {
-                val anchorBottom = getViewBottomInWindow(anchorView)
-                val availableHeight = activityRoot.height - anchorBottom
-                setBottomSheetHeight(bottomSheet, availableHeight)
-            }
-        }
-    }
-
-    private fun getViewBottomInWindow(view: View): Int {
-        val location = IntArray(2)
-        view.getLocationInWindow(location)
-        return location[1] + view.height
-    }
-
-    private fun setBottomSheetHeight(
-        sheet: View,
-        height: Int,
-    ) {
-        sheet.layoutParams =
-            sheet.layoutParams
-                .apply {
-                    this.height = height
-                }
-        sheet.requestLayout()
-
-        BottomSheetBehavior.from(sheet).apply {
-            skipCollapsed = true
-            state = BottomSheetBehavior.STATE_EXPANDED
-        }
-    }
-
     override fun getTheme(): Int = R.style.BottomSheetDialogTheme
 
-    private fun initAdapter(binding: FragmentCommentsBottomSheetBinding) {
+    private fun initAdapter(binding: FragmentCommentsBinding) {
         binding.rvComments.adapter = adapter
     }
 
-    private fun setupOnClickAddComment(binding: FragmentCommentsBottomSheetBinding) {
+    private fun setupOnClickAddComment(binding: FragmentCommentsBinding) {
         with(binding) {
             tvInputComment.setOnClickListener { viewModel.showCommentCreate() }
         }
     }
 
-    private fun setupObserve(binding: FragmentCommentsBottomSheetBinding) {
+    private fun setupObserve(binding: FragmentCommentsBinding) {
         viewModel.comments.observe(viewLifecycleOwner) { value ->
             adapter.submitList(value)
         }
@@ -112,7 +61,7 @@ class CommentsBottomSheet : BottomSheetDialogFragment(R.layout.fragment_comments
 
     private fun handleEvent(
         commentsUiEvent: CommentsUiEvent,
-        binding: FragmentCommentsBottomSheetBinding,
+        binding: FragmentCommentsBinding,
     ) {
         when (commentsUiEvent) {
             is CommentsUiEvent.ShowCommentCreate ->
@@ -129,7 +78,7 @@ class CommentsBottomSheet : BottomSheetDialogFragment(R.layout.fragment_comments
 
     private fun showCommentCreate(
         discussionId: Long,
-        binding: FragmentCommentsBottomSheetBinding,
+        binding: FragmentCommentsBinding,
     ) {
         val bottomSheet = CommentCreateBottomSheet.newInstance(discussionId)
         bottomSheet.setVisibilityListener(getBottomSheetVisibilityListener(binding))
@@ -148,7 +97,7 @@ class CommentsBottomSheet : BottomSheetDialogFragment(R.layout.fragment_comments
         }
     }
 
-    private fun getBottomSheetVisibilityListener(binding: FragmentCommentsBottomSheetBinding) =
+    private fun getBottomSheetVisibilityListener(binding: FragmentCommentsBinding) =
         object : BottomSheetVisibilityListener {
             override fun onBottomSheetShown() {
                 binding.tvInputComment.visibility = View.GONE
@@ -159,13 +108,27 @@ class CommentsBottomSheet : BottomSheetDialogFragment(R.layout.fragment_comments
             }
         }
 
-    companion object {
-        const val TAG = "COMMENTS_BOTTOM_SHEET"
-        private const val COMMENT_CREATE_POSITION = 0
-        private const val DIM_AMOUNT = 0.001f
+    private val adapterHandler =
+        object : CommentAdapter.Handler {
+            override fun onItemClick(commentId: Long) {
+                parentFragmentManager.commit {
+                    hide(this@CommentsFragment)
+                    add(
+                        R.id.fcv_comment,
+                        CommentDetailFragment.newInstance(viewModel.discussionId, commentId),
+                        CommentDetailFragment.TAG,
+                    )
+                    addToBackStack(null)
+                }
+            }
+        }
 
-        fun newInstance(discussionId: Long): CommentsBottomSheet =
-            CommentsBottomSheet().apply {
+    companion object {
+        const val TAG = "COMMENTS"
+        private const val COMMENT_CREATE_POSITION = 0
+
+        fun newInstance(discussionId: Long): CommentsFragment =
+            CommentsFragment().apply {
                 arguments = bundleOf(CommentsViewModel.KEY_DISCUSSION_ID to discussionId)
             }
     }

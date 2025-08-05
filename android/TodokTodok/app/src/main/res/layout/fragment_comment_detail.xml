@@ -38,6 +38,7 @@
         android:id="@+id/cl_comment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_20"
         android:background="@color/gray_ED"
         app:layout_constraintBottom_toTopOf="@id/rv_replies"
         app:layout_constraintTop_toBottomOf="@id/iv_comment_detail_back">

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingHorizontal="@dimen/space_24"
-    tools:context=".presentation.view.discussiondetail.comments.CommentsBottomSheet">
+    tools:context=".presentation.view.discussiondetail.comments.CommentsFragment">
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_text_comment_content"
