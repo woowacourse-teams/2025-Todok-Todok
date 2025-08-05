@@ -14,6 +14,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import todoktodok.backend.DatabaseInitializer;
 import todoktodok.backend.InitializerTimer;
+import todoktodok.backend.comment.application.dto.request.CommentRequest;
 import todoktodok.backend.member.presentation.fixture.MemberFixture;
 import todoktodok.backend.reply.application.dto.request.ReplyRequest;
 
@@ -79,5 +80,33 @@ public class ReplyControllerTest {
                 .when().post("/api/v1/discussions/1/comments/1/replies/1/report")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
+    }
+
+    @Test
+    @DisplayName("대댓글을 수정한다")
+    void updateCommentTest() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+        databaseInitializer.setDefaultCommentInfo();
+
+        databaseInitializer.setReplyInfo("저도 같은 의견입니다!", 1L, 1L);
+
+        final String updatedContent = "아니다, 생각해보니 상속의 핵심 목적은 아니네요.";
+        final ReplyRequest replyRequest = new ReplyRequest(
+                updatedContent
+        );
+
+        final String token = MemberFixture.login("user@gmail.com");
+
+        // when - then
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .header("Authorization", token)
+                .body(replyRequest)
+                .when().patch("/api/v1/discussions/1/comments/1/replies/1")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
     }
 }
