@@ -112,7 +112,7 @@ public class Member extends TimeStamp {
     }
 
     private static void validateNicknameLength(final String nickname) {
-        if (nickname.isEmpty() || nickname.length() > NICKNAME_MAX_LENGTH) {
+        if (nickname == null || nickname.isEmpty() || nickname.length() > NICKNAME_MAX_LENGTH) {
             throw new IllegalArgumentException("닉네임은 1자 이상, 8자 이하여야 합니다");
         }
     }
@@ -124,6 +124,10 @@ public class Member extends TimeStamp {
     }
 
     private static void validateProfileMessage(final String profileMessage) {
+        if (profileMessage == null) {
+            return;
+        }
+
         if (profileMessage.length() > PROFILE_MESSAGE_MAX_LENGTH) {
             throw new IllegalArgumentException("상태메세지는 40자 이하여야 합니다");
         }
