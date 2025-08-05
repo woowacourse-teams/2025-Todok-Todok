@@ -27,7 +27,7 @@ class UserInformationViewHolder private constructor(
 
             Glide
                 .with(binding.root)
-                .load(content.profileImageUrl)
+                .load(content.profileImage)
                 .into(ivProfile)
         }
     }

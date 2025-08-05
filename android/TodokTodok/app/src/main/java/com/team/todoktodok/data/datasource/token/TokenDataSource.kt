@@ -14,14 +14,18 @@ class TokenDataSource(
 
     suspend fun getAccessToken(): String = dataStore.data.first().accessToken
 
+    suspend fun getMemberId(): String = dataStore.data.first().memberId
+
     suspend fun saveToken(
         accessToken: String,
         refreshToken: String = "",
+        memberId: String,
     ) {
         dataStore.updateData {
             it.copy(
                 accessToken,
                 "", // 리프레시 토큰 구현
+                memberId,
             )
         }
     }

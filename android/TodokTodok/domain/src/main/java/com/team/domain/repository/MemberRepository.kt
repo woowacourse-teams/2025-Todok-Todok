@@ -11,5 +11,9 @@ interface MemberRepository {
 
     suspend fun signUp(nickname: String)
 
-    suspend fun getProfile(): Profile
+    suspend fun getProfile(memberId: String? = SAVED_MY_MEMBER_ID): Profile
+
+    companion object {
+        private val SAVED_MY_MEMBER_ID = null
+    }
 }
