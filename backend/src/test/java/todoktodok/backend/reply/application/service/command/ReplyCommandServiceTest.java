@@ -103,6 +103,27 @@ public class ReplyCommandServiceTest {
     }
 
     @Test
+    @DisplayName("없는 대댓글을 신고하면 예외가 발생한다")
+    void validateNotExistReportTest() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+        databaseInitializer.setDefaultCommentInfo();
+        databaseInitializer.setDefaultReplyInfo();
+
+        final Long memberId = 1L;
+        final Long discussionId = 1L;
+        final Long commentId = 1L;
+        final Long replyId = 2L;
+
+        // when - then
+        assertThatThrownBy(() -> replyCommandService.report(memberId, discussionId, commentId, replyId))
+                .isInstanceOf(NoSuchElementException.class)
+                .hasMessage("해당 대댓글을 찾을 수 없습니다");
+    }
+
+    @Test
     @DisplayName("이미 자신이 신고한 대댓글을 중복 신고하면 예외가 발생한다")
     void validateDuplicatedReportTest() {
         // given
