@@ -56,4 +56,28 @@ public class ReplyControllerTest {
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
     }
+
+    @Test
+    @DisplayName("대댓글을 신고한다")
+    void reportTest() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setUserInfo("user2@gmail.com", "user2", "https://user2.png", "user");
+
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+        databaseInitializer.setDefaultCommentInfo();
+
+        databaseInitializer.setReplyInfo("저도 같은 의견입니다!", 2L, 1L);
+
+        final String token = MemberFixture.login("user@gmail.com");
+
+        // when - then
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .header("Authorization", token)
+                .when().post("/api/v1/discussions/1/comments/1/replies/1/report")
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value());
+    }
 }

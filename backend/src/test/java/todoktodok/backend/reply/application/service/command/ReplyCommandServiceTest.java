@@ -80,4 +80,72 @@ public class ReplyCommandServiceTest {
                 .isInstanceOf(NoSuchElementException.class)
                 .hasMessage("해당 회원을 찾을 수 없습니다");
     }
+
+    @Test
+    @DisplayName("자기 자신을 신고하면 예외가 발생한다")
+    void validateSelfReportTest() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+        databaseInitializer.setDefaultCommentInfo();
+        databaseInitializer.setDefaultReplyInfo();
+
+        final Long memberId = 1L;
+        final Long discussionId = 1L;
+        final Long commentId = 1L;
+        final Long replyId = 1L;
+
+        // when - then
+        assertThatThrownBy(() -> replyCommandService.report(memberId, discussionId, commentId, replyId))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("자기 자신이 작성한 대댓글을 신고할 수 없습니다");
+    }
+
+    @Test
+    @DisplayName("없는 대댓글을 신고하면 예외가 발생한다")
+    void validateNotExistReportTest() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+        databaseInitializer.setDefaultCommentInfo();
+        databaseInitializer.setDefaultReplyInfo();
+
+        final Long memberId = 1L;
+        final Long discussionId = 1L;
+        final Long commentId = 1L;
+        final Long replyId = 2L;
+
+        // when - then
+        assertThatThrownBy(() -> replyCommandService.report(memberId, discussionId, commentId, replyId))
+                .isInstanceOf(NoSuchElementException.class)
+                .hasMessage("해당 대댓글을 찾을 수 없습니다");
+    }
+
+    @Test
+    @DisplayName("이미 자신이 신고한 대댓글을 중복 신고하면 예외가 발생한다")
+    void validateDuplicatedReportTest() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setUserInfo("user2@gmail.com", "user2", "https://user2.png", "user");
+
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+        databaseInitializer.setDefaultCommentInfo();
+
+        databaseInitializer.setReplyInfo("저도 같은 의견입니다!", 2L, 1L);
+
+        final Long memberId = 1L;
+        final Long discussionId = 1L;
+        final Long commentId = 1L;
+        final Long replyId = 1L;
+
+        replyCommandService.report(memberId, discussionId, commentId, replyId);
+
+        // when - then
+        assertThatThrownBy(() -> replyCommandService.report(memberId, discussionId, commentId, replyId))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("이미 신고한 대댓글입니다");
+    }
 }
