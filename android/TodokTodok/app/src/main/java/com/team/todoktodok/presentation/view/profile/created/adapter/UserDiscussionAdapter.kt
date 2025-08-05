@@ -8,19 +8,19 @@ import com.team.todoktodok.presentation.view.profile.created.adapter.UserDiscuss
 
 class UserDiscussionAdapter(
     private val handler: Handler,
-) : ListAdapter<Discussion, RecyclerView.ViewHolder>(UserDiscussionDiffCallback()) {
+) : ListAdapter<Discussion, UserDiscussionViewHolder>(UserDiscussionDiffCallback()) {
 
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): RecyclerView.ViewHolder = UserDiscussionViewHolder(parent, handler)
+    ): UserDiscussionViewHolder = UserDiscussionViewHolder(parent, handler)
 
     override fun onBindViewHolder(
-        holder: RecyclerView.ViewHolder,
+        holder: UserDiscussionViewHolder,
         position: Int,
     ) {
-        (holder as UserDiscussionViewHolder).bind(getItem(position))
+        holder.bind(getItem(position))
     }
 
     interface Handler : UserDiscussionViewHolder.Handler
