@@ -1,5 +1,6 @@
 package com.team.todoktodok.data.datasource
 
+import com.team.domain.model.Support
 import com.team.domain.model.member.MemberDiscussionType
 import com.team.domain.model.member.MemberId
 import com.team.todoktodok.data.core.JwtParser
@@ -10,9 +11,11 @@ import com.team.todoktodok.data.network.request.LoginRequest
 import com.team.todoktodok.data.network.response.ProfileResponse
 import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
 import com.team.todoktodok.data.network.service.MemberService
+import io.mockk.Runs
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
+import io.mockk.just
 import io.mockk.mockk
 import io.mockk.mockkConstructor
 import kotlinx.coroutines.test.runTest
@@ -129,5 +132,41 @@ class DefaultMemberRemoteDataSourceTest {
 
             // then
             assertEquals(response, result)
+        }
+
+    @Test
+    fun `신고 타입이 Report면 신고 API를 호출한다`() =
+        runTest {
+            // given
+            val memberId = "10"
+            val request = MemberId.OtherUser(memberId)
+            val type = Support.REPORT
+
+            coEvery { memberService.report(memberId) } just Runs
+
+            // when
+            dataSource.supportMember(request, type)
+
+            // then
+            coVerify(exactly = 1) { memberService.report(memberId) }
+            coVerify(exactly = 0) { memberService.block(any()) }
+        }
+
+    @Test
+    fun `신고 타입이 BLOCK이면 차단 API를 호출한다`() =
+        runTest {
+            // given
+            val memberId = "10"
+            val request = MemberId.OtherUser(memberId)
+            val type = Support.BLOCK
+
+            coEvery { memberService.block(memberId) } just Runs
+
+            // when
+            dataSource.supportMember(request, type)
+
+            // then
+            coVerify(exactly = 0) { memberService.report(any()) }
+            coVerify(exactly = 1) { memberService.block(memberId) }
         }
 }
