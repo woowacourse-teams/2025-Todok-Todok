@@ -2,9 +2,7 @@ package com.team.todoktodok.presentation.view.discussiondetail.comments
 
 import android.app.Dialog
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
@@ -20,10 +18,7 @@ import com.team.todoktodok.presentation.view.discussiondetail.comments.adapter.C
 import com.team.todoktodok.presentation.view.discussiondetail.comments.vm.CommentsViewModel
 import com.team.todoktodok.presentation.view.discussiondetail.comments.vm.CommentsViewModelFactory
 
-class CommentsBottomSheet : BottomSheetDialogFragment() {
-    @Suppress("ktlint:standard:backing-property-naming")
-    private var _binding: FragmentCommentsBottomSheetBinding? = null
-    private val binding get() = _binding!!
+class CommentsBottomSheet : BottomSheetDialogFragment(R.layout.fragment_comments_bottom_sheet) {
     private val adapter by lazy { CommentAdapter() }
 
     private val viewModel by viewModels<CommentsViewModel> {
@@ -39,23 +34,15 @@ class CommentsBottomSheet : BottomSheetDialogFragment() {
             window?.setDimAmount(DIM_AMOUNT_NONE)
         }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
-        _binding = FragmentCommentsBottomSheetBinding.inflate(layoutInflater)
-        return binding.root
-    }
-
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
-        initAdapter()
-        setupOnClickAddComment()
-        setupObserve()
+        val binding = FragmentCommentsBottomSheetBinding.bind(view)
+        initAdapter(binding)
+        setupOnClickAddComment(binding)
+        setupObserve(binding)
         setupFragmentResultListener()
     }
 
@@ -104,42 +91,48 @@ class CommentsBottomSheet : BottomSheetDialogFragment() {
 
     override fun getTheme(): Int = R.style.BottomSheetDialogTheme
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
-    private fun initAdapter() {
+    private fun initAdapter(binding: FragmentCommentsBottomSheetBinding) {
         binding.rvComments.adapter = adapter
     }
 
-    private fun setupOnClickAddComment() {
+    private fun setupOnClickAddComment(binding: FragmentCommentsBottomSheetBinding) {
         with(binding) {
             tvInputComment.setOnClickListener { viewModel.showCommentCreate() }
         }
     }
 
-    private fun setupObserve() {
+    private fun setupObserve(binding: FragmentCommentsBottomSheetBinding) {
         viewModel.comments.observe(viewLifecycleOwner) { value ->
             adapter.submitList(value)
         }
         viewModel.uiEvent.observe(viewLifecycleOwner) { value ->
-            handleEvent(value)
+            handleEvent(value, binding)
         }
     }
 
-    private fun handleEvent(commentsUiEvent: CommentsUiEvent) {
+    private fun handleEvent(
+        commentsUiEvent: CommentsUiEvent,
+        binding: FragmentCommentsBottomSheetBinding,
+    ) {
         when (commentsUiEvent) {
-            is CommentsUiEvent.ShowCommentCreate -> showCommentCreate(commentsUiEvent.discussionId)
+            is CommentsUiEvent.ShowCommentCreate ->
+                showCommentCreate(
+                    commentsUiEvent.discussionId,
+                    binding,
+                )
+
             CommentsUiEvent.ShowNewComment -> {
                 binding.rvComments.smoothScrollToPosition(COMMENT_CREATE_POSITION)
             }
         }
     }
 
-    private fun showCommentCreate(discussionId: Long) {
+    private fun showCommentCreate(
+        discussionId: Long,
+        binding: FragmentCommentsBottomSheetBinding,
+    ) {
         val bottomSheet = CommentCreateBottomSheet.newInstance(discussionId)
-        bottomSheet.setVisibilityListener(getBottomSheetVisibilityListener())
+        bottomSheet.setVisibilityListener(getBottomSheetVisibilityListener(binding))
         bottomSheet.show(childFragmentManager, CommentCreateBottomSheet.TAG)
     }
 
@@ -155,7 +148,7 @@ class CommentsBottomSheet : BottomSheetDialogFragment() {
         }
     }
 
-    private fun getBottomSheetVisibilityListener() =
+    private fun getBottomSheetVisibilityListener(binding: FragmentCommentsBottomSheetBinding) =
         object : BottomSheetVisibilityListener {
             override fun onBottomSheetShown() {
                 binding.tvInputComment.visibility = View.GONE
