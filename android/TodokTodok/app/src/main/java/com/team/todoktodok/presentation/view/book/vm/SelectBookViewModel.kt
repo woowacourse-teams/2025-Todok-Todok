@@ -7,6 +7,7 @@ import com.team.domain.repository.BookRepository
 import com.team.todoktodok.R
 import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
 import com.team.todoktodok.presentation.core.event.SingleLiveData
+import com.team.todoktodok.presentation.view.book.ErrorSelectBookType
 import com.team.todoktodok.presentation.view.book.SelectBookUiEvent
 import com.team.todoktodok.presentation.view.book.SelectBookUiState
 import kotlinx.coroutines.Dispatchers
@@ -28,12 +29,12 @@ class SelectBookViewModel(
 
     fun onDeleteKeywordButtonClicked() {
         searchWithCurrentKeyword(NO_KEYWORD)
-        _uiEvent.setValue(SelectBookUiEvent.ShowDialog(R.string.error_delete_keyword))
+        _uiEvent.setValue(SelectBookUiEvent.ShowDialog(ErrorSelectBookType.ERROR_DELETE_KEYWORD))
     }
 
     fun onSearchAction(keyword: String) {
         if (keyword.isBlank()) {
-            _uiEvent.setValue(SelectBookUiEvent.ShowDialog(R.string.error_empty_keyword))
+            _uiEvent.setValue(SelectBookUiEvent.ShowDialog(ErrorSelectBookType.ERROR_EMPTY_KEYWORD))
             return
         }
         _uiEvent.setValue(SelectBookUiEvent.HideKeyboard)
@@ -53,7 +54,7 @@ class SelectBookViewModel(
         uiState = uiState.copy(selectedBook = uiState.searchedBooks[position])
         val selectedBook = uiState.selectedBook
         if (selectedBook == null) {
-            _uiEvent.setValue(SelectBookUiEvent.ShowDialog(R.string.error_no_selected_book))
+            _uiEvent.setValue(SelectBookUiEvent.ShowDialog(ErrorSelectBookType.ERROR_NO_SELECTED_BOOK))
         } else {
             _uiEvent.setValue(SelectBookUiEvent.NavigateToCreateDiscussionRoom(selectedBook))
         }
@@ -77,7 +78,7 @@ class SelectBookViewModel(
                 isLoading()
                 _uiEvent.setValue(SelectBookUiEvent.ShowSearchResult(uiState.searchedBooks))
             } catch (e: Exception) {
-                _uiEvent.setValue(SelectBookUiEvent.ShowDialog(R.string.error_network))
+                _uiEvent.setValue(SelectBookUiEvent.ShowDialog(ErrorSelectBookType.ERROR_NETWORK))
             }
         }
     }

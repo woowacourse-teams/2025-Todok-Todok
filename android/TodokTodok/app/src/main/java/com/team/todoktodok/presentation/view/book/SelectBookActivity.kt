@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.team.todoktodok.App
+import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivitySelectBookBinding
 import com.team.todoktodok.presentation.view.book.adapter.SearchBooksAdapter
 import com.team.todoktodok.presentation.view.book.vm.SelectBookViewModel
@@ -111,7 +112,21 @@ class SelectBookActivity : AppCompatActivity() {
                 }
 
                 is SelectBookUiEvent.ShowDialog -> {
-                    Toast.makeText(this, getString(event.message), Toast.LENGTH_LONG).show()
+                    val message: String = when (event.error) {
+                        ErrorSelectBookType.ERROR_NO_SELECTED_BOOK -> {
+                            getString(R.string.error_no_selected_book)
+                        }
+                        ErrorSelectBookType.ERROR_NETWORK -> {
+                            getString(R.string.error_network)
+                        }
+                        ErrorSelectBookType.ERROR_EMPTY_KEYWORD -> {
+                            getString(R.string.error_empty_keyword)
+                        }
+                        ErrorSelectBookType.ERROR_DELETE_KEYWORD -> {
+                            getString(R.string.error_delete_keyword)
+                        }
+                    }
+                    Toast.makeText(this, message, Toast.LENGTH_LONG).show()
                 }
 
                 is SelectBookUiEvent.ShowSearchResult -> {
