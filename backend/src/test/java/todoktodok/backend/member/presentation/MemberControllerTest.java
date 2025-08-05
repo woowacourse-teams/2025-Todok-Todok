@@ -85,7 +85,7 @@ class MemberControllerTest {
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setUserInfo("user2@gmail.com", "user2", "https://user2.png", "user");
 
-        String token = MemberFixture.login("user@gmail.com");
+        final String token = MemberFixture.login("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -103,7 +103,7 @@ class MemberControllerTest {
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setUserInfo("user2@gmail.com", "user2", "https://user2.png", "user");
 
-        String token = MemberFixture.login("user@gmail.com");
+        final String token = MemberFixture.login("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
