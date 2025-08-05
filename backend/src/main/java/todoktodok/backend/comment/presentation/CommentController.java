@@ -8,7 +8,9 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -46,6 +48,22 @@ public class CommentController {
                 .build();
     }
 
+    @Operation(summary = "댓글 좋아요 API")
+    @Auth(value = Role.USER)
+    @PostMapping("/{commentId}/like")
+    public ResponseEntity<Void> like(
+            @Parameter(hidden = true) @LoginMember final Long memberId,
+            @PathVariable final Long discussionId,
+            @PathVariable final Long commentId
+    ) {
+        final boolean isLiked = commentCommandService.like(memberId, discussionId, commentId);
+
+        if (isLiked) {
+            return ResponseEntity.status(HttpStatus.CREATED).build();
+        }
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
     @Operation(summary = "댓글 신고 API")
     @Auth(value = Role.USER)
     @PostMapping("/{commentId}/report")
@@ -69,6 +87,35 @@ public class CommentController {
     ) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(commentQueryService.getComments(memberId, discussionId));
+    }
+
+    @Operation(summary = "댓글 수정 API")
+    @Auth(value = Role.USER)
+    @PatchMapping("/{commentId}")
+    public ResponseEntity<Void> updateComment(
+            @Parameter(hidden = true) @LoginMember final Long memberId,
+            @PathVariable final Long discussionId,
+            @PathVariable final Long commentId,
+            @RequestBody @Valid final CommentRequest commentRequest
+    ) {
+        commentCommandService.updateComment(memberId, discussionId, commentId, commentRequest);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .location(ServletUriComponentsBuilder.fromCurrentRequest().build().toUri())
+                .build();
+    }
+
+    @Operation(summary = "댓글 삭제 API")
+    @Auth(value = Role.USER)
+    @DeleteMapping("/{commentId}")
+    public ResponseEntity<Void> deleteComment(
+            @Parameter(hidden = true) @LoginMember final Long memberId,
+            @PathVariable final Long discussionId,
+            @PathVariable final Long commentId
+    ) {
+        commentCommandService.deleteComment(memberId, discussionId, commentId);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     private URI createUri(final Long id) {
