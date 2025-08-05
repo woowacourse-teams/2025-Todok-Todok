@@ -1,9 +1,11 @@
 package todoktodok.backend.reply.application.service.command;
 
+import jakarta.validation.Valid;
 import java.util.NoSuchElementException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import todoktodok.backend.comment.application.dto.request.CommentRequest;
 import todoktodok.backend.comment.domain.Comment;
 import todoktodok.backend.comment.domain.repository.CommentRepository;
 import todoktodok.backend.discussion.domain.Discussion;
@@ -74,6 +76,25 @@ public class ReplyCommandService {
         replyReportRepository.save(replyReport);
     }
 
+    public void updateReply(
+            final Long memberId,
+            final Long discussionId,
+            final Long commentId,
+            final Long replyId,
+            final ReplyRequest replyRequest
+    ) {
+        final Member member = findMember(memberId);
+        final Discussion discussion = findDiscussion(discussionId);
+        final Comment comment = findComment(commentId);
+        final Reply reply = findReply(replyId);
+
+        validateReplyMember(reply, member);
+        comment.validateMatchWithDiscussion(discussion);
+        reply.validateMatchWithComment(comment);
+
+        reply.updateContent(replyRequest.content());
+    }
+
     private Member findMember(final Long memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new NoSuchElementException("해당 회원을 찾을 수 없습니다"));
@@ -100,6 +121,15 @@ public class ReplyCommandService {
     ) {
         if (replyReportRepository.existsByMemberAndReply(member, reply)) {
             throw new IllegalArgumentException("이미 신고한 대댓글입니다");
+        }
+    }
+
+    private void validateReplyMember(
+            final Reply reply,
+            final Member member
+    ) {
+        if (!reply.isOwnedBy(member)) {
+            throw new IllegalArgumentException("자기 자신의 대댓글만 수정/삭제 가능합니다");
         }
     }
 }

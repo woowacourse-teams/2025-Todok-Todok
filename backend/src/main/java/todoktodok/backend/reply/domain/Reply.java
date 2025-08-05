@@ -58,6 +58,15 @@ public class Reply extends TimeStamp {
         );
     }
 
+    public void updateContent(final String content) {
+        validateContent(content);
+        this.content = content;
+    }
+
+    public boolean isOwnedBy(final Member member) {
+        return this.member.equals(member);
+    }
+
     public void validateMatchWithComment(final Comment comment) {
         if (!this.comment.equals(comment)) {
             throw new IllegalArgumentException("해당 댓글에 있는 대댓글이 아닙니다");
