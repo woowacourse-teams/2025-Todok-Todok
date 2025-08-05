@@ -45,10 +45,6 @@ class SelectBookViewModel(
         updateSearchedBooks()
     }
 
-    fun navigateToBack() {
-        _uiEvent.setValue(SelectBookUiEvent.NavigateToBack)
-    }
-
     fun updateSelectedBook(position: Int) {
         uiState = uiState.copy(selectedBook = uiState.searchedBooks[position])
         val selectedBook = uiState.selectedBook
