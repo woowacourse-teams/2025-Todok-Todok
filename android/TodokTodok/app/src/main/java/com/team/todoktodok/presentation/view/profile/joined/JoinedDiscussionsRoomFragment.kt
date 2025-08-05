@@ -12,12 +12,14 @@ import com.team.todoktodok.presentation.view.profile.ProfileActivity.Companion.A
 import com.team.todoktodok.presentation.view.profile.created.adapter.UserDiscussionAdapter
 import com.team.todoktodok.presentation.view.profile.created.vm.CreatedDiscussionsViewModel
 import com.team.todoktodok.presentation.view.profile.created.vm.CreatedDiscussionsViewModelFactory
+import com.team.todoktodok.presentation.view.profile.joined.vm.JoinedDiscussionsViewModel
+import com.team.todoktodok.presentation.view.profile.joined.vm.JoinedDiscussionsViewModelFactory
 import kotlin.getValue
 
 class JoinedDiscussionsRoomFragment : Fragment(R.layout.fragment_joined_discussions_room) {
-    private val viewModel: CreatedDiscussionsViewModel by viewModels {
+    private val viewModel: JoinedDiscussionsViewModel by viewModels {
         val repositoryModule = (requireActivity().application as App).container.repositoryModule
-        CreatedDiscussionsViewModelFactory(repositoryModule.memberRepository)
+        JoinedDiscussionsViewModelFactory(repositoryModule.memberRepository)
     }
 
     private lateinit var discussionAdapter: UserDiscussionAdapter
