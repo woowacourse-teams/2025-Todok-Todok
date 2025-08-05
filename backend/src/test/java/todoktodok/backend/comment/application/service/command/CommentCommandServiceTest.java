@@ -87,7 +87,7 @@ public class CommentCommandServiceTest {
     }
 
     @Test
-    @DisplayName("좋아요를 눌렀던 댓글에 좋아요를 생성한다")
+    @DisplayName("이미 좋아요를 누른 댓글에 다시 좋아요를 누르면 좋아요가 취소된다")
     void commentLikeDeleteTest() {
         // given
         databaseInitializer.setDefaultUserInfo();
@@ -105,6 +105,28 @@ public class CommentCommandServiceTest {
 
         // then
         assertThat(isLiked).isFalse();
+    }
+
+    @Test
+    @DisplayName("좋아요를 생성하는 댓글과 토론방이 일치하지 않으면 예외가 발생한다")
+    void validateDiscussionCommentLikeTest() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+
+        databaseInitializer.setDefaultDiscussionInfo();
+        databaseInitializer.setDiscussionInfo("오브젝트", "오브젝트 토론입니다", 1L, 1L);
+
+        databaseInitializer.setCommentInfo("상속의 핵심 목적은 타입 계층의 구축입니다!", 1L, 1L);
+
+        final Long memberId = 1L;
+        final Long discussionId = 2L;
+        final Long commentId = 1L;
+
+        // when - then
+        assertThatThrownBy(() -> commentCommandService.like(memberId, discussionId, commentId))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("해당 토론방에 있는 댓글이 아닙니다");
     }
 
     @Test
