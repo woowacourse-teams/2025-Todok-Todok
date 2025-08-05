@@ -32,7 +32,7 @@ class SelectBookViewModel(
     }
 
     fun onSearchAction(keyword: String) {
-        if (keyword.isEmpty()) {
+        if (keyword.isBlank()) {
             _uiEvent.setValue(SelectBookUiEvent.ShowDialog(R.string.error_empty_keyword))
             return
         }
@@ -65,12 +65,6 @@ class SelectBookViewModel(
 
     private fun updateSearchedBooks() {
         val keyword = uiState.keyword
-        if (keyword.isBlank()) {
-            uiState = uiState.copy(isLoading = false, searchedBooks = Books(emptyList()))
-            _uiEvent.setValue(SelectBookUiEvent.ShowSearchResult(uiState.searchedBooks))
-            SelectBookUiEvent.ShowDialog(R.string.error_empty_keyword)
-            return
-        }
         uiState = uiState.copy(isLoading = true)
         isLoading()
         viewModelScope.launch {
