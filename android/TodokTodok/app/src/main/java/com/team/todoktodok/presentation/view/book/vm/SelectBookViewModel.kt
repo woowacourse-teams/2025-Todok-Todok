@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.team.domain.model.Books
 import com.team.domain.repository.BookRepository
-import com.team.todoktodok.R
 import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
 import com.team.todoktodok.presentation.core.event.SingleLiveData
 import com.team.todoktodok.presentation.view.book.ErrorSelectBookType

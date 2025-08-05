@@ -112,20 +112,21 @@ class SelectBookActivity : AppCompatActivity() {
                 }
 
                 is SelectBookUiEvent.ShowDialog -> {
-                    val message: String = when (event.error) {
-                        ErrorSelectBookType.ERROR_NO_SELECTED_BOOK -> {
-                            getString(R.string.error_no_selected_book)
+                    val message: String =
+                        when (event.error) {
+                            ErrorSelectBookType.ERROR_NO_SELECTED_BOOK -> {
+                                getString(R.string.error_no_selected_book)
+                            }
+                            ErrorSelectBookType.ERROR_NETWORK -> {
+                                getString(R.string.error_network)
+                            }
+                            ErrorSelectBookType.ERROR_EMPTY_KEYWORD -> {
+                                getString(R.string.error_empty_keyword)
+                            }
+                            ErrorSelectBookType.ERROR_DELETE_KEYWORD -> {
+                                getString(R.string.error_delete_keyword)
+                            }
                         }
-                        ErrorSelectBookType.ERROR_NETWORK -> {
-                            getString(R.string.error_network)
-                        }
-                        ErrorSelectBookType.ERROR_EMPTY_KEYWORD -> {
-                            getString(R.string.error_empty_keyword)
-                        }
-                        ErrorSelectBookType.ERROR_DELETE_KEYWORD -> {
-                            getString(R.string.error_delete_keyword)
-                        }
-                    }
                     Toast.makeText(this, message, Toast.LENGTH_LONG).show()
                 }
 
