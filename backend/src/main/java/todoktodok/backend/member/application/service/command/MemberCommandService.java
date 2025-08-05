@@ -93,14 +93,11 @@ public class MemberCommandService {
     ) {
         final Member member = findMember(memberId);
 
-        final String updatedNickname = profileUpdateRequest.nickname();
-        final String updatedProfileMessage = profileUpdateRequest.profileMessage();
+        final String newNickname = profileUpdateRequest.nickname();
+        final String newProfileMessage = profileUpdateRequest.profileMessage();
 
-        if (!member.isMyNickname(updatedNickname)) {
-            validateDuplicatedNickname(updatedNickname);
-        }
-
-        member.updateNicknameOrProfileMessage(updatedNickname, updatedProfileMessage);
+        validateNicknameUpdate(member, newNickname);
+        member.updateNicknameOrProfileMessage(newNickname, newProfileMessage);
 
         return new ProfileUpdateResponse(member);
     }
@@ -165,5 +162,15 @@ public class MemberCommandService {
         if (memberReportRepository.existsByMemberAndTarget(member, target)) {
             throw new IllegalArgumentException("이미 신고한 회원입니다");
         }
+    }
+
+    private void validateNicknameUpdate(
+            final Member member,
+            final String newNickname
+    ) {
+        if (member.isMyNickname(newNickname)) {
+            return;
+        }
+        validateDuplicatedNickname(newNickname);
     }
 }
