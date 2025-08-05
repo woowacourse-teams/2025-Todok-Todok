@@ -88,7 +88,8 @@ public class ReplyController {
     ) {
         replyCommandService.deleteReply(memberId, discussionId, commentId, replyId);
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .build();
     }
 
     private URI createUri(final Long id) {
