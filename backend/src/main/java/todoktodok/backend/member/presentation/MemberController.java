@@ -1,0 +1,75 @@
+package todoktodok.backend.member.presentation;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import todoktodok.backend.global.auth.Auth;
+import todoktodok.backend.global.auth.Role;
+import todoktodok.backend.global.resolver.LoginMember;
+import todoktodok.backend.global.resolver.TempMember;
+import todoktodok.backend.member.application.dto.request.LoginRequest;
+import todoktodok.backend.member.application.dto.request.SignupRequest;
+import todoktodok.backend.member.application.service.command.MemberCommandService;
+
+@RestController
+@AllArgsConstructor
+@RequestMapping("/api/v1/members")
+public class MemberController {
+
+    private final MemberCommandService memberCommandService;
+
+    @Operation(summary = "로그인 API")
+    @Auth(value = Role.GUEST)
+    @PostMapping("/login")
+    public ResponseEntity<Void> login(
+            @RequestBody @Valid final LoginRequest loginRequest
+    ) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .header("Authorization", memberCommandService.login(loginRequest))
+                .build();
+    }
+
+    @Operation(summary = "회원가입 API")
+    @Auth(value = Role.TEMP_USER)
+    @PostMapping("/signup")
+    public ResponseEntity<Void> signup(
+            @TempMember final String memberEmail,
+            @RequestBody @Valid final SignupRequest signupRequest
+    ) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .header("Authorization", memberCommandService.signup(signupRequest, memberEmail))
+                .build();
+    }
+
+    @Operation(summary = "작성자 차단 API")
+    @Auth(value = Role.USER)
+    @PostMapping("/{memberId}/block")
+    public ResponseEntity<Void> block(
+            @Parameter(hidden = true) @LoginMember final Long memberId,
+            @PathVariable("memberId") final Long targetId
+    ) {
+        memberCommandService.block(memberId, targetId);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .build();
+    }
+
+    @Operation(summary = "작성자 신고 API")
+    @Auth(value = Role.USER)
+    @PostMapping("/{memberId}/report")
+    public ResponseEntity<Void> report(
+            @Parameter(hidden = true) @LoginMember final Long memberId,
+            @PathVariable("memberId") final Long targetId
+    ) {
+        memberCommandService.report(memberId, targetId);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .build();
+    }
+}
