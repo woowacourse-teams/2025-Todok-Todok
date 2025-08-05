@@ -9,6 +9,7 @@ import android.widget.PopupWindow
 import androidx.core.graphics.drawable.toDrawable
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.team.domain.model.Support
 import com.team.todoktodok.databinding.ItemUserInformationBinding
 import com.team.todoktodok.databinding.PopupMenuReportBinding
 import com.team.todoktodok.presentation.view.profile.adapter.ProfileItems
@@ -48,11 +49,11 @@ class UserInformationViewHolder private constructor(
             )
 
         binding.tvReport.setOnClickListener {
-            handler.onClickReport()
+            handler.onClickSupport(Support.REPORT)
         }
 
         binding.tvBlock.setOnClickListener {
-            handler.onClickBlock()
+            handler.onClickSupport(Support.BLOCK)
         }
 
         popupWindow.elevation = 8f
@@ -89,8 +90,6 @@ class UserInformationViewHolder private constructor(
     interface Handler {
         fun onClickProfileImage()
 
-        fun onClickReport()
-
-        fun onClickBlock()
+        fun onClickSupport(type: Support)
     }
 }
