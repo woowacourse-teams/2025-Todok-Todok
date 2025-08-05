@@ -11,7 +11,7 @@ class SelectBookViewModelFactory(
         if (modelClass.isAssignableFrom(SelectBookViewModel::class.java)) {
             return SelectBookViewModel(bookRepository) as T
         } else {
-            throw IllegalArgumentException()
+            throw IllegalArgumentException("알 수 없는 ViewModel 클래스입니다: ${modelClass.name}")
         }
     }
 }
