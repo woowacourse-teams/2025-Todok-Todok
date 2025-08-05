@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.global.jwt.JwtTokenProvider;
 import todoktodok.backend.member.application.dto.request.LoginRequest;
+import todoktodok.backend.member.application.dto.request.ProfileUpdateRequest;
 import todoktodok.backend.member.application.dto.request.SignupRequest;
+import todoktodok.backend.member.application.dto.response.ProfileUpdateResponse;
 import todoktodok.backend.member.domain.Block;
 import todoktodok.backend.member.domain.Member;
 import todoktodok.backend.member.domain.MemberReport;
@@ -37,7 +39,7 @@ public class MemberCommandService {
             final SignupRequest signupRequest,
             final String memberEmail
     ) {
-        validateDuplicatedNickname(signupRequest);
+        validateDuplicatedNickname(signupRequest.nickname());
         validateDuplicatedEmail(signupRequest);
         validateEmailWithTokenEmail(signupRequest, memberEmail);
 
@@ -85,8 +87,26 @@ public class MemberCommandService {
         memberReportRepository.save(memberReport);
     }
 
-    private void validateDuplicatedNickname(final SignupRequest signupRequest) {
-        if (memberRepository.existsByNickname(signupRequest.nickname())) {
+    public ProfileUpdateResponse updateProfile(
+            final Long memberId,
+            final ProfileUpdateRequest profileUpdateRequest
+    ) {
+        final Member member = findMember(memberId);
+
+        final String updatedNickname = profileUpdateRequest.nickname();
+        final String updatedProfileMessage = profileUpdateRequest.profileMessage();
+
+        if (!member.isMyNickname(updatedNickname)) {
+            validateDuplicatedNickname(updatedNickname);
+        }
+
+        member.updateNicknameOrProfileMessage(updatedNickname, updatedProfileMessage);
+
+        return new ProfileUpdateResponse(member);
+    }
+
+    private void validateDuplicatedNickname(final String nickname) {
+        if (memberRepository.existsByNickname(nickname)) {
             throw new IllegalArgumentException("이미 존재하는 닉네임입니다");
         }
     }
