@@ -1,0 +1,49 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${database.url}
+    username: ${database.username}
+    password: ${database.password}
+  sql:
+    init:
+      mode: always
+      schema-locations:
+      data-locations:
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    hibernate:
+      ddl-auto: validate
+    defer-datasource-initialization: false
+
+  config:
+    activate:
+      on-profile: prod
+    import:
+      - submodule/security/aladin.yml
+      - submodule/security/jwt.yml
+      - submodule/security/database.yml
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
+aladin:
+  base-url: ${aladin.base-url}
+  item-search-uri: ${aladin.item-search-uri}
+  api-key: ${aladin.api-key}
+  item-lookup-uri: ${aladin.item-lookup-uri}
+
+jwt:
+  access-token:
+    expire-mills: ${jwt.access-token.expire-mills}
+  temp-token:
+    expire-mills: ${jwt.temp-token.expire-mills}
