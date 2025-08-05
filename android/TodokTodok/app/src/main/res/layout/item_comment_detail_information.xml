@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/space_16"
-    android:paddingHorizontal="@dimen/space_24">
+    android:background="@color/gray_ED">
 
     <TextView
         android:id="@+id/tv_user_nickname"
@@ -18,7 +18,7 @@
         tools:text="코드마스터" />
 
     <TextView
-        android:id="@+id/tv_reply_create_at"
+        android:id="@+id/tv_discussion_create_at"
         style="@style/HintTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/item_discussion_detail_meta_line_height"
@@ -38,7 +38,7 @@
         app:layout_constraintTop_toTopOf="@id/tv_user_nickname" />
 
     <TextView
-        android:id="@+id/tv_reply_opinion"
+        android:id="@+id/tv_discussion_opinion"
         style="@style/BaseTextStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -55,12 +55,11 @@
         android:layout_marginBottom="36dp"
         android:background="@drawable/btn_heart_background"
         android:contentDescription="@null"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_reply_opinion" />
+        app:layout_constraintTop_toBottomOf="@id/tv_discussion_opinion" />
 
     <TextView
-        android:id="@+id/tv_like_count"
+        android:id="@+id/tv_heart_count"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/space_24"
         android:layout_marginStart="@dimen/space_8"
