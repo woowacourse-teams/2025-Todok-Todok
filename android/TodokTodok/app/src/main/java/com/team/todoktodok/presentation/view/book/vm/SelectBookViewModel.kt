@@ -71,7 +71,7 @@ class SelectBookViewModel(
             try {
                 val books: Books =
                     withContext(Dispatchers.IO) {
-                        bookRepository.fetchBooks(keyword)
+                        bookRepository.getBooks(keyword)
                     }
                 uiState = uiState.copy(isLoading = false, searchedBooks = books)
                 isLoading()
