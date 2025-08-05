@@ -18,7 +18,7 @@ sealed class SelectBookUiEvent {
         val book: Book,
     ) : SelectBookUiEvent()
 
-    data class ShowDialog(
+    data class ShowToast(
         val error: ErrorSelectBookType,
     ) : SelectBookUiEvent()
 

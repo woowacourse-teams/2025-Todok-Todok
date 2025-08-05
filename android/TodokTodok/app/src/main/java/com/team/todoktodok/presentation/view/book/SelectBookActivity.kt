@@ -111,7 +111,7 @@ class SelectBookActivity : AppCompatActivity() {
                     binding.etSearchKeyword.requestFocus()
                 }
 
-                is SelectBookUiEvent.ShowDialog -> {
+                is SelectBookUiEvent.ShowToast -> {
                     val message: String =
                         when (event.error) {
                             ErrorSelectBookType.ERROR_NO_SELECTED_BOOK -> {

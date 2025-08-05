@@ -28,12 +28,12 @@ class SelectBookViewModel(
 
     fun onDeleteKeywordButtonClicked() {
         searchWithCurrentKeyword(NO_KEYWORD)
-        _uiEvent.setValue(SelectBookUiEvent.ShowDialog(ErrorSelectBookType.ERROR_DELETE_KEYWORD))
+        _uiEvent.setValue(SelectBookUiEvent.ShowToast(ErrorSelectBookType.ERROR_DELETE_KEYWORD))
     }
 
     fun onSearchAction(keyword: String) {
         if (keyword.isBlank()) {
-            _uiEvent.setValue(SelectBookUiEvent.ShowDialog(ErrorSelectBookType.ERROR_EMPTY_KEYWORD))
+            _uiEvent.setValue(SelectBookUiEvent.ShowToast(ErrorSelectBookType.ERROR_EMPTY_KEYWORD))
             return
         }
         _uiEvent.setValue(SelectBookUiEvent.HideKeyboard)
@@ -53,7 +53,7 @@ class SelectBookViewModel(
         uiState = uiState.copy(selectedBook = uiState.searchedBooks[position])
         val selectedBook = uiState.selectedBook
         if (selectedBook == null) {
-            _uiEvent.setValue(SelectBookUiEvent.ShowDialog(ErrorSelectBookType.ERROR_NO_SELECTED_BOOK))
+            _uiEvent.setValue(SelectBookUiEvent.ShowToast(ErrorSelectBookType.ERROR_NO_SELECTED_BOOK))
         } else {
             _uiEvent.setValue(SelectBookUiEvent.NavigateToCreateDiscussionRoom(selectedBook))
         }
@@ -71,13 +71,13 @@ class SelectBookViewModel(
             try {
                 val books: Books =
                     withContext(Dispatchers.IO) {
-                        bookRepository.getBooks(keyword)
+                        bookRepository.fetchBooks(keyword)
                     }
                 uiState = uiState.copy(isLoading = false, searchedBooks = books)
                 isLoading()
                 _uiEvent.setValue(SelectBookUiEvent.ShowSearchResult(uiState.searchedBooks))
             } catch (e: Exception) {
-                _uiEvent.setValue(SelectBookUiEvent.ShowDialog(ErrorSelectBookType.ERROR_NETWORK))
+                _uiEvent.setValue(SelectBookUiEvent.ShowToast(ErrorSelectBookType.ERROR_NETWORK))
             }
         }
     }
