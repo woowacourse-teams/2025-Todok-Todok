@@ -8,6 +8,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -56,6 +58,15 @@ public class Comment extends TimeStamp {
         return new Comment(
                 null, content, member, discussion
         );
+    }
+
+    public void updateContent(final String content) {
+        validateContent(content);
+        this.content = content;
+    }
+
+    public boolean isOwnedBy(final Member member) {
+        return this.member.equals(member);
     }
 
     public void validateMatchWithDiscussion(final Discussion discussion) {
