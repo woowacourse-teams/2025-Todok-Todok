@@ -57,7 +57,7 @@ class CreatedDiscussionsRoomFragment : Fragment(R.layout.fragment_created_discus
         fun newInstance(memberId: String?): CreatedDiscussionsRoomFragment =
             CreatedDiscussionsRoomFragment().apply {
                 memberId?.let {
-                    arguments = bundleOf(it to ARG_MEMBER_ID)
+                    arguments = bundleOf(ARG_MEMBER_ID to it)
                 }
             }
     }
