@@ -28,7 +28,7 @@ class ProfileViewModel(
         viewModelScope.launch {
             val memberId = MemberId(id)
             // val result = memberRepository.getProfile(memberId)
-            val result = Profile("1", "페토", "나나조아", "")
+            val result = Profile("2", "페토", "나나조아", "")
             _uiState.value = _uiState.value?.modifyProfile(result)
         }
     }
@@ -38,7 +38,7 @@ class ProfileViewModel(
             val memberId = _uiState.value?.memberId
             if (memberId is MemberId.OtherUser) {
                 memberRepository.supportMember(memberId, type)
-                onUiEvent(ProfileUiEvent.OnCompleteSupport)
+                onUiEvent(ProfileUiEvent.OnCompleteSupport(type))
             }
         }
     }

@@ -3,7 +3,7 @@ package com.team.todoktodok.presentation.view.profile
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -13,6 +13,7 @@ import com.team.domain.model.Support
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivityProfileBinding
+import com.team.todoktodok.presentation.core.ext.getSerializableCompat
 import com.team.todoktodok.presentation.view.discussions.DiscussionsActivity
 import com.team.todoktodok.presentation.view.profile.adapter.ContentPagerAdapter
 import com.team.todoktodok.presentation.view.profile.adapter.ProfileAdapter
@@ -33,6 +34,7 @@ class ProfileActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setUpSystemBar()
+        setUpDialogResultListener()
         initView(binding)
         setUpUiState()
         setUpUiEvent()
@@ -44,6 +46,17 @@ class ProfileActivity : AppCompatActivity() {
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
+        }
+    }
+
+    private fun setUpDialogResultListener() {
+        supportFragmentManager.setFragmentResultListener(
+            SupportMemberDialog.REQUEST_KEY_SUPPORT,
+            this@ProfileActivity,
+        ) { _, bundle ->
+            val result =
+                bundle.getSerializableCompat<Support>(SupportMemberDialog.RESULT_KEY_SUPPORT)
+            viewModel.supportMember(result)
         }
     }
 
@@ -61,16 +74,16 @@ class ProfileActivity : AppCompatActivity() {
 
     private fun setUpUiState() {
         viewModel.uiState.observe(this) { value ->
-            Log.d("dasdas", "${value.isMyProfilePage}: ")
             profileAdapter.submitList(value.items)
         }
     }
 
     private fun setUpUiEvent() {
-        viewModel.uiEvent.observe(this) { value ->
-            when (value) {
-                ProfileUiEvent.OnCompleteSupport -> {
-                    Log.d("ProfileActivity", "OnCompleteSupport")
+        viewModel.uiEvent.observe(this) { event ->
+            when (event) {
+                is ProfileUiEvent.OnCompleteSupport -> {
+                    val message = getString(R.string.profile_complete_support).format(event.type.name)
+                    Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -92,7 +105,8 @@ class ProfileActivity : AppCompatActivity() {
             }
 
             override fun onClickSupport(type: Support) {
-                viewModel.supportMember(type)
+                val dialog = SupportMemberDialog.newInstance(type)
+                dialog.show(supportFragmentManager, SupportMemberDialog.TAG)
             }
         }
 

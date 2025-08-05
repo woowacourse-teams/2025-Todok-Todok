@@ -12,7 +12,8 @@ data class ProfileUiState(
 
     fun modifyProfile(profile: Profile): ProfileUiState {
         val currentItems = items.toMutableList()
-        currentItems[PROFILE_ITEM_INDEX] = ProfileItems.InformationItem(profile, isMyProfilePage)
+        currentItems[PROFILE_ITEM_INDEX] =
+            ProfileItems.InformationItem(profile, isMyProfilePage)
 
         return copy(items = currentItems)
     }
@@ -33,7 +34,7 @@ data class ProfileUiState(
                     ),
                     ProfileItems.TabItem,
                 )
-            return ProfileUiState(items = initialItems, MemberId.Mine)
+            return ProfileUiState(items = initialItems, MemberId.OtherUser("2"))
         }
 
         private const val INITIALIZE_VALUE = ""
