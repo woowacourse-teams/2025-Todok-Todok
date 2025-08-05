@@ -31,8 +31,10 @@ public class ReplyCommandService {
             final ReplyRequest replyRequest
     ) {
         final Member member = findMember(memberId);
-        findDiscussion(discussionId);
+        final Discussion discussion = findDiscussion(discussionId);
         final Comment comment = findComment(commentId);
+
+        comment.validateMatchWithDiscussion(discussion);
 
         final Reply reply = Reply.builder()
                 .content(replyRequest.content())
