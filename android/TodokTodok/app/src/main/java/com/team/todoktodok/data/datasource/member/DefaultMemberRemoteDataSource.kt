@@ -1,6 +1,7 @@
 package com.team.todoktodok.data.datasource.member
 
 import com.team.domain.model.member.MemberDiscussionType
+import com.team.domain.model.member.MemberId
 import com.team.todoktodok.data.core.JwtParser
 import com.team.todoktodok.data.datasource.token.TokenDataSource
 import com.team.todoktodok.data.network.auth.AuthInterceptor.Companion.AUTHORIZATION_NAME
@@ -42,13 +43,14 @@ class DefaultMemberRemoteDataSource(
         }
 
     override suspend fun fetchMemberDiscussionRooms(
-        memberId: String?,
+        memberId: MemberId,
         type: MemberDiscussionType,
-    ): List<DiscussionResponse> =
-        memberId?.let {
-            memberService.fetchMemberDiscussionRooms(it, type.name)
-        } ?: run {
-            val memberId = tokenDataSource.getMemberId()
-            memberService.fetchMemberDiscussionRooms(memberId, type.name)
-        }
+    ): List<DiscussionResponse> {
+        val memberId =
+            when (memberId) {
+                MemberId.Mine -> tokenDataSource.getMemberId()
+                is MemberId.OtherUser -> memberId.id
+            }
+        return memberService.fetchMemberDiscussionRooms(memberId, type.name)
+    }
 }

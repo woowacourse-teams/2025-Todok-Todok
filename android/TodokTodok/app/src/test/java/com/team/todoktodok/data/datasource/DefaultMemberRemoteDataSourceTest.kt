@@ -1,6 +1,7 @@
 package com.team.todoktodok.data.datasource
 
 import com.team.domain.model.member.MemberDiscussionType
+import com.team.domain.model.member.MemberId
 import com.team.todoktodok.data.core.JwtParser
 import com.team.todoktodok.data.datasource.member.DefaultMemberRemoteDataSource
 import com.team.todoktodok.data.datasource.token.TokenDataSource
@@ -99,11 +100,11 @@ class DefaultMemberRemoteDataSourceTest {
     fun `토론방 목록 조회시 memberId가 주어지면 해당 memberId로 요청한다`() =
         runTest {
             // given
-            val memberId = "5"
+            val memberId = MemberId.OtherUser("5")
             val type = MemberDiscussionType.CREATED.name
             val response = mockk<List<DiscussionResponse>>()
 
-            coEvery { memberService.fetchMemberDiscussionRooms(memberId, type) } returns response
+            coEvery { memberService.fetchMemberDiscussionRooms(memberId.id, type) } returns response
 
             // when
             val result = dataSource.fetchMemberDiscussionRooms(memberId, MemberDiscussionType.CREATED)
@@ -124,7 +125,7 @@ class DefaultMemberRemoteDataSourceTest {
             coEvery { memberService.fetchMemberDiscussionRooms(memberId, type.name) } returns response
 
             // when
-            val result = dataSource.fetchMemberDiscussionRooms(null, type)
+            val result = dataSource.fetchMemberDiscussionRooms(MemberId.Mine, type)
 
             // then
             assertEquals(response, result)

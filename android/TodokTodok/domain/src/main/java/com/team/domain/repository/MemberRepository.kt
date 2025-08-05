@@ -2,6 +2,7 @@ package com.team.domain.repository
 
 import com.team.domain.model.Discussion
 import com.team.domain.model.member.MemberDiscussionType
+import com.team.domain.model.member.MemberId
 import com.team.domain.model.member.Profile
 
 interface MemberRepository {
@@ -16,7 +17,7 @@ interface MemberRepository {
     suspend fun getProfile(memberId: String? = SAVED_MY_MEMBER_ID): Profile
 
     suspend fun getMemberDiscussionRooms(
-        memberId: String?,
+        memberId: MemberId,
         type: MemberDiscussionType,
     ): List<Discussion>
 
