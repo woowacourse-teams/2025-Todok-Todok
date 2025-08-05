@@ -1,5 +1,8 @@
 package com.team.domain.repository
 
+import com.team.domain.model.Discussion
+import com.team.domain.model.member.MemberDiscussionType
+import com.team.domain.model.member.MemberId
 import com.team.domain.model.member.Profile
 
 interface MemberRepository {
@@ -11,9 +14,10 @@ interface MemberRepository {
 
     suspend fun signUp(nickname: String)
 
-    suspend fun getProfile(memberId: String? = SAVED_MY_MEMBER_ID): Profile
+    suspend fun getProfile(id: MemberId): Profile
 
-    companion object {
-        private val SAVED_MY_MEMBER_ID = null
-    }
+    suspend fun getMemberDiscussionRooms(
+        id: MemberId,
+        type: MemberDiscussionType,
+    ): List<Discussion>
 }

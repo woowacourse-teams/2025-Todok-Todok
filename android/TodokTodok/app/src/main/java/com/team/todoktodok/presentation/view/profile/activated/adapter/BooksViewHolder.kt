@@ -1,4 +1,4 @@
-package com.team.todoktodok.presentation.view.profile.activated
+package com.team.todoktodok.presentation.view.profile.activated.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

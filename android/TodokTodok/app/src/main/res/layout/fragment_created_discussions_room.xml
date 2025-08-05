@@ -3,4 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation.view.profile.created.CreatedDiscussionsRoomFragment"/>
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".presentation.view.profile.created.CreatedDiscussionsRoomFragment">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_discussions"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+</FrameLayout>

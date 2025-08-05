@@ -1,12 +1,14 @@
 package com.team.todoktodok.data.datasource
 
-import com.team.domain.model.member.Profile
+import com.team.domain.model.member.MemberDiscussionType
+import com.team.domain.model.member.MemberId
 import com.team.todoktodok.data.core.JwtParser
 import com.team.todoktodok.data.datasource.member.DefaultMemberRemoteDataSource
 import com.team.todoktodok.data.datasource.token.TokenDataSource
 import com.team.todoktodok.data.network.auth.AuthInterceptor.Companion.AUTHORIZATION_NAME
 import com.team.todoktodok.data.network.request.LoginRequest
 import com.team.todoktodok.data.network.response.ProfileResponse
+import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
 import com.team.todoktodok.data.network.service.MemberService
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -65,31 +67,67 @@ class DefaultMemberRemoteDataSourceTest {
     @Test
     fun `유저 정보 API를 호출할 때 MemberId를 전달 받았으면 전달받은 memberID를 사용해 API를 호출한다`() =
         runTest {
-            val memberId = "1"
+            // given
+            val memberId = MemberId.OtherUser("1")
             val profileResponse = mockk<ProfileResponse>()
-            val profile = mockk<Profile>()
 
-            coEvery { memberService.fetchProfile(memberId) } returns profileResponse
-            every { profileResponse.toDomain() } returns profile
+            coEvery { memberService.fetchProfile(memberId.id) } returns profileResponse
 
+            // when
             val result = dataSource.fetchProfile(memberId)
 
-            assertEquals(profile, result)
+            // then
+            assertEquals(profileResponse, result)
         }
 
     @Test
     fun `유저 정보 API를 호출할 때 MemberId가 없다면 TokenDataSource를 호출해 memberID를 받아와 API를 호출한다`() =
         runTest {
+            // given
             val memberId = "2"
             val profileResponse = mockk<ProfileResponse>()
-            val profile = mockk<Profile>()
-
             coEvery { tokenDataSource.getMemberId() } returns memberId
             coEvery { memberService.fetchProfile(memberId) } returns profileResponse
-            every { profileResponse.toDomain() } returns profile
 
-            val result = dataSource.fetchProfile(null)
+            // when
+            val result = dataSource.fetchProfile(MemberId.Mine)
 
-            assertEquals(profile, result)
+            // then
+            assertEquals(profileResponse, result)
+        }
+
+    @Test
+    fun `토론방 목록 조회시 memberId가 주어지면 해당 memberId로 요청한다`() =
+        runTest {
+            // given
+            val memberId = MemberId.OtherUser("5")
+            val type = MemberDiscussionType.CREATED.name
+            val response = mockk<List<DiscussionResponse>>()
+
+            coEvery { memberService.fetchMemberDiscussionRooms(memberId.id, type) } returns response
+
+            // when
+            val result = dataSource.fetchMemberDiscussionRooms(memberId, MemberDiscussionType.CREATED)
+
+            // then
+            assertEquals(response, result)
+        }
+
+    @Test
+    fun `토론방 목록 조회시 memberId가 null이면 TokenDataSource에서 가져온다`() =
+        runTest {
+            // given
+            val memberId = "10"
+            val type = MemberDiscussionType.PARTICIPATED
+            val response = mockk<List<DiscussionResponse>>()
+
+            coEvery { tokenDataSource.getMemberId() } returns memberId
+            coEvery { memberService.fetchMemberDiscussionRooms(memberId, type.name) } returns response
+
+            // when
+            val result = dataSource.fetchMemberDiscussionRooms(MemberId.Mine, type)
+
+            // then
+            assertEquals(response, result)
         }
 }

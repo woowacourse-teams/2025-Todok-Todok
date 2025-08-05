@@ -11,6 +11,7 @@ import com.team.todoktodok.presentation.view.profile.created.CreatedDiscussionsR
 import com.team.todoktodok.presentation.view.profile.joined.JoinedDiscussionsRoomFragment
 
 class ContentPagerAdapter(
+    private val memberId: String?,
     fragmentManager: FragmentManager,
     lifecycle: Lifecycle,
 ) : FragmentStateAdapter(fragmentManager, lifecycle) {
@@ -18,8 +19,8 @@ class ContentPagerAdapter(
         val tab = UserProfileTab(position)
         return when (tab) {
             UserProfileTab.ACTIVATED_BOOKS -> ActivatedBooksFragment()
-            UserProfileTab.CREATED_DISCUSSIONS -> CreatedDiscussionsRoomFragment()
-            UserProfileTab.JOINED_DISCUSSIONS -> JoinedDiscussionsRoomFragment()
+            UserProfileTab.CREATED_DISCUSSIONS -> CreatedDiscussionsRoomFragment.newInstance(memberId)
+            UserProfileTab.JOINED_DISCUSSIONS -> JoinedDiscussionsRoomFragment.newInstance(memberId)
         }
     }
 

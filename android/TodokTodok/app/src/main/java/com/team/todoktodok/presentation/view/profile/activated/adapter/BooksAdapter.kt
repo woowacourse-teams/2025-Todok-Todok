@@ -1,9 +1,9 @@
-package com.team.todoktodok.presentation.view.profile.activated
+package com.team.todoktodok.presentation.view.profile.activated.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.team.domain.model.Book
-import com.team.todoktodok.presentation.view.profile.activated.BooksViewHolder.Companion.BooksViewHolder
+import com.team.todoktodok.presentation.view.profile.activated.adapter.BooksViewHolder.Companion.BooksViewHolder
 
 class BooksAdapter(
     private val handler: Handler,

@@ -1,10 +1,14 @@
 package com.team.todoktodok.data.repository
 
+import com.team.domain.model.Discussion
 import com.team.domain.model.Member
+import com.team.domain.model.member.MemberDiscussionType
+import com.team.domain.model.member.MemberId
 import com.team.domain.model.member.Profile
 import com.team.domain.repository.MemberRepository
 import com.team.todoktodok.data.datasource.member.MemberRemoteDataSource
 import com.team.todoktodok.data.network.request.toRequest
+import com.team.todoktodok.data.network.response.discussion.toDomain
 
 class DefaultMemberRepository(
     private val remoteMemberRemoteDataSource: MemberRemoteDataSource,
@@ -28,5 +32,13 @@ class DefaultMemberRepository(
         }
     }
 
-    override suspend fun getProfile(request: String?): Profile = remoteMemberRemoteDataSource.fetchProfile(request)
+    override suspend fun getProfile(id: MemberId): Profile = remoteMemberRemoteDataSource.fetchProfile(id).toDomain()
+
+    override suspend fun getMemberDiscussionRooms(
+        id: MemberId,
+        type: MemberDiscussionType,
+    ): List<Discussion> =
+        remoteMemberRemoteDataSource
+            .fetchMemberDiscussionRooms(id, type)
+            .map { it.toDomain() }
 }

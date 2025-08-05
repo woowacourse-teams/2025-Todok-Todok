@@ -15,7 +15,7 @@ class DefaultDiscussionRemoteDataSource(
     override suspend fun getDiscussions(
         type: DiscussionFilter,
         keyword: String?,
-    ): List<DiscussionResponse> = discussionService.fetchDiscussions(keyword, type.value)
+    ): List<DiscussionResponse> = discussionService.fetchDiscussions(keyword, type.name)
 
     override suspend fun saveDiscussion(discussionRequest: DiscussionRequest): Long =
         discussionService.saveDiscussion(discussionRequest).extractDiscussionId()
