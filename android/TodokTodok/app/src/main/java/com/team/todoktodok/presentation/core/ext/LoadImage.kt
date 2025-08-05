@@ -1,4 +1,4 @@
-package com.team.todoktodok.presentation.view.book
+package com.team.todoktodok.presentation.core.ext
 
 import android.widget.ImageView
 import com.bumptech.glide.Glide
