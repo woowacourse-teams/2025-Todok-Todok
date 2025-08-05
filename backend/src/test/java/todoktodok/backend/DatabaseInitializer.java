@@ -205,4 +205,21 @@ public class DatabaseInitializer {
                 .executeUpdate();
     }
 
+    @Transactional
+    public void setReplyLikeInfo(
+            final Long memberId,
+            final Long replyId
+    ) {
+        em.createNativeQuery(
+                        """
+                                INSERT INTO REPLY_LIKE (member_id, reply_id, created_at, modified_at)
+                                VALUES 
+                                (:memberId, :replyId, CURRENT_TIME, CURRENT_TIME)
+                                """
+                )
+                .setParameter("memberId", memberId)
+                .setParameter("replyId", replyId)
+                .executeUpdate();
+    }
+
 }
