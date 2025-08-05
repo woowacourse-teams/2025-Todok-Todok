@@ -43,4 +43,16 @@ public class MemberQueryServiceTest {
                 .isInstanceOf(NoSuchElementException.class)
                 .hasMessage("해당 회원을 찾을 수 없습니다");
     }
+
+    @Test
+    @DisplayName("존재하지 않는 회원의 활동 도서를 조회하면 예외가 발생한다")
+    void getActiveBooksTest_memberNotFound_fail() {
+        // given
+        final Long notExistsMemberId = 1L;
+
+        // when - then
+        assertThatThrownBy(() -> memberQueryService.getActiveBooks(notExistsMemberId))
+                .isInstanceOf(NoSuchElementException.class)
+                .hasMessage("해당 회원을 찾을 수 없습니다");
+    }
 }
