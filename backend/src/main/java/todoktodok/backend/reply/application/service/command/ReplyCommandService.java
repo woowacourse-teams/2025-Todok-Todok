@@ -60,9 +60,9 @@ public class ReplyCommandService {
         final Comment comment = findComment(commentId);
         final Reply reply = findReply(replyId);
 
-        comment.validateMatchWithDiscussion(discussion);
         reply.validateMatchWithComment(comment);
         reply.validateSelfReport(member);
+        comment.validateMatchWithDiscussion(discussion);
 
         validateDuplicatedReport(member, reply);
 
@@ -72,6 +72,43 @@ public class ReplyCommandService {
                 .build();
 
         replyReportRepository.save(replyReport);
+    }
+
+    public void updateReply(
+            final Long memberId,
+            final Long discussionId,
+            final Long commentId,
+            final Long replyId,
+            final ReplyRequest replyRequest
+    ) {
+        final Member member = findMember(memberId);
+        final Discussion discussion = findDiscussion(discussionId);
+        final Comment comment = findComment(commentId);
+        final Reply reply = findReply(replyId);
+
+        comment.validateMatchWithDiscussion(discussion);
+        reply.validateMatchWithComment(comment);
+        validateReplyMember(reply, member);
+
+        reply.updateContent(replyRequest.content());
+    }
+
+    public void deleteReply(
+            final Long memberId,
+            final Long discussionId,
+            final Long commentId,
+            final Long replyId
+    ) {
+        final Member member = findMember(memberId);
+        final Comment comment = findComment(commentId);
+        final Discussion discussion = findDiscussion(discussionId);
+        final Reply reply = findReply(replyId);
+
+        validateReplyMember(reply, member);
+        comment.validateMatchWithDiscussion(discussion);
+        reply.validateMatchWithComment(comment);
+
+        replyRepository.delete(reply);
     }
 
     private Member findMember(final Long memberId) {
@@ -100,6 +137,15 @@ public class ReplyCommandService {
     ) {
         if (replyReportRepository.existsByMemberAndReply(member, reply)) {
             throw new IllegalArgumentException("이미 신고한 대댓글입니다");
+        }
+    }
+
+    private void validateReplyMember(
+            final Reply reply,
+            final Member member
+    ) {
+        if (!reply.isOwnedBy(member)) {
+            throw new IllegalArgumentException("자기 자신의 대댓글만 수정/삭제 가능합니다");
         }
     }
 }
