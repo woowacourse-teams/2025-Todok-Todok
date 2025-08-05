@@ -7,6 +7,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -72,14 +73,19 @@ class SelectBookActivity : AppCompatActivity() {
                 viewModel.onDeleteKeywordButtonClicked()
             }
             etSearchKeyword.setOnEditorActionListener { view, actionId, _ ->
-                if (actionId == EditorInfo.IME_ACTION_SEARCH || actionId == EditorInfo.IME_ACTION_DONE) {
-                    val keyword = view.text.toString()
-                    viewModel.onSearchAction(keyword)
-                    true
-                } else {
-                    false
-                }
+                handleSearchAction(view, actionId)
             }
+        }
+    }
+
+
+    private fun handleSearchAction(view: TextView, actionId: Int): Boolean {
+        return if (actionId == EditorInfo.IME_ACTION_SEARCH || actionId == EditorInfo.IME_ACTION_DONE) {
+            val keyword = view.text.toString()
+            viewModel.onSearchAction(keyword)
+            true
+        } else {
+            false
         }
     }
 
