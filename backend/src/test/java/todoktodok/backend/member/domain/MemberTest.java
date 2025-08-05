@@ -102,7 +102,7 @@ class MemberTest {
 
         // when - then
         assertThatThrownBy(() -> {
-            member.updateNicknameOrProfileMessage(newNickname, newProfileMessage);
+            member.updateNicknameAndProfileMessage(newNickname, newProfileMessage);
         }).isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("상태메세지는 40자 이하여야 합니다");
     }

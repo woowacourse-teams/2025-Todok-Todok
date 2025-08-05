@@ -60,7 +60,7 @@ public class Member extends TimeStamp {
         );
     }
 
-    public void updateNicknameOrProfileMessage(
+    public void updateNicknameAndProfileMessage(
             final String nickname,
             final String profileMessage
     ) {

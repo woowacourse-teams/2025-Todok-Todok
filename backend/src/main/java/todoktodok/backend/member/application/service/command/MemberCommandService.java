@@ -97,7 +97,7 @@ public class MemberCommandService {
         final String newProfileMessage = profileUpdateRequest.profileMessage();
 
         validateNicknameUpdate(member, newNickname);
-        member.updateNicknameOrProfileMessage(newNickname, newProfileMessage);
+        member.updateNicknameAndProfileMessage(newNickname, newProfileMessage);
 
         return new ProfileUpdateResponse(member);
     }
