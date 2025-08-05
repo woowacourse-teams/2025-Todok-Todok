@@ -16,7 +16,7 @@ class CommentsViewModel(
     savedStateHandle: SavedStateHandle,
     private val commentRepository: CommentRepository,
 ) : ViewModel() {
-    private val discussionId =
+    val discussionId =
         savedStateHandle.get<Long>(KEY_DISCUSSION_ID) ?: throw IllegalStateException()
 
     private val _comments = MutableLiveData<List<Comment>>()

@@ -70,7 +70,7 @@
         tools:text="20" />
 
     <ImageView
-        android:id="@+id/iv_comment"
+        android:id="@+id/iv_reply"
         android:layout_width="@dimen/space_24"
         android:layout_height="@dimen/space_24"
         android:layout_marginStart="@dimen/space_20"
@@ -84,9 +84,9 @@
         android:layout_width="wrap_content"
         android:layout_height="@dimen/space_24"
         android:layout_marginStart="@dimen/space_8"
-        app:layout_constraintBottom_toBottomOf="@id/iv_comment"
-        app:layout_constraintStart_toEndOf="@id/iv_comment"
-        app:layout_constraintTop_toTopOf="@id/iv_comment"
+        app:layout_constraintBottom_toBottomOf="@id/iv_reply"
+        app:layout_constraintStart_toEndOf="@id/iv_reply"
+        app:layout_constraintTop_toTopOf="@id/iv_reply"
         tools:text="20" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
