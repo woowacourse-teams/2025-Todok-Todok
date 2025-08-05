@@ -8,5 +8,7 @@ import todoktodok.backend.member.domain.Member;
 
 public interface CommentLikeRepository extends JpaRepository<CommentLike, Long> {
 
-    Optional<CommentLike> findByMemberAndComment(Member member, Comment comment);
+    Optional<CommentLike> findByMemberAndComment(final Member member, final Comment comment);
+
+    int countCommentLikesByComment(final Comment comment);
 }
