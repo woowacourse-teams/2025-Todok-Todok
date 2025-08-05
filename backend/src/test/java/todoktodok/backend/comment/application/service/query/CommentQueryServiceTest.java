@@ -57,7 +57,7 @@ public class CommentQueryServiceTest {
         final List<CommentResponse> comments = commentQueryService.getComments(memberId, discussionId);
         final CommentResponse comment = comments.getFirst();
 
-        // when - then
+        // then
         assertAll(
                 () -> assertThat(comment.replyCount()).isEqualTo(2),
                 () -> assertThat(comment.likeCount()).isEqualTo(1)
