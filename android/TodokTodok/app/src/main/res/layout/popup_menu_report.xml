@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_white_stroke_radius_8dp"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_report"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black_18"
+        android:padding="@dimen/space_20"
+        android:layout_marginHorizontal="@dimen/space_20"
+        android:fontFamily="@font/pretendard_regular"
+        android:textSize="@dimen/font_size_x_large"
+        android:text="@string/text_menu_report"/>
+
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/green_73"/>
+
+    <TextView
+        android:id="@+id/tv_block"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/red_FF"
+        android:padding="@dimen/space_20"
+        android:layout_marginHorizontal="@dimen/space_20"
+        android:fontFamily="@font/pretendard_regular"
+        android:textSize="@dimen/font_size_x_large"
+        android:text="@string/text_menu_block"/>
+</LinearLayout>

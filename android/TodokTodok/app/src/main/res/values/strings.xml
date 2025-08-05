@@ -57,5 +57,7 @@
 
     <string name="discussion_menu_alarm">알람</string>
     <string name="discussion_menu_profile">내정보</string>
+    <string name="text_menu_report">신고하기</string>
+    <string name="text_menu_block">차단하기</string>
 
 </resources>
