@@ -32,8 +32,20 @@ public class CommentQueryService {
         validateIsExistMember(memberId);
         final Discussion discussion = getDiscussion(discussionId);
 
-        return commentRepository.findCommentsByDiscussion(discussion).stream()
-                .map(this::getCommentResponseWithCount)
+        final List<Comment> comments = commentRepository.findCommentsByDiscussion(discussion);
+        final List<Long> commentIds = comments.stream()
+                .map(Comment::getId)
+                .toList();
+
+        final List<CommentLikeCountDto> likeCountsById = commentLikeRepository.findLikeCountsByCommentIds(commentIds);
+        final List<CommentReplyCountDto> replyCountsById = replyRepository.findReplyCountsByCommentIds(commentIds);
+
+        return comments.stream()
+                .map(comment -> new CommentResponse(
+                        comment,
+                        getLikeCount(comment, likeCountsById),
+                        getReplyCount(comment, replyCountsById)
+                ))
                 .toList();
     }
 
@@ -48,10 +60,25 @@ public class CommentQueryService {
                 .orElseThrow(() -> new NoSuchElementException("해당 토론방을 찾을 수 없습니다"));
     }
 
-    private CommentResponse getCommentResponseWithCount(final Comment comment) {
-        final int likeCount = commentLikeRepository.countCommentLikesByComment(comment);
-        final int replyCount = replyRepository.countRepliesByComment(comment);
+    private static int getReplyCount(
+            final Comment comment,
+            final List<CommentReplyCountDto> replyCountsById
+    ) {
+        return replyCountsById.stream()
+                .filter(count -> count.commentId().equals(comment.getId()))
+                .findFirst()
+                .orElseThrow(IllegalStateException::new)
+                .replyCount();
+    }
 
-        return new CommentResponse(comment, likeCount, replyCount);
+    private static int getLikeCount(
+            final Comment comment,
+            final List<CommentLikeCountDto> likeCountsById
+    ) {
+        return likeCountsById.stream()
+                .filter(count -> count.commentId().equals(comment.getId()))
+                .findFirst()
+                .orElseThrow(IllegalStateException::new)
+                .likeCount();
     }
 }

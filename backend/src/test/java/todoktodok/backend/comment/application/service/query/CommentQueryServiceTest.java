@@ -47,7 +47,7 @@ public class CommentQueryServiceTest {
         databaseInitializer.setDefaultCommentInfo();
 
         databaseInitializer.setDefaultReplyInfo();
-        databaseInitializer.setDefaultReplyInfo();
+        databaseInitializer.setReplyInfo("동의합니다.", 1L, 1L);
         databaseInitializer.setCommentLikeInfo(1L, 1L);
 
         final Long memberId = 1L;
