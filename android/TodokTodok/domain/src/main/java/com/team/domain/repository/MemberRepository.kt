@@ -14,14 +14,10 @@ interface MemberRepository {
 
     suspend fun signUp(nickname: String)
 
-    suspend fun getProfile(memberId: String? = SAVED_MY_MEMBER_ID): Profile
+    suspend fun getProfile(id: MemberId): Profile
 
     suspend fun getMemberDiscussionRooms(
-        memberId: MemberId,
+        id: MemberId,
         type: MemberDiscussionType,
     ): List<Discussion>
-
-    companion object {
-        private val SAVED_MY_MEMBER_ID = null
-    }
 }

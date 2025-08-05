@@ -68,10 +68,10 @@ class DefaultMemberRemoteDataSourceTest {
     fun `유저 정보 API를 호출할 때 MemberId를 전달 받았으면 전달받은 memberID를 사용해 API를 호출한다`() =
         runTest {
             // given
-            val memberId = "1"
+            val memberId = MemberId.OtherUser("1")
             val profileResponse = mockk<ProfileResponse>()
 
-            coEvery { memberService.fetchProfile(memberId) } returns profileResponse
+            coEvery { memberService.fetchProfile(memberId.id) } returns profileResponse
 
             // when
             val result = dataSource.fetchProfile(memberId)
@@ -90,7 +90,7 @@ class DefaultMemberRemoteDataSourceTest {
             coEvery { memberService.fetchProfile(memberId) } returns profileResponse
 
             // when
-            val result = dataSource.fetchProfile(null)
+            val result = dataSource.fetchProfile(MemberId.Mine)
 
             // then
             assertEquals(profileResponse, result)

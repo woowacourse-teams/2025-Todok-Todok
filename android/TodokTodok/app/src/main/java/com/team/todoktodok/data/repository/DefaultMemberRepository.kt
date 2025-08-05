@@ -32,13 +32,13 @@ class DefaultMemberRepository(
         }
     }
 
-    override suspend fun getProfile(request: String?): Profile = remoteMemberRemoteDataSource.fetchProfile(request).toDomain()
+    override suspend fun getProfile(id: MemberId): Profile = remoteMemberRemoteDataSource.fetchProfile(id).toDomain()
 
     override suspend fun getMemberDiscussionRooms(
-        memberId: MemberId,
+        id: MemberId,
         type: MemberDiscussionType,
     ): List<Discussion> =
         remoteMemberRemoteDataSource
-            .fetchMemberDiscussionRooms(memberId, type)
+            .fetchMemberDiscussionRooms(id, type)
             .map { it.toDomain() }
 }

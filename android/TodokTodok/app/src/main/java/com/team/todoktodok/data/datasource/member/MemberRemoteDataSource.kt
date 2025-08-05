@@ -11,10 +11,10 @@ interface MemberRemoteDataSource {
 
     suspend fun signUp(request: SignUpRequest)
 
-    suspend fun fetchProfile(request: String?): ProfileResponse
+    suspend fun fetchProfile(request: MemberId): ProfileResponse
 
     suspend fun fetchMemberDiscussionRooms(
-        memberId: MemberId,
+        request: MemberId,
         type: MemberDiscussionType,
     ): List<DiscussionResponse>
 }

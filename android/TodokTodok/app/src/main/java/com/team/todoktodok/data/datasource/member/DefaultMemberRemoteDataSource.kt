@@ -34,22 +34,23 @@ class DefaultMemberRemoteDataSource(
         )
     }
 
-    override suspend fun fetchProfile(request: String?): ProfileResponse =
-        request?.let {
-            memberService.fetchProfile(it)
-        } ?: run {
-            val memberId = tokenDataSource.getMemberId()
-            memberService.fetchProfile(memberId)
-        }
+    override suspend fun fetchProfile(request: MemberId): ProfileResponse {
+        val memberId =
+            when (request) {
+                MemberId.Mine -> tokenDataSource.getMemberId()
+                is MemberId.OtherUser -> request.id
+            }
+        return memberService.fetchProfile(memberId)
+    }
 
     override suspend fun fetchMemberDiscussionRooms(
-        memberId: MemberId,
+        request: MemberId,
         type: MemberDiscussionType,
     ): List<DiscussionResponse> {
         val memberId =
-            when (memberId) {
+            when (request) {
                 MemberId.Mine -> tokenDataSource.getMemberId()
-                is MemberId.OtherUser -> memberId.id
+                is MemberId.OtherUser -> request.id
             }
         return memberService.fetchMemberDiscussionRooms(memberId, type.name)
     }
