@@ -167,7 +167,7 @@ public class CommentControllerTest {
                 .contentType(ContentType.JSON)
                 .header("Authorization", token)
                 .body(commentRequest)
-                .when().put("/api/v1/discussions/1/comments/1")
+                .when().patch("/api/v1/discussions/1/comments/1")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }
