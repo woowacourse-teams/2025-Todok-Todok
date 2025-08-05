@@ -26,7 +26,7 @@ class DefaultCommentRepositoryTest {
     fun `토론방 Id을 통해 댓글들을 반환한다`() =
         runTest {
             // given
-            val expected = COMMENTS
+            val expected = COMMENTS.sortedByDescending { it.createAt }
             // when
             val comments = defaultCommentRepository.getCommentsByDiscussionRoomId(0)
             // then

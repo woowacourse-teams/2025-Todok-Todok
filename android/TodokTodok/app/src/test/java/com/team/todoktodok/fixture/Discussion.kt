@@ -14,7 +14,6 @@ val DISCUSSIONS =
             book = Book(1L, "자바 ORM 표준 JPA 프로그래밍", "김영한", ""),
             writer = User(1L, Nickname("홍길동")),
             createAt = LocalDateTime.of(2025, 7, 12, 12, 0),
-            snap = "노트 스냅샷 1",
             discussionOpinion = "fetch join을 남발하면 안됩니다.",
         ),
         Discussion(
@@ -23,7 +22,6 @@ val DISCUSSIONS =
             book = Book(2L, "Kotlin in Action", "Dmitry Jemerov", ""),
             writer = User(2L, Nickname("박코루틴")),
             createAt = LocalDateTime.of(2025, 7, 13, 12, 0),
-            snap = "노트 스냅샷 2",
             discussionOpinion = "suspend fun과 launch 차이를 이해해야 합니다.",
         ),
         Discussion(
@@ -32,7 +30,6 @@ val DISCUSSIONS =
             book = Book(3L, "안드로이드 아키텍처 가이드", "구글", ""),
             writer = User(3L, Nickname("김아키텍처")),
             createAt = LocalDateTime.of(2025, 7, 14, 12, 0),
-            snap = "노트 스냅샷 3",
             discussionOpinion = "UI와 로직을 분리해 유지보수가 쉬워집니다.",
         ),
         Discussion(
@@ -41,7 +38,6 @@ val DISCUSSIONS =
             book = Book(4L, "Clean Code", "Robert C. Martin", ""),
             writer = User(4L, Nickname("이클린")),
             createAt = LocalDateTime.of(2025, 7, 15, 12, 0),
-            snap = "노트 스냅샷 4",
             discussionOpinion = "의도를 드러내는 코드가 중요합니다.",
         ),
         Discussion(
@@ -50,7 +46,6 @@ val DISCUSSIONS =
             book = Book(5L, "Head First Design Patterns", "Eric Freeman", ""),
             writer = User(5L, Nickname("정디자인")),
             createAt = LocalDateTime.of(2025, 7, 16, 12, 0),
-            snap = "노트 스냅샷 5",
             discussionOpinion = "상황에 맞는 패턴 선택이 중요합니다.",
         ),
     )
