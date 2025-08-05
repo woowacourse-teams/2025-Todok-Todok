@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.global.jwt.JwtTokenProvider;
 import todoktodok.backend.member.application.dto.request.LoginRequest;
+import todoktodok.backend.member.application.dto.request.ProfileUpdateRequest;
 import todoktodok.backend.member.application.dto.request.SignupRequest;
+import todoktodok.backend.member.application.dto.response.ProfileUpdateResponse;
 import todoktodok.backend.member.domain.Block;
 import todoktodok.backend.member.domain.Member;
 import todoktodok.backend.member.domain.MemberReport;
@@ -37,7 +39,7 @@ public class MemberCommandService {
             final SignupRequest signupRequest,
             final String memberEmail
     ) {
-        validateDuplicatedNickname(signupRequest);
+        validateDuplicatedNickname(signupRequest.nickname());
         validateDuplicatedEmail(signupRequest);
         validateEmailWithTokenEmail(signupRequest, memberEmail);
 
@@ -85,8 +87,23 @@ public class MemberCommandService {
         memberReportRepository.save(memberReport);
     }
 
-    private void validateDuplicatedNickname(final SignupRequest signupRequest) {
-        if (memberRepository.existsByNickname(signupRequest.nickname())) {
+    public ProfileUpdateResponse updateProfile(
+            final Long memberId,
+            final ProfileUpdateRequest profileUpdateRequest
+    ) {
+        final Member member = findMember(memberId);
+
+        final String newNickname = profileUpdateRequest.nickname();
+        final String newProfileMessage = profileUpdateRequest.profileMessage();
+
+        validateNicknameUpdate(member, newNickname);
+        member.updateNicknameAndProfileMessage(newNickname, newProfileMessage);
+
+        return new ProfileUpdateResponse(member);
+    }
+
+    private void validateDuplicatedNickname(final String nickname) {
+        if (memberRepository.existsByNickname(nickname)) {
             throw new IllegalArgumentException("이미 존재하는 닉네임입니다");
         }
     }
@@ -108,7 +125,7 @@ public class MemberCommandService {
 
     private Member findMember(final Long memberId) {
         return memberRepository.findById(memberId)
-                .orElseThrow(() -> new NoSuchElementException("해당하는 회원을 찾을 수 없습니다"));
+                .orElseThrow(() -> new NoSuchElementException("해당 회원을 찾을 수 없습니다"));
     }
 
     private static void validateSelfBlock(
@@ -145,5 +162,15 @@ public class MemberCommandService {
         if (memberReportRepository.existsByMemberAndTarget(member, target)) {
             throw new IllegalArgumentException("이미 신고한 회원입니다");
         }
+    }
+
+    private void validateNicknameUpdate(
+            final Member member,
+            final String newNickname
+    ) {
+        if (member.isMyNickname(newNickname)) {
+            return;
+        }
+        validateDuplicatedNickname(newNickname);
     }
 }

@@ -1,10 +1,14 @@
 package todoktodok.backend.member.presentation;
 
+import static org.hamcrest.Matchers.equalTo;
+
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -16,6 +20,7 @@ import todoktodok.backend.DatabaseInitializer;
 import todoktodok.backend.InitializerTimer;
 import todoktodok.backend.global.jwt.JwtTokenProvider;
 import todoktodok.backend.member.application.dto.request.LoginRequest;
+import todoktodok.backend.member.application.dto.request.ProfileUpdateRequest;
 import todoktodok.backend.member.application.dto.request.SignupRequest;
 import todoktodok.backend.member.presentation.fixture.MemberFixture;
 
@@ -82,7 +87,7 @@ class MemberControllerTest {
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setUserInfo("user2@gmail.com", "user2", "https://user2.png", "user");
 
-        String token = MemberFixture.login("user@gmail.com");
+        final String token = MemberFixture.login("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -100,7 +105,7 @@ class MemberControllerTest {
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setUserInfo("user2@gmail.com", "user2", "https://user2.png", "user");
 
-        String token = MemberFixture.login("user@gmail.com");
+        final String token = MemberFixture.login("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -109,5 +114,69 @@ class MemberControllerTest {
                 .when().post("/api/v1/members/2/report")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
+    }
+
+    @ParameterizedTest
+    @ValueSource(longs = {1, 2})
+    @DisplayName("프로필을 조회한다")
+    void getProfileTest(final Long memberId) {
+        // given
+        databaseInitializer.setUserInfo("user@gmail.com", "user", "https://user.png", "user");
+        databaseInitializer.setUserInfo("user2@gmail.com", "user2", "https://user2.png", "user2");
+
+        final String token = MemberFixture.login("user@gmail.com");
+
+        // when
+        final String uri = String.format("/api/v1/members/%d/profile", memberId);
+
+        // then
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .header("Authorization", token)
+                .when().get(uri)
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
+    }
+
+    @Test
+    @DisplayName("닉네임을 수정한다")
+    void updateProfileTest_nickname() {
+        // given
+        databaseInitializer.setUserInfo("user@gmail.com", "user", "https://user.png", "user");
+
+        final String token = MemberFixture.login("user@gmail.com");
+        final String newNickname = "newUser";
+        final String profileMessage = "user";
+
+        // when - then
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .header("Authorization", token)
+                .body(new ProfileUpdateRequest(newNickname, profileMessage))
+                .when().put("/api/v1/members/profile")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("nickname", equalTo(newNickname));
+    }
+
+    @Test
+    @DisplayName("상태메세지를 수정한다")
+    void updateProfileTest_profileMessage() {
+        // given
+        databaseInitializer.setUserInfo("user@gmail.com", "user", "https://user.png", "user");
+
+        final String token = MemberFixture.login("user@gmail.com");
+        final String nickname = "user";
+        final String newProfileMessage = "newProfileMessage";
+
+        // when - then
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .header("Authorization", token)
+                .body(new ProfileUpdateRequest(nickname, newProfileMessage))
+                .when().put("/api/v1/members/profile")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("profileMessage", equalTo(newProfileMessage));
     }
 }
