@@ -60,9 +60,9 @@ public class ReplyCommandService {
         final Comment comment = findComment(commentId);
         final Reply reply = findReply(replyId);
 
-        comment.validateMatchWithDiscussion(discussion);
         reply.validateMatchWithComment(comment);
         reply.validateSelfReport(member);
+        comment.validateMatchWithDiscussion(discussion);
 
         validateDuplicatedReport(member, reply);
 
@@ -86,9 +86,9 @@ public class ReplyCommandService {
         final Comment comment = findComment(commentId);
         final Reply reply = findReply(replyId);
 
-        validateReplyMember(reply, member);
         comment.validateMatchWithDiscussion(discussion);
         reply.validateMatchWithComment(comment);
+        validateReplyMember(reply, member);
 
         reply.updateContent(replyRequest.content());
     }
