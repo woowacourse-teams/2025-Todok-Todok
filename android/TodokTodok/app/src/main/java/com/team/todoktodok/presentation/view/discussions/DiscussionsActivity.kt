@@ -18,6 +18,7 @@ import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivityDiscussionsBinding
 import com.team.todoktodok.presentation.core.ext.clearHintOnFocus
+import com.team.todoktodok.presentation.view.book.SelectBookActivity
 import com.team.todoktodok.presentation.view.discussions.all.AllDiscussionFragment
 import com.team.todoktodok.presentation.view.discussions.my.MyDiscussionFragment
 import com.team.todoktodok.presentation.view.discussions.vm.DiscussionsViewModel
@@ -107,6 +108,8 @@ class DiscussionsActivity : AppCompatActivity() {
             )
 
             ivDiscussionNavigation.setOnClickListener {
+                val intent = SelectBookActivity.Intent(this@DiscussionsActivity)
+                startActivity(intent)
             }
         }
     }

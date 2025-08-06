@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/space_24"
+    android:paddingRight="@dimen/space_24"
+    tools:context=".presentation.view.book.SelectBookActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/topBar_select_book"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/space_56"
+        android:background="@color/white"
+        app:layout_constraintBottom_toTopOf="@id/etl_search_keyword"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_select_book"
+        style="@style/HeaderTitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/select_book"
+        app:layout_constraintBottom_toBottomOf="@id/topBar_select_book"
+        app:layout_constraintEnd_toEndOf="@id/topBar_select_book"
+        app:layout_constraintStart_toStartOf="@id/topBar_select_book"
+        app:layout_constraintTop_toTopOf="@id/topBar_select_book" />
+
+    <ImageView
+        android:id="@+id/btn_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_back"
+        android:contentDescription="@string/content_description_btn_back"
+        app:layout_constraintBottom_toBottomOf="@id/topBar_select_book"
+        app:layout_constraintStart_toStartOf="@id/topBar_select_book"
+        app:layout_constraintTop_toTopOf="@id/topBar_select_book" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/etl_search_keyword"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="@dimen/space_20"
+        android:layout_marginBottom="10dp"
+        app:boxBackgroundColor="@color/green_F0"
+        app:boxBackgroundMode="filled"
+        app:boxCornerRadiusBottomEnd="@dimen/space_8"
+        app:boxCornerRadiusBottomStart="@dimen/space_8"
+        app:boxCornerRadiusTopEnd="@dimen/space_8"
+        app:boxCornerRadiusTopStart="@dimen/space_8"
+        app:boxStrokeWidth="@dimen/space_0"
+        app:boxStrokeWidthFocused="@dimen/space_0"
+        app:endIconDrawable="@drawable/ic_cancel"
+        app:endIconMode="clear_text"
+        app:endIconTint="@color/gray_76"
+        app:hintEnabled="false"
+        app:layout_constraintBottom_toTopOf="@id/rv_searched_books"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/topBar_select_book"
+        app:startIconDrawable="@drawable/ic_search"
+        app:startIconTint="@color/green_63">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_search_keyword"
+            style="@style/BaseTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/pretendard_regular"
+            android:hint="@string/hint_search_keyword"
+            android:inputType="text"
+            android:maxLines="1"
+            android:paddingVertical="@dimen/space_0"
+            android:textColor="@color/black_18"
+            android:textColorHint="@color/gray_76" />
+
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_searched_books"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/space_0"
+        android:paddingBottom="10dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/etl_search_keyword"
+        tools:listitem="@layout/item_book" />
+</androidx.constraintlayout.widget.ConstraintLayout>
