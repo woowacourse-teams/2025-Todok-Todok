@@ -48,4 +48,12 @@
     <style name="BottomSheetStyle" parent="Widget.Material3.BottomSheet.Modal">
         <item name="backgroundTint">@color/white</item>
     </style>
+
+    <!-- styles.xml -->
+    <style name="supportDialog" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowMinWidthMajor">90%</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
 </resources>

@@ -56,7 +56,7 @@ class JoinedDiscussionsRoomFragment : Fragment(R.layout.fragment_joined_discussi
 
     companion object {
         // API 연동 완료시 제거
-        fun newInstance(memberId: String? = "1"): JoinedDiscussionsRoomFragment =
+        fun newInstance(memberId: String?): JoinedDiscussionsRoomFragment =
             JoinedDiscussionsRoomFragment().apply {
                 arguments = bundleOf(ARG_MEMBER_ID to memberId)
             }

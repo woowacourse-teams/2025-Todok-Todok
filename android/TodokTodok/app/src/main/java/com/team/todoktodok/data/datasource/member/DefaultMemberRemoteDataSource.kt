@@ -1,5 +1,6 @@
 package com.team.todoktodok.data.datasource.member
 
+import com.team.domain.model.Support
 import com.team.domain.model.member.MemberDiscussionType
 import com.team.domain.model.member.MemberId
 import com.team.todoktodok.data.core.JwtParser
@@ -53,5 +54,15 @@ class DefaultMemberRemoteDataSource(
                 is MemberId.OtherUser -> request.id
             }
         return memberService.fetchMemberDiscussionRooms(memberId, type.name)
+    }
+
+    override suspend fun supportMember(
+        request: MemberId.OtherUser,
+        type: Support,
+    ) {
+        when (type) {
+            Support.BLOCK -> memberService.block(request.id)
+            Support.REPORT -> memberService.report(request.id)
+        }
     }
 }

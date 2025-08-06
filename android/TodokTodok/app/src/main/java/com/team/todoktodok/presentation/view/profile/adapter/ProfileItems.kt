@@ -10,6 +10,7 @@ sealed class ProfileItems(
 
     data class InformationItem(
         val value: Profile,
+        val isMyProfile: Boolean,
     ) : ProfileItems(ViewType.INFORMATION)
 
     data object TabItem : ProfileItems(ViewType.TAB)

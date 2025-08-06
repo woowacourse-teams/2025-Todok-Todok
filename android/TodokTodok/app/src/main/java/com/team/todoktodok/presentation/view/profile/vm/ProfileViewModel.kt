@@ -4,8 +4,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.team.domain.model.Support
+import com.team.domain.model.member.MemberId
+import com.team.domain.model.member.MemberId.Companion.MemberId
 import com.team.domain.model.member.Profile
 import com.team.domain.repository.MemberRepository
+import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
+import com.team.todoktodok.presentation.core.event.SingleLiveData
+import com.team.todoktodok.presentation.view.profile.ProfileUiEvent
 import com.team.todoktodok.presentation.view.profile.ProfileUiState
 import kotlinx.coroutines.launch
 
@@ -15,15 +21,29 @@ class ProfileViewModel(
     private val _uiState = MutableLiveData(ProfileUiState.initial())
     val uiState: LiveData<ProfileUiState> get() = _uiState
 
-    init {
-        loadProfile()
-    }
+    private val _uiEvent = MutableSingleLiveData<ProfileUiEvent>()
+    val uiEvent: SingleLiveData<ProfileUiEvent> get() = _uiEvent
 
-    fun loadProfile() {
+    fun loadProfile(id: String?) {
         viewModelScope.launch {
-            // val result = memberRepository.getProfile()
-            val result = Profile("1", "페토", "나나조아", "")
+            val memberId = MemberId(id)
+            // val result = memberRepository.getProfile(memberId)
+            val result = Profile("2", "페토", "나나조아", "")
             _uiState.value = _uiState.value?.modifyProfile(result)
         }
+    }
+
+    fun supportMember(type: Support) {
+        viewModelScope.launch {
+            val memberId = _uiState.value?.memberId
+            if (memberId is MemberId.OtherUser) {
+                memberRepository.supportMember(memberId, type)
+                onUiEvent(ProfileUiEvent.OnCompleteSupport(type))
+            }
+        }
+    }
+
+    private fun onUiEvent(event: ProfileUiEvent) {
+        _uiEvent.setValue(event)
     }
 }
