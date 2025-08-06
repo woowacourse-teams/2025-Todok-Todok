@@ -1,7 +1,9 @@
 package todoktodok.backend.discussion.application.service.query;
 
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,22 +30,7 @@ public class DiscussionQueryService {
         validateMember(memberId);
 
         final List<Discussion> discussions = discussionRepository.findAll();
-        final List<Long> discussionIds = discussions.stream()
-                .map(Discussion::getId)
-                .toList();
-
-        final List<DiscussionLikeCountDto> likeCountsById = discussionLikeRepository.findLikeCountsByDiscussionIds(
-                discussionIds);
-        final List<DiscussionCommentCountDto> commentCountsById = commentRepository.findCommentCountsByDiscussionIds(
-                discussionIds);
-
-        return discussions.stream()
-                .map(discussion -> new DiscussionResponse(
-                        discussion,
-                        findLikeCount(discussion, likeCountsById),
-                        findCommentCount(discussion, commentCountsById)
-                ))
-                .toList();
+        return getDiscussionsResponses(discussions);
     }
 
     public DiscussionResponse getDiscussion(
@@ -81,6 +68,25 @@ public class DiscussionQueryService {
         return getDiscussionsByKeyword(keyword);
     }
 
+    private List<DiscussionResponse> getDiscussionsResponses(final List<Discussion> discussions) {
+        final List<Long> discussionIds = discussions.stream()
+                .map(Discussion::getId)
+                .toList();
+
+        final List<DiscussionLikeCountDto> likeCountsById = discussionLikeRepository.findLikeCountsByDiscussionIds(
+                discussionIds);
+        final List<DiscussionCommentCountDto> commentCountsById = commentRepository.findCommentCountsByDiscussionIds(
+                discussionIds);
+
+        return discussions.stream()
+                .map(discussion -> new DiscussionResponse(
+                        discussion,
+                        findLikeCount(discussion, likeCountsById),
+                        findCommentCount(discussion, commentCountsById)
+                ))
+                .toList();
+    }
+
     private static boolean isKeywordBlank(String keyword) {
         return keyword == null || keyword.isBlank();
     }
@@ -109,39 +115,59 @@ public class DiscussionQueryService {
     }
 
     private List<DiscussionResponse> getMyDiscussions(final Member member) {
-        return discussionRepository.findDiscussionsByMember(member).stream()
-                .map(discussion -> new DiscussionResponse(
-                        discussion,
-                        Math.toIntExact(discussionLikeRepository.findLikeCountsByDiscussionId(discussion.getId())),
-                        Math.toIntExact(commentRepository.findCommentCountsByDiscussionId(discussion.getId()))
-                ))
-                .toList();
+        final List<Discussion> discussions = discussionRepository.findDiscussionsByMember(member);
+
+        return getDiscussionsResponses(discussions);
     }
 
     private List<DiscussionResponse> getMyDiscussionsByKeyword(
             final String keyword,
             final Member member
     ) {
-        return discussionRepository.searchByKeywordAndMember(keyword, member).stream()
+        List<Discussion> discussions = discussionRepository.searchByKeywordAndMember(keyword, member).stream()
                 .filter(discussion -> discussion.isOwnedBy(member))
+                .toList();
+
+        return getDiscussionResponses(discussions);
+    }
+
+    private List<DiscussionResponse> getDiscussionsByKeyword(final String keyword) {
+        List<Discussion> discussions = discussionRepository.searchByKeyword(keyword);
+
+        return getDiscussionResponses(discussions);
+    }
+
+    private List<DiscussionResponse> getDiscussionResponses(final List<Discussion> discussions) {
+        List<Long> discussionIds = discussions.stream()
+                .map(Discussion::getId)
+                .toList();
+
+        Map<Long, Integer> likeCounts = getLikeCounts(discussionIds);
+        Map<Long, Integer> commentCounts = getCommentCounts(discussionIds);
+
+        return discussions.stream()
                 .map(discussion -> new DiscussionResponse(
                         discussion,
-                        Math.toIntExact(discussionLikeRepository.findLikeCountsByDiscussionId(discussion.getId())),
-                        Math.toIntExact(commentRepository.findCommentCountsByDiscussionId(discussion.getId()))
+                        likeCounts.getOrDefault(discussion.getId(), 0),
+                        commentCounts.getOrDefault(discussion.getId(), 0)
                 ))
                 .toList();
     }
 
-    private List<DiscussionResponse> getDiscussionsByKeyword(
-            final String keyword
-    ) {
-        return discussionRepository.searchByKeyword(keyword).stream()
-                .map(discussion -> new DiscussionResponse(
-                        discussion,
-                        Math.toIntExact(discussionLikeRepository.findLikeCountsByDiscussionId(discussion.getId())),
-                        Math.toIntExact(commentRepository.findCommentCountsByDiscussionId(discussion.getId()))
-                ))
-                .toList();
+    private Map<Long, Integer> getLikeCounts(final List<Long> discussionIds) {
+        return discussionLikeRepository.findLikeCountsByDiscussionIds(discussionIds).stream()
+                .collect(Collectors.toMap(
+                        DiscussionLikeCountDto::discussionId,
+                        DiscussionLikeCountDto::likeCount
+                ));
+    }
+
+    private Map<Long, Integer> getCommentCounts(final List<Long> discussionIds) {
+        return commentRepository.findCommentCountsByDiscussionIds(discussionIds).stream()
+                .collect(Collectors.toMap(
+                        DiscussionCommentCountDto::discussionId,
+                        DiscussionCommentCountDto::commentCount
+                ));
     }
 
     private static int findCommentCount(
