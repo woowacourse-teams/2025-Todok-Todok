@@ -60,6 +60,48 @@ class ReplyQueryServiceTest {
     }
 
     @Test
+    @DisplayName("댓글별 대댓글 목록 조회 시 대댓글이 없는 경우 좋아요수 0개를 반환한다")
+    void getRepliesWithLikeCountTest_noReply() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+        databaseInitializer.setDefaultCommentInfo();
+
+        final Long memberId = 1L;
+        final Long discussionId = 1L;
+        final Long commentId = 1L;
+
+        // when
+        final List<ReplyResponse> replies = replyQueryService.getReplies(memberId, discussionId, commentId);
+
+        // then
+        assertThat(replies).isEmpty();
+    }
+
+    @Test
+    @DisplayName("댓글별 대댓글 목록 조회 시 대댓글 좋아요가 없는 경우 좋아요수 0개를 반환한다")
+    void getRepliesWithLikeCountTest_noReplyLike() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+        databaseInitializer.setDefaultCommentInfo();
+        databaseInitializer.setDefaultReplyInfo();
+
+        final Long memberId = 1L;
+        final Long discussionId = 1L;
+        final Long commentId = 1L;
+
+        // when
+        final List<ReplyResponse> replies = replyQueryService.getReplies(memberId, discussionId, commentId);
+        final ReplyResponse reply = replies.getFirst();
+
+        // then
+        assertThat(reply.likeCount()).isEqualTo(0);
+    }
+
+    @Test
     @DisplayName("없는 댓글에 대해 답글을 조회할 경우 예외가 발생한다")
     void getRepliesWithLikeCountTest_noComment() {
         // given

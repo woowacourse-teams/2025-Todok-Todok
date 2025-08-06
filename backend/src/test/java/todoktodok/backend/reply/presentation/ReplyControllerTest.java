@@ -85,7 +85,7 @@ public class ReplyControllerTest {
 
     @Test
     @DisplayName("댓글별 대댓글 목록을 조회한다")
-    void getCommentsTest() {
+    void getRepliesTest() {
         // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
