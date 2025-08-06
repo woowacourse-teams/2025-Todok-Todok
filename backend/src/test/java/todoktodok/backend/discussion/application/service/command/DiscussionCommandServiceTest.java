@@ -115,6 +115,43 @@ class DiscussionCommandServiceTest {
     }
 
     @Test
+    @DisplayName("자신의 것이 아닌 토론방을 삭제하면 예외가 발생한다")
+    void validateDiscussionMemberDeleteTest() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+
+        databaseInitializer.setUserInfo("user2@gmail.com", "user", "https://image.png", "프로필 메시지");
+
+        final Long memberId = 2L;
+        final Long discussionId = 1L;
+
+        // when - then
+        assertThatThrownBy(() -> discussionCommandService.deleteDiscussion(memberId, discussionId))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("자기 자신의 토론방만 수정/삭제 가능합니다");
+    }
+
+    @Test
+    @DisplayName("댓글이 존재하는 토론방을 삭제하면 예외가 발생한다")
+    void validateHasCommentDiscussionDeleteTest() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+        databaseInitializer.setDefaultCommentInfo();
+
+        final Long memberId = 1L;
+        final Long discussionId = 1L;
+
+        // when - then
+        assertThatThrownBy(() -> discussionCommandService.deleteDiscussion(memberId, discussionId))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("댓글이 존재하는 토론방은 삭제할 수 없습니다");
+    }
+
+    @Test
     @DisplayName("같은 회원이 토론방을 중복 신고하면 예외가 발생한다")
     void report_duplicated_fail() {
         // given

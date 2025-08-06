@@ -129,6 +129,25 @@ class DiscussionControllerTest {
     }
 
     @Test
+    @DisplayName("토론방을 삭제한다")
+    void deleteDiscussionTest() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+
+        final String token = MemberFixture.login("user@gmail.com");
+
+        // when - then
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .header("Authorization", token)
+                .when().delete("/api/v1/discussions/1")
+                .then().log().all()
+                .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    @Test
     @DisplayName("토론방을 필터링한다")
     void filterDiscussions() {
         // given
