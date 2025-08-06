@@ -9,12 +9,12 @@ import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentCommentDetailBinding
 import com.team.todoktodok.presentation.view.discussiondetail.commentdetail.vm.CommentDetailViewModel
-import com.team.todoktodok.presentation.view.discussiondetail.comments.vm.CommentsViewModelFactory
+import com.team.todoktodok.presentation.view.discussiondetail.commentdetail.vm.CommentDetailViewModelFactory
 
 class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
     private val viewModel: CommentDetailViewModel by viewModels {
         val repositoryModule = (requireActivity().application as App).container.repositoryModule
-        CommentsViewModelFactory(
+        CommentDetailViewModelFactory(
             repositoryModule.commentRepository,
         )
     }

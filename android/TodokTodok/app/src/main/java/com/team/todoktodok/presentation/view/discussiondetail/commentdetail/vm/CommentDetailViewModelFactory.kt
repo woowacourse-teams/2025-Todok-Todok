@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.team.domain.repository.CommentRepository
-import com.team.todoktodok.presentation.view.discussiondetail.comments.vm.CommentsViewModel
 
 class CommentDetailViewModelFactory(
     private val commentRepository: CommentRepository,
