@@ -17,6 +17,8 @@ import todoktodok.backend.InitializerTimer;
 import todoktodok.backend.member.presentation.fixture.MemberFixture;
 import todoktodok.backend.reply.application.dto.request.ReplyRequest;
 
+import static org.hamcrest.Matchers.is;
+
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(initializers = InitializerTimer.class)
@@ -79,6 +81,31 @@ public class ReplyControllerTest {
                 .when().post("/api/v1/discussions/1/comments/1/replies/1/report")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
+    }
+
+    @Test
+    @DisplayName("댓글별 대댓글 목록을 조회한다")
+    void getRepliesTest() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+        databaseInitializer.setCommentInfo("캡슐화 왜 하시나요?", 1L, 1L);
+        databaseInitializer.setCommentInfo("상속의 핵심 목적은 타입 계층의 구축입니다!", 1L, 1L);
+
+        databaseInitializer.setReplyInfo("왜냐면 캡슐화는 짱이거든요.", 1L, 1L);
+        databaseInitializer.setReplyInfo("맞아요, 상속은 짱이에요..", 1L, 2L);
+
+        final String token = MemberFixture.login("user@gmail.com");
+
+        // when - then
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .header("Authorization", token)
+                .when().get("/api/v1/discussions/1/comments/1/replies")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("size()", is(1));
     }
 
     @Test

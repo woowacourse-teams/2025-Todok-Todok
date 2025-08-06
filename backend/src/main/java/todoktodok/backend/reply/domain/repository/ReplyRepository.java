@@ -20,4 +20,6 @@ public interface ReplyRepository extends JpaRepository<Reply, Long> {
         GROUP BY c.id
     """)
     List<CommentReplyCountDto> findReplyCountsByCommentIds(@Param("commentIds") final List<Long> commentIds);
+
+    List<Reply> findRepliesByComment(final Comment comment);
 }
