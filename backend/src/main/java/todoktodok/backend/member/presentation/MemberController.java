@@ -23,6 +23,7 @@ import todoktodok.backend.global.resolver.TempMember;
 import todoktodok.backend.member.application.dto.request.LoginRequest;
 import todoktodok.backend.member.application.dto.request.ProfileUpdateRequest;
 import todoktodok.backend.member.application.dto.request.SignupRequest;
+import todoktodok.backend.member.application.dto.response.BlockMemberResponse;
 import todoktodok.backend.member.application.dto.response.MemberDiscussionResponse;
 import todoktodok.backend.member.application.dto.response.ProfileResponse;
 import todoktodok.backend.member.application.dto.response.ProfileUpdateResponse;
@@ -114,6 +115,16 @@ public class MemberController {
     ) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(memberQueryService.getMemberDiscussionsByType(memberId, type));
+    }
+
+    @Operation(summary = "차단한 회원 전체 조회 API")
+    @Auth(value = Role.USER)
+    @GetMapping("/block")
+    public ResponseEntity<List<BlockMemberResponse>> getBlockMembers(
+            @Parameter(hidden = true) @LoginMember final Long memberId
+    ) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(memberQueryService.getBlockMembers(memberId));
     }
 
     @Operation(summary = "프로필 정보 수정 API")
