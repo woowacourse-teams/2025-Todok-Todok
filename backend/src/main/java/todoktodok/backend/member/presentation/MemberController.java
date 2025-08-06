@@ -102,6 +102,16 @@ public class MemberController {
                 .body(memberQueryService.getActiveBooks(memberId));
     }
 
+    @Operation(summary = "활동 도서 전체 조회 API2")
+    @Auth(value = Role.USER)
+    @GetMapping("/{memberId}/books2")
+    public ResponseEntity<List<BookResponse>> getActiveBooks2(
+            @PathVariable final Long memberId
+    ) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(memberQueryService.getActiveBooks(memberId));
+    }
+
     @Operation(summary = "프로필 정보 수정 API")
     @Auth(value = Role.USER)
     @PutMapping("/profile")

@@ -2,18 +2,15 @@ package todoktodok.backend.member.application.service.query;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.book.application.dto.response.BookResponse;
 import todoktodok.backend.book.domain.Book;
-import todoktodok.backend.comment.domain.repository.CommentRepository;
-import todoktodok.backend.discussion.domain.repository.DiscussionRepository;
+import todoktodok.backend.book.domain.repository.BookRepository;
 import todoktodok.backend.member.application.dto.response.ProfileResponse;
 import todoktodok.backend.member.domain.Member;
 import todoktodok.backend.member.domain.repository.MemberRepository;
-import todoktodok.backend.reply.domain.repository.ReplyRepository;
 
 @Service
 @Transactional(readOnly = true)
@@ -21,9 +18,7 @@ import todoktodok.backend.reply.domain.repository.ReplyRepository;
 public class MemberQueryService {
 
     private final MemberRepository memberRepository;
-    private final DiscussionRepository discussionRepository;
-    private final CommentRepository commentRepository;
-    private final ReplyRepository replyRepository;
+    private final BookRepository bookRepository;
 
     public ProfileResponse getProfile(final Long memberId) {
         final Member member = findMember(memberId);
@@ -34,15 +29,9 @@ public class MemberQueryService {
     public List<BookResponse> getActiveBooks(final Long memberId) {
         final Member member = findMember(memberId);
 
-        final List<Book> activeBooksFromDiscussion = discussionRepository.findBooksByMember(member);
-        final List<Book> activeBooksFromComment = commentRepository.findBooksByMember(member);
-        final List<Book> activeBooksFromReply = replyRepository.findBooksByMember(member);
+        final List<Book> activeBooks = bookRepository.findActiveBooksByMember(member);
 
-        return Stream.of(
-                        activeBooksFromDiscussion,
-                        activeBooksFromComment,
-                        activeBooksFromReply
-                ).flatMap(List::stream)
+        return activeBooks.stream()
                 .distinct()
                 .map(BookResponse::new)
                 .toList();
