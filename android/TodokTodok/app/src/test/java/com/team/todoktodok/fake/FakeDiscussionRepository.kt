@@ -17,20 +17,4 @@ class FakeDiscussionRepository : DiscussionRepository {
         type: DiscussionFilter,
         keyword: String?,
     ): List<Discussion> = discussions
-
-    override suspend fun saveDiscussion(
-        noteId: Long,
-        discussionOpinion: String,
-        discussionTitle: String,
-    ): Long {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun saveDiscussionRoom(
-        noteId: Long,
-        discussionTitle: String,
-        discussionOpinion: String,
-    ) {
-        TODO("Not yet implemented")
-    }
 }

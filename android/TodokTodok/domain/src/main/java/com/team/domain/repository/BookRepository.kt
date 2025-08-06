@@ -1,13 +1,7 @@
 package com.team.domain.repository
 
-import com.team.domain.model.Book
+import com.team.domain.model.Books
 
 interface BookRepository {
-    suspend fun searchBooks(searchInput: String): List<Book>
-
-    suspend fun getBooks(): List<Book>
-
-    suspend fun saveBook(book: Book)
-
-    suspend fun saveSelectedBook(book: Book): Long
+    suspend fun fetchBooks(keyword: String): Books
 }

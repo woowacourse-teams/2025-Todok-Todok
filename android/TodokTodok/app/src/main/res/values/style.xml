@@ -30,6 +30,11 @@
         <item name="android:textColor">@color/gray_76</item>
     </style>
 
+    <style name="RoundedImageStyle" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/space_8</item>
+    </style>
+
     <!-- 원형 이미지 -->
     <style name="circleImageView" >
         <item name="cornerFamily">rounded</item>
