@@ -78,16 +78,17 @@ class SelectBookActivity : AppCompatActivity() {
         }
     }
 
-
-    private fun handleSearchAction(view: TextView, actionId: Int): Boolean {
-        return if (actionId == EditorInfo.IME_ACTION_SEARCH || actionId == EditorInfo.IME_ACTION_DONE) {
+    private fun handleSearchAction(
+        view: TextView,
+        actionId: Int,
+    ): Boolean =
+        if (actionId == EditorInfo.IME_ACTION_SEARCH || actionId == EditorInfo.IME_ACTION_DONE) {
             val keyword = view.text.toString()
             viewModel.onSearchAction(keyword)
             true
         } else {
             false
         }
-    }
 
     private fun setupUiEvent() {
         viewModel.uiEvent.observe(this) { event ->
