@@ -131,6 +131,23 @@ public class DatabaseInitializer {
     }
 
     @Transactional
+    public void setDiscussionLikeInfo(
+            final Long memberId,
+            final Long discussionId
+    ) {
+        em.createNativeQuery(
+                        """
+                                INSERT INTO DISCUSSION_LIKE (member_id, discussion_id, created_at, modified_at)
+                                VALUES 
+                                (:memberId, :discussionId, CURRENT_TIME, CURRENT_TIME)
+                                """
+                )
+                .setParameter("memberId", memberId)
+                .setParameter("discussionId", discussionId)
+                .executeUpdate();
+    }
+
+    @Transactional
     public void setDefaultCommentInfo() {
         em.createNativeQuery(
                 """
@@ -221,5 +238,4 @@ public class DatabaseInitializer {
                 .setParameter("replyId", replyId)
                 .executeUpdate();
     }
-
 }
