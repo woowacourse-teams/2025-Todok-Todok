@@ -23,12 +23,12 @@ import todoktodok.backend.global.resolver.TempMember;
 import todoktodok.backend.member.application.dto.request.LoginRequest;
 import todoktodok.backend.member.application.dto.request.ProfileUpdateRequest;
 import todoktodok.backend.member.application.dto.request.SignupRequest;
-import todoktodok.backend.member.application.dto.response.MyDiscussionResponse;
+import todoktodok.backend.member.application.dto.response.MemberDiscussionResponse;
 import todoktodok.backend.member.application.dto.response.ProfileResponse;
 import todoktodok.backend.member.application.dto.response.ProfileUpdateResponse;
 import todoktodok.backend.member.application.service.command.MemberCommandService;
 import todoktodok.backend.member.application.service.query.MemberQueryService;
-import todoktodok.backend.member.domain.MyDiscussionFilterType;
+import todoktodok.backend.member.domain.MemberDiscussionFilterType;
 
 @RestController
 @AllArgsConstructor
@@ -105,15 +105,15 @@ public class MemberController {
                 .body(memberQueryService.getActiveBooks(memberId));
     }
 
-    @Operation(summary = "내 토론방 필터 조회 API")
+    @Operation(summary = "회원별 토론방 필터 조회 API")
     @Auth(value = Role.USER)
     @GetMapping("/{memberId}/discussions")
-    public ResponseEntity<List<MyDiscussionResponse>> getMyDiscussionsByType(
+    public ResponseEntity<List<MemberDiscussionResponse>> getMemberDiscussionsByType(
             @PathVariable final Long memberId,
-            @RequestParam final MyDiscussionFilterType type
+            @RequestParam final MemberDiscussionFilterType type
     ) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(memberQueryService.getMyDiscussionsByType(memberId, type));
+                .body(memberQueryService.getMemberDiscussionsByType(memberId, type));
     }
 
     @Operation(summary = "프로필 정보 수정 API")

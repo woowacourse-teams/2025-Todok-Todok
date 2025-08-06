@@ -9,10 +9,10 @@ import todoktodok.backend.book.application.dto.response.BookResponse;
 import todoktodok.backend.book.domain.Book;
 import todoktodok.backend.book.domain.repository.BookRepository;
 import todoktodok.backend.discussion.domain.repository.DiscussionRepository;
-import todoktodok.backend.member.application.dto.response.MyDiscussionResponse;
+import todoktodok.backend.member.application.dto.response.MemberDiscussionResponse;
 import todoktodok.backend.member.application.dto.response.ProfileResponse;
 import todoktodok.backend.member.domain.Member;
-import todoktodok.backend.member.domain.MyDiscussionFilterType;
+import todoktodok.backend.member.domain.MemberDiscussionFilterType;
 import todoktodok.backend.member.domain.repository.MemberRepository;
 
 @Service
@@ -41,9 +41,9 @@ public class MemberQueryService {
                 .toList();
     }
 
-    public List<MyDiscussionResponse> getMyDiscussionsByType(
+    public List<MemberDiscussionResponse> getMemberDiscussionsByType(
             final Long memberId,
-            final MyDiscussionFilterType type
+            final MemberDiscussionFilterType type
     ) {
         final Member member = findMember(memberId);
 
@@ -59,15 +59,15 @@ public class MemberQueryService {
                 .orElseThrow(() -> new NoSuchElementException("해당 회원을 찾을 수 없습니다"));
     }
 
-    private List<MyDiscussionResponse> getCreatedDiscussions(final Member member) {
+    private List<MemberDiscussionResponse> getCreatedDiscussions(final Member member) {
         return discussionRepository.findDiscussionsByMember(member).stream()
-                .map(MyDiscussionResponse::new)
+                .map(MemberDiscussionResponse::new)
                 .toList();
     }
 
-    private List<MyDiscussionResponse> getParticipatedDiscussions(final Member member) {
+    private List<MemberDiscussionResponse> getParticipatedDiscussions(final Member member) {
         return discussionRepository.findParticipatedDiscussionsByMember(member.getId()).stream()
-                .map(MyDiscussionResponse::new)
+                .map(MemberDiscussionResponse::new)
                 .toList();
     }
 }

@@ -216,8 +216,8 @@ class MemberControllerTest {
     }
 
     @Test
-    @DisplayName("내가 생성한 토론방을 조회한다")
-    void getMyDiscussionsByTypeTest_created() {
+    @DisplayName("회원이 생성한 토론방을 조회한다")
+    void getMemberDiscussionsByTypeTest_created() {
         // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
@@ -236,8 +236,8 @@ class MemberControllerTest {
     }
 
     @Test
-    @DisplayName("내가 참여한 토론방을 조회한다")
-    void getMyDiscussionsByTypeTest_participated() {
+    @DisplayName("회원이 참여한 토론방을 조회한다")
+    void getMemberDiscussionsByTypeTest_participated() {
         // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setUserInfo("user2@gmail.com", "user2", "https://user2.png", "user2");
@@ -271,8 +271,8 @@ class MemberControllerTest {
     }
 
     @Test
-    @DisplayName("내 토론방을 필터링할 때 type을 명시하지 않으면 예외가 발생한다")
-    void getMyDiscussionsByTypeTest_noType_fail() {
+    @DisplayName("회원의 토론방을 필터링할 때 type을 명시하지 않으면 예외가 발생한다")
+    void getMemberDiscussionsByTypeTest_noType_fail() {
         // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
@@ -291,8 +291,8 @@ class MemberControllerTest {
     }
 
     @Test
-    @DisplayName("내 토론방을 필터링할 때 type에 정해지지 않는 값을 추가하면 예외가 발생한다")
-    void getMyDiscussionsByTypeTest_invalidType_fail() {
+    @DisplayName("회원의 토론방을 필터링할 때 type에 정해지지 않는 값을 추가하면 예외가 발생한다")
+    void getMemberDiscussionsByTypeTest_invalidType_fail() {
         // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();

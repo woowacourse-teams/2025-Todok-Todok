@@ -18,8 +18,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.DatabaseInitializer;
 import todoktodok.backend.InitializerTimer;
-import todoktodok.backend.member.application.dto.response.MyDiscussionResponse;
-import todoktodok.backend.member.domain.MyDiscussionFilterType;
+import todoktodok.backend.member.application.dto.response.MemberDiscussionResponse;
+import todoktodok.backend.member.domain.MemberDiscussionFilterType;
 
 @ActiveProfiles("test")
 @Transactional
@@ -63,16 +63,16 @@ public class MemberQueryServiceTest {
     }
 
     @Test
-    @DisplayName("내가 생성한 토론방을 조회한다")
-    void getMyDiscussionsByTypeTest_created() {
+    @DisplayName("회원이 생성한 토론방을 조회한다")
+    void getMemberDiscussionsByTypeTest_created() {
         // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
         databaseInitializer.setDefaultDiscussionInfo();
 
         // when
-        final List<MyDiscussionResponse> createdDiscussions = memberQueryService.getMyDiscussionsByType(
-                1L, MyDiscussionFilterType.CREATED
+        final List<MemberDiscussionResponse> createdDiscussions = memberQueryService.getMemberDiscussionsByType(
+                1L, MemberDiscussionFilterType.CREATED
         );
 
         // then
@@ -80,8 +80,8 @@ public class MemberQueryServiceTest {
     }
 
     @Test
-    @DisplayName("내가 참여한 토론방을 조회한다")
-    void getMyDiscussionsByTypeTest_participated() {
+    @DisplayName("회원이 참여한 토론방을 조회한다")
+    void getMemberDiscussionsByTypeTest_participated() {
         // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setUserInfo("user2@gmail.com", "user2", "https://user2.png", "user2");
@@ -103,8 +103,8 @@ public class MemberQueryServiceTest {
         databaseInitializer.setReplyInfo("저도 자바좋아해요", 1L, 2L);
 
         // when
-        final List<MyDiscussionResponse> participatedDiscussions = memberQueryService.getMyDiscussionsByType(
-                1L, MyDiscussionFilterType.PARTICIPATED
+        final List<MemberDiscussionResponse> participatedDiscussions = memberQueryService.getMemberDiscussionsByType(
+                1L, MemberDiscussionFilterType.PARTICIPATED
         );
 
         // then
@@ -113,13 +113,13 @@ public class MemberQueryServiceTest {
 
     @ParameterizedTest
     @CsvSource(value = {"CREATED", "PARTICIPATED"})
-    @DisplayName("존재하지 않는 회원의 내 토론방을 조회하면 예외가 발생한다")
-    void getMyDiscussionsByTypeTest_memberNotFound_fail(final MyDiscussionFilterType type) {
+    @DisplayName("존재하지 않는 회원의 토론방을 조회하면 예외가 발생한다")
+    void getMemberDiscussionsByTypeTest_memberNotFound_fail(final MemberDiscussionFilterType type) {
         // given
         final Long notExistsMemberId = 1L;
 
         // when - then
-        assertThatThrownBy(() -> memberQueryService.getMyDiscussionsByType(notExistsMemberId, type))
+        assertThatThrownBy(() -> memberQueryService.getMemberDiscussionsByType(notExistsMemberId, type))
                 .isInstanceOf(NoSuchElementException.class)
                 .hasMessage("해당 회원을 찾을 수 없습니다");
     }

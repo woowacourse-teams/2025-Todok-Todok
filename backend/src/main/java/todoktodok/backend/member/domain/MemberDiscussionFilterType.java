@@ -1,6 +1,6 @@
 package todoktodok.backend.member.domain;
 
-public enum MyDiscussionFilterType {
+public enum MemberDiscussionFilterType {
 
     CREATED,
     PARTICIPATED
