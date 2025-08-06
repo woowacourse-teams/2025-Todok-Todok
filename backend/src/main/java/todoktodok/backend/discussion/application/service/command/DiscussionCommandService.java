@@ -103,10 +103,10 @@ public class DiscussionCommandService {
         final Member member = findMember(memberId);
         final Discussion discussion = findDiscussion(discussionId);
 
-        final Optional<DiscussionLike> existingDiscussionLike = discussionLikeRepository.findByMemberAndDiscussion(
+        final Optional<DiscussionLike> discussionLikeOrEmpty = discussionLikeRepository.findByMemberAndDiscussion(
                 member, discussion);
-        if (existingDiscussionLike.isPresent()) {
-            discussionLikeRepository.delete(existingDiscussionLike.get());
+        if (discussionLikeOrEmpty.isPresent()) {
+            discussionLikeRepository.delete(discussionLikeOrEmpty.get());
             return false;
         }
 
