@@ -86,7 +86,7 @@ class SupportMemberDialog : DialogFragment(R.layout.dialog_support) {
             }
 
         private const val ARG_TYPE = "type"
-        private const val INVALID_SUPPORT_TYPE = -1
+        private const val INVALID_SUPPORT_TYPE = "존재하지 않는 신고 타입입니다."
 
         const val REQUEST_KEY_SUPPORT = "request_support"
         const val RESULT_KEY_SUPPORT = "result_support"
