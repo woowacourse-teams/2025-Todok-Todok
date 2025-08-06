@@ -274,20 +274,28 @@ class DiscussionQueryServiceTest {
         @DisplayName("전체 토론방을 조회할 시 토론방의 좋아요수와 댓글수를 반환한다")
         void getAllDiscussions_LikeCountAndCommentCountTest() {
             // given
+            // 사용자 3명
+            databaseInitializer.setUserInfo(
+                    "user3@gmail.com", "user3", "", ""
+            );
+
+            // 토론방 1: 좋아요 1개, 댓글 1개
             databaseInitializer.setDiscussionLikeInfo(1L, 1L);
-            databaseInitializer.setCommentInfo("클린코드 만만세", 1L, 1L);
+            databaseInitializer.setCommentInfo("첫 번째 댓글", 1L, 1L);
 
+            // 토론방 2: 좋아요 2개 (서로 다른 사용자), 댓글 2개
             databaseInitializer.setDiscussionLikeInfo(1L, 2L);
-            databaseInitializer.setCommentInfo("클린코드 만만세", 1L, 2L);
-            databaseInitializer.setDiscussionLikeInfo(1L, 2L);
-            databaseInitializer.setCommentInfo("클린코드 만만세", 1L, 2L);
+            databaseInitializer.setDiscussionLikeInfo(2L, 2L); // 다른 사용자
+            databaseInitializer.setCommentInfo("두 번째 토론 첫 댓글", 1L, 2L);
+            databaseInitializer.setCommentInfo("두 번째 토론 둘째 댓글", 2L, 2L);
 
+            // 토론방 3: 좋아요 3개, 댓글 3개 (모두 서로 다른 사용자/내용)
             databaseInitializer.setDiscussionLikeInfo(1L, 3L);
-            databaseInitializer.setCommentInfo("클린코드 만만세", 1L, 3L);
-            databaseInitializer.setDiscussionLikeInfo(1L, 3L);
-            databaseInitializer.setCommentInfo("클린코드 만만세", 1L, 3L);
-            databaseInitializer.setDiscussionLikeInfo(1L, 3L);
-            databaseInitializer.setCommentInfo("클린코드 만만세", 1L, 3L);
+            databaseInitializer.setDiscussionLikeInfo(2L, 3L);
+            databaseInitializer.setDiscussionLikeInfo(3L, 3L); // 세 번째 사용자 필요
+            databaseInitializer.setCommentInfo("세 번째 토론 첫 댓글", 1L, 3L);
+            databaseInitializer.setCommentInfo("세 번째 토론 둘째 댓글", 2L, 3L);
+            databaseInitializer.setCommentInfo("세 번째 토론 셋째 댓글", 3L, 3L);
 
             // when
             final List<DiscussionResponse> discussions = discussionQueryService.getDiscussionsByKeywordAndType(
