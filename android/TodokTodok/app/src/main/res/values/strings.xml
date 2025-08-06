@@ -17,7 +17,7 @@
     <string name="all_delete_action">삭제하기</string>
     <string name="all_update_action">수정하기</string>
     <string name="all_report_action">신고하기</string>
-    <string name="all_cancel">신고하기</string>
+    <string name="all_cancel">취소하기</string>
 
     <!--  토론 목록 페이지  -->
     <string name="content_description_add_discussion">토론방 추가 화면으로 이동합니다</string>
