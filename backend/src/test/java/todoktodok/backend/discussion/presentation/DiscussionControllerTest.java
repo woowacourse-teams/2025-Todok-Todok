@@ -129,6 +129,27 @@ class DiscussionControllerTest {
     }
 
     @Test
+    @DisplayName("다른 사용자의 토론방 수정 시 에러가 발생한다")
+    void updateDiscussion_unauthorized() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setUserInfo("user2@gmail.com", "user2", "https://image.png", "message");
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+
+        final String token = MemberFixture.login("user2@gmail.com");
+
+        // when - then
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .header("Authorization", token)
+                .body(new DiscussionUpdateRequest("title", "content"))
+                .when().patch("/api/v1/discussions/1")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
     @DisplayName("토론방을 삭제한다")
     void deleteDiscussionTest() {
         // given
