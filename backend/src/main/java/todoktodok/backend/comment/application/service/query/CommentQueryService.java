@@ -26,6 +26,23 @@ public class CommentQueryService {
     private final CommentLikeRepository commentLikeRepository;
     private final ReplyRepository replyRepository;
 
+    public CommentResponse getComment(
+            final Long memberId,
+            final Long discussionId,
+            final Long commentId
+    ) {
+        final Discussion discussion = getDiscussion(discussionId);
+        final Comment comment = findComment(commentId);
+
+        validateIsExistMember(memberId);
+        comment.validateMatchWithDiscussion(discussion);
+
+        final int likeCount = commentLikeRepository.countCommentLikesByComment(comment);
+        final int replyCount = replyRepository.countRepliesByComment(comment);
+
+        return new CommentResponse(comment, likeCount, replyCount);
+    }
+
     public List<CommentResponse> getComments(
             final Long memberId,
             final Long discussionId
@@ -44,8 +61,8 @@ public class CommentQueryService {
         return comments.stream()
                 .map(comment -> new CommentResponse(
                         comment,
-                        findLikeCount(comment, likeCountsById),
-                        findReplyCount(comment, replyCountsById)
+                        getLikeCount(comment, likeCountsById),
+                        getReplyCount(comment, replyCountsById)
                 ))
                 .toList();
     }
@@ -61,25 +78,30 @@ public class CommentQueryService {
                 .orElseThrow(() -> new NoSuchElementException("해당 토론방을 찾을 수 없습니다"));
     }
 
-    private static int findReplyCount(
+    private Comment findComment(final Long commentId) {
+        return commentRepository.findById(commentId)
+                .orElseThrow(() -> new NoSuchElementException("해당 댓글을 찾을 수 없습니다"));
+    }
+
+    private static int getReplyCount(
             final Comment comment,
             final List<CommentReplyCountDto> replyCountsById
     ) {
         return replyCountsById.stream()
-                .filter(count -> comment.isSameId(count.commentId()))
+                .filter(count -> count.commentId().equals(comment.getId()))
                 .findFirst()
-                .map(CommentReplyCountDto::replyCount)
-                .orElseThrow(() -> new IllegalStateException("댓글의 대댓글 수를 찾을 수 없습니다"));
+                .orElseThrow(IllegalStateException::new)
+                .replyCount();
     }
 
-    private static int findLikeCount(
+    private static int getLikeCount(
             final Comment comment,
             final List<CommentLikeCountDto> likeCountsById
     ) {
         return likeCountsById.stream()
-                .filter(count -> comment.isSameId(count.commentId()))
+                .filter(count -> count.commentId().equals(comment.getId()))
                 .findFirst()
-                .map(CommentLikeCountDto::likeCount)
-                .orElseThrow(() -> new IllegalStateException("댓글의 좋아요 수를 찾을 수 없습니다"));
+                .orElseThrow(IllegalStateException::new)
+                .likeCount();
     }
 }

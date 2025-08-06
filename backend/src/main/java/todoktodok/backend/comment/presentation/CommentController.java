@@ -89,6 +89,18 @@ public class CommentController {
                 .body(commentQueryService.getComments(memberId, discussionId));
     }
 
+    @Operation(summary = "댓글 단일 조회 API")
+    @Auth(value = Role.USER)
+    @GetMapping("/{commentId}")
+    public ResponseEntity<CommentResponse> getComment(
+            @Parameter(hidden = true) @LoginMember final Long memberId,
+            @PathVariable final Long discussionId,
+            @PathVariable final Long commentId
+    ) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(commentQueryService.getComment(memberId, discussionId, commentId));
+    }
+
     @Operation(summary = "댓글 수정 API")
     @Auth(value = Role.USER)
     @PatchMapping("/{commentId}")

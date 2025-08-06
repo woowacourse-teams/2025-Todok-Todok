@@ -23,4 +23,6 @@ public interface CommentLikeRepository extends JpaRepository<CommentLike, Long> 
         GROUP BY c.id
     """)
     List<CommentLikeCountDto> findLikeCountsByCommentIds(@Param("commentIds") final List<Long> commentIds);
+
+    int countCommentLikesByComment(final Comment comment);
 }
