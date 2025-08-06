@@ -22,11 +22,11 @@ sealed class CommentDetailItems(
         ;
 
         companion object {
-            fun ViewType(index: Int): ViewType =
-                ViewType.entries.find { it.sequence == index }
-                    ?: throw IllegalArgumentException(INVALID_INDEX_VIEW_TYPE.format(index))
+            fun ViewType(sequence: Int): ViewType =
+                ViewType.entries.find { it.sequence == sequence }
+                    ?: throw IllegalArgumentException(INVALID_INDEX_VIEW_TYPE.format(sequence))
 
-            private const val INVALID_INDEX_VIEW_TYPE = "뷰타입의 인덱스가 잘못 되었습니다. [%d]"
+            private const val INVALID_INDEX_VIEW_TYPE = "뷰타입의 순서가 잘못 되었습니다. [%d]"
         }
     }
 }
