@@ -31,8 +31,6 @@ class DiscussionCommandServiceTest {
     @Autowired
     private DiscussionCommandService discussionCommandService;
 
-
-
     @BeforeEach
     void setUp() {
         databaseInitializer.clear();
