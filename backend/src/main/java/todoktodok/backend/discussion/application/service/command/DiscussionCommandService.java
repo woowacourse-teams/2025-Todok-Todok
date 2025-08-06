@@ -73,7 +73,10 @@ public class DiscussionCommandService {
 
         validateDiscussionMember(discussion, member);
 
-        discussion.update(discussionUpdateRequest.discussionTitle(), discussionUpdateRequest.discussionOpinion());
+        final String discussionTitle = discussionUpdateRequest.discussionTitle();
+        final String discussionOpinion = discussionUpdateRequest.discussionOpinion();
+
+        discussion.update(discussionTitle, discussionOpinion);
     }
 
     public void deleteDiscussion(

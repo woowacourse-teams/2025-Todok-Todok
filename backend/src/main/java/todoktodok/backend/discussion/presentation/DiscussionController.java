@@ -111,7 +111,8 @@ public class DiscussionController {
     ) {
         discussionCommandService.deleteDiscussion(memberId, discussionId);
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .build();
     }
 
     private URI createUri(final Long id) {
