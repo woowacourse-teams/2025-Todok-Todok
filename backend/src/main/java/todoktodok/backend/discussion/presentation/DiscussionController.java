@@ -125,9 +125,11 @@ public class DiscussionController {
         final boolean isLiked = discussionCommandService.toggleLike(memberId, discussionId);
 
         if (isLiked) {
-            return ResponseEntity.status(HttpStatus.CREATED).build();
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .build();
         }
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .build();
     }
 
     private URI createUri(final Long id) {

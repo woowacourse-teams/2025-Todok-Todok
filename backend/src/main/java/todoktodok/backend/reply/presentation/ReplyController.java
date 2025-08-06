@@ -103,9 +103,11 @@ public class ReplyController {
         final boolean isLiked = replyCommandService.toggleLike(memberId, discussionId, commentId, replyId);
 
         if (isLiked) {
-            return ResponseEntity.status(HttpStatus.CREATED).build();
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .build();
         }
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .build();
     }
 
     private URI createUri(final Long id) {
