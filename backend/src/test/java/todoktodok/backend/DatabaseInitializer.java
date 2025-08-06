@@ -2,7 +2,9 @@ package todoktodok.backend;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+
 import java.util.List;
+
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -181,9 +183,10 @@ public class DatabaseInitializer {
     public void setDefaultReplyInfo() {
         em.createNativeQuery(
                 """
-                INSERT INTO REPLY (content, member_id, comment_id, created_at, modified_at)
-                VALUES ('저도 같은 의견입니다!', 1L, 1L, CURRENT_TIME, CURRENT_TIME)
-                """
+                        INSERT INTO REPLY (content, member_id, comment_id, created_at, modified_at)
+                        VALUES 
+                        ('저도 같은 의견입니다!', 1L, 1L, CURRENT_TIME, CURRENT_TIME)
+                        """
         ).executeUpdate();
     }
 
@@ -195,9 +198,10 @@ public class DatabaseInitializer {
     ) {
         em.createNativeQuery(
                         """
-                        INSERT INTO REPLY (content, member_id, comment_id, created_at, modified_at)
-                        VALUES (:content, :memberId, :commentId, CURRENT_TIME, CURRENT_TIME)
-                        """
+                                INSERT INTO REPLY (content, member_id, comment_id, created_at, modified_at)
+                                VALUES 
+                                (:content, :memberId, :commentId, CURRENT_TIME, CURRENT_TIME)
+                                """
                 )
                 .setParameter("content", content)
                 .setParameter("memberId", memberId)
@@ -221,5 +225,4 @@ public class DatabaseInitializer {
                 .setParameter("replyId", replyId)
                 .executeUpdate();
     }
-
 }

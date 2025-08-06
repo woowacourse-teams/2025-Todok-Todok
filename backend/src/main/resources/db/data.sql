@@ -851,3 +851,8 @@ VALUES
 ('저는 응집도를 객체 내부에 얼마나 관련 있는 책임이 모여있는가, 결합도를 객체끼리 얼마나 최소한으로 의존하고 있는가 라고 이해했어요
 응집도는 객체 하나만의 관점으로 바라보고, 결합도는 협력을 하는 여러 객체의 관점에서 바라보는 것으로요!',
  4, 8, CURRENT_TIME, CURRENT_TIME);
+
+ INSERT INTO REPLY (content, member_id, comment_id, created_at, modified_at)
+ VALUES
+ ('저도 동의합니다!!',
+  4, 19, CURRENT_TIME, CURRENT_TIME);

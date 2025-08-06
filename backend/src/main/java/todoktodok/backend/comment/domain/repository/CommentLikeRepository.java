@@ -15,8 +15,6 @@ public interface CommentLikeRepository extends JpaRepository<CommentLike, Long> 
 
     Optional<CommentLike> findByMemberAndComment(final Member member, final Comment comment);
 
-    int countCommentLikesByComment(final Comment comment);
-
     @Query("""
         SELECT new todoktodok.backend.comment.application.service.query.CommentLikeCountDto(c.id, COUNT(cl))
         FROM Comment c
