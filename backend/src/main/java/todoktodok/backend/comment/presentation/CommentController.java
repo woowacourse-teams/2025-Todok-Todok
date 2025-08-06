@@ -59,9 +59,11 @@ public class CommentController {
         final boolean isLiked = commentCommandService.toggleLike(memberId, discussionId, commentId);
 
         if (isLiked) {
-            return ResponseEntity.status(HttpStatus.CREATED).build();
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .build();
         }
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .build();
     }
 
     @Operation(summary = "댓글 신고 API")

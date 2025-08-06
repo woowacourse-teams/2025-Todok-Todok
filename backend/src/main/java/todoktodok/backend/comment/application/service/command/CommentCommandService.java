@@ -57,9 +57,9 @@ public class CommentCommandService {
 
         comment.validateMatchWithDiscussion(discussion);
 
-        final Optional<CommentLike> existingCommentLike = commentLikeRepository.findByMemberAndComment(member, comment);
-        if (existingCommentLike.isPresent()) {
-            commentLikeRepository.delete(existingCommentLike.get());
+        final Optional<CommentLike> commentLikeOrEmpty = commentLikeRepository.findByMemberAndComment(member, comment);
+        if (commentLikeOrEmpty.isPresent()) {
+            commentLikeRepository.delete(commentLikeOrEmpty.get());
             return false;
         }
 
