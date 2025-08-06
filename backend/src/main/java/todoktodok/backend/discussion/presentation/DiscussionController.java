@@ -8,6 +8,7 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -99,6 +100,18 @@ public class DiscussionController {
         return ResponseEntity.status(HttpStatus.OK)
                 .location(ServletUriComponentsBuilder.fromCurrentRequest().build().toUri())
                 .build();
+    }
+
+    @Operation(summary = "토론방 삭제 API")
+    @Auth(value = Role.USER)
+    @DeleteMapping("/{discussionId}")
+    public ResponseEntity<Void> deleteDiscussion(
+            @Parameter(hidden = true) @LoginMember final Long memberId,
+            @PathVariable final Long discussionId
+    ) {
+        discussionCommandService.deleteDiscussion(memberId, discussionId);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     private URI createUri(final Long id) {

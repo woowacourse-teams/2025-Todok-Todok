@@ -6,8 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.book.domain.Book;
 import todoktodok.backend.book.domain.repository.BookRepository;
-import todoktodok.backend.comment.application.dto.request.CommentRequest;
-import todoktodok.backend.comment.domain.Comment;
+import todoktodok.backend.comment.domain.repository.CommentRepository;
 import todoktodok.backend.discussion.application.dto.request.DiscussionRequest;
 import todoktodok.backend.discussion.application.dto.request.DiscussionUpdateRequest;
 import todoktodok.backend.discussion.domain.Discussion;
@@ -23,9 +22,10 @@ import todoktodok.backend.member.domain.repository.MemberRepository;
 public class DiscussionCommandService {
 
     private final DiscussionRepository discussionRepository;
+    private final DiscussionReportRepository discussionReportRepository;
     private final MemberRepository memberRepository;
     private final BookRepository bookRepository;
-    private final DiscussionReportRepository discussionReportRepository;
+    private final CommentRepository commentRepository;
 
     public Long createDiscussion(
             final Long memberId,
@@ -74,6 +74,25 @@ public class DiscussionCommandService {
         validateDiscussionMember(discussion, member);
 
         discussion.update(discussionUpdateRequest.discussionTitle(), discussionUpdateRequest.discussionOpinion());
+    }
+
+    public void deleteDiscussion(
+            final Long memberId,
+            final Long discussionId
+    ) {
+        final Member member = findMember(memberId);
+        final Discussion discussion = findDiscussion(discussionId);
+
+        validateDiscussionMember(discussion, member);
+        validateHasComment(discussion);
+
+        discussionRepository.delete(discussion);
+    }
+
+    private void validateHasComment(final Discussion discussion) {
+        if(commentRepository.existsCommentsByDiscussion(discussion)){
+            throw new IllegalArgumentException("댓글이 존재하는 토론방은 삭제할 수 없습니다");
+        }
     }
 
     private Member findMember(final Long memberId) {
