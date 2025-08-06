@@ -100,6 +100,36 @@ class DiscussionQueryServiceTest {
                 .hasMessage("해당 토론방을 찾을 수 없습니다");
     }
 
+    @Test
+    @DisplayName("특정 토론방의 좋아요 수와 댓글 수를 조회할 수 있다")
+    void getDiscussionLikeCountAndCommentCount() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+
+        final Long memberId = 1L;
+        final Long bookId = 1L;
+
+        databaseInitializer.setDiscussionInfo(
+                "클린코드에 대해 논의해볼까요",
+                "클린코드만세",
+                memberId,
+                bookId
+        );
+
+        databaseInitializer.setDiscussionLikeInfo(1L, 1L);
+        databaseInitializer.setCommentInfo("클린코드 만만세", 1L, 1L);
+
+        // when
+        final DiscussionResponse discussion = discussionQueryService.getDiscussion(1L, 1L);
+
+        // then
+        assertAll(
+                () -> assertThat(discussion.commentCount()).isEqualTo(1),
+                () -> assertThat(discussion.likeCount()).isEqualTo(1)
+        );
+    }
+
     @Nested
     @DisplayName("토론방 필터링 테스트")
     class DiscussionFilterTest {
@@ -237,6 +267,41 @@ class DiscussionQueryServiceTest {
                     () -> assertThat(discussions.get(1).discussionId()).isEqualTo(3L),
                     () -> assertThat(discussions.get(0).discussionTitle()).contains(keyword),
                     () -> assertThat(discussions.get(1).discussionTitle()).contains(keyword)
+            );
+        }
+
+        @Test
+        @DisplayName("전체 토론방을 조회할 시 토론방의 좋아요수와 댓글수를 반환한다")
+        void getAllDiscussions_LikeCountAndCommentCountTest() {
+            // given
+            databaseInitializer.setDiscussionLikeInfo(1L, 1L);
+            databaseInitializer.setCommentInfo("클린코드 만만세", 1L, 1L);
+
+            databaseInitializer.setDiscussionLikeInfo(1L, 2L);
+            databaseInitializer.setCommentInfo("클린코드 만만세", 1L, 2L);
+            databaseInitializer.setDiscussionLikeInfo(1L, 2L);
+            databaseInitializer.setCommentInfo("클린코드 만만세", 1L, 2L);
+
+            databaseInitializer.setDiscussionLikeInfo(1L, 3L);
+            databaseInitializer.setCommentInfo("클린코드 만만세", 1L, 3L);
+            databaseInitializer.setDiscussionLikeInfo(1L, 3L);
+            databaseInitializer.setCommentInfo("클린코드 만만세", 1L, 3L);
+            databaseInitializer.setDiscussionLikeInfo(1L, 3L);
+            databaseInitializer.setCommentInfo("클린코드 만만세", 1L, 3L);
+
+            // when
+            final List<DiscussionResponse> discussions = discussionQueryService.getDiscussionsByKeywordAndType(
+                    1L, null, DiscussionFilterType.ALL
+            );
+
+            // then
+            assertAll(
+                    () -> assertThat(discussions.get(0).likeCount()).isEqualTo(1L),
+                    () -> assertThat(discussions.get(0).commentCount()).isEqualTo(1L),
+                    () -> assertThat(discussions.get(1).likeCount()).isEqualTo(2L),
+                    () -> assertThat(discussions.get(1).commentCount()).isEqualTo(2L),
+                    () -> assertThat(discussions.get(2).likeCount()).isEqualTo(3L),
+                    () -> assertThat(discussions.get(2).commentCount()).isEqualTo(3L)
             );
         }
     }
