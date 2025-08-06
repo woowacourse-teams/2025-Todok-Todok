@@ -1,6 +1,5 @@
 package com.team.todoktodok.presentation.view.discussiondetail.commentdetail.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -14,7 +13,6 @@ class ReplyItemViewHolder private constructor(
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(reply: Reply) {
         with(binding) {
-            Log.d("12345", reply.toString())
             tvUserNickname.text = reply.user.nickname.value
             tvReplyCreateAt.text =
                 reply.createdAt.formatWithResource(root.context, R.string.date_format_pattern)
