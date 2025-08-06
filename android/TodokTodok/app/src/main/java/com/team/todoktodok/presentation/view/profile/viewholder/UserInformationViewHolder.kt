@@ -18,7 +18,6 @@ class UserInformationViewHolder private constructor(
     private val binding: ItemUserInformationBinding,
     private val handler: Handler,
 ) : RecyclerView.ViewHolder(binding.root) {
-    private val context = itemView.context
 
     init {
         with(binding) {
@@ -27,7 +26,7 @@ class UserInformationViewHolder private constructor(
             }
 
             ivReport.setOnClickListener {
-                showCustomPopupMenu(context, viewAnchor, binding.root)
+                showCustomPopupMenu(itemView.context, viewAnchor, binding.root)
             }
         }
     }
@@ -50,10 +49,12 @@ class UserInformationViewHolder private constructor(
 
         binding.tvReport.setOnClickListener {
             handler.onClickSupport(Support.REPORT)
+            popupWindow.dismiss()
         }
 
         binding.tvBlock.setOnClickListener {
             handler.onClickSupport(Support.BLOCK)
+            popupWindow.dismiss()
         }
 
         popupWindow.elevation = 8f
