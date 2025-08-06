@@ -214,4 +214,99 @@ class MemberControllerTest {
                 .statusCode(HttpStatus.OK.value())
                 .body("size()", is(3));
     }
+
+    @Test
+    @DisplayName("내가 생성한 토론방을 조회한다")
+    void getMyDiscussionsByTypeTest_created() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+
+        final String token = MemberFixture.login("user@gmail.com");
+
+        // when - then
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .header("Authorization", token)
+                .when().get("/api/v1/members/1/discussions?type=CREATED")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("size()", is(1));
+    }
+
+    @Test
+    @DisplayName("내가 참여한 토론방을 조회한다")
+    void getMyDiscussionsByTypeTest_participated() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setUserInfo("user2@gmail.com", "user2", "https://user2.png", "user2");
+
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setBookInfo("토비의 스프링", "스프링 설명", "토비", "출판사", "1234567890123", "spring.png");
+        databaseInitializer.setBookInfo("자바의정석", "자바 설명", "남궁성", "출판사", "1234567890123", "java.png");
+
+        // 생성한 토론방
+        databaseInitializer.setDefaultDiscussionInfo();
+
+        // 댓글을 작성한 토론방
+        databaseInitializer.setDiscussionInfo("스프링 토론ㄱ", "스프링 짱", 2L, 2L);
+        databaseInitializer.setCommentInfo("맞지맞지 스프링 짱", 1L, 2L);
+
+        // 대댓글 작성한 토론방
+        databaseInitializer.setDiscussionInfo("자바 토론ㄱ", "자바 짱", 2L, 3L);
+        databaseInitializer.setCommentInfo("user2가 user2에 단 댓글", 2L, 3L);
+        databaseInitializer.setReplyInfo("저도 자바좋아해요", 1L, 2L);
+
+        final String token = MemberFixture.login("user@gmail.com");
+
+        // when - then
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .header("Authorization", token)
+                .when().get("/api/v1/members/1/discussions?type=PARTICIPATED")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("size()", is(3));
+    }
+
+    @Test
+    @DisplayName("내 토론방을 필터링할 때 type을 명시하지 않으면 예외가 발생한다")
+    void getMyDiscussionsByTypeTest_noType_fail() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+
+        final String token = MemberFixture.login("user@gmail.com");
+        final String uri = "/api/v1/members/1/discussions";
+
+        // when - then
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .header("Authorization", token)
+                .when().get(uri)
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    @DisplayName("내 토론방을 필터링할 때 type에 정해지지 않는 값을 추가하면 예외가 발생한다")
+    void getMyDiscussionsByTypeTest_invalidType_fail() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+
+        final String token = MemberFixture.login("user@gmail.com");
+        final String uri = "/api/v1/members/1/discussions?type=HELLO";
+
+        // when - then
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .header("Authorization", token)
+                .when().get(uri)
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
 }
