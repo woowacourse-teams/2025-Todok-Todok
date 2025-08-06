@@ -92,6 +92,16 @@ public class MemberController {
                 .body(memberQueryService.getProfile(memberId));
     }
 
+    @Operation(summary = "활동 도서 전체 조회 API")
+    @Auth(value = Role.USER)
+    @GetMapping("/{memberId}/books")
+    public ResponseEntity<List<BookResponse>> getActiveBooks(
+            @PathVariable final Long memberId
+    ) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(memberQueryService.getActiveBooks(memberId));
+    }
+
     @Operation(summary = "프로필 정보 수정 API")
     @Auth(value = Role.USER)
     @PutMapping("/profile")
@@ -101,15 +111,5 @@ public class MemberController {
     ) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(memberCommandService.updateProfile(memberId, profileUpdateRequest));
-    }
-
-    @Operation(summary = "활동 도서 전체 조회 API")
-    @Auth(value = Role.USER)
-    @GetMapping("/{memberId}/books")
-    public ResponseEntity<List<BookResponse>> getActiveBooks(
-            @PathVariable final Long memberId
-    ) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(memberQueryService.getActiveBooks(memberId));
     }
 }
