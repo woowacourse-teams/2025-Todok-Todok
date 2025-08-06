@@ -39,13 +39,13 @@ public class MemberQueryService {
         final List<Book> activeBooksFromReply = replyRepository.findBooksByMember(member);
 
         return Stream.of(
-            activeBooksFromDiscussion,
-            activeBooksFromComment,
-            activeBooksFromReply
-        ).flatMap(List::stream)
-        .distinct()
-        .map(BookResponse::new)
-        .toList();
+                        activeBooksFromDiscussion,
+                        activeBooksFromComment,
+                        activeBooksFromReply
+                ).flatMap(List::stream)
+                .distinct()
+                .map(BookResponse::new)
+                .toList();
     }
 
     private Member findMember(final Long memberId) {
