@@ -4,22 +4,20 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import java.net.URI;
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import todoktodok.backend.global.auth.Auth;
 import todoktodok.backend.global.auth.Role;
 import todoktodok.backend.global.resolver.LoginMember;
 import todoktodok.backend.reply.application.dto.request.ReplyRequest;
+import todoktodok.backend.reply.application.dto.response.ReplyResponse;
 import todoktodok.backend.reply.application.service.command.ReplyCommandService;
+import todoktodok.backend.reply.application.service.query.ReplyQueryService;
 
 @RestController
 @AllArgsConstructor
@@ -27,6 +25,7 @@ import todoktodok.backend.reply.application.service.command.ReplyCommandService;
 public class ReplyController {
 
     private final ReplyCommandService replyCommandService;
+    private final ReplyQueryService replyQueryService;
 
     @Operation(summary = "대댓글 생성 API")
     @Auth(value = Role.USER)
@@ -57,6 +56,18 @@ public class ReplyController {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .build();
+    }
+
+    @Operation(summary = "댓글별 대댓글 목록 조회 API")
+    @Auth(value = Role.USER)
+    @GetMapping
+    public ResponseEntity<List<ReplyResponse>> getReplies(
+            @Parameter(hidden = true) @LoginMember final Long memberId,
+            @PathVariable final Long discussionId,
+            @PathVariable final Long commentId
+    ) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(replyQueryService.getReplies(memberId, discussionId, commentId));
     }
 
     @Operation(summary = "대댓글 수정 API")
