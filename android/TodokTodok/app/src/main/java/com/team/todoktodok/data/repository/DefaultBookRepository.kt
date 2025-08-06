@@ -1,8 +1,10 @@
 package com.team.todoktodok.data.repository
 
+import com.team.domain.model.Book
 import com.team.domain.model.Books
 import com.team.domain.repository.BookRepository
 import com.team.todoktodok.data.datasource.book.BookRemoteDataSource
+import com.team.todoktodok.data.network.request.toRequest
 import com.team.todoktodok.data.network.response.discussion.BookResponse
 import com.team.todoktodok.data.network.response.discussion.toDomain
 
@@ -15,5 +17,9 @@ class DefaultBookRepository(
                 .fetchBooks(keyword)
                 .map { bookResponse: BookResponse -> bookResponse.toDomain() }
         return Books(value)
+    }
+
+    override suspend fun saveBook(book: Book): Long {
+        return bookRemoteDataSource.saveBook(book.toRequest())
     }
 }
