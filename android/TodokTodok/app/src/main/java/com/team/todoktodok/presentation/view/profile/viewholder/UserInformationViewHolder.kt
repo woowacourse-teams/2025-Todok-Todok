@@ -18,7 +18,6 @@ class UserInformationViewHolder private constructor(
     private val binding: ItemUserInformationBinding,
     private val handler: Handler,
 ) : RecyclerView.ViewHolder(binding.root) {
-
     init {
         with(binding) {
             ivProfile.setOnClickListener {
