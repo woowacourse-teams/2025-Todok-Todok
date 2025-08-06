@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.ksp)
     id("kotlin-parcelize")
     id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
 }
 
 android {
@@ -58,6 +59,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
             )
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
 
@@ -93,6 +95,7 @@ dependencies {
     implementation(libs.bundles.network)
     implementation(libs.bundles.google)
     implementation(libs.bundles.glide)
+    implementation(libs.bundles.logging)
 
     testImplementation(libs.bundles.test)
     testImplementation(libs.androidx.core.testing)
