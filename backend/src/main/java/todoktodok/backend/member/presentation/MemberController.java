@@ -3,6 +3,7 @@ package todoktodok.backend.member.presentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import todoktodok.backend.book.application.dto.response.BookResponse;
 import todoktodok.backend.global.auth.Auth;
 import todoktodok.backend.global.auth.Role;
 import todoktodok.backend.global.resolver.LoginMember;
@@ -88,6 +90,26 @@ public class MemberController {
     ) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(memberQueryService.getProfile(memberId));
+    }
+
+    @Operation(summary = "활동 도서 전체 조회 API")
+    @Auth(value = Role.USER)
+    @GetMapping("/{memberId}/books")
+    public ResponseEntity<List<BookResponse>> getActiveBooks(
+            @PathVariable final Long memberId
+    ) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(memberQueryService.getActiveBooks(memberId));
+    }
+
+    @Operation(summary = "활동 도서 전체 조회 API2")
+    @Auth(value = Role.USER)
+    @GetMapping("/{memberId}/books2")
+    public ResponseEntity<List<BookResponse>> getActiveBooks2(
+            @PathVariable final Long memberId
+    ) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(memberQueryService.getActiveBooks(memberId));
     }
 
     @Operation(summary = "프로필 정보 수정 API")
