@@ -169,6 +169,26 @@ class DiscussionControllerTest {
     }
 
     @Test
+    @DisplayName("댓글이 있는 토론방 삭제 시 에러가 발생한다")
+    void deleteDiscussion_hasComments() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+        databaseInitializer.setDefaultCommentInfo();
+
+        final String token = MemberFixture.login("user@gmail.com");
+
+        // when - then
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .header("Authorization", token)
+                .when().delete("/api/v1/discussions/1")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
     @DisplayName("토론방을 필터링한다")
     void filterDiscussions() {
         // given
