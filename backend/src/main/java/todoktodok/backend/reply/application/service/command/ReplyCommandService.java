@@ -115,7 +115,7 @@ public class ReplyCommandService {
         replyRepository.delete(reply);
     }
 
-    public boolean like(
+    public boolean toggleLike(
             final Long memberId,
             final Long discussionId,
             final Long commentId,

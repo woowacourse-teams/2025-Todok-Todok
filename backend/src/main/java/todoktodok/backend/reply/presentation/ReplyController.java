@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import todoktodok.backend.comment.application.dto.request.CommentRequest;
 import todoktodok.backend.global.auth.Auth;
 import todoktodok.backend.global.auth.Role;
 import todoktodok.backend.global.resolver.LoginMember;
@@ -95,13 +94,13 @@ public class ReplyController {
     @Operation(summary = "대댓글 좋아요 API")
     @Auth(value = Role.USER)
     @PostMapping("/{replyId}/like")
-    public ResponseEntity<Void> like(
+    public ResponseEntity<Void> toggleLike(
             @Parameter(hidden = true) @LoginMember final Long memberId,
             @PathVariable final Long discussionId,
             @PathVariable final Long commentId,
             @PathVariable final Long replyId
     ) {
-        final boolean isLiked = replyCommandService.like(memberId, discussionId, commentId, replyId);
+        final boolean isLiked = replyCommandService.toggleLike(memberId, discussionId, commentId, replyId);
 
         if (isLiked) {
             return ResponseEntity.status(HttpStatus.CREATED).build();

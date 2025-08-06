@@ -132,7 +132,7 @@ public class ReplyControllerTest {
 
     @Test
     @DisplayName("대댓글 좋아요를 생성한다")
-    void createReplyLikeTest() {
+    void createReplyToggleLikeTest() {
         // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
@@ -153,7 +153,7 @@ public class ReplyControllerTest {
 
     @Test
     @DisplayName("대댓글 좋아요를 삭제한다")
-    void deleteReplyLikeTest() {
+    void deleteReplyToggleLikeTest() {
         // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
