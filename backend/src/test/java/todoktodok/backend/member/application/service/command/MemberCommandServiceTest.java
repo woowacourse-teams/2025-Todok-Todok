@@ -242,4 +242,48 @@ class MemberCommandServiceTest {
         // then
         assertThat(memberCommandService.updateProfile(memberId, profileUpdateRequest)).isEqualTo(expected);
     }
+
+    @Test
+    @DisplayName("존재하지 않는 회원이 차단해제를 하면 예외가 발생한다")
+    void deleteBlockTest_notFoundMember_fail() {
+        // given
+        databaseInitializer.setUserInfo("target@gmail.com", "target", "https://image.png", "targe");
+        final Long notExistsMemberId = 999L;
+        final Long targetId = 1L;
+
+        // when - then
+        assertThatThrownBy(() -> memberCommandService.deleteBlock(notExistsMemberId, targetId))
+                .isInstanceOf(NoSuchElementException.class)
+                .hasMessage("해당 회원을 찾을 수 없습니다");
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 회원을 차단해제하면 예외가 발생한다")
+    void deleteBlockTest_notFoundTarget_fail() {
+        // given
+        databaseInitializer.setUserInfo("user@gmail.com", "user", "https://image.png", "user");
+        final Long memberId = 1L;
+        final Long notExistsTargetId = 999L;
+
+        // when - then
+        assertThatThrownBy(() -> memberCommandService.deleteBlock(memberId, notExistsTargetId))
+                .isInstanceOf(NoSuchElementException.class)
+                .hasMessage("해당 회원을 찾을 수 없습니다");
+    }
+
+    @Test
+    @DisplayName("차단하지 않은 회원을 차단해제하면 예외가 발생한다")
+    void deleteBlockTest_notBlock_fail() {
+        // given
+        databaseInitializer.setUserInfo("user@gmail.com", "user", "https://image.png", "user");
+        databaseInitializer.setUserInfo("target@gmail.com", "target", "https://image.png", "targe");
+
+        final Long memberId = 1L;
+        final Long targetId = 2L;
+
+        // when - then
+        assertThatThrownBy(() -> memberCommandService.deleteBlock(memberId, targetId))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("차단한 회원이 아닙니다");
+    }
 }

@@ -332,4 +332,24 @@ class MemberControllerTest {
                 .statusCode(HttpStatus.OK.value())
                 .body("size()", is(2));
     }
+
+    @Test
+    @DisplayName("차단한 회원을 차단해제한다")
+    void deleteBlockTest() {
+        // given
+        databaseInitializer.setUserInfo("user@gmail.com", "user", "https://image.png", "user");
+        databaseInitializer.setUserInfo("user2@gmail.com", "user2", "https://image2.png", "user2");
+
+        databaseInitializer.setBlockInfo(1L, 2L);
+
+        final String token = MemberFixture.login("user@gmail.com");
+
+        // when - then
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .header("Authorization", token)
+                .when().delete("/api/v1/members/2/block")
+                .then().log().all()
+                .statusCode(HttpStatus.NO_CONTENT.value());
+    }
 }
