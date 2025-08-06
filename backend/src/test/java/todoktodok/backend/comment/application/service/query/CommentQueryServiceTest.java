@@ -38,8 +38,51 @@ public class CommentQueryServiceTest {
     }
 
     @Test
+    @DisplayName("댓글 단일 조회한다")
+    void getCommentTest() {
+        // given
+        final String content = "댓글 1입니다";
+
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+        databaseInitializer.setCommentInfo(content, 1L, 1L);
+
+        final Long memberId = 1L;
+        final Long discussionId = 1L;
+        final Long commentId = 1L;
+
+        // when
+        final CommentResponse comment = commentQueryService.getComment(memberId, discussionId, commentId);
+
+        // then
+        assertThat(comment.content()).isEqualTo(content);
+    }
+
+    @Test
+    @DisplayName("토론방별 댓글 목록 조회한다")
+    void getCommentsTest() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+
+        databaseInitializer.setDefaultCommentInfo();
+        databaseInitializer.setCommentInfo("댓글 2입니다", 1L, 1L);
+
+        final Long memberId = 1L;
+        final Long discussionId = 1L;
+
+        // when
+        final List<CommentResponse> comments = commentQueryService.getComments(memberId, discussionId);
+
+        // then
+        assertThat(comments).hasSize(2);
+    }
+
+    @Test
     @DisplayName("토론방별 댓글 목록 조회 시 댓글의 좋아요수와 답글수를 반환한다")
-    void createCommentTest_likeCountAndReplyCount() {
+    void getCommentsTest_likeCountAndReplyCount() {
         // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
@@ -66,7 +109,7 @@ public class CommentQueryServiceTest {
 
     @Test
     @DisplayName("없는 토론방에 대해 댓글을 조회할 경우 예외가 발생한다")
-    void createCommentTest_discussionNotFound_fail() {
+    void getCommentsTest_discussionNotFound_fail() {
         // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
