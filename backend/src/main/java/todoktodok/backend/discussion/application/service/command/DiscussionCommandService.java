@@ -1,6 +1,7 @@
 package todoktodok.backend.discussion.application.service.command;
 
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,7 +11,9 @@ import todoktodok.backend.comment.domain.repository.CommentRepository;
 import todoktodok.backend.discussion.application.dto.request.DiscussionRequest;
 import todoktodok.backend.discussion.application.dto.request.DiscussionUpdateRequest;
 import todoktodok.backend.discussion.domain.Discussion;
+import todoktodok.backend.discussion.domain.DiscussionLike;
 import todoktodok.backend.discussion.domain.DiscussionReport;
+import todoktodok.backend.discussion.domain.repository.DiscussionLikeRepository;
 import todoktodok.backend.discussion.domain.repository.DiscussionReportRepository;
 import todoktodok.backend.discussion.domain.repository.DiscussionRepository;
 import todoktodok.backend.member.domain.Member;
@@ -23,6 +26,7 @@ public class DiscussionCommandService {
 
     private final DiscussionRepository discussionRepository;
     private final DiscussionReportRepository discussionReportRepository;
+    private final DiscussionLikeRepository discussionLikeRepository;
     private final MemberRepository memberRepository;
     private final BookRepository bookRepository;
     private final CommentRepository commentRepository;
@@ -92,8 +96,31 @@ public class DiscussionCommandService {
         discussionRepository.delete(discussion);
     }
 
+    public boolean toggleLike(
+            final Long memberId,
+            final Long discussionId
+    ) {
+        final Member member = findMember(memberId);
+        final Discussion discussion = findDiscussion(discussionId);
+
+        final Optional<DiscussionLike> existingDiscussionLike = discussionLikeRepository.findByMemberAndDiscussion(
+                member, discussion);
+        if (existingDiscussionLike.isPresent()) {
+            discussionLikeRepository.delete(existingDiscussionLike.get());
+            return false;
+        }
+
+        final DiscussionLike discussionLike = DiscussionLike.builder()
+                .discussion(discussion)
+                .member(member)
+                .build();
+
+        discussionLikeRepository.save(discussionLike);
+        return true;
+    }
+
     private void validateHasComment(final Discussion discussion) {
-        if(commentRepository.existsCommentsByDiscussion(discussion)){
+        if (commentRepository.existsCommentsByDiscussion(discussion)) {
             throw new IllegalArgumentException("댓글이 존재하는 토론방은 삭제할 수 없습니다");
         }
     }
