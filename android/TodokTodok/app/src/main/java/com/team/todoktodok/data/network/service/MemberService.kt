@@ -25,12 +25,12 @@ interface MemberService {
 
     @GET("v1/members/{memberId}/profile")
     suspend fun fetchProfile(
-        @Path("memberId") memberId: String,
+        @Path("memberId") memberId: Long,
     ): ProfileResponse
 
     @GET("v1/members/{memberId}/discussions")
     suspend fun fetchMemberDiscussionRooms(
-        @Path("memberId") memberId: String,
+        @Path("memberId") memberId: Long,
         @Query("type") type: String,
     ): List<DiscussionResponse>
 }

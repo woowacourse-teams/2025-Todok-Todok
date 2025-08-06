@@ -35,7 +35,7 @@ class JoinedDiscussionsRoomFragment : Fragment(R.layout.fragment_joined_discussi
     private fun initView(binding: FragmentCreatedDiscussionsRoomBinding) {
         discussionAdapter = UserDiscussionAdapter(userDiscussionAdapterHandler)
 
-        val memberId: String? = arguments?.getString(ARG_MEMBER_ID)
+        val memberId: Long? = arguments?.getLong(ARG_MEMBER_ID, INVALID_MEMBER_ID)
         viewModel.loadDiscussions(memberId)
 
         binding.rvDiscussions.adapter = discussionAdapter
@@ -56,9 +56,11 @@ class JoinedDiscussionsRoomFragment : Fragment(R.layout.fragment_joined_discussi
 
     companion object {
         // API 연동 완료시 제거
-        fun newInstance(memberId: String? = "1"): JoinedDiscussionsRoomFragment =
+        fun newInstance(memberId: Long?): JoinedDiscussionsRoomFragment =
             JoinedDiscussionsRoomFragment().apply {
                 arguments = bundleOf(ARG_MEMBER_ID to memberId)
             }
+
+        private const val INVALID_MEMBER_ID = -1L
     }
 }

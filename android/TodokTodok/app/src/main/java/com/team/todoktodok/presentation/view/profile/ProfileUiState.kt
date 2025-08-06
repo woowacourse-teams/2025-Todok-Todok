@@ -20,7 +20,7 @@ data class ProfileUiState(
                     ProfileItems.HeaderItem,
                     ProfileItems.InformationItem(
                         Profile(
-                            INITIALIZE_VALUE,
+                            0L,
                             INITIALIZE_VALUE,
                             INITIALIZE_VALUE,
                             INITIALIZE_VALUE,

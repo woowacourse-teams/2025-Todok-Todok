@@ -45,7 +45,9 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun initView(binding: ActivityProfileBinding) {
-        val memberId: String? = intent?.getStringExtra(ARG_MEMBER_ID)
+        val memberId: Long? = intent?.getLongExtra(ARG_MEMBER_ID, INVALID_MEMBER_ID)
+        viewModel.loadProfile(memberId)
+
         val viewPagerAdapter = ContentPagerAdapter(memberId, supportFragmentManager, lifecycle)
         profileAdapter = ProfileAdapter(profileAdapterHandler, viewPagerAdapter)
 
@@ -79,12 +81,13 @@ class ProfileActivity : AppCompatActivity() {
     companion object {
         fun Intent(
             context: Context,
-            memberId: String? = null,
+            memberId: Long? = null,
         ): Intent =
             Intent(context, ProfileActivity::class.java).apply {
                 memberId?.let { putExtra(ARG_MEMBER_ID, it) }
             }
 
         const val ARG_MEMBER_ID = "member_id"
+        private const val INVALID_MEMBER_ID = -1L
     }
 }

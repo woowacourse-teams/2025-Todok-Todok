@@ -34,7 +34,7 @@ class CreatedDiscussionsRoomFragment : Fragment(R.layout.fragment_created_discus
     private fun initView(binding: FragmentCreatedDiscussionsRoomBinding) {
         discussionAdapter = UserDiscussionAdapter(userDiscussionAdapterHandler)
 
-        val memberId: String? = arguments?.getString(ARG_MEMBER_ID)
+        val memberId: Long? = arguments?.getLong(ARG_MEMBER_ID, INVALID_MEMBER_ID)
         viewModel.loadDiscussions(memberId)
 
         binding.rvDiscussions.adapter = discussionAdapter
@@ -54,11 +54,13 @@ class CreatedDiscussionsRoomFragment : Fragment(R.layout.fragment_created_discus
         }
 
     companion object {
-        fun newInstance(memberId: String?): CreatedDiscussionsRoomFragment =
+        fun newInstance(memberId: Long?): CreatedDiscussionsRoomFragment =
             CreatedDiscussionsRoomFragment().apply {
                 memberId?.let {
                     arguments = bundleOf(ARG_MEMBER_ID to it)
                 }
             }
+
+        private const val INVALID_MEMBER_ID = -1L
     }
 }

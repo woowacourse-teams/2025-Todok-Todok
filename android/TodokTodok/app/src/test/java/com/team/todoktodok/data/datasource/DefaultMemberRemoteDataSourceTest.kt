@@ -41,7 +41,7 @@ class DefaultMemberRemoteDataSourceTest {
             val rawToken = "test.jwt.token"
             val accessTokenWithPrefix = "Bearer $rawToken"
             val memberType = "NORMAL"
-            val memberId = "123"
+            val memberId = 1L
 
             val mockResponse = mockk<Response<Unit>>()
 
@@ -68,7 +68,7 @@ class DefaultMemberRemoteDataSourceTest {
     fun `유저 정보 API를 호출할 때 MemberId를 전달 받았으면 전달받은 memberID를 사용해 API를 호출한다`() =
         runTest {
             // given
-            val memberId = MemberId.OtherUser("1")
+            val memberId = MemberId.OtherUser(1L)
             val profileResponse = mockk<ProfileResponse>()
 
             coEvery { memberService.fetchProfile(memberId.id) } returns profileResponse
@@ -84,7 +84,7 @@ class DefaultMemberRemoteDataSourceTest {
     fun `유저 정보 API를 호출할 때 MemberId가 없다면 TokenDataSource를 호출해 memberID를 받아와 API를 호출한다`() =
         runTest {
             // given
-            val memberId = "2"
+            val memberId = 2L
             val profileResponse = mockk<ProfileResponse>()
             coEvery { tokenDataSource.getMemberId() } returns memberId
             coEvery { memberService.fetchProfile(memberId) } returns profileResponse
@@ -100,7 +100,7 @@ class DefaultMemberRemoteDataSourceTest {
     fun `토론방 목록 조회시 memberId가 주어지면 해당 memberId로 요청한다`() =
         runTest {
             // given
-            val memberId = MemberId.OtherUser("5")
+            val memberId = MemberId.OtherUser(1L)
             val type = MemberDiscussionType.CREATED.name
             val response = mockk<List<DiscussionResponse>>()
 
@@ -117,7 +117,7 @@ class DefaultMemberRemoteDataSourceTest {
     fun `토론방 목록 조회시 memberId가 null이면 TokenDataSource에서 가져온다`() =
         runTest {
             // given
-            val memberId = "10"
+            val memberId = 1L
             val type = MemberDiscussionType.PARTICIPATED
             val response = mockk<List<DiscussionResponse>>()
 

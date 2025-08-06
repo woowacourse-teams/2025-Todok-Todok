@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.team.domain.model.Book
 import com.team.domain.model.Discussion
+import com.team.domain.model.member.MemberDiscussionType
+import com.team.domain.model.member.MemberId.Companion.MemberId
 import com.team.domain.model.member.Nickname
 import com.team.domain.model.member.User
 import com.team.domain.repository.MemberRepository
@@ -18,9 +20,9 @@ class CreatedDiscussionsViewModel(
     private val _discussion = MutableLiveData(emptyList<Discussion>())
     val discussion: LiveData<List<Discussion>> get() = _discussion
 
-    fun loadDiscussions(id: String?) {
+    fun loadDiscussions(id: Long?) {
         viewModelScope.launch {
-            // val result = memberRepository.getMemberDiscussionRooms(MemberId(id), MemberDiscussionType.CREATED)
+            val result = memberRepository.getMemberDiscussionRooms(MemberId(id), MemberDiscussionType.CREATED)
             _discussion.value =
                 listOf(
                     Discussion(
