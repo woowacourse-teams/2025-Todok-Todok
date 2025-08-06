@@ -35,7 +35,7 @@ class ProfileActivity : AppCompatActivity() {
 
         setUpSystemBar()
         setUpDialogResultListener()
-        initView(binding)
+        initView()
         setUpUiState()
         setUpUiEvent()
     }
@@ -60,7 +60,7 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
-    private fun initView(binding: ActivityProfileBinding) {
+    private fun initView() {
         val memberId: String? = intent?.getStringExtra(ARG_MEMBER_ID)
         viewModel.loadProfile(memberId)
 
