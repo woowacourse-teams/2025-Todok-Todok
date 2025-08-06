@@ -6,7 +6,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.book.domain.Book;
 import todoktodok.backend.book.domain.repository.BookRepository;
+import todoktodok.backend.comment.domain.repository.CommentRepository;
 import todoktodok.backend.discussion.application.dto.request.DiscussionRequest;
+import todoktodok.backend.discussion.application.dto.request.DiscussionUpdateRequest;
 import todoktodok.backend.discussion.domain.Discussion;
 import todoktodok.backend.discussion.domain.DiscussionReport;
 import todoktodok.backend.discussion.domain.repository.DiscussionReportRepository;
@@ -20,9 +22,10 @@ import todoktodok.backend.member.domain.repository.MemberRepository;
 public class DiscussionCommandService {
 
     private final DiscussionRepository discussionRepository;
+    private final DiscussionReportRepository discussionReportRepository;
     private final MemberRepository memberRepository;
     private final BookRepository bookRepository;
-    private final DiscussionReportRepository discussionReportRepository;
+    private final CommentRepository commentRepository;
 
     public Long createDiscussion(
             final Long memberId,
@@ -60,6 +63,41 @@ public class DiscussionCommandService {
         discussionReportRepository.save(discussionReport);
     }
 
+    public void updateDiscussion(
+            final Long memberId,
+            final Long discussionId,
+            final DiscussionUpdateRequest discussionUpdateRequest
+    ) {
+        final Member member = findMember(memberId);
+        final Discussion discussion = findDiscussion(discussionId);
+
+        validateDiscussionMember(discussion, member);
+
+        final String discussionTitle = discussionUpdateRequest.discussionTitle();
+        final String discussionOpinion = discussionUpdateRequest.discussionOpinion();
+
+        discussion.update(discussionTitle, discussionOpinion);
+    }
+
+    public void deleteDiscussion(
+            final Long memberId,
+            final Long discussionId
+    ) {
+        final Member member = findMember(memberId);
+        final Discussion discussion = findDiscussion(discussionId);
+
+        validateDiscussionMember(discussion, member);
+        validateHasComment(discussion);
+
+        discussionRepository.delete(discussion);
+    }
+
+    private void validateHasComment(final Discussion discussion) {
+        if(commentRepository.existsCommentsByDiscussion(discussion)){
+            throw new IllegalArgumentException("댓글이 존재하는 토론방은 삭제할 수 없습니다");
+        }
+    }
+
     private Member findMember(final Long memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new NoSuchElementException("해당 회원을 찾을 수 없습니다"));
@@ -73,6 +111,15 @@ public class DiscussionCommandService {
     private Discussion findDiscussion(final Long discussionId) {
         return discussionRepository.findById(discussionId)
                 .orElseThrow(() -> new NoSuchElementException("해당 토론방을 찾을 수 없습니다"));
+    }
+
+    private void validateDiscussionMember(
+            final Discussion discussion,
+            final Member member
+    ) {
+        if (!discussion.isOwnedBy(member)) {
+            throw new IllegalArgumentException("자기 자신의 토론방만 수정/삭제 가능합니다");
+        }
     }
 
     private void validateDuplicatedReport(
