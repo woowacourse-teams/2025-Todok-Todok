@@ -67,7 +67,10 @@ public class Discussion extends TimeStamp {
         return this.member.equals(member);
     }
 
-    public void update(final String title, final String content) {
+    public void update(
+            final String title,
+            final String content
+    ) {
         validateTitle(title);
         validateContent(content);
 
