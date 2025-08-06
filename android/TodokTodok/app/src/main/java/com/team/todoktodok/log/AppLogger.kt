@@ -55,6 +55,7 @@ object AppLogger {
     private const val RELEASE_TAG = "release_tag"
     private const val DEBUG_TAG = "modongpe"
     private const val DATE_FORMAT = "yyyy-MM-dd HH:mm:ss"
+    private val dateFormatter = SimpleDateFormat(DATE_FORMAT, Locale.getDefault())
 
     /**
      * 현재 시간을 지정한 포맷으로 반환한다.
@@ -62,8 +63,7 @@ object AppLogger {
      * @return 현재 시간 문자열 (예: 2025-08-06 13:24:15)
      */
     private fun now(): String {
-        val formatter = SimpleDateFormat(DATE_FORMAT, Locale.getDefault())
-        return formatter.format(Date())
+        return dateFormatter.format(Date())
     }
 
     /**
