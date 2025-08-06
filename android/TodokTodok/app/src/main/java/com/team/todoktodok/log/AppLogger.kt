@@ -62,9 +62,7 @@ object AppLogger {
      *
      * @return 현재 시간 문자열 (예: 2025-08-06 13:24:15)
      */
-    private fun now(): String {
-        return dateFormatter.format(Date())
-    }
+    private fun now(): String = dateFormatter.format(Date())
 
     /**
      * 로그를 호출한 파일명과 라인 번호를 "FileName.kt: 123" 형식으로 반환한다.
