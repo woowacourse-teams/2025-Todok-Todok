@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import todoktodok.backend.book.application.dto.response.BookResponse;
 import todoktodok.backend.global.auth.Auth;
@@ -22,10 +23,12 @@ import todoktodok.backend.global.resolver.TempMember;
 import todoktodok.backend.member.application.dto.request.LoginRequest;
 import todoktodok.backend.member.application.dto.request.ProfileUpdateRequest;
 import todoktodok.backend.member.application.dto.request.SignupRequest;
+import todoktodok.backend.member.application.dto.response.MemberDiscussionResponse;
 import todoktodok.backend.member.application.dto.response.ProfileResponse;
 import todoktodok.backend.member.application.dto.response.ProfileUpdateResponse;
 import todoktodok.backend.member.application.service.command.MemberCommandService;
 import todoktodok.backend.member.application.service.query.MemberQueryService;
+import todoktodok.backend.member.domain.MemberDiscussionFilterType;
 
 @RestController
 @AllArgsConstructor
@@ -102,14 +105,15 @@ public class MemberController {
                 .body(memberQueryService.getActiveBooks(memberId));
     }
 
-    @Operation(summary = "활동 도서 전체 조회 API2")
+    @Operation(summary = "회원별 토론방 필터 조회 API")
     @Auth(value = Role.USER)
-    @GetMapping("/{memberId}/books2")
-    public ResponseEntity<List<BookResponse>> getActiveBooks2(
-            @PathVariable final Long memberId
+    @GetMapping("/{memberId}/discussions")
+    public ResponseEntity<List<MemberDiscussionResponse>> getMemberDiscussionsByType(
+            @PathVariable final Long memberId,
+            @RequestParam final MemberDiscussionFilterType type
     ) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(memberQueryService.getActiveBooks(memberId));
+                .body(memberQueryService.getMemberDiscussionsByType(memberId, type));
     }
 
     @Operation(summary = "프로필 정보 수정 API")
