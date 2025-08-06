@@ -7,6 +7,7 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -136,5 +137,18 @@ public class MemberController {
     ) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(memberCommandService.updateProfile(memberId, profileUpdateRequest));
+    }
+
+    @Operation(summary = "차단 해제 API")
+    @Auth(value = Role.USER)
+    @DeleteMapping("/{memberId}/block")
+    public ResponseEntity<Void> deleteBlock(
+            @Parameter(hidden = true) @LoginMember final Long memberId,
+            @PathVariable("memberId") final Long targetId
+    ) {
+        memberCommandService.deleteBlock(memberId, targetId);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .build();
     }
 }

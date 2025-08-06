@@ -15,4 +15,11 @@ public interface BlockRepository extends JpaRepository<Block, Long> {
         WHERE b.member = :member
     """)
     List<Block> findBlocksByMember(final Member member);
+
+    @Query("""
+        SELECT b FROM Block b
+        WHERE b.member = :member
+        AND b.target = :target
+    """)
+    Block findByMemberAndTarget(final Member member, final Member target);
 }
