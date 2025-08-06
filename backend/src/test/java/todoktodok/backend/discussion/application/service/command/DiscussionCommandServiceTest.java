@@ -31,8 +31,7 @@ class DiscussionCommandServiceTest {
     @Autowired
     private DiscussionCommandService discussionCommandService;
 
-    @Autowired
-    private MemberRepository memberRepository;
+
 
     @BeforeEach
     void setUp() {
