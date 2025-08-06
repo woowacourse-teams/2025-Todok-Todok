@@ -6,7 +6,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.book.domain.Book;
 import todoktodok.backend.book.domain.repository.BookRepository;
+import todoktodok.backend.comment.application.dto.request.CommentRequest;
+import todoktodok.backend.comment.domain.Comment;
 import todoktodok.backend.discussion.application.dto.request.DiscussionRequest;
+import todoktodok.backend.discussion.application.dto.request.DiscussionUpdateRequest;
 import todoktodok.backend.discussion.domain.Discussion;
 import todoktodok.backend.discussion.domain.DiscussionReport;
 import todoktodok.backend.discussion.domain.repository.DiscussionReportRepository;
@@ -60,6 +63,19 @@ public class DiscussionCommandService {
         discussionReportRepository.save(discussionReport);
     }
 
+    public void updateDiscussion(
+            final Long memberId,
+            final Long discussionId,
+            final DiscussionUpdateRequest discussionUpdateRequest
+    ) {
+        final Member member = findMember(memberId);
+        final Discussion discussion = findDiscussion(discussionId);
+
+        validateDiscussionMember(discussion, member);
+
+        discussion.update(discussionUpdateRequest.discussionTitle(), discussionUpdateRequest.discussionOpinion());
+    }
+
     private Member findMember(final Long memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new NoSuchElementException("해당 회원을 찾을 수 없습니다"));
@@ -73,6 +89,15 @@ public class DiscussionCommandService {
     private Discussion findDiscussion(final Long discussionId) {
         return discussionRepository.findById(discussionId)
                 .orElseThrow(() -> new NoSuchElementException("해당 토론방을 찾을 수 없습니다"));
+    }
+
+    private void validateDiscussionMember(
+            final Discussion discussion,
+            final Member member
+    ) {
+        if (!discussion.isOwnedBy(member)) {
+            throw new IllegalArgumentException("자기 자신의 토론방만 수정/삭제 가능합니다");
+        }
     }
 
     private void validateDuplicatedReport(
