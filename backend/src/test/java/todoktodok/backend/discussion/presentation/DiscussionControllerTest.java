@@ -15,7 +15,9 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import todoktodok.backend.DatabaseInitializer;
 import todoktodok.backend.InitializerTimer;
+import todoktodok.backend.comment.application.dto.request.CommentRequest;
 import todoktodok.backend.discussion.application.dto.request.DiscussionRequest;
+import todoktodok.backend.discussion.application.dto.request.DiscussionUpdateRequest;
 import todoktodok.backend.member.presentation.fixture.MemberFixture;
 
 @ActiveProfiles("test")
@@ -97,6 +99,33 @@ class DiscussionControllerTest {
                 .when().post("/api/v1/discussions/1/report")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
+    }
+
+    @Test
+    @DisplayName("토론방을 수정한다")
+    void updateDiscussionTest() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+
+        final String updatedTitle = "상속과 조합은 어떤 상황에 쓰이나요?";
+        final String updatedContent= "상속과 조합의 차이점이 궁금합니다.";
+        final DiscussionUpdateRequest discussionUpdateRequest = new DiscussionUpdateRequest(
+                updatedTitle,
+                updatedContent
+        );
+
+        final String token = MemberFixture.login("user@gmail.com");
+
+        // when - then
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .header("Authorization", token)
+                .body(discussionUpdateRequest)
+                .when().patch("/api/v1/discussions/1")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
     }
 
     @Test
