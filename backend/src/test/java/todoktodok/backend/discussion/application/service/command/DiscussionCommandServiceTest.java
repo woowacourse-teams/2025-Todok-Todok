@@ -15,7 +15,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.DatabaseInitializer;
 import todoktodok.backend.InitializerTimer;
+import todoktodok.backend.comment.application.dto.request.CommentRequest;
 import todoktodok.backend.discussion.application.dto.request.DiscussionRequest;
+import todoktodok.backend.discussion.application.dto.request.DiscussionUpdateRequest;
 import todoktodok.backend.member.domain.Member;
 import todoktodok.backend.member.domain.repository.MemberRepository;
 import todoktodok.backend.member.presentation.fixture.MemberFixture;
@@ -84,6 +86,69 @@ class DiscussionCommandServiceTest {
         )
                 .isInstanceOf(NoSuchElementException.class)
                 .hasMessage("해당 도서를 찾을 수 없습니다");
+    }
+
+    @Test
+    @DisplayName("자신의 것이 아닌 토론방을 수정하면 예외가 발생한다")
+    void validateDiscussionMemberUpdateTest() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+
+        databaseInitializer.setUserInfo("user2@gmail.com", "user", "https://image.png", "프로필 메시지");
+
+        final Long memberId = 2L;
+        final Long discussionId = 1L;
+
+        final String updatedTitle = "상속과 조합은 어떤 상황에 쓰이나요?";
+        final String updatedContent= "상속과 조합의 차이점이 궁금합니다.";
+        final DiscussionUpdateRequest discussionUpdateRequest = new DiscussionUpdateRequest(
+                updatedTitle,
+                updatedContent
+        );
+
+        // when - then
+        assertThatThrownBy(() -> discussionCommandService.updateDiscussion(memberId, discussionId, discussionUpdateRequest))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("자기 자신의 토론방만 수정/삭제 가능합니다");
+    }
+
+    @Test
+    @DisplayName("자신의 것이 아닌 토론방을 삭제하면 예외가 발생한다")
+    void validateDiscussionMemberDeleteTest() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+
+        databaseInitializer.setUserInfo("user2@gmail.com", "user", "https://image.png", "프로필 메시지");
+
+        final Long memberId = 2L;
+        final Long discussionId = 1L;
+
+        // when - then
+        assertThatThrownBy(() -> discussionCommandService.deleteDiscussion(memberId, discussionId))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("자기 자신의 토론방만 수정/삭제 가능합니다");
+    }
+
+    @Test
+    @DisplayName("댓글이 존재하는 토론방을 삭제하면 예외가 발생한다")
+    void validateHasCommentDiscussionDeleteTest() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+        databaseInitializer.setDefaultCommentInfo();
+
+        final Long memberId = 1L;
+        final Long discussionId = 1L;
+
+        // when - then
+        assertThatThrownBy(() -> discussionCommandService.deleteDiscussion(memberId, discussionId))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("댓글이 존재하는 토론방은 삭제할 수 없습니다");
     }
 
     @Test

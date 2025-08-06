@@ -8,4 +8,6 @@ import todoktodok.backend.discussion.domain.Discussion;
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     List<Comment> findCommentsByDiscussion(final Discussion discussion);
+
+    boolean existsCommentsByDiscussion(final Discussion discussion);
 }
