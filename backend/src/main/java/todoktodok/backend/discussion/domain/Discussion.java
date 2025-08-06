@@ -78,6 +78,10 @@ public class Discussion extends TimeStamp {
         this.content = content;
     }
 
+    public boolean isSameId(final Long discussionId) {
+        return this.id.equals(discussionId);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
