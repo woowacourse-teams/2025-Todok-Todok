@@ -1,5 +1,6 @@
 package todoktodok.backend.reply.application.service.command;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.NoSuchElementException;
@@ -302,5 +303,139 @@ public class ReplyCommandServiceTest {
         assertThatThrownBy(() -> replyCommandService.deleteReply(memberId, discussionId, commentId, replyId))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("해당 댓글에 있는 대댓글이 아닙니다");
+    }
+
+    @Test
+    @DisplayName("좋아요를 누르지 않았던 대댓글에 좋아요를 생성한다")
+    void replyToggleLikeTest() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+        databaseInitializer.setDefaultCommentInfo();
+        databaseInitializer.setDefaultReplyInfo();
+
+        final Long memberId = 1L;
+        final Long discussionId = 1L;
+        final Long commentId = 1L;
+        final Long replyId = 1L;
+
+        // when
+        final boolean isLiked = replyCommandService.toggleLike(memberId, discussionId, commentId, replyId);
+
+        // then
+        assertThat(isLiked).isTrue();
+    }
+
+    @Test
+    @DisplayName("이미 좋아요를 누른 대댓글에 다시 좋아요를 누르면 좋아요가 취소된다")
+    void replyToggleLikeDeleteTest() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+        databaseInitializer.setDefaultCommentInfo();
+        databaseInitializer.setDefaultReplyInfo();
+        databaseInitializer.setReplyLikeInfo(1L, 1L);
+
+        final Long memberId = 1L;
+        final Long discussionId = 1L;
+        final Long commentId = 1L;
+        final Long replyId = 1L;
+
+        // when
+        final boolean isLiked = replyCommandService.toggleLike(memberId, discussionId, commentId, replyId);
+
+        // then
+        assertThat(isLiked).isFalse();
+    }
+
+    @Test
+    @DisplayName("좋아요를 생성하는 댓글과 토론방이 일치하지 않으면 예외가 발생한다")
+    void validateDiscussionCommentToggleLikeTest() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+
+        databaseInitializer.setDefaultDiscussionInfo();
+        databaseInitializer.setDiscussionInfo("오브젝트", "오브젝트 토론입니다", 1L, 1L);
+
+        databaseInitializer.setCommentInfo("상속의 핵심 목적은 타입 계층의 구축입니다!", 1L, 1L);
+        databaseInitializer.setDefaultReplyInfo();
+
+        final Long memberId = 1L;
+        final Long discussionId = 2L;
+        final Long commentId = 1L;
+        final Long replyId = 1L;
+
+        // when - then
+        assertThatThrownBy(() -> replyCommandService.toggleLike(memberId, discussionId, commentId, replyId))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("해당 토론방에 있는 댓글이 아닙니다");
+    }
+
+    @Test
+    @DisplayName("좋아요를 생성하는 대댓글과 댓글이 일치하지 않으면 예외가 발생한다")
+    void validateReplyCommentToggleLikeTest() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+
+        databaseInitializer.setDefaultCommentInfo();
+        databaseInitializer.setCommentInfo("상속의 핵심 목적은 타입 계층의 구축입니다!", 1L, 1L);
+        databaseInitializer.setDefaultReplyInfo();
+
+        final Long memberId = 1L;
+        final Long discussionId = 1L;
+        final Long commentId = 2L;
+        final Long replyId = 1L;
+
+        // when - then
+        assertThatThrownBy(() -> replyCommandService.toggleLike(memberId, discussionId, commentId, replyId))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("해당 댓글에 있는 대댓글이 아닙니다");
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 회원이 좋아요를 누르면 예외가 발생한다")
+    void validateMemberNotFoundToggleLikeTest() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+        databaseInitializer.setDefaultCommentInfo();
+        databaseInitializer.setDefaultReplyInfo();
+
+        final Long nonExistentMemberId = 999L;
+        final Long discussionId = 1L;
+        final Long commentId = 1L;
+        final Long replyId = 1L;
+
+        // when - then
+        assertThatThrownBy(() -> replyCommandService.toggleLike(nonExistentMemberId, discussionId, commentId, replyId))
+                .isInstanceOf(NoSuchElementException.class)
+                .hasMessage("해당 회원을 찾을 수 없습니다");
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 대댓글에 좋아요를 누르면 예외가 발생한다")
+    void validateReplyNotFoundToggleLikeTest() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+        databaseInitializer.setDefaultCommentInfo();
+        databaseInitializer.setDefaultReplyInfo();
+
+        final Long memberId = 1L;
+        final Long discussionId = 1L;
+        final Long commentId = 1L;
+        final Long nonExistentReplyId = 999L;
+
+        // when - then
+        assertThatThrownBy(() -> replyCommandService.toggleLike(memberId, discussionId, commentId, nonExistentReplyId))
+                .isInstanceOf(NoSuchElementException.class)
+                .hasMessage("해당 대댓글을 찾을 수 없습니다");
     }
 }

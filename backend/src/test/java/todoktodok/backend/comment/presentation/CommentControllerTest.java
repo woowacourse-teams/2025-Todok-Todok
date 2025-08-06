@@ -61,7 +61,7 @@ public class CommentControllerTest {
 
     @Test
     @DisplayName("댓글 좋아요를 생성한다")
-    void createCommentLikeTest() {
+    void createCommentToggleLikeTest() {
         // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
@@ -81,7 +81,7 @@ public class CommentControllerTest {
 
     @Test
     @DisplayName("댓글 좋아요를 삭제한다")
-    void deleteCommentLikeTest() {
+    void deleteCommentToggleLikeTest() {
         // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();

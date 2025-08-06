@@ -51,12 +51,12 @@ public class CommentController {
     @Operation(summary = "댓글 좋아요 API")
     @Auth(value = Role.USER)
     @PostMapping("/{commentId}/like")
-    public ResponseEntity<Void> like(
+    public ResponseEntity<Void> toggleLike(
             @Parameter(hidden = true) @LoginMember final Long memberId,
             @PathVariable final Long discussionId,
             @PathVariable final Long commentId
     ) {
-        final boolean isLiked = commentCommandService.like(memberId, discussionId, commentId);
+        final boolean isLiked = commentCommandService.toggleLike(memberId, discussionId, commentId);
 
         if (isLiked) {
             return ResponseEntity.status(HttpStatus.CREATED).build();

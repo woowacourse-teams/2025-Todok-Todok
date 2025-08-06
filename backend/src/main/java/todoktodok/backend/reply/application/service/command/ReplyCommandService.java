@@ -1,6 +1,7 @@
 package todoktodok.backend.reply.application.service.command;
 
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,7 +13,9 @@ import todoktodok.backend.member.domain.Member;
 import todoktodok.backend.member.domain.repository.MemberRepository;
 import todoktodok.backend.reply.application.dto.request.ReplyRequest;
 import todoktodok.backend.reply.domain.Reply;
+import todoktodok.backend.reply.domain.ReplyLike;
 import todoktodok.backend.reply.domain.ReplyReport;
+import todoktodok.backend.reply.domain.repository.ReplyLikeRepository;
 import todoktodok.backend.reply.domain.repository.ReplyReportRepository;
 import todoktodok.backend.reply.domain.repository.ReplyRepository;
 
@@ -23,6 +26,7 @@ public class ReplyCommandService {
 
     private final ReplyRepository replyRepository;
     private final ReplyReportRepository replyReportRepository;
+    private final ReplyLikeRepository replyLikeRepository;
     private final MemberRepository memberRepository;
     private final DiscussionRepository discussionRepository;
     private final CommentRepository commentRepository;
@@ -109,6 +113,35 @@ public class ReplyCommandService {
         reply.validateMatchWithComment(comment);
 
         replyRepository.delete(reply);
+    }
+
+    public boolean toggleLike(
+            final Long memberId,
+            final Long discussionId,
+            final Long commentId,
+            final Long replyId
+    ) {
+        final Member member = findMember(memberId);
+        final Discussion discussion = findDiscussion(discussionId);
+        final Comment comment = findComment(commentId);
+        final Reply reply = findReply(replyId);
+
+        comment.validateMatchWithDiscussion(discussion);
+        reply.validateMatchWithComment(comment);
+
+        final Optional<ReplyLike> existingReplyLike = replyLikeRepository.findByMemberAndReply(member, reply);
+        if (existingReplyLike.isPresent()) {
+            replyLikeRepository.delete(existingReplyLike.get());
+            return false;
+        }
+
+        final ReplyLike replyLike = ReplyLike.builder()
+                .reply(reply)
+                .member(member)
+                .build();
+
+        replyLikeRepository.save(replyLike);
+        return true;
     }
 
     private Member findMember(final Long memberId) {
