@@ -43,4 +43,26 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
             @Param("keyword") final String keyword,
             @Param("member") final Member member
     );
+
+    @Query(value = """
+        SELECT d.* 
+        FROM discussion d
+        WHERE d.member_id = :memberId
+            
+        UNION
+            
+        SELECT DISTINCT d.* 
+        FROM discussion d
+        JOIN comment c ON c.discussion_id = d.id
+        WHERE c.member_id = :memberId
+            
+        UNION
+            
+        SELECT DISTINCT d.* 
+        FROM discussion d
+        JOIN comment c ON c.discussion_id = d.id
+        JOIN reply r ON r.comment_id = c.id
+        WHERE r.member_id = :memberId
+    """, nativeQuery = true)
+    List<Discussion> findParticipatedDiscussionsByMember(@Param("memberId") final Long memberId);
 }

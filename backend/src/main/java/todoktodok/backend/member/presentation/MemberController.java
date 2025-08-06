@@ -105,6 +105,17 @@ public class MemberController {
                 .body(memberQueryService.getActiveBooks(memberId));
     }
 
+    @Operation(summary = "내 토론방 필터 조회 API")
+    @Auth(value = Role.USER)
+    @GetMapping("/{memberId}/discussions")
+    public ResponseEntity<List<MyDiscussionResponse>> getMyDiscussionsByType(
+            @PathVariable final Long memberId,
+            @RequestParam final MyDiscussionFilterType type
+    ) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(memberQueryService.getMyDiscussionsByType(memberId, type));
+    }
+
     @Operation(summary = "프로필 정보 수정 API")
     @Auth(value = Role.USER)
     @PutMapping("/profile")

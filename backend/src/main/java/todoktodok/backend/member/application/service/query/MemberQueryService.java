@@ -8,8 +8,11 @@ import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.book.application.dto.response.BookResponse;
 import todoktodok.backend.book.domain.Book;
 import todoktodok.backend.book.domain.repository.BookRepository;
+import todoktodok.backend.discussion.domain.repository.DiscussionRepository;
+import todoktodok.backend.member.application.dto.response.MyDiscussionResponse;
 import todoktodok.backend.member.application.dto.response.ProfileResponse;
 import todoktodok.backend.member.domain.Member;
+import todoktodok.backend.member.domain.MyDiscussionFilterType;
 import todoktodok.backend.member.domain.repository.MemberRepository;
 
 @Service
@@ -19,6 +22,7 @@ public class MemberQueryService {
 
     private final MemberRepository memberRepository;
     private final BookRepository bookRepository;
+    private final DiscussionRepository discussionRepository;
 
     public ProfileResponse getProfile(final Long memberId) {
         final Member member = findMember(memberId);
@@ -37,8 +41,33 @@ public class MemberQueryService {
                 .toList();
     }
 
+    public List<MyDiscussionResponse> getMyDiscussionsByType(
+            final Long memberId,
+            final MyDiscussionFilterType type
+    ) {
+        final Member member = findMember(memberId);
+
+        if (type.isTypeCreated()) {
+            return getCreatedDiscussions(member);
+        }
+
+        return getParticipatedDiscussions(member);
+    }
+
     private Member findMember(final Long memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new NoSuchElementException("해당 회원을 찾을 수 없습니다"));
+    }
+
+    private List<MyDiscussionResponse> getCreatedDiscussions(final Member member) {
+        return discussionRepository.findDiscussionsByMember(member).stream()
+                .map(MyDiscussionResponse::new)
+                .toList();
+    }
+
+    private List<MyDiscussionResponse> getParticipatedDiscussions(final Member member) {
+        return discussionRepository.findParticipatedDiscussionsByMember(member.getId()).stream()
+                .map(MyDiscussionResponse::new)
+                .toList();
     }
 }
