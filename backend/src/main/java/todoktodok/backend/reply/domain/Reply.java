@@ -67,6 +67,10 @@ public class Reply extends TimeStamp {
         return this.member.equals(member);
     }
 
+    public boolean isSameId(final Long replyId) {
+        return this.id.equals(replyId);
+    }
+
     public void validateMatchWithComment(final Comment comment) {
         if (!this.comment.equals(comment)) {
             throw new IllegalArgumentException("해당 댓글에 있는 대댓글이 아닙니다");

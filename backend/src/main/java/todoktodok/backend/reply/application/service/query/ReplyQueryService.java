@@ -32,12 +32,11 @@ public class ReplyQueryService {
             final Long discussionId,
             final Long commentId
     ) {
-        final Discussion discussion = getDiscussion(discussionId);
-        final Comment comment = getComment(commentId);
+        final Discussion discussion = findDiscussion(discussionId);
+        final Comment comment = findComment(commentId);
 
         validateIsExistMember(memberId);
         comment.validateMatchWithDiscussion(discussion);
-
 
         final List<Reply> replies = replyRepository.findRepliesByComment(comment);
         final List<Long> replyIds = replies.stream()
@@ -49,35 +48,34 @@ public class ReplyQueryService {
         return replies.stream()
                 .map(reply -> new ReplyResponse(
                         reply,
-                        getLikeCount(reply, likeCountsById)
+                        findLikeCount(reply, likeCountsById)
                 ))
                 .toList();
     }
 
     private void validateIsExistMember(final Long memberId) {
-        if (!memberRepository.existsById(memberId)) {
-            throw new NoSuchElementException("해당 회원을 찾을 수 없습니다");
-        }
+        memberRepository.findById(memberId)
+                .orElseThrow(() -> new NoSuchElementException("해당 회원을 찾을 수 없습니다"));
     }
 
-    private Discussion getDiscussion(final Long discussionId) {
+    private Discussion findDiscussion(final Long discussionId) {
         return discussionRepository.findById(discussionId)
                 .orElseThrow(() -> new NoSuchElementException("해당 토론방을 찾을 수 없습니다"));
     }
 
-    private Comment getComment(final Long commentId) {
+    private Comment findComment(final Long commentId) {
         return commentRepository.findById(commentId)
                 .orElseThrow(() -> new NoSuchElementException("해당 댓글을 찾을 수 없습니다"));
     }
 
-    private static int getLikeCount(
+    private static int findLikeCount(
             final Reply reply,
             final List<ReplyLikeCountDto> likeCountsById
     ) {
         return likeCountsById.stream()
-                .filter(count -> count.replyId().equals(reply.getId()))
+                .filter(count -> reply.isSameId(count.replyId()))
                 .findFirst()
-                .orElseThrow(IllegalStateException::new)
-                .likeCount();
+                .map(ReplyLikeCountDto::likeCount)
+                .orElseThrow(() -> new IllegalStateException("대댓글별 좋아요 수를 찾을 수 없습니다"));
     }
 }
