@@ -115,6 +115,23 @@ public class DiscussionController {
                 .build();
     }
 
+    @Operation(summary = "토론방 좋아요 API")
+    @Auth(value = Role.USER)
+    @PostMapping("/{discussionId}/like")
+    public ResponseEntity<Void> toggleLike(
+            @Parameter(hidden = true) @LoginMember final Long memberId,
+            @PathVariable final Long discussionId
+    ) {
+        final boolean isLiked = discussionCommandService.toggleLike(memberId, discussionId);
+
+        if (isLiked) {
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .build();
+        }
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .build();
+    }
+
     private URI createUri(final Long id) {
         return ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")

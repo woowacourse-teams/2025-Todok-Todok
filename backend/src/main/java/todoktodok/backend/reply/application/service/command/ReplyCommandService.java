@@ -129,9 +129,9 @@ public class ReplyCommandService {
         comment.validateMatchWithDiscussion(discussion);
         reply.validateMatchWithComment(comment);
 
-        final Optional<ReplyLike> existingReplyLike = replyLikeRepository.findByMemberAndReply(member, reply);
-        if (existingReplyLike.isPresent()) {
-            replyLikeRepository.delete(existingReplyLike.get());
+        final Optional<ReplyLike> replyLikeOrEmpty = replyLikeRepository.findByMemberAndReply(member, reply);
+        if (replyLikeOrEmpty.isPresent()) {
+            replyLikeRepository.delete(replyLikeOrEmpty.get());
             return false;
         }
 
