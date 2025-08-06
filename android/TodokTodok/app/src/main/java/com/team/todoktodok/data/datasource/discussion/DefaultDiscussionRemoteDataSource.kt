@@ -1,6 +1,8 @@
 package com.team.todoktodok.data.datasource.discussion
 
 import com.team.domain.model.DiscussionFilter
+import com.team.todoktodok.data.network.request.DiscussionRequest
+import com.team.todoktodok.data.network.request.DiscussionRoomRequest
 import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
 import com.team.todoktodok.data.network.service.DiscussionService
 import retrofit2.Response
@@ -13,7 +15,7 @@ class DefaultDiscussionRemoteDataSource(
     override suspend fun getDiscussions(
         type: DiscussionFilter,
         keyword: String?,
-    ): List<DiscussionResponse> = discussionService.fetchDiscussions(keyword, type.name)
+    ): List<DiscussionResponse> = discussionService.fetchDiscussions(keyword, type.value)
 
     private fun Response<*>.extractDiscussionId(): Long {
         val locationHeader = headers()[HEADER_LOCATION]
