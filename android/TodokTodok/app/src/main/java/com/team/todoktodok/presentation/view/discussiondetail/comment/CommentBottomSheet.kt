@@ -51,7 +51,11 @@ class CommentBottomSheet : BottomSheetDialogFragment(R.layout.fragment_comment_b
             if (isAdded && anchorView != null && bottomSheet != null) {
                 val anchorBottom = getViewBottomInWindow(anchorView)
                 val availableHeight = activityRoot.height - anchorBottom
-                setBottomSheetHeight(bottomSheet, availableHeight)
+                if (availableHeight > 0) {
+                    setBottomSheetHeight(bottomSheet, availableHeight)
+                } else {
+                    setBottomSheetHeight(bottomSheet, activityRoot.height / 2)
+                }
             }
         }
     }
