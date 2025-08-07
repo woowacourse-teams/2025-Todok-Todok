@@ -1,12 +1,14 @@
 package com.team.todoktodok.fake.datasource
 
 import com.team.todoktodok.data.datasource.comment.CommentRemoteDataSource
+import com.team.todoktodok.data.network.model.LikeAction
 import com.team.todoktodok.data.network.request.CommentRequest
 import com.team.todoktodok.data.network.response.comment.CommentResponse
 import com.team.todoktodok.data.network.response.discussion.MemberResponse
 import java.time.LocalDateTime
 
 class FakeCommentRemoteDataSource : CommentRemoteDataSource {
+    private var like = LikeAction.UNLIKE
     private val dummyCommentResponses =
         mutableListOf(
             CommentResponse(
@@ -75,5 +77,55 @@ class FakeCommentRemoteDataSource : CommentRemoteDataSource {
                 MemberResponse(1, "동전"),
             ),
         )
+    }
+
+    override suspend fun toggleLike(
+        discussionId: Long,
+        commentId: Long,
+    ): LikeAction =
+        when (like) {
+            LikeAction.LIKE -> LikeAction.UNLIKE
+            LikeAction.UNLIKE -> LikeAction.LIKE
+        }
+
+    override suspend fun updateComment(
+        discussionId: Long,
+        commentId: Long,
+        comment: String,
+    ) {
+        val index = dummyCommentResponses.indexOfFirst { it.commentId == commentId }
+        if (index != -1) {
+            dummyCommentResponses[index] = (
+                CommentResponse(
+                    100,
+                    comment,
+                    LocalDateTime.of(2000, 7, 3, 10, 21).toString(),
+                    MemberResponse(1, "동전"),
+                )
+            )
+        }
+    }
+
+    override suspend fun deleteComment(
+        discussionId: Long,
+        commentId: Long,
+    ) {
+        dummyCommentResponses.removeIf { it.commentId == commentId }
+    }
+
+    override suspend fun report(
+        discussionId: Long,
+        commentId: Long,
+    ) {
+    }
+
+    companion object {
+        val fixture =
+            CommentResponse(
+                100,
+                "하하",
+                LocalDateTime.of(2000, 7, 3, 10, 21).toString(),
+                MemberResponse(1, "동전"),
+            )
     }
 }
