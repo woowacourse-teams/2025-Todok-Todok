@@ -2,15 +2,20 @@ package com.team.todoktodok.presentation.view.setting.modify
 
 import android.os.Bundle
 import android.view.View
+import androidx.activity.viewModels
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.team.domain.model.member.NickNameException
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentModifyProfileBinding
+import com.team.todoktodok.presentation.view.setting.SettingScreen
 import com.team.todoktodok.presentation.view.setting.modify.vm.ModifyProfileViewModel
 import com.team.todoktodok.presentation.view.setting.modify.vm.ModifyProfileViewModelFactory
+import com.team.todoktodok.presentation.view.setting.vm.SettingViewModel
+import com.team.todoktodok.presentation.view.setting.vm.SettingViewModelFactory
 import kotlin.getValue
 
 class ModifyProfileFragment : Fragment(R.layout.fragment_modify_profile) {
@@ -18,6 +23,8 @@ class ModifyProfileFragment : Fragment(R.layout.fragment_modify_profile) {
         val repositoryModule = (requireActivity().application as App).container.repositoryModule
         ModifyProfileViewModelFactory(repositoryModule.memberRepository)
     }
+
+    private val settingViewModel: SettingViewModel by activityViewModels { SettingViewModelFactory() }
 
     override fun onViewCreated(
         view: View,
@@ -61,7 +68,7 @@ class ModifyProfileFragment : Fragment(R.layout.fragment_modify_profile) {
         viewModel.uiEvent.observe(viewLifecycleOwner) { value ->
             when (value) {
                 ModifyProfileUiEvent.OnCompleteModification -> {
-                    requireActivity().onBackPressedDispatcher.onBackPressed()
+                    settingViewModel.changeScreen(SettingScreen.SETTING_MAIN)
                 }
                 is ModifyProfileUiEvent.ShowInvalidNickNameMessage -> {
                     handleNickNameErrorEvent(value.exception, binding)

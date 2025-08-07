@@ -4,12 +4,10 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentSettingBinding
 import com.team.todoktodok.presentation.view.setting.vm.SettingViewModel
 import com.team.todoktodok.presentation.view.setting.vm.SettingViewModelFactory
-import kotlin.getValue
 
 class SettingFragment : Fragment(R.layout.fragment_setting) {
     private val viewModel: SettingViewModel by activityViewModels { SettingViewModelFactory() }
