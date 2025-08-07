@@ -87,7 +87,7 @@ public class DiscussionQueryService {
                 .toList();
     }
 
-    private boolean isKeywordBlank(String keyword) {
+    private boolean isKeywordBlank(final String keyword) {
         return keyword == null || keyword.isBlank();
     }
 
@@ -107,7 +107,11 @@ public class DiscussionQueryService {
                 .orElseThrow(() -> new NoSuchElementException("해당 회원을 찾을 수 없습니다"));
     }
 
-    private List<DiscussionResponse> getDiscussionsByType(Long memberId, DiscussionFilterType type, Member member) {
+    private List<DiscussionResponse> getDiscussionsByType(
+            final Long memberId,
+            final DiscussionFilterType type,
+            final Member member
+    ) {
         if (type.isTypeMine()) {
             return getMyDiscussions(member);
         }
