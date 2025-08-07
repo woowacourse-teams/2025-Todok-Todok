@@ -55,7 +55,7 @@ jobs:
 
   cd:
     needs: ci
-    runs-on: [self-hosted, practice]
+    runs-on: [self-hosted, prac]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
