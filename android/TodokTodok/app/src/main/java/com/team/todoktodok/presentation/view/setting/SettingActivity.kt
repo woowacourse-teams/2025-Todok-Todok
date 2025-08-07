@@ -51,6 +51,7 @@ class SettingActivity : AppCompatActivity() {
 
         binding.toolbar.setNavigationOnClickListener {
             if (viewModel.uiState.value?.screen == SettingScreen.SETTING_MAIN) {
+                setResult(RESULT_OK)
                 finish()
             } else {
                 viewModel.changeScreen(SettingScreen.SETTING_MAIN)
