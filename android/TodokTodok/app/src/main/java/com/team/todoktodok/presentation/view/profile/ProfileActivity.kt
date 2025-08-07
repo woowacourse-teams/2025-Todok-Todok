@@ -20,6 +20,7 @@ import com.team.todoktodok.presentation.view.profile.adapter.ContentPagerAdapter
 import com.team.todoktodok.presentation.view.profile.adapter.ProfileAdapter
 import com.team.todoktodok.presentation.view.profile.vm.ProfileViewModel
 import com.team.todoktodok.presentation.view.profile.vm.ProfileViewModelFactory
+import com.team.todoktodok.presentation.view.setting.SettingActivity
 
 class ProfileActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProfileBinding
@@ -94,7 +95,7 @@ class ProfileActivity : AppCompatActivity() {
     private val profileAdapterHandler =
         object : ProfileAdapter.Handler {
             override fun onClickSetting() {
-                // 설정 화면 이동 기능 추가
+                startActivity(SettingActivity.Intent(this@ProfileActivity))
             }
 
             override fun onClickLogo() {

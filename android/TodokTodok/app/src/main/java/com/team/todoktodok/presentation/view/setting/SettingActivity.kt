@@ -1,5 +1,7 @@
 package com.team.todoktodok.presentation.view.setting
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.annotation.StringRes
 import androidx.activity.enableEdgeToEdge
@@ -96,5 +98,9 @@ class SettingActivity : AppCompatActivity() {
             replace(R.id.fcv_setting, fragment)
             addToBackStack(null)
         }
+    }
+
+    companion object {
+        fun Intent(context: Context): Intent = Intent(context, SettingActivity::class.java)
     }
 }
