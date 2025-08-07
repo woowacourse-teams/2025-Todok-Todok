@@ -2,7 +2,6 @@ package todoktodok.backend.comment.application.service.query;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,8 +40,9 @@ public class CommentQueryService {
                 .getFirst()
                 .likeCount();
         final int replyCount = replyRepository.countRepliesByComment(comment);
+        final boolean isLiked = commentLikeRepository.existsByMemberIdAndCommentId(memberId, commentId);
 
-        return new CommentResponse(comment, likeCount, replyCount);
+        return new CommentResponse(comment, likeCount, replyCount, isLiked);
     }
 
     public List<CommentResponse> getComments(
@@ -64,7 +64,8 @@ public class CommentQueryService {
                 .map(comment -> new CommentResponse(
                         comment,
                         findLikeCount(comment, likeCountsById),
-                        findReplyCount(comment, replyCountsById)
+                        findReplyCount(comment, replyCountsById),
+                        commentLikeRepository.existsByMemberIdAndCommentId(memberId, comment.getId())
                 ))
                 .toList();
     }
