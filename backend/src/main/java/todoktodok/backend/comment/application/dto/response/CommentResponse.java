@@ -11,14 +11,14 @@ public record CommentResponse(
         String content,
         int likeCount,
         int replyCount,
-        boolean isLiked
+        boolean isLikedByMe
 ) {
 
     public CommentResponse(
             final Comment comment,
             final int likeCount,
             final int replyCount,
-            final boolean isLiked
+            final boolean isLikedByMe
     ) {
         this(
                 comment.getId(),
@@ -27,7 +27,7 @@ public record CommentResponse(
                 comment.getContent(),
                 likeCount,
                 replyCount,
-                isLiked
+                isLikedByMe
         );
     }
 }

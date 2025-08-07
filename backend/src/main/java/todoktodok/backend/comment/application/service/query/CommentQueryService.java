@@ -40,9 +40,9 @@ public class CommentQueryService {
                 .getFirst()
                 .likeCount();
         final int replyCount = replyRepository.countRepliesByComment(comment);
-        final boolean isLiked = commentLikeRepository.existsByMemberIdAndCommentId(memberId, commentId);
+        final boolean isLikedByMe = commentLikeRepository.existsByMemberIdAndCommentId(memberId, commentId);
 
-        return new CommentResponse(comment, likeCount, replyCount, isLiked);
+        return new CommentResponse(comment, likeCount, replyCount, isLikedByMe);
     }
 
     public List<CommentResponse> getComments(
@@ -66,9 +66,13 @@ public class CommentQueryService {
                         comment,
                         findLikeCount(comment, likeCountsById),
                         findReplyCount(comment, replyCountsById),
-                        likedCommentIds.contains(comment.getId())
+                        checkIsLikedByMe(comment, likedCommentIds)
                 ))
                 .toList();
+    }
+
+    private boolean checkIsLikedByMe(Comment comment, List<Long> likedCommentIds) {
+        return likedCommentIds.contains(comment.getId());
     }
 
     private void validateIsExistMember(final Long memberId) {
