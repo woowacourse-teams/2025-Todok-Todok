@@ -46,4 +46,11 @@ class DefaultCommentRepository(
     ) {
         commentRemoteDataSource.deleteComment(discussionId, commentId)
     }
+
+    override suspend fun report(
+        discussionId: Long,
+        commentId: Long,
+    ) {
+        commentRemoteDataSource.report(discussionId, commentId)
+    }
 }
