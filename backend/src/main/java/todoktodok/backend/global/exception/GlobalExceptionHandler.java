@@ -20,38 +20,45 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(JwtException.class)
     public ResponseEntity<String> handleJwtException(final JwtException e) {
+        log.warn(PREFIX + e.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PREFIX + e.getMessage());
     }
 
     @ExceptionHandler({IllegalArgumentException.class, DateTimeException.class})
     public ResponseEntity<String> handleBadRequestException(final RuntimeException e) {
+        log.warn(PREFIX + e.getMessage());
         return ResponseEntity.badRequest().body(PREFIX + e.getMessage());
     }
 
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<String> handleNotFoundException(NoSuchElementException e) {
+        log.warn(PREFIX + e.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(PREFIX + e.getMessage());
     }
 
     @ExceptionHandler(IllegalStateException.class)
     public ResponseEntity<String> handleIllegalStateException(final IllegalStateException e) {
+        log.warn(PREFIX + e.getMessage());
         return ResponseEntity.internalServerError().body(PREFIX + e.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<String> handleMethodArgumentNotValidException(final MethodArgumentNotValidException e) {
+        log.warn(PREFIX + e.getBindingResult().getFieldErrors().getFirst().getDefaultMessage());
         return ResponseEntity.badRequest()
                 .body(PREFIX + e.getBindingResult().getFieldErrors().getFirst().getDefaultMessage());
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<String> handleMethodArgumentTypeMismatchException(final MethodArgumentTypeMismatchException e) {
+        log.warn(PREFIX + String.format("유효하지 않은 %s의 값입니다", e.getRequiredType().getSimpleName()));
         return ResponseEntity.badRequest()
                 .body(PREFIX + String.format("유효하지 않은 %s의 값입니다", e.getRequiredType().getSimpleName()));
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ResponseEntity<String> handleMissingServletRequestParameterException(final MissingServletRequestParameterException e) {
+        log.warn(PREFIX + String.format("파라미터 %s가 존재하지 않습니다", e.getParameterName()));
         return ResponseEntity.badRequest()
                 .body(PREFIX + String.format("파라미터 %s가 존재하지 않습니다", e.getParameterName()));
     }
