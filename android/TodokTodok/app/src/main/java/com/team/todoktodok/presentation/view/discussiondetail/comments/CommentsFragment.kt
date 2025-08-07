@@ -1,6 +1,7 @@
 package com.team.todoktodok.presentation.view.discussiondetail.comments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupWindow
@@ -17,6 +18,7 @@ import com.team.todoktodok.presentation.view.discussiondetail.BottomSheetVisibil
 import com.team.todoktodok.presentation.view.discussiondetail.commentcreate.CommentCreateBottomSheet
 import com.team.todoktodok.presentation.view.discussiondetail.commentdetail.CommentDetailFragment
 import com.team.todoktodok.presentation.view.discussiondetail.comments.adapter.CommentAdapter
+import com.team.todoktodok.presentation.view.discussiondetail.comments.model.CommentUiModel
 import com.team.todoktodok.presentation.view.discussiondetail.comments.vm.CommentsViewModel
 import com.team.todoktodok.presentation.view.discussiondetail.comments.vm.CommentsViewModelFactory
 
@@ -27,6 +29,7 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
         val repositoryModule = (requireActivity().application as App).container.repositoryModule
         CommentsViewModelFactory(
             repositoryModule.commentRepository,
+            repositoryModule.tokenRepository,
         )
     }
 
@@ -115,17 +118,34 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
             true,
         )
 
-    private fun getPopUpView(commentId: Long): PopupWindow =
-        if (true) {
+    private fun getPopUpView(commentUiModel: CommentUiModel): PopupWindow =
+        if (commentUiModel.isMyComment) {
             val binding = MenuOwnedDiscussionBinding.inflate(layoutInflater)
-            binding.tvEdit.setOnClickListener { viewModel.updateComment(commentId) }
-            binding.tvDelete.setOnClickListener { viewModel.deleteComment(commentId = commentId) }
+            binding.tvEdit.setOnClickListener { viewModel.updateComment(commentUiModel.comment.id) }
+            binding.tvDelete.setOnClickListener { viewModel.deleteComment(commentUiModel.comment.id) }
             createPopUpView(binding.root)
         } else {
+            setUpDialogResultListener(commentId = commentUiModel.comment.id)
             val binding = MenuExternalDiscussionBinding.inflate(layoutInflater)
-            binding.tvReport.setOnClickListener { }
+            binding.tvReport.setOnClickListener {
+                val dialog = ReportCommentDialog.newInstance()
+                dialog.show(childFragmentManager, ReportCommentDialog.TAG)
+            }
             createPopUpView(binding.root)
         }
+
+    private fun setUpDialogResultListener(commentId: Long) {
+        childFragmentManager.setFragmentResultListener(
+            ReportCommentDialog.RESULT_KEY_REPORT,
+            this,
+        ) { _, bundle ->
+            val result = bundle.getBoolean(ReportCommentDialog.RESULT_KEY_REPORT)
+            if (result) {
+                viewModel.report(commentId)
+                popupWindow?.dismiss()
+            }
+        }
+    }
 
     private fun getBottomSheetVisibilityListener(binding: FragmentCommentsBinding) =
         object : BottomSheetVisibilityListener {
@@ -157,10 +177,10 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
             }
 
             override fun onOptionClick(
-                commentId: Long,
+                commentUiModel: CommentUiModel,
                 view: View,
             ) {
-                if (popupWindow == null) popupWindow = getPopUpView(commentId)
+                popupWindow = getPopUpView(commentUiModel)
                 if (popupWindow?.isShowing == true) {
                     popupWindow?.dismiss()
                 } else {

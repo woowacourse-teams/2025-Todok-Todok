@@ -8,30 +8,31 @@ import com.team.domain.model.Comment
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ItemCommentBinding
 import com.team.todoktodok.presentation.core.ext.formatWithResource
+import com.team.todoktodok.presentation.view.discussiondetail.comments.model.CommentUiModel
 
 class CommentViewHolder private constructor(
     private val binding: ItemCommentBinding,
     private val handler: Handler,
 ) : RecyclerView.ViewHolder(binding.root) {
-    fun bind(comment: Comment) {
+    fun bind(commentUiModel: CommentUiModel) {
         with(binding) {
-            tvDiscussionOpinion.text = comment.content
-            tvUserNickname.text = comment.writer.nickname.value
+            tvDiscussionOpinion.text = commentUiModel.comment.content
+            tvUserNickname.text = commentUiModel.comment.writer.nickname.value
             tvDiscussionCreateAt.text =
-                comment.createAt.formatWithResource(
+                commentUiModel.comment.createAt.formatWithResource(
                     binding.root.context,
                     R.string.date_format_pattern,
                 )
             ivReply.setOnClickListener {
-                handler.onReplyClick(comment.id)
+                handler.onReplyClick(commentUiModel.comment.id)
             }
             ivCommentOption.setOnClickListener {
-                handler.onOptionClick(comment.id, ivCommentOption)
+                handler.onOptionClick(commentUiModel, ivCommentOption)
             }
-            ivLike.setOnClickListener { handler.onToggleLike(comment.id) }
-            ivLike.isSelected = comment.isLikedByMe
-            tvHeartCount.text = comment.likeCount.toString()
-            tvReplyCount.text = comment.replyCount.toString()
+            ivLike.setOnClickListener { handler.onToggleLike(commentUiModel.comment.id) }
+            ivLike.isSelected = commentUiModel.comment.isLikedByMe
+            tvHeartCount.text = commentUiModel.comment.likeCount.toString()
+            tvReplyCount.text = commentUiModel.comment.replyCount.toString()
         }
     }
 
@@ -52,7 +53,7 @@ class CommentViewHolder private constructor(
         fun onDeleteClick(commentId: Long)
 
         fun onOptionClick(
-            commentId: Long,
+            commentUiModel: CommentUiModel,
             view: View,
         )
 
