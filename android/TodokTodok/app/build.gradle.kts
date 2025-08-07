@@ -96,6 +96,7 @@ dependencies {
     implementation(libs.bundles.google)
     implementation(libs.bundles.glide)
     implementation(libs.bundles.logging)
+    implementation(libs.google.material)
 
     testImplementation(libs.bundles.test)
     testImplementation(libs.androidx.core.testing)
