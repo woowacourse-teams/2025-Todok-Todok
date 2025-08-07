@@ -7,6 +7,7 @@ import todoktodok.backend.comment.domain.Comment;
 import todoktodok.backend.comment.domain.repository.CommentRepository;
 import todoktodok.backend.discussion.domain.Discussion;
 import todoktodok.backend.discussion.domain.repository.DiscussionRepository;
+import todoktodok.backend.member.domain.Member;
 import todoktodok.backend.member.domain.repository.MemberRepository;
 import todoktodok.backend.reply.application.dto.response.ReplyResponse;
 import todoktodok.backend.reply.domain.Reply;
@@ -35,7 +36,7 @@ public class ReplyQueryService {
         final Discussion discussion = findDiscussion(discussionId);
         final Comment comment = findComment(commentId);
 
-        validateIsExistMember(memberId);
+        final Member member = findMember(memberId);
         comment.validateMatchWithDiscussion(discussion);
 
         final List<Reply> replies = replyRepository.findRepliesByComment(comment);
@@ -44,17 +45,19 @@ public class ReplyQueryService {
                 .toList();
 
         final List<ReplyLikeCountDto> likeCountsById = replyLikeRepository.findLikeCountsByReplyIds(replyIds);
+        final List<Long> likedReplyIds = replyLikeRepository.findLikedDiscussionIdsByMember(member, replyIds);
 
         return replies.stream()
                 .map(reply -> new ReplyResponse(
                         reply,
-                        findLikeCount(reply, likeCountsById)
+                        findLikeCount(reply, likeCountsById),
+                        findIsLiked(reply, likedReplyIds)
                 ))
                 .toList();
     }
 
-    private void validateIsExistMember(final Long memberId) {
-        memberRepository.findById(memberId)
+    private Member findMember(final Long memberId) {
+        return memberRepository.findById(memberId)
                 .orElseThrow(() -> new NoSuchElementException("해당 회원을 찾을 수 없습니다"));
     }
 
@@ -77,5 +80,12 @@ public class ReplyQueryService {
                 .findFirst()
                 .map(ReplyLikeCountDto::likeCount)
                 .orElseThrow(() -> new IllegalStateException("대댓글별 좋아요 수를 찾을 수 없습니다"));
+    }
+
+    private boolean findIsLiked(
+            final Reply reply,
+            final List<Long> likedReplyIds
+    ) {
+        return likedReplyIds.contains(reply.getId());
     }
 }
