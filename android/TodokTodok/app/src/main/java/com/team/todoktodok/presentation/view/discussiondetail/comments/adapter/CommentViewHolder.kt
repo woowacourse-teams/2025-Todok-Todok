@@ -10,6 +10,7 @@ import com.team.todoktodok.presentation.core.ext.formatWithResource
 
 class CommentViewHolder private constructor(
     private val binding: ItemCommentBinding,
+    private val handler: Handler,
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(comment: Comment) {
         with(binding) {
@@ -20,14 +21,24 @@ class CommentViewHolder private constructor(
                     binding.root.context,
                     R.string.date_format_pattern,
                 )
+            ivReply.setOnClickListener {
+                handler.onItemClick(comment.id)
+            }
         }
     }
 
     companion object {
-        fun CommentViewHolder(parent: ViewGroup): CommentViewHolder {
+        fun CommentViewHolder(
+            parent: ViewGroup,
+            handler: Handler,
+        ): CommentViewHolder {
             val layoutInflater = LayoutInflater.from(parent.context)
             val binding = ItemCommentBinding.inflate(layoutInflater, parent, false)
-            return CommentViewHolder(binding)
+            return CommentViewHolder(binding, handler)
         }
+    }
+
+    interface Handler {
+        fun onItemClick(commentId: Long)
     }
 }

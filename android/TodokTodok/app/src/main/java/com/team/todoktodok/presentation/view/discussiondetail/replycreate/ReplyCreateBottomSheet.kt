@@ -1,4 +1,4 @@
-package com.team.todoktodok.presentation.view.discussiondetail.commentcreate
+package com.team.todoktodok.presentation.view.discussiondetail.replycreate
 
 import android.app.Dialog
 import android.content.Context
@@ -16,13 +16,13 @@ import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentCommentCreateBottomSheetBinding
 import com.team.todoktodok.presentation.view.discussiondetail.BottomSheetVisibilityListener
-import com.team.todoktodok.presentation.view.discussiondetail.commentcreate.vm.CommentCreateViewModel
-import com.team.todoktodok.presentation.view.discussiondetail.commentcreate.vm.CommentCreateViewModelFactory
+import com.team.todoktodok.presentation.view.discussiondetail.replycreate.vm.ReplyCreateViewModel
+import com.team.todoktodok.presentation.view.discussiondetail.replycreate.vm.ReplyCreateViewModelFactory
 
-class CommentCreateBottomSheet : BottomSheetDialogFragment(R.layout.fragment_comment_create_bottom_sheet) {
-    private val viewModel by viewModels<CommentCreateViewModel> {
+class ReplyCreateBottomSheet : BottomSheetDialogFragment(R.layout.fragment_comment_create_bottom_sheet) {
+    private val viewModel by viewModels<ReplyCreateViewModel> {
         val repositoryModule = (requireActivity().application as App).container.repositoryModule
-        CommentCreateViewModelFactory(
+        ReplyCreateViewModelFactory(
             repositoryModule.commentRepository,
         )
     }
@@ -74,7 +74,7 @@ class CommentCreateBottomSheet : BottomSheetDialogFragment(R.layout.fragment_com
     private fun setupOnClickAddComment(binding: FragmentCommentCreateBottomSheetBinding) {
         with(binding) {
             ivAddComment.setOnClickListener {
-                viewModel.submitComment()
+                viewModel.submitReply()
                 etTextCommentContent.text?.clear()
                 etTextCommentContent.clearFocus()
             }
@@ -90,10 +90,10 @@ class CommentCreateBottomSheet : BottomSheetDialogFragment(R.layout.fragment_com
         }
     }
 
-    private fun handleUiEvent(uiEvent: CommentCreateUiEvent) {
+    private fun handleUiEvent(uiEvent: ReplyCreateUiEvent) {
         when (uiEvent) {
-            is CommentCreateUiEvent.CreateComment -> {
-                setFragmentResult(COMMENT_REQUEST_KEY, bundleOf(COMMENT_CREATED_RESULT_KEY to true))
+            ReplyCreateUiEvent.CreateReply -> {
+                setFragmentResult(REPLY_REQUEST_KEY, bundleOf(REPLY_CREATED_RESULT_KEY to true))
                 dismiss()
             }
         }
@@ -108,15 +108,22 @@ class CommentCreateBottomSheet : BottomSheetDialogFragment(R.layout.fragment_com
     }
 
     companion object {
-        const val COMMENT_REQUEST_KEY = "comment_create_result"
-        const val COMMENT_CREATED_RESULT_KEY = "IS_COMMENT_CREATED"
-        const val TAG = "COMMENTS_BOTTOM_SHEET"
+        const val REPLY_REQUEST_KEY = "reply_request_key"
+        const val REPLY_CREATED_RESULT_KEY = "IS_REPLY_CREATED"
+        const val TAG = "COMMENT_DETAIL_SHEET"
 
         private const val DIM_AMOUNT = 0.001f
 
-        fun newInstance(discussionId: Long): CommentCreateBottomSheet =
-            CommentCreateBottomSheet().apply {
-                arguments = bundleOf(CommentCreateViewModel.KEY_DISCUSSION_ID to discussionId)
+        fun newInstance(
+            discussionId: Long,
+            commentId: Long,
+        ): ReplyCreateBottomSheet =
+            ReplyCreateBottomSheet().apply {
+                arguments =
+                    bundleOf(
+                        ReplyCreateViewModel.KEY_DISCUSSION_ID to discussionId,
+                        ReplyCreateViewModel.KEY_COMMENT_ID to commentId,
+                    )
             }
     }
 }

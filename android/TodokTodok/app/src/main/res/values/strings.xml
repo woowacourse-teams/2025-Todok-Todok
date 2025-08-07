@@ -63,6 +63,13 @@
     <string name="discussion_menu_alarm">알람</string>
     <string name="discussion_menu_profile">내정보</string>
 
+    <!-- 댓글 상세 화면-->
+    <string name="content_description_comment_detail_back">댓글 상세 화면에서 뒤로가는 버튼</string>
+    <string name="content_description_comment_option">댓글 옵션 클릭 버튼</string>
+    <string name="content_description_reply_option">대댓글 옵션 클릭 버튼</string>
+    <string name="content_description_comment_reply">대댓글 목록 버튼</string>
+    <string name="content_description_comment_like">댓글 좋아요 클릭 버튼</string>
+    <string name="content_description_reply_like">대댓글 좋아요 클릭 버튼</string>
     <!-- 토론방 책 선택 화면 -->
     <string name="content_description_ut_discussion_img">토론방 책 이미지</string>
     <string name="create_discussion_room">토론방 생성</string>
