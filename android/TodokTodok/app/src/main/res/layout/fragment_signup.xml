@@ -9,9 +9,10 @@
     <TextView
         android:id="@+id/tv_header"
         style="@style/HeaderTitleText"
+        android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="@dimen/toolbar_height"
-        android:text="@string/app_name_kr"
+        android:text="@string/signup_text"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -20,7 +21,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/space_32"
-        android:text="@string/signup_text"
+        android:text="@string/all_nickname"
         android:textSize="@dimen/font_size_large"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0"
