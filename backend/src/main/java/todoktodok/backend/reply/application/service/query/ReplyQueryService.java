@@ -71,7 +71,7 @@ public class ReplyQueryService {
                 .orElseThrow(() -> new NoSuchElementException("해당 댓글을 찾을 수 없습니다"));
     }
 
-    private static int findLikeCount(
+    private int findLikeCount(
             final Reply reply,
             final List<ReplyLikeCountDto> likeCountsById
     ) {
