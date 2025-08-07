@@ -3,10 +3,7 @@ package com.team.todoktodok.presentation.view.discussion.create
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import android.view.inputmethod.EditorInfo
-import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -26,7 +23,11 @@ import com.team.todoktodok.presentation.view.discussiondetail.DiscussionDetailAc
 
 class CreateDiscussionRoomActivity : AppCompatActivity() {
     private val binding by lazy { ActivityCreateDiscussionRoomBinding.inflate(layoutInflater) }
-    private val mode by lazy { intent.getParcelableCompat<SerializationCreateDiscussionRoomMode>(EXTRA_MODE) }
+    private val mode by lazy {
+        intent.getParcelableCompat<SerializationCreateDiscussionRoomMode>(
+            EXTRA_MODE,
+        )
+    }
     private val viewModel by viewModels<CreateDiscussionRoomViewModel> {
         val repositoryModule = (application as App).container.repositoryModule
         CreateDiscussionRoomViewModelFactory(
@@ -43,7 +44,6 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
         setContentView(binding.root)
         initSystemBar()
         setupUi()
-
 
         binding.apply {
             btnBack.setOnClickListener { finish() }
@@ -62,29 +62,28 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
                 is SerializationCreateDiscussionRoomMode.Edit -> {
                     binding.tvCreateDiscussionRoomTitle.text = "토론방 수정"
                     binding.btnEdit.visibility = View.INVISIBLE
+                    btnCreate.isEnabled = true
                     binding.btnCreate.setOnClickListener {
                         viewModel.editDiscussionRoom()
                     }
                     binding.etDiscussionRoomTitle.setText(viewModel.title.value)
                     binding.etDiscussionRoomOpinion.setText(viewModel.opinion.value)
+
+                    btnCreate.setTextColor(
+                        ContextCompat.getColor(
+                            this@CreateDiscussionRoomActivity,
+                            R.color.green_1A,
+                        ),
+                    )
                 }
             }
             etDiscussionRoomTitle.setOnEditorActionListener { view, actionId, event ->
-                handleTextInput(view, actionId)
+                viewModel.onTitleChanged(view.text.toString())
+                true
             }
             etDiscussionRoomOpinion.setOnEditorActionListener { view, actionId, event ->
-                handleTextInput(view, actionId)
-            }
-            if (etDiscussionRoomTitle.text.isNullOrBlank() && etDiscussionRoomOpinion.text.isNullOrBlank()) {
-                btnCreate.isEnabled = false
-            } else {
-                btnCreate.isEnabled = true
-                btnCreate.setTextColor(
-                    ContextCompat.getColor(
-                        this@CreateDiscussionRoomActivity,
-                        R.color.green_1A,
-                    ),
-                )
+                viewModel.onOpinionChanged(view.text.toString())
+                true
             }
         }
     }
@@ -108,21 +107,28 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
                 }
             }
         }
-    }
-
-    private fun handleTextInput(
-        view: TextView,
-        actionId: Int,
-    ): Boolean =
-        if (actionId == EditorInfo.IME_ACTION_DONE) {
-            when (view.id) {
-                binding.etDiscussionRoomTitle.id -> viewModel.onTitleChanged(view.text.toString())
-                binding.etDiscussionRoomOpinion.id -> viewModel.onOpinionChanged(view.text.toString())
-            }
-            true
-        } else {
-            false
+        viewModel.title.observe(this) { title ->
+            binding.etDiscussionRoomTitle.setText(title)
         }
+        viewModel.opinion.observe(this) { opinion ->
+            binding.etDiscussionRoomOpinion.setText(opinion)
+        }
+//        viewModel.isCreate.observe(this) { isCreate: Boolean ->
+//            binding.apply {
+//                if (etDiscussionRoomTitle.text.isNullOrBlank() && etDiscussionRoomOpinion.text.isNullOrBlank()) {
+//                    btnCreate.isEnabled = false
+//                } else {
+//                    btnCreate.isEnabled = true
+//                    btnCreate.setTextColor(
+//                        ContextCompat.getColor(
+//                            this@CreateDiscussionRoomActivity,
+//                            R.color.green_1A,
+//                        ),
+//                    )
+//                }
+//            }
+//        }
+    }
 
     private fun initSystemBar() {
         enableEdgeToEdge()

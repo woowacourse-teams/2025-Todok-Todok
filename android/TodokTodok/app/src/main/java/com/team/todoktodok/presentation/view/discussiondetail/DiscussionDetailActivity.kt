@@ -149,10 +149,11 @@ class DiscussionDetailActivity : AppCompatActivity() {
             is DiscussionDetailUiEvent.ReportDiscussion -> showToast("토론 신고")
             is DiscussionDetailUiEvent.UpdateDiscussion -> {
                 val discussionId = discussionDetailUiEvent.discussionId
-                val intent = CreateDiscussionRoomActivity.Intent(
-                    this@DiscussionDetailActivity,
-                    SerializationCreateDiscussionRoomMode.Edit(discussionId)
-                )
+                val intent =
+                    CreateDiscussionRoomActivity.Intent(
+                        this@DiscussionDetailActivity,
+                        SerializationCreateDiscussionRoomMode.Edit(discussionId),
+                    )
                 startActivity(intent)
                 finish()
             }

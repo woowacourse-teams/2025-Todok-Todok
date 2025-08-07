@@ -2,8 +2,6 @@ package com.team.todoktodok.presentation.view.discussion.create.vm
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.createSavedStateHandle
-import androidx.lifecycle.viewmodel.CreationExtras
 import com.team.domain.repository.BookRepository
 import com.team.domain.repository.DiscussionRepository
 import com.team.domain.repository.TokenRepository
@@ -15,9 +13,7 @@ class CreateDiscussionRoomViewModelFactory(
     private val discussionRepository: DiscussionRepository,
     private val tokenRepository: TokenRepository,
 ) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(
-        modelClass: Class<T>,
-    ): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(CreateDiscussionRoomViewModel::class.java)) {
             return CreateDiscussionRoomViewModel(
                 mode,

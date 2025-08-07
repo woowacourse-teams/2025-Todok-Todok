@@ -1,10 +1,7 @@
 package com.team.todoktodok.presentation.view.discussion.create.vm
 
-import android.provider.ContactsContract.QuickContact.EXTRA_MODE
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.team.domain.model.Book
@@ -24,6 +21,9 @@ class CreateDiscussionRoomViewModel(
     private val discussionRepository: DiscussionRepository,
     private val tokenRepository: TokenRepository,
 ) : ViewModel() {
+    private val _isCreate: MutableLiveData<Boolean> = MutableLiveData(false)
+    val isCreate: LiveData<Boolean> = _isCreate
+
     private val _book: MutableLiveData<Book> = MutableLiveData()
     val book: LiveData<Book> = _book
 
@@ -33,7 +33,7 @@ class CreateDiscussionRoomViewModel(
     private val _opinion: MutableLiveData<String> = MutableLiveData()
     val opinion: LiveData<String> = _opinion
 
-    private val discussionRoomId: Long? = null
+    private var discussionRoomId: Long? = null
 
     private val _uiEvent: MutableSingleLiveData<CreateDiscussionUiEvent> = MutableSingleLiveData()
     val uiEvent: SingleLiveData<CreateDiscussionUiEvent> get() = _uiEvent
@@ -48,17 +48,28 @@ class CreateDiscussionRoomViewModel(
                 _book.value = mode.selectedBook.toDomain()
             }
             is SerializationCreateDiscussionRoomMode.Edit -> {
+                discussionRoomId = mode.discussionRoomId
                 getDiscussionRoom(mode.discussionRoomId)
             }
         }
     }
 
+    fun checkCreate() {
+        if (_title.value.isNullOrBlank() || _opinion.value.isNullOrBlank()) {
+            _isCreate.value = false
+        } else {
+            _isCreate.value = true
+        }
+    }
+
     fun onTitleChanged(title: String) {
         _title.value = title
+        checkCreate()
     }
 
     fun onOpinionChanged(opinion: String) {
         _opinion.value = opinion
+        checkCreate()
     }
 
     fun createDiscussionRoom() {
