@@ -2,6 +2,7 @@ package com.team.domain.repository
 
 import com.team.domain.model.Discussion
 import com.team.domain.model.DiscussionFilter
+import com.team.domain.model.member.DiscussionRoom
 
 interface DiscussionRepository {
     suspend fun getDiscussion(id: Long): Result<Discussion>
@@ -19,7 +20,6 @@ interface DiscussionRepository {
 
     suspend fun editDiscussionRoom(
         discussionId: Long,
-        discussionTitle: String,
-        discussionOpinion: String,
+        discussionRoom: DiscussionRoom,
     )
 }
