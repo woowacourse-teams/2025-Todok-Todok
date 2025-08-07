@@ -91,11 +91,14 @@ jobs:
 #          docker run -d -p 80:8080 woowajeff/todoktodok:dev
 #          echo "컨테이너 실행 완료"
 
-      - name: Docker Compose Down
+      - name: Docker Compose Down (if exists)
         run: |
           cd backend
-          docker-compose down
-          echo "기존 docker-compose 종료 실패 (무시)"
+          if [ -f docker-compose.yml ]; then
+            docker-compose down
+          else
+            echo "docker-compose.yml 없음 - down 스킵"
+          fi
 
       - name: Docker Compose Up
         run: |
