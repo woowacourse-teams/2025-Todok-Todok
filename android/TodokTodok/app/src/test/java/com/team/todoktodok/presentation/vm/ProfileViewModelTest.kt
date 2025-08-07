@@ -4,6 +4,8 @@ import com.team.domain.model.member.Profile
 import com.team.domain.repository.MemberRepository
 import com.team.todoktodok.CoroutinesTestExtension
 import com.team.todoktodok.InstantTaskExecutorExtension
+import com.team.todoktodok.ext.getOrAwaitValue
+import com.team.todoktodok.presentation.view.profile.adapter.ProfileItems
 import com.team.todoktodok.presentation.view.profile.vm.ProfileViewModel
 import io.kotest.matchers.shouldBe
 import io.mockk.coEvery
@@ -39,7 +41,7 @@ class ProfileViewModelTest {
             viewModel.loadProfile(1)
 
             // then
-            val expected = Profile(1, "페토", "나나를 좋아하는", "")
+            val expected = (viewModel.uiState.getOrAwaitValue().items[1] as ProfileItems.InformationItem).value
 
             expected shouldBe response
         }
