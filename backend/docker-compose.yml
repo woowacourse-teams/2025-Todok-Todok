@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  dev:
+    container_name: dev
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+      args:
+        JAR_FILE: /build/libs/*.jar  # 빌드 시에 전달할 인자 (필요 시)
+    image: woowajeff/todoktodok:dev
+    ports:
+      - "80:8080"
+    volumes:
+      - ./log:/log   # 로그 공유
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+    restart: always
+
+  promtail:
+    container_name: promtail
+    image: grafana/promtail:latest
+    restart: always
+    volumes:
+      - ./promtail-config.yml:/etc/promtail/promtail.yml
+      - ./log:/log
+    command: -config.file=/etc/promtail/promtail.yml
