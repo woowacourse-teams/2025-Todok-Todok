@@ -124,7 +124,7 @@ public class DiscussionQueryService {
             final String keyword,
             final Member member
     ) {
-        List<Discussion> discussions = discussionRepository.searchByKeywordAndMember(keyword, member).stream()
+        final List<Discussion> discussions = discussionRepository.searchByKeywordAndMember(keyword, member).stream()
                 .filter(discussion -> discussion.isOwnedBy(member))
                 .toList();
 
@@ -132,18 +132,18 @@ public class DiscussionQueryService {
     }
 
     private List<DiscussionResponse> getDiscussionsByKeyword(final String keyword) {
-        List<Discussion> discussions = discussionRepository.searchByKeyword(keyword);
+        final List<Discussion> discussions = discussionRepository.searchByKeyword(keyword);
 
         return getDiscussionResponses(discussions);
     }
 
     private List<DiscussionResponse> getDiscussionResponses(final List<Discussion> discussions) {
-        List<Long> discussionIds = discussions.stream()
+        final List<Long> discussionIds = discussions.stream()
                 .map(Discussion::getId)
                 .toList();
 
-        Map<Long, Integer> likeCounts = getLikeCounts(discussionIds);
-        Map<Long, Integer> commentCounts = getCommentCounts(discussionIds);
+        final Map<Long, Integer> likeCounts = getLikeCounts(discussionIds);
+        final Map<Long, Integer> commentCounts = getCommentCounts(discussionIds);
 
         return discussions.stream()
                 .map(discussion -> new DiscussionResponse(
