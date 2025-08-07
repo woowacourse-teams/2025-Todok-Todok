@@ -20,7 +20,7 @@ class DefaultDiscussionRepository(
         bookId: Long,
         discussionTitle: String,
         discussionOpinion: String,
-    ): Int {
+    ): Long {
         val response =
             discussionRemoteDataSource.saveDiscussionRoom(
                 bookId = bookId,
@@ -30,7 +30,7 @@ class DefaultDiscussionRepository(
         if (response.isSuccessful) {
             val location = response.headers()[HEADER_LOCATION]
             val id = location?.substringAfterLast(HEADER_DISCUSSION_ID_PREFIX)
-            return id?.toIntOrNull() ?: throw IllegalStateException(ERROR_SEVER_RESPONSE)
+            return id?.toLongOrNull() ?: throw IllegalStateException(ERROR_SEVER_RESPONSE)
         } else {
             throw IllegalStateException(ERROR_NETWORK_WITH_SEVER)
         }

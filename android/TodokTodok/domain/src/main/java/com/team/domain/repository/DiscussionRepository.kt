@@ -15,5 +15,5 @@ interface DiscussionRepository {
         bookId: Long,
         discussionTitle: String,
         discussionOpinion: String,
-    ): Int
+    ): Long
 }
