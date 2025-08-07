@@ -9,6 +9,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 @Component
 public class LogInterceptor implements HandlerInterceptor {
+
     private static final Logger log = LoggerFactory.getLogger(LogInterceptor.class);
 
     @Override
