@@ -33,7 +33,7 @@ public class LogInterceptor implements HandlerInterceptor {
         final String requestURI = request.getRequestURI();
         final int status = response.getStatus();
 
-        if (status >= 200 && status < 300) {
+        if (status >= 200 && status < 400) {
             log.info("[API RESPONSE] {}: {}", requestURI, status);
         } else {
             log.error("[API RESPONSE] {}: {}", requestURI, status);
