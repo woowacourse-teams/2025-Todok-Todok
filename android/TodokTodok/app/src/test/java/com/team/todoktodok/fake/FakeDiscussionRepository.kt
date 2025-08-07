@@ -22,12 +22,15 @@ class FakeDiscussionRepository : DiscussionRepository {
     override suspend fun saveDiscussionRoom(
         bookId: Long,
         discussionTitle: String,
-        discussionOpinion: String
+        discussionOpinion: String,
     ): Long {
         TODO("Not yet implemented")
     }
 
-    override suspend fun editDiscussionRoom(discussionId: Long, discussionRoom: DiscussionRoom) {
+    override suspend fun editDiscussionRoom(
+        discussionId: Long,
+        discussionRoom: DiscussionRoom,
+    ) {
         TODO("Not yet implemented")
     }
 }

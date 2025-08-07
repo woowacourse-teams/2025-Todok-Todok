@@ -78,7 +78,7 @@ class FakeDiscussionRemoteDataSource : DiscussionRemoteDataSource {
     override suspend fun saveDiscussionRoom(
         bookId: Long,
         discussionTitle: String,
-        discussionOpinion: String
+        discussionOpinion: String,
     ): Response<Unit> {
         TODO("Not yet implemented")
     }
@@ -86,7 +86,7 @@ class FakeDiscussionRemoteDataSource : DiscussionRemoteDataSource {
     override suspend fun editDiscussionRoom(
         discussionId: Long,
         discussionTitle: String,
-        discussionOpinion: String
+        discussionOpinion: String,
     ): Response<Unit> {
         TODO("Not yet implemented")
     }
