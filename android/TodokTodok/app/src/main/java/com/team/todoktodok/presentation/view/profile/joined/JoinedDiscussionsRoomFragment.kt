@@ -9,8 +9,10 @@ import com.team.domain.model.member.MemberId.Companion.INVALID_MEMBER_ID
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentCreatedDiscussionsRoomBinding
+import com.team.todoktodok.presentation.view.discussiondetail.DiscussionDetailActivity
 import com.team.todoktodok.presentation.view.profile.ProfileActivity.Companion.ARG_MEMBER_ID
 import com.team.todoktodok.presentation.view.profile.ProfileActivity.Companion.MEMBER_ID_NOT_FOUND
+import com.team.todoktodok.presentation.view.profile.created.MemberDiscussionUiEvent
 import com.team.todoktodok.presentation.view.profile.created.adapter.UserDiscussionAdapter
 import com.team.todoktodok.presentation.view.profile.joined.vm.JoinedDiscussionsViewModel
 import com.team.todoktodok.presentation.view.profile.joined.vm.JoinedDiscussionsViewModelFactory
@@ -30,8 +32,10 @@ class JoinedDiscussionsRoomFragment : Fragment(R.layout.fragment_joined_discussi
     ) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentCreatedDiscussionsRoomBinding.bind(view)
+
         initView(binding)
         setUpUiState()
+        setUpUiEvent()
     }
 
     private fun initView(binding: FragmentCreatedDiscussionsRoomBinding) {
@@ -50,10 +54,21 @@ class JoinedDiscussionsRoomFragment : Fragment(R.layout.fragment_joined_discussi
         }
     }
 
+    private fun setUpUiEvent() {
+        viewModel.uiEvent.observe(viewLifecycleOwner) { event ->
+            when (event) {
+                is MemberDiscussionUiEvent.NavigateToDetail -> {
+                    val intent = DiscussionDetailActivity.Intent(requireContext(), event.discussionId)
+                    startActivity(intent)
+                }
+            }
+        }
+    }
+
     private val userDiscussionAdapterHandler =
         object : UserDiscussionAdapter.Handler {
             override fun onSelectDiscussion(index: Int) {
-                TODO("Not yet implemented")
+                viewModel.findSelectedDiscussion(index)
             }
         }
 
