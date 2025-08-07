@@ -31,13 +31,15 @@ public class CommentQueryService {
             final Long discussionId,
             final Long commentId
     ) {
-        final Discussion discussion = getDiscussion(discussionId);
+        final Discussion discussion = findDiscussion(discussionId);
         final Comment comment = findComment(commentId);
 
         validateIsExistMember(memberId);
         comment.validateMatchWithDiscussion(discussion);
 
-        final int likeCount = commentLikeRepository.countCommentLikesByComment(comment);
+        final int likeCount = commentLikeRepository.findLikeCountsByCommentIds(List.of(comment.getId()))
+                .getFirst()
+                .likeCount();
         final int replyCount = replyRepository.countRepliesByComment(comment);
 
         return new CommentResponse(comment, likeCount, replyCount);
@@ -48,7 +50,7 @@ public class CommentQueryService {
             final Long discussionId
     ) {
         validateIsExistMember(memberId);
-        final Discussion discussion = getDiscussion(discussionId);
+        final Discussion discussion = findDiscussion(discussionId);
 
         final List<Comment> comments = commentRepository.findCommentsByDiscussion(discussion);
         final List<Long> commentIds = comments.stream()
@@ -61,8 +63,8 @@ public class CommentQueryService {
         return comments.stream()
                 .map(comment -> new CommentResponse(
                         comment,
-                        getLikeCount(comment, likeCountsById),
-                        getReplyCount(comment, replyCountsById)
+                        findLikeCount(comment, likeCountsById),
+                        findReplyCount(comment, replyCountsById)
                 ))
                 .toList();
     }
@@ -73,7 +75,7 @@ public class CommentQueryService {
         }
     }
 
-    private Discussion getDiscussion(final Long discussionId) {
+    private Discussion findDiscussion(final Long discussionId) {
         return discussionRepository.findById(discussionId)
                 .orElseThrow(() -> new NoSuchElementException("해당 토론방을 찾을 수 없습니다"));
     }
@@ -83,25 +85,25 @@ public class CommentQueryService {
                 .orElseThrow(() -> new NoSuchElementException("해당 댓글을 찾을 수 없습니다"));
     }
 
-    private static int getReplyCount(
+    private int findReplyCount(
             final Comment comment,
             final List<CommentReplyCountDto> replyCountsById
     ) {
         return replyCountsById.stream()
-                .filter(count -> count.commentId().equals(comment.getId()))
+                .filter(count -> comment.isSameId(count.commentId()))
                 .findFirst()
-                .orElseThrow(IllegalStateException::new)
-                .replyCount();
+                .map(CommentReplyCountDto::replyCount)
+                .orElseThrow(() -> new IllegalStateException("댓글의 대댓글 수를 찾을 수 없습니다"));
     }
 
-    private static int getLikeCount(
+    private int findLikeCount(
             final Comment comment,
             final List<CommentLikeCountDto> likeCountsById
     ) {
         return likeCountsById.stream()
-                .filter(count -> count.commentId().equals(comment.getId()))
+                .filter(count -> comment.isSameId(count.commentId()))
                 .findFirst()
-                .orElseThrow(IllegalStateException::new)
-                .likeCount();
+                .map(CommentLikeCountDto::likeCount)
+                .orElseThrow(() -> new IllegalStateException("댓글의 좋아요 수를 찾을 수 없습니다"));
     }
 }
