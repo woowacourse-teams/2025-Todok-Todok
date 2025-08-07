@@ -128,46 +128,13 @@ public class DiscussionQueryService {
                 .filter(discussion -> discussion.isOwnedBy(member))
                 .toList();
 
-        return getDiscussionResponses(discussions);
+        return getDiscussionsResponses(discussions);
     }
 
     private List<DiscussionResponse> getDiscussionsByKeyword(final String keyword) {
         final List<Discussion> discussions = discussionRepository.searchByKeyword(keyword);
 
-        return getDiscussionResponses(discussions);
-    }
-
-    private List<DiscussionResponse> getDiscussionResponses(final List<Discussion> discussions) {
-        final List<Long> discussionIds = discussions.stream()
-                .map(Discussion::getId)
-                .toList();
-
-        final Map<Long, Integer> likeCounts = getLikeCounts(discussionIds);
-        final Map<Long, Integer> commentCounts = getCommentCounts(discussionIds);
-
-        return discussions.stream()
-                .map(discussion -> new DiscussionResponse(
-                        discussion,
-                        likeCounts.getOrDefault(discussion.getId(), 0),
-                        commentCounts.getOrDefault(discussion.getId(), 0)
-                ))
-                .toList();
-    }
-
-    private Map<Long, Integer> getLikeCounts(final List<Long> discussionIds) {
-        return discussionLikeRepository.findLikeCountsByDiscussionIds(discussionIds).stream()
-                .collect(Collectors.toMap(
-                        DiscussionLikeCountDto::discussionId,
-                        DiscussionLikeCountDto::likeCount
-                ));
-    }
-
-    private Map<Long, Integer> getCommentCounts(final List<Long> discussionIds) {
-        return commentRepository.findCommentCountsByDiscussionIds(discussionIds).stream()
-                .collect(Collectors.toMap(
-                        DiscussionCommentCountDto::discussionId,
-                        DiscussionCommentCountDto::commentCount
-                ));
+        return getDiscussionsResponses(discussions);
     }
 
     private int findCommentCount(
