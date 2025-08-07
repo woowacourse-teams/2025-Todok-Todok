@@ -27,4 +27,9 @@ interface CommentRemoteDataSource {
         discussionId: Long,
         commentId: Long,
     )
+
+    suspend fun report(
+        discussionId: Long,
+        commentId: Long,
+    )
 }

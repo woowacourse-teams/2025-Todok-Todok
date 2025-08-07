@@ -22,6 +22,12 @@ interface CommentService {
         @Body commentRequest: CommentRequest,
     ): Response<Unit>
 
+    @POST("v1/discussions/{discussionId}/comments/{commentId}/")
+    suspend fun report(
+        @Path("discussionId") discussionId: Long,
+        @Path("commentId") commentId: Long,
+    ): Response<Unit>
+
     @POST("v1/discussions/{discussionId}/comments/{commentId}/like")
     suspend fun toggleLike(
         @Path("discussionId") discussionId: Long,

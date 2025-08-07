@@ -113,6 +113,12 @@ class FakeCommentRemoteDataSource : CommentRemoteDataSource {
         dummyCommentResponses.removeIf { it.commentId == commentId }
     }
 
+    override suspend fun report(
+        discussionId: Long,
+        commentId: Long,
+    ) {
+    }
+
     companion object {
         val fixture =
             CommentResponse(
