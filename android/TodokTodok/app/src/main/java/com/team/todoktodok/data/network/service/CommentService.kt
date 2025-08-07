@@ -28,6 +28,13 @@ interface CommentService {
         @Path("commentId") commentId: Long,
     ): Response<Unit>
 
+    @PATCH("v1/discussions/{discussionId}/comments/{commentId}")
+    suspend fun updateComment(
+        @Path("discussionId") discussionId: Long,
+        @Path("commentId") commentId: Long,
+        @Body commentRequest: CommentRequest,
+    )
+
     @DELETE("v1/discussions/{discussionId}/comments/{commentId}")
     suspend fun deleteComment(
         @Path("discussionId") discussionId: Long,

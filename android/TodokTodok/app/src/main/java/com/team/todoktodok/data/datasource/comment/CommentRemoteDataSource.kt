@@ -17,6 +17,12 @@ interface CommentRemoteDataSource {
         commentId: Long,
     ): LikeAction
 
+    suspend fun updateComment(
+        discussionId: Long,
+        commentId: Long,
+        comment: String,
+    )
+
     suspend fun deleteComment(
         discussionId: Long,
         commentId: Long,
