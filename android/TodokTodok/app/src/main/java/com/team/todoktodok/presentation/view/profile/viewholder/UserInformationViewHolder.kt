@@ -3,7 +3,6 @@ package com.team.todoktodok.presentation.view.profile.viewholder
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.team.todoktodok.databinding.ItemUserInformationBinding
 import com.team.todoktodok.presentation.view.profile.adapter.ProfileItems
 
@@ -25,10 +24,10 @@ class UserInformationViewHolder private constructor(
             tvNickname.text = content.nickname
             tvDescription.text = content.description
 
-            Glide
-                .with(binding.root)
-                .load(content.profileImage)
-                .into(ivProfile)
+//            Glide
+//                .with(binding.root)
+//                .load(content.profileImage)
+//                .into(ivProfile)
         }
     }
 

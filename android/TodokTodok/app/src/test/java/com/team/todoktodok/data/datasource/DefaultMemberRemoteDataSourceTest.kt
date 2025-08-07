@@ -8,7 +8,7 @@ import com.team.todoktodok.data.datasource.token.TokenDataSource
 import com.team.todoktodok.data.network.auth.AuthInterceptor.Companion.AUTHORIZATION_NAME
 import com.team.todoktodok.data.network.request.LoginRequest
 import com.team.todoktodok.data.network.response.ProfileResponse
-import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
+import com.team.todoktodok.data.network.response.discussion.MemberDiscussionResponse
 import com.team.todoktodok.data.network.service.MemberService
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -102,7 +102,7 @@ class DefaultMemberRemoteDataSourceTest {
             // given
             val memberId = MemberId.OtherUser(1L)
             val type = MemberDiscussionType.CREATED.name
-            val response = mockk<List<DiscussionResponse>>()
+            val response = mockk<List<MemberDiscussionResponse>>()
 
             coEvery { memberService.fetchMemberDiscussionRooms(memberId.id, type) } returns response
 
@@ -119,7 +119,7 @@ class DefaultMemberRemoteDataSourceTest {
             // given
             val memberId = 1L
             val type = MemberDiscussionType.PARTICIPATED
-            val response = mockk<List<DiscussionResponse>>()
+            val response = mockk<List<MemberDiscussionResponse>>()
 
             coEvery { tokenDataSource.getMemberId() } returns memberId
             coEvery { memberService.fetchMemberDiscussionRooms(memberId, type.name) } returns response

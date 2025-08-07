@@ -1,7 +1,7 @@
 package com.team.todoktodok.data.repository
 
-import com.team.domain.model.Discussion
 import com.team.domain.model.Member
+import com.team.domain.model.member.MemberDiscussion
 import com.team.domain.model.member.MemberDiscussionType
 import com.team.domain.model.member.MemberId
 import com.team.domain.model.member.Profile
@@ -37,7 +37,7 @@ class DefaultMemberRepository(
     override suspend fun getMemberDiscussionRooms(
         id: MemberId,
         type: MemberDiscussionType,
-    ): List<Discussion> =
+    ): List<MemberDiscussion> =
         remoteMemberRemoteDataSource
             .fetchMemberDiscussionRooms(id, type)
             .map { it.toDomain() }

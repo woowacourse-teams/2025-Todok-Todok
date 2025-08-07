@@ -3,7 +3,7 @@ package com.team.todoktodok.data.network.service
 import com.team.todoktodok.data.network.request.LoginRequest
 import com.team.todoktodok.data.network.request.SignUpRequest
 import com.team.todoktodok.data.network.response.ProfileResponse
-import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
+import com.team.todoktodok.data.network.response.discussion.MemberDiscussionResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -32,5 +32,5 @@ interface MemberService {
     suspend fun fetchMemberDiscussionRooms(
         @Path("memberId") memberId: Long,
         @Query("type") type: String,
-    ): List<DiscussionResponse>
+    ): List<MemberDiscussionResponse>
 }
