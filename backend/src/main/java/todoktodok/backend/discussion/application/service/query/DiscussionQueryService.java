@@ -87,7 +87,7 @@ public class DiscussionQueryService {
                 .toList();
     }
 
-    private static boolean isKeywordBlank(String keyword) {
+    private boolean isKeywordBlank(String keyword) {
         return keyword == null || keyword.isBlank();
     }
 
@@ -170,7 +170,7 @@ public class DiscussionQueryService {
                 ));
     }
 
-    private static int findCommentCount(
+    private int findCommentCount(
             final Discussion discussion,
             final List<DiscussionCommentCountDto> commentCountsById
     ) {
@@ -181,7 +181,7 @@ public class DiscussionQueryService {
                 .orElseThrow(() -> new IllegalStateException("토론방의 댓글 수를 찾을 수 없습니다"));
     }
 
-    private static int findLikeCount(
+    private int findLikeCount(
             final Discussion discussion,
             final List<DiscussionLikeCountDto> likeCountsById
     ) {
