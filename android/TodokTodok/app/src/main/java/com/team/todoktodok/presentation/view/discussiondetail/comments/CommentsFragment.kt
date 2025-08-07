@@ -2,6 +2,8 @@ package com.team.todoktodok.presentation.view.discussiondetail.comments
 
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
+import android.widget.PopupWindow
 import androidx.core.os.bundleOf
 import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
@@ -9,6 +11,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentCommentsBinding
+import com.team.todoktodok.databinding.MenuExternalDiscussionBinding
+import com.team.todoktodok.databinding.MenuOwnedDiscussionBinding
 import com.team.todoktodok.presentation.view.discussiondetail.BottomSheetVisibilityListener
 import com.team.todoktodok.presentation.view.discussiondetail.commentcreate.CommentCreateBottomSheet
 import com.team.todoktodok.presentation.view.discussiondetail.commentdetail.CommentDetailFragment
@@ -26,6 +30,8 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
         )
     }
 
+    private var popupWindow: PopupWindow? = null
+
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
@@ -33,7 +39,7 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentCommentsBinding.bind(view)
         initAdapter(binding)
-        setupOnClickAddComment(binding)
+        setupOnClick(binding)
         setupObserve(binding)
         setupFragmentResultListener()
     }
@@ -42,7 +48,7 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
         binding.rvComments.adapter = adapter
     }
 
-    private fun setupOnClickAddComment(binding: FragmentCommentsBinding) {
+    private fun setupOnClick(binding: FragmentCommentsBinding) {
         with(binding) {
             tvInputComment.setOnClickListener { viewModel.showCommentCreate() }
         }
@@ -95,6 +101,26 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
         }
     }
 
+    private fun createPopUpView(popupView: View) =
+        PopupWindow(
+            popupView,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            true,
+        )
+
+    private fun getPopUpView(commentId: Long): PopupWindow =
+        if (true) {
+            val binding = MenuOwnedDiscussionBinding.inflate(layoutInflater)
+            binding.tvEdit.setOnClickListener { viewModel }
+            binding.tvDelete.setOnClickListener { viewModel.deleteComment(commentId = commentId) }
+            createPopUpView(binding.root)
+        } else {
+            val binding = MenuExternalDiscussionBinding.inflate(layoutInflater)
+            binding.tvReport.setOnClickListener { }
+            createPopUpView(binding.root)
+        }
+
     private fun getBottomSheetVisibilityListener(binding: FragmentCommentsBinding) =
         object : BottomSheetVisibilityListener {
             override fun onBottomSheetShown() {
@@ -108,7 +134,7 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
 
     private val adapterHandler =
         object : CommentAdapter.Handler {
-            override fun onItemClick(commentId: Long) {
+            override fun onReplyClick(commentId: Long) {
                 parentFragmentManager.commit {
                     hide(this@CommentsFragment)
                     add(
@@ -117,6 +143,22 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
                         CommentDetailFragment.TAG,
                     )
                     addToBackStack(null)
+                }
+            }
+
+            override fun onDeleteClick(commentId: Long) {
+                viewModel.deleteComment(commentId)
+            }
+
+            override fun onOptionClick(
+                commentId: Long,
+                view: View,
+            ) {
+                if (popupWindow == null) popupWindow = getPopUpView(commentId)
+                if (popupWindow?.isShowing == true) {
+                    popupWindow?.dismiss()
+                } else {
+                    popupWindow?.showAsDropDown(view)
                 }
             }
         }

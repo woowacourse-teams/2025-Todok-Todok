@@ -38,6 +38,13 @@ class CommentsViewModel(
         }
     }
 
+    fun deleteComment(commentId: Long) {
+        viewModelScope.launch {
+            commentRepository.deleteComment(discussionId, commentId)
+            loadComments()
+        }
+    }
+
     fun showCommentCreate() {
         _uiEvent.setValue(CommentsUiEvent.ShowCommentCreate(discussionId))
     }

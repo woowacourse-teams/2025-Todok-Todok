@@ -1,6 +1,7 @@
 package com.team.todoktodok.presentation.view.discussiondetail.comments.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.team.domain.model.Comment
@@ -22,7 +23,10 @@ class CommentViewHolder private constructor(
                     R.string.date_format_pattern,
                 )
             ivReply.setOnClickListener {
-                handler.onItemClick(comment.id)
+                handler.onReplyClick(comment.id)
+            }
+            ivCommentOption.setOnClickListener {
+                handler.onOptionClick(comment.id, ivCommentOption)
             }
         }
     }
@@ -39,6 +43,13 @@ class CommentViewHolder private constructor(
     }
 
     interface Handler {
-        fun onItemClick(commentId: Long)
+        fun onReplyClick(commentId: Long)
+
+        fun onDeleteClick(commentId: Long)
+
+        fun onOptionClick(
+            commentId: Long,
+            view: View,
+        )
     }
 }
