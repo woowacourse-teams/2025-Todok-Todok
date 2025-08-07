@@ -3,6 +3,7 @@ package com.team.todoktodok.data.datasource.member
 import com.team.domain.model.Support
 import com.team.domain.model.member.MemberDiscussionType
 import com.team.domain.model.member.MemberId
+import com.team.todoktodok.data.network.request.ModifyProfileRequest
 import com.team.todoktodok.data.network.request.SignUpRequest
 import com.team.todoktodok.data.network.response.ProfileResponse
 import com.team.todoktodok.data.network.response.discussion.BookResponse
@@ -26,4 +27,6 @@ interface MemberRemoteDataSource {
     )
 
     suspend fun fetchMemberBooks(request: MemberId): List<BookResponse>
+
+    suspend fun modifyProfile(request: ModifyProfileRequest)
 }
