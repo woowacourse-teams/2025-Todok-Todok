@@ -38,6 +38,13 @@ class CommentsViewModel(
         }
     }
 
+    fun toggleLike(commentId: Long) {
+        viewModelScope.launch {
+            commentRepository.toggleLike(discussionId, commentId)
+            loadComments()
+        }
+    }
+
     fun deleteComment(commentId: Long) {
         viewModelScope.launch {
             commentRepository.deleteComment(discussionId, commentId)

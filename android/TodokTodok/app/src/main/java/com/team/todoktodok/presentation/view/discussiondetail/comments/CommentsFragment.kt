@@ -167,6 +167,10 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
                     popupWindow?.showAsDropDown(view)
                 }
             }
+
+            override fun onToggleLike(commentId: Long) {
+                viewModel.toggleLike(commentId)
+            }
         }
 
     companion object {
