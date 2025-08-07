@@ -40,7 +40,7 @@ class DiscussionQueryServiceTest {
 
     @Test
     @DisplayName("전체 토론방을 조회한다")
-    void getDiscussions() {
+    void getAllDiscussions() {
         // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
@@ -49,7 +49,8 @@ class DiscussionQueryServiceTest {
         final Long memberId = 1L;
 
         // when
-        final List<DiscussionResponse> discussions = discussionQueryService.getDiscussions(memberId);
+        final List<DiscussionResponse> discussions = discussionQueryService.getDiscussionsByKeywordAndType(
+                memberId, "", DiscussionFilterType.ALL);
 
         // then
         assertThat(discussions).hasSize(1);
@@ -128,6 +129,45 @@ class DiscussionQueryServiceTest {
                 () -> assertThat(discussion.commentCount()).isEqualTo(1),
                 () -> assertThat(discussion.likeCount()).isEqualTo(1)
         );
+    }
+
+    @Test
+    @DisplayName("토론방 단일 조회 시 내가 좋아요를 생성한 글인지 확인한다")
+    void getDiscussion_isLikedTest_true() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+
+        databaseInitializer.setDefaultDiscussionInfo();
+        databaseInitializer.setDiscussionLikeInfo(1L, 1L);
+
+        final Long memberId = 1L;
+        final Long discussionId = 1L;
+
+        // when
+        final DiscussionResponse discussion = discussionQueryService.getDiscussion(memberId, discussionId);
+
+        // then
+        assertThat(discussion.isLiked()).isTrue();
+    }
+
+    @Test
+    @DisplayName("토론방 단일 조회 시 내가 좋아요를 생성하지 않은 글인지 확인한다")
+    void getDiscussion_isLikedTest_false() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+
+        databaseInitializer.setDefaultDiscussionInfo();
+
+        final Long memberId = 1L;
+        final Long discussionId = 1L;
+
+        // when
+        final DiscussionResponse discussion = discussionQueryService.getDiscussion(memberId, discussionId);
+
+        // then
+        assertThat(discussion.isLiked()).isFalse();
     }
 
     @Nested
@@ -310,6 +350,33 @@ class DiscussionQueryServiceTest {
                     () -> assertThat(discussions.get(1).commentCount()).isEqualTo(2L),
                     () -> assertThat(discussions.get(2).likeCount()).isEqualTo(3L),
                     () -> assertThat(discussions.get(2).commentCount()).isEqualTo(3L)
+            );
+        }
+
+        @Test
+        @DisplayName("토론방 필터링 조회 시 나의 좋아요 여부를 반환한다")
+        void getDiscussions_isLikedTest() {
+            // given
+            databaseInitializer.setDefaultUserInfo();
+            databaseInitializer.setDefaultBookInfo();
+
+            databaseInitializer.setDefaultDiscussionInfo();
+            databaseInitializer.setDiscussionInfo("토론방 2", "토론방 2입니다", 1L, 1L);
+
+            databaseInitializer.setDiscussionLikeInfo(1L, 1L);
+
+            final Long memberId = 1L;
+
+            // when
+            final List<DiscussionResponse> discussions = discussionQueryService.getDiscussionsByKeywordAndType(
+                    memberId, "", DiscussionFilterType.ALL);
+            final DiscussionResponse likedDiscussion = discussions.get(0);
+            final DiscussionResponse notLikedDiscussion = discussions.get(1);
+
+            // then
+            assertAll(
+                    () -> assertThat(likedDiscussion.isLiked()).isTrue(),
+                    () -> assertThat(notLikedDiscussion.isLiked()).isFalse()
             );
         }
     }
