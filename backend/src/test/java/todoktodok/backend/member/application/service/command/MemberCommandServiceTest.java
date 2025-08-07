@@ -2,12 +2,15 @@ package todoktodok.backend.member.application.service.command;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+import java.util.NoSuchElementException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.context.annotation.Profile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +20,9 @@ import todoktodok.backend.global.auth.Role;
 import todoktodok.backend.global.jwt.JwtTokenProvider;
 import todoktodok.backend.global.jwt.TokenInfo;
 import todoktodok.backend.member.application.dto.request.LoginRequest;
+import todoktodok.backend.member.application.dto.request.ProfileUpdateRequest;
 import todoktodok.backend.member.application.dto.request.SignupRequest;
+import todoktodok.backend.member.application.dto.response.ProfileUpdateResponse;
 
 @ActiveProfiles("test")
 @Transactional
@@ -133,7 +138,7 @@ class MemberCommandServiceTest {
         // given
         databaseInitializer.setDefaultUserInfo();
 
-        Long memberId = 1L;
+        final Long memberId = 1L;
 
         // when - then
         assertThatThrownBy(() -> memberCommandService.block(memberId, memberId))
@@ -147,7 +152,7 @@ class MemberCommandServiceTest {
         // given
         databaseInitializer.setDefaultUserInfo();
 
-        Long memberId = 1L;
+        final Long memberId = 1L;
 
         // when - then
         assertThatThrownBy(() -> memberCommandService.report(memberId, memberId))
@@ -161,8 +166,9 @@ class MemberCommandServiceTest {
         // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setUserInfo("user2@gmail.com", "user", "https://image.png", "");
-        Long memberId = 1L;
-        Long targetId = 2L;
+
+        final Long memberId = 1L;
+        final Long targetId = 2L;
 
         memberCommandService.block(memberId, targetId);
 
@@ -178,8 +184,9 @@ class MemberCommandServiceTest {
         // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setUserInfo("user2@gmail.com", "user", "https://image.png", "");
-        Long memberId = 1L;
-        Long targetId = 2L;
+
+        final Long memberId = 1L;
+        final Long targetId = 2L;
 
         memberCommandService.report(memberId, targetId);
 
@@ -187,5 +194,96 @@ class MemberCommandServiceTest {
         assertThatThrownBy(() -> memberCommandService.report(memberId, targetId))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("이미 신고한 회원입니다");
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 회원의 정보를 수정하려고 하면 예외가 발생한다")
+    void updateProfileTest_memberNotFound_fail() {
+        // given
+        final Long notExistsMemberId = 1L;
+        final ProfileUpdateRequest profileUpdateRequest = new ProfileUpdateRequest("nickname", "profileMessage");
+
+        // when - then
+        assertThatThrownBy(() -> memberCommandService.updateProfile(notExistsMemberId, profileUpdateRequest))
+                .isInstanceOf(NoSuchElementException.class)
+                .hasMessage("해당 회원을 찾을 수 없습니다");
+    }
+
+    @Test
+    @DisplayName("정보수정 시 다른사람과 중복된 닉네임을 입력하면 예외가 발생한다")
+    void updateProfileTest_validateDuplicateNickname_fail() {
+        // given
+        databaseInitializer.setUserInfo("user@gmail.com", "nick", "https://image.png", "profileMessage");
+        databaseInitializer.setUserInfo("user2@gmail.com", "nickname", "https://image.png", "profileMessage");
+
+        final Long memberId = 1L;
+        final ProfileUpdateRequest profileUpdateRequest = new ProfileUpdateRequest("nickname", "newProfileMessage");
+
+        // when - then
+        assertThatThrownBy(() -> memberCommandService.updateProfile(memberId, profileUpdateRequest))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("이미 존재하는 닉네임입니다");
+    }
+
+    @Test
+    @DisplayName("정보수정 시 이전의 내 정보와 동일한 정보라면 예외가 발생하지 않는다")
+    void updateProfileTest_isMyNickname_success() {
+        // given
+        final String nickname = "nickname";
+        final String profileMessage = "profileMessage";
+        databaseInitializer.setUserInfo("user@gmail.com", nickname, "https://image.png", profileMessage);
+
+        final Long memberId = 1L;
+        final ProfileUpdateRequest profileUpdateRequest = new ProfileUpdateRequest(nickname, profileMessage);
+
+        // when
+        final ProfileUpdateResponse expected = new ProfileUpdateResponse(nickname, profileMessage);
+
+        // then
+        assertThat(memberCommandService.updateProfile(memberId, profileUpdateRequest)).isEqualTo(expected);
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 회원이 차단해제를 하면 예외가 발생한다")
+    void deleteBlockTest_notFoundMember_fail() {
+        // given
+        databaseInitializer.setUserInfo("target@gmail.com", "target", "https://image.png", "targe");
+        final Long notExistsMemberId = 999L;
+        final Long targetId = 1L;
+
+        // when - then
+        assertThatThrownBy(() -> memberCommandService.deleteBlock(notExistsMemberId, targetId))
+                .isInstanceOf(NoSuchElementException.class)
+                .hasMessage("해당 회원을 찾을 수 없습니다");
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 회원을 차단해제하면 예외가 발생한다")
+    void deleteBlockTest_notFoundTarget_fail() {
+        // given
+        databaseInitializer.setUserInfo("user@gmail.com", "user", "https://image.png", "user");
+        final Long memberId = 1L;
+        final Long notExistsTargetId = 999L;
+
+        // when - then
+        assertThatThrownBy(() -> memberCommandService.deleteBlock(memberId, notExistsTargetId))
+                .isInstanceOf(NoSuchElementException.class)
+                .hasMessage("해당 회원을 찾을 수 없습니다");
+    }
+
+    @Test
+    @DisplayName("차단하지 않은 회원을 차단해제하면 예외가 발생한다")
+    void deleteBlockTest_notBlock_fail() {
+        // given
+        databaseInitializer.setUserInfo("user@gmail.com", "user", "https://image.png", "user");
+        databaseInitializer.setUserInfo("target@gmail.com", "target", "https://image.png", "targe");
+
+        final Long memberId = 1L;
+        final Long targetId = 2L;
+
+        // when - then
+        assertThatThrownBy(() -> memberCommandService.deleteBlock(memberId, targetId))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("차단한 회원이 아닙니다");
     }
 }

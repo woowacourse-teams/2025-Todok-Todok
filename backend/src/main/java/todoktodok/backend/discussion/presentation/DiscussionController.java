@@ -8,7 +8,9 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import todoktodok.backend.comment.application.dto.request.CommentRequest;
 import todoktodok.backend.discussion.application.dto.request.DiscussionRequest;
+import todoktodok.backend.discussion.application.dto.request.DiscussionUpdateRequest;
 import todoktodok.backend.discussion.application.dto.response.DiscussionResponse;
 import todoktodok.backend.discussion.application.service.command.DiscussionCommandService;
 import todoktodok.backend.discussion.application.service.query.DiscussionQueryService;
@@ -47,17 +51,6 @@ public class DiscussionController {
                 .build();
     }
 
-    @Operation(summary = "토론방 단일 조회 API")
-    @Auth(Role.USER)
-    @GetMapping("/{discussionId}")
-    public ResponseEntity<DiscussionResponse> getDiscussion(
-            @Parameter(hidden = true) @LoginMember final Long memberId,
-            @PathVariable final Long discussionId
-    ) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(discussionQueryService.getDiscussion(memberId, discussionId));
-    }
-
     @Operation(summary = "토론방 신고 API")
     @Auth(Role.USER)
     @PostMapping("/{discussionId}/report")
@@ -71,6 +64,17 @@ public class DiscussionController {
                 .build();
     }
 
+    @Operation(summary = "토론방 단일 조회 API")
+    @Auth(Role.USER)
+    @GetMapping("/{discussionId}")
+    public ResponseEntity<DiscussionResponse> getDiscussion(
+            @Parameter(hidden = true) @LoginMember final Long memberId,
+            @PathVariable final Long discussionId
+    ) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(discussionQueryService.getDiscussion(memberId, discussionId));
+    }
+
     @Operation(summary = "토론방 필터링 조회 API")
     @Auth(value = Role.USER)
     @GetMapping
@@ -81,6 +85,51 @@ public class DiscussionController {
     ) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(discussionQueryService.getDiscussionsByKeywordAndType(memberId, keyword, type));
+    }
+
+    @Operation(summary = "토론방 수정 API")
+    @Auth(value = Role.USER)
+    @PatchMapping("/{discussionId}")
+    public ResponseEntity<Void> updateDiscussion(
+            @Parameter(hidden = true) @LoginMember final Long memberId,
+            @PathVariable final Long discussionId,
+            @RequestBody @Valid final DiscussionUpdateRequest discussionUpdateRequest
+    ) {
+        discussionCommandService.updateDiscussion(memberId, discussionId, discussionUpdateRequest);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .location(ServletUriComponentsBuilder.fromCurrentRequest().build().toUri())
+                .build();
+    }
+
+    @Operation(summary = "토론방 삭제 API")
+    @Auth(value = Role.USER)
+    @DeleteMapping("/{discussionId}")
+    public ResponseEntity<Void> deleteDiscussion(
+            @Parameter(hidden = true) @LoginMember final Long memberId,
+            @PathVariable final Long discussionId
+    ) {
+        discussionCommandService.deleteDiscussion(memberId, discussionId);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .build();
+    }
+
+    @Operation(summary = "토론방 좋아요 API")
+    @Auth(value = Role.USER)
+    @PostMapping("/{discussionId}/like")
+    public ResponseEntity<Void> toggleLike(
+            @Parameter(hidden = true) @LoginMember final Long memberId,
+            @PathVariable final Long discussionId
+    ) {
+        final boolean isLiked = discussionCommandService.toggleLike(memberId, discussionId);
+
+        if (isLiked) {
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .build();
+        }
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .build();
     }
 
     private URI createUri(final Long id) {

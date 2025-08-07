@@ -26,6 +26,7 @@ import todoktodok.backend.global.common.TimeStamp;
 public class Member extends TimeStamp {
 
     private static final int NICKNAME_MAX_LENGTH = 8;
+    private static final int PROFILE_MESSAGE_MAX_LENGTH = 40;
     private static final Pattern NICKNAME_PATTERN = Pattern.compile("^[가-힣a-zA-Z0-9]+$");
     private static final String DELETED_MEMBER_NICKNAME = "(알수없음)";
 
@@ -57,6 +58,21 @@ public class Member extends TimeStamp {
         return new Member(
                 null, email, nickname, profileImage, profileMessage
         );
+    }
+
+    public void updateNicknameAndProfileMessage(
+            final String nickname,
+            final String profileMessage
+    ) {
+        validateNickname(nickname);
+        validateProfileMessage(profileMessage);
+
+        this.nickname = nickname;
+        this.profileMessage = profileMessage;
+    }
+
+    public boolean isMyNickname(final String nickname) {
+        return this.nickname.equals(nickname);
     }
 
     @Override
@@ -96,7 +112,7 @@ public class Member extends TimeStamp {
     }
 
     private static void validateNicknameLength(final String nickname) {
-        if (nickname.isEmpty() || nickname.length() > NICKNAME_MAX_LENGTH) {
+        if (nickname == null || nickname.isEmpty() || nickname.length() > NICKNAME_MAX_LENGTH) {
             throw new IllegalArgumentException("닉네임은 1자 이상, 8자 이하여야 합니다");
         }
     }
@@ -104,6 +120,16 @@ public class Member extends TimeStamp {
     private static void validateEmail(final String email) {
         if (email == null || email.isBlank()) {
             throw new IllegalArgumentException("이메일은 필수입니다");
+        }
+    }
+
+    private static void validateProfileMessage(final String profileMessage) {
+        if (profileMessage == null) {
+            return;
+        }
+
+        if (profileMessage.length() > PROFILE_MESSAGE_MAX_LENGTH) {
+            throw new IllegalArgumentException("상태메세지는 40자 이하여야 합니다");
         }
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import todoktodok.backend.global.interceptor.AuthorizationInterceptor;
+import todoktodok.backend.global.interceptor.LogInterceptor;
 import todoktodok.backend.global.resolver.MemberArgumentResolver;
 import todoktodok.backend.global.resolver.TempMemberArgumentResolver;
 
@@ -17,9 +18,18 @@ public class WebMvcConfig implements WebMvcConfigurer {
     private final AuthorizationInterceptor authorizationInterceptor;
     private final MemberArgumentResolver memberArgumentResolver;
     private final TempMemberArgumentResolver tempMemberArgumentResolver;
+    private final LogInterceptor logInterceptor;
 
     @Override
     public void addInterceptors(final InterceptorRegistry registry) {
+        registry.addInterceptor(logInterceptor)
+                .addPathPatterns("/**")
+                .excludePathPatterns(
+                        "/h2-console/**",
+                        "/swagger-ui/**",
+                        "/v3/api-docs/**"
+                );
+
         registry.addInterceptor(authorizationInterceptor)
                 .addPathPatterns("/api/**")
                 .excludePathPatterns(

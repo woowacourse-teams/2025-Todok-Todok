@@ -51,17 +51,19 @@ public class CommentController {
     @Operation(summary = "댓글 좋아요 API")
     @Auth(value = Role.USER)
     @PostMapping("/{commentId}/like")
-    public ResponseEntity<Void> like(
+    public ResponseEntity<Void> toggleLike(
             @Parameter(hidden = true) @LoginMember final Long memberId,
             @PathVariable final Long discussionId,
             @PathVariable final Long commentId
     ) {
-        final boolean isLiked = commentCommandService.like(memberId, discussionId, commentId);
+        final boolean isLiked = commentCommandService.toggleLike(memberId, discussionId, commentId);
 
         if (isLiked) {
-            return ResponseEntity.status(HttpStatus.CREATED).build();
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .build();
         }
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .build();
     }
 
     @Operation(summary = "댓글 신고 API")
@@ -87,6 +89,18 @@ public class CommentController {
     ) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(commentQueryService.getComments(memberId, discussionId));
+    }
+
+    @Operation(summary = "댓글 단일 조회 API")
+    @Auth(value = Role.USER)
+    @GetMapping("/{commentId}")
+    public ResponseEntity<CommentResponse> getComment(
+            @Parameter(hidden = true) @LoginMember final Long memberId,
+            @PathVariable final Long discussionId,
+            @PathVariable final Long commentId
+    ) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(commentQueryService.getComment(memberId, discussionId, commentId));
     }
 
     @Operation(summary = "댓글 수정 API")

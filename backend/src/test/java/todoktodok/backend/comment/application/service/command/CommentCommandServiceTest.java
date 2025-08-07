@@ -68,7 +68,7 @@ public class CommentCommandServiceTest {
 
     @Test
     @DisplayName("좋아요를 누르지 않았던 댓글에 좋아요를 생성한다")
-    void commentLikeTest() {
+    void commentToggleLikeTest() {
         // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
@@ -80,7 +80,7 @@ public class CommentCommandServiceTest {
         final Long commentId = 1L;
 
         // when
-        final boolean isLiked = commentCommandService.like(memberId, discussionId, commentId);
+        final boolean isLiked = commentCommandService.toggleLike(memberId, discussionId, commentId);
 
         // then
         assertThat(isLiked).isTrue();
@@ -88,7 +88,7 @@ public class CommentCommandServiceTest {
 
     @Test
     @DisplayName("이미 좋아요를 누른 댓글에 다시 좋아요를 누르면 좋아요가 취소된다")
-    void commentLikeDeleteTest() {
+    void commentToggleLikeDeleteTest() {
         // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
@@ -101,7 +101,7 @@ public class CommentCommandServiceTest {
         final Long commentId = 1L;
 
         // when
-        final boolean isLiked = commentCommandService.like(memberId, discussionId, commentId);
+        final boolean isLiked = commentCommandService.toggleLike(memberId, discussionId, commentId);
 
         // then
         assertThat(isLiked).isFalse();
@@ -109,7 +109,7 @@ public class CommentCommandServiceTest {
 
     @Test
     @DisplayName("좋아요를 생성하는 댓글과 토론방이 일치하지 않으면 예외가 발생한다")
-    void validateDiscussionCommentLikeTest() {
+    void validateDiscussionCommentToggleLikeTest() {
         // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
@@ -124,7 +124,7 @@ public class CommentCommandServiceTest {
         final Long commentId = 1L;
 
         // when - then
-        assertThatThrownBy(() -> commentCommandService.like(memberId, discussionId, commentId))
+        assertThatThrownBy(() -> commentCommandService.toggleLike(memberId, discussionId, commentId))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("해당 토론방에 있는 댓글이 아닙니다");
     }
@@ -260,5 +260,25 @@ public class CommentCommandServiceTest {
         assertThatThrownBy(() -> commentCommandService.deleteComment(memberId, discussionId, commentId))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("해당 토론방에 있는 댓글이 아닙니다");
+    }
+
+    @Test
+    @DisplayName("대댓글이 존재하는 댓글을 삭제하면 예외가 발생한다")
+    void validateHasCommentDiscussionDeleteTest() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+        databaseInitializer.setDefaultCommentInfo();
+        databaseInitializer.setDefaultReplyInfo();
+
+        final Long memberId = 1L;
+        final Long discussionId = 1L;
+        final Long commentId = 1L;
+
+        // when - then
+        assertThatThrownBy(() -> commentCommandService.deleteComment(memberId, discussionId, commentId))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("대댓글이 존재하는 댓글은 삭제할 수 없습니다");
     }
 }

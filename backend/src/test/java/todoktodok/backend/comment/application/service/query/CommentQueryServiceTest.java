@@ -1,7 +1,12 @@
 package todoktodok.backend.comment.application.service.query;
 
+import java.util.List;
 import java.util.NoSuchElementException;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,6 +18,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.DatabaseInitializer;
 import todoktodok.backend.InitializerTimer;
+import todoktodok.backend.comment.application.dto.response.CommentResponse;
 
 @ActiveProfiles("test")
 @Transactional
@@ -32,8 +38,78 @@ public class CommentQueryServiceTest {
     }
 
     @Test
+    @DisplayName("댓글 단일 조회한다")
+    void getCommentTest() {
+        // given
+        final String content = "댓글 1입니다";
+
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+        databaseInitializer.setCommentInfo(content, 1L, 1L);
+
+        final Long memberId = 1L;
+        final Long discussionId = 1L;
+        final Long commentId = 1L;
+
+        // when
+        final CommentResponse comment = commentQueryService.getComment(memberId, discussionId, commentId);
+
+        // then
+        assertThat(comment.content()).isEqualTo(content);
+    }
+
+    @Test
+    @DisplayName("토론방별 댓글 목록 조회한다")
+    void getCommentsTest() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+
+        databaseInitializer.setDefaultCommentInfo();
+        databaseInitializer.setCommentInfo("댓글 2입니다", 1L, 1L);
+
+        final Long memberId = 1L;
+        final Long discussionId = 1L;
+
+        // when
+        final List<CommentResponse> comments = commentQueryService.getComments(memberId, discussionId);
+
+        // then
+        assertThat(comments).hasSize(2);
+    }
+
+    @Test
+    @DisplayName("토론방별 댓글 목록 조회 시 댓글의 좋아요수와 답글수를 반환한다")
+    void getCommentsTest_likeCountAndReplyCount() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+        databaseInitializer.setDefaultCommentInfo();
+
+        databaseInitializer.setDefaultReplyInfo();
+        databaseInitializer.setReplyInfo("동의합니다.", 1L, 1L);
+        databaseInitializer.setCommentLikeInfo(1L, 1L);
+
+        final Long memberId = 1L;
+        final Long discussionId = 1L;
+
+        // when
+        final List<CommentResponse> comments = commentQueryService.getComments(memberId, discussionId);
+        final CommentResponse comment = comments.getFirst();
+
+        // then
+        assertAll(
+                () -> assertThat(comment.replyCount()).isEqualTo(2),
+                () -> assertThat(comment.likeCount()).isEqualTo(1)
+        );
+    }
+
+    @Test
     @DisplayName("없는 토론방에 대해 댓글을 조회할 경우 예외가 발생한다")
-    void createCommentTest_discussionNotFound_fail() {
+    void getCommentsTest_discussionNotFound_fail() {
         // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
