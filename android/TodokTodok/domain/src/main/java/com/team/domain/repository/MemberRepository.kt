@@ -1,5 +1,6 @@
 package com.team.domain.repository
 
+import com.team.domain.model.Support
 import com.team.domain.model.member.MemberDiscussion
 import com.team.domain.model.member.MemberDiscussionType
 import com.team.domain.model.member.MemberId
@@ -20,4 +21,9 @@ interface MemberRepository {
         id: MemberId,
         type: MemberDiscussionType,
     ): List<MemberDiscussion>
+
+    suspend fun supportMember(
+        id: MemberId.OtherUser,
+        type: Support,
+    )
 }

@@ -138,7 +138,7 @@ class DefaultMemberRemoteDataSourceTest {
     fun `신고 타입이 Report면 신고 API를 호출한다`() =
         runTest {
             // given
-            val memberId = "10"
+            val memberId = 10L
             val request = MemberId.OtherUser(memberId)
             val type = Support.REPORT
 
@@ -156,7 +156,7 @@ class DefaultMemberRemoteDataSourceTest {
     fun `신고 타입이 BLOCK이면 차단 API를 호출한다`() =
         runTest {
             // given
-            val memberId = "10"
+            val memberId = 10L
             val request = MemberId.OtherUser(memberId)
             val type = Support.BLOCK
 

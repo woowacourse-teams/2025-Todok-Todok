@@ -33,4 +33,14 @@ interface MemberService {
         @Path("memberId") memberId: Long,
         @Query("type") type: String,
     ): List<MemberDiscussionResponse>
+
+    @POST("v1/members/{memberId}/report")
+    suspend fun report(
+        @Path("memberId") memberId: Long,
+    )
+
+    @POST("v1/members/{memberId}/block")
+    suspend fun block(
+        @Path("memberId") memberId: Long,
+    )
 }

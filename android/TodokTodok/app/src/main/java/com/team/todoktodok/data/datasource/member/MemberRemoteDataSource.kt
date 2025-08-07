@@ -1,5 +1,6 @@
 package com.team.todoktodok.data.datasource.member
 
+import com.team.domain.model.Support
 import com.team.domain.model.member.MemberDiscussionType
 import com.team.domain.model.member.MemberId
 import com.team.todoktodok.data.network.request.SignUpRequest
@@ -17,4 +18,9 @@ interface MemberRemoteDataSource {
         request: MemberId,
         type: MemberDiscussionType,
     ): List<MemberDiscussionResponse>
+
+    suspend fun supportMember(
+        request: MemberId.OtherUser,
+        type: Support,
+    )
 }
