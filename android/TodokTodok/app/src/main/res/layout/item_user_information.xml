@@ -12,13 +12,13 @@
         android:id="@+id/iv_profile"
         android:layout_width="88dp"
         android:layout_height="88dp"
+        android:src="@drawable/img_mascort"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:shapeAppearanceOverlay="@style/circleImageView"
         app:strokeWidth="1dp"
-        app:strokeColor="@color/black_18"
-        tools:src="@drawable/img_mascort"/>
+        app:strokeColor="@color/black_18" />
 
     <TextView
         android:id="@+id/tv_nickname"
