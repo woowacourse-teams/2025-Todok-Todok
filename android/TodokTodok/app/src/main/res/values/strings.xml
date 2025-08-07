@@ -81,4 +81,5 @@
     <string name="content_description_edit_book_in_discussion_room">토론방 책을 변경합니다</string>
     <string name="hint_discussion_room_opinion">최근에 읽은 책에서 이야기하고 싶은 내용을 입력해주세요!</string>
     <string name="hint_discussion_room_title">제목을 입력해주세요!</string>
+    <string name="edit_discussion_room_title">토론방 수정</string>
 </resources>

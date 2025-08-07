@@ -1,11 +1,13 @@
 package com.team.todoktodok.presentation.view.discussion.create.vm
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.team.domain.model.Book
 import com.team.domain.model.Discussion
+import com.team.domain.model.member.DiscussionRoom.Companion.DiscussionRoom
 import com.team.domain.repository.BookRepository
 import com.team.domain.repository.DiscussionRepository
 import com.team.domain.repository.TokenRepository
@@ -47,6 +49,7 @@ class CreateDiscussionRoomViewModel(
             is SerializationCreateDiscussionRoomMode.Create -> {
                 _book.value = mode.selectedBook.toDomain()
             }
+
             is SerializationCreateDiscussionRoomMode.Edit -> {
                 discussionRoomId = mode.discussionRoomId
                 getDiscussionRoom(mode.discussionRoomId)
@@ -54,22 +57,14 @@ class CreateDiscussionRoomViewModel(
         }
     }
 
-    fun checkCreate() {
-        if (_title.value.isNullOrBlank() || _opinion.value.isNullOrBlank()) {
-            _isCreate.value = false
-        } else {
-            _isCreate.value = true
-        }
-    }
-
     fun onTitleChanged(title: String) {
         _title.value = title
-        checkCreate()
+        _isCreate.value = title.isNotEmpty() && opinion.value?.isNotEmpty() == true
     }
 
     fun onOpinionChanged(opinion: String) {
         _opinion.value = opinion
-        checkCreate()
+        _isCreate.value = title.value?.isNotEmpty() == true && opinion.isNotEmpty()
     }
 
     fun createDiscussionRoom() {
@@ -104,17 +99,27 @@ class CreateDiscussionRoomViewModel(
     }
 
     fun editDiscussionRoom() {
-        val discussionRoomId =
-            discussionRoomId ?: throw IllegalStateException("토론방 정보가 없습니다.")
-        val title = title.value ?: throw IllegalStateException("제목이 없습니다.")
-        val opinion = opinion.value ?: throw IllegalStateException("내용이 없습니다.")
-        viewModelScope.launch {
-            discussionRepository.editDiscussionRoom(
-                discussionId = discussionRoomId,
-                discussionTitle = title,
-                discussionOpinion = opinion,
-            )
-            _uiEvent.setValue(CreateDiscussionUiEvent.NavigateToDiscussionDetail(discussionRoomId))
+        try {
+            val discussionRoomId =
+                discussionRoomId ?: throw IllegalStateException("토론방 정보가 없습니다.")
+            val title = title.value ?: throw IllegalStateException("제목이 없습니다.")
+            val opinion = opinion.value ?: throw IllegalStateException("내용이 없습니다.")
+            val discussionRoom = DiscussionRoom(title, opinion)
+            viewModelScope.launch {
+                discussionRepository.editDiscussionRoom(
+                    discussionId = discussionRoomId,
+                    discussionRoom = discussionRoom,
+                )
+                _uiEvent.setValue(
+                    CreateDiscussionUiEvent.NavigateToDiscussionDetail(
+                        discussionRoomId
+                    )
+                )
+            }
+        } catch (e: IllegalArgumentException) {
+            _uiEvent.setValue(CreateDiscussionUiEvent.ShowToast(e.message ?: "다시 시도해주세요"))
+        } catch (e: IllegalStateException) {
+            _uiEvent.setValue(CreateDiscussionUiEvent.ShowToast(e.message ?: "다시 시도해주세요"))
         }
     }
 }
