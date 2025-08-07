@@ -4,18 +4,32 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.team.todoktodok.App
 import com.team.todoktodok.databinding.ActivityCreateDiscussionRoomBinding
+import com.team.todoktodok.presentation.core.ext.getParcelableCompat
+import com.team.todoktodok.presentation.view.discussion.create.vm.CreateDiscussionRoomViewModel
+import com.team.todoktodok.presentation.view.discussion.create.vm.CreateDiscussionRoomViewModelFactory
+import com.team.todoktodok.presentation.view.serialization.SerializationBook
 
 class CreateDiscussionRoomActivity : AppCompatActivity() {
     private val binding by lazy { ActivityCreateDiscussionRoomBinding.inflate(layoutInflater) }
+
+    private val viewModel by viewModels<CreateDiscussionRoomViewModel>  {
+        val repositoryModule = (application as  App).container.repositoryModule
+        CreateDiscussionRoomViewModelFactory(repositoryModule.bookRepository, repositoryModule.discussionRepository)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         initSystemBar()
+
+        val intent = intent
+        val book = intent.getParcelableCompat<SerializationBook>(EXTRA_SELECTED_BOOK).toDomain()
     }
 
     private fun initSystemBar() {
