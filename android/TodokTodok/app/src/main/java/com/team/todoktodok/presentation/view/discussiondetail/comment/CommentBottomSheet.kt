@@ -38,10 +38,10 @@ class CommentBottomSheet : BottomSheetDialogFragment(R.layout.fragment_comment_b
 
     override fun onStart() {
         super.onStart()
-        adjustBottomSheetBelowAnchor()
+        alignBottomSheetBelow()
     }
 
-    private fun adjustBottomSheetBelowAnchor() {
+    private fun alignBottomSheetBelow() {
         val bottomSheet =
             dialog?.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
                 ?: return
@@ -49,6 +49,14 @@ class CommentBottomSheet : BottomSheetDialogFragment(R.layout.fragment_comment_b
             activity?.window?.decorView?.findViewById<View>(android.R.id.content) ?: return
         val anchorView = activity?.findViewById<View>(R.id.tv_discussion_create_at) ?: return
 
+        resizeBottomSheetToFitBelow(activityRoot, anchorView, bottomSheet)
+    }
+
+    private fun resizeBottomSheetToFitBelow(
+        activityRoot: View,
+        anchorView: View,
+        bottomSheet: View,
+    ) {
         activityRoot.post {
             if (!isAdded) return@post
             val anchorBottom = getViewBottomInWindow(anchorView)
