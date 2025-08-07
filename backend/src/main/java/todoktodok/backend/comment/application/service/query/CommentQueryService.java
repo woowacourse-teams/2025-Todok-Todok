@@ -111,7 +111,8 @@ public class CommentQueryService {
 
     private boolean checkIsLikedByMe(
             final Comment comment,
-            final List<Long> likedCommentIds) {
+            final List<Long> likedCommentIds
+    ) {
         return likedCommentIds.contains(comment.getId());
     }
 }
