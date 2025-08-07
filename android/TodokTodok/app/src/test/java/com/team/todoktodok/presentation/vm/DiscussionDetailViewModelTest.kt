@@ -55,7 +55,7 @@ class DiscussionDetailViewModelTest {
     @Test
     fun `토론방을 신고 이벤트를 발생시킨다`() {
         // given
-        val expected = DiscussionDetailUiEvent.ReportDiscussion(DISCUSSION_ID)
+        val expected = DiscussionDetailUiEvent.AlreadyReportDiscussion(DISCUSSION_ID)
         // when
         discussionDetailViewModel.reportDiscussion()
         // then

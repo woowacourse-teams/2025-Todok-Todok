@@ -53,6 +53,7 @@ class DiscussionDetailActivity : AppCompatActivity() {
         setupOnClick()
         setupObserve()
         setPopBackStack()
+        setUpDialogResultListener()
     }
 
     override fun onDestroy() {
@@ -115,9 +116,14 @@ class DiscussionDetailActivity : AppCompatActivity() {
             createPopUpView(binding.root)
         } else {
             val binding = MenuExternalDiscussionBinding.inflate(layoutInflater)
-            binding.tvReport.setOnClickListener { viewModel.reportDiscussion() }
+            binding.tvReport.setOnClickListener { showReportDialog() }
             createPopUpView(binding.root)
         }
+
+    private fun showReportDialog() {
+        val dialog = ReportDiscussionDialog.newInstance()
+        dialog.show(supportFragmentManager, ReportDiscussionDialog.TAG)
+    }
 
     private fun createPopUpView(popupView: View) =
         PopupWindow(
@@ -148,7 +154,7 @@ class DiscussionDetailActivity : AppCompatActivity() {
             is DiscussionDetailUiEvent.ShowComments -> showComments(discussionDetailUiEvent.discussionId)
             is DiscussionDetailUiEvent.ToggleLikeOnDiscussion -> showToast("좋아요 클릭")
             is DiscussionDetailUiEvent.DeleteDiscussion -> showToast("토론 삭제")
-            is DiscussionDetailUiEvent.ReportDiscussion -> showToast("토론 신고")
+            is DiscussionDetailUiEvent.AlreadyReportDiscussion -> showToast(getString(R.string.all_already_report_discussion))
             is DiscussionDetailUiEvent.UpdateDiscussion -> {
                 val discussionId = discussionDetailUiEvent.discussionId
                 val intent =
@@ -184,6 +190,19 @@ class DiscussionDetailActivity : AppCompatActivity() {
     private fun showComments(discussionId: Long) {
         val bottomSheet = CommentBottomSheet.newInstance(discussionId)
         bottomSheet.show(supportFragmentManager, CommentsFragment.TAG)
+    }
+
+    private fun setUpDialogResultListener() {
+        supportFragmentManager.setFragmentResultListener(
+            ReportDiscussionDialog.RESULT_KEY_REPORT,
+            this,
+        ) { _, bundle ->
+            val result = bundle.getBoolean(ReportDiscussionDialog.RESULT_KEY_REPORT)
+            if (result) {
+                viewModel.reportDiscussion()
+                popupWindow?.dismiss()
+            }
+        }
     }
 
     private fun LocalDateTime.formatDate(): String {

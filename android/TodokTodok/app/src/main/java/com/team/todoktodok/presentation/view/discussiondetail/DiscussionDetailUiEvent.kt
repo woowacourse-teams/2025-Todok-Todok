@@ -9,9 +9,7 @@ sealed interface DiscussionDetailUiEvent {
         val discussionId: Long,
     ) : DiscussionDetailUiEvent
 
-    data class ReportDiscussion(
-        val discussionId: Long,
-    ) : DiscussionDetailUiEvent
+    data object AlreadyReportDiscussion : DiscussionDetailUiEvent
 
     data class UpdateDiscussion(
         val discussionId: Long,

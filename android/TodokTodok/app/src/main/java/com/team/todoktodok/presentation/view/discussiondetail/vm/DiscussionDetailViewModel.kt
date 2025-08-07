@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.team.domain.model.Discussion
 import com.team.domain.repository.DiscussionRepository
 import com.team.domain.repository.TokenRepository
 import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
@@ -39,7 +38,13 @@ class DiscussionDetailViewModel(
     }
 
     fun reportDiscussion() {
-        onUiEvent(DiscussionDetailUiEvent.ReportDiscussion(discussionId))
+        viewModelScope.launch {
+            runCatching {
+                discussionRepository.reportDiscussion(discussionId)
+            }.onFailure {
+                onUiEvent(DiscussionDetailUiEvent.AlreadyReportDiscussion)
+            }
+        }
     }
 
     fun updateDiscussion() {
