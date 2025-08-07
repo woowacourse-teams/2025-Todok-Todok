@@ -141,6 +141,9 @@ class DiscussionDetailActivity : AppCompatActivity() {
                 tvUserNickname.text = value.discussion.writer.nickname.value
                 tvDiscussionCreateAt.text = value.discussion.createAt.formatDate()
                 tvDiscussionOpinion.text = value.discussion.discussionOpinion
+                ivLike.isSelected = value.discussion.isLikedByMe
+                tvHeartCount.text = value.discussion.likeCount.toString()
+                tvCommentCount.text = value.discussion.commentCount.toString()
             }
             setupPopUpDiscussionClick(value.isMyDiscussion)
         }
@@ -152,7 +155,6 @@ class DiscussionDetailActivity : AppCompatActivity() {
     private fun handleEvent(discussionDetailUiEvent: DiscussionDetailUiEvent) {
         when (discussionDetailUiEvent) {
             is DiscussionDetailUiEvent.ShowComments -> showComments(discussionDetailUiEvent.discussionId)
-            is DiscussionDetailUiEvent.ToggleLikeOnDiscussion -> showToast("좋아요 클릭")
             is DiscussionDetailUiEvent.DeleteDiscussion -> navigateUp()
             is DiscussionDetailUiEvent.AlreadyReportDiscussion -> showToast(getString(R.string.all_already_report_discussion))
             is DiscussionDetailUiEvent.UpdateDiscussion -> {

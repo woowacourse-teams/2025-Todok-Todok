@@ -5,10 +5,6 @@ sealed interface DiscussionDetailUiEvent {
         val discussionId: Long,
     ) : DiscussionDetailUiEvent
 
-    data class ToggleLikeOnDiscussion(
-        val discussionId: Long,
-    ) : DiscussionDetailUiEvent
-
     data object AlreadyReportDiscussion : DiscussionDetailUiEvent
 
     data class UpdateDiscussion(
