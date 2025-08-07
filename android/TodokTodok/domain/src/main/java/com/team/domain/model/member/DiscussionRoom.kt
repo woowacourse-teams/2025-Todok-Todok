@@ -11,12 +11,10 @@ data class DiscussionRoom(
         fun DiscussionRoom(
             title: String,
             opinion: String,
-        ): DiscussionRoom = DiscussionRoom(
-            _title = Title(title),
-            _opinion = Opinion(opinion),
-        )
+        ): DiscussionRoom =
+            DiscussionRoom(
+                _title = Title(title),
+                _opinion = Opinion(opinion),
+            )
     }
 }
-
-
-

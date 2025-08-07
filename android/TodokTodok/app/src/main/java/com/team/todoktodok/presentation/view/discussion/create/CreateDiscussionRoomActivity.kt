@@ -21,9 +21,7 @@ import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivityCreateDiscussionRoomBinding
 import com.team.todoktodok.presentation.core.ext.getParcelableCompat
 import com.team.todoktodok.presentation.core.ext.loadImage
-import com.team.todoktodok.presentation.view.book.ErrorSelectBookType
 import com.team.todoktodok.presentation.view.book.SelectBookActivity
-import com.team.todoktodok.presentation.view.book.SelectBookUiEvent
 import com.team.todoktodok.presentation.view.discussion.create.vm.CreateDiscussionRoomViewModel
 import com.team.todoktodok.presentation.view.discussion.create.vm.CreateDiscussionRoomViewModelFactory
 import com.team.todoktodok.presentation.view.discussiondetail.DiscussionDetailActivity
@@ -127,15 +125,18 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
             }
             uiEvent.observe(this@CreateDiscussionRoomActivity) { event ->
                 when (event) {
-                    is CreateDiscussionUiEvent.NavigateToDiscussionDetail -> navigateToDiscussionDetail(
-                        event
-                    )
+                    is CreateDiscussionUiEvent.NavigateToDiscussionDetail ->
+                        navigateToDiscussionDetail(
+                            event,
+                        )
 
-                    is CreateDiscussionUiEvent.ShowToast -> Toast.makeText(
-                        this@CreateDiscussionRoomActivity,
-                        event.error,
-                        Toast.LENGTH_LONG
-                    ).show()
+                    is CreateDiscussionUiEvent.ShowToast ->
+                        Toast
+                            .makeText(
+                                this@CreateDiscussionRoomActivity,
+                                event.error,
+                                Toast.LENGTH_LONG,
+                            ).show()
                 }
             }
             title.observe(this@CreateDiscussionRoomActivity) { title ->
