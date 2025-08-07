@@ -1,21 +1,28 @@
 package com.team.todoktodok.presentation.view.discussion.create.vm
 
+import android.provider.ContactsContract.QuickContact.EXTRA_MODE
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.team.domain.model.Book
 import com.team.domain.model.Discussion
 import com.team.domain.repository.BookRepository
 import com.team.domain.repository.DiscussionRepository
-import com.team.todoktodok.data.datasource.token.TokenDataSource
-import kotlinx.coroutines.async
+import com.team.domain.repository.TokenRepository
+import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
+import com.team.todoktodok.presentation.core.event.SingleLiveData
+import com.team.todoktodok.presentation.view.discussion.create.CreateDiscussionUiEvent
+import com.team.todoktodok.presentation.view.discussion.create.SerializationCreateDiscussionRoomMode
 import kotlinx.coroutines.launch
 
 class CreateDiscussionRoomViewModel(
+    private val mode: SerializationCreateDiscussionRoomMode,
     private val bookRepository: BookRepository,
     private val discussionRepository: DiscussionRepository,
-    private val tokenDataSource: TokenDataSource,
+    private val tokenRepository: TokenRepository,
 ) : ViewModel() {
     private val _book: MutableLiveData<Book> = MutableLiveData()
     val book: LiveData<Book> = _book
@@ -26,16 +33,24 @@ class CreateDiscussionRoomViewModel(
     private val _opinion: MutableLiveData<String> = MutableLiveData()
     val opinion: LiveData<String> = _opinion
 
-    private val _discussionRoomId: MutableLiveData<Long> = MutableLiveData()
-    val discussionRoomId: LiveData<Long> = _discussionRoomId
+    private val discussionRoomId: Long? = null
+
+    private val _uiEvent: MutableSingleLiveData<CreateDiscussionUiEvent> = MutableSingleLiveData()
+    val uiEvent: SingleLiveData<CreateDiscussionUiEvent> get() = _uiEvent
 
     init {
-        _book.value = Book(
-            id = 1L,
-            title = "클린 코드",
-            author = "로버트 C. 마틴",
-            image = "https://image.aladin.co.kr/product/1950/55/cover500/8960773417_2.jpg",
-        )
+        decideMode()
+    }
+
+    private fun decideMode() {
+        when (mode) {
+            is SerializationCreateDiscussionRoomMode.Create -> {
+                _book.value = mode.selectedBook.toDomain()
+            }
+            is SerializationCreateDiscussionRoomMode.Edit -> {
+                getDiscussionRoom(mode.discussionRoomId)
+            }
+        }
     }
 
     fun onTitleChanged(title: String) {
@@ -56,17 +71,39 @@ class CreateDiscussionRoomViewModel(
                 discussionRepository.saveDiscussionRoom(
                     bookId = bookId,
                     discussionTitle = title,
-                    discussionOpinion = opinion
+                    discussionOpinion = opinion,
                 )
-            _discussionRoomId.value = discussionId
-            return@launch
+            _uiEvent.setValue(CreateDiscussionUiEvent.NavigateToDiscussionDetail(discussionId))
         }
     }
 
-    fun getDiscussionRoom() {
-        val discussionRoomId = discussionRoomId.value ?: throw IllegalStateException("토론방 정보가 없습니다.")
+    private fun getDiscussionRoom(discussionRoomId: Long) {
         viewModelScope.launch {
-            val result: Result<Discussion> = discussionRepository.getDiscussion(discussionRoomId)
+            val myMemberId: Long = tokenRepository.getMemberId()
+            val result: Discussion =
+                discussionRepository.getDiscussion(discussionRoomId).getOrThrow()
+
+            if (result.writer.id != myMemberId) {
+                throw IllegalStateException("내가 작성한 토론방이 아닙니다")
+            }
+            _book.value = result.book
+            _title.value = result.discussionTitle
+            _opinion.value = result.discussionOpinion
+        }
+    }
+
+    fun editDiscussionRoom() {
+        val discussionRoomId =
+            discussionRoomId ?: throw IllegalStateException("토론방 정보가 없습니다.")
+        val title = title.value ?: throw IllegalStateException("제목이 없습니다.")
+        val opinion = opinion.value ?: throw IllegalStateException("내용이 없습니다.")
+        viewModelScope.launch {
+            discussionRepository.editDiscussionRoom(
+                discussionId = discussionRoomId,
+                discussionTitle = title,
+                discussionOpinion = opinion,
+            )
+            _uiEvent.setValue(CreateDiscussionUiEvent.NavigateToDiscussionDetail(discussionRoomId))
         }
     }
 }
