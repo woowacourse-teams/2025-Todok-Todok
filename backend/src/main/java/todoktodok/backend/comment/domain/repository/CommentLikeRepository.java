@@ -23,5 +23,17 @@ public interface CommentLikeRepository extends JpaRepository<CommentLike, Long> 
             """)
     List<CommentLikeCountDto> findLikeCountsByCommentIds(@Param("commentIds") final List<Long> commentIds);
 
-    boolean existsByMemberIdAndCommentId(@Param("memberId") final Long memberId, @Param("commentId") final Long commentId);
+    boolean existsByMemberIdAndCommentId(
+            @Param("memberId") final Long memberId,
+            @Param("commentId") final Long commentId
+    );
+
+    @Query("""
+            SELECT cl.comment.id
+            FROM CommentLike cl
+            WHERE cl.member.id = :memberId AND cl.comment.id IN :commentIds
+            """)
+    List<Long> findLikedCommentIdsByMemberIdAndByCommentIds(
+            @Param("memberId") final Long memberId,
+            @Param("commentIds") final List<Long> commentIds);
 }
