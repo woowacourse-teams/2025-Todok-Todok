@@ -18,6 +18,7 @@
     <string name="all_update_action">수정하기</string>
     <string name="all_report_action">신고하기</string>
     <string name="all_cancel">취소하기</string>
+    <string name="all_nickname">닉네임</string>
 
     <!--  토론 목록 페이지  -->
     <string name="content_description_add_discussion">토론방 추가 화면으로 이동합니다</string>
@@ -83,4 +84,10 @@
     <string name="error_empty_keyword">검색어를 입력해주세요</string>
     <string name="error_no_selected_book">책을 선택해주세요</string>
     <string name="error_network">네트워크 에러가 발생했어요</string>
+
+    <!-- 설정 화면 -->
+    <string name="setting_modify_profile">프로필 정보 수정</string>
+    <string name="setting_block_members">차단한 회원 관리</string>
+    <string name="setting_member_message">상태 메세지</string>
+    <string name="setting_member_message_et_hint">상태 메시지를 입력해주세요</string>
 </resources>
