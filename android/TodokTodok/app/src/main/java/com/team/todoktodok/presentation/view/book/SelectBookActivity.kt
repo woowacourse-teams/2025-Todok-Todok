@@ -3,6 +3,7 @@ package com.team.todoktodok.presentation.view.book
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -21,7 +22,7 @@ import com.team.todoktodok.presentation.view.book.adapter.SearchBooksAdapter
 import com.team.todoktodok.presentation.view.book.vm.SelectBookViewModel
 import com.team.todoktodok.presentation.view.book.vm.SelectBookViewModelFactory
 import com.team.todoktodok.presentation.view.discussion.create.CreateDiscussionRoomActivity
-import com.team.todoktodok.presentation.view.discussion.create.CreateDiscussionRoomMode
+import com.team.todoktodok.presentation.view.discussion.create.SerializationCreateDiscussionRoomMode
 import com.team.todoktodok.presentation.view.serialization.toSerialization
 
 class SelectBookActivity : AppCompatActivity() {
@@ -109,7 +110,7 @@ class SelectBookActivity : AppCompatActivity() {
                     val intent =
                         CreateDiscussionRoomActivity.Intent(
                             this,
-                            CreateDiscussionRoomMode.Create(book),
+                            SerializationCreateDiscussionRoomMode.Create(book),
                         )
                     startActivity(intent)
                     finish()

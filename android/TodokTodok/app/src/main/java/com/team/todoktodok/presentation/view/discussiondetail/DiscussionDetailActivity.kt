@@ -18,6 +18,8 @@ import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivityDiscussionDetailBinding
 import com.team.todoktodok.databinding.MenuExternalDiscussionBinding
 import com.team.todoktodok.databinding.MenuOwnedDiscussionBinding
+import com.team.todoktodok.presentation.view.discussion.create.CreateDiscussionRoomActivity
+import com.team.todoktodok.presentation.view.discussion.create.SerializationCreateDiscussionRoomMode
 import com.team.todoktodok.presentation.view.discussiondetail.comments.CommentsBottomSheet
 import com.team.todoktodok.presentation.view.discussiondetail.vm.DiscussionDetailViewModel
 import com.team.todoktodok.presentation.view.discussiondetail.vm.DiscussionDetailViewModel.Companion.KEY_DISCUSSION_ID
@@ -145,7 +147,15 @@ class DiscussionDetailActivity : AppCompatActivity() {
             is DiscussionDetailUiEvent.ToggleLikeOnDiscussion -> showToast("좋아요 클릭")
             is DiscussionDetailUiEvent.DeleteDiscussion -> showToast("토론 삭제")
             is DiscussionDetailUiEvent.ReportDiscussion -> showToast("토론 신고")
-            is DiscussionDetailUiEvent.UpdateDiscussion -> showToast("토론 수정")
+            is DiscussionDetailUiEvent.UpdateDiscussion -> {
+                val discussionId = discussionDetailUiEvent.discussionId
+                val intent = CreateDiscussionRoomActivity.Intent(
+                    this@DiscussionDetailActivity,
+                    SerializationCreateDiscussionRoomMode.Edit(discussionId)
+                )
+                startActivity(intent)
+                finish()
+            }
         }
     }
 
