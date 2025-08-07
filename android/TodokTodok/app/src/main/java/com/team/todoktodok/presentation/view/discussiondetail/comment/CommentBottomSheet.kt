@@ -44,26 +44,26 @@ class CommentBottomSheet : BottomSheetDialogFragment(R.layout.fragment_comment_b
     private fun adjustBottomSheetBelowAnchor() {
         val bottomSheet =
             dialog?.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
-        val activityRoot = activity?.window?.decorView?.findViewById<View>(android.R.id.content)
-        val anchorView = activity?.findViewById<View>(R.id.tv_discussion_create_at)
+                ?: return
+        val activityRoot =
+            activity?.window?.decorView?.findViewById<View>(android.R.id.content) ?: return
+        val anchorView = activity?.findViewById<View>(R.id.tv_discussion_create_at) ?: return
 
-        activityRoot?.post {
-            if (isAdded && anchorView != null && bottomSheet != null) {
-                val anchorBottom = getViewBottomInWindow(anchorView)
-                val availableHeight = activityRoot.height - anchorBottom
-                if (availableHeight > 0) {
-                    setBottomSheetHeight(bottomSheet, availableHeight)
-                } else {
-                    setBottomSheetHeight(bottomSheet, activityRoot.height / 2)
-                }
-            }
+        activityRoot.post {
+            if (!isAdded) return@post
+            val anchorBottom = getViewBottomInWindow(anchorView)
+            val availableHeight = activityRoot.height - anchorBottom
+            val finalHeight =
+                if (availableHeight > 0) availableHeight else activityRoot.height / 2
+
+            setBottomSheetHeight(bottomSheet, finalHeight)
         }
     }
 
     private fun getViewBottomInWindow(view: View): Int {
         val location = IntArray(2)
         view.getLocationInWindow(location)
-        return location[1] + view.height
+        return location[LOCATION_INDEX_Y] + view.height
     }
 
     private fun setBottomSheetHeight(
@@ -86,6 +86,7 @@ class CommentBottomSheet : BottomSheetDialogFragment(R.layout.fragment_comment_b
     override fun getTheme(): Int = R.style.BottomSheetDialogTheme
 
     companion object {
+        private const val LOCATION_INDEX_Y = 1
         private const val DIM_AMOUNT = 0.001f
         const val KEY_DISCUSSION_ID = "discussion_id"
 
