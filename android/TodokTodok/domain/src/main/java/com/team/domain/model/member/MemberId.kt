@@ -8,6 +8,11 @@ sealed interface MemberId {
     ) : MemberId
 
     companion object {
-        fun MemberId(memberId: Long?): MemberId = memberId?.let { OtherUser(it) } ?: run { Mine }
+        fun MemberId(memberId: Long): MemberId {
+            if (memberId == INVALID_MEMBER_ID) return Mine
+            return OtherUser(memberId)
+        }
+
+        const val INVALID_MEMBER_ID = -1L
     }
 }
