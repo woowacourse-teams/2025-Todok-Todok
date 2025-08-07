@@ -9,10 +9,10 @@ sealed interface MemberId {
 
     companion object {
         fun MemberId(memberId: Long): MemberId {
-            if (memberId == INVALID_MEMBER_ID) return Mine
+            if (memberId == DEFAULT_MEMBER_ID) return Mine
             return OtherUser(memberId)
         }
 
-        const val INVALID_MEMBER_ID = -1L
+        const val DEFAULT_MEMBER_ID = -1L
     }
 }
