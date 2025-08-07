@@ -52,7 +52,10 @@ class DiscussionDetailViewModel(
     }
 
     fun deleteDiscussion() {
-        onUiEvent(DiscussionDetailUiEvent.DeleteDiscussion(discussionId))
+        viewModelScope.launch {
+            discussionRepository.deleteDiscussion(discussionId)
+            onUiEvent(DiscussionDetailUiEvent.DeleteDiscussion(discussionId))
+        }
     }
 
     fun toggleLike() {

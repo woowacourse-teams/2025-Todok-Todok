@@ -153,7 +153,7 @@ class DiscussionDetailActivity : AppCompatActivity() {
         when (discussionDetailUiEvent) {
             is DiscussionDetailUiEvent.ShowComments -> showComments(discussionDetailUiEvent.discussionId)
             is DiscussionDetailUiEvent.ToggleLikeOnDiscussion -> showToast("좋아요 클릭")
-            is DiscussionDetailUiEvent.DeleteDiscussion -> showToast("토론 삭제")
+            is DiscussionDetailUiEvent.DeleteDiscussion -> navigateUp()
             is DiscussionDetailUiEvent.AlreadyReportDiscussion -> showToast(getString(R.string.all_already_report_discussion))
             is DiscussionDetailUiEvent.UpdateDiscussion -> {
                 val discussionId = discussionDetailUiEvent.discussionId
