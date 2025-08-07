@@ -3,6 +3,8 @@ package com.team.todoktodok.presentation.view.discussion.create
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
@@ -21,26 +23,27 @@ import com.team.todoktodok.presentation.view.book.SelectBookActivity
 import com.team.todoktodok.presentation.view.discussion.create.vm.CreateDiscussionRoomViewModel
 import com.team.todoktodok.presentation.view.discussion.create.vm.CreateDiscussionRoomViewModelFactory
 import com.team.todoktodok.presentation.view.discussiondetail.DiscussionDetailActivity
-import com.team.todoktodok.presentation.view.serialization.SerializationBook
 
 class CreateDiscussionRoomActivity : AppCompatActivity() {
     private val binding by lazy { ActivityCreateDiscussionRoomBinding.inflate(layoutInflater) }
-
+    private val mode by lazy { intent.getParcelableCompat<SerializationCreateDiscussionRoomMode>(EXTRA_MODE) }
     private val viewModel by viewModels<CreateDiscussionRoomViewModel> {
         val repositoryModule = (application as App).container.repositoryModule
         CreateDiscussionRoomViewModelFactory(
+            mode,
             repositoryModule.bookRepository,
-            repositoryModule.discussionRepository
+            repositoryModule.discussionRepository,
+            repositoryModule.tokenRepository,
         )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(binding.root)
         initSystemBar()
         setupUi()
-        val intent = intent
-        val book = intent.getParcelableCompat<SerializationBook>(EXTRA_SELECTED_BOOK).toDomain()
+
 
         binding.apply {
             btnBack.setOnClickListener { finish() }
@@ -49,10 +52,23 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
                 startActivity(intent)
                 finish()
             }
-            btnCreate.setOnClickListener {
-                viewModel.createDiscussionRoom()
-            }
+            when (mode) {
+                is SerializationCreateDiscussionRoomMode.Create -> {
+                    binding.btnCreate.setOnClickListener {
+                        viewModel.createDiscussionRoom()
+                    }
+                }
 
+                is SerializationCreateDiscussionRoomMode.Edit -> {
+                    binding.tvCreateDiscussionRoomTitle.text = "토론방 수정"
+                    binding.btnEdit.visibility = View.INVISIBLE
+                    binding.btnCreate.setOnClickListener {
+                        viewModel.editDiscussionRoom()
+                    }
+                    binding.etDiscussionRoomTitle.setText(viewModel.title.value)
+                    binding.etDiscussionRoomOpinion.setText(viewModel.opinion.value)
+                }
+            }
             etDiscussionRoomTitle.setOnEditorActionListener { view, actionId, event ->
                 handleTextInput(view, actionId)
             }
@@ -66,8 +82,8 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
                 btnCreate.setTextColor(
                     ContextCompat.getColor(
                         this@CreateDiscussionRoomActivity,
-                        R.color.green_1A
-                    )
+                        R.color.green_1A,
+                    ),
                 )
             }
         }
@@ -79,15 +95,19 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
             binding.tvBookAuthor.text = book.author
             binding.ivBookImage.loadImage(book.image)
         }
-        viewModel.discussionRoomId.observe(this) { discussionRoomId: Long ->
-            val intent =
-                DiscussionDetailActivity.Intent(this@CreateDiscussionRoomActivity, discussionRoomId)
-            startActivity(intent)
-            finish()
+        viewModel.uiEvent.observe(this) { event ->
+            when (event) {
+                is CreateDiscussionUiEvent.NavigateToDiscussionDetail -> {
+                    val intent =
+                        DiscussionDetailActivity.Intent(
+                            this@CreateDiscussionRoomActivity,
+                            event.discussionRoomId,
+                        )
+                    startActivity(intent)
+                    finish()
+                }
+            }
         }
-
-
-
     }
 
     private fun handleTextInput(
@@ -121,18 +141,25 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
     companion object {
         private const val EXTRA_SELECTED_BOOK = "discussionBook"
         private const val EXTRA_DISCUSSION_ROOM_ID = "discussionRoomId"
+        private const val EXTRA_MODE = "mode"
 
         fun Intent(
             context: Context,
-            mode: CreateDiscussionRoomMode,
+            mode: SerializationCreateDiscussionRoomMode,
         ): Intent {
             val intent = Intent(context, CreateDiscussionRoomActivity::class.java)
             when (mode) {
-                is CreateDiscussionRoomMode.Create ->
-                    intent.putExtra(EXTRA_SELECTED_BOOK, mode.selectedBook)
+                is SerializationCreateDiscussionRoomMode.Create ->
+                    intent.apply {
+                        putExtra(EXTRA_MODE, mode)
+                        putExtra(EXTRA_SELECTED_BOOK, mode.selectedBook)
+                    }
 
-                is CreateDiscussionRoomMode.Edit ->
-                    intent.putExtra(EXTRA_DISCUSSION_ROOM_ID, mode.discussionRoomId)
+                is SerializationCreateDiscussionRoomMode.Edit ->
+                    intent.apply {
+                        putExtra(EXTRA_MODE, mode)
+                        putExtra(EXTRA_DISCUSSION_ROOM_ID, mode.discussionRoomId)
+                    }
             }
             return intent
         }
