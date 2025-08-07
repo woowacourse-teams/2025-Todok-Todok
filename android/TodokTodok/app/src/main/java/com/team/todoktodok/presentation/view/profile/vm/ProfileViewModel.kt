@@ -15,9 +15,10 @@ class ProfileViewModel(
     private val _uiState = MutableLiveData(ProfileUiState.initial())
     val uiState: LiveData<ProfileUiState> get() = _uiState
 
-    fun loadProfile(memberId: Long?) {
+    fun loadProfile(memberId: Long) {
         viewModelScope.launch {
-            val result = memberRepository.getProfile(MemberId(1))
+            val memberId = MemberId(memberId)
+            val result = memberRepository.getProfile(memberId)
             _uiState.value = _uiState.value?.modifyProfile(result)
         }
     }

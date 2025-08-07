@@ -3,6 +3,9 @@ package com.team.todoktodok.presentation.view.discussions
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -23,6 +26,7 @@ import com.team.todoktodok.presentation.view.discussions.all.AllDiscussionFragme
 import com.team.todoktodok.presentation.view.discussions.my.MyDiscussionFragment
 import com.team.todoktodok.presentation.view.discussions.vm.DiscussionsViewModel
 import com.team.todoktodok.presentation.view.discussions.vm.DiscussionsViewModelFactory
+import com.team.todoktodok.presentation.view.profile.ProfileActivity
 
 class DiscussionsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDiscussionsBinding
@@ -43,18 +47,11 @@ class DiscussionsActivity : AppCompatActivity() {
         setContentView(binding.root)
         manager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
 
+        setSupportActionBar(binding.toolbar)
         setUpSystemBars()
         initFragments()
         setUpUiState()
-        initView(binding)
-    }
-
-    private fun initFragments() {
-        supportFragmentManager.commit {
-            add(R.id.fragmentContainerView, allDiscussionFragment, ALL_DISCUSSION_FRAGMENT_TAG)
-            add(R.id.fragmentContainerView, myDiscussionFragment, MY_DISCUSSION_FRAGMENT_TAG)
-            hide(myDiscussionFragment)
-        }
+        initView()
     }
 
     private fun setUpSystemBars() {
@@ -63,6 +60,19 @@ class DiscussionsActivity : AppCompatActivity() {
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
+        }
+
+        supportActionBar?.apply {
+            setDisplayShowTitleEnabled(false)
+            setDisplayShowHomeEnabled(false)
+        }
+    }
+
+    private fun initFragments() {
+        supportFragmentManager.commit {
+            add(R.id.fragmentContainerView, allDiscussionFragment, ALL_DISCUSSION_FRAGMENT_TAG)
+            add(R.id.fragmentContainerView, myDiscussionFragment, MY_DISCUSSION_FRAGMENT_TAG)
+            hide(myDiscussionFragment)
         }
     }
 
@@ -78,7 +88,7 @@ class DiscussionsActivity : AppCompatActivity() {
         }
     }
 
-    private fun initView(binding: ActivityDiscussionsBinding) {
+    private fun initView() {
         with(binding) {
             val hint = getString(R.string.discussion_search_bar_hint)
             etSearchDiscussion.clearHintOnFocus(binding.etSearchDiscussionLayout, hint)
@@ -155,6 +165,22 @@ class DiscussionsActivity : AppCompatActivity() {
         super.onResume()
         viewModel.loadDiscussions()
     }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        Log.d("Toolbar", "Menu created") // ← 이거 로그 찍히는지 확인
+        menuInflater.inflate(R.menu.discussion_list_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        when (item.itemId) {
+            R.id.item_profile -> {
+                Log.d("Toolbar", "Profile menu clicked")
+                startActivity(ProfileActivity.Intent(this))
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
 
     companion object {
         private const val ALL_DISCUSSION_TAB_POSITION = 0

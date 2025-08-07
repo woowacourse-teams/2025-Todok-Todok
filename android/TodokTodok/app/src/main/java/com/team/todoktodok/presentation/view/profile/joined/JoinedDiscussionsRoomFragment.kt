@@ -5,10 +5,12 @@ import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.team.domain.model.member.MemberId.Companion.INVALID_MEMBER_ID
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentCreatedDiscussionsRoomBinding
 import com.team.todoktodok.presentation.view.profile.ProfileActivity.Companion.ARG_MEMBER_ID
+import com.team.todoktodok.presentation.view.profile.ProfileActivity.Companion.MEMBER_ID_NOT_FOUND
 import com.team.todoktodok.presentation.view.profile.created.adapter.UserDiscussionAdapter
 import com.team.todoktodok.presentation.view.profile.joined.vm.JoinedDiscussionsViewModel
 import com.team.todoktodok.presentation.view.profile.joined.vm.JoinedDiscussionsViewModelFactory
@@ -36,6 +38,7 @@ class JoinedDiscussionsRoomFragment : Fragment(R.layout.fragment_joined_discussi
         discussionAdapter = UserDiscussionAdapter(userDiscussionAdapterHandler)
 
         val memberId: Long? = arguments?.getLong(ARG_MEMBER_ID, INVALID_MEMBER_ID)
+        requireNotNull(memberId) { MEMBER_ID_NOT_FOUND }
         viewModel.loadDiscussions(memberId)
 
         binding.rvDiscussions.adapter = discussionAdapter
@@ -55,12 +58,9 @@ class JoinedDiscussionsRoomFragment : Fragment(R.layout.fragment_joined_discussi
         }
 
     companion object {
-        // API 연동 완료시 제거
-        fun newInstance(memberId: Long?): JoinedDiscussionsRoomFragment =
+        fun newInstance(memberId: Long): JoinedDiscussionsRoomFragment =
             JoinedDiscussionsRoomFragment().apply {
                 arguments = bundleOf(ARG_MEMBER_ID to memberId)
             }
-
-        private const val INVALID_MEMBER_ID = -1L
     }
 }

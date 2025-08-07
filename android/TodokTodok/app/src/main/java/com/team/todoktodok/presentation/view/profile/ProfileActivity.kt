@@ -8,6 +8,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.team.domain.model.member.MemberId.Companion.INVALID_MEMBER_ID
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivityProfileBinding
@@ -46,6 +47,7 @@ class ProfileActivity : AppCompatActivity() {
 
     private fun initView(binding: ActivityProfileBinding) {
         val memberId: Long? = intent?.getLongExtra(ARG_MEMBER_ID, INVALID_MEMBER_ID)
+        requireNotNull(memberId) { MEMBER_ID_NOT_FOUND }
         viewModel.loadProfile(memberId)
 
         val viewPagerAdapter = ContentPagerAdapter(memberId, supportFragmentManager, lifecycle)
@@ -88,6 +90,6 @@ class ProfileActivity : AppCompatActivity() {
             }
 
         const val ARG_MEMBER_ID = "member_id"
-        private const val INVALID_MEMBER_ID = -1L
+        const val MEMBER_ID_NOT_FOUND = "멤버 아이디가 존재하지 않습니다"
     }
 }
