@@ -12,24 +12,31 @@ public class LogInterceptor implements HandlerInterceptor {
     private static final Logger log = LoggerFactory.getLogger(LogInterceptor.class);
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        String requestURI = request.getRequestURI();
+    public boolean preHandle(
+            final HttpServletRequest request,
+            final HttpServletResponse response,
+            final Object handler
+    ) {
+        final String requestURI = request.getRequestURI();
         log.info("[API REQUEST] {}", requestURI);
 
         return true;
     }
 
     @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler,
-                                Exception ex) {
-        String requestURI = request.getRequestURI();
-        int status = response.getStatus();
+    public void afterCompletion(
+            final HttpServletRequest request,
+            final HttpServletResponse response,
+            final Object handler,
+            final Exception ex
+    ) {
+        final String requestURI = request.getRequestURI();
+        final int status = response.getStatus();
 
         if (status >= 200 && status < 300) {
             log.info("[API RESPONSE] {}: {}", requestURI, status);
         } else {
             log.error("[API RESPONSE] {}: {}", requestURI, status);
-
         }
     }
 }
