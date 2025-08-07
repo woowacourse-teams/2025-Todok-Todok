@@ -95,7 +95,7 @@ jobs:
         run: |
           cd backend
           if [ -f docker-compose.yml ]; then
-            docker-compose down
+            docker compose down
           else
             echo "docker-compose.yml 없음 - down 스킵"
           fi
@@ -103,7 +103,7 @@ jobs:
       - name: Docker Compose Up
         run: |
           cd backend
-          docker-compose up -d
+          docker compose up -d
           echo "docker compose up"
 
       - name: Docker image Prune
