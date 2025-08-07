@@ -11,9 +11,9 @@ class JwtParser(
         return json.getString(KEY_MEMBER_TYPE)
     }
 
-    fun parseMemberId(): String {
+    fun parseMemberId(): Long {
         val json = decodeJwt(jwt)
-        return json.getString(KEY_MEMBER_ID)
+        return json.getLong(KEY_MEMBER_ID)
     }
 
     fun decodeJwt(jwt: String): JSONObject {

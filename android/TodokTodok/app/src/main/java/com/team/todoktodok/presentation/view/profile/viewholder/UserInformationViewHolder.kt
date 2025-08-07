@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.PopupWindow
 import androidx.core.graphics.drawable.toDrawable
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.team.domain.model.Support
 import com.team.todoktodok.databinding.ItemUserInformationBinding
 import com.team.todoktodok.databinding.PopupMenuReportBinding
@@ -64,15 +63,15 @@ class UserInformationViewHolder private constructor(
     fun bind(item: ProfileItems.InformationItem) {
         val content = item.value
         with(binding) {
+            if (item.isMyProfile) ivReport.visibility = View.GONE
+
             tvNickname.text = content.nickname
             tvDescription.text = content.description
 
-            if (item.isMyProfile) ivReport.visibility = View.GONE
-
-            Glide
-                .with(binding.root)
-                .load(content.profileImage)
-                .into(ivProfile)
+//            Glide
+//                .with(binding.root)
+//                .load(content.profileImage)
+//                .into(ivProfile)
         }
     }
 

@@ -9,7 +9,7 @@ import com.team.todoktodok.data.network.auth.AuthInterceptor.Companion.AUTHORIZA
 import com.team.todoktodok.data.network.request.LoginRequest
 import com.team.todoktodok.data.network.request.SignUpRequest
 import com.team.todoktodok.data.network.response.ProfileResponse
-import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
+import com.team.todoktodok.data.network.response.discussion.MemberDiscussionResponse
 import com.team.todoktodok.data.network.service.MemberService
 
 class DefaultMemberRemoteDataSource(
@@ -47,7 +47,7 @@ class DefaultMemberRemoteDataSource(
     override suspend fun fetchMemberDiscussionRooms(
         request: MemberId,
         type: MemberDiscussionType,
-    ): List<DiscussionResponse> {
+    ): List<MemberDiscussionResponse> {
         val memberId =
             when (request) {
                 MemberId.Mine -> tokenDataSource.getMemberId()

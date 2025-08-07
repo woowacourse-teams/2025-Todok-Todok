@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.team.domain.model.Support
+import com.team.domain.model.member.MemberId.Companion.INVALID_MEMBER_ID
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivityProfileBinding
@@ -35,9 +36,9 @@ class ProfileActivity : AppCompatActivity() {
 
         setUpSystemBar()
         setUpDialogResultListener()
-        initView()
-        setUpUiState()
         setUpUiEvent()
+        initView(binding)
+        setUpUiState()
     }
 
     private fun setUpSystemBar() {
@@ -60,8 +61,9 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
-    private fun initView() {
-        val memberId: String? = intent?.getStringExtra(ARG_MEMBER_ID)
+    private fun initView(binding: ActivityProfileBinding) {
+        val memberId: Long? = intent?.getLongExtra(ARG_MEMBER_ID, INVALID_MEMBER_ID)
+        requireNotNull(memberId) { MEMBER_ID_NOT_FOUND }
         viewModel.loadProfile(memberId)
 
         val viewPagerAdapter = ContentPagerAdapter(memberId, supportFragmentManager, lifecycle)
@@ -96,8 +98,12 @@ class ProfileActivity : AppCompatActivity() {
             }
 
             override fun onClickLogo() {
-                startActivity(DiscussionsActivity.Intent(this@ProfileActivity))
-                finish()
+                if (viewModel.uiState.value?.isMyProfilePage == true) {
+                    finish()
+                } else {
+                    startActivity(DiscussionsActivity.Intent(this@ProfileActivity))
+                    finish()
+                }
             }
 
             override fun onClickProfileImage() {
@@ -113,12 +119,13 @@ class ProfileActivity : AppCompatActivity() {
     companion object {
         fun Intent(
             context: Context,
-            memberId: String? = null,
+            memberId: Long? = null,
         ): Intent =
             Intent(context, ProfileActivity::class.java).apply {
                 memberId?.let { putExtra(ARG_MEMBER_ID, it) }
             }
 
         const val ARG_MEMBER_ID = "member_id"
+        const val MEMBER_ID_NOT_FOUND = "멤버 아이디가 존재하지 않습니다"
     }
 }

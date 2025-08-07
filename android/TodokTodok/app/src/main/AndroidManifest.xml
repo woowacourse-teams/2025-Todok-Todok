@@ -17,21 +17,24 @@
         <activity
             android:name=".presentation.view.discussions.DiscussionsActivity"
             android:exported="false" />
-        <activity android:name=".presentation.view.profile.ProfileActivity"
+        <activity
+            android:name=".presentation.view.profile.ProfileActivity"
+            android:exported="true"/>
+        <activity
+            android:name=".presentation.view.auth.AuthActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".presentation.view.auth.AuthActivity"
-            android:exported="true">
-        </activity>
-        <activity
             android:name=".presentation.view.discussiondetail.DiscussionDetailActivity"
             android:exported="false" />
-        <activity android:name=".presentation.view.book.SelectBookActivity"
+        <activity
+            android:name=".presentation.view.book.SelectBookActivity"
             android:exported="false" />
     </application>
+
 </manifest>

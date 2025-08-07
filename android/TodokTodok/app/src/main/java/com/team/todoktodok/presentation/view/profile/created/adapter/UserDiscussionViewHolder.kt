@@ -3,7 +3,7 @@ package com.team.todoktodok.presentation.view.profile.created.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.team.domain.model.Discussion
+import com.team.domain.model.member.MemberDiscussion
 import com.team.todoktodok.databinding.ItemUserDiscussionBinding
 
 class UserDiscussionViewHolder private constructor(
@@ -16,7 +16,7 @@ class UserDiscussionViewHolder private constructor(
         }
     }
 
-    fun bind(item: Discussion) {
+    fun bind(item: MemberDiscussion) {
         with(binding) {
             tvDiscussionTitle.text = item.discussionTitle
             tvBookTitle.text = item.book.title

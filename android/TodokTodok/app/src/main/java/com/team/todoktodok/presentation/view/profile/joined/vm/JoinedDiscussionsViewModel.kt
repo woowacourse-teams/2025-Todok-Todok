@@ -4,42 +4,47 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.team.domain.model.Book
-import com.team.domain.model.Discussion
-import com.team.domain.model.member.Nickname
-import com.team.domain.model.member.User
+import com.team.domain.model.member.MemberDiscussion
+import com.team.domain.model.member.MemberDiscussionType
+import com.team.domain.model.member.MemberId.Companion.MemberId
 import com.team.domain.repository.MemberRepository
+import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
+import com.team.todoktodok.presentation.core.event.SingleLiveData
+import com.team.todoktodok.presentation.view.profile.created.MemberDiscussionUiEvent
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
 
 class JoinedDiscussionsViewModel(
     private val memberRepository: MemberRepository,
 ) : ViewModel() {
-    private val _discussion = MutableLiveData(emptyList<Discussion>())
-    val discussion: LiveData<List<Discussion>> get() = _discussion
+    private val _discussion = MutableLiveData(emptyList<MemberDiscussion>())
+    val discussion: LiveData<List<MemberDiscussion>> get() = _discussion
 
-    fun loadDiscussions(id: String?) {
+    private val _uiEvent = MutableSingleLiveData<MemberDiscussionUiEvent>()
+    val uiEvent: SingleLiveData<MemberDiscussionUiEvent> get() = _uiEvent
+
+    fun loadDiscussions(id: Long) {
         viewModelScope.launch {
-            // val result = memberRepository.getMemberDiscussionRooms(MemberId(id), MemberDiscussionType.PARTICIPATED)
-            _discussion.value =
-                listOf(
-                    Discussion(
-                        id = 1L,
-                        discussionTitle = "JPA 성능 최적화",
-                        book = Book(1L, "자바 ORM 표준 JPA 프로그래밍", "김영한", ""),
-                        writer = User(1L, Nickname("홍길동")),
-                        createAt = LocalDateTime.of(2025, 7, 12, 12, 0),
-                        discussionOpinion = "fetch join을 남발하면 안됩니다.",
-                    ),
-                    Discussion(
-                        id = 2L,
-                        discussionTitle = "코틀린 코루틴 완전 정복",
-                        book = Book(2L, "Kotlin in Action", "Dmitry Jemerov", ""),
-                        writer = User(2L, Nickname("박코루틴")),
-                        createAt = LocalDateTime.of(2025, 7, 13, 12, 0),
-                        discussionOpinion = "suspend fun과 launch 차이를 이해해야 합니다.",
-                    ),
+            val result =
+                memberRepository.getMemberDiscussionRooms(
+                    MemberId(id),
+                    MemberDiscussionType.PARTICIPATED,
                 )
+            _discussion.value = result
         }
+    }
+
+    fun findSelectedDiscussion(index: Int) {
+        val selectedDiscussion = _discussion.value?.get(index)
+        requireNotNull(selectedDiscussion) { INVALID_DISCUSSION_INDEX.format(index) }
+
+        onUiEvent(MemberDiscussionUiEvent.NavigateToDetail(selectedDiscussion.id))
+    }
+
+    private fun onUiEvent(event: MemberDiscussionUiEvent) {
+        _uiEvent.setValue(event)
+    }
+
+    companion object {
+        private const val INVALID_DISCUSSION_INDEX = "토론 목록에서 인덱스 %d는 유효하지 않습니다."
     }
 }

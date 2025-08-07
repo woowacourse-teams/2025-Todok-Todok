@@ -1,7 +1,7 @@
 package com.team.domain.repository
 
-import com.team.domain.model.Discussion
 import com.team.domain.model.Support
+import com.team.domain.model.member.MemberDiscussion
 import com.team.domain.model.member.MemberDiscussionType
 import com.team.domain.model.member.MemberId
 import com.team.domain.model.member.Profile
@@ -20,7 +20,7 @@ interface MemberRepository {
     suspend fun getMemberDiscussionRooms(
         id: MemberId,
         type: MemberDiscussionType,
-    ): List<Discussion>
+    ): List<MemberDiscussion>
 
     suspend fun supportMember(
         id: MemberId.OtherUser,

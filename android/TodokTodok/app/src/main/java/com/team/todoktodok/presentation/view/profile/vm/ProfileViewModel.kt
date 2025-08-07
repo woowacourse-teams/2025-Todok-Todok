@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.team.domain.model.Support
 import com.team.domain.model.member.MemberId
 import com.team.domain.model.member.MemberId.Companion.MemberId
-import com.team.domain.model.member.Profile
 import com.team.domain.repository.MemberRepository
 import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
 import com.team.todoktodok.presentation.core.event.SingleLiveData
@@ -24,12 +23,11 @@ class ProfileViewModel(
     private val _uiEvent = MutableSingleLiveData<ProfileUiEvent>()
     val uiEvent: SingleLiveData<ProfileUiEvent> get() = _uiEvent
 
-    fun loadProfile(id: String?) {
+    fun loadProfile(memberId: Long) {
         viewModelScope.launch {
-            val memberId = MemberId(id)
-            // val result = memberRepository.getProfile(memberId)
-            val result = Profile("2", "페토", "나나조아", "")
-            _uiState.value = _uiState.value?.modifyProfile(result)
+            val memberId = MemberId(memberId)
+            val result = memberRepository.getProfile(memberId)
+            _uiState.value = _uiState.value?.modifyProfile(result, memberId)
         }
     }
 

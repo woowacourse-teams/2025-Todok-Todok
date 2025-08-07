@@ -11,7 +11,7 @@ import com.team.todoktodok.presentation.view.profile.created.CreatedDiscussionsR
 import com.team.todoktodok.presentation.view.profile.joined.JoinedDiscussionsRoomFragment
 
 class ContentPagerAdapter(
-    private val memberId: String?,
+    private val memberId: Long,
     fragmentManager: FragmentManager,
     lifecycle: Lifecycle,
 ) : FragmentStateAdapter(fragmentManager, lifecycle) {

@@ -5,7 +5,7 @@ import com.team.domain.model.member.MemberDiscussionType
 import com.team.domain.model.member.MemberId
 import com.team.todoktodok.data.network.request.SignUpRequest
 import com.team.todoktodok.data.network.response.ProfileResponse
-import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
+import com.team.todoktodok.data.network.response.discussion.MemberDiscussionResponse
 
 interface MemberRemoteDataSource {
     suspend fun login(request: String): String
@@ -17,7 +17,7 @@ interface MemberRemoteDataSource {
     suspend fun fetchMemberDiscussionRooms(
         request: MemberId,
         type: MemberDiscussionType,
-    ): List<DiscussionResponse>
+    ): List<MemberDiscussionResponse>
 
     suspend fun supportMember(
         request: MemberId.OtherUser,

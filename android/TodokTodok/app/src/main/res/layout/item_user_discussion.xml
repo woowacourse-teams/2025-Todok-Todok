@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/cardViewRowSchedule"
     style="@style/Widget.Material3.CardView.Filled"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -18,65 +18,65 @@
         android:layout_height="wrap_content">
 
         <View
-            android:id="@+id/viewRowScheduleRemainingDeco"
+            android:id="@+id/view_holder"
             android:layout_width="5dp"
             android:layout_height="0dp"
             android:background="#93DC90"
-            android:visibility="visible"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/tv_book_title"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/space_16"
+            android:layout_marginTop="@dimen/space_12"
+            android:layout_marginEnd="@dimen/space_16"
             android:ellipsize="end"
-            android:fontFamily="@font/pretendard_semi_bold"
             android:maxLines="1"
+            android:fontFamily="@font/pretendard_semi_bold"
             android:textColor="@color/black_18"
             android:textSize="18sp"
-            android:layout_marginTop="@dimen/space_4"
-            app:layout_constraintHorizontal_bias="0"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/view_holder"
             app:layout_constraintEnd_toEndOf="parent"
-            tools:text="김수한무 거북이와 두루미 삼천갑자 동방삭 치치카포 사리사리센타 워리워리 세드리벤 슬뫼 이무드리 샘이나리 시프네르 보르무스 베르무스 삼사무기 가필리아 구름에 달 가듯이" />
+            tools:text="책 제목 예시 텍스트" />
 
         <TextView
             android:id="@+id/tv_discussion_title"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/space_16"
+            android:layout_marginTop="@dimen/space_8"
+            android:layout_marginEnd="@dimen/space_16"
             android:ellipsize="end"
-            android:fontFamily="@font/pretendard_medium"
             android:maxLines="1"
+            android:fontFamily="@font/pretendard_medium"
             android:textColor="@color/gray_66"
             android:textSize="@dimen/font_size_large"
-            android:paddingTop="@dimen/space_12"
-            app:layout_constraintHorizontal_bias="0"
             app:layout_constraintTop_toBottomOf="@id/tv_book_title"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/view_holder"
             app:layout_constraintEnd_toEndOf="parent"
             tools:text="김수한무 거북이와 두루미 삼천갑자 동방삭 치치카포 사리사리센타 워리워리 세드리벤 슬뫼 이무드리 샘이나리 시프네르 보르무스 베르무스 삼사무기 가필리아 구름에 달 가듯이" />
 
         <TextView
             android:id="@+id/tv_discussion_content"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/space_16"
+            android:layout_marginTop="@dimen/space_8"
+            android:layout_marginBottom="@dimen/space_12"
+            android:layout_marginEnd="@dimen/space_16"
             android:ellipsize="end"
-            android:fontFamily="@font/pretendard_regular"
             android:maxLines="1"
+            android:fontFamily="@font/pretendard_regular"
             android:textColor="@color/gray_66"
             android:textSize="@dimen/font_size_large"
-            android:paddingBottom="@dimen/space_8"
-            android:paddingTop="@dimen/space_12"
-            app:layout_constraintHorizontal_bias="0"
             app:layout_constraintTop_toBottomOf="@id/tv_discussion_title"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/view_holder"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             tools:text="김수한무 거북이와 두루미 삼천갑자 동방삭 치치카포 사리사리센타 워리워리 세드리벤 슬뫼 이무드리 샘이나리 시프네르 보르무스 베르무스 삼사무기 가필리아 구름에 달 가듯이" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>
