@@ -33,7 +33,7 @@ public interface CommentLikeRepository extends JpaRepository<CommentLike, Long> 
             FROM CommentLike cl
             WHERE cl.member.id = :memberId AND cl.comment.id IN :commentIds
             """)
-    List<Long> findLikedCommentIdsByMemberIdAndByCommentIds(
+    List<Long> findLikedCommentIdsByMember(
             @Param("memberId") final Long memberId,
             @Param("commentIds") final List<Long> commentIds);
 }

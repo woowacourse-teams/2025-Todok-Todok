@@ -59,15 +59,14 @@ public class CommentQueryService {
 
         final List<CommentLikeCountDto> likeCountsById = commentLikeRepository.findLikeCountsByCommentIds(commentIds);
         final List<CommentReplyCountDto> replyCountsById = replyRepository.findReplyCountsByCommentIds(commentIds);
-        final List<Long> likedCommentByIds = commentLikeRepository.findLikedCommentIdsByMemberIdAndByCommentIds(
-                memberId, commentIds);
+        final List<Long> likedCommentIds = commentLikeRepository.findLikedCommentIdsByMember(memberId, commentIds);
 
         return comments.stream()
                 .map(comment -> new CommentResponse(
                         comment,
                         findLikeCount(comment, likeCountsById),
                         findReplyCount(comment, replyCountsById),
-                        likedCommentByIds.contains(comment.getId())
+                        likedCommentIds.contains(comment.getId())
                 ))
                 .toList();
     }
