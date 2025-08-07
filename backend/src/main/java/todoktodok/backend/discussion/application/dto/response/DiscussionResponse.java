@@ -13,12 +13,14 @@ public record DiscussionResponse(
         String discussionTitle,
         String discussionOpinion,
         int likeCount,
-        int commentCount
+        int commentCount,
+        boolean isLiked
 ) {
     public DiscussionResponse(
             final Discussion discussion,
             final int likeCount,
-            final int commentCount
+            final int commentCount,
+            final boolean isLiked
     ) {
         this(
                 discussion.getId(),
@@ -28,7 +30,8 @@ public record DiscussionResponse(
                 discussion.getTitle(),
                 discussion.getContent(),
                 likeCount,
-                commentCount
+                commentCount,
+                isLiked
         );
     }
 }
