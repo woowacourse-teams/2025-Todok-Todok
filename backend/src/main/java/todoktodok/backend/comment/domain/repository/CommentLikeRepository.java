@@ -1,8 +1,8 @@
 package todoktodok.backend.comment.domain.repository;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -16,11 +16,11 @@ public interface CommentLikeRepository extends JpaRepository<CommentLike, Long> 
     Optional<CommentLike> findByMemberAndComment(final Member member, final Comment comment);
 
     @Query("""
-        SELECT new todoktodok.backend.comment.application.service.query.CommentLikeCountDto(c.id, COUNT(cl))
-        FROM Comment c
-        LEFT JOIN CommentLike cl ON cl.comment = c
-        WHERE c.id IN :commentIds
-        GROUP BY c.id
-    """)
+                SELECT new todoktodok.backend.comment.application.service.query.CommentLikeCountDto(c.id, COUNT(cl))
+                FROM Comment c
+                LEFT JOIN CommentLike cl ON cl.comment = c
+                WHERE c.id IN :commentIds
+                GROUP BY c.id
+            """)
     List<CommentLikeCountDto> findLikeCountsByCommentIds(@Param("commentIds") final List<Long> commentIds);
 }
