@@ -30,7 +30,7 @@ public interface ReplyLikeRepository extends JpaRepository<ReplyLike, Long> {
                 WHERE rl.member = :member
                 AND rl.reply.id IN :replyIds
             """)
-    List<Long> findLikedDiscussionIdsByMember(
+    List<Long> findLikedReplyIdsByMember(
             @Param("member") final Member member,
             @Param("replyIds") final List<Long> replyIds
     );

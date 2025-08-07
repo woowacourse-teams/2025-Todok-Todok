@@ -136,7 +136,7 @@ public class DiscussionQueryService {
                         discussion,
                         findLikeCount(discussion, likeCountsById),
                         findCommentCount(discussion, commentCountsById),
-                        findIsLiked(discussion, likedDiscussionIds)
+                        isLikedDiscussion(discussion, likedDiscussionIds)
                 ))
                 .toList();
     }
@@ -163,7 +163,7 @@ public class DiscussionQueryService {
                 .orElseThrow(() -> new IllegalStateException("토론방의 좋아요 수를 찾을 수 없습니다"));
     }
 
-    private boolean findIsLiked(
+    private boolean isLikedDiscussion(
             final Discussion discussion,
             final List<Long> likedDiscussionIds
     ) {

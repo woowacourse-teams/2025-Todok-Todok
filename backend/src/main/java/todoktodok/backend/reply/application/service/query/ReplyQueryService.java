@@ -45,13 +45,13 @@ public class ReplyQueryService {
                 .toList();
 
         final List<ReplyLikeCountDto> likeCountsById = replyLikeRepository.findLikeCountsByReplyIds(replyIds);
-        final List<Long> likedReplyIds = replyLikeRepository.findLikedDiscussionIdsByMember(member, replyIds);
+        final List<Long> likedReplyIds = replyLikeRepository.findLikedReplyIdsByMember(member, replyIds);
 
         return replies.stream()
                 .map(reply -> new ReplyResponse(
                         reply,
                         findLikeCount(reply, likeCountsById),
-                        findIsLiked(reply, likedReplyIds)
+                        isLikedReply(reply, likedReplyIds)
                 ))
                 .toList();
     }
@@ -82,7 +82,7 @@ public class ReplyQueryService {
                 .orElseThrow(() -> new IllegalStateException("대댓글별 좋아요 수를 찾을 수 없습니다"));
     }
 
-    private boolean findIsLiked(
+    private boolean isLikedReply(
             final Reply reply,
             final List<Long> likedReplyIds
     ) {
