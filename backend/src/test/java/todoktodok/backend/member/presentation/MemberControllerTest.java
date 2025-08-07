@@ -309,4 +309,47 @@ class MemberControllerTest {
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
+
+    @Test
+    @DisplayName("차단한 회원 전체를 조회한다")
+    void getBlockMembersTest() {
+        // given
+        databaseInitializer.setUserInfo("user@gmail.com", "user", "https://image.png", "user");
+        databaseInitializer.setUserInfo("user2@gmail.com", "user2", "https://image2.png", "user2");
+        databaseInitializer.setUserInfo("user3@gmail.com", "user3", "https://image3.png", "user3");
+
+        databaseInitializer.setBlockInfo(1L, 2L);
+        databaseInitializer.setBlockInfo(1L, 3L);
+
+        final String token = MemberFixture.login("user@gmail.com");
+
+        // when - then
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .header("Authorization", token)
+                .when().get("/api/v1/members/block")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("size()", is(2));
+    }
+
+    @Test
+    @DisplayName("차단한 회원을 차단해제한다")
+    void deleteBlockTest() {
+        // given
+        databaseInitializer.setUserInfo("user@gmail.com", "user", "https://image.png", "user");
+        databaseInitializer.setUserInfo("user2@gmail.com", "user2", "https://image2.png", "user2");
+
+        databaseInitializer.setBlockInfo(1L, 2L);
+
+        final String token = MemberFixture.login("user@gmail.com");
+
+        // when - then
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .header("Authorization", token)
+                .when().delete("/api/v1/members/2/block")
+                .then().log().all()
+                .statusCode(HttpStatus.NO_CONTENT.value());
+    }
 }

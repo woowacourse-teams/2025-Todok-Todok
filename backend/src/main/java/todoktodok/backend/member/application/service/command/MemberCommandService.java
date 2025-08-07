@@ -102,6 +102,20 @@ public class MemberCommandService {
         return new ProfileUpdateResponse(member);
     }
 
+    public void deleteBlock(
+            final Long memberId,
+            final Long targetId
+    ) {
+        final Member member = findMember(memberId);
+        final Member target = findMember(targetId);
+
+        validateBlock(member, target);
+
+        final Block block = blockRepository.findByMemberAndTarget(member, target);
+
+        blockRepository.delete(block);
+    }
+
     private void validateDuplicatedNickname(final String nickname) {
         if (memberRepository.existsByNickname(nickname)) {
             throw new IllegalArgumentException("이미 존재하는 닉네임입니다");
@@ -172,5 +186,14 @@ public class MemberCommandService {
             return;
         }
         validateDuplicatedNickname(newNickname);
+    }
+
+    private void validateBlock(
+            final Member member,
+            final Member target
+    ) {
+        if (!blockRepository.existsByMemberAndTarget(member, target)) {
+            throw new IllegalArgumentException("차단한 회원이 아닙니다");
+        }
     }
 }

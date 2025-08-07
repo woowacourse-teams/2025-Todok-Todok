@@ -242,4 +242,21 @@ public class DatabaseInitializer {
                 .setParameter("replyId", replyId)
                 .executeUpdate();
     }
+
+    @Transactional
+    public void setBlockInfo(
+            final Long memberId,
+            final Long targetId
+    ) {
+        em.createNativeQuery(
+                        """
+                        INSERT INTO BLOCK (member_id, target_id, created_at, modified_at)
+                        VALUES 
+                        (:memberId, :targetId, CURRENT_TIME, CURRENT_TIME)
+                        """
+                 )
+                .setParameter("memberId", memberId)
+                .setParameter("targetId", targetId)
+                .executeUpdate();
+    }
 }

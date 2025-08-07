@@ -18,6 +18,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.DatabaseInitializer;
 import todoktodok.backend.InitializerTimer;
+import todoktodok.backend.member.application.dto.response.BlockMemberResponse;
 import todoktodok.backend.member.application.dto.response.MemberDiscussionResponse;
 import todoktodok.backend.member.domain.MemberDiscussionFilterType;
 
@@ -122,5 +123,30 @@ public class MemberQueryServiceTest {
         assertThatThrownBy(() -> memberQueryService.getMemberDiscussionsByType(notExistsMemberId, type))
                 .isInstanceOf(NoSuchElementException.class)
                 .hasMessage("해당 회원을 찾을 수 없습니다");
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 회원의 차단 전체 목록을 조회하면 예외가 발생한다")
+    void getBlockMembersTest_memberNotFound_fail() {
+        // given
+        final Long notExistsMemberId = 1L;
+
+        // when - then
+        assertThatThrownBy(() -> memberQueryService.getBlockMembers(notExistsMemberId))
+                .isInstanceOf(NoSuchElementException.class)
+                .hasMessage("해당 회원을 찾을 수 없습니다");
+    }
+
+    @Test
+    @DisplayName("차단한 회원이 없다면 빈 리스트를 반환한다")
+    void getBlockMembersTest_emptyBlock() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+
+        // when
+        final List<BlockMemberResponse> blockMembers = memberQueryService.getBlockMembers(1L);
+
+        // then
+        assertThat(blockMembers).hasSize(0);
     }
 }

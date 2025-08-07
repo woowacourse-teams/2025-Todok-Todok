@@ -9,10 +9,13 @@ import todoktodok.backend.book.application.dto.response.BookResponse;
 import todoktodok.backend.book.domain.Book;
 import todoktodok.backend.book.domain.repository.BookRepository;
 import todoktodok.backend.discussion.domain.repository.DiscussionRepository;
+import todoktodok.backend.member.application.dto.response.BlockMemberResponse;
 import todoktodok.backend.member.application.dto.response.MemberDiscussionResponse;
 import todoktodok.backend.member.application.dto.response.ProfileResponse;
+import todoktodok.backend.member.domain.Block;
 import todoktodok.backend.member.domain.Member;
 import todoktodok.backend.member.domain.MemberDiscussionFilterType;
+import todoktodok.backend.member.domain.repository.BlockRepository;
 import todoktodok.backend.member.domain.repository.MemberRepository;
 
 @Service
@@ -23,6 +26,7 @@ public class MemberQueryService {
     private final MemberRepository memberRepository;
     private final BookRepository bookRepository;
     private final DiscussionRepository discussionRepository;
+    private final BlockRepository blockRepository;
 
     public ProfileResponse getProfile(final Long memberId) {
         final Member member = findMember(memberId);
@@ -52,6 +56,16 @@ public class MemberQueryService {
         }
 
         return getParticipatedDiscussions(member);
+    }
+
+    public List<BlockMemberResponse> getBlockMembers(final Long memberId) {
+        final Member member = findMember(memberId);
+
+        final List<Block> blockMembers = blockRepository.findBlocksByMember(member);
+
+        return blockMembers.stream()
+                .map(BlockMemberResponse::new)
+                .toList();
     }
 
     private Member findMember(final Long memberId) {
