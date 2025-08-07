@@ -20,6 +20,9 @@ import com.team.todoktodok.databinding.ActivitySelectBookBinding
 import com.team.todoktodok.presentation.view.book.adapter.SearchBooksAdapter
 import com.team.todoktodok.presentation.view.book.vm.SelectBookViewModel
 import com.team.todoktodok.presentation.view.book.vm.SelectBookViewModelFactory
+import com.team.todoktodok.presentation.view.discussion.create.CreateDiscussionRoomActivity
+import com.team.todoktodok.presentation.view.discussion.create.CreateDiscussionRoomMode
+import com.team.todoktodok.presentation.view.serialization.toSerialization
 
 class SelectBookActivity : AppCompatActivity() {
     private val binding by lazy { ActivitySelectBookBinding.inflate(layoutInflater) }
@@ -102,7 +105,14 @@ class SelectBookActivity : AppCompatActivity() {
                 }
 
                 is SelectBookUiEvent.NavigateToCreateDiscussionRoom -> {
-                    // 토론방 생성 페이지로 이동
+                    val book = event.book.toSerialization()
+                    val intent =
+                        CreateDiscussionRoomActivity.Intent(
+                            this,
+                            CreateDiscussionRoomMode.Create(book),
+                        )
+                    startActivity(intent)
+                    finish()
                 }
 
                 is SelectBookUiEvent.HideKeyboard -> {
@@ -120,12 +130,15 @@ class SelectBookActivity : AppCompatActivity() {
                             ErrorSelectBookType.ERROR_NO_SELECTED_BOOK -> {
                                 getString(R.string.error_no_selected_book)
                             }
+
                             ErrorSelectBookType.ERROR_NETWORK -> {
                                 getString(R.string.error_network)
                             }
+
                             ErrorSelectBookType.ERROR_EMPTY_KEYWORD -> {
                                 getString(R.string.error_empty_keyword)
                             }
+
                             ErrorSelectBookType.ERROR_DELETE_KEYWORD -> {
                                 getString(R.string.error_delete_keyword)
                             }
