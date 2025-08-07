@@ -1,12 +1,15 @@
 package com.team.todoktodok.presentation.vm
 
 import com.team.domain.model.member.MemberDiscussion
+import com.team.domain.model.member.MemberDiscussionType
+import com.team.domain.model.member.MemberId.Companion.MemberId
 import com.team.domain.repository.MemberRepository
 import com.team.todoktodok.CoroutinesTestExtension
 import com.team.todoktodok.InstantTaskExecutorExtension
 import com.team.todoktodok.presentation.view.profile.created.vm.CreatedDiscussionsViewModel
 import io.kotest.matchers.shouldBe
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -31,13 +34,27 @@ class CreatedDiscussionsViewModelTest {
     fun `사용자가 생성했던 토론 목록을 불러온다`() =
         runTest {
             // given
+            val memberId = 1L
             val discussions = emptyList<MemberDiscussion>()
-            coEvery { mockMemberRepository.getMemberDiscussionRooms(any(), any()) } returns discussions
+
+            coEvery {
+                mockMemberRepository
+                    .getMemberDiscussionRooms(
+                        MemberId(memberId),
+                        MemberDiscussionType.CREATED,
+                    )
+            } returns discussions
 
             // when
-            viewModel.loadDiscussions(1)
+            viewModel.loadDiscussions(memberId)
 
             // then
             viewModel.discussion.value shouldBe discussions
+            coVerify {
+                mockMemberRepository.getMemberDiscussionRooms(
+                    MemberId(memberId),
+                    MemberDiscussionType.CREATED,
+                )
+            }
         }
 }
