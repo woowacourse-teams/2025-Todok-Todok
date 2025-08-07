@@ -11,6 +11,13 @@ import java.time.LocalDateTime
 class FakeCommentRepository : CommentRepository {
     private val comments = COMMENTS.toMutableList()
 
+    override suspend fun getComment(
+        discussionId: Long,
+        commentId: Long,
+    ): Comment {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun getCommentsByDiscussionRoomId(id: Long): List<Comment> = comments
 
     override suspend fun saveComment(
@@ -23,6 +30,9 @@ class FakeCommentRepository : CommentRepository {
                 content,
                 user,
                 LocalDateTime.of(2008, 7, 23, 12, 10),
+                likeCount = 0,
+                replyCount = 0,
+                isLikedByMe = false,
             ),
         )
     }
