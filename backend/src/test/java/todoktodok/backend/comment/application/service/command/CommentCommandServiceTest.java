@@ -261,4 +261,24 @@ public class CommentCommandServiceTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("해당 토론방에 있는 댓글이 아닙니다");
     }
+
+    @Test
+    @DisplayName("대댓글이 존재하는 댓글을 삭제하면 예외가 발생한다")
+    void validateHasCommentDiscussionDeleteTest() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+        databaseInitializer.setDefaultCommentInfo();
+        databaseInitializer.setDefaultReplyInfo();
+
+        final Long memberId = 1L;
+        final Long discussionId = 1L;
+        final Long commentId = 1L;
+
+        // when - then
+        assertThatThrownBy(() -> commentCommandService.deleteComment(memberId, discussionId, commentId))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("대댓글이 존재하는 댓글은 삭제할 수 없습니다");
+    }
 }

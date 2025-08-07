@@ -16,6 +16,7 @@ import todoktodok.backend.discussion.domain.Discussion;
 import todoktodok.backend.discussion.domain.repository.DiscussionRepository;
 import todoktodok.backend.member.domain.Member;
 import todoktodok.backend.member.domain.repository.MemberRepository;
+import todoktodok.backend.reply.domain.repository.ReplyRepository;
 
 @Service
 @Transactional
@@ -27,6 +28,7 @@ public class CommentCommandService {
     private final CommentRepository commentRepository;
     private final CommentReportRepository commentReportRepository;
     private final CommentLikeRepository commentLikeRepository;
+    private final ReplyRepository replyRepository;
 
     public Long createComment(
             final Long memberId,
@@ -119,6 +121,7 @@ public class CommentCommandService {
         final Member member = findMember(memberId);
         final Discussion discussion = findDiscussion(discussionId);
 
+        validateHasReply(comment);
         validateCommentMember(comment, member);
         comment.validateMatchWithDiscussion(discussion);
 
@@ -155,6 +158,12 @@ public class CommentCommandService {
     ) {
         if (!comment.isOwnedBy(member)) {
             throw new IllegalArgumentException("자기 자신의 댓글만 수정/삭제 가능합니다");
+        }
+    }
+
+    private void validateHasReply(final Comment comment) {
+        if (replyRepository.existsByComment(comment)) {
+            throw new IllegalArgumentException("대댓글이 존재하는 댓글은 삭제할 수 없습니다");
         }
     }
 }
