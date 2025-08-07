@@ -3,21 +3,22 @@ package todoktodok.backend.reply.presentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
+
 import java.net.URI;
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import todoktodok.backend.global.auth.Auth;
 import todoktodok.backend.global.auth.Role;
 import todoktodok.backend.global.resolver.LoginMember;
 import todoktodok.backend.reply.application.dto.request.ReplyRequest;
+import todoktodok.backend.reply.application.dto.response.ReplyResponse;
 import todoktodok.backend.reply.application.service.command.ReplyCommandService;
+import todoktodok.backend.reply.application.service.query.ReplyQueryService;
 
 @RestController
 @AllArgsConstructor
@@ -25,6 +26,7 @@ import todoktodok.backend.reply.application.service.command.ReplyCommandService;
 public class ReplyController {
 
     private final ReplyCommandService replyCommandService;
+    private final ReplyQueryService replyQueryService;
 
     @Operation(summary = "대댓글 생성 API")
     @Auth(value = Role.USER)
@@ -39,6 +41,84 @@ public class ReplyController {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .location(createUri(replyId))
+                .build();
+    }
+
+    @Operation(summary = "대댓글 신고 API")
+    @Auth(value = Role.USER)
+    @PostMapping("/{replyId}/report")
+    public ResponseEntity<Void> report(
+            @Parameter(hidden = true) @LoginMember final Long memberId,
+            @PathVariable final Long discussionId,
+            @PathVariable final Long commentId,
+            @PathVariable final Long replyId
+    ) {
+        replyCommandService.report(memberId, discussionId, commentId, replyId);
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .build();
+    }
+
+    @Operation(summary = "댓글별 대댓글 목록 조회 API")
+    @Auth(value = Role.USER)
+    @GetMapping
+    public ResponseEntity<List<ReplyResponse>> getReplies(
+            @Parameter(hidden = true) @LoginMember final Long memberId,
+            @PathVariable final Long discussionId,
+            @PathVariable final Long commentId
+    ) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(replyQueryService.getReplies(memberId, discussionId, commentId));
+    }
+
+    @Operation(summary = "대댓글 수정 API")
+    @Auth(value = Role.USER)
+    @PatchMapping("/{replyId}")
+    public ResponseEntity<Void> updateReply(
+            @Parameter(hidden = true) @LoginMember final Long memberId,
+            @PathVariable final Long discussionId,
+            @PathVariable final Long commentId,
+            @PathVariable final Long replyId,
+            @RequestBody @Valid final ReplyRequest replyRequest
+    ) {
+        replyCommandService.updateReply(memberId, discussionId, commentId, replyId, replyRequest);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .location(ServletUriComponentsBuilder.fromCurrentRequest().build().toUri())
+                .build();
+    }
+
+    @Operation(summary = "대댓글 삭제 API")
+    @Auth(value = Role.USER)
+    @DeleteMapping("/{replyId}")
+    public ResponseEntity<Void> deleteReply(
+            @Parameter(hidden = true) @LoginMember final Long memberId,
+            @PathVariable final Long discussionId,
+            @PathVariable final Long commentId,
+            @PathVariable final Long replyId
+    ) {
+        replyCommandService.deleteReply(memberId, discussionId, commentId, replyId);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .build();
+    }
+
+    @Operation(summary = "대댓글 좋아요 API")
+    @Auth(value = Role.USER)
+    @PostMapping("/{replyId}/like")
+    public ResponseEntity<Void> toggleLike(
+            @Parameter(hidden = true) @LoginMember final Long memberId,
+            @PathVariable final Long discussionId,
+            @PathVariable final Long commentId,
+            @PathVariable final Long replyId
+    ) {
+        final boolean isLiked = replyCommandService.toggleLike(memberId, discussionId, commentId, replyId);
+
+        if (isLiked) {
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .build();
+        }
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
                 .build();
     }
 

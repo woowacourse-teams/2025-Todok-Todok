@@ -2,7 +2,9 @@ package todoktodok.backend;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+
 import java.util.List;
+
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -131,6 +133,23 @@ public class DatabaseInitializer {
     }
 
     @Transactional
+    public void setDiscussionLikeInfo(
+            final Long memberId,
+            final Long discussionId
+    ) {
+        em.createNativeQuery(
+                        """
+                                INSERT INTO DISCUSSION_LIKE (member_id, discussion_id, created_at, modified_at)
+                                VALUES 
+                                (:memberId, :discussionId, CURRENT_TIME, CURRENT_TIME)
+                                """
+                )
+                .setParameter("memberId", memberId)
+                .setParameter("discussionId", discussionId)
+                .executeUpdate();
+    }
+
+    @Transactional
     public void setDefaultCommentInfo() {
         em.createNativeQuery(
                 """
@@ -174,6 +193,70 @@ public class DatabaseInitializer {
                 )
                 .setParameter("memberId", memberId)
                 .setParameter("commentId", commentId)
+                .executeUpdate();
+    }
+
+    @Transactional
+    public void setDefaultReplyInfo() {
+        em.createNativeQuery(
+                """
+                        INSERT INTO REPLY (content, member_id, comment_id, created_at, modified_at)
+                        VALUES 
+                        ('저도 같은 의견입니다!', 1L, 1L, CURRENT_TIME, CURRENT_TIME)
+                        """
+        ).executeUpdate();
+    }
+
+    @Transactional
+    public void setReplyInfo(
+            final String content,
+            final Long memberId,
+            final Long commentId
+    ) {
+        em.createNativeQuery(
+                        """
+                                INSERT INTO REPLY (content, member_id, comment_id, created_at, modified_at)
+                                VALUES 
+                                (:content, :memberId, :commentId, CURRENT_TIME, CURRENT_TIME)
+                                """
+                )
+                .setParameter("content", content)
+                .setParameter("memberId", memberId)
+                .setParameter("commentId", commentId)
+                .executeUpdate();
+    }
+
+    @Transactional
+    public void setReplyLikeInfo(
+            final Long memberId,
+            final Long replyId
+    ) {
+        em.createNativeQuery(
+                        """
+                                INSERT INTO REPLY_LIKE (member_id, reply_id, created_at, modified_at)
+                                VALUES 
+                                (:memberId, :replyId, CURRENT_TIME, CURRENT_TIME)
+                                """
+                )
+                .setParameter("memberId", memberId)
+                .setParameter("replyId", replyId)
+                .executeUpdate();
+    }
+
+    @Transactional
+    public void setBlockInfo(
+            final Long memberId,
+            final Long targetId
+    ) {
+        em.createNativeQuery(
+                        """
+                        INSERT INTO BLOCK (member_id, target_id, created_at, modified_at)
+                        VALUES 
+                        (:memberId, :targetId, CURRENT_TIME, CURRENT_TIME)
+                        """
+                 )
+                .setParameter("memberId", memberId)
+                .setParameter("targetId", targetId)
                 .executeUpdate();
     }
 }

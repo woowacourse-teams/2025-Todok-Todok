@@ -1,11 +1,13 @@
 package todoktodok.backend.member.domain;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import todoktodok.backend.member.presentation.fixture.MemberFixture;
 
 class MemberTest {
 
@@ -83,5 +85,41 @@ class MemberTest {
                     .build();
         } ).isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("이메일은 필수입니다");
+    }
+
+    @Test
+    @DisplayName("상태메세지는 40자 이하여야 한다")
+    void validateProfileMessageTest() {
+        // given
+        final Member member = MemberFixture.create(
+                "email@gmail.com",
+                "nickname",
+                "profileImage"
+        );
+
+        final String newNickname = "nicknick";
+        final String newProfileMessage = "a".repeat(41);
+
+        // when - then
+        assertThatThrownBy(() -> {
+            member.updateNicknameAndProfileMessage(newNickname, newProfileMessage);
+        }).isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("상태메세지는 40자 이하여야 합니다");
+    }
+
+    @Test
+    @DisplayName("내 닉네임과 동일하면 true를 반환한다")
+    void isMyNicknameTest() {
+        // given
+        final Member member = MemberFixture.create(
+                "email@gmail.com",
+                "nickname",
+                "profileImage"
+        );
+
+        final String equalNickname = "nickname";
+
+        // when - then
+        assertThat(member.isMyNickname(equalNickname)).isTrue();
     }
 }

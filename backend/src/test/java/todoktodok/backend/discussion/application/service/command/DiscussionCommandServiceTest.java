@@ -1,11 +1,11 @@
 package todoktodok.backend.discussion.application.service.command;
 
-import java.util.NoSuchElementException;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+import java.util.NoSuchElementException;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,9 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.DatabaseInitializer;
 import todoktodok.backend.InitializerTimer;
 import todoktodok.backend.discussion.application.dto.request.DiscussionRequest;
-import todoktodok.backend.member.domain.Member;
+import todoktodok.backend.discussion.application.dto.request.DiscussionUpdateRequest;
 import todoktodok.backend.member.domain.repository.MemberRepository;
-import todoktodok.backend.member.presentation.fixture.MemberFixture;
 
 @ActiveProfiles("test")
 @Transactional
@@ -31,9 +30,6 @@ class DiscussionCommandServiceTest {
 
     @Autowired
     private DiscussionCommandService discussionCommandService;
-
-    @Autowired
-    private MemberRepository memberRepository;
 
     @BeforeEach
     void setUp() {
@@ -87,6 +83,69 @@ class DiscussionCommandServiceTest {
     }
 
     @Test
+    @DisplayName("자신의 것이 아닌 토론방을 수정하면 예외가 발생한다")
+    void validateDiscussionMemberUpdateTest() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+
+        databaseInitializer.setUserInfo("user2@gmail.com", "user", "https://image.png", "프로필 메시지");
+
+        final Long memberId = 2L;
+        final Long discussionId = 1L;
+
+        final String updatedTitle = "상속과 조합은 어떤 상황에 쓰이나요?";
+        final String updatedContent = "상속과 조합의 차이점이 궁금합니다.";
+        final DiscussionUpdateRequest discussionUpdateRequest = new DiscussionUpdateRequest(
+                updatedTitle,
+                updatedContent
+        );
+
+        // when - then
+        assertThatThrownBy(() -> discussionCommandService.updateDiscussion(memberId, discussionId, discussionUpdateRequest))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("자기 자신의 토론방만 수정/삭제 가능합니다");
+    }
+
+    @Test
+    @DisplayName("자신의 것이 아닌 토론방을 삭제하면 예외가 발생한다")
+    void validateDiscussionMemberDeleteTest() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+
+        databaseInitializer.setUserInfo("user2@gmail.com", "user", "https://image.png", "프로필 메시지");
+
+        final Long memberId = 2L;
+        final Long discussionId = 1L;
+
+        // when - then
+        assertThatThrownBy(() -> discussionCommandService.deleteDiscussion(memberId, discussionId))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("자기 자신의 토론방만 수정/삭제 가능합니다");
+    }
+
+    @Test
+    @DisplayName("댓글이 존재하는 토론방을 삭제하면 예외가 발생한다")
+    void validateHasCommentDiscussionDeleteTest() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+        databaseInitializer.setDefaultCommentInfo();
+
+        final Long memberId = 1L;
+        final Long discussionId = 1L;
+
+        // when - then
+        assertThatThrownBy(() -> discussionCommandService.deleteDiscussion(memberId, discussionId))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("댓글이 존재하는 토론방은 삭제할 수 없습니다");
+    }
+
+    @Test
     @DisplayName("같은 회원이 토론방을 중복 신고하면 예외가 발생한다")
     void report_duplicated_fail() {
         // given
@@ -124,82 +183,40 @@ class DiscussionCommandServiceTest {
                 .hasMessage("자기 자신의 토론방을 신고할 수 없습니다");
     }
 
-    @Nested
-    @Disabled
-    @DisplayName("미사용 테스트")
-    class DisabledTest {
-        @Test
-        @DisplayName("존재하지 않는 회원으로 토론방 생성 시 예외가 발생한다")
-        void createDiscussion_memberNotFound_fail() {
-            // given
-            databaseInitializer.setDefaultUserInfo();
-            databaseInitializer.setDefaultBookInfo();
+    @Test
+    @DisplayName("좋아요를 누르지 않았던 토론방에 좋아요를 생성한다")
+    void discussionToggleLikeTest() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
 
-            final Long memberId = 999L;
+        final Long memberId = 1L;
+        final Long discussionId = 1L;
 
-            final DiscussionRequest discussionRequest = new DiscussionRequest(
-                    1L,
-                    "이 책의 의존성 주입 방식에 대한 생각",
-                    "스프링의 DI 방식은 유지보수에 정말 큰 도움이 된다고 느꼈습니다."
-            );
+        // when
+        final boolean isLiked = discussionCommandService.toggleLike(memberId, discussionId);
 
-            // when - then
-            assertThatThrownBy(() -> discussionCommandService.createDiscussion(memberId, discussionRequest))
-                    .isInstanceOf(NoSuchElementException.class)
-                    .hasMessage("해당 회원을 찾을 수 없습니다");
-        }
+        // then
+        assertThat(isLiked).isTrue();
+    }
 
-        @Test
-        @DisplayName("존재하지 않는 기록으로 토론방 생성 시 예외가 발생한다")
-        void createDiscussion_NoteNotFound_fail() {
-            // given
-            databaseInitializer.setDefaultUserInfo();
-            databaseInitializer.setDefaultBookInfo();
+    @Test
+    @DisplayName("이미 좋아요를 누른 토론방에 다시 좋아요를 누르면 좋아요가 취소된다")
+    void discussionToggleLikeDeleteTest() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+        databaseInitializer.setDiscussionLikeInfo(1L, 1L);
 
-            final Long memberId = 1L;
-            final Long noteId = 999L;
+        final Long memberId = 1L;
+        final Long discussionId = 1L;
 
-            final DiscussionRequest discussionRequest = new DiscussionRequest(
-                    noteId,
-                    "이 책의 의존성 주입 방식에 대한 생각",
-                    "스프링의 DI 방식은 유지보수에 정말 큰 도움이 된다고 느꼈습니다."
-            );
+        // when
+        final boolean isLiked = discussionCommandService.toggleLike(memberId, discussionId);
 
-            // when - then
-            assertThatThrownBy(
-                    () -> discussionCommandService.createDiscussion(memberId, discussionRequest)
-            )
-                    .isInstanceOf(NoSuchElementException.class)
-                    .hasMessage("해당 기록을 찾을 수 없습니다");
-        }
-
-        @Test
-        @DisplayName("기록 소유자가 아닌 경우 토론방 생성 시 예외가 발생한다")
-        void createDiscussion_whenNoteNotOwnedByMember_fail() {
-            // given
-            databaseInitializer.setDefaultUserInfo();
-            databaseInitializer.setDefaultBookInfo();
-
-            final Member member = MemberFixture.create(
-                    "user12@gmail.com",
-                    "user12",
-                    "https://image.jpg"
-            );
-            memberRepository.save(member);
-
-            final Long memberId = 2L;
-            final Long noteId = 1L;
-
-            final DiscussionRequest discussionRequest = new DiscussionRequest(
-                    noteId,
-                    "이 책의 의존성 주입 방식에 대한 생각",
-                    "스프링의 DI 방식은 유지보수에 정말 큰 도움이 된다고 느꼈습니다."
-            );
-
-            // when - then
-            assertThatThrownBy(() -> discussionCommandService.createDiscussion(memberId, discussionRequest))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("해당 기록의 소유자만 토론방을 생성할 수 있습니다");
-        }
+        // then
+        assertThat(isLiked).isFalse();
     }
 }

@@ -39,7 +39,7 @@ public class Discussion extends TimeStamp {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false, length = 512)
+    @Column(nullable = false, length = 2550)
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -65,6 +65,21 @@ public class Discussion extends TimeStamp {
 
     public boolean isOwnedBy(final Member member) {
         return this.member.equals(member);
+    }
+
+    public void update(
+            final String title,
+            final String content
+    ) {
+        validateTitle(title);
+        validateContent(content);
+
+        this.title = title;
+        this.content = content;
+    }
+
+    public boolean isSameId(final Long discussionId) {
+        return this.id.equals(discussionId);
     }
 
     @Override
