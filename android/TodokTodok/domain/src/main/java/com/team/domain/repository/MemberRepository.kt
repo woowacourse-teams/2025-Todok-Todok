@@ -1,5 +1,6 @@
 package com.team.domain.repository
 
+import com.team.domain.model.Book
 import com.team.domain.model.Support
 import com.team.domain.model.member.MemberDiscussion
 import com.team.domain.model.member.MemberDiscussionType
@@ -26,4 +27,6 @@ interface MemberRepository {
         id: MemberId.OtherUser,
         type: Support,
     )
+
+    suspend fun getMemberBooks(id: MemberId): List<Book>
 }

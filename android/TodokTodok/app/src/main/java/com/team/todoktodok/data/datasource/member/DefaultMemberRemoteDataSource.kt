@@ -9,6 +9,7 @@ import com.team.todoktodok.data.network.auth.AuthInterceptor.Companion.AUTHORIZA
 import com.team.todoktodok.data.network.request.LoginRequest
 import com.team.todoktodok.data.network.request.SignUpRequest
 import com.team.todoktodok.data.network.response.ProfileResponse
+import com.team.todoktodok.data.network.response.discussion.BookResponse
 import com.team.todoktodok.data.network.response.discussion.MemberDiscussionResponse
 import com.team.todoktodok.data.network.service.MemberService
 
@@ -36,11 +37,7 @@ class DefaultMemberRemoteDataSource(
     }
 
     override suspend fun fetchProfile(request: MemberId): ProfileResponse {
-        val memberId =
-            when (request) {
-                MemberId.Mine -> tokenDataSource.getMemberId()
-                is MemberId.OtherUser -> request.id
-            }
+        val memberId = adjustMemberType(request)
         return memberService.fetchProfile(memberId)
     }
 
@@ -48,11 +45,7 @@ class DefaultMemberRemoteDataSource(
         request: MemberId,
         type: MemberDiscussionType,
     ): List<MemberDiscussionResponse> {
-        val memberId =
-            when (request) {
-                MemberId.Mine -> tokenDataSource.getMemberId()
-                is MemberId.OtherUser -> request.id
-            }
+        val memberId = adjustMemberType(request)
         return memberService.fetchMemberDiscussionRooms(memberId, type.name)
     }
 
@@ -65,4 +58,15 @@ class DefaultMemberRemoteDataSource(
             Support.REPORT -> memberService.report(request.id)
         }
     }
+
+    override suspend fun fetchMemberBooks(request: MemberId): List<BookResponse> {
+        val memberId = adjustMemberType(request)
+        return memberService.fetchMemberBooks(memberId)
+    }
+
+    private suspend fun adjustMemberType(request: MemberId): Long =
+        when (request) {
+            MemberId.Mine -> tokenDataSource.getMemberId()
+            is MemberId.OtherUser -> request.id
+        }
 }

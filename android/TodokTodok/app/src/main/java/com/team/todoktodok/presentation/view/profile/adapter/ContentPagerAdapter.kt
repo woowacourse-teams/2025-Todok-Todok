@@ -18,7 +18,7 @@ class ContentPagerAdapter(
     override fun createFragment(position: Int): Fragment {
         val tab = UserProfileTab(position)
         return when (tab) {
-            UserProfileTab.ACTIVATED_BOOKS -> ActivatedBooksFragment()
+            UserProfileTab.ACTIVATED_BOOKS -> ActivatedBooksFragment.newInstance(memberId)
             UserProfileTab.CREATED_DISCUSSIONS -> CreatedDiscussionsRoomFragment.newInstance(memberId)
             UserProfileTab.JOINED_DISCUSSIONS -> JoinedDiscussionsRoomFragment.newInstance(memberId)
         }
