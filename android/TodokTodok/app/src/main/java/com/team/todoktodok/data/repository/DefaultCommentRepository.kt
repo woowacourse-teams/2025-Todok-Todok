@@ -11,6 +11,11 @@ import com.team.todoktodok.data.network.response.comment.toDomain
 class DefaultCommentRepository(
     private val commentRemoteDataSource: CommentRemoteDataSource,
 ) : CommentRepository {
+    override suspend fun getComment(
+        discussionId: Long,
+        commentId: Long,
+    ) = commentRemoteDataSource.fetchComment(discussionId, commentId).toDomain()
+
     override suspend fun getCommentsByDiscussionRoomId(id: Long): List<Comment> =
         commentRemoteDataSource
             .fetchCommentsByDiscussionRoomId(id)

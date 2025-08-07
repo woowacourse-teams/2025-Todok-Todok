@@ -4,6 +4,11 @@ import com.team.domain.model.Comment
 import com.team.domain.model.LikeStatus
 
 interface CommentRepository {
+    suspend fun getComment(
+        discussionId: Long,
+        commentId: Long,
+    ): Comment
+
     suspend fun getCommentsByDiscussionRoomId(id: Long): List<Comment>
 
     suspend fun saveComment(

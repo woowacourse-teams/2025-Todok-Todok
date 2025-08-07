@@ -8,6 +8,11 @@ import com.team.todoktodok.data.network.service.CommentService
 class DefaultCommentRemoteDataSource(
     private val commentService: CommentService,
 ) : CommentRemoteDataSource {
+    override suspend fun fetchComment(
+        discussionId: Long,
+        commentId: Long,
+    ): CommentResponse = commentService.fetchComment(discussionId, commentId)
+
     override suspend fun fetchCommentsByDiscussionRoomId(id: Long): List<CommentResponse> = commentService.fetchComments(id)
 
     override suspend fun saveComment(

@@ -63,6 +63,13 @@ class FakeCommentRemoteDataSource : CommentRemoteDataSource {
             ),
         )
 
+    override suspend fun fetchComment(
+        discussionId: Long,
+        commentId: Long,
+    ): CommentResponse {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun fetchCommentsByDiscussionRoomId(id: Long): List<CommentResponse> = dummyCommentResponses.toList()
 
     override suspend fun saveComment(
