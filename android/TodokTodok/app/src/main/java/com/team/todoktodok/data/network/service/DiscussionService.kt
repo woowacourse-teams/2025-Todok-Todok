@@ -28,7 +28,7 @@ interface DiscussionService {
         @Body discussionRoomRequest: DiscussionRoomRequest,
     ): Response<Unit>
 
-    @PATCH("va/discussions")
+    @PATCH("v1/discussions/{discussionId}")
     suspend fun editDiscussionRoom(
         @Path("discussionId") discussionId: Long,
         @Body editDiscussionRoomRequest: EditDiscussionRoomRequest,
