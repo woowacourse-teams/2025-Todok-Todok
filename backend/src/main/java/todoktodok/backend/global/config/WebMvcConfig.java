@@ -24,7 +24,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addInterceptors(final InterceptorRegistry registry) {
         registry.addInterceptor(logInterceptor)
                 .addPathPatterns("/**")
-                .excludePathPatterns("/h2-console", "/swagger-ui/**");
+                .excludePathPatterns(
+                        "/h2-console/**",
+                        "/swagger-ui/**",
+                        "/v3/api-docs/**"
+                );
 
         registry.addInterceptor(authorizationInterceptor)
                 .addPathPatterns("/api/**")
