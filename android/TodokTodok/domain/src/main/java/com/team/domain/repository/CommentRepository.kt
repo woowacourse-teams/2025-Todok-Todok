@@ -16,6 +16,12 @@ interface CommentRepository {
         commentId: Long,
     ): LikeStatus
 
+    suspend fun updateComment(
+        discussionId: Long,
+        commentId: Long,
+        content: String,
+    )
+
     suspend fun deleteComment(
         discussionId: Long,
         commentId: Long,
