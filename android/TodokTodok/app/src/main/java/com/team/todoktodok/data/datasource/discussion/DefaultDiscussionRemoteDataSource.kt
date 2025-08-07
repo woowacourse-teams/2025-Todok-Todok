@@ -9,8 +9,7 @@ import retrofit2.Response
 class DefaultDiscussionRemoteDataSource(
     private val discussionService: DiscussionService,
 ) : DiscussionRemoteDataSource {
-    override suspend fun getDiscussion(id: Long): Result<DiscussionResponse> =
-        runCatching { discussionService.fetchDiscussion(id) }
+    override suspend fun getDiscussion(id: Long): Result<DiscussionResponse> = runCatching { discussionService.fetchDiscussion(id) }
 
     override suspend fun getDiscussions(
         type: DiscussionFilter,
@@ -22,14 +21,14 @@ class DefaultDiscussionRemoteDataSource(
         discussionTitle: String,
         discussionOpinion: String,
     ): Response<Unit> {
-        val discussionRoomRequest = DiscussionRoomRequest(
-            bookId,
-            discussionTitle,
-            discussionOpinion
-        )
+        val discussionRoomRequest =
+            DiscussionRoomRequest(
+                bookId,
+                discussionTitle,
+                discussionOpinion,
+            )
         return discussionService.saveDiscussionRoom(discussionRoomRequest)
     }
-
 
     private fun Response<*>.extractDiscussionId(): Long {
         val locationHeader = headers()[HEADER_LOCATION]

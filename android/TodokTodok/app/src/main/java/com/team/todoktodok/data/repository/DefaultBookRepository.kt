@@ -19,7 +19,5 @@ class DefaultBookRepository(
         return Books(value)
     }
 
-    override suspend fun saveBook(book: Book): Long {
-        return bookRemoteDataSource.saveBook(book.toRequest())
-    }
+    override suspend fun saveBook(book: Book): Long = bookRemoteDataSource.saveBook(book.toRequest())
 }

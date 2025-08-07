@@ -9,25 +9,24 @@ import com.team.todoktodok.data.network.response.discussion.toDomain
 class DefaultDiscussionRepository(
     private val discussionRemoteDataSource: DiscussionRemoteDataSource,
 ) : DiscussionRepository {
-    override suspend fun getDiscussion(id: Long): Result<Discussion> =
-        discussionRemoteDataSource.getDiscussion(id).map { it.toDomain() }
+    override suspend fun getDiscussion(id: Long): Result<Discussion> = discussionRemoteDataSource.getDiscussion(id).map { it.toDomain() }
 
     override suspend fun getDiscussions(
         type: DiscussionFilter,
         keyword: String?,
-    ): List<Discussion> =
-        discussionRemoteDataSource.getDiscussions(type, keyword).map { it.toDomain() }
+    ): List<Discussion> = discussionRemoteDataSource.getDiscussions(type, keyword).map { it.toDomain() }
 
     override suspend fun saveDiscussionRoom(
         bookId: Long,
         discussionTitle: String,
         discussionOpinion: String,
     ): Int {
-        val response = discussionRemoteDataSource.saveDiscussionRoom(
-            bookId = bookId,
-            discussionTitle = discussionTitle,
-            discussionOpinion = discussionOpinion
-        )
+        val response =
+            discussionRemoteDataSource.saveDiscussionRoom(
+                bookId = bookId,
+                discussionTitle = discussionTitle,
+                discussionOpinion = discussionOpinion,
+            )
         if (response.isSuccessful) {
             val location = response.headers()[HEADER_LOCATION]
             val id = location?.substringAfterLast(HEADER_DISCUSSION_ID_PREFIX)

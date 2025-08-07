@@ -8,4 +8,3 @@ interface BookRemoteDataSource {
 
     suspend fun saveBook(bookRequest: BookRequest): Long
 }
-

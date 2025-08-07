@@ -11,9 +11,10 @@ data class BookRequest(
     val bookImage: String,
 )
 
-fun Book.toRequest() = BookRequest(
-    bookIsbn = id,
-    bookTitle = title,
-    bookAuthor = author,
-    bookImage = image,
-)
+fun Book.toRequest() =
+    BookRequest(
+        bookIsbn = id,
+        bookTitle = title,
+        bookAuthor = author,
+        bookImage = image,
+    )

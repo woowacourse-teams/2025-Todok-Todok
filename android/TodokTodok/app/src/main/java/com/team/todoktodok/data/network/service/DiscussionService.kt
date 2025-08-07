@@ -2,7 +2,6 @@ package com.team.todoktodok.data.network.service
 
 import com.team.todoktodok.data.network.request.DiscussionRoomRequest
 import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
-import kotlinx.serialization.Serializable
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -27,4 +26,3 @@ interface DiscussionService {
         @Body discussionRoomRequest: DiscussionRoomRequest,
     ): Response<Unit>
 }
-

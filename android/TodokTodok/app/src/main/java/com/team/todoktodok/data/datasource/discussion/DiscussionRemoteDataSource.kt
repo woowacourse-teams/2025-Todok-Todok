@@ -1,7 +1,6 @@
 package com.team.todoktodok.data.datasource.discussion
 
 import com.team.domain.model.DiscussionFilter
-import com.team.todoktodok.data.network.request.DiscussionRoomRequest
 import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
 import retrofit2.Response
 
