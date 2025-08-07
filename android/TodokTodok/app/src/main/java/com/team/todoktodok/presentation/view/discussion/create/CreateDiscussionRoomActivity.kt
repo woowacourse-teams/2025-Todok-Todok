@@ -1,5 +1,7 @@
 package com.team.todoktodok.presentation.view.discussion.create
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -27,6 +29,25 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
                 systemBars.bottom,
             )
             insets
+        }
+    }
+
+    companion object {
+        private const val EXTRA_SELECTED_BOOK = "discussionBook"
+        private const val EXTRA_DISCUSSION_ROOM_ID = "discussionRoomId"
+
+        fun Intent(
+            context: Context,
+            mode: CreateDiscussionRoomMode,
+        ): Intent {
+            val intent = Intent(context, CreateDiscussionRoomActivity::class.java)
+            when (mode) {
+                is CreateDiscussionRoomMode.Create ->
+                    intent.putExtra(EXTRA_SELECTED_BOOK, mode.selectedBook)
+                is CreateDiscussionRoomMode.Edit ->
+                    intent.putExtra(EXTRA_DISCUSSION_ROOM_ID, mode.discussionRoomId)
+            }
+            return intent
         }
     }
 }
