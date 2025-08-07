@@ -72,10 +72,15 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
                 showCommentCreate(
                     commentsUiEvent.discussionId,
                     binding,
+                    null,
                 )
 
             CommentsUiEvent.ShowNewComment -> {
                 binding.rvComments.smoothScrollToPosition(COMMENT_CREATE_POSITION)
+            }
+
+            is CommentsUiEvent.ShowCommentUpdate -> {
+                showCommentCreate(commentsUiEvent.discussionId, binding, commentsUiEvent.commentId)
             }
         }
     }
@@ -83,8 +88,9 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
     private fun showCommentCreate(
         discussionId: Long,
         binding: FragmentCommentsBinding,
+        commentId: Long?,
     ) {
-        val bottomSheet = CommentCreateBottomSheet.newInstance(discussionId)
+        val bottomSheet = CommentCreateBottomSheet.newInstance(discussionId, commentId)
         bottomSheet.setVisibilityListener(getBottomSheetVisibilityListener(binding))
         bottomSheet.show(childFragmentManager, CommentCreateBottomSheet.TAG)
     }
@@ -112,7 +118,7 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
     private fun getPopUpView(commentId: Long): PopupWindow =
         if (true) {
             val binding = MenuOwnedDiscussionBinding.inflate(layoutInflater)
-            binding.tvEdit.setOnClickListener { viewModel }
+            binding.tvEdit.setOnClickListener { viewModel.updateComment(commentId) }
             binding.tvDelete.setOnClickListener { viewModel.deleteComment(commentId = commentId) }
             createPopUpView(binding.root)
         } else {

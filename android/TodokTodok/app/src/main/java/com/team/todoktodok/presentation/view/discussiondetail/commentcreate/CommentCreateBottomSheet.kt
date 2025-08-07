@@ -114,9 +114,16 @@ class CommentCreateBottomSheet : BottomSheetDialogFragment(R.layout.fragment_com
 
         private const val DIM_AMOUNT = 0.001f
 
-        fun newInstance(discussionId: Long): CommentCreateBottomSheet =
+        fun newInstance(
+            discussionId: Long,
+            commentId: Long?,
+        ): CommentCreateBottomSheet =
             CommentCreateBottomSheet().apply {
-                arguments = bundleOf(CommentCreateViewModel.KEY_DISCUSSION_ID to discussionId)
+                arguments =
+                    bundleOf(
+                        CommentCreateViewModel.KEY_DISCUSSION_ID to discussionId,
+                        CommentCreateViewModel.KEY_COMMENT_ID to commentId,
+                    )
             }
     }
 }
