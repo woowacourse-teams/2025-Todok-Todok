@@ -7,21 +7,23 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.team.domain.model.Discussion
 import com.team.domain.repository.DiscussionRepository
+import com.team.domain.repository.TokenRepository
 import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
 import com.team.todoktodok.presentation.core.event.SingleLiveData
 import com.team.todoktodok.presentation.view.discussiondetail.DiscussionDetailUiEvent
+import com.team.todoktodok.presentation.view.discussiondetail.model.DiscussionUiModel
 import kotlinx.coroutines.launch
 
 class DiscussionDetailViewModel(
     savedStateHandle: SavedStateHandle,
     private val discussionRepository: DiscussionRepository,
+    private val tokenRepository: TokenRepository,
 ) : ViewModel() {
     private val discussionId =
         savedStateHandle.get<Long>(KEY_DISCUSSION_ID) ?: throw IllegalStateException()
 
-    val isMyDiscussion = true
-    private val _discussion = MutableLiveData<Discussion>()
-    val discussion: LiveData<Discussion> = _discussion
+    private val _discussion = MutableLiveData<DiscussionUiModel>()
+    val discussion: LiveData<DiscussionUiModel> = _discussion
 
     private val _uiEvent = MutableSingleLiveData<DiscussionDetailUiEvent>()
     val uiEvent: SingleLiveData<DiscussionDetailUiEvent> = _uiEvent
@@ -53,7 +55,13 @@ class DiscussionDetailViewModel(
     }
 
     private suspend fun loadDiscussionRoom() {
-        _discussion.value = discussionRepository.getDiscussion(discussionId).getOrNull()
+        val discussion = discussionRepository.getDiscussion(discussionId).getOrThrow()
+        _discussion.value =
+            DiscussionUiModel(
+                discussion,
+                discussion.writer.id == tokenRepository.getMemberId(),
+            )
+        discussionRepository.getDiscussion(discussionId).getOrNull()
     }
 
     private fun onUiEvent(uiEvent: DiscussionDetailUiEvent) {

@@ -5,9 +5,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.team.domain.repository.DiscussionRepository
+import com.team.domain.repository.TokenRepository
 
 class DiscussionDetailViewModelFactory(
     private val discussionRepository: DiscussionRepository,
+    private val tokenRepository: TokenRepository,
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(
         modelClass: Class<T>,
@@ -18,6 +20,7 @@ class DiscussionDetailViewModelFactory(
             return DiscussionDetailViewModel(
                 savedStateHandle,
                 discussionRepository,
+                tokenRepository,
             ) as T
         } else {
             throw IllegalArgumentException()
