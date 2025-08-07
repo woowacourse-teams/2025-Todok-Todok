@@ -1,5 +1,6 @@
 package com.team.todoktodok.data.datasource.comment
 
+import com.team.todoktodok.data.network.model.LikeAction
 import com.team.todoktodok.data.network.request.CommentRequest
 import com.team.todoktodok.data.network.response.comment.CommentResponse
 
@@ -9,5 +10,15 @@ interface CommentRemoteDataSource {
     suspend fun saveComment(
         discussionId: Long,
         comment: CommentRequest,
+    )
+
+    suspend fun toggleLike(
+        discussionId: Long,
+        commentId: Long,
+    ): LikeAction
+
+    suspend fun deleteComment(
+        discussionId: Long,
+        commentId: Long,
     )
 }
