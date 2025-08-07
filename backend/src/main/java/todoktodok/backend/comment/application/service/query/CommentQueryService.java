@@ -2,7 +2,6 @@ package todoktodok.backend.comment.application.service.query;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,8 +40,9 @@ public class CommentQueryService {
                 .getFirst()
                 .likeCount();
         final int replyCount = replyRepository.countRepliesByComment(comment);
+        final boolean isLikedByMe = commentLikeRepository.existsByMemberIdAndCommentId(memberId, commentId);
 
-        return new CommentResponse(comment, likeCount, replyCount);
+        return new CommentResponse(comment, likeCount, replyCount, isLikedByMe);
     }
 
     public List<CommentResponse> getComments(
@@ -59,12 +59,14 @@ public class CommentQueryService {
 
         final List<CommentLikeCountDto> likeCountsById = commentLikeRepository.findLikeCountsByCommentIds(commentIds);
         final List<CommentReplyCountDto> replyCountsById = replyRepository.findReplyCountsByCommentIds(commentIds);
+        final List<Long> likedCommentIds = commentLikeRepository.findLikedCommentIdsByMember(memberId, commentIds);
 
         return comments.stream()
                 .map(comment -> new CommentResponse(
                         comment,
                         findLikeCount(comment, likeCountsById),
-                        findReplyCount(comment, replyCountsById)
+                        findReplyCount(comment, replyCountsById),
+                        checkIsLikedByMe(comment, likedCommentIds)
                 ))
                 .toList();
     }
@@ -105,5 +107,12 @@ public class CommentQueryService {
                 .findFirst()
                 .map(CommentLikeCountDto::likeCount)
                 .orElseThrow(() -> new IllegalStateException("댓글의 좋아요 수를 찾을 수 없습니다"));
+    }
+
+    private boolean checkIsLikedByMe(
+            final Comment comment,
+            final List<Long> likedCommentIds
+    ) {
+        return likedCommentIds.contains(comment.getId());
     }
 }

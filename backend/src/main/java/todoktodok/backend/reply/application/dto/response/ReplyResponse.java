@@ -10,19 +10,22 @@ public record ReplyResponse(
         MemberResponse member,
         LocalDateTime createdAt,
         String content,
-        int likeCount
+        int likeCount,
+        boolean isLikedByMe
 ) {
 
     public ReplyResponse(
             final Reply reply,
-            final int likeCount
+            final int likeCount,
+            final boolean isLikedByMe
     ) {
         this(
                 reply.getId(),
                 new MemberResponse(reply.getMember()),
                 reply.getCreatedAt(),
                 reply.getContent(),
-                likeCount
+                likeCount,
+                isLikedByMe
         );
     }
 }

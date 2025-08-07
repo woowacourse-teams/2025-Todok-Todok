@@ -2,7 +2,6 @@ package todoktodok.backend.comment.domain.repository;
 
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -23,4 +22,18 @@ public interface CommentLikeRepository extends JpaRepository<CommentLike, Long> 
                 GROUP BY c.id
             """)
     List<CommentLikeCountDto> findLikeCountsByCommentIds(@Param("commentIds") final List<Long> commentIds);
+
+    boolean existsByMemberIdAndCommentId(
+            @Param("memberId") final Long memberId,
+            @Param("commentId") final Long commentId
+    );
+
+    @Query("""
+            SELECT cl.comment.id
+            FROM CommentLike cl
+            WHERE cl.member.id = :memberId AND cl.comment.id IN :commentIds
+            """)
+    List<Long> findLikedCommentIdsByMember(
+            @Param("memberId") final Long memberId,
+            @Param("commentIds") final List<Long> commentIds);
 }

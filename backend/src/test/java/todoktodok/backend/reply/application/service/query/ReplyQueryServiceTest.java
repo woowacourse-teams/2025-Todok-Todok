@@ -17,6 +17,7 @@ import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @ActiveProfiles("test")
 @Transactional
@@ -159,5 +160,35 @@ class ReplyQueryServiceTest {
         assertThatThrownBy(() -> replyQueryService.getReplies(memberId, discussionId, commentId))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("해당 토론방에 있는 댓글이 아닙니다");
+    }
+
+    @Test
+    @DisplayName("대댓글을 조회할 때 좋아요 생성 여부를 반환한다")
+    void getReplies_isLikedTest() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+        databaseInitializer.setDefaultCommentInfo();
+
+        databaseInitializer.setReplyInfo("좋은데요?", 1L, 1L);
+        databaseInitializer.setReplyInfo("별론데요?", 1L, 1L);
+
+        databaseInitializer.setReplyLikeInfo(1L, 1L);
+
+        final Long memberId = 1L;
+        final Long discussionId = 1L;
+        final Long commentId = 1L;
+
+        // when
+        final List<ReplyResponse> replies = replyQueryService.getReplies(memberId, discussionId, commentId);
+        final ReplyResponse likedReply = replies.get(0);
+        final ReplyResponse notLikedReply = replies.get(1);
+
+        // then
+        assertAll(
+                () -> assertThat(likedReply.isLikedByMe()).isTrue(),
+                () -> assertThat(notLikedReply.isLikedByMe()).isFalse()
+        );
     }
 }
