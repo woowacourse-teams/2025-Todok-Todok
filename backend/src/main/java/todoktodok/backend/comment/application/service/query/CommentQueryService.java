@@ -71,10 +71,6 @@ public class CommentQueryService {
                 .toList();
     }
 
-    private boolean checkIsLikedByMe(Comment comment, List<Long> likedCommentIds) {
-        return likedCommentIds.contains(comment.getId());
-    }
-
     private void validateIsExistMember(final Long memberId) {
         if (!memberRepository.existsById(memberId)) {
             throw new NoSuchElementException("해당 회원을 찾을 수 없습니다");
@@ -111,5 +107,11 @@ public class CommentQueryService {
                 .findFirst()
                 .map(CommentLikeCountDto::likeCount)
                 .orElseThrow(() -> new IllegalStateException("댓글의 좋아요 수를 찾을 수 없습니다"));
+    }
+
+    private boolean checkIsLikedByMe(
+            final Comment comment,
+            final List<Long> likedCommentIds) {
+        return likedCommentIds.contains(comment.getId());
     }
 }
