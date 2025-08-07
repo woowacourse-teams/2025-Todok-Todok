@@ -160,6 +160,6 @@ public class DiscussionQueryService {
                 .filter(count -> discussion.isSameId(count.discussionId()))
                 .findFirst()
                 .map(DiscussionLikeCountDto::likeCount)
-                .orElseThrow(() -> new IllegalStateException("댓글의 좋아요 수를 찾을 수 없습니다"));
+                .orElseThrow(() -> new IllegalStateException("토론방의 좋아요 수를 찾을 수 없습니다"));
     }
 }

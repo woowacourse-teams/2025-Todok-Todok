@@ -28,6 +28,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
         FROM Comment c
         WHERE c.discussion.id = :discussionId
     """)
-    Long findCommentCountsByDiscussionId(@Param("discussionId") Long discussionId);
+    Long findCommentCountsByDiscussionId(@Param("discussionId") final Long discussionId);
 
 }
