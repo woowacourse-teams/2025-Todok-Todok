@@ -5,6 +5,7 @@ import com.team.todoktodok.data.datasource.discussion.DiscussionRemoteDataSource
 import com.team.todoktodok.data.network.response.discussion.BookResponse
 import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
 import com.team.todoktodok.data.network.response.discussion.MemberResponse
+import retrofit2.Response
 
 class FakeDiscussionRemoteDataSource : DiscussionRemoteDataSource {
     val discussionResponses =
@@ -73,4 +74,20 @@ class FakeDiscussionRemoteDataSource : DiscussionRemoteDataSource {
 
             matchesKeyword && matchesType
         }
+
+    override suspend fun saveDiscussionRoom(
+        bookId: Long,
+        discussionTitle: String,
+        discussionOpinion: String
+    ): Response<Unit> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun editDiscussionRoom(
+        discussionId: Long,
+        discussionTitle: String,
+        discussionOpinion: String
+    ): Response<Unit> {
+        TODO("Not yet implemented")
+    }
 }
