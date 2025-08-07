@@ -3,6 +3,7 @@ package com.team.todoktodok.data.network.service
 import com.team.todoktodok.data.network.request.LoginRequest
 import com.team.todoktodok.data.network.request.SignUpRequest
 import com.team.todoktodok.data.network.response.ProfileResponse
+import com.team.todoktodok.data.network.response.discussion.BookResponse
 import com.team.todoktodok.data.network.response.discussion.MemberDiscussionResponse
 import retrofit2.Response
 import retrofit2.http.Body
@@ -43,4 +44,9 @@ interface MemberService {
     suspend fun block(
         @Path("memberId") memberId: Long,
     )
+
+    @GET("v1/members/{memberId}/books")
+    suspend fun fetchMemberBooks(
+        @Path("memberId") memberId: Long,
+    ): List<BookResponse>
 }

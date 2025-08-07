@@ -5,6 +5,7 @@ import com.team.domain.model.member.MemberDiscussionType
 import com.team.domain.model.member.MemberId
 import com.team.todoktodok.data.network.request.SignUpRequest
 import com.team.todoktodok.data.network.response.ProfileResponse
+import com.team.todoktodok.data.network.response.discussion.BookResponse
 import com.team.todoktodok.data.network.response.discussion.MemberDiscussionResponse
 
 interface MemberRemoteDataSource {
@@ -23,4 +24,6 @@ interface MemberRemoteDataSource {
         request: MemberId.OtherUser,
         type: Support,
     )
+
+    suspend fun fetchMemberBooks(request: MemberId): List<BookResponse>
 }

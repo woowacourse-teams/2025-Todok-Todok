@@ -1,5 +1,6 @@
 package com.team.todoktodok.data.repository
 
+import com.team.domain.model.Book
 import com.team.domain.model.Member
 import com.team.domain.model.Support
 import com.team.domain.model.member.MemberDiscussion
@@ -9,6 +10,7 @@ import com.team.domain.model.member.Profile
 import com.team.domain.repository.MemberRepository
 import com.team.todoktodok.data.datasource.member.MemberRemoteDataSource
 import com.team.todoktodok.data.network.request.toRequest
+import com.team.todoktodok.data.network.response.discussion.toDomain
 
 class DefaultMemberRepository(
     private val remoteMemberRemoteDataSource: MemberRemoteDataSource,
@@ -48,4 +50,9 @@ class DefaultMemberRepository(
     ) {
         remoteMemberRemoteDataSource.supportMember(id, type)
     }
+
+    override suspend fun getMemberBooks(id: MemberId): List<Book> =
+        remoteMemberRemoteDataSource
+            .fetchMemberBooks(id)
+            .map { it.toDomain() }
 }
