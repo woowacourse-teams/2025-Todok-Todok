@@ -51,17 +51,6 @@ public class DiscussionController {
                 .build();
     }
 
-    @Operation(summary = "토론방 단일 조회 API")
-    @Auth(Role.USER)
-    @GetMapping("/{discussionId}")
-    public ResponseEntity<DiscussionResponse> getDiscussion(
-            @Parameter(hidden = true) @LoginMember final Long memberId,
-            @PathVariable final Long discussionId
-    ) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(discussionQueryService.getDiscussion(memberId, discussionId));
-    }
-
     @Operation(summary = "토론방 신고 API")
     @Auth(Role.USER)
     @PostMapping("/{discussionId}/report")
@@ -73,6 +62,17 @@ public class DiscussionController {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .build();
+    }
+
+    @Operation(summary = "토론방 단일 조회 API")
+    @Auth(Role.USER)
+    @GetMapping("/{discussionId}")
+    public ResponseEntity<DiscussionResponse> getDiscussion(
+            @Parameter(hidden = true) @LoginMember final Long memberId,
+            @PathVariable final Long discussionId
+    ) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(discussionQueryService.getDiscussion(memberId, discussionId));
     }
 
     @Operation(summary = "토론방 필터링 조회 API")

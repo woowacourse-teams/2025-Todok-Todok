@@ -11,16 +11,24 @@ public record DiscussionResponse(
         MemberResponse member,
         LocalDateTime createdAt,
         String discussionTitle,
-        String discussionOpinion
+        String discussionOpinion,
+        int likeCount,
+        int commentCount
 ) {
-    public DiscussionResponse(final Discussion discussion) {
+    public DiscussionResponse(
+            final Discussion discussion,
+            final int likeCount,
+            final int commentCount
+    ) {
         this(
                 discussion.getId(),
                 new BookResponse(discussion.getBook()),
                 new MemberResponse(discussion.getMember()),
                 discussion.getCreatedAt(),
                 discussion.getTitle(),
-                discussion.getContent()
+                discussion.getContent(),
+                likeCount,
+                commentCount
         );
     }
 }
