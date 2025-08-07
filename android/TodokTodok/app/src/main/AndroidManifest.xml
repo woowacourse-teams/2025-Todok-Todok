@@ -15,11 +15,15 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".presentation.view.discussion.create.CreateDiscussionRoomActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:exported="false" />
+        <activity
             android:name=".presentation.view.discussions.DiscussionsActivity"
             android:exported="false" />
         <activity
             android:name=".presentation.view.profile.ProfileActivity"
-            android:exported="true"/>
+            android:exported="false"/>
         <activity
             android:name=".presentation.view.auth.AuthActivity"
             android:exported="true">
