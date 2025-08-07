@@ -10,6 +10,9 @@ import org.springframework.web.servlet.HandlerInterceptor;
 @Component
 public class LogInterceptor implements HandlerInterceptor {
 
+    private static final int HTTP_STATUS_SUCCESS_MIN = 200;
+    private static final int HTTP_STATUS_ERROR_MIN = 400;
+
     private static final Logger log = LoggerFactory.getLogger(LogInterceptor.class);
 
     @Override
@@ -34,7 +37,7 @@ public class LogInterceptor implements HandlerInterceptor {
         final String requestURI = request.getRequestURI();
         final int status = response.getStatus();
 
-        if (status >= 200 && status < 400) {
+        if (status >= HTTP_STATUS_SUCCESS_MIN && status < HTTP_STATUS_ERROR_MIN) {
             log.info("[API RESPONSE] {}: {}", requestURI, status);
         } else {
             log.error("[API RESPONSE] {}: {}", requestURI, status);
