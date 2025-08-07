@@ -16,4 +16,10 @@ interface DiscussionRepository {
         discussionTitle: String,
         discussionOpinion: String,
     ): Long
+
+    suspend fun editDiscussionRoom(
+        discussionId: Long,
+        discussionTitle: String,
+        discussionOpinion: String,
+    )
 }

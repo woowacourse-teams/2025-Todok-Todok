@@ -36,6 +36,18 @@ class DefaultDiscussionRepository(
         }
     }
 
+    override suspend fun editDiscussionRoom(
+        discussionId: Long,
+        discussionTitle: String,
+        discussionOpinion: String,
+    ) {
+        discussionRemoteDataSource.editDiscussionRoom(
+            discussionId = discussionId,
+            discussionTitle = discussionTitle,
+            discussionOpinion = discussionOpinion,
+        )
+    }
+
     companion object {
         private const val HEADER_LOCATION: String = "location"
         private const val HEADER_DISCUSSION_ID_PREFIX: String = "/"

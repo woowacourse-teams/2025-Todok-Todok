@@ -17,4 +17,10 @@ interface DiscussionRemoteDataSource {
         discussionTitle: String,
         discussionOpinion: String,
     ): Response<Unit>
+
+    suspend fun editDiscussionRoom(
+        discussionId: Long,
+        discussionTitle: String,
+        discussionOpinion: String,
+    ): Response<Unit>
 }
