@@ -92,7 +92,7 @@ class CommentCreateBottomSheet : BottomSheetDialogFragment(R.layout.fragment_com
 
     private fun handleUiEvent(uiEvent: CommentCreateUiEvent) {
         when (uiEvent) {
-            is CommentCreateUiEvent.CreateComment -> {
+            is CommentCreateUiEvent.SubmitComment -> {
                 setFragmentResult(COMMENT_REQUEST_KEY, bundleOf(COMMENT_CREATED_RESULT_KEY to true))
                 dismiss()
             }

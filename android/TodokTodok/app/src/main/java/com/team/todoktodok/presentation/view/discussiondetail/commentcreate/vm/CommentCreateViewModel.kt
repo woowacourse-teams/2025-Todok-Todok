@@ -44,9 +44,10 @@ class CommentCreateViewModel(
         viewModelScope.launch {
             if (commentId == null) {
                 commentRepository.saveComment(discussionId, commentText.value ?: "")
-                _uiEvent.setValue(CommentCreateUiEvent.CreateComment)
+                _uiEvent.setValue(CommentCreateUiEvent.SubmitComment)
             } else {
                 commentRepository.updateComment(discussionId, commentId, commentText.value ?: "")
+                _uiEvent.setValue(CommentCreateUiEvent.SubmitComment)
             }
         }
     }
