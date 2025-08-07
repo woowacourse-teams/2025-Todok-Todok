@@ -187,8 +187,8 @@ class ReplyQueryServiceTest {
 
         // then
         assertAll(
-                () -> assertThat(likedReply.isLiked()).isTrue(),
-                () -> assertThat(notLikedReply.isLiked()).isFalse()
+                () -> assertThat(likedReply.isLikedByMe()).isTrue(),
+                () -> assertThat(notLikedReply.isLikedByMe()).isFalse()
         );
     }
 }

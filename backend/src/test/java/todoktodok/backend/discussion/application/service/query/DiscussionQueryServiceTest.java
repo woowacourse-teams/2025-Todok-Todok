@@ -148,7 +148,7 @@ class DiscussionQueryServiceTest {
         final DiscussionResponse discussion = discussionQueryService.getDiscussion(memberId, discussionId);
 
         // then
-        assertThat(discussion.isLiked()).isTrue();
+        assertThat(discussion.isLikedByMe()).isTrue();
     }
 
     @Test
@@ -167,7 +167,7 @@ class DiscussionQueryServiceTest {
         final DiscussionResponse discussion = discussionQueryService.getDiscussion(memberId, discussionId);
 
         // then
-        assertThat(discussion.isLiked()).isFalse();
+        assertThat(discussion.isLikedByMe()).isFalse();
     }
 
     @Nested
@@ -375,8 +375,8 @@ class DiscussionQueryServiceTest {
 
             // then
             assertAll(
-                    () -> assertThat(likedDiscussion.isLiked()).isTrue(),
-                    () -> assertThat(notLikedDiscussion.isLiked()).isFalse()
+                    () -> assertThat(likedDiscussion.isLikedByMe()).isTrue(),
+                    () -> assertThat(notLikedDiscussion.isLikedByMe()).isFalse()
             );
         }
     }

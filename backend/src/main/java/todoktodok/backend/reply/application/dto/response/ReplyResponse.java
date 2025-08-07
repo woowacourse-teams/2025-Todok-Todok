@@ -11,13 +11,13 @@ public record ReplyResponse(
         LocalDateTime createdAt,
         String content,
         int likeCount,
-        boolean isLiked
+        boolean isLikedByMe
 ) {
 
     public ReplyResponse(
             final Reply reply,
             final int likeCount,
-            final boolean isLiked
+            final boolean isLikedByMe
     ) {
         this(
                 reply.getId(),
@@ -25,7 +25,7 @@ public record ReplyResponse(
                 reply.getCreatedAt(),
                 reply.getContent(),
                 likeCount,
-                isLiked
+                isLikedByMe
         );
     }
 }

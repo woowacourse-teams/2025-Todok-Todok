@@ -51,7 +51,7 @@ public class ReplyQueryService {
                 .map(reply -> new ReplyResponse(
                         reply,
                         findLikeCount(reply, likeCountsById),
-                        isLikedReply(reply, likedReplyIds)
+                        checkIsLikedByMe(reply, likedReplyIds)
                 ))
                 .toList();
     }
@@ -82,7 +82,7 @@ public class ReplyQueryService {
                 .orElseThrow(() -> new IllegalStateException("대댓글별 좋아요 수를 찾을 수 없습니다"));
     }
 
-    private boolean isLikedReply(
+    private boolean checkIsLikedByMe(
             final Reply reply,
             final List<Long> likedReplyIds
     ) {
