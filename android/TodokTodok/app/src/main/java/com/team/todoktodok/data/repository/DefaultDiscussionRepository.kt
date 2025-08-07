@@ -2,9 +2,11 @@ package com.team.todoktodok.data.repository
 
 import com.team.domain.model.Discussion
 import com.team.domain.model.DiscussionFilter
+import com.team.domain.model.LikeStatus
 import com.team.domain.model.member.DiscussionRoom
 import com.team.domain.repository.DiscussionRepository
 import com.team.todoktodok.data.datasource.discussion.DiscussionRemoteDataSource
+import com.team.todoktodok.data.network.model.toStatus
 import com.team.todoktodok.data.network.response.discussion.toDomain
 
 class DefaultDiscussionRepository(
@@ -46,6 +48,16 @@ class DefaultDiscussionRepository(
             discussionTitle = discussionRoom.title,
             discussionOpinion = discussionRoom.opinion,
         )
+    }
+
+    override suspend fun deleteDiscussion(discussionId: Long) {
+        discussionRemoteDataSource.deleteDiscussion(discussionId)
+    }
+
+    override suspend fun toggleLike(discussionId: Long): LikeStatus = discussionRemoteDataSource.toggleLike(discussionId).toStatus()
+
+    override suspend fun reportDiscussion(discussionId: Long) {
+        discussionRemoteDataSource.reportDiscussion(discussionId)
     }
 
     companion object {

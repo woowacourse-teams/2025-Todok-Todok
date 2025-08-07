@@ -10,4 +10,7 @@ data class Discussion(
     val writer: User,
     val createAt: LocalDateTime,
     val discussionOpinion: String,
+    val likeCount: Int,
+    val commentCount: Int,
+    val isLikedByMe: Boolean,
 )

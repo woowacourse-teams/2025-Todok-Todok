@@ -1,6 +1,7 @@
 package com.team.todoktodok.data.datasource.discussion
 
 import com.team.domain.model.DiscussionFilter
+import com.team.todoktodok.data.network.model.LikeAction
 import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
 import retrofit2.Response
 
@@ -23,4 +24,10 @@ interface DiscussionRemoteDataSource {
         discussionTitle: String,
         discussionOpinion: String,
     ): Response<Unit>
+
+    suspend fun deleteDiscussion(discussionId: Long)
+
+    suspend fun toggleLike(discussionId: Long): LikeAction
+
+    suspend fun reportDiscussion(discussionId: Long)
 }

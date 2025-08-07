@@ -2,6 +2,7 @@ package com.team.domain.repository
 
 import com.team.domain.model.Discussion
 import com.team.domain.model.DiscussionFilter
+import com.team.domain.model.LikeStatus
 import com.team.domain.model.member.DiscussionRoom
 
 interface DiscussionRepository {
@@ -22,4 +23,10 @@ interface DiscussionRepository {
         discussionId: Long,
         discussionRoom: DiscussionRoom,
     )
+
+    suspend fun deleteDiscussion(discussionId: Long)
+
+    suspend fun toggleLike(discussionId: Long): LikeStatus
+
+    suspend fun reportDiscussion(discussionId: Long)
 }

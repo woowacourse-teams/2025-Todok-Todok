@@ -5,6 +5,7 @@ import com.team.todoktodok.data.network.request.EditDiscussionRoomRequest
 import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.PATCH
 import retrofit2.http.POST
@@ -33,4 +34,19 @@ interface DiscussionService {
         @Path("discussionId") discussionId: Long,
         @Body editDiscussionRoomRequest: EditDiscussionRoomRequest,
     ): Response<Unit>
+
+    @DELETE("v1/discussions/{discussionId}")
+    suspend fun deleteDiscussion(
+        @Path("discussionId") discussionId: Long,
+    )
+
+    @POST("v1/discussions/{discussionId}/like")
+    suspend fun toggleLike(
+        @Path("discussionId") discussionId: Long,
+    ): Response<Unit>
+
+    @POST("v1/discussions/{discussionId}/report")
+    suspend fun reportDiscussion(
+        @Path("discussionId") discussionId: Long,
+    )
 }
