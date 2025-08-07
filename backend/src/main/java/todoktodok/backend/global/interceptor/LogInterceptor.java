@@ -35,12 +35,13 @@ public class LogInterceptor implements HandlerInterceptor {
             final Exception ex
     ) {
         final String requestURI = request.getRequestURI();
+        final String method = request.getMethod();
         final int status = response.getStatus();
 
         if (status >= HTTP_STATUS_SUCCESS_MIN && status < HTTP_STATUS_ERROR_MIN) {
-            log.info("[API RESPONSE] {}: {}", requestURI, status);
+            log.info("[API RESPONSE] [{}] {}: {}", method, requestURI, status);
         } else {
-            log.error("[API RESPONSE] {}: {}", requestURI, status);
+            log.error("[API RESPONSE] [{}] {}: {}", method, requestURI, status);
         }
     }
 }
