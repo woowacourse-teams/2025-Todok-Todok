@@ -50,7 +50,7 @@
     </style>
 
     <!-- styles.xml -->
-    <style name="supportDialog" parent="Theme.AppCompat.Light.Dialog">
+    <style name="cornerRadiusDialog" parent="Theme.AppCompat.Light.Dialog">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowMinWidthMajor">90%</item>
         <item name="android:windowNoTitle">true</item>
