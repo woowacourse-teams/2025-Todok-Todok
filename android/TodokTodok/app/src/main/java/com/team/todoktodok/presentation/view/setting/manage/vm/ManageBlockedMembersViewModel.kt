@@ -36,7 +36,7 @@ class ManageBlockedMembersViewModel(
             requireNotNull(memberId) { NOT_FOUND_MEMBER }
 
             _blockedMembers.value = _blockedMembers.value?.filter { it.memberId != memberId }
-            // memberRepository.unblock(memberId)
+            memberRepository.unblock(memberId)
         }
     }
 
