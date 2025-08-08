@@ -34,6 +34,7 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
         val binding = FragmentCommentDetailBinding.bind(view)
         setOnNavigateUp(binding)
         initAdapter(binding)
+        initView(binding)
         setupOnClickAddReply(binding)
         setupObserve(binding)
         setupFragmentResultListener()
@@ -41,6 +42,12 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
 
     fun initAdapter(binding: FragmentCommentDetailBinding) {
         binding.rvItems.adapter = adapter
+    }
+
+    fun initView(binding: FragmentCommentDetailBinding) {
+        with(binding) {
+            rvItems.itemAnimator = null
+        }
     }
 
     private fun setupOnClickAddReply(binding: FragmentCommentDetailBinding) {
