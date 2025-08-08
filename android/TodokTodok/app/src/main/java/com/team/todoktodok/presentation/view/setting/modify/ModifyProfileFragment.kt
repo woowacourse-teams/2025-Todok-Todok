@@ -1,8 +1,9 @@
 package com.team.todoktodok.presentation.view.setting.modify
 
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.View
-import androidx.activity.viewModels
+import android.view.inputmethod.EditorInfo
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -40,15 +41,53 @@ class ModifyProfileFragment : Fragment(R.layout.fragment_modify_profile) {
 
     private fun initView(binding: FragmentModifyProfileBinding) {
         with(binding) {
-            etNickname.onFocusChangeListener =
+            setUpNicknameEditText(binding)
+            setUpMessageEditText(binding)
+            setUpModifyButton(binding)
+        }
+    }
+
+    private fun setUpNicknameEditText(binding: FragmentModifyProfileBinding) {
+        with(binding.etNickname) {
+            onFocusChangeListener =
                 View.OnFocusChangeListener { v, hasFocus ->
-                    if (hasFocus) etNicknameLayout.hint = null
+                    if (hasFocus) binding.etNicknameLayout.hint = null
                 }
 
-            etNickname.doAfterTextChanged {
-                etNicknameLayout.error = null
+            doAfterTextChanged {
+                binding.etNicknameLayout.error = null
             }
 
+            setOnEditorActionListener { _, actionId, event ->
+                if (actionId == EditorInfo.IME_ACTION_NEXT ||
+                    (event?.keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_DOWN)
+                ) {
+                    binding.etMessage.requestFocus()
+                    true
+                } else {
+                    false
+                }
+            }
+        }
+    }
+
+    private fun setUpMessageEditText(binding: FragmentModifyProfileBinding) {
+        with(binding) {
+            etMessage.setOnEditorActionListener { _, actionId, event ->
+                if (actionId == EditorInfo.IME_ACTION_DONE ||
+                    (event?.keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_DOWN)
+                ) {
+                    btnModify.performClick()
+                    true
+                } else {
+                    false
+                }
+            }
+        }
+    }
+
+    private fun setUpModifyButton(binding: FragmentModifyProfileBinding) {
+        with(binding) {
             btnModify.setOnClickListener {
                 val nickname = etNickname.text.toString()
                 val message = etMessage.text.toString()
@@ -70,6 +109,7 @@ class ModifyProfileFragment : Fragment(R.layout.fragment_modify_profile) {
                 ModifyProfileUiEvent.OnCompleteModification -> {
                     settingViewModel.changeScreen(SettingScreen.SETTING_MAIN)
                 }
+
                 is ModifyProfileUiEvent.ShowInvalidNickNameMessage -> {
                     handleNickNameErrorEvent(value.exception, binding)
                 }

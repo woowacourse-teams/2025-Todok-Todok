@@ -9,7 +9,6 @@ import com.team.domain.model.member.MemberDiscussionType
 import com.team.domain.model.member.MemberId
 import com.team.domain.model.member.Profile
 import com.team.domain.repository.MemberRepository
-import com.team.todoktodok.data.core.ext.toLocalDate
 import com.team.todoktodok.data.datasource.member.MemberRemoteDataSource
 import com.team.todoktodok.data.network.request.ModifyProfileRequest
 import com.team.todoktodok.data.network.request.toRequest
@@ -64,36 +63,7 @@ class DefaultMemberRepository(
         message: String,
     ) = remoteMemberRemoteDataSource.modifyProfile(ModifyProfileRequest(nickname, message))
 
-    override suspend fun getBlockedMembers(): List<BlockedMember> {
-        return listOf(
-            BlockedMember(
-                5,
-                "페토",
-                "2025-07-30T07:54:24.604Z".toLocalDate(),
-            ),
-            BlockedMember(
-                1,
-                "페토",
-                "2025-07-30T07:54:24.604Z".toLocalDate(),
-            ),
-            BlockedMember(
-                2,
-                "페토",
-                "2025-07-30T07:54:24.604Z".toLocalDate(),
-            ),
-            BlockedMember(
-                3,
-                "페토",
-                "2025-07-30T07:54:24.604Z".toLocalDate(),
-            ),
-            BlockedMember(
-                4,
-                "페토",
-                "2025-07-30T07:54:24.604Z".toLocalDate(),
-            ),
-        )
-        // remoteMemberRemoteDataSource.fetchBlockedMembers().map { it.toDomain() }
-    }
+    override suspend fun getBlockedMembers(): List<BlockedMember> = remoteMemberRemoteDataSource.fetchBlockedMembers().map { it.toDomain() }
 
     override suspend fun unblock(id: Long) = remoteMemberRemoteDataSource.unblock(id)
 }
