@@ -63,6 +63,20 @@ class CommentDetailViewModel(
         }
     }
 
+    fun toggleReplyLike(replyId: Long) {
+        viewModelScope.launch {
+            replyRepository.toggleLike(discussionId, commentId, replyId)
+            loadReplies()
+        }
+    }
+
+    fun toggleCommentLike(commentId: Long) {
+        viewModelScope.launch {
+            commentRepository.toggleLike(discussionId, commentId)
+            loadComment()
+        }
+    }
+
     fun showReplyCreate() {
         _uiEvent.setValue(CommentDetailUiEvent.ShowReplyCreate(discussionId, commentId))
     }

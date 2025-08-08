@@ -15,7 +15,7 @@ import com.team.todoktodok.presentation.view.discussiondetail.commentdetail.vm.C
 import com.team.todoktodok.presentation.view.discussiondetail.replycreate.ReplyCreateBottomSheet
 
 class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
-    private val adapter by lazy { CommentDetailAdapter() }
+    private val adapter by lazy { CommentDetailAdapter(commentDetailHandler) }
 
     private val viewModel: CommentDetailViewModel by viewModels {
         val repositoryModule = (requireActivity().application as App).container.repositoryModule
@@ -113,6 +113,17 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
             parentFragmentManager.popBackStack()
         }
     }
+
+    private val commentDetailHandler =
+        object : CommentDetailAdapter.Handler {
+            override fun onReplyLikeClick(replyId: Long) {
+                viewModel.toggleReplyLike(replyId)
+            }
+
+            override fun onCommentLikeClick(commentId: Long) {
+                viewModel.toggleCommentLike(commentId)
+            }
+        }
 
     companion object {
         const val TAG = "TAG_COMMENT_DETAIL"

@@ -8,6 +8,6 @@ data class Reply(
     val createdAt: LocalDateTime,
     val likeCount: Int,
     val user: User,
-    val replyId: Int,
+    val replyId: Long,
     val isLikedByMe: Boolean,
 )
