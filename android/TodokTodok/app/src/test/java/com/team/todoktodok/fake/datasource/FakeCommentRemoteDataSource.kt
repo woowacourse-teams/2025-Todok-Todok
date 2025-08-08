@@ -20,6 +20,9 @@ class FakeCommentRemoteDataSource : CommentRemoteDataSource {
                         memberId = 1L,
                         nickname = "Alice",
                     ),
+                likeCount = 0,
+                replyCount = 0,
+                isLikedByMe = false,
             ),
             CommentResponse(
                 commentId = 2L,
@@ -30,6 +33,9 @@ class FakeCommentRemoteDataSource : CommentRemoteDataSource {
                         memberId = 2L,
                         nickname = "Bob",
                     ),
+                likeCount = 0,
+                replyCount = 0,
+                isLikedByMe = false,
             ),
             CommentResponse(
                 commentId = 3L,
@@ -40,6 +46,9 @@ class FakeCommentRemoteDataSource : CommentRemoteDataSource {
                         memberId = 3L,
                         nickname = "Charlie",
                     ),
+                likeCount = 0,
+                replyCount = 0,
+                isLikedByMe = false,
             ),
             CommentResponse(
                 commentId = 4L,
@@ -50,6 +59,9 @@ class FakeCommentRemoteDataSource : CommentRemoteDataSource {
                         memberId = 4L,
                         nickname = "Diana",
                     ),
+                likeCount = 0,
+                replyCount = 0,
+                isLikedByMe = false,
             ),
             CommentResponse(
                 commentId = 5L,
@@ -60,6 +72,9 @@ class FakeCommentRemoteDataSource : CommentRemoteDataSource {
                         memberId = 5L,
                         nickname = "Ethan",
                     ),
+                likeCount = 0,
+                replyCount = 0,
+                isLikedByMe = false,
             ),
         )
 
@@ -82,6 +97,9 @@ class FakeCommentRemoteDataSource : CommentRemoteDataSource {
                 comment.content,
                 LocalDateTime.of(2000, 7, 3, 10, 21).toString(),
                 MemberResponse(1, "동전"),
+                likeCount = 0,
+                replyCount = 0,
+                isLikedByMe = false,
             ),
         )
     }
@@ -108,6 +126,9 @@ class FakeCommentRemoteDataSource : CommentRemoteDataSource {
                     comment,
                     LocalDateTime.of(2000, 7, 3, 10, 21).toString(),
                     MemberResponse(1, "동전"),
+                    likeCount = 0,
+                    replyCount = 0,
+                    isLikedByMe = false,
                 )
             )
         }
@@ -133,6 +154,9 @@ class FakeCommentRemoteDataSource : CommentRemoteDataSource {
                 "하하",
                 LocalDateTime.of(2000, 7, 3, 10, 21).toString(),
                 MemberResponse(1, "동전"),
+                likeCount = 0,
+                replyCount = 0,
+                isLikedByMe = false,
             )
     }
 }

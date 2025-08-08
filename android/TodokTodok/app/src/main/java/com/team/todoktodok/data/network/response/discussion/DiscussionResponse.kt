@@ -19,6 +19,9 @@ data class DiscussionResponse(
     val discussionTitle: String,
     @SerialName("member")
     val memberResponse: MemberResponse,
+    val likeCount: Int,
+    val commentCount: Int,
+    val isLikedByMe: Boolean,
 )
 
 fun DiscussionResponse.toDomain() =
@@ -29,4 +32,7 @@ fun DiscussionResponse.toDomain() =
         writer = memberResponse.toDomain(),
         createAt = createdAt.toLocalDateTime(),
         discussionOpinion = discussionOpinion,
+        likeCount = likeCount,
+        commentCount = commentCount,
+        isLikedByMe = isLikedByMe,
     )

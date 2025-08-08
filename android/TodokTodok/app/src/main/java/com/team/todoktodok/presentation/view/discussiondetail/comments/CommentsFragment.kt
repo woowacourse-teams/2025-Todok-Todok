@@ -128,11 +128,15 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
             setUpDialogResultListener(commentId = commentUiModel.comment.id)
             val binding = MenuExternalDiscussionBinding.inflate(layoutInflater)
             binding.tvReport.setOnClickListener {
-                val dialog = ReportCommentDialog.newInstance()
-                dialog.show(childFragmentManager, ReportCommentDialog.TAG)
+                showReportDialog()
             }
             createPopUpView(binding.root)
         }
+
+    private fun showReportDialog() {
+        val dialog = ReportCommentDialog.newInstance()
+        dialog.show(childFragmentManager, ReportCommentDialog.TAG)
+    }
 
     private fun setUpDialogResultListener(commentId: Long) {
         childFragmentManager.setFragmentResultListener(
