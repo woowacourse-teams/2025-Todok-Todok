@@ -22,7 +22,7 @@ class BooksViewHolder private constructor(
     fun bind(item: Book) {
         Glide
             .with(binding.root)
-            .load("https://image.aladin.co.kr/product/33413/26/coversum/k582938339_1.jpg")
+            .load(item.image)
             .into(binding.ivBook)
     }
 
