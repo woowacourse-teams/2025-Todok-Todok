@@ -173,42 +173,45 @@ class DefaultMemberRemoteDataSourceTest {
         }
 
     @Test
-    fun `프로필 수정 요청 시 modifyProfile API를 호출한다`() = runTest {
-        // given
-        val request = ModifyProfileRequest("나는", "페토다!")
+    fun `프로필 수정 요청 시 modifyProfile API를 호출한다`() =
+        runTest {
+            // given
+            val request = ModifyProfileRequest("나는", "페토다!")
 
-        coEvery { memberService.modifyProfile(request) } just Runs
+            coEvery { memberService.modifyProfile(request) } just Runs
 
-        // when
-        dataSource.modifyProfile(request)
+            // when
+            dataSource.modifyProfile(request)
 
-        // then
-        coVerify(exactly = 1) { memberService.modifyProfile(request) }
-    }
-
-    @Test
-    fun `차단된 멤버 목록을 가져온다`() = runTest {
-        // given
-        val response = mockk<List<BlockedMemberResponse>>()
-        coEvery { memberService.fetchBlockedMembers() } returns response
-
-        // when
-        val result = dataSource.fetchBlockedMembers()
-
-        // then
-        assertEquals(response, result)
-    }
+            // then
+            coVerify(exactly = 1) { memberService.modifyProfile(request) }
+        }
 
     @Test
-    fun `차단 해제 요청 시 unblock API를 호출한다`() = runTest {
-        // given
-        val memberId = 123L
-        coEvery { memberService.unblock(memberId) } just Runs
+    fun `차단된 멤버 목록을 가져온다`() =
+        runTest {
+            // given
+            val response = mockk<List<BlockedMemberResponse>>()
+            coEvery { memberService.fetchBlockedMembers() } returns response
 
-        // when
-        dataSource.unblock(memberId)
+            // when
+            val result = dataSource.fetchBlockedMembers()
 
-        // then
-        coVerify(exactly = 1) { memberService.unblock(memberId) }
-    }
+            // then
+            assertEquals(response, result)
+        }
+
+    @Test
+    fun `차단 해제 요청 시 unblock API를 호출한다`() =
+        runTest {
+            // given
+            val memberId = 123L
+            coEvery { memberService.unblock(memberId) } just Runs
+
+            // when
+            dataSource.unblock(memberId)
+
+            // then
+            coVerify(exactly = 1) { memberService.unblock(memberId) }
+        }
 }
