@@ -1,14 +1,13 @@
-package com.team.todoktodok.data.datasource.reply
+package com.team.domain.repository
 
-import com.team.todoktodok.data.network.model.LikeAction
-import com.team.todoktodok.data.network.request.ReplyRequest
-import com.team.todoktodok.data.network.response.comment.ReplyResponse
+import com.team.domain.model.LikeStatus
+import com.team.domain.model.Reply
 
-interface ReplyRemoteDataSource {
+interface ReplyRepository {
     suspend fun fetchReplies(
         discussionId: Long,
         commentId: Long,
-    ): List<ReplyResponse>
+    ): List<Reply>
 
     suspend fun saveReply(
         discussionId: Long,
@@ -20,7 +19,7 @@ interface ReplyRemoteDataSource {
         discussionId: Long,
         commentId: Long,
         replyId: Long,
-    ): LikeAction
+    ): LikeStatus
 
     suspend fun updateReply(
         discussionId: Long,

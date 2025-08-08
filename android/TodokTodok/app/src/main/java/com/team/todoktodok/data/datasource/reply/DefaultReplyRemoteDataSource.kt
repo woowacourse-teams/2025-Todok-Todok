@@ -19,9 +19,9 @@ class DefaultReplyRemoteDataSource(
     override suspend fun saveReply(
         discussionId: Long,
         commentId: Long,
-        replyRequest: ReplyRequest,
+        content: String,
     ) {
-        replyService.saveReply(discussionId, commentId, replyRequest)
+        replyService.saveReply(discussionId, commentId, ReplyRequest(content))
     }
 
     override suspend fun toggleLike(
