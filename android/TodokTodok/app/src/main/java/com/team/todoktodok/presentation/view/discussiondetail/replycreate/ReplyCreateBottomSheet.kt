@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.core.os.bundleOf
@@ -23,7 +24,7 @@ class ReplyCreateBottomSheet : BottomSheetDialogFragment(R.layout.fragment_comme
     private val viewModel by viewModels<ReplyCreateViewModel> {
         val repositoryModule = (requireActivity().application as App).container.repositoryModule
         ReplyCreateViewModelFactory(
-            repositoryModule.commentRepository,
+            repositoryModule.replyRepository,
         )
     }
 
@@ -93,7 +94,10 @@ class ReplyCreateBottomSheet : BottomSheetDialogFragment(R.layout.fragment_comme
     private fun handleUiEvent(uiEvent: ReplyCreateUiEvent) {
         when (uiEvent) {
             ReplyCreateUiEvent.CreateReply -> {
-                setFragmentResult(REPLY_REQUEST_KEY, bundleOf(REPLY_CREATED_RESULT_KEY to true))
+                setFragmentResult(
+                    REPLY_REQUEST_KEY,
+                    bundleOf(REPLY_CREATED_RESULT_KEY to true),
+                )
                 dismiss()
             }
         }

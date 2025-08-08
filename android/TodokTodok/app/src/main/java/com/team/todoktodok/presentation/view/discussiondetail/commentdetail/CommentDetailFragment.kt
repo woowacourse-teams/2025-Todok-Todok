@@ -9,7 +9,6 @@ import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentCommentDetailBinding
 import com.team.todoktodok.presentation.view.discussiondetail.BottomSheetVisibilityListener
-import com.team.todoktodok.presentation.view.discussiondetail.commentcreate.CommentCreateBottomSheet
 import com.team.todoktodok.presentation.view.discussiondetail.commentdetail.adapter.CommentDetailAdapter
 import com.team.todoktodok.presentation.view.discussiondetail.commentdetail.vm.CommentDetailViewModel
 import com.team.todoktodok.presentation.view.discussiondetail.commentdetail.vm.CommentDetailViewModelFactory
@@ -69,6 +68,10 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
                     commentDetailUiEvent.commentId,
                     binding,
                 )
+
+            is CommentDetailUiEvent.ShowNewReply -> {
+                binding.rvItems.smoothScrollToPosition(adapter.itemCount)
+            }
         }
     }
 
@@ -84,7 +87,7 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
 
     private fun setupFragmentResultListener() {
         childFragmentManager.setFragmentResultListener(
-            CommentCreateBottomSheet.COMMENT_REQUEST_KEY,
+            ReplyCreateBottomSheet.REPLY_REQUEST_KEY,
             this,
         ) { _, bundle ->
             val result = bundle.getBoolean(ReplyCreateBottomSheet.REPLY_CREATED_RESULT_KEY)

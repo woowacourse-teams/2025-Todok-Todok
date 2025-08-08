@@ -59,11 +59,16 @@ class CommentDetailViewModel(
     fun repliesReload() {
         viewModelScope.launch {
             loadReplies()
+            showNewComment()
         }
     }
 
     fun showReplyCreate() {
         _uiEvent.setValue(CommentDetailUiEvent.ShowReplyCreate(discussionId, commentId))
+    }
+
+    fun showNewComment() {
+        _uiEvent.setValue(CommentDetailUiEvent.ShowNewReply)
     }
 
     private suspend fun loadReplies() {
