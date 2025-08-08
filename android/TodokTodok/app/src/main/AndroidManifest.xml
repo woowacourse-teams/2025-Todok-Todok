@@ -18,9 +18,13 @@
             android:name=".presentation.view.discussion.create.CreateDiscussionRoomActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustPan" />
+      <activity
+            android:name=".presentation.view.setting.SettingActivity"
+            android:exported="false"/>
         <activity
             android:name=".presentation.view.discussions.DiscussionsActivity"
-            android:exported="false" />
+            android:exported="false" >
+        </activity>
         <activity
             android:name=".presentation.view.profile.ProfileActivity"
             android:exported="true">

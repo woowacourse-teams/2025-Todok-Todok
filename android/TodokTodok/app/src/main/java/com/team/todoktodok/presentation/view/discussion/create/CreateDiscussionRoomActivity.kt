@@ -117,48 +117,66 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
     }
 
     private fun setupObserve() {
-        viewModel.apply {
-            book.observe(this@CreateDiscussionRoomActivity) { book: Book ->
-                binding.tvBookTitle.text = book.title
-                binding.tvBookAuthor.text = book.author
-                binding.ivBookImage.loadImage(book.image)
-            }
-            uiEvent.observe(this@CreateDiscussionRoomActivity) { event ->
-                when (event) {
-                    is CreateDiscussionUiEvent.NavigateToDiscussionDetail ->
-                        navigateToDiscussionDetail(
-                            event,
-                        )
+        observeBook()
+        observeUiEvent()
+        observeTitle()
+        observeOpinion()
+        observeIsCreate()
+    }
 
-                    is CreateDiscussionUiEvent.ShowToast ->
-                        Toast
-                            .makeText(
-                                this@CreateDiscussionRoomActivity,
-                                event.error,
-                                Toast.LENGTH_LONG,
-                            ).show()
-                }
+    private fun observeIsCreate() {
+        viewModel.isCreate.observe(this@CreateDiscussionRoomActivity) { isCreate: Boolean ->
+            if (isCreate) {
+                binding.btnCreate.isEnabled = true
+                binding.btnCreate.setTextColor(
+                    ContextCompat.getColor(
+                        this@CreateDiscussionRoomActivity,
+                        R.color.green_1A,
+                    ),
+                )
             }
-            title.observe(this@CreateDiscussionRoomActivity) { title ->
-                if (binding.etDiscussionRoomTitle.text.toString() != title) {
-                    binding.etDiscussionRoomTitle.setText(title)
-                }
+        }
+    }
+
+    private fun observeOpinion() {
+        viewModel.opinion.observe(this@CreateDiscussionRoomActivity) { opinion ->
+            if (binding.etDiscussionRoomOpinion.text.toString() != opinion) {
+                binding.etDiscussionRoomOpinion.setText(opinion)
             }
-            opinion.observe(this@CreateDiscussionRoomActivity) { opinion ->
-                if (binding.etDiscussionRoomOpinion.text.toString() != opinion) {
-                    binding.etDiscussionRoomOpinion.setText(opinion)
-                }
+        }
+    }
+
+    private fun observeTitle() {
+        viewModel.title.observe(this@CreateDiscussionRoomActivity) { title ->
+            if (binding.etDiscussionRoomTitle.text.toString() != title) {
+                binding.etDiscussionRoomTitle.setText(title)
             }
-            isCreate.observe(this@CreateDiscussionRoomActivity) { isCreate: Boolean ->
-                if (isCreate) {
-                    binding.btnCreate.isEnabled = true
-                    binding.btnCreate.setTextColor(
-                        ContextCompat.getColor(
-                            this@CreateDiscussionRoomActivity,
-                            R.color.green_1A,
-                        ),
+        }
+    }
+
+    private fun observeBook() {
+        viewModel.book.observe(this@CreateDiscussionRoomActivity) { book: Book ->
+            binding.tvBookTitle.text = book.title
+            binding.tvBookAuthor.text = book.author
+            binding.ivBookImage.loadImage(book.image)
+        }
+    }
+
+    private fun observeUiEvent() {
+        viewModel.uiEvent.observe(this@CreateDiscussionRoomActivity) { event ->
+            when (event) {
+                is CreateDiscussionUiEvent.NavigateToDiscussionDetail ->
+                    navigateToDiscussionDetail(
+                        event,
                     )
-                }
+
+                is CreateDiscussionUiEvent.ShowToast ->
+                    Toast
+                        .makeText(
+                            this@CreateDiscussionRoomActivity,
+                            event.error,
+                            Toast.LENGTH_LONG,
+                        ).show()
             }
         }
     }

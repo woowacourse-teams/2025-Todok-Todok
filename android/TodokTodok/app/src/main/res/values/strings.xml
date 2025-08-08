@@ -21,6 +21,7 @@
     <string name="all_report_comment">댓글을 신고하시겠습니까?</string>
     <string name="all_report_discussion">토론방을 신고하시겠습니까?</string>
     <string name="all_already_report_discussion">이미 신고한 토론방 입니다</string>
+    <string name="all_nickname">닉네임</string>
 
     <!--  토론 목록 페이지  -->
     <string name="content_description_add_discussion">토론방 추가 화면으로 이동합니다</string>
@@ -86,10 +87,20 @@
     <string name="error_empty_keyword">검색어를 입력해주세요</string>
     <string name="error_no_selected_book">책을 선택해주세요</string>
     <string name="error_network">네트워크 에러가 발생했어요</string>
+
+   <!-- 토론방 생성 화면 -->
     <string name="create_discussion_room_appbar">토론방 생성</string>
     <string name="create">등록</string>
     <string name="content_description_edit_book_in_discussion_room">토론방 책을 변경합니다</string>
     <string name="hint_discussion_room_opinion">최근에 읽은 책에서 이야기하고 싶은 내용을 입력해주세요!</string>
     <string name="hint_discussion_room_title">제목을 입력해주세요!</string>
     <string name="edit_discussion_room_title">토론방 수정</string>
+
+    <!-- 설정 화면 -->
+    <string name="setting_modify_profile">프로필 정보 수정</string>
+    <string name="setting_block_members">차단한 회원 관리</string>
+    <string name="setting_member_message">상태 메세지</string>
+    <string name="setting_modify_profile_complete">프로필 수정이 완료 되었습니다.</string>
+    <string name="setting_member_message_et_hint">상태 메시지를 입력해주세요</string>
+
 </resources>

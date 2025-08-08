@@ -7,6 +7,7 @@ import com.team.todoktodok.data.core.JwtParser
 import com.team.todoktodok.data.datasource.token.TokenDataSource
 import com.team.todoktodok.data.network.auth.AuthInterceptor.Companion.AUTHORIZATION_NAME
 import com.team.todoktodok.data.network.request.LoginRequest
+import com.team.todoktodok.data.network.request.ModifyProfileRequest
 import com.team.todoktodok.data.network.request.SignUpRequest
 import com.team.todoktodok.data.network.response.ProfileResponse
 import com.team.todoktodok.data.network.response.discussion.BookResponse
@@ -69,4 +70,8 @@ class DefaultMemberRemoteDataSource(
             MemberId.Mine -> tokenDataSource.getMemberId()
             is MemberId.OtherUser -> request.id
         }
+
+    override suspend fun modifyProfile(request: ModifyProfileRequest) {
+        memberService.modifyProfile(request)
+    }
 }
