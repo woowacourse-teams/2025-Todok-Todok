@@ -1,6 +1,5 @@
 package com.team.todoktodok.presentation.core.ext
 
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
@@ -48,5 +47,3 @@ inline fun <reified T : Serializable> Bundle.getSerializableCompat(key: String):
         "Bundle extra '$key' is missing or not of expected type ${T::class.java.name}"
     }
 }
-
-
