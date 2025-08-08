@@ -43,6 +43,9 @@ class DefaultCommentRepositoryTest {
                     "수고 많으셨습니다다.",
                     User(1, Nickname("동전")),
                     LocalDateTime.of(2000, 7, 3, 10, 21),
+                    likeCount = 0,
+                    replyCount = 0,
+                    isLikedByMe = false,
                 )
             // when
             defaultCommentRepository.saveComment(10, "수고 많으셨습니다다.")

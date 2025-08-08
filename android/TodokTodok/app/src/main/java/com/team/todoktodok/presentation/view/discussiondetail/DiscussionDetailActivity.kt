@@ -35,6 +35,7 @@ class DiscussionDetailActivity : AppCompatActivity() {
         val repositoryModule = (application as App).container.repositoryModule
         DiscussionDetailViewModelFactory(
             repositoryModule.discussionRepository,
+            repositoryModule.tokenRepository,
         )
     }
     private val binding: ActivityDiscussionDetailBinding by lazy {
@@ -52,6 +53,7 @@ class DiscussionDetailActivity : AppCompatActivity() {
         setupOnClick()
         setupObserve()
         setPopBackStack()
+        setUpDialogResultListener()
     }
 
     override fun onDestroy() {
@@ -82,7 +84,6 @@ class DiscussionDetailActivity : AppCompatActivity() {
             ivComment.setOnClickListener {
                 viewModel.showComments()
             }
-            setupPopUpDiscussionClick()
             setupLickClick()
         }
     }
@@ -96,9 +97,9 @@ class DiscussionDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupPopUpDiscussionClick() {
+    private fun setupPopUpDiscussionClick(isMyDiscussion: Boolean) {
         binding.ivDiscussionOption.setOnClickListener {
-            if (popupWindow == null) popupWindow = getPopUpView()
+            if (popupWindow == null) popupWindow = getPopUpView(isMyDiscussion)
             if (popupWindow?.isShowing == true) {
                 popupWindow?.dismiss()
             } else {
@@ -107,17 +108,22 @@ class DiscussionDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun getPopUpView(): PopupWindow =
-        if (viewModel.isMyDiscussion) {
+    private fun getPopUpView(isMyDiscussion: Boolean): PopupWindow =
+        if (isMyDiscussion) {
             val binding = MenuOwnedDiscussionBinding.inflate(layoutInflater)
             binding.tvEdit.setOnClickListener { viewModel.updateDiscussion() }
             binding.tvDelete.setOnClickListener { viewModel.deleteDiscussion() }
             createPopUpView(binding.root)
         } else {
             val binding = MenuExternalDiscussionBinding.inflate(layoutInflater)
-            binding.tvReport.setOnClickListener { viewModel.reportDiscussion() }
+            binding.tvReport.setOnClickListener { showReportDialog() }
             createPopUpView(binding.root)
         }
+
+    private fun showReportDialog() {
+        val dialog = ReportDiscussionDialog.newInstance()
+        dialog.show(supportFragmentManager, ReportDiscussionDialog.TAG)
+    }
 
     private fun createPopUpView(popupView: View) =
         PopupWindow(
@@ -130,12 +136,16 @@ class DiscussionDetailActivity : AppCompatActivity() {
     private fun setupObserve() {
         viewModel.discussion.observe(this) { value ->
             with(binding) {
-                tvBookTitle.text = value.book.title
-                tvDiscussionTitle.text = value.discussionTitle
-                tvUserNickname.text = value.writer.nickname.value
-                tvDiscussionCreateAt.text = value.createAt.formatDate()
-                tvDiscussionOpinion.text = value.discussionOpinion
+                tvBookTitle.text = value.discussion.book.title
+                tvDiscussionTitle.text = value.discussion.discussionTitle
+                tvUserNickname.text = value.discussion.writer.nickname.value
+                tvDiscussionCreateAt.text = value.discussion.createAt.formatDate()
+                tvDiscussionOpinion.text = value.discussion.discussionOpinion
+                ivLike.isSelected = value.discussion.isLikedByMe
+                tvHeartCount.text = value.discussion.likeCount.toString()
+                tvCommentCount.text = value.discussion.commentCount.toString()
             }
+            setupPopUpDiscussionClick(value.isMyDiscussion)
         }
         viewModel.uiEvent.observe(this) { value ->
             handleEvent(value)
@@ -145,9 +155,8 @@ class DiscussionDetailActivity : AppCompatActivity() {
     private fun handleEvent(discussionDetailUiEvent: DiscussionDetailUiEvent) {
         when (discussionDetailUiEvent) {
             is DiscussionDetailUiEvent.ShowComments -> showComments(discussionDetailUiEvent.discussionId)
-            is DiscussionDetailUiEvent.ToggleLikeOnDiscussion -> showToast("좋아요 클릭")
-            is DiscussionDetailUiEvent.DeleteDiscussion -> showToast("토론 삭제")
-            is DiscussionDetailUiEvent.ReportDiscussion -> showToast("토론 신고")
+            is DiscussionDetailUiEvent.DeleteDiscussion -> navigateUp()
+            is DiscussionDetailUiEvent.AlreadyReportDiscussion -> showToast(getString(R.string.all_already_report_discussion))
             is DiscussionDetailUiEvent.UpdateDiscussion -> {
                 val discussionId = discussionDetailUiEvent.discussionId
                 val intent =
@@ -183,6 +192,19 @@ class DiscussionDetailActivity : AppCompatActivity() {
     private fun showComments(discussionId: Long) {
         val bottomSheet = CommentBottomSheet.newInstance(discussionId)
         bottomSheet.show(supportFragmentManager, CommentsFragment.TAG)
+    }
+
+    private fun setUpDialogResultListener() {
+        supportFragmentManager.setFragmentResultListener(
+            ReportDiscussionDialog.RESULT_KEY_REPORT,
+            this,
+        ) { _, bundle ->
+            val result = bundle.getBoolean(ReportDiscussionDialog.RESULT_KEY_REPORT)
+            if (result) {
+                viewModel.reportDiscussion()
+                popupWindow?.dismiss()
+            }
+        }
     }
 
     private fun LocalDateTime.formatDate(): String {

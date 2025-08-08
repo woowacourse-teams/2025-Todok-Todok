@@ -2,6 +2,7 @@ package com.team.todoktodok.fake.datasource
 
 import com.team.domain.model.DiscussionFilter
 import com.team.todoktodok.data.datasource.discussion.DiscussionRemoteDataSource
+import com.team.todoktodok.data.network.model.LikeAction
 import com.team.todoktodok.data.network.response.discussion.BookResponse
 import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
 import com.team.todoktodok.data.network.response.discussion.MemberResponse
@@ -17,6 +18,9 @@ class FakeDiscussionRemoteDataSource : DiscussionRemoteDataSource {
                 discussionOpinion = "fetch join을 남발하면 안됩니다.",
                 createdAt = "2025-07-12T12:00:00",
                 memberResponse = MemberResponse(1, "홍길동"),
+                likeCount = 0,
+                commentCount = 0,
+                isLikedByMe = false,
             ),
             DiscussionResponse(
                 discussionId = 2,
@@ -25,6 +29,9 @@ class FakeDiscussionRemoteDataSource : DiscussionRemoteDataSource {
                 discussionOpinion = "suspend fun과 launch 차이를 이해해야 합니다.",
                 createdAt = "2025-07-13T12:00:00",
                 memberResponse = MemberResponse(2, "박코루틴"),
+                likeCount = 0,
+                commentCount = 0,
+                isLikedByMe = false,
             ),
             DiscussionResponse(
                 discussionId = 3,
@@ -33,6 +40,9 @@ class FakeDiscussionRemoteDataSource : DiscussionRemoteDataSource {
                 discussionOpinion = "UI와 로직을 분리해 유지보수가 쉬워집니다.",
                 createdAt = "2025-07-14T12:00:00",
                 memberResponse = MemberResponse(3, "김아키텍처"),
+                likeCount = 0,
+                commentCount = 0,
+                isLikedByMe = false,
             ),
             DiscussionResponse(
                 discussionId = 4,
@@ -41,6 +51,9 @@ class FakeDiscussionRemoteDataSource : DiscussionRemoteDataSource {
                 discussionOpinion = "의도를 드러내는 코드가 중요합니다.",
                 createdAt = "2025-07-15T12:00:00",
                 memberResponse = MemberResponse(4, "이클린"),
+                likeCount = 0,
+                commentCount = 0,
+                isLikedByMe = false,
             ),
             DiscussionResponse(
                 discussionId = 5,
@@ -49,6 +62,9 @@ class FakeDiscussionRemoteDataSource : DiscussionRemoteDataSource {
                 discussionOpinion = "상황에 맞는 패턴 선택이 중요합니다.",
                 createdAt = "2025-07-16T12:00:00",
                 memberResponse = MemberResponse(5, "정디자인"),
+                likeCount = 0,
+                commentCount = 0,
+                isLikedByMe = false,
             ),
         )
 
@@ -88,6 +104,18 @@ class FakeDiscussionRemoteDataSource : DiscussionRemoteDataSource {
         discussionTitle: String,
         discussionOpinion: String,
     ): Response<Unit> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun deleteDiscussion(discussionId: Long) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun toggleLike(discussionId: Long): LikeAction {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun reportDiscussion(discussionId: Long) {
         TODO("Not yet implemented")
     }
 }

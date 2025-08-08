@@ -1,6 +1,7 @@
 package com.team.todoktodok.data.datasource.discussion
 
 import com.team.domain.model.DiscussionFilter
+import com.team.todoktodok.data.network.model.LikeAction
 import com.team.todoktodok.data.network.request.DiscussionRoomRequest
 import com.team.todoktodok.data.network.request.EditDiscussionRoomRequest
 import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
@@ -44,6 +45,21 @@ class DefaultDiscussionRemoteDataSource(
                     discussionOpinion,
                 ),
         )
+
+    override suspend fun deleteDiscussion(discussionId: Long) {
+        discussionService.deleteDiscussion(discussionId)
+    }
+
+    override suspend fun toggleLike(discussionId: Long): LikeAction =
+        when (discussionService.toggleLike(discussionId).code()) {
+            201 -> LikeAction.LIKE
+            204 -> LikeAction.UNLIKE
+            else -> throw IllegalStateException()
+        }
+
+    override suspend fun reportDiscussion(discussionId: Long) {
+        discussionService.reportDiscussion(discussionId)
+    }
 
     private fun Response<*>.extractDiscussionId(): Long {
         val locationHeader = headers()[HEADER_LOCATION]

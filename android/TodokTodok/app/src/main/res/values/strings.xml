@@ -18,6 +18,9 @@
     <string name="all_update_action">수정하기</string>
     <string name="all_report_action">신고하기</string>
     <string name="all_cancel">취소하기</string>
+    <string name="all_report_comment">댓글을 신고하시겠습니까?</string>
+    <string name="all_report_discussion">토론방을 신고하시겠습니까?</string>
+    <string name="all_already_report_discussion">이미 신고한 토론방 입니다</string>
     <string name="all_nickname">닉네임</string>
 
     <!--  토론 목록 페이지  -->

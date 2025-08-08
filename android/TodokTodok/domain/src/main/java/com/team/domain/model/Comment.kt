@@ -8,4 +8,7 @@ data class Comment(
     val content: String,
     val writer: User,
     val createAt: LocalDateTime,
+    val likeCount: Int,
+    val replyCount: Int,
+    val isLikedByMe: Boolean,
 )
