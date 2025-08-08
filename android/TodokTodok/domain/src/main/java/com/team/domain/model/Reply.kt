@@ -9,4 +9,5 @@ data class Reply(
     val likeCount: Int,
     val user: User,
     val replyId: Int,
+    val isLikedByMe: Boolean,
 )

@@ -9,6 +9,8 @@ import com.team.todoktodok.data.datasource.discussion.DefaultDiscussionRemoteDat
 import com.team.todoktodok.data.datasource.discussion.DiscussionRemoteDataSource
 import com.team.todoktodok.data.datasource.member.DefaultMemberRemoteDataSource
 import com.team.todoktodok.data.datasource.member.MemberRemoteDataSource
+import com.team.todoktodok.data.datasource.reply.DefaultReplyRemoteDataSource
+import com.team.todoktodok.data.datasource.reply.ReplyRemoteDataSource
 import com.team.todoktodok.data.datasource.token.TokenDataSource
 
 class DataSourceModule(
@@ -36,5 +38,15 @@ class DataSourceModule(
         )
     }
 
-    val bookRemoteDataSource: BookRemoteDataSource by lazy { DefaultBookRemoteDataSource(serviceModule.bookService) }
+    val bookRemoteDataSource: BookRemoteDataSource by lazy {
+        DefaultBookRemoteDataSource(
+            serviceModule.bookService,
+        )
+    }
+
+    val replyRemoteDataSource: ReplyRemoteDataSource by lazy {
+        DefaultReplyRemoteDataSource(
+            serviceModule.replyService,
+        )
+    }
 }

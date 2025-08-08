@@ -4,11 +4,13 @@ import com.team.domain.repository.BookRepository
 import com.team.domain.repository.CommentRepository
 import com.team.domain.repository.DiscussionRepository
 import com.team.domain.repository.MemberRepository
+import com.team.domain.repository.ReplyRepository
 import com.team.domain.repository.TokenRepository
 import com.team.todoktodok.data.repository.DefaultBookRepository
 import com.team.todoktodok.data.repository.DefaultCommentRepository
 import com.team.todoktodok.data.repository.DefaultDiscussionRepository
 import com.team.todoktodok.data.repository.DefaultMemberRepository
+import com.team.todoktodok.data.repository.DefaultReplyRepository
 import com.team.todoktodok.data.repository.DefaultTokenRepository
 
 class RepositoryModule(
@@ -27,4 +29,6 @@ class RepositoryModule(
     val bookRepository: BookRepository by lazy { DefaultBookRepository(dataSourceModule.bookRemoteDataSource) }
 
     val tokenRepository: TokenRepository by lazy { DefaultTokenRepository(dataSourceModule.tokenLocalDataSource) }
+
+    val replyRepository: ReplyRepository by lazy { DefaultReplyRepository(dataSourceModule.replyRemoteDataSource) }
 }

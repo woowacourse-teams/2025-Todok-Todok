@@ -5,6 +5,7 @@ import com.team.todoktodok.data.network.service.CommentService
 import com.team.todoktodok.data.network.service.DiscussionService
 import com.team.todoktodok.data.network.service.MemberService
 import com.team.todoktodok.data.network.service.NoteService
+import com.team.todoktodok.data.network.service.ReplyService
 
 class ServiceModule(
     retrofit: RetrofitModule,
@@ -27,5 +28,9 @@ class ServiceModule(
 
     val bookService: BookService by lazy {
         retrofit.instance.create(BookService::class.java)
+    }
+
+    val replyService: ReplyService by lazy {
+        retrofit.instance.create(ReplyService::class.java)
     }
 }
