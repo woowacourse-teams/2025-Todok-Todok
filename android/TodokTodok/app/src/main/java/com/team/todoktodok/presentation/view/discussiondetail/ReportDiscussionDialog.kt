@@ -56,7 +56,7 @@ class ReportDiscussionDialog : DialogFragment(R.layout.dialog_support) {
         )
     }
 
-    override fun getTheme(): Int = R.style.supportDialog
+    override fun getTheme(): Int = R.style.cornerRadiusDialog
 
     companion object {
         fun newInstance(): ReportDiscussionDialog = ReportDiscussionDialog()
