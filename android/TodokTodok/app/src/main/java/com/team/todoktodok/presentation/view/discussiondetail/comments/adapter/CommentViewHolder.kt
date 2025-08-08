@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.team.domain.model.Comment
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ItemCommentBinding
 import com.team.todoktodok.presentation.core.ext.formatWithResource
