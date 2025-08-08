@@ -3,12 +3,12 @@ package com.team.todoktodok.data.repository
 import com.team.domain.model.LikeStatus
 import com.team.domain.model.Reply
 import com.team.domain.repository.ReplyRepository
-import com.team.todoktodok.data.datasource.reply.DefaultReplyRemoteDataSource
+import com.team.todoktodok.data.datasource.reply.ReplyRemoteDataSource
 import com.team.todoktodok.data.network.model.toStatus
 import com.team.todoktodok.data.network.response.comment.toDomain
 
 class DefaultReplyRepository(
-    private val remoteDataSource: DefaultReplyRemoteDataSource,
+    private val remoteDataSource: ReplyRemoteDataSource,
 ) : ReplyRepository {
     override suspend fun fetchReplies(
         discussionId: Long,
