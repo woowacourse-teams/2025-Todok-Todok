@@ -13,6 +13,7 @@ import com.team.todoktodok.presentation.view.discussiondetail.commentdetail.adap
 import com.team.todoktodok.presentation.view.discussiondetail.commentdetail.vm.CommentDetailViewModel
 import com.team.todoktodok.presentation.view.discussiondetail.commentdetail.vm.CommentDetailViewModelFactory
 import com.team.todoktodok.presentation.view.discussiondetail.replycreate.ReplyCreateBottomSheet
+import com.team.todoktodok.presentation.view.profile.ProfileActivity
 
 class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
     private val adapter by lazy { CommentDetailAdapter(commentDetailHandler) }
@@ -120,10 +121,23 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
                 viewModel.toggleReplyLike(replyId)
             }
 
+            override fun onReplyUserNameClick(userId: Long) {
+                navigateToProfile(userId)
+            }
+
             override fun onCommentLikeClick(commentId: Long) {
                 viewModel.toggleCommentLike(commentId)
             }
+
+            override fun onCommentUserNameClick(userId: Long) {
+                navigateToProfile(userId)
+            }
         }
+
+    private fun navigateToProfile(userId: Long) {
+        val intent = ProfileActivity.Intent(requireContext(), userId)
+        startActivity(intent)
+    }
 
     companion object {
         const val TAG = "TAG_COMMENT_DETAIL"

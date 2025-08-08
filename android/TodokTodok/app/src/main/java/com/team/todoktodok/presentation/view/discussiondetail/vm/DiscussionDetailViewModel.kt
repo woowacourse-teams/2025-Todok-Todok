@@ -67,6 +67,15 @@ class DiscussionDetailViewModel(
         }
     }
 
+    fun navigateToProfile() {
+        val memberId =
+            _discussion.value
+                ?.discussion
+                ?.writer
+                ?.id ?: return
+        _uiEvent.setValue(DiscussionDetailUiEvent.NavigateToProfile(memberId))
+    }
+
     private suspend fun loadDiscussionRoom() {
         val discussion = discussionRepository.getDiscussion(discussionId).getOrThrow()
         _discussion.value =

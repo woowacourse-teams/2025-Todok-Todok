@@ -20,12 +20,14 @@ import com.team.todoktodok.databinding.MenuExternalDiscussionBinding
 import com.team.todoktodok.databinding.MenuOwnedDiscussionBinding
 import com.team.todoktodok.presentation.view.discussion.create.CreateDiscussionRoomActivity
 import com.team.todoktodok.presentation.view.discussion.create.SerializationCreateDiscussionRoomMode
+import com.team.todoktodok.presentation.view.discussion.create.SerializationCreateDiscussionRoomMode.*
 import com.team.todoktodok.presentation.view.discussiondetail.comment.CommentBottomSheet
 import com.team.todoktodok.presentation.view.discussiondetail.comments.CommentsFragment
 import com.team.todoktodok.presentation.view.discussiondetail.vm.DiscussionDetailViewModel
 import com.team.todoktodok.presentation.view.discussiondetail.vm.DiscussionDetailViewModel.Companion.KEY_DISCUSSION_ID
 import com.team.todoktodok.presentation.view.discussiondetail.vm.DiscussionDetailViewModelFactory
 import com.team.todoktodok.presentation.view.discussions.DiscussionsActivity
+import com.team.todoktodok.presentation.view.profile.ProfileActivity
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -84,8 +86,16 @@ class DiscussionDetailActivity : AppCompatActivity() {
             ivComment.setOnClickListener {
                 viewModel.showComments()
             }
+            tvUserNickname.setOnClickListener {
+                viewModel.navigateToProfile()
+            }
             setupLickClick()
         }
+    }
+
+    private fun navigateToProfile(memberId: Long) {
+        val intent = ProfileActivity.Intent(this)
+        startActivity(intent)
     }
 
     private fun setupLickClick() {
@@ -162,10 +172,15 @@ class DiscussionDetailActivity : AppCompatActivity() {
                 val intent =
                     CreateDiscussionRoomActivity.Intent(
                         this@DiscussionDetailActivity,
-                        SerializationCreateDiscussionRoomMode.Edit(discussionId),
+                        Edit(discussionId),
                     )
                 startActivity(intent)
                 finish()
+            }
+
+            is DiscussionDetailUiEvent.NavigateToProfile -> {
+                val intent = ProfileActivity.Intent(this, discussionDetailUiEvent.userId)
+                startActivity(intent)
             }
         }
     }

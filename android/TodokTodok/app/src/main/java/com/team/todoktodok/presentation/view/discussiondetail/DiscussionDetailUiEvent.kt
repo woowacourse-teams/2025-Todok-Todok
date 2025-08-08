@@ -14,4 +14,8 @@ sealed interface DiscussionDetailUiEvent {
     data class DeleteDiscussion(
         val discussionId: Long,
     ) : DiscussionDetailUiEvent
+
+    data class NavigateToProfile(
+        val userId: Long,
+    ) : DiscussionDetailUiEvent
 }

@@ -21,6 +21,9 @@ class ReplyItemViewHolder private constructor(
             ivLike.isSelected = reply.isLikedByMe
             ivLike.setOnClickListener { handler.onReplyLikeClick(reply.replyId) }
             tvLikeCount.text = reply.likeCount.toString()
+            tvUserNickname.setOnClickListener {
+                handler.onReplyUserNameClick(reply.user.id)
+            }
         }
     }
 
@@ -37,5 +40,7 @@ class ReplyItemViewHolder private constructor(
 
     interface Handler {
         fun onReplyLikeClick(replyId: Long)
+
+        fun onReplyUserNameClick(userId: Long)
     }
 }

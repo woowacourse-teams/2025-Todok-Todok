@@ -20,6 +20,7 @@ import com.team.todoktodok.presentation.view.discussiondetail.comments.adapter.C
 import com.team.todoktodok.presentation.view.discussiondetail.comments.model.CommentUiModel
 import com.team.todoktodok.presentation.view.discussiondetail.comments.vm.CommentsViewModel
 import com.team.todoktodok.presentation.view.discussiondetail.comments.vm.CommentsViewModelFactory
+import com.team.todoktodok.presentation.view.profile.ProfileActivity
 
 class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
     private val adapter by lazy { CommentAdapter(adapterHandler) }
@@ -194,7 +195,16 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
             override fun onToggleLike(commentId: Long) {
                 viewModel.toggleLike(commentId)
             }
+
+            override fun onUserNameClick(userId: Long) {
+                navigateToProfile(userId)
+            }
         }
+
+    fun navigateToProfile(userId: Long) {
+        val intent = ProfileActivity.Intent(requireContext(), userId)
+        startActivity(intent)
+    }
 
     companion object {
         const val TAG = "COMMENTS"

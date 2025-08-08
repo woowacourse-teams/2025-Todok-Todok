@@ -21,6 +21,9 @@ class CommentItemViewHolder private constructor(
             ivLike.isSelected = comment.isLikedByMe
             ivLike.setOnClickListener { handler.onCommentLikeClick(comment.id) }
             tvHeartCount.text = comment.likeCount.toString()
+            tvUserNickname.setOnClickListener {
+                handler.onCommentUserNameClick(comment.writer.id)
+            }
         }
     }
 
@@ -37,5 +40,7 @@ class CommentItemViewHolder private constructor(
 
     interface Handler {
         fun onCommentLikeClick(commentId: Long)
+
+        fun onCommentUserNameClick(userId: Long)
     }
 }
