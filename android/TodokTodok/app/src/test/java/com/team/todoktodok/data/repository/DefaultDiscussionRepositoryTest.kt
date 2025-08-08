@@ -69,6 +69,9 @@ class DefaultDiscussionRepositoryTest {
                         writer = User(id = 1, nickname = Nickname(value = "홍길동")),
                         createAt = LocalDateTime.of(2025, 7, 12, 12, 0),
                         discussionOpinion = "fetch join을 남발하면 안됩니다.",
+                        likeCount = 0,
+                        commentCount = 0,
+                        isLikedByMe = false,
                     ),
                 )
 
@@ -107,6 +110,9 @@ class DefaultDiscussionRepositoryTest {
                         writer = User(1L, Nickname("홍길동")),
                         createAt = LocalDateTime.of(2025, 7, 12, 12, 0),
                         discussionOpinion = "fetch join을 남발하면 안됩니다.",
+                        likeCount = 0,
+                        commentCount = 0,
+                        isLikedByMe = false,
                     ),
                 )
 

@@ -5,6 +5,11 @@ import com.team.todoktodok.data.network.request.CommentRequest
 import com.team.todoktodok.data.network.response.comment.CommentResponse
 
 interface CommentRemoteDataSource {
+    suspend fun fetchComment(
+        discussionId: Long,
+        commentId: Long,
+    ): CommentResponse
+
     suspend fun fetchCommentsByDiscussionRoomId(id: Long): List<CommentResponse>
 
     suspend fun saveComment(

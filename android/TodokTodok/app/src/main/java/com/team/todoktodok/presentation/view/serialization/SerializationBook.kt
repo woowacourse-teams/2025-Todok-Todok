@@ -13,3 +13,11 @@ data class SerializationBook(
 ) : Parcelable {
     fun toDomain(): Book = Book(id, title, author, image)
 }
+
+fun Book.toSerialization(): SerializationBook =
+    SerializationBook(
+        id = id,
+        title = title,
+        author = author,
+        image = image,
+    )

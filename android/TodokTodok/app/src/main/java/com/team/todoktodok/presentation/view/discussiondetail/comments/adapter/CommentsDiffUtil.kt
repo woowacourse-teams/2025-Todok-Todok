@@ -1,17 +1,17 @@
 package com.team.todoktodok.presentation.view.discussiondetail.comments.adapter
 
 import androidx.recyclerview.widget.DiffUtil
-import com.team.domain.model.Comment
+import com.team.todoktodok.presentation.view.discussiondetail.comments.model.CommentUiModel
 
-val commentsDiffUtil =
-    object : DiffUtil.ItemCallback<Comment>() {
+val commentUiModelsDiffUtil =
+    object : DiffUtil.ItemCallback<CommentUiModel>() {
         override fun areItemsTheSame(
-            oldItem: Comment,
-            newItem: Comment,
-        ): Boolean = oldItem.id == newItem.id
+            oldItem: CommentUiModel,
+            newItem: CommentUiModel,
+        ): Boolean = oldItem.comment.id == newItem.comment.id
 
         override fun areContentsTheSame(
-            oldItem: Comment,
-            newItem: Comment,
+            oldItem: CommentUiModel,
+            newItem: CommentUiModel,
         ): Boolean = oldItem == newItem
     }

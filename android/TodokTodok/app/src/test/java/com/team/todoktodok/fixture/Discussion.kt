@@ -15,6 +15,9 @@ val DISCUSSIONS =
             writer = User(1L, Nickname("홍길동")),
             createAt = LocalDateTime.of(2025, 7, 12, 12, 0),
             discussionOpinion = "fetch join을 남발하면 안됩니다.",
+            likeCount = 0,
+            commentCount = 0,
+            isLikedByMe = false,
         ),
         Discussion(
             id = 2L,
@@ -23,6 +26,9 @@ val DISCUSSIONS =
             writer = User(2L, Nickname("박코루틴")),
             createAt = LocalDateTime.of(2025, 7, 13, 12, 0),
             discussionOpinion = "suspend fun과 launch 차이를 이해해야 합니다.",
+            likeCount = 0,
+            commentCount = 0,
+            isLikedByMe = false,
         ),
         Discussion(
             id = 3L,
@@ -31,6 +37,9 @@ val DISCUSSIONS =
             writer = User(3L, Nickname("김아키텍처")),
             createAt = LocalDateTime.of(2025, 7, 14, 12, 0),
             discussionOpinion = "UI와 로직을 분리해 유지보수가 쉬워집니다.",
+            likeCount = 0,
+            commentCount = 0,
+            isLikedByMe = false,
         ),
         Discussion(
             id = 4L,
@@ -39,6 +48,9 @@ val DISCUSSIONS =
             writer = User(4L, Nickname("이클린")),
             createAt = LocalDateTime.of(2025, 7, 15, 12, 0),
             discussionOpinion = "의도를 드러내는 코드가 중요합니다.",
+            likeCount = 0,
+            commentCount = 0,
+            isLikedByMe = false,
         ),
         Discussion(
             id = 5L,
@@ -47,5 +59,8 @@ val DISCUSSIONS =
             writer = User(5L, Nickname("정디자인")),
             createAt = LocalDateTime.of(2025, 7, 16, 12, 0),
             discussionOpinion = "상황에 맞는 패턴 선택이 중요합니다.",
+            likeCount = 0,
+            commentCount = 0,
+            isLikedByMe = false,
         ),
     )

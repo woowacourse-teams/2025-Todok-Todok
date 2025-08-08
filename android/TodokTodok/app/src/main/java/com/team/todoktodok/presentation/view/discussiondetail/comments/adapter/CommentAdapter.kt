@@ -2,13 +2,13 @@ package com.team.todoktodok.presentation.view.discussiondetail.comments.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
-import com.team.domain.model.Comment
 import com.team.todoktodok.presentation.view.discussiondetail.comments.adapter.CommentViewHolder.Companion.CommentViewHolder
+import com.team.todoktodok.presentation.view.discussiondetail.comments.model.CommentUiModel
 
 class CommentAdapter(
     private val handler: Handler,
-) : ListAdapter<Comment, CommentViewHolder>(
-        commentsDiffUtil,
+) : ListAdapter<CommentUiModel, CommentViewHolder>(
+        commentUiModelsDiffUtil,
     ) {
     override fun onCreateViewHolder(
         parent: ViewGroup,

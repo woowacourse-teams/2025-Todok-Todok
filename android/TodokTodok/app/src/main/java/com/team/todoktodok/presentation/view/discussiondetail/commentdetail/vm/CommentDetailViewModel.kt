@@ -45,6 +45,9 @@ class CommentDetailViewModel(
                     "정말 좋은 글이에요!",
                     User(1, Nickname("동전")),
                     LocalDateTime.of(2024, 3, 15, 10, 30),
+                    likeCount = 1,
+                    replyCount = 1,
+                    isLikedByMe = false,
                 ),
             )
     }

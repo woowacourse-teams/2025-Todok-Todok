@@ -12,6 +12,18 @@ data class CommentResponse(
     val content: String,
     val createdAt: String,
     val member: MemberResponse,
+    val likeCount: Int,
+    val replyCount: Int,
+    val isLikedByMe: Boolean,
 )
 
-fun CommentResponse.toDomain() = Comment(commentId, content, member.toDomain(), createdAt.toLocalDateTime())
+fun CommentResponse.toDomain() =
+    Comment(
+        commentId,
+        content,
+        member.toDomain(),
+        createdAt.toLocalDateTime(),
+        likeCount,
+        replyCount,
+        isLikedByMe,
+    )
