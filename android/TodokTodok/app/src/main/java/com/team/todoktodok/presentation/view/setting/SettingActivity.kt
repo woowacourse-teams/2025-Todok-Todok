@@ -3,16 +3,16 @@ package com.team.todoktodok.presentation.view.setting
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.annotation.StringRes
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.commit
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivitySettingBinding
-import com.team.todoktodok.presentation.view.setting.manage.ManageBlockedUsersFragment
+import com.team.todoktodok.presentation.view.setting.manage.ManageBlockedMembersFragment
 import com.team.todoktodok.presentation.view.setting.modify.ModifyProfileFragment
 import com.team.todoktodok.presentation.view.setting.vm.SettingViewModel
 import com.team.todoktodok.presentation.view.setting.vm.SettingViewModelFactory
@@ -92,7 +92,7 @@ class SettingActivity : AppCompatActivity() {
             when (screen) {
                 SettingScreen.SETTING_MAIN -> SettingFragment()
                 SettingScreen.MODIFY_PROFILE -> ModifyProfileFragment()
-                SettingScreen.MANAGE_BLOCKED_USERS -> ManageBlockedUsersFragment()
+                SettingScreen.MANAGE_BLOCKED_USERS -> ManageBlockedMembersFragment()
             }
 
         supportFragmentManager.commit {

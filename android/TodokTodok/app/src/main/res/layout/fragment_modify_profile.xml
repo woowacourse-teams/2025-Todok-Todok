@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginHorizontal="@dimen/space_24"
@@ -11,23 +11,25 @@
         android:id="@+id/tv_nickname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/all_nickname"
         android:fontFamily="@font/pretendard_bold"
+        android:text="@string/all_nickname"
         android:textSize="@dimen/font_size_large"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/et_nickname_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:errorIconDrawable="@null"
+        android:gravity="top|start"
         app:counterEnabled="true"
         app:counterMaxLength="8"
         app:cursorColor="@color/black_18"
         app:errorEnabled="true"
+        android:inputType="text"
+        app:errorIconDrawable="@null"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_nickname">
@@ -36,6 +38,7 @@
             android:id="@+id/et_nickname"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:imeOptions="actionNext"
             android:background="@drawable/bg_green_f0_radius_8dp"
             android:maxLength="8"
             android:maxLines="1"
@@ -46,24 +49,26 @@
         android:id="@+id/tv_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/setting_member_message"
-        android:fontFamily="@font/pretendard_bold"
-        android:textSize="@dimen/font_size_large"
         android:layout_marginTop="@dimen/space_20"
+        android:fontFamily="@font/pretendard_bold"
+        android:text="@string/setting_member_message"
+        android:textSize="@dimen/font_size_large"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0"
-        app:layout_constraintTop_toBottomOf="@id/et_nickname_layout"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@id/et_nickname_layout" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/et_message_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:errorIconDrawable="@null"
+        android:imeOptions="actionNext"
+        android:inputType="text"
         app:counterEnabled="true"
         app:counterMaxLength="40"
         app:cursorColor="@color/black_18"
         app:errorEnabled="true"
+        app:errorIconDrawable="@null"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_message">
@@ -72,6 +77,7 @@
             android:id="@+id/et_message"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:imeOptions="actionDone"
             android:background="@drawable/bg_green_f0_radius_8dp"
             android:maxLength="40"
             android:textColor="@color/black_18" />
