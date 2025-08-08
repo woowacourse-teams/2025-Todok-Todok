@@ -1,7 +1,6 @@
 package com.team.todoktodok.data.datasource.reply
 
 import com.team.todoktodok.data.network.model.LikeAction
-import com.team.todoktodok.data.network.request.ReplyRequest
 import com.team.todoktodok.data.network.response.comment.ReplyResponse
 
 interface ReplyRemoteDataSource {

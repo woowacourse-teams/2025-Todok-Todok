@@ -13,7 +13,7 @@ data class ReplyResponse(
     val isLikedByMe: Boolean,
     val likeCount: Int,
     val member: MemberResponse,
-    val replyId: Int,
+    val replyId: Long,
 )
 
 fun ReplyResponse.toDomain() =

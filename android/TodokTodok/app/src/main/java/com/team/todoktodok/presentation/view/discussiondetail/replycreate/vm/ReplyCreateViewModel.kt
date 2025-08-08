@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.team.domain.repository.CommentRepository
+import com.team.domain.repository.ReplyRepository
 import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
 import com.team.todoktodok.presentation.core.event.SingleLiveData
 import com.team.todoktodok.presentation.view.discussiondetail.replycreate.ReplyCreateUiEvent
@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 
 class ReplyCreateViewModel(
     savedStateHandle: SavedStateHandle,
-    private val commentRepository: CommentRepository,
+    private val replyRepository: ReplyRepository,
 ) : ViewModel() {
     private val discussionId =
         savedStateHandle.get<Long>(KEY_DISCUSSION_ID) ?: throw IllegalStateException()
@@ -33,6 +33,11 @@ class ReplyCreateViewModel(
 
     fun submitReply() {
         viewModelScope.launch {
+            replyRepository.saveReply(
+                discussionId,
+                commentId,
+                commentText.value ?: throw IllegalStateException(),
+            )
             _uiEvent.setValue(ReplyCreateUiEvent.CreateReply)
         }
     }

@@ -10,7 +10,7 @@ import com.team.todoktodok.data.network.response.comment.toDomain
 class DefaultReplyRepository(
     private val remoteDataSource: ReplyRemoteDataSource,
 ) : ReplyRepository {
-    override suspend fun fetchReplies(
+    override suspend fun getReplies(
         discussionId: Long,
         commentId: Long,
     ): List<Reply> = remoteDataSource.fetchReplies(discussionId, commentId).map { it.toDomain() }

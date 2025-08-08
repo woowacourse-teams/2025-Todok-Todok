@@ -5,4 +5,6 @@ sealed interface CommentDetailUiEvent {
         val discussionId: Long,
         val commentId: Long,
     ) : CommentDetailUiEvent
+
+    data object ShowNewReply : CommentDetailUiEvent
 }

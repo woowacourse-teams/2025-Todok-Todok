@@ -28,6 +28,9 @@ class CommentViewHolder private constructor(
             ivCommentOption.setOnClickListener {
                 handler.onOptionClick(commentUiModel, ivCommentOption)
             }
+            tvUserNickname.setOnClickListener {
+                handler.onClickUserName(commentUiModel.comment.writer.id)
+            }
             ivLike.setOnClickListener { handler.onToggleLike(commentUiModel.comment.id) }
             ivLike.isSelected = commentUiModel.comment.isLikedByMe
             tvHeartCount.text = commentUiModel.comment.likeCount.toString()
@@ -57,5 +60,7 @@ class CommentViewHolder private constructor(
         )
 
         fun onToggleLike(commentId: Long)
+
+        fun onClickUserName(userId: Long)
     }
 }

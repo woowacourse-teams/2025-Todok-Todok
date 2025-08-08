@@ -9,19 +9,20 @@ import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentCommentDetailBinding
 import com.team.todoktodok.presentation.view.discussiondetail.BottomSheetVisibilityListener
-import com.team.todoktodok.presentation.view.discussiondetail.commentcreate.CommentCreateBottomSheet
 import com.team.todoktodok.presentation.view.discussiondetail.commentdetail.adapter.CommentDetailAdapter
 import com.team.todoktodok.presentation.view.discussiondetail.commentdetail.vm.CommentDetailViewModel
 import com.team.todoktodok.presentation.view.discussiondetail.commentdetail.vm.CommentDetailViewModelFactory
 import com.team.todoktodok.presentation.view.discussiondetail.replycreate.ReplyCreateBottomSheet
+import com.team.todoktodok.presentation.view.profile.ProfileActivity
 
 class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
-    private val adapter by lazy { CommentDetailAdapter() }
+    private val adapter by lazy { CommentDetailAdapter(commentDetailHandler) }
 
     private val viewModel: CommentDetailViewModel by viewModels {
         val repositoryModule = (requireActivity().application as App).container.repositoryModule
         CommentDetailViewModelFactory(
             repositoryModule.commentRepository,
+            repositoryModule.replyRepository,
         )
     }
 
@@ -33,6 +34,7 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
         val binding = FragmentCommentDetailBinding.bind(view)
         setOnNavigateUp(binding)
         initAdapter(binding)
+        initView(binding)
         setupOnClickAddReply(binding)
         setupObserve(binding)
         setupFragmentResultListener()
@@ -40,6 +42,12 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
 
     fun initAdapter(binding: FragmentCommentDetailBinding) {
         binding.rvItems.adapter = adapter
+    }
+
+    fun initView(binding: FragmentCommentDetailBinding) {
+        with(binding) {
+            rvItems.itemAnimator = null
+        }
     }
 
     private fun setupOnClickAddReply(binding: FragmentCommentDetailBinding) {
@@ -68,6 +76,10 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
                     commentDetailUiEvent.commentId,
                     binding,
                 )
+
+            is CommentDetailUiEvent.ShowNewReply -> {
+                binding.rvItems.smoothScrollToPosition(adapter.itemCount)
+            }
         }
     }
 
@@ -83,7 +95,7 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
 
     private fun setupFragmentResultListener() {
         childFragmentManager.setFragmentResultListener(
-            CommentCreateBottomSheet.COMMENT_REQUEST_KEY,
+            ReplyCreateBottomSheet.REPLY_REQUEST_KEY,
             this,
         ) { _, bundle ->
             val result = bundle.getBoolean(ReplyCreateBottomSheet.REPLY_CREATED_RESULT_KEY)
@@ -108,6 +120,30 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
         binding.ivCommentDetailBack.setOnClickListener {
             parentFragmentManager.popBackStack()
         }
+    }
+
+    private val commentDetailHandler =
+        object : CommentDetailAdapter.Handler {
+            override fun onClickReplyLike(replyId: Long) {
+                viewModel.toggleReplyLike(replyId)
+            }
+
+            override fun onClickReplyUserName(userId: Long) {
+                navigateToProfile(userId)
+            }
+
+            override fun onClickCommentLike(commentId: Long) {
+                viewModel.toggleCommentLike(commentId)
+            }
+
+            override fun onClickCommentUserName(userId: Long) {
+                navigateToProfile(userId)
+            }
+        }
+
+    private fun navigateToProfile(userId: Long) {
+        val intent = ProfileActivity.Intent(requireContext(), userId)
+        startActivity(intent)
     }
 
     companion object {

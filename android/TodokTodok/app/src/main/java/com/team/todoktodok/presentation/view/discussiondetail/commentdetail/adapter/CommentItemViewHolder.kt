@@ -10,6 +10,7 @@ import com.team.todoktodok.presentation.core.ext.formatWithResource
 
 class CommentItemViewHolder private constructor(
     private val binding: ItemCommentDetailInformationBinding,
+    private val handler: Handler,
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(comment: Comment) {
         with(binding) {
@@ -17,14 +18,29 @@ class CommentItemViewHolder private constructor(
             tvDiscussionCreateAt.text =
                 comment.createAt.formatWithResource(root.context, R.string.date_format_pattern)
             tvDiscussionOpinion.text = comment.content
+            ivLike.isSelected = comment.isLikedByMe
+            ivLike.setOnClickListener { handler.onClickCommentLike(comment.id) }
+            tvHeartCount.text = comment.likeCount.toString()
+            tvUserNickname.setOnClickListener {
+                handler.onClickCommentUserName(comment.writer.id)
+            }
         }
     }
 
     companion object {
-        fun CommentItemViewHolder(parent: ViewGroup): CommentItemViewHolder {
+        fun CommentItemViewHolder(
+            parent: ViewGroup,
+            handler: Handler,
+        ): CommentItemViewHolder {
             val layoutInflater = LayoutInflater.from(parent.context)
             val binding = ItemCommentDetailInformationBinding.inflate(layoutInflater, parent, false)
-            return CommentItemViewHolder(binding)
+            return CommentItemViewHolder(binding, handler)
         }
+    }
+
+    interface Handler {
+        fun onClickCommentLike(commentId: Long)
+
+        fun onClickCommentUserName(userId: Long)
     }
 }

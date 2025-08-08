@@ -10,6 +10,7 @@ import com.team.todoktodok.presentation.core.ext.formatWithResource
 
 class ReplyItemViewHolder private constructor(
     private val binding: ItemReplyBinding,
+    private val handler: Handler,
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(reply: Reply) {
         with(binding) {
@@ -17,14 +18,29 @@ class ReplyItemViewHolder private constructor(
             tvReplyCreateAt.text =
                 reply.createdAt.formatWithResource(root.context, R.string.date_format_pattern)
             tvReplyOpinion.text = reply.content
+            ivLike.isSelected = reply.isLikedByMe
+            ivLike.setOnClickListener { handler.onClickReplyLike(reply.replyId) }
+            tvLikeCount.text = reply.likeCount.toString()
+            tvUserNickname.setOnClickListener {
+                handler.onClickReplyUserName(reply.user.id)
+            }
         }
     }
 
     companion object {
-        fun ReplyItemViewHolder(parent: ViewGroup): ReplyItemViewHolder {
+        fun ReplyItemViewHolder(
+            parent: ViewGroup,
+            handler: Handler,
+        ): ReplyItemViewHolder {
             val layoutInflater = LayoutInflater.from(parent.context)
             val binding = ItemReplyBinding.inflate(layoutInflater, parent, false)
-            return ReplyItemViewHolder(binding)
+            return ReplyItemViewHolder(binding, handler)
         }
+    }
+
+    interface Handler {
+        fun onClickReplyLike(replyId: Long)
+
+        fun onClickReplyUserName(userId: Long)
     }
 }
