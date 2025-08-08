@@ -19,10 +19,10 @@ class CommentItemViewHolder private constructor(
                 comment.createAt.formatWithResource(root.context, R.string.date_format_pattern)
             tvDiscussionOpinion.text = comment.content
             ivLike.isSelected = comment.isLikedByMe
-            ivLike.setOnClickListener { handler.onCommentLikeClick(comment.id) }
+            ivLike.setOnClickListener { handler.onClickCommentLike(comment.id) }
             tvHeartCount.text = comment.likeCount.toString()
             tvUserNickname.setOnClickListener {
-                handler.onCommentUserNameClick(comment.writer.id)
+                handler.onClickCommentUserName(comment.writer.id)
             }
         }
     }
@@ -39,8 +39,8 @@ class CommentItemViewHolder private constructor(
     }
 
     interface Handler {
-        fun onCommentLikeClick(commentId: Long)
+        fun onClickCommentLike(commentId: Long)
 
-        fun onCommentUserNameClick(userId: Long)
+        fun onClickCommentUserName(userId: Long)
     }
 }

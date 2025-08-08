@@ -92,11 +92,6 @@ class DiscussionDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun navigateToProfile(memberId: Long) {
-        val intent = ProfileActivity.Intent(this)
-        startActivity(intent)
-    }
-
     private fun setupLickClick() {
         with(binding) {
             ivLike.setOnClickListener {
@@ -178,10 +173,14 @@ class DiscussionDetailActivity : AppCompatActivity() {
             }
 
             is DiscussionDetailUiEvent.NavigateToProfile -> {
-                val intent = ProfileActivity.Intent(this, discussionDetailUiEvent.userId)
-                startActivity(intent)
+                navigateToProfile(memberId = discussionDetailUiEvent.userId)
             }
         }
+    }
+
+    private fun navigateToProfile(memberId: Long) {
+        val intent = ProfileActivity.Intent(this, memberId)
+        startActivity(intent)
     }
 
     private fun showToast(message: String) {

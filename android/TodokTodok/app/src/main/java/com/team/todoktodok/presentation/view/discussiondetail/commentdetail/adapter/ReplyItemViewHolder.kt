@@ -19,10 +19,10 @@ class ReplyItemViewHolder private constructor(
                 reply.createdAt.formatWithResource(root.context, R.string.date_format_pattern)
             tvReplyOpinion.text = reply.content
             ivLike.isSelected = reply.isLikedByMe
-            ivLike.setOnClickListener { handler.onReplyLikeClick(reply.replyId) }
+            ivLike.setOnClickListener { handler.onClickReplyLike(reply.replyId) }
             tvLikeCount.text = reply.likeCount.toString()
             tvUserNickname.setOnClickListener {
-                handler.onReplyUserNameClick(reply.user.id)
+                handler.onClickReplyUserName(reply.user.id)
             }
         }
     }
@@ -39,8 +39,8 @@ class ReplyItemViewHolder private constructor(
     }
 
     interface Handler {
-        fun onReplyLikeClick(replyId: Long)
+        fun onClickReplyLike(replyId: Long)
 
-        fun onReplyUserNameClick(userId: Long)
+        fun onClickReplyUserName(userId: Long)
     }
 }

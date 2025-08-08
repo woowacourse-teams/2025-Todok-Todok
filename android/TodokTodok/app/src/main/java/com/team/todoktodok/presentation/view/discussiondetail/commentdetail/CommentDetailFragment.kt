@@ -124,19 +124,19 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
 
     private val commentDetailHandler =
         object : CommentDetailAdapter.Handler {
-            override fun onReplyLikeClick(replyId: Long) {
+            override fun onClickReplyLike(replyId: Long) {
                 viewModel.toggleReplyLike(replyId)
             }
 
-            override fun onReplyUserNameClick(userId: Long) {
+            override fun onClickReplyUserName(userId: Long) {
                 navigateToProfile(userId)
             }
 
-            override fun onCommentLikeClick(commentId: Long) {
+            override fun onClickCommentLike(commentId: Long) {
                 viewModel.toggleCommentLike(commentId)
             }
 
-            override fun onCommentUserNameClick(userId: Long) {
+            override fun onClickCommentUserName(userId: Long) {
                 navigateToProfile(userId)
             }
         }

@@ -29,7 +29,7 @@ class CommentViewHolder private constructor(
                 handler.onOptionClick(commentUiModel, ivCommentOption)
             }
             tvUserNickname.setOnClickListener {
-                handler.onUserNameClick(commentUiModel.comment.writer.id)
+                handler.onClickUserName(commentUiModel.comment.writer.id)
             }
             ivLike.setOnClickListener { handler.onToggleLike(commentUiModel.comment.id) }
             ivLike.isSelected = commentUiModel.comment.isLikedByMe
@@ -61,6 +61,6 @@ class CommentViewHolder private constructor(
 
         fun onToggleLike(commentId: Long)
 
-        fun onUserNameClick(userId: Long)
+        fun onClickUserName(userId: Long)
     }
 }
