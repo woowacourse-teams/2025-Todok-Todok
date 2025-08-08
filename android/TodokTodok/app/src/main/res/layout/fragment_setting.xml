@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/ll_modify_profile"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/space_24"
+        android:layout_marginStart="@dimen/space_24"
+        android:layout_marginEnd="@dimen/space_24"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:id="@+id/iv_icon_profile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_profile" />
+
+        <TextView
+            android:id="@+id/tv_title_profile"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_16"
+            android:layout_weight="1"
+            android:fontFamily="@font/pretendard_medium"
+            android:text="@string/setting_modify_profile"
+            android:textColor="@color/black_18"
+            android:textSize="@dimen/font_size_large" />
+
+        <ImageView
+            android:id="@+id/iv_move_profile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_arrow_up" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_block_members"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/space_32"
+        android:layout_marginStart="@dimen/space_24"
+        android:layout_marginEnd="@dimen/space_24"
+        app:layout_constraintTop_toBottomOf="@id/ll_modify_profile"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:id="@+id/iv_icon_blocking"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_x_circle" />
+
+        <TextView
+            android:id="@+id/tv_title_blocking"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_16"
+            android:layout_weight="1"
+            android:fontFamily="@font/pretendard_medium"
+            android:text="@string/setting_block_members"
+            android:textColor="@color/black_18"
+            android:textSize="@dimen/font_size_large" />
+
+        <ImageView
+            android:id="@+id/iv_move_block"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_arrow_up" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

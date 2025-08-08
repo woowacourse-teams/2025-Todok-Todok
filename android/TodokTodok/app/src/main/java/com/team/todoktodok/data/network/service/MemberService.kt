@@ -1,6 +1,7 @@
 package com.team.todoktodok.data.network.service
 
 import com.team.todoktodok.data.network.request.LoginRequest
+import com.team.todoktodok.data.network.request.ModifyProfileRequest
 import com.team.todoktodok.data.network.request.SignUpRequest
 import com.team.todoktodok.data.network.response.ProfileResponse
 import com.team.todoktodok.data.network.response.discussion.BookResponse
@@ -9,6 +10,7 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -49,4 +51,9 @@ interface MemberService {
     suspend fun fetchMemberBooks(
         @Path("memberId") memberId: Long,
     ): List<BookResponse>
+
+    @PUT("v1/members/profile")
+    suspend fun modifyProfile(
+        @Body requestBody: ModifyProfileRequest,
+    )
 }
