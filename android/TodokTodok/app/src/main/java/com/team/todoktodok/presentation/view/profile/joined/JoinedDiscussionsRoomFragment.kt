@@ -5,7 +5,7 @@ import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.team.domain.model.member.MemberId.Companion.INVALID_MEMBER_ID
+import com.team.domain.model.member.MemberId.Companion.DEFAULT_MEMBER_ID
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentCreatedDiscussionsRoomBinding
@@ -41,7 +41,7 @@ class JoinedDiscussionsRoomFragment : Fragment(R.layout.fragment_joined_discussi
     private fun initView(binding: FragmentCreatedDiscussionsRoomBinding) {
         discussionAdapter = UserDiscussionAdapter(userDiscussionAdapterHandler)
 
-        val memberId: Long? = arguments?.getLong(ARG_MEMBER_ID, INVALID_MEMBER_ID)
+        val memberId: Long? = arguments?.getLong(ARG_MEMBER_ID, DEFAULT_MEMBER_ID)
         requireNotNull(memberId) { MEMBER_ID_NOT_FOUND }
         viewModel.loadDiscussions(memberId)
 

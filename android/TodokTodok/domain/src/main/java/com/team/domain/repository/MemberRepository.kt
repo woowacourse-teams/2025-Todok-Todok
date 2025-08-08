@@ -29,4 +29,9 @@ interface MemberRepository {
     )
 
     suspend fun getMemberBooks(id: MemberId): List<Book>
+
+    suspend fun modifyProfile(
+        nickname: String,
+        message: String,
+    )
 }

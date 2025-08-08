@@ -5,12 +5,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.team.domain.model.Support
-import com.team.domain.model.member.MemberId.Companion.INVALID_MEMBER_ID
+import com.team.domain.model.member.MemberId.Companion.DEFAULT_MEMBER_ID
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivityProfileBinding
@@ -20,6 +21,7 @@ import com.team.todoktodok.presentation.view.profile.adapter.ContentPagerAdapter
 import com.team.todoktodok.presentation.view.profile.adapter.ProfileAdapter
 import com.team.todoktodok.presentation.view.profile.vm.ProfileViewModel
 import com.team.todoktodok.presentation.view.profile.vm.ProfileViewModelFactory
+import com.team.todoktodok.presentation.view.setting.SettingActivity
 
 class ProfileActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProfileBinding
@@ -28,6 +30,15 @@ class ProfileActivity : AppCompatActivity() {
         ProfileViewModelFactory(repositoryModule.memberRepository)
     }
     private lateinit var profileAdapter: ProfileAdapter
+
+    private val launcher =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult(),
+        ) { result ->
+            if (result.resultCode == RESULT_OK) {
+                viewModel.loadProfile(DEFAULT_MEMBER_ID)
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,7 +73,7 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun initView(binding: ActivityProfileBinding) {
-        val memberId: Long? = intent?.getLongExtra(ARG_MEMBER_ID, INVALID_MEMBER_ID)
+        val memberId: Long? = intent?.getLongExtra(ARG_MEMBER_ID, DEFAULT_MEMBER_ID)
         requireNotNull(memberId) { MEMBER_ID_NOT_FOUND }
         viewModel.loadProfile(memberId)
 
@@ -94,7 +105,7 @@ class ProfileActivity : AppCompatActivity() {
     private val profileAdapterHandler =
         object : ProfileAdapter.Handler {
             override fun onClickSetting() {
-                // 설정 화면 이동 기능 추가
+                launcher.launch(SettingActivity.Intent(this@ProfileActivity))
             }
 
             override fun onClickLogo() {

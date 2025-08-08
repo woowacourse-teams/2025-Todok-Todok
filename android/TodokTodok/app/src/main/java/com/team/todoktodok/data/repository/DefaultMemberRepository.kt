@@ -9,6 +9,7 @@ import com.team.domain.model.member.MemberId
 import com.team.domain.model.member.Profile
 import com.team.domain.repository.MemberRepository
 import com.team.todoktodok.data.datasource.member.MemberRemoteDataSource
+import com.team.todoktodok.data.network.request.ModifyProfileRequest
 import com.team.todoktodok.data.network.request.toRequest
 import com.team.todoktodok.data.network.response.discussion.toDomain
 
@@ -55,4 +56,9 @@ class DefaultMemberRepository(
         remoteMemberRemoteDataSource
             .fetchMemberBooks(id)
             .map { it.toDomain() }
+
+    override suspend fun modifyProfile(
+        nickname: String,
+        message: String,
+    ) = remoteMemberRemoteDataSource.modifyProfile(ModifyProfileRequest(nickname, message))
 }
