@@ -19,8 +19,7 @@ import com.team.todoktodok.databinding.ActivityDiscussionDetailBinding
 import com.team.todoktodok.databinding.MenuExternalDiscussionBinding
 import com.team.todoktodok.databinding.MenuOwnedDiscussionBinding
 import com.team.todoktodok.presentation.view.discussion.create.CreateDiscussionRoomActivity
-import com.team.todoktodok.presentation.view.discussion.create.SerializationCreateDiscussionRoomMode
-import com.team.todoktodok.presentation.view.discussion.create.SerializationCreateDiscussionRoomMode.*
+import com.team.todoktodok.presentation.view.discussion.create.SerializationCreateDiscussionRoomMode.Edit
 import com.team.todoktodok.presentation.view.discussiondetail.comment.CommentBottomSheet
 import com.team.todoktodok.presentation.view.discussiondetail.comments.CommentsFragment
 import com.team.todoktodok.presentation.view.discussiondetail.vm.DiscussionDetailViewModel

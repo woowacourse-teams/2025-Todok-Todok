@@ -1,11 +1,8 @@
 package com.team.todoktodok.data.datasource.reply
 
 import com.team.todoktodok.data.network.model.LikeAction
-import com.team.todoktodok.data.network.request.CommentRequest
 import com.team.todoktodok.data.network.request.ReplyRequest
-import com.team.todoktodok.data.network.response.comment.CommentResponse
 import com.team.todoktodok.data.network.response.comment.ReplyResponse
-import com.team.todoktodok.data.network.service.CommentService
 import com.team.todoktodok.data.network.service.ReplyService
 
 class DefaultReplyRemoteDataSource(
