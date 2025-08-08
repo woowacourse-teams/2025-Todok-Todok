@@ -24,8 +24,8 @@ class CommentDetailViewModel(
 
     val commentId =
         savedStateHandle.get<Long>(KEY_COMMENT_ID) ?: throw IllegalStateException()
-    private val _uiState = MutableLiveData<CommentDetailUiState?>(null)
-    val uiState: LiveData<CommentDetailUiState?> = _uiState
+    private val _uiState = MutableLiveData<CommentDetailUiState>(EMPTY_UI_STATE)
+    val uiState: LiveData<CommentDetailUiState> = _uiState
 
     private val _uiEvent = MutableSingleLiveData<CommentDetailUiEvent>()
     val uiEvent: SingleLiveData<CommentDetailUiEvent> = _uiEvent
@@ -39,7 +39,7 @@ class CommentDetailViewModel(
 
     private suspend fun loadComment() {
         val currentUiState = _uiState.value
-        if (currentUiState == null) {
+        if (currentUiState == EMPTY_UI_STATE) {
             _uiState.value =
                 CommentDetailUiState(
                     commentRepository.getComment(discussionId, commentId),
@@ -104,5 +104,7 @@ class CommentDetailViewModel(
     companion object {
         const val KEY_DISCUSSION_ID = "discussion_id"
         const val KEY_COMMENT_ID = "comment_id"
+
+        private val EMPTY_UI_STATE = null
     }
 }
