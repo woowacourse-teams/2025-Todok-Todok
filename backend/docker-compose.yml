@@ -20,8 +20,10 @@ services:
   promtail:
     container_name: promtail
     image: grafana/promtail:latest
-    restart: always
+    ports:
+      - "9080:9080"
     volumes:
       - ./promtail-config.yml:/etc/promtail/promtail.yml
       - ./log:/log
     command: -config.file=/etc/promtail/promtail.yml
+    restart: always
