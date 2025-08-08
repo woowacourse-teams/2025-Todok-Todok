@@ -2,6 +2,7 @@ package com.team.domain.repository
 
 import com.team.domain.model.Book
 import com.team.domain.model.Support
+import com.team.domain.model.member.BlockedMember
 import com.team.domain.model.member.MemberDiscussion
 import com.team.domain.model.member.MemberDiscussionType
 import com.team.domain.model.member.MemberId
@@ -34,4 +35,8 @@ interface MemberRepository {
         nickname: String,
         message: String,
     )
+
+    suspend fun getBlockedMembers(): List<BlockedMember>
+
+    suspend fun unblock(id: Long)
 }

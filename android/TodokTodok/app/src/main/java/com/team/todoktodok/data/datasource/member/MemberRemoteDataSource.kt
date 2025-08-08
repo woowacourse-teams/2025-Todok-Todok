@@ -5,6 +5,7 @@ import com.team.domain.model.member.MemberDiscussionType
 import com.team.domain.model.member.MemberId
 import com.team.todoktodok.data.network.request.ModifyProfileRequest
 import com.team.todoktodok.data.network.request.SignUpRequest
+import com.team.todoktodok.data.network.response.BlockedMemberResponse
 import com.team.todoktodok.data.network.response.ProfileResponse
 import com.team.todoktodok.data.network.response.discussion.BookResponse
 import com.team.todoktodok.data.network.response.discussion.MemberDiscussionResponse
@@ -29,4 +30,8 @@ interface MemberRemoteDataSource {
     suspend fun fetchMemberBooks(request: MemberId): List<BookResponse>
 
     suspend fun modifyProfile(request: ModifyProfileRequest)
+
+    suspend fun fetchBlockedMembers(): List<BlockedMemberResponse>
+
+    suspend fun unblock(request: Long)
 }

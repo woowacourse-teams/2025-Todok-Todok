@@ -8,6 +8,8 @@ import com.team.todoktodok.data.datasource.member.DefaultMemberRemoteDataSource
 import com.team.todoktodok.data.datasource.token.TokenDataSource
 import com.team.todoktodok.data.network.auth.AuthInterceptor.Companion.AUTHORIZATION_NAME
 import com.team.todoktodok.data.network.request.LoginRequest
+import com.team.todoktodok.data.network.request.ModifyProfileRequest
+import com.team.todoktodok.data.network.response.BlockedMemberResponse
 import com.team.todoktodok.data.network.response.ProfileResponse
 import com.team.todoktodok.data.network.response.discussion.MemberDiscussionResponse
 import com.team.todoktodok.data.network.service.MemberService
@@ -169,4 +171,44 @@ class DefaultMemberRemoteDataSourceTest {
             coVerify(exactly = 0) { memberService.report(any()) }
             coVerify(exactly = 1) { memberService.block(memberId) }
         }
+
+    @Test
+    fun `프로필 수정 요청 시 modifyProfile API를 호출한다`() = runTest {
+        // given
+        val request = ModifyProfileRequest("나는", "페토다!")
+
+        coEvery { memberService.modifyProfile(request) } just Runs
+
+        // when
+        dataSource.modifyProfile(request)
+
+        // then
+        coVerify(exactly = 1) { memberService.modifyProfile(request) }
+    }
+
+    @Test
+    fun `차단된 멤버 목록을 가져온다`() = runTest {
+        // given
+        val response = mockk<List<BlockedMemberResponse>>()
+        coEvery { memberService.fetchBlockedMembers() } returns response
+
+        // when
+        val result = dataSource.fetchBlockedMembers()
+
+        // then
+        assertEquals(response, result)
+    }
+
+    @Test
+    fun `차단 해제 요청 시 unblock API를 호출한다`() = runTest {
+        // given
+        val memberId = 123L
+        coEvery { memberService.unblock(memberId) } just Runs
+
+        // when
+        dataSource.unblock(memberId)
+
+        // then
+        coVerify(exactly = 1) { memberService.unblock(memberId) }
+    }
 }
