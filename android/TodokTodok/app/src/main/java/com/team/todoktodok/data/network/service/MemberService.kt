@@ -3,11 +3,13 @@ package com.team.todoktodok.data.network.service
 import com.team.todoktodok.data.network.request.LoginRequest
 import com.team.todoktodok.data.network.request.ModifyProfileRequest
 import com.team.todoktodok.data.network.request.SignUpRequest
+import com.team.todoktodok.data.network.response.BlockedMemberResponse
 import com.team.todoktodok.data.network.response.ProfileResponse
 import com.team.todoktodok.data.network.response.discussion.BookResponse
 import com.team.todoktodok.data.network.response.discussion.MemberDiscussionResponse
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
@@ -55,5 +57,13 @@ interface MemberService {
     @PUT("v1/members/profile")
     suspend fun modifyProfile(
         @Body requestBody: ModifyProfileRequest,
+    )
+
+    @GET("v1/members/block")
+    suspend fun fetchBlockedMembers(): List<BlockedMemberResponse>
+
+    @DELETE("v1/members/{memberId}/block")
+    suspend fun unblock(
+        @Path("memberId") memberId: Long,
     )
 }

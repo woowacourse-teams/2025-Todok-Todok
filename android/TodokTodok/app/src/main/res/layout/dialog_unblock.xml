@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_support_dialog"
+    android:paddingTop="@dimen/space_24">
+
+    <TextView
+        android:id="@+id/tv_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/font_size_large"
+        android:textColor="@color/black_18"
+        android:gravity="center"
+        android:text="@string/setting_unblock_content"
+        android:fontFamily="@font/pretendard_regular"
+        android:layout_marginHorizontal="@dimen/space_24"
+        android:layout_marginBottom="@dimen/space_24"
+        tools:text="해당 회원을 차단하시겠습니까?"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <TextView
+            android:id="@+id/btn_cancel"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/all_cancel"
+            android:textColor="@color/black_18"
+            android:fontFamily="@font/pretendard_regular"
+            android:background="@drawable/bg_support_dialog_button_left"
+            android:textSize="@dimen/font_size_large" />
+
+        <TextView
+            android:id="@+id/btn_submit"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/setting_unblock"
+            android:textColor="@color/green_1A"
+            android:fontFamily="@font/pretendard_semi_bold"
+            android:background="@drawable/bg_support_dialog_button_right"
+            android:textSize="@dimen/font_size_large" />
+    </LinearLayout>
+</LinearLayout>

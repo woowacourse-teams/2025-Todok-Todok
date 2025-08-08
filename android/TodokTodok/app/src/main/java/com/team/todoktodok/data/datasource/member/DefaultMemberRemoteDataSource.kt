@@ -9,6 +9,7 @@ import com.team.todoktodok.data.network.auth.AuthInterceptor.Companion.AUTHORIZA
 import com.team.todoktodok.data.network.request.LoginRequest
 import com.team.todoktodok.data.network.request.ModifyProfileRequest
 import com.team.todoktodok.data.network.request.SignUpRequest
+import com.team.todoktodok.data.network.response.BlockedMemberResponse
 import com.team.todoktodok.data.network.response.ProfileResponse
 import com.team.todoktodok.data.network.response.discussion.BookResponse
 import com.team.todoktodok.data.network.response.discussion.MemberDiscussionResponse
@@ -74,4 +75,8 @@ class DefaultMemberRemoteDataSource(
     override suspend fun modifyProfile(request: ModifyProfileRequest) {
         memberService.modifyProfile(request)
     }
+
+    override suspend fun fetchBlockedMembers(): List<BlockedMemberResponse> = memberService.fetchBlockedMembers()
+
+    override suspend fun unblock(request: Long) = memberService.unblock(request)
 }

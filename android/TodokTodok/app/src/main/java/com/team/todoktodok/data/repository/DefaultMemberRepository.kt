@@ -3,6 +3,7 @@ package com.team.todoktodok.data.repository
 import com.team.domain.model.Book
 import com.team.domain.model.Member
 import com.team.domain.model.Support
+import com.team.domain.model.member.BlockedMember
 import com.team.domain.model.member.MemberDiscussion
 import com.team.domain.model.member.MemberDiscussionType
 import com.team.domain.model.member.MemberId
@@ -61,4 +62,8 @@ class DefaultMemberRepository(
         nickname: String,
         message: String,
     ) = remoteMemberRemoteDataSource.modifyProfile(ModifyProfileRequest(nickname, message))
+
+    override suspend fun getBlockedMembers(): List<BlockedMember> = remoteMemberRemoteDataSource.fetchBlockedMembers().map { it.toDomain() }
+
+    override suspend fun unblock(id: Long) = remoteMemberRemoteDataSource.unblock(id)
 }
