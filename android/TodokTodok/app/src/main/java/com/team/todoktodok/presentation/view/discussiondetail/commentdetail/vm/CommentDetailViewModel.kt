@@ -5,21 +5,19 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.team.domain.model.Comment
-import com.team.domain.model.Reply
-import com.team.domain.model.member.Nickname
-import com.team.domain.model.member.User
 import com.team.domain.repository.CommentRepository
+import com.team.domain.repository.ReplyRepository
 import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
 import com.team.todoktodok.presentation.core.event.SingleLiveData
 import com.team.todoktodok.presentation.view.discussiondetail.commentdetail.CommentDetailUiEvent
 import com.team.todoktodok.presentation.view.discussiondetail.commentdetail.CommentDetailUiState
+import com.team.todoktodok.presentation.view.discussiondetail.commentdetail.CommentDetailUiState.Companion.INIT_COMMENT
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
 
 class CommentDetailViewModel(
     private val savedStateHandle: SavedStateHandle,
     private val commentRepository: CommentRepository,
+    private val replyRepository: ReplyRepository,
 ) : ViewModel() {
     val discussionId =
         savedStateHandle.get<Long>(KEY_DISCUSSION_ID) ?: throw IllegalStateException()
@@ -33,23 +31,29 @@ class CommentDetailViewModel(
     val uiEvent: SingleLiveData<CommentDetailUiEvent> = _uiEvent
 
     init {
-        loadComment()
-        loadReplies()
+        viewModelScope.launch {
+            loadComment()
+            loadReplies()
+        }
     }
 
-    private fun loadComment() {
-        _uiState.value =
-            CommentDetailUiState(
-                Comment(
-                    1,
-                    "정말 좋은 글이에요!",
-                    User(1, Nickname("동전")),
-                    LocalDateTime.of(2024, 3, 15, 10, 30),
-                    likeCount = 1,
-                    replyCount = 1,
-                    isLikedByMe = false,
-                ),
-            )
+    private suspend fun loadComment() {
+        val currentUiState = _uiState.value
+        if (currentUiState == null) {
+            _uiState.value =
+                CommentDetailUiState(
+                    commentRepository.getComment(discussionId, commentId),
+                )
+        } else {
+            _uiState.value =
+                currentUiState.copy(
+                    comment =
+                        commentRepository.getComment(
+                            discussionId,
+                            commentId,
+                        ),
+                )
+        }
     }
 
     fun repliesReload() {
@@ -62,27 +66,20 @@ class CommentDetailViewModel(
         _uiEvent.setValue(CommentDetailUiEvent.ShowReplyCreate(discussionId, commentId))
     }
 
-    private fun loadReplies() {
-        _uiState.value =
-            _uiState.value?.copy(
-                replies =
-                    listOf(
-                        Reply(
-                            content = "정말 좋은 글이에요!",
-                            user = User(1, Nickname("동전")),
-                            createdAt = LocalDateTime.of(2024, 3, 15, 10, 30),
-                            replyId = 1,
-                            likeCount = 0,
-                        ),
-                        Reply(
-                            content = "정말 좋은 글이에요?",
-                            user = User(2, Nickname("단전")),
-                            createdAt = LocalDateTime.of(2024, 3, 15, 10, 30),
-                            replyId = 2,
-                            likeCount = 0,
-                        ),
-                    ),
-            )
+    private suspend fun loadReplies() {
+        val currentUiState = _uiState.value
+        if (currentUiState == null) {
+            _uiState.value =
+                CommentDetailUiState(
+                    comment = INIT_COMMENT,
+                    replies = replyRepository.getReplies(discussionId, commentId),
+                )
+        } else {
+            _uiState.value =
+                currentUiState.copy(
+                    replies = replyRepository.getReplies(discussionId, commentId),
+                )
+        }
     }
 
     companion object {

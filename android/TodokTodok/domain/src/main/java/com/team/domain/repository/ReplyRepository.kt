@@ -4,7 +4,7 @@ import com.team.domain.model.LikeStatus
 import com.team.domain.model.Reply
 
 interface ReplyRepository {
-    suspend fun fetchReplies(
+    suspend fun getReplies(
         discussionId: Long,
         commentId: Long,
     ): List<Reply>

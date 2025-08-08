@@ -22,6 +22,7 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
         val repositoryModule = (requireActivity().application as App).container.repositoryModule
         CommentDetailViewModelFactory(
             repositoryModule.commentRepository,
+            repositoryModule.replyRepository,
         )
     }
 
