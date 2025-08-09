@@ -3,7 +3,6 @@ package com.team.todoktodok.presentation.view.discussions
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.inputmethod.InputMethodManager
@@ -29,36 +28,31 @@ import com.team.todoktodok.presentation.view.discussions.vm.DiscussionsViewModel
 import com.team.todoktodok.presentation.view.profile.ProfileActivity
 
 class DiscussionsActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityDiscussionsBinding
-
     private val viewModel: DiscussionsViewModel by viewModels {
         val repositoryModule = (application as App).container.repositoryModule
         DiscussionsViewModelFactory(repositoryModule.discussionRepository)
     }
-
-    private lateinit var manager: InputMethodManager
 
     private val allDiscussionFragment = AllDiscussionFragment()
     private val myDiscussionFragment = MyDiscussionFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityDiscussionsBinding.inflate(layoutInflater)
+        val binding = ActivityDiscussionsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        manager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
 
         setSupportActionBar(binding.toolbar)
         setUpSystemBars()
         initFragments()
-        setUpUiState()
-        initView()
+        setUpUiState(binding)
+        initView(binding)
     }
 
     private fun setUpSystemBars() {
         enableEdgeToEdge()
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0)
             insets
         }
 
@@ -76,7 +70,7 @@ class DiscussionsActivity : AppCompatActivity() {
         }
     }
 
-    private fun setUpUiState() {
+    private fun setUpUiState(binding: ActivityDiscussionsBinding) {
         viewModel.uiState.observe(this) { value ->
             val allDiscussionTab = binding.tabLayout.getTabAt(ALL_DISCUSSION_TAB_POSITION)
             allDiscussionTab?.text =
@@ -88,13 +82,13 @@ class DiscussionsActivity : AppCompatActivity() {
         }
     }
 
-    private fun initView() {
+    private fun initView(binding: ActivityDiscussionsBinding) {
         with(binding) {
             val hint = getString(R.string.discussion_search_bar_hint)
             etSearchDiscussion.clearHintOnFocus(binding.etSearchDiscussionLayout, hint)
 
             etSearchDiscussion.setOnEditorActionListener { v, actionId, event ->
-                triggerSearch()
+                triggerSearch(binding)
                 true
             }
 
@@ -124,7 +118,7 @@ class DiscussionsActivity : AppCompatActivity() {
         }
     }
 
-    private fun triggerSearch() {
+    private fun triggerSearch(binding: ActivityDiscussionsBinding) {
         val editableText = binding.etSearchDiscussion.text
         val keyword = editableText?.toString()?.trim()
         val isKeywordNotEmpty = !keyword.isNullOrEmpty()
@@ -155,10 +149,11 @@ class DiscussionsActivity : AppCompatActivity() {
     }
 
     private fun hideSoftKeyboard() {
-        manager.hideSoftInputFromWindow(
-            currentFocus?.windowToken,
-            InputMethodManager.HIDE_NOT_ALWAYS,
-        )
+        (getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager)
+            .hideSoftInputFromWindow(
+                currentFocus?.windowToken,
+                InputMethodManager.HIDE_NOT_ALWAYS,
+            )
     }
 
     override fun onResume() {
@@ -167,7 +162,6 @@ class DiscussionsActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        Log.d("Toolbar", "Menu created") // ← 이거 로그 찍히는지 확인
         menuInflater.inflate(R.menu.discussion_list_menu, menu)
         return true
     }
@@ -175,10 +169,10 @@ class DiscussionsActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
         when (item.itemId) {
             R.id.item_profile -> {
-                Log.d("Toolbar", "Profile menu clicked")
                 startActivity(ProfileActivity.Intent(this))
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
 
