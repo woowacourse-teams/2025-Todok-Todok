@@ -28,6 +28,8 @@ import com.team.todoktodok.presentation.view.discussions.vm.DiscussionsViewModel
 import com.team.todoktodok.presentation.view.profile.ProfileActivity
 
 class DiscussionsActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityDiscussionsBinding
+
     private val viewModel: DiscussionsViewModel by viewModels {
         val repositoryModule = (application as App).container.repositoryModule
         DiscussionsViewModelFactory(repositoryModule.discussionRepository)
@@ -38,7 +40,7 @@ class DiscussionsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = ActivityDiscussionsBinding.inflate(layoutInflater)
+        binding = ActivityDiscussionsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         setSupportActionBar(binding.toolbar)
@@ -159,6 +161,7 @@ class DiscussionsActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         viewModel.loadDiscussions()
+        binding.etSearchDiscussion.clearFocus()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
