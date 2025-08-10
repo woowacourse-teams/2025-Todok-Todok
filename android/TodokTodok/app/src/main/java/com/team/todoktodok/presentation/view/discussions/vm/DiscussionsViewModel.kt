@@ -47,6 +47,7 @@ class DiscussionsViewModel(
         val currentState = _uiState.value ?: return
         val currentFilter = currentState.filter
         val keyword = currentState.searchKeyword
+        toggleLoading()
 
         DiscussionFilter.entries.forEach { filter ->
             viewModelScope.launch {
@@ -57,6 +58,7 @@ class DiscussionsViewModel(
                     onUiEvent(discussions, filter)
                 }
             }
+            toggleLoading()
         }
     }
 
@@ -71,6 +73,10 @@ class DiscussionsViewModel(
                     DiscussionFilter.MINE -> it.copy(myDiscussions = discussions)
                 }
             }
+    }
+
+    private fun toggleLoading() {
+        _uiState.value = _uiState.value?.toggleLoading()
     }
 
     private fun onUiEvent(

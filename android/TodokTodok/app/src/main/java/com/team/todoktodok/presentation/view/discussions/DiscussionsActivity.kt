@@ -3,7 +3,6 @@ package com.team.todoktodok.presentation.view.discussions
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.inputmethod.InputMethodManager
@@ -46,7 +45,6 @@ class DiscussionsActivity : AppCompatActivity() {
         binding = ActivityDiscussionsBinding.inflate(layoutInflater)
         setContentView(binding.root)
         manager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-
         setSupportActionBar(binding.toolbar)
         setUpSystemBars()
         initFragments()
@@ -85,6 +83,11 @@ class DiscussionsActivity : AppCompatActivity() {
             val myDiscussionTab = binding.tabLayout.getTabAt(MY_DISCUSSION_TAB_POSITION)
             myDiscussionTab?.text =
                 getString(R.string.discussion_tab_title_my).format(value.myDiscussionsSize)
+
+            when (value.isLoading) {
+                true -> binding.progressBar.show()
+                false -> binding.progressBar.hide()
+            }
         }
     }
 
@@ -167,7 +170,6 @@ class DiscussionsActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        Log.d("Toolbar", "Menu created") // ← 이거 로그 찍히는지 확인
         menuInflater.inflate(R.menu.discussion_list_menu, menu)
         return true
     }
@@ -175,10 +177,10 @@ class DiscussionsActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
         when (item.itemId) {
             R.id.item_profile -> {
-                Log.d("Toolbar", "Profile menu clicked")
                 startActivity(ProfileActivity.Intent(this))
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
 
