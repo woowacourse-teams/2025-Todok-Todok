@@ -1,17 +1,17 @@
 package com.team.todoktodok.presentation.view.discussiondetail.commentdetail.adapter
 
-import com.team.domain.model.Comment
-import com.team.domain.model.Reply
+import com.team.todoktodok.presentation.view.discussiondetail.model.CommentUiModel
+import com.team.todoktodok.presentation.view.discussiondetail.model.ReplyUiModel
 
 sealed class CommentDetailItems(
     val viewType: ViewType,
 ) {
     data class CommentItem(
-        val value: Comment,
+        val value: CommentUiModel,
     ) : CommentDetailItems(ViewType.COMMENT_ITEM)
 
     data class ReplyItem(
-        val value: Reply,
+        val value: ReplyUiModel,
     ) : CommentDetailItems(ViewType.REPLIES_ITEM)
 
     enum class ViewType(

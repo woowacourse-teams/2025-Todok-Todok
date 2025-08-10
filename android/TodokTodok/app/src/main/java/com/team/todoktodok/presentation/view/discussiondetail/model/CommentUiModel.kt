@@ -1,4 +1,4 @@
-package com.team.todoktodok.presentation.view.discussiondetail.comments.model
+package com.team.todoktodok.presentation.view.discussiondetail.model
 
 import com.team.domain.model.Comment
 

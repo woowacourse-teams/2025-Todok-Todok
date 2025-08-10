@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ItemCommentBinding
 import com.team.todoktodok.presentation.core.ext.formatWithResource
-import com.team.todoktodok.presentation.view.discussiondetail.comments.model.CommentUiModel
+import com.team.todoktodok.presentation.view.discussiondetail.model.CommentUiModel
 
 class CommentViewHolder private constructor(
     private val binding: ItemCommentBinding,
@@ -15,7 +15,7 @@ class CommentViewHolder private constructor(
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(commentUiModel: CommentUiModel) {
         with(binding) {
-            tvDiscussionOpinion.text = commentUiModel.comment.content
+            tvCommentOpinion.text = commentUiModel.comment.content
             tvUserNickname.text = commentUiModel.comment.writer.nickname.value
             tvDiscussionCreateAt.text =
                 commentUiModel.comment.createAt.formatWithResource(

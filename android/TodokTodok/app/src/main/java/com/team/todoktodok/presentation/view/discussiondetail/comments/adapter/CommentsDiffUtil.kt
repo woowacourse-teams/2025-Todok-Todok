@@ -1,7 +1,7 @@
 package com.team.todoktodok.presentation.view.discussiondetail.comments.adapter
 
 import androidx.recyclerview.widget.DiffUtil
-import com.team.todoktodok.presentation.view.discussiondetail.comments.model.CommentUiModel
+import com.team.todoktodok.presentation.view.discussiondetail.model.CommentUiModel
 
 val commentUiModelsDiffUtil =
     object : DiffUtil.ItemCallback<CommentUiModel>() {

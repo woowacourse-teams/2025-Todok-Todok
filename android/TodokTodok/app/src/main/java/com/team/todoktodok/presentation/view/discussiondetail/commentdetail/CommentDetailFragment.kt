@@ -1,15 +1,21 @@
 package com.team.todoktodok.presentation.view.discussiondetail.commentdetail
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.widget.PopupWindow
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentCommentDetailBinding
+import com.team.todoktodok.databinding.MenuExternalDiscussionBinding
+import com.team.todoktodok.databinding.MenuOwnedDiscussionBinding
 import com.team.todoktodok.presentation.view.discussiondetail.BottomSheetVisibilityListener
 import com.team.todoktodok.presentation.view.discussiondetail.commentdetail.adapter.CommentDetailAdapter
+import com.team.todoktodok.presentation.view.discussiondetail.commentdetail.adapter.CommentDetailItems
 import com.team.todoktodok.presentation.view.discussiondetail.commentdetail.vm.CommentDetailViewModel
 import com.team.todoktodok.presentation.view.discussiondetail.commentdetail.vm.CommentDetailViewModelFactory
 import com.team.todoktodok.presentation.view.discussiondetail.replycreate.ReplyCreateBottomSheet
@@ -23,8 +29,11 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
         CommentDetailViewModelFactory(
             repositoryModule.commentRepository,
             repositoryModule.replyRepository,
+            repositoryModule.tokenRepository,
         )
     }
+
+    private var popupWindow: PopupWindow? = null
 
     override fun onViewCreated(
         view: View,
@@ -38,6 +47,12 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
         setupOnClickAddReply(binding)
         setupObserve(binding)
         setupFragmentResultListener()
+    }
+
+    override fun onDestroy() {
+        popupWindow?.dismiss()
+        popupWindow = null
+        super.onDestroy()
     }
 
     fun initAdapter(binding: FragmentCommentDetailBinding) {
@@ -83,6 +98,50 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
         }
     }
 
+    private fun bindCommentDetailPopupView(commentDetailItems: CommentDetailItems) =
+        when (commentDetailItems) {
+            is CommentDetailItems.CommentItem ->
+                if (commentDetailItems.value.isMyComment) {
+                    optionPopupView(
+                        layoutInflater,
+                    ) { viewModel.deleteComment() }
+                } else {
+                    reportPopupView(
+                        layoutInflater,
+                    ) { viewModel.reportComment() }
+                }
+
+            is CommentDetailItems.ReplyItem ->
+                if (commentDetailItems.value.isMyReply) {
+                    optionPopupView(
+                        layoutInflater,
+                    ) { viewModel.deleteReply(commentDetailItems.value.reply.replyId) }
+                } else {
+                    reportPopupView(
+                        layoutInflater,
+                    ) { viewModel.reportReply(commentDetailItems.value.reply.replyId) }
+                }
+        }
+
+    private fun optionPopupView(
+        layoutInflater: LayoutInflater,
+        onDelete: () -> Unit,
+    ): PopupWindow {
+        val binding = MenuOwnedDiscussionBinding.inflate(layoutInflater)
+        binding.tvEdit.setOnClickListener { }
+        binding.tvDelete.setOnClickListener { onDelete() }
+        return createPopupView(binding.root)
+    }
+
+    private fun reportPopupView(
+        layoutInflater: LayoutInflater,
+        onReport: () -> Unit,
+    ): PopupWindow {
+        val binding = MenuExternalDiscussionBinding.inflate(layoutInflater)
+        binding.tvReport.setOnClickListener { onReport() }
+        return createPopupView(binding.root)
+    }
+
     private fun showReplyCreate(
         discussionId: Long,
         commentId: Long,
@@ -91,7 +150,16 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
         val bottomSheet = ReplyCreateBottomSheet.newInstance(discussionId, commentId)
         bottomSheet.setVisibilityListener(getBottomSheetVisibilityListener(binding))
         bottomSheet.show(childFragmentManager, ReplyCreateBottomSheet.TAG)
+        createPopupView(binding.root)
     }
+
+    private fun createPopupView(popupView: View) =
+        PopupWindow(
+            popupView,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            true,
+        )
 
     private fun setupFragmentResultListener() {
         childFragmentManager.setFragmentResultListener(
@@ -132,8 +200,36 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
                 navigateToProfile(userId)
             }
 
-            override fun onClickCommentLike(commentId: Long) {
-                viewModel.toggleCommentLike(commentId)
+            override fun onClickDeleteReply(replyId: Long) {
+                viewModel.deleteReply(replyId)
+            }
+
+            override fun onClickReplyOption(
+                item: CommentDetailItems.ReplyItem,
+                anchorView: View,
+            ) {
+                popupWindow = bindCommentDetailPopupView(item)
+                if (popupWindow?.isShowing == true) {
+                    popupWindow?.dismiss()
+                } else {
+                    popupWindow?.showAsDropDown(anchorView)
+                }
+            }
+
+            override fun onClickCommentOption(
+                item: CommentDetailItems.CommentItem,
+                anchorView: View,
+            ) {
+                popupWindow = bindCommentDetailPopupView(item)
+                if (popupWindow?.isShowing == true) {
+                    popupWindow?.dismiss()
+                } else {
+                    popupWindow?.showAsDropDown(anchorView)
+                }
+            }
+
+            override fun onClickCommentLike() {
+                viewModel.toggleCommentLike()
             }
 
             override fun onClickCommentUserName(userId: Long) {

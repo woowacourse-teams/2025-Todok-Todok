@@ -18,9 +18,9 @@ import com.team.todoktodok.presentation.view.discussiondetail.BottomSheetVisibil
 import com.team.todoktodok.presentation.view.discussiondetail.commentcreate.CommentCreateBottomSheet
 import com.team.todoktodok.presentation.view.discussiondetail.commentdetail.CommentDetailFragment
 import com.team.todoktodok.presentation.view.discussiondetail.comments.adapter.CommentAdapter
-import com.team.todoktodok.presentation.view.discussiondetail.comments.model.CommentUiModel
 import com.team.todoktodok.presentation.view.discussiondetail.comments.vm.CommentsViewModel
 import com.team.todoktodok.presentation.view.discussiondetail.comments.vm.CommentsViewModelFactory
+import com.team.todoktodok.presentation.view.discussiondetail.model.CommentUiModel
 import com.team.todoktodok.presentation.view.profile.ProfileActivity
 
 class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
@@ -46,6 +46,12 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
         setupOnClick(binding)
         setupObserve(binding)
         setupFragmentResultListener()
+    }
+
+    override fun onDestroy() {
+        popupWindow?.dismiss()
+        popupWindow = null
+        super.onDestroy()
     }
 
     private fun initAdapter(binding: FragmentCommentsBinding) {

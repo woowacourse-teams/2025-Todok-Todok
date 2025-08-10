@@ -10,7 +10,7 @@ import com.team.domain.repository.TokenRepository
 import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
 import com.team.todoktodok.presentation.core.event.SingleLiveData
 import com.team.todoktodok.presentation.view.discussiondetail.comments.CommentsUiEvent
-import com.team.todoktodok.presentation.view.discussiondetail.comments.model.CommentUiModel
+import com.team.todoktodok.presentation.view.discussiondetail.model.CommentUiModel
 import kotlinx.coroutines.launch
 
 class CommentsViewModel(
