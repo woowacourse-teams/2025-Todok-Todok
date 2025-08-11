@@ -354,6 +354,29 @@ class DiscussionQueryServiceTest {
         }
 
         @Test
+        @DisplayName("전체 토론방을 조회할 때, 조회되는 댓글 수는 댓글과 대댓글 수의 합이다")
+        void getAllDiscussions_totalCommentCountTest() {
+            // given
+            databaseInitializer.setDefaultUserInfo();
+            databaseInitializer.setDefaultDiscussionInfo();
+
+            final Long memberId = 1L;
+            final Long discussionId = 1L;
+            databaseInitializer.setCommentInfo("댓글1", memberId, discussionId);
+
+            final Long commentId = 1L;
+            databaseInitializer.setReplyInfo("대댓글1", memberId, commentId);
+
+            // when
+            final List<DiscussionResponse> discussions = discussionQueryService.getDiscussionsByKeywordAndType(
+                    memberId, null, DiscussionFilterType.ALL
+            );
+
+            // then
+            assertThat(discussions.get(0).commentCount()).isEqualTo(2);
+        }
+
+        @Test
         @DisplayName("토론방 필터링 조회 시 나의 좋아요 여부를 반환한다")
         void getDiscussions_isLikedTest() {
             // given

@@ -15,9 +15,14 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     boolean existsCommentsByDiscussion(final Discussion discussion);
 
     @Query("""
-        SELECT new todoktodok.backend.discussion.application.service.query.DiscussionCommentCountDto(d.id, COUNT(c))
+        SELECT new todoktodok.backend.discussion.application.service.query.DiscussionCommentCountDto(
+            d.id,
+            COUNT(DISTINCT c.id),
+            COUNT(DISTINCT r.id)
+        )
         FROM Discussion d
-        LEFT JOIN Comment c ON c.discussion = d
+        LEFT JOIN Comment c ON c.discussion = d AND c.deletedAt IS NULL
+        LEFT JOIN Reply r ON r.comment = c AND r.deletedAt IS NULL
         WHERE d.id IN :discussionIds
         GROUP BY d.id
     """)

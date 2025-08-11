@@ -2,7 +2,6 @@ package todoktodok.backend.discussion.application.service.query;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -148,7 +147,7 @@ public class DiscussionQueryService {
         return commentCountsById.stream()
                 .filter(count -> discussion.isSameId(count.discussionId()))
                 .findFirst()
-                .map(DiscussionCommentCountDto::commentCount)
+                .map(dto -> dto.commentCount() + dto.replyCount())
                 .orElseThrow(() -> new IllegalStateException("토론방의 댓글 수를 찾을 수 없습니다"));
     }
 
