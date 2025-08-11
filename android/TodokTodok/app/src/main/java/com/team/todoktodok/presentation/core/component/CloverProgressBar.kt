@@ -24,6 +24,7 @@ class CloverProgressBar
         }
 
         fun show() {
+            clearAnimation()
             if (visibility != VISIBLE) {
                 startAnimation(AnimationUtils.loadAnimation(context, R.anim.fade_in))
                 visibility = VISIBLE
@@ -31,6 +32,7 @@ class CloverProgressBar
         }
 
         fun hide() {
+            clearAnimation()
             val anim = AnimationUtils.loadAnimation(context, R.anim.fade_out)
             anim.setAnimationListener(
                 object : Animation.AnimationListener {
