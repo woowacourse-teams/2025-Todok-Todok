@@ -35,7 +35,7 @@ class ProfileViewModel(
         viewModelScope.launch {
             val memberId = _uiState.value?.memberId
             if (memberId is MemberId.OtherUser) {
-                memberRepository.supportMember(memberId, type)
+                memberRepository.supportMember(MemberId.OtherUser(2), type)
                 onUiEvent(ProfileUiEvent.OnCompleteSupport(type))
             }
         }

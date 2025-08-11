@@ -18,6 +18,7 @@ import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivityDiscussionDetailBinding
 import com.team.todoktodok.databinding.MenuExternalDiscussionBinding
 import com.team.todoktodok.databinding.MenuOwnedDiscussionBinding
+import com.team.todoktodok.presentation.core.component.CommonDialog
 import com.team.todoktodok.presentation.view.discussion.create.CreateDiscussionRoomActivity
 import com.team.todoktodok.presentation.view.discussion.create.SerializationCreateDiscussionRoomMode.Edit
 import com.team.todoktodok.presentation.view.discussiondetail.comment.CommentBottomSheet
@@ -125,8 +126,12 @@ class DiscussionDetailActivity : AppCompatActivity() {
         }
 
     private fun showReportDialog() {
-        val dialog = ReportDiscussionDialog.newInstance()
-        dialog.show(supportFragmentManager, ReportDiscussionDialog.TAG)
+        val dialog =
+            CommonDialog.newInstance(
+                getString(R.string.all_report_action),
+                getString(R.string.all_report_action),
+            )
+        dialog.show(supportFragmentManager, CommonDialog.TAG)
     }
 
     private fun createPopUpView(popupView: View) =
@@ -209,10 +214,10 @@ class DiscussionDetailActivity : AppCompatActivity() {
 
     private fun setUpDialogResultListener() {
         supportFragmentManager.setFragmentResultListener(
-            ReportDiscussionDialog.RESULT_KEY_REPORT,
+            CommonDialog.RESULT_KEY_COMMON_DIALOG,
             this,
         ) { _, bundle ->
-            val result = bundle.getBoolean(ReportDiscussionDialog.RESULT_KEY_REPORT)
+            val result = bundle.getBoolean(CommonDialog.RESULT_KEY_COMMON_DIALOG)
             if (result) {
                 viewModel.reportDiscussion()
                 popupWindow?.dismiss()

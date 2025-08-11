@@ -4,17 +4,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.team.domain.model.member.BlockedMember
 import com.team.domain.repository.MemberRepository
+import com.team.todoktodok.presentation.view.setting.manage.ManageBlockedMembersUiState
 import kotlinx.coroutines.launch
 
 class ManageBlockedMembersViewModel(
     private val memberRepository: MemberRepository,
 ) : ViewModel() {
-    private val _blockedMembers = MutableLiveData<List<BlockedMember>>()
-    val blockedMembers: LiveData<List<BlockedMember>> get() = _blockedMembers
-
-    private var selectedMember: BlockedMember? = null
+    private val _uiState = MutableLiveData(ManageBlockedMembersUiState())
+    val uiState: LiveData<ManageBlockedMembersUiState> get() = _uiState
 
     init {
         loadBlockedMembers()
@@ -22,20 +20,22 @@ class ManageBlockedMembersViewModel(
 
     private fun loadBlockedMembers() {
         viewModelScope.launch {
-            _blockedMembers.value = memberRepository.getBlockedMembers()
+            val result = memberRepository.getBlockedMembers()
+            _uiState.value = _uiState.value?.copy(members = result)
         }
     }
 
-    fun findMember(index: Int) {
-        selectedMember = _blockedMembers.value?.get(index)
+    fun onSelectMember(memberId: Long) {
+        _uiState.value = _uiState.value?.modifySelectedMember(memberId)
     }
 
     fun unblockMember() {
         viewModelScope.launch {
-            val memberId = selectedMember?.memberId
-            requireNotNull(memberId) { NOT_FOUND_MEMBER }
+            val currentUiState = _uiState.value ?: throw IllegalArgumentException(NOT_FOUND_MEMBER)
+            val memberId = currentUiState.selectedMemberId
+            require(memberId != -1L) { NOT_FOUND_MEMBER }
 
-            _blockedMembers.value = _blockedMembers.value?.filter { it.memberId != memberId }
+            _uiState.value = currentUiState.removeSelectedMember()
             memberRepository.unblock(memberId)
         }
     }
