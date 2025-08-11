@@ -42,13 +42,15 @@ class ManageBlockedMembersViewModelTest {
             viewModel = ManageBlockedMembersViewModel(repository)
 
             // then
-            assertEquals(blockedList, viewModel.blockedMembers.getOrAwaitValue())
+            val actual = viewModel.uiState.getOrAwaitValue().members
+            assertEquals(blockedList, actual)
         }
 
     @Test
-    fun `차단된 유저의 차단을 해제한다`() =
+    fun `차단된 유저의 차단을 해제하고 차단 목록에서 제거한다`() =
         runTest {
             // given
+            val unblockMemberId = 2L
             val members =
                 listOf(
                     BlockedMember(1L, "user1", "2025-07-30T07:54:24.604Z".toLocalDate()),
@@ -58,12 +60,15 @@ class ManageBlockedMembersViewModelTest {
             viewModel = ManageBlockedMembersViewModel(repository)
 
             // when
-            viewModel.findMember(1)
+            viewModel.onSelectMember(unblockMemberId)
             viewModel.unblockMember()
 
             // then
-            coVerify { repository.unblock(2L) }
-            assertEquals(1, viewModel.blockedMembers.getOrAwaitValue().size)
-            assertFalse(viewModel.blockedMembers.value!!.any { it.memberId == 2L })
+            val actual = viewModel.uiState.getOrAwaitValue()
+            val actualMembers = actual.members
+
+            coVerify { repository.unblock(unblockMemberId) }
+            assertEquals(-1, actual.selectedMemberId)
+            assertFalse(actualMembers.any { it.memberId == unblockMemberId })
         }
 }

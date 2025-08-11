@@ -13,6 +13,7 @@ import com.team.todoktodok.data.datasource.member.MemberRemoteDataSource
 import com.team.todoktodok.data.network.request.ModifyProfileRequest
 import com.team.todoktodok.data.network.request.toRequest
 import com.team.todoktodok.data.network.response.discussion.toDomain
+import java.time.LocalDate
 
 class DefaultMemberRepository(
     private val remoteMemberRemoteDataSource: MemberRemoteDataSource,
@@ -63,7 +64,15 @@ class DefaultMemberRepository(
         message: String,
     ) = remoteMemberRemoteDataSource.modifyProfile(ModifyProfileRequest(nickname, message))
 
-    override suspend fun getBlockedMembers(): List<BlockedMember> = remoteMemberRemoteDataSource.fetchBlockedMembers().map { it.toDomain() }
+    override suspend fun getBlockedMembers(): List<BlockedMember> {
+        // remoteMemberRemoteDataSource.fetchBlockedMembers().map { it.toDomain() }
+        return listOf(
+            BlockedMember(0, "페토", LocalDate.of(2025, 2, 3)),
+            BlockedMember(1, "페토", LocalDate.of(2025, 2, 3)),
+            BlockedMember(2, "페토", LocalDate.of(2025, 2, 3)),
+            BlockedMember(3, "페토", LocalDate.of(2025, 2, 3)),
+        )
+    }
 
     override suspend fun unblock(id: Long) = remoteMemberRemoteDataSource.unblock(id)
 }
