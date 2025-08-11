@@ -199,8 +199,8 @@ public class CommentQueryServiceTest {
 
         // when
         final List<CommentResponse> comments = commentQueryService.getComments(memberId, discussionId);
-        CommentResponse likedComment = comments.get(0);
-        CommentResponse notLikedComment = comments.get(1);
+        final CommentResponse likedComment = comments.get(0);
+        final CommentResponse notLikedComment = comments.get(1);
 
         // then
         assertAll(
