@@ -8,7 +8,10 @@ data class DiscussionsUiState(
     val myDiscussions: List<Discussion> = emptyList(),
     val searchKeyword: String = "",
     val filter: DiscussionFilter = DiscussionFilter.ALL,
+    val isLoading: Boolean = true,
 ) {
     val allDiscussionsSize get() = allDiscussions.size
     val myDiscussionsSize get() = myDiscussions.size
+
+    fun toggleLoading() = copy(isLoading = !isLoading)
 }

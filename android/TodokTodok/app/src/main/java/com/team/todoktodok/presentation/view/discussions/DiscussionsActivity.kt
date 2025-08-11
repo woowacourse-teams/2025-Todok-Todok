@@ -3,7 +3,6 @@ package com.team.todoktodok.presentation.view.discussions
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.inputmethod.InputMethodManager
@@ -46,15 +45,14 @@ class DiscussionsActivity : AppCompatActivity() {
         binding = ActivityDiscussionsBinding.inflate(layoutInflater)
         setContentView(binding.root)
         manager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-
         setSupportActionBar(binding.toolbar)
-        setUpSystemBars()
+        setupSystemBars()
         initFragments()
-        setUpUiState()
+        setupUiState()
         initView()
     }
 
-    private fun setUpSystemBars() {
+    private fun setupSystemBars() {
         enableEdgeToEdge()
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -76,15 +74,28 @@ class DiscussionsActivity : AppCompatActivity() {
         }
     }
 
-    private fun setUpUiState() {
-        viewModel.uiState.observe(this) { value ->
-            val allDiscussionTab = binding.tabLayout.getTabAt(ALL_DISCUSSION_TAB_POSITION)
-            allDiscussionTab?.text =
-                getString(R.string.discussion_tab_title_all).format(value.allDiscussionsSize)
+    private fun setupUiState() {
+        viewModel.uiState.observe(this) { state ->
+            updateTabs(state.allDiscussionsSize, state.myDiscussionsSize)
+            updateLoadingState(state.isLoading)
+        }
+    }
 
-            val myDiscussionTab = binding.tabLayout.getTabAt(MY_DISCUSSION_TAB_POSITION)
-            myDiscussionTab?.text =
-                getString(R.string.discussion_tab_title_my).format(value.myDiscussionsSize)
+    private fun updateTabs(
+        allDiscussionSize: Int,
+        myDiscussionSize: Int,
+    ) = with(binding.tabLayout) {
+        getTabAt(ALL_DISCUSSION_TAB_POSITION)?.text =
+            getString(R.string.discussion_tab_title_all).format(allDiscussionSize)
+
+        getTabAt(MY_DISCUSSION_TAB_POSITION)?.text =
+            getString(R.string.discussion_tab_title_my).format(myDiscussionSize)
+    }
+
+    private fun updateLoadingState(isLoading: Boolean) {
+        when (isLoading) {
+            true -> binding.progressBar.show()
+            false -> binding.progressBar.hide()
         }
     }
 
@@ -167,7 +178,6 @@ class DiscussionsActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        Log.d("Toolbar", "Menu created") // ← 이거 로그 찍히는지 확인
         menuInflater.inflate(R.menu.discussion_list_menu, menu)
         return true
     }
@@ -175,10 +185,10 @@ class DiscussionsActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
         when (item.itemId) {
             R.id.item_profile -> {
-                Log.d("Toolbar", "Profile menu clicked")
                 startActivity(ProfileActivity.Intent(this))
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
 
