@@ -1,7 +1,6 @@
 package todoktodok.backend.global.exception;
 
 import io.jsonwebtoken.JwtException;
-import java.time.DateTimeException;
 import java.util.NoSuchElementException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -23,23 +22,22 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PREFIX + e.getMessage());
     }
 
-    @ExceptionHandler({IllegalArgumentException.class, DateTimeException.class})
-    public ResponseEntity<String> handleBadRequestException(final RuntimeException e) {
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<String> handleBadRequestException(final IllegalArgumentException e) {
         log.warn(PREFIX + e.getMessage());
-        return ResponseEntity.badRequest().body(PREFIX + e.getMessage());
+        return ResponseEntity.badRequest().body(PREFIX + getSafeErrorMessage(e));
     }
 
     @ExceptionHandler(NoSuchElementException.class)
-    public ResponseEntity<String> handleNotFoundException(NoSuchElementException e) {
+    public ResponseEntity<String> handleNotFoundException(final NoSuchElementException e) {
         log.warn(PREFIX + e.getMessage());
-        final String safeErrorMessage = e.getMessage().split(":")[0];
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(PREFIX + safeErrorMessage);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(PREFIX + getSafeErrorMessage(e));
     }
 
     @ExceptionHandler(IllegalStateException.class)
     public ResponseEntity<String> handleIllegalStateException(final IllegalStateException e) {
         log.warn(PREFIX + e.getMessage());
-        return ResponseEntity.internalServerError().body(PREFIX + e.getMessage());
+        return ResponseEntity.internalServerError().body(PREFIX + getSafeErrorMessage(e));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -98,5 +96,9 @@ public class GlobalExceptionHandler {
         final String visiblePart = str.substring(0, 4);
         final String maskedPart = "*".repeat(str.length() - 4);
         return visiblePart + maskedPart;
+    }
+
+    private String getSafeErrorMessage(final RuntimeException e) {
+        return e.getMessage().split(":")[0];
     }
 }
