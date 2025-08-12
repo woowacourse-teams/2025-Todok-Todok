@@ -24,8 +24,8 @@ public class LogInterceptor implements HandlerInterceptor {
         final String requestURI = request.getRequestURI();
         final String clientIp = getClientIp(request);
         request.setAttribute("clientIp", clientIp);
-        log.info("[API REQUEST] {}", requestURI);
 
+        log.info("[API REQUEST] {} from {}", requestURI, clientIp);
         return true;
     }
 
@@ -39,15 +39,12 @@ public class LogInterceptor implements HandlerInterceptor {
         final String requestURI = request.getRequestURI();
         final String method = request.getMethod();
         final int status = response.getStatus();
-
-        String clientIp = (String) request.getAttribute("clientIp");
-
-        log.error("[API RESPONSE] [{}] {} from {}: {}", method, requestURI, clientIp, status);
+        final String clientIp = (String) request.getAttribute("clientIp");
 
         if (status >= HTTP_STATUS_SUCCESS_MIN && status < HTTP_STATUS_ERROR_MIN) {
-            log.info("[API RESPONSE] [{}] {}: {}", method, requestURI, status);
+            log.info("[API RESPONSE] [{}] {} from {}: {}", method, requestURI, clientIp, status);
         } else {
-            log.error("[API RESPONSE] [{}] {}: {}", method, requestURI, status);
+            log.error("[API RESPONSE] [{}] {} from {}: {}", method, requestURI, clientIp, status);
         }
     }
 
