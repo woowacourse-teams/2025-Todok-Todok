@@ -93,6 +93,8 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
             is CommentsUiEvent.ShowCommentUpdate -> {
                 showCommentCreate(commentsUiEvent.discussionId, binding, commentsUiEvent.commentId)
             }
+
+            CommentsUiEvent.DeleteComment -> sharedViewModel.reloadDiscussion()
         }
     }
 
@@ -134,7 +136,6 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
             }
             binding.tvDelete.setOnClickListener {
                 viewModel.deleteComment(commentUiModel.comment.id)
-                sharedViewModel.reloadDiscussion()
                 popupWindow?.dismiss()
             }
             createPopUpView(binding.root)
@@ -192,10 +193,6 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
                     )
                     addToBackStack(null)
                 }
-            }
-
-            override fun onDeleteClick(commentId: Long) {
-                viewModel.deleteComment(commentId)
             }
 
             override fun onOptionClick(

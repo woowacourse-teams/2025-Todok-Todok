@@ -51,6 +51,7 @@ class CommentsViewModel(
         viewModelScope.launch {
             commentRepository.deleteComment(discussionId, commentId)
             loadComments()
+            _uiEvent.setValue(CommentsUiEvent.DeleteComment)
         }
     }
 

@@ -29,7 +29,7 @@ class CommentDetailViewModel(
     val commentId =
         savedStateHandle.get<Long>(KEY_COMMENT_ID) ?: throw IllegalStateException()
 
-    private val _uiState = MutableLiveData<CommentDetailUiState>(EMPTY_UI_STATE)
+    private val _uiState = MutableLiveData<CommentDetailUiState>()
     val uiState: LiveData<CommentDetailUiState> = _uiState
 
     private val _uiEvent = MutableSingleLiveData<CommentDetailUiEvent>()
@@ -42,39 +42,9 @@ class CommentDetailViewModel(
         }
     }
 
-    private suspend fun loadComment() {
-        val currentUiState = _uiState.value
-        val comment = commentRepository.getComment(discussionId, commentId)
-        val isMyComment = comment.writer.id == tokenRepository.getMemberId()
-        if (currentUiState == EMPTY_UI_STATE) {
-            val comment = commentRepository.getComment(discussionId, commentId)
-            _uiState.value =
-                CommentDetailUiState(
-                    CommentUiModel(
-                        comment,
-                        isMyComment,
-                    ),
-                )
-        } else {
-            _uiState.value =
-                currentUiState.copy(
-                    comment =
-                        CommentUiModel(
-                            commentRepository.getComment(discussionId, commentId),
-                            isMyComment,
-                        ),
-                )
-        }
-    }
-
     fun reloadComment() {
         viewModelScope.launch {
             loadComment()
-        }
-    }
-
-    fun repliesReload() {
-        viewModelScope.launch {
             loadReplies()
             showNewReply()
         }
@@ -109,6 +79,7 @@ class CommentDetailViewModel(
         viewModelScope.launch {
             replyRepository.deleteReply(discussionId, commentId, replyId)
             loadReplies()
+            _uiEvent.setValue(CommentDetailUiEvent.DeleteReply)
         }
     }
 
@@ -154,6 +125,31 @@ class CommentDetailViewModel(
         _uiEvent.setValue(CommentDetailUiEvent.ShowNewReply)
     }
 
+    private suspend fun loadComment() {
+        val currentUiState = _uiState.value
+        val comment = commentRepository.getComment(discussionId, commentId)
+        val isMyComment = comment.writer.id == tokenRepository.getMemberId()
+        if (currentUiState == EMPTY_UI_STATE) {
+            val comment = commentRepository.getComment(discussionId, commentId)
+            _uiState.value =
+                CommentDetailUiState(
+                    CommentUiModel(
+                        comment,
+                        isMyComment,
+                    ),
+                )
+        } else {
+            _uiState.value =
+                currentUiState.copy(
+                    comment =
+                        CommentUiModel(
+                            commentRepository.getComment(discussionId, commentId),
+                            isMyComment,
+                        ),
+                )
+        }
+    }
+
     private suspend fun loadReplies() {
         val currentUiState = _uiState.value
         val memberId = tokenRepository.getMemberId()
@@ -164,7 +160,7 @@ class CommentDetailViewModel(
                     reply.user.id == memberId,
                 )
             }
-        if (currentUiState == null) {
+        if (currentUiState == EMPTY_UI_STATE) {
             _uiState.value =
                 CommentDetailUiState(
                     comment = INIT_COMMENT,

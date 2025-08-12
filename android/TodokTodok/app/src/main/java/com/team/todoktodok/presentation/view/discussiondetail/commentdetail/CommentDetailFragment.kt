@@ -84,7 +84,7 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
 
     fun setupObserve(binding: FragmentCommentDetailBinding) {
         viewModel.uiState.observe(viewLifecycleOwner) { value ->
-            adapter.submitList(value?.getCommentDetailItems() ?: emptyList())
+            adapter.submitList(value.getCommentDetailItems())
         }
         viewModel.uiEvent.observe(this) { value ->
             handleEvent(value, binding)
@@ -139,6 +139,10 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
 
             CommentDetailUiEvent.ToggleCommentLike -> commentsViewModel.reloadComments()
             CommentDetailUiEvent.CommentUpdate -> commentsViewModel.reloadComments()
+            CommentDetailUiEvent.DeleteReply -> {
+                popupWindow?.dismiss()
+                commentsViewModel.reloadComments()
+            }
         }
     }
 
@@ -149,11 +153,14 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
                     optionPopupView(
                         layoutInflater,
                         { viewModel.updateComment() },
-                    ) { viewModel.deleteComment() }
+                        { viewModel.deleteComment() },
+                    )
                 } else {
                     reportPopupView(
                         layoutInflater,
-                    ) { viewModel.reportComment() }
+                    ) {
+                        viewModel.reportComment()
+                    }
                 }
 
             is CommentDetailItems.ReplyItem ->
@@ -166,10 +173,8 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
                                 commentDetailItems.value.reply.content,
                             )
                         },
-                    ) {
-                        viewModel.deleteReply(commentDetailItems.value.reply.replyId)
-                        popupWindow?.dismiss()
-                    }
+                        { viewModel.deleteReply(commentDetailItems.value.reply.replyId) },
+                    )
                 } else {
                     reportPopupView(
                         layoutInflater,
@@ -255,7 +260,6 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
             val result = bundle.getBoolean(ReplyCreateBottomSheet.REPLY_CREATED_RESULT_KEY)
             if (result) {
                 viewModel.reloadComment()
-                viewModel.repliesReload()
             }
         }
     }

@@ -22,6 +22,8 @@ sealed interface CommentDetailUiEvent {
 
     data object DeleteComment : CommentDetailUiEvent
 
+    data object DeleteReply : CommentDetailUiEvent
+
     data object ToggleCommentLike : CommentDetailUiEvent
 
     data object CommentUpdate : CommentDetailUiEvent

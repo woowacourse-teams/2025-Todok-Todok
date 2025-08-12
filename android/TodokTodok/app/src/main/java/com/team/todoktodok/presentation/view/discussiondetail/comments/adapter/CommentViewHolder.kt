@@ -52,8 +52,6 @@ class CommentViewHolder private constructor(
     interface Handler {
         fun onReplyClick(commentId: Long)
 
-        fun onDeleteClick(commentId: Long)
-
         fun onOptionClick(
             commentUiModel: CommentUiModel,
             view: View,

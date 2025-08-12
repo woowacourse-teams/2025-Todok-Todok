@@ -11,4 +11,6 @@ sealed interface CommentsUiEvent {
     ) : CommentsUiEvent
 
     data object ShowNewComment : CommentsUiEvent
+
+    data object DeleteComment : CommentsUiEvent
 }
