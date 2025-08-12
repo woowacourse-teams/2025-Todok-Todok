@@ -20,11 +20,20 @@ class BooksViewHolder private constructor(
     }
 
     fun bind(item: Book) {
-        Glide
-            .with(binding.root)
-            .load(item.image)
-            .into(binding.ivBook)
+        with(binding) {
+            tvBookTitle.text = extractSubtitle(item.title)
+            tvBookAuthor.text = extractAuthorText(item.author)
+
+            Glide
+                .with(root)
+                .load(item.image)
+                .into(ivBook)
+        }
     }
+
+    private fun extractSubtitle(text: String): String = text.split("-").first()
+
+    private fun extractAuthorText(text: String): String = text.split("(").first()
 
     private fun adjustItemSize() {
         val resource = itemView.context.resources
@@ -32,14 +41,14 @@ class BooksViewHolder private constructor(
         val screenWidth = displayMetrics.widthPixels
 
         val spanCount = SPAN_COUNT
-        val spacing = resource.getDimensionPixelSize(R.dimen.space_12)
+        val spacing = resource.getDimensionPixelSize(R.dimen.space_4)
         val totalSpacing = spacing * (spanCount + 1)
         val itemWidth = (screenWidth - totalSpacing) / spanCount
 
         itemView.layoutParams =
             itemView.layoutParams.apply {
                 width = itemWidth
-                height = (itemWidth * BOOK_ASPECT_RATIO).toInt()
+                height = ViewGroup.LayoutParams.WRAP_CONTENT
             }
     }
 
@@ -53,7 +62,6 @@ class BooksViewHolder private constructor(
             return BooksViewHolder(binding, handler)
         }
 
-        private const val BOOK_ASPECT_RATIO = 1.2f
         private const val SPAN_COUNT = 3
     }
 
