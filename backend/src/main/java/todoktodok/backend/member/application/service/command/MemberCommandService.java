@@ -148,7 +148,7 @@ public class MemberCommandService {
             final Member target
     ) {
         if (member.equals(target)) {
-            throw new IllegalArgumentException("자기 자신을 차단할 수 없습니다");
+            throw new IllegalArgumentException(String.format("자기 자신을 차단할 수 없습니다: %d", member.getId()));
         }
     }
 
@@ -157,7 +157,7 @@ public class MemberCommandService {
             final Member target
     ) {
         if (blockRepository.existsByMemberAndTarget(member, target)) {
-            throw new IllegalArgumentException("이미 차단한 회원입니다");
+            throw new IllegalArgumentException(String.format("이미 차단한 회원입니다: %d -> %d", member.getId(), target.getId()));
         }
     }
 
@@ -166,7 +166,7 @@ public class MemberCommandService {
             final Member target
     ) {
         if (member.equals(target)) {
-            throw new IllegalArgumentException("자기 자신을 신고할 수 없습니다");
+            throw new IllegalArgumentException(String.format("자기 자신을 신고할 수 없습니다: %d", member.getId()));
         }
     }
 
@@ -175,7 +175,7 @@ public class MemberCommandService {
             final Member target
     ) {
         if (memberReportRepository.existsByMemberAndTarget(member, target)) {
-            throw new IllegalArgumentException("이미 신고한 회원입니다");
+            throw new IllegalArgumentException(String.format("이미 신고한 회원입니다: %d -> %d", member.getId(), target.getId()));
         }
     }
 
@@ -194,7 +194,7 @@ public class MemberCommandService {
             final Member target
     ) {
         if (!blockRepository.existsByMemberAndTarget(member, target)) {
-            throw new IllegalArgumentException("차단한 회원이 아닙니다");
+            throw new IllegalArgumentException(String.format("차단한 회원이 아닙니다: %d -> %d", member.getId(), target.getId()));
         }
     }
 
