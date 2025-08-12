@@ -39,9 +39,10 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentLoginBinding.bind(view)
         googleLoginManager = GoogleLoginManager(requireContext())
+
+        setUpUiEvent(binding)
         showAnimation(binding)
         initView(binding)
-        setUpUiEvent(binding)
     }
 
     private fun initView(binding: FragmentLoginBinding) {
