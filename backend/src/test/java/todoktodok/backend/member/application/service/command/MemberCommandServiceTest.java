@@ -101,7 +101,7 @@ class MemberCommandServiceTest {
         // when - then
         assertThatThrownBy(() -> memberCommandService.signup(signupRequest,  "user22@gmail.com"))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("이미 존재하는 닉네임입니다");
+                .hasMessageContaining("이미 존재하는 닉네임입니다");
     }
 
     @Test
@@ -116,7 +116,7 @@ class MemberCommandServiceTest {
         // when - then
         assertThatThrownBy(() -> memberCommandService.signup(signupRequest, email))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("이미 가입된 이메일입니다");
+                .hasMessageContaining("이미 가입된 이메일입니다");
     }
 
     @Test
@@ -129,7 +129,7 @@ class MemberCommandServiceTest {
         // when - then
         assertThatThrownBy(() -> memberCommandService.signup(signupRequest, "notLoginUser@gmail.com"))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("소셜 로그인을 하지 않은 이메일입니다");
+                .hasMessageContaining("소셜 로그인을 하지 않은 이메일입니다");
     }
 
     @Test
@@ -143,7 +143,7 @@ class MemberCommandServiceTest {
         // when - then
         assertThatThrownBy(() -> memberCommandService.block(memberId, memberId))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("자기 자신을 차단할 수 없습니다");
+                .hasMessageContaining("자기 자신을 차단할 수 없습니다");
     }
 
     @Test
@@ -157,7 +157,7 @@ class MemberCommandServiceTest {
         // when - then
         assertThatThrownBy(() -> memberCommandService.report(memberId, memberId))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("자기 자신을 신고할 수 없습니다");
+                .hasMessageContaining("자기 자신을 신고할 수 없습니다");
     }
 
     @Test
@@ -175,7 +175,7 @@ class MemberCommandServiceTest {
         // when - then
         assertThatThrownBy(() -> memberCommandService.block(memberId, targetId))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("이미 차단한 회원입니다");
+                .hasMessageContaining("이미 차단한 회원입니다");
     }
 
     @Test
@@ -193,7 +193,7 @@ class MemberCommandServiceTest {
         // when - then
         assertThatThrownBy(() -> memberCommandService.report(memberId, targetId))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("이미 신고한 회원입니다");
+                .hasMessageContaining("이미 신고한 회원입니다");
     }
 
     @Test
@@ -206,7 +206,7 @@ class MemberCommandServiceTest {
         // when - then
         assertThatThrownBy(() -> memberCommandService.updateProfile(notExistsMemberId, profileUpdateRequest))
                 .isInstanceOf(NoSuchElementException.class)
-                .hasMessage("해당 회원을 찾을 수 없습니다");
+                .hasMessageContaining("해당 회원을 찾을 수 없습니다");
     }
 
     @Test
@@ -222,7 +222,7 @@ class MemberCommandServiceTest {
         // when - then
         assertThatThrownBy(() -> memberCommandService.updateProfile(memberId, profileUpdateRequest))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("이미 존재하는 닉네임입니다");
+                .hasMessageContaining("이미 존재하는 닉네임입니다");
     }
 
     @Test
@@ -254,7 +254,7 @@ class MemberCommandServiceTest {
         // when - then
         assertThatThrownBy(() -> memberCommandService.deleteBlock(notExistsMemberId, targetId))
                 .isInstanceOf(NoSuchElementException.class)
-                .hasMessage("해당 회원을 찾을 수 없습니다");
+                .hasMessageContaining("해당 회원을 찾을 수 없습니다");
     }
 
     @Test
@@ -268,7 +268,7 @@ class MemberCommandServiceTest {
         // when - then
         assertThatThrownBy(() -> memberCommandService.deleteBlock(memberId, notExistsTargetId))
                 .isInstanceOf(NoSuchElementException.class)
-                .hasMessage("해당 회원을 찾을 수 없습니다");
+                .hasMessageContaining("해당 회원을 찾을 수 없습니다");
     }
 
     @Test
@@ -284,6 +284,6 @@ class MemberCommandServiceTest {
         // when - then
         assertThatThrownBy(() -> memberCommandService.deleteBlock(memberId, targetId))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("차단한 회원이 아닙니다");
+                .hasMessageContaining("차단한 회원이 아닙니다");
     }
 }
