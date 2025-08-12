@@ -30,8 +30,6 @@ public interface ReplyRepository extends JpaRepository<Reply, Long> {
         FROM Reply r
         JOIN r.comment c
         WHERE c.discussion.id = :discussionId
-        AND r.deletedAt IS NULL
-        AND c.deletedAt IS NULL
     """)
     Long countRepliesByDiscussionId(@Param("discussionId") Long discussionId);
 }
