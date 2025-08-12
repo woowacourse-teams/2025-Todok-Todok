@@ -1,5 +1,6 @@
 package todoktodok.backend.member.application.service.command;
 
+import jakarta.validation.constraints.Email;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
@@ -118,13 +119,13 @@ public class MemberCommandService {
 
     private void validateDuplicatedNickname(final String nickname) {
         if (memberRepository.existsByNickname(nickname)) {
-            throw new IllegalArgumentException("이미 존재하는 닉네임입니다");
+            throw new IllegalArgumentException(String.format("이미 존재하는 닉네임입니다: %s", nickname));
         }
     }
 
     private void validateDuplicatedEmail(final SignupRequest signupRequest) {
         if (memberRepository.existsByEmail(signupRequest.email())) {
-            throw new IllegalArgumentException("이미 가입된 이메일입니다");
+            throw new IllegalArgumentException(String.format("이미 가입된 이메일입니다: %s", maskEmail(signupRequest.email())));
         }
     }
 
@@ -133,13 +134,13 @@ public class MemberCommandService {
             final String tokenEmail
     ) {
         if (!tokenEmail.equals(signupRequest.email())) {
-            throw new IllegalArgumentException("소셜 로그인을 하지 않은 이메일입니다");
+            throw new IllegalArgumentException(String.format("소셜 로그인을 하지 않은 이메일입니다: %s", maskEmail(signupRequest.email())));
         }
     }
 
     private Member findMember(final Long memberId) {
         return memberRepository.findById(memberId)
-                .orElseThrow(() -> new NoSuchElementException("해당 회원을 찾을 수 없습니다"));
+                .orElseThrow(() -> new NoSuchElementException(String.format("해당 회원을 찾을 수 없습니다: %d", memberId)));
     }
 
     private static void validateSelfBlock(
@@ -195,5 +196,11 @@ public class MemberCommandService {
         if (!blockRepository.existsByMemberAndTarget(member, target)) {
             throw new IllegalArgumentException("차단한 회원이 아닙니다");
         }
+    }
+
+    private String maskEmail(final String email) {
+        final String visiblePart = email.substring(0, 4);
+        final String maskedPart = "*".repeat(email.length() - 4);
+        return visiblePart + maskedPart;
     }
 }

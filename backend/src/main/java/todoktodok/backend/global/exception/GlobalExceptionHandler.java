@@ -32,7 +32,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<String> handleNotFoundException(NoSuchElementException e) {
         log.warn(PREFIX + e.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(PREFIX + e.getMessage());
+        final String safeErrorMessage = e.getMessage().split(":")[0];
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(PREFIX + safeErrorMessage);
     }
 
     @ExceptionHandler(IllegalStateException.class)
