@@ -18,8 +18,6 @@ class ManageBlockedMembersFragment : Fragment(R.layout.fragment_manage_blocked_m
         ManageBlockedMembersViewModelFactory(repositoryModule.memberRepository)
     }
 
-    private lateinit var unBlockDialog: CommonDialog
-
     private lateinit var blockedMembersAdapter: BlockedMembersAdapter
 
     override fun onViewCreated(
@@ -34,12 +32,6 @@ class ManageBlockedMembersFragment : Fragment(R.layout.fragment_manage_blocked_m
     }
 
     private fun initView(binding: FragmentManageBlockedMembersBinding) {
-        unBlockDialog =
-            CommonDialog.newInstance(
-                message = getString(R.string.setting_unblock_content),
-                submitButtonText = getString(R.string.setting_unblock),
-            )
-
         blockedMembersAdapter = BlockedMembersAdapter(blockedMembersAdapterHandler)
         binding.rvBlockedMembers.adapter = blockedMembersAdapter
 
@@ -55,8 +47,12 @@ class ManageBlockedMembersFragment : Fragment(R.layout.fragment_manage_blocked_m
     private val blockedMembersAdapterHandler =
         object : BlockedMembersAdapter.Handler {
             override fun onUnblockClicked(index: Int) {
-                unBlockDialog.show(parentFragmentManager, CommonDialog.TAG)
                 viewModel.onSelectMember(blockedMembersAdapter.currentList[index].memberId)
+                CommonDialog
+                    .newInstance(
+                        message = getString(R.string.setting_unblock_content),
+                        submitButtonText = getString(R.string.setting_unblock),
+                    ).show(parentFragmentManager, CommonDialog.TAG)
             }
         }
 
