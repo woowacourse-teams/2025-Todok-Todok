@@ -22,6 +22,8 @@ public class LogInterceptor implements HandlerInterceptor {
             final Object handler
     ) {
         final String requestURI = request.getRequestURI();
+        final String clientIp = getClientIp(request);
+        request.setAttribute("clientIp", clientIp);
         log.info("[API REQUEST] {}", requestURI);
 
         return true;
@@ -38,10 +40,22 @@ public class LogInterceptor implements HandlerInterceptor {
         final String method = request.getMethod();
         final int status = response.getStatus();
 
+        String clientIp = (String) request.getAttribute("clientIp");
+
+        log.error("[API RESPONSE] [{}] {} from {}: {}", method, requestURI, clientIp, status);
+
         if (status >= HTTP_STATUS_SUCCESS_MIN && status < HTTP_STATUS_ERROR_MIN) {
             log.info("[API RESPONSE] [{}] {}: {}", method, requestURI, status);
         } else {
             log.error("[API RESPONSE] [{}] {}: {}", method, requestURI, status);
         }
+    }
+
+    private String getClientIp(final HttpServletRequest request) {
+        final String xfHeader = request.getHeader("X-Forwarded-For");
+        if (xfHeader == null) {
+            return request.getRemoteAddr();
+        }
+        return xfHeader.split(",")[0];
     }
 }
