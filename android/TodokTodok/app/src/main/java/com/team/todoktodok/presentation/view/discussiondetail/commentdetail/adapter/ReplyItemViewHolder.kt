@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ItemReplyBinding
 import com.team.todoktodok.presentation.core.ext.formatWithResource
-import com.team.todoktodok.presentation.view.discussiondetail.model.ReplyUiModel
 
 class ReplyItemViewHolder private constructor(
     private val binding: ItemReplyBinding,
@@ -50,8 +49,6 @@ class ReplyItemViewHolder private constructor(
         fun onClickReplyLike(replyId: Long)
 
         fun onClickReplyUserName(userId: Long)
-
-        fun onClickDeleteReply(replyId: Long)
 
         fun onClickReplyOption(
             item: CommentDetailItems.ReplyItem,

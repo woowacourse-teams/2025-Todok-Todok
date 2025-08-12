@@ -67,22 +67,55 @@ class CommentDetailViewModel(
         }
     }
 
+    fun reloadComment() {
+        viewModelScope.launch {
+            loadComment()
+        }
+    }
+
     fun repliesReload() {
         viewModelScope.launch {
             loadReplies()
-            showNewComment()
+            showNewReply()
         }
+    }
+
+    fun updatedComment() {
+        viewModelScope.launch {
+            loadComment()
+            _uiEvent.setValue(CommentDetailUiEvent.CommentUpdate)
+        }
+    }
+
+    fun updateReply(
+        replyId: Long,
+        content: String,
+    ) {
+        _uiEvent.setValue(
+            CommentDetailUiEvent.ShowReplyUpdate(
+                discussionId,
+                commentId,
+                replyId,
+                content,
+            ),
+        )
+    }
+
+    fun updateComment() {
+        _uiEvent.setValue(CommentDetailUiEvent.ShowCommentUpdate(discussionId, commentId))
     }
 
     fun deleteReply(replyId: Long) {
         viewModelScope.launch {
             replyRepository.deleteReply(discussionId, commentId, replyId)
+            loadReplies()
         }
     }
 
     fun deleteComment() {
         viewModelScope.launch {
             commentRepository.deleteComment(discussionId, commentId)
+            _uiEvent.setValue(CommentDetailUiEvent.DeleteComment)
         }
     }
 
@@ -94,7 +127,7 @@ class CommentDetailViewModel(
 
     fun reportComment() {
         viewModelScope.launch {
-            commentRepository.deleteComment(discussionId, commentId)
+            commentRepository.report(discussionId, commentId)
         }
     }
 
@@ -109,6 +142,7 @@ class CommentDetailViewModel(
         viewModelScope.launch {
             commentRepository.toggleLike(discussionId, commentId)
             loadComment()
+            _uiEvent.setValue(CommentDetailUiEvent.ToggleCommentLike)
         }
     }
 
@@ -116,7 +150,7 @@ class CommentDetailViewModel(
         _uiEvent.setValue(CommentDetailUiEvent.ShowReplyCreate(discussionId, commentId))
     }
 
-    private fun showNewComment() {
+    private fun showNewReply() {
         _uiEvent.setValue(CommentDetailUiEvent.ShowNewReply)
     }
 

@@ -120,12 +120,16 @@ class ReplyCreateBottomSheet : BottomSheetDialogFragment(R.layout.fragment_comme
         fun newInstance(
             discussionId: Long,
             commentId: Long,
+            replyId: Long?,
+            content: String?,
         ): ReplyCreateBottomSheet =
             ReplyCreateBottomSheet().apply {
                 arguments =
                     bundleOf(
                         ReplyCreateViewModel.KEY_DISCUSSION_ID to discussionId,
                         ReplyCreateViewModel.KEY_COMMENT_ID to commentId,
+                        ReplyCreateViewModel.KEY_REPLY_ID to replyId,
+                        ReplyCreateViewModel.KEY_REPLY_CONTENT to content,
                     )
             }
     }

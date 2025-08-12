@@ -26,7 +26,7 @@ class DefaultCommentRepositoryTest {
     fun `토론방 Id을 통해 댓글들을 반환한다`() =
         runTest {
             // given
-            val expected = COMMENTS.sortedByDescending { it.createAt }
+            val expected = COMMENTS.sortedBy { it.createAt }
             // when
             val comments = defaultCommentRepository.getCommentsByDiscussionRoomId(0)
             // then
@@ -50,7 +50,7 @@ class DefaultCommentRepositoryTest {
             // when
             defaultCommentRepository.saveComment(10, "수고 많으셨습니다다.")
             // then
-            assertThat(defaultCommentRepository.getCommentsByDiscussionRoomId(1).last()).isEqualTo(
+            assertThat(defaultCommentRepository.getCommentsByDiscussionRoomId(1).first()).isEqualTo(
                 expected,
             )
         }

@@ -4,11 +4,11 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupWindow
-import androidx.core.os.bundleOf
+import androidx.core.view.doOnPreDraw
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentCommentsBinding
 import com.team.todoktodok.databinding.MenuExternalDiscussionBinding
@@ -19,20 +19,18 @@ import com.team.todoktodok.presentation.view.discussiondetail.commentcreate.Comm
 import com.team.todoktodok.presentation.view.discussiondetail.commentdetail.CommentDetailFragment
 import com.team.todoktodok.presentation.view.discussiondetail.comments.adapter.CommentAdapter
 import com.team.todoktodok.presentation.view.discussiondetail.comments.vm.CommentsViewModel
-import com.team.todoktodok.presentation.view.discussiondetail.comments.vm.CommentsViewModelFactory
 import com.team.todoktodok.presentation.view.discussiondetail.model.CommentUiModel
+import com.team.todoktodok.presentation.view.discussiondetail.vm.DiscussionDetailViewModel
 import com.team.todoktodok.presentation.view.profile.ProfileActivity
 
 class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
     private val adapter by lazy { CommentAdapter(adapterHandler) }
 
-    private val viewModel by viewModels<CommentsViewModel> {
-        val repositoryModule = (requireActivity().application as App).container.repositoryModule
-        CommentsViewModelFactory(
-            repositoryModule.commentRepository,
-            repositoryModule.tokenRepository,
-        )
-    }
+    private val sharedViewModel: DiscussionDetailViewModel by activityViewModels()
+
+    private val viewModel by viewModels<CommentsViewModel>(
+        ownerProducer = { requireParentFragment() },
+    )
 
     private var popupWindow: PopupWindow? = null
 
@@ -86,7 +84,10 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
                 )
 
             CommentsUiEvent.ShowNewComment -> {
-                binding.rvComments.smoothScrollToPosition(COMMENT_CREATE_POSITION)
+                sharedViewModel.reloadDiscussion()
+                binding.rvComments.doOnPreDraw {
+                    binding.rvComments.smoothScrollToPosition(adapter.itemCount)
+                }
             }
 
             is CommentsUiEvent.ShowCommentUpdate -> {
@@ -112,7 +113,7 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
         ) { _, bundle ->
             val result = bundle.getBoolean(CommentCreateBottomSheet.COMMENT_CREATED_RESULT_KEY)
             if (result) {
-                viewModel.commentsReload()
+                viewModel.reloadComments()
             }
         }
     }
@@ -128,8 +129,14 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
     private fun getPopUpView(commentUiModel: CommentUiModel): PopupWindow =
         if (commentUiModel.isMyComment) {
             val binding = MenuOwnedDiscussionBinding.inflate(layoutInflater)
-            binding.tvEdit.setOnClickListener { viewModel.updateComment(commentUiModel.comment.id) }
-            binding.tvDelete.setOnClickListener { viewModel.deleteComment(commentUiModel.comment.id) }
+            binding.tvEdit.setOnClickListener {
+                viewModel.updateComment(commentUiModel.comment.id)
+            }
+            binding.tvDelete.setOnClickListener {
+                viewModel.deleteComment(commentUiModel.comment.id)
+                sharedViewModel.reloadDiscussion()
+                popupWindow?.dismiss()
+            }
             createPopUpView(binding.root)
         } else {
             setUpDialogResultListener(commentId = commentUiModel.comment.id)
@@ -219,11 +226,7 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
 
     companion object {
         const val TAG = "COMMENTS"
-        private const val COMMENT_CREATE_POSITION = 0
 
-        fun newInstance(discussionId: Long): CommentsFragment =
-            CommentsFragment().apply {
-                arguments = bundleOf(CommentsViewModel.KEY_DISCUSSION_ID to discussionId)
-            }
+        fun newInstance(): CommentsFragment = CommentsFragment()
     }
 }

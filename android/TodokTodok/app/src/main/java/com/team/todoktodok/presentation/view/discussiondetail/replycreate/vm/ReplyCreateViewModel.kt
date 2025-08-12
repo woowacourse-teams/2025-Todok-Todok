@@ -21,11 +21,23 @@ class ReplyCreateViewModel(
     private val commentId =
         savedStateHandle.get<Long>(KEY_COMMENT_ID) ?: throw IllegalStateException()
 
+    private val replyId = savedStateHandle.get<Long>(KEY_REPLY_ID)
+
+    private val content = savedStateHandle.get<String>(KEY_REPLY_CONTENT)
+
     private val _uiEvent = MutableSingleLiveData<ReplyCreateUiEvent>()
     val uiEvent: SingleLiveData<ReplyCreateUiEvent> = _uiEvent
 
     private val _commentText = MutableLiveData("")
     val commentText: LiveData<String> = _commentText
+
+    init {
+        viewModelScope.launch {
+            if (replyId != null) {
+                onCommentChanged(content ?: "")
+            }
+        }
+    }
 
     fun onCommentChanged(text: CharSequence?) {
         _commentText.value = text?.toString() ?: ""
@@ -33,17 +45,29 @@ class ReplyCreateViewModel(
 
     fun submitReply() {
         viewModelScope.launch {
-            replyRepository.saveReply(
-                discussionId,
-                commentId,
-                commentText.value ?: throw IllegalStateException(),
-            )
-            _uiEvent.setValue(ReplyCreateUiEvent.CreateReply)
+            if (replyId == null) {
+                replyRepository.saveReply(
+                    discussionId,
+                    commentId,
+                    commentText.value ?: throw IllegalStateException(),
+                )
+                _uiEvent.setValue(ReplyCreateUiEvent.CreateReply)
+            } else {
+                replyRepository.updateReply(
+                    discussionId,
+                    commentId,
+                    replyId,
+                    commentText.value ?: throw IllegalStateException(),
+                )
+                _uiEvent.setValue(ReplyCreateUiEvent.CreateReply)
+            }
         }
     }
 
     companion object {
         const val KEY_DISCUSSION_ID = "discussionId"
         const val KEY_COMMENT_ID = "comment_id"
+        const val KEY_REPLY_ID = "reply_id"
+        const val KEY_REPLY_CONTENT = "reply_content"
     }
 }

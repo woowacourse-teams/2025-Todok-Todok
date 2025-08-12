@@ -47,6 +47,12 @@ class DiscussionDetailViewModel(
         }
     }
 
+    fun reloadDiscussion() {
+        viewModelScope.launch {
+            loadDiscussionRoom()
+        }
+    }
+
     fun updateDiscussion() {
         onUiEvent(DiscussionDetailUiEvent.UpdateDiscussion(discussionId))
     }
@@ -83,7 +89,6 @@ class DiscussionDetailViewModel(
                 discussion,
                 discussion.writer.id == tokenRepository.getMemberId(),
             )
-        discussionRepository.getDiscussion(discussionId).getOrNull()
     }
 
     private fun onUiEvent(uiEvent: DiscussionDetailUiEvent) {

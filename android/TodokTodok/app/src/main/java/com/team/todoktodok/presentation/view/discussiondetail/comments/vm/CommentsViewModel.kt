@@ -33,7 +33,7 @@ class CommentsViewModel(
         }
     }
 
-    fun commentsReload() {
+    fun reloadComments() {
         viewModelScope.launch {
             loadComments()
             showNewComment()

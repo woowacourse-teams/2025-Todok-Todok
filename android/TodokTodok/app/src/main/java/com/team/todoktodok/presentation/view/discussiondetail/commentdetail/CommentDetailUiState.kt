@@ -1,7 +1,6 @@
 package com.team.todoktodok.presentation.view.discussiondetail.commentdetail
 
 import com.team.domain.model.Comment
-import com.team.domain.model.Reply
 import com.team.domain.model.member.Nickname
 import com.team.domain.model.member.User
 import com.team.todoktodok.presentation.view.discussiondetail.commentdetail.adapter.CommentDetailItems
