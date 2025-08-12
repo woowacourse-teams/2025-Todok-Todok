@@ -15,6 +15,6 @@ data class ManageBlockedMembersUiState(
         )
 
     companion object {
-        private const val NOT_HAS_SELECTED_MEMBER = -1L
+        const val NOT_HAS_SELECTED_MEMBER = -1L
     }
 }

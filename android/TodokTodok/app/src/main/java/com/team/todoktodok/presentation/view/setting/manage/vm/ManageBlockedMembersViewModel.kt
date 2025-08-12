@@ -33,7 +33,7 @@ class ManageBlockedMembersViewModel(
         viewModelScope.launch {
             val currentUiState = _uiState.value ?: throw IllegalArgumentException(NOT_FOUND_MEMBER)
             val memberId = currentUiState.selectedMemberId
-            require(memberId != -1L) { NOT_FOUND_MEMBER }
+            require(memberId != ManageBlockedMembersUiState.NOT_HAS_SELECTED_MEMBER) { NOT_FOUND_MEMBER }
 
             _uiState.value = currentUiState.removeSelectedMember()
             memberRepository.unblock(memberId)
