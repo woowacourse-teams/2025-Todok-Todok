@@ -13,6 +13,12 @@ enum class MemberType {
                 else -> throw IllegalArgumentException(INVALID_MEMBER_TYPE)
             }
 
+        fun MemberType(memberId: Long): MemberType =
+            when (memberId) {
+                0L -> TEMP_USER
+                else -> USER
+            }
+
         private const val INVALID_MEMBER_TYPE = "존재하지 않는 유저 타입입니다."
     }
 }
