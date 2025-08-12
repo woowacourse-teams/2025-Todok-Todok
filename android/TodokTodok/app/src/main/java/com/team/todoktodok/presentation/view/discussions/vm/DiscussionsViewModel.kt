@@ -19,8 +19,8 @@ class DiscussionsViewModel(
     private val _uiState = MutableLiveData(DiscussionsUiState())
     val uiState: LiveData<DiscussionsUiState> get() = _uiState
 
-    private val _uiEvent = MutableLiveData<DiscussionsUiEvent>()
-    val uiEvent: LiveData<DiscussionsUiEvent> get() = _uiEvent
+    private val _uiEvent = MutableSingleLiveData<DiscussionsUiEvent>()
+    val uiEvent: SingleLiveData<DiscussionsUiEvent> get() = _uiEvent
 
     private var loadJob: Job? = null
 
@@ -83,7 +83,7 @@ class DiscussionsViewModel(
         discussions: List<Discussion>,
         filter: DiscussionFilter,
     ) {
-        _uiEvent.value =
+        val event =
             when {
                 discussions.isEmpty() && filter == DiscussionFilter.ALL -> DiscussionsUiEvent.ShowNotHasAllDiscussions
                 discussions.isEmpty() && filter == DiscussionFilter.MINE -> DiscussionsUiEvent.ShowNotHasMyDiscussions
@@ -91,5 +91,7 @@ class DiscussionsViewModel(
                 filter == DiscussionFilter.MINE -> DiscussionsUiEvent.ShowHasMyDiscussions
                 else -> throw IllegalArgumentException()
             }
+
+        _uiEvent.setValue(event)
     }
 }
