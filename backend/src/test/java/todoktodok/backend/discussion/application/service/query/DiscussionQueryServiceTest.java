@@ -132,6 +132,35 @@ class DiscussionQueryServiceTest {
     }
 
     @Test
+    @DisplayName("특정 토론방의 전체 댓글 수는 댓글 수와 대댓글 수의 합이다")
+    void getDiscussion_TotalCommentCountTest() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+
+        final Long memberId = 1L;
+        final Long bookId = 1L;
+
+        databaseInitializer.setDiscussionInfo(
+                "클린코드에 대해 논의해볼까요",
+                "클린코드만세",
+                memberId,
+                bookId
+        );
+
+        final Long discussionId = 1L;
+
+        databaseInitializer.setCommentInfo("댓글1", memberId, discussionId);
+        databaseInitializer.setReplyInfo("대댓글1", memberId, 1L);
+
+        // when
+        final DiscussionResponse discussion = discussionQueryService.getDiscussion(memberId, discussionId);
+
+        // then
+        assertThat(discussion.commentCount()).isEqualTo(2);
+    }
+
+    @Test
     @DisplayName("토론방 단일 조회 시 내가 좋아요를 생성한 글인지 확인한다")
     void getDiscussion_isLikedTest_true() {
         // given
@@ -362,9 +391,11 @@ class DiscussionQueryServiceTest {
 
             final Long memberId = 1L;
             final Long discussionId = 1L;
+
             databaseInitializer.setCommentInfo("댓글1", memberId, discussionId);
 
             final Long commentId = 1L;
+
             databaseInitializer.setReplyInfo("대댓글1", memberId, commentId);
 
             // when

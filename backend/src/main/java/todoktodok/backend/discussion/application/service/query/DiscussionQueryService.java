@@ -13,6 +13,7 @@ import todoktodok.backend.discussion.domain.repository.DiscussionLikeRepository;
 import todoktodok.backend.discussion.domain.repository.DiscussionRepository;
 import todoktodok.backend.member.domain.Member;
 import todoktodok.backend.member.domain.repository.MemberRepository;
+import todoktodok.backend.reply.domain.repository.ReplyRepository;
 
 @Service
 @Transactional(readOnly = true)
@@ -23,6 +24,7 @@ public class DiscussionQueryService {
     private final DiscussionLikeRepository discussionLikeRepository;
     private final MemberRepository memberRepository;
     private final CommentRepository commentRepository;
+    private final ReplyRepository replyRepository;
 
     public DiscussionResponse getDiscussion(
             final Long memberId,
@@ -32,7 +34,9 @@ public class DiscussionQueryService {
         final Discussion discussion = findDiscussion(discussionId);
 
         final int likeCount = Math.toIntExact(discussionLikeRepository.findLikeCountsByDiscussionId(discussionId));
-        final int commentCount = Math.toIntExact(commentRepository.findCommentCountsByDiscussionId(discussionId));
+        final int commentCount = Math.toIntExact(
+                commentRepository.countCommentsByDiscussionId(discussionId) + replyRepository.countRepliesByDiscussionId(discussionId)
+        );
         final boolean isLiked = discussionLikeRepository.existsByMemberAndDiscussion(member, discussion);
 
         return new DiscussionResponse(
@@ -128,7 +132,8 @@ public class DiscussionQueryService {
                 discussionIds);
         final List<DiscussionCommentCountDto> commentCountsById = commentRepository.findCommentCountsByDiscussionIds(
                 discussionIds);
-        final List<Long> likedDiscussionIds = discussionLikeRepository.findLikedDiscussionIdsByMember(member, discussionIds);
+        final List<Long> likedDiscussionIds = discussionLikeRepository.findLikedDiscussionIdsByMember(member,
+                discussionIds);
 
         return discussions.stream()
                 .map(discussion -> new DiscussionResponse(
