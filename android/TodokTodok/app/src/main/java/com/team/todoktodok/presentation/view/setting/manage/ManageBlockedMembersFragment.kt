@@ -39,7 +39,7 @@ class ManageBlockedMembersFragment : Fragment(R.layout.fragment_manage_blocked_m
             CommonDialog.REQUEST_KEY_COMMON_DIALOG,
             viewLifecycleOwner,
         ) { _, bundle ->
-            val isConfirmed = bundle.getBoolean(CommonDialog.REQUEST_KEY_COMMON_DIALOG, false)
+            val isConfirmed = bundle.getBoolean(CommonDialog.RESULT_KEY_COMMON_DIALOG, false)
             if (isConfirmed) viewModel.unblockMember()
         }
     }
