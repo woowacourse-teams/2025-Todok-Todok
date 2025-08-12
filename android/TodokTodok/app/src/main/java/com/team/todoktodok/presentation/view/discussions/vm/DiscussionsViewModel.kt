@@ -7,6 +7,8 @@ import androidx.lifecycle.viewModelScope
 import com.team.domain.model.Discussion
 import com.team.domain.model.DiscussionFilter
 import com.team.domain.repository.DiscussionRepository
+import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
+import com.team.todoktodok.presentation.core.event.SingleLiveData
 import com.team.todoktodok.presentation.view.discussions.DiscussionsUiEvent
 import com.team.todoktodok.presentation.view.discussions.DiscussionsUiState
 import kotlinx.coroutines.Job
@@ -47,10 +49,11 @@ class DiscussionsViewModel(
         val currentState = _uiState.value ?: return
         val currentFilter = currentState.filter
         val keyword = currentState.searchKeyword
-        toggleLoading()
 
-        DiscussionFilter.entries.forEach { filter ->
-            viewModelScope.launch {
+        setLoading()
+
+        viewModelScope.launch {
+            for (filter in DiscussionFilter.entries) {
                 val discussions = discussionRepository.getDiscussions(filter, keyword)
                 updateDiscussions(filter, discussions)
 
@@ -58,7 +61,7 @@ class DiscussionsViewModel(
                     onUiEvent(discussions, filter)
                 }
             }
-            toggleLoading()
+            setLoading()
         }
     }
 
@@ -75,7 +78,7 @@ class DiscussionsViewModel(
             }
     }
 
-    private fun toggleLoading() {
+    private fun setLoading() {
         _uiState.value = _uiState.value?.toggleLoading()
     }
 
