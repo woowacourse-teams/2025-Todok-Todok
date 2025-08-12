@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class BookRequest(
-    val bookId: Long,
+    val bookIsbn: Long,
     val bookTitle: String,
     val bookAuthor: String,
     val bookImage: String,
@@ -13,7 +13,7 @@ data class BookRequest(
 
 fun Book.toRequest() =
     BookRequest(
-        bookId = id,
+        bookIsbn = id,
         bookTitle = title,
         bookAuthor = author,
         bookImage = image,
