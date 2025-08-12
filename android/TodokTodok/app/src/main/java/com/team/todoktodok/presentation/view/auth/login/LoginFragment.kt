@@ -26,7 +26,10 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
     private lateinit var googleLoginManager: GoogleLoginManager
     private val viewModel: AuthViewModel by viewModels {
         val repositoryModule = (requireActivity().application as App).container.repositoryModule
-        AuthViewModelFactory(repositoryModule.memberRepository)
+        AuthViewModelFactory(
+            repositoryModule.memberRepository,
+            repositoryModule.tokenRepository,
+        )
     }
 
     override fun onViewCreated(
@@ -38,7 +41,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         googleLoginManager = GoogleLoginManager(requireContext())
         showAnimation(binding)
         initView(binding)
-        setUpUiEvent()
+        setUpUiEvent(binding)
     }
 
     private fun initView(binding: FragmentLoginBinding) {
@@ -84,11 +87,12 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         animatorSet.start()
     }
 
-    private fun setUpUiEvent() {
+    private fun setUpUiEvent(binding: FragmentLoginBinding) {
         viewModel.uiEvent.observe(viewLifecycleOwner) {
             when (it) {
                 LoginUiEvent.NavigateToMain -> moveToMain()
                 LoginUiEvent.NavigateToSignUp -> moveToSignUp()
+                LoginUiEvent.ShowLoginButton -> showLoginButton(binding)
             }
         }
     }
@@ -103,6 +107,10 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         parentFragmentManager.commit {
             replace(R.id.fcv_container_auth, SignUpFragment())
         }
+    }
+
+    private fun showLoginButton(binding: FragmentLoginBinding) {
+        binding.tvLogin.visibility = View.VISIBLE
     }
 
     private fun showSnackBar(
