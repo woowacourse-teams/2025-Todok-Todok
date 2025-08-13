@@ -1,17 +1,19 @@
 package com.team.todoktodok.presentation.view.profile.viewholder
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.team.todoktodok.databinding.ItemUserHeaderBinding
+import com.team.todoktodok.presentation.view.profile.adapter.ProfileItems
 
 class UserProfileHeaderViewHolder private constructor(
-    binding: ItemUserHeaderBinding,
+    private val binding: ItemUserHeaderBinding,
     private val handler: Handler,
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
         with(binding) {
-            ivLogo.root.setOnClickListener {
+            ivBack.setOnClickListener {
                 handler.onClickLogo()
             }
 
@@ -19,6 +21,10 @@ class UserProfileHeaderViewHolder private constructor(
                 handler.onClickSetting()
             }
         }
+    }
+
+    fun bind(item: ProfileItems.HeaderItem) {
+        if (!item.isMyProfile) binding.ivSetting.visibility = View.INVISIBLE
     }
 
     companion object {
