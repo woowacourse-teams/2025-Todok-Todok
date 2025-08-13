@@ -85,6 +85,11 @@ public class GlobalExceptionHandler {
         }
 
         final String str = value.toString();
+
+        if (field.equals("discussionTitle") || field.equals("discussionOpinion")) {
+            return str.length() + "자";
+        }
+
         if (!field.equals("email")) {
             return str;
         }
