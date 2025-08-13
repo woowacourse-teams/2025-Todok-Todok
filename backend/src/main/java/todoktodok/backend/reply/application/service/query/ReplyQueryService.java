@@ -58,17 +58,17 @@ public class ReplyQueryService {
 
     private Member findMember(final Long memberId) {
         return memberRepository.findById(memberId)
-                .orElseThrow(() -> new NoSuchElementException("해당 회원을 찾을 수 없습니다"));
+                .orElseThrow(() -> new NoSuchElementException(String.format("해당 회원을 찾을 수 없습니다: %d", memberId)));
     }
 
     private Discussion findDiscussion(final Long discussionId) {
         return discussionRepository.findById(discussionId)
-                .orElseThrow(() -> new NoSuchElementException("해당 토론방을 찾을 수 없습니다"));
+                .orElseThrow(() -> new NoSuchElementException(String.format("해당 토론방을 찾을 수 없습니다: %d", discussionId)));
     }
 
     private Comment findComment(final Long commentId) {
         return commentRepository.findById(commentId)
-                .orElseThrow(() -> new NoSuchElementException("해당 댓글을 찾을 수 없습니다"));
+                .orElseThrow(() -> new NoSuchElementException(String.format("해당 댓글을 찾을 수 없습니다: %d", commentId)));
     }
 
     private int findLikeCount(
@@ -79,7 +79,7 @@ public class ReplyQueryService {
                 .filter(count -> reply.isSameId(count.replyId()))
                 .findFirst()
                 .map(ReplyLikeCountDto::likeCount)
-                .orElseThrow(() -> new IllegalStateException("대댓글별 좋아요 수를 찾을 수 없습니다"));
+                .orElseThrow(() -> new IllegalStateException(String.format("대댓글별 좋아요 수를 찾을 수 없습니다: reply-%d", reply.getId())));
     }
 
     private boolean checkIsLikedByMe(

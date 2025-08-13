@@ -118,7 +118,7 @@ class ReplyQueryServiceTest {
         // when - then
         assertThatThrownBy(() -> replyQueryService.getReplies(memberId, discussionId, commentId))
                 .isInstanceOf(NoSuchElementException.class)
-                .hasMessage("해당 댓글을 찾을 수 없습니다");
+                .hasMessageContaining("해당 댓글을 찾을 수 없습니다");
     }
 
     @Test
@@ -137,7 +137,7 @@ class ReplyQueryServiceTest {
         // when - then
         assertThatThrownBy(() -> replyQueryService.getReplies(memberId, discussionId, commentId))
                 .isInstanceOf(NoSuchElementException.class)
-                .hasMessage("해당 토론방을 찾을 수 없습니다");
+                .hasMessageContaining("해당 토론방을 찾을 수 없습니다");
     }
 
     @Test

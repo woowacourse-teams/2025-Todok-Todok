@@ -44,7 +44,7 @@ public class ReplyTest {
                         .comment(comment)
                         .build()
         ).isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("대댓글 내용은 1자 이상, 1500자 이하여야 합니다");
+                .hasMessageContaining("대댓글 내용은 1자 이상, 1500자 이하여야 합니다");
     }
 
     @Test
@@ -61,7 +61,7 @@ public class ReplyTest {
                         .comment(comment)
                         .build()
         ).isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("대댓글 내용은 1자 이상, 1500자 이하여야 합니다");
+                .hasMessageContaining("대댓글 내용은 1자 이상, 1500자 이하여야 합니다");
     }
 
     @Test
@@ -90,7 +90,7 @@ public class ReplyTest {
         // when - then
         assertThatThrownBy(() -> reply.validateMatchWithComment(anotherComment))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("해당 댓글에 있는 대댓글이 아닙니다");
+                .hasMessageContaining("해당 댓글에 있는 대댓글이 아닙니다");
     }
 
     @Test
@@ -106,6 +106,6 @@ public class ReplyTest {
         // when - then
         assertThatThrownBy(() -> reply.validateSelfReport(member))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("자기 자신이 작성한 대댓글을 신고할 수 없습니다");
+                .hasMessageContaining("자기 자신이 작성한 대댓글을 신고할 수 없습니다");
     }
 }
