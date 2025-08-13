@@ -6,7 +6,6 @@ import android.view.View
 import android.view.WindowManager
 import androidx.core.os.bundleOf
 import androidx.fragment.app.commit
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -25,15 +24,13 @@ class CommentBottomSheet : BottomSheetDialogFragment(R.layout.fragment_comment_b
         }
 
     override val defaultViewModelProviderFactory: ViewModelProvider.Factory
-        get() {
+        by lazy {
             val repoModule = (requireActivity().application as App).container.repositoryModule
-            return CommentsViewModelFactory(
+            CommentsViewModelFactory(
                 repoModule.commentRepository,
                 repoModule.tokenRepository,
             )
         }
-
-    private val viewModel by viewModels<CommentsViewModel>()
 
     override fun onViewCreated(
         view: View,
