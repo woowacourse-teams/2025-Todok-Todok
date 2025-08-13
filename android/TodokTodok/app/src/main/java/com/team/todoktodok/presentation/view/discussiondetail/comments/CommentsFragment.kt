@@ -81,6 +81,7 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
                     commentsUiEvent.discussionId,
                     binding,
                     null,
+                    null,
                 )
 
             CommentsUiEvent.ShowNewComment -> {
@@ -91,7 +92,12 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
             }
 
             is CommentsUiEvent.ShowCommentUpdate -> {
-                showCommentCreate(commentsUiEvent.discussionId, binding, commentsUiEvent.commentId)
+                showCommentCreate(
+                    commentsUiEvent.discussionId,
+                    binding,
+                    commentsUiEvent.commentId,
+                    commentsUiEvent.content,
+                )
             }
 
             CommentsUiEvent.DeleteComment -> sharedViewModel.reloadDiscussion()
@@ -102,8 +108,9 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
         discussionId: Long,
         binding: FragmentCommentsBinding,
         commentId: Long?,
+        content: String?,
     ) {
-        val bottomSheet = CommentCreateBottomSheet.newInstance(discussionId, commentId)
+        val bottomSheet = CommentCreateBottomSheet.newInstance(discussionId, commentId, content)
         bottomSheet.setVisibilityListener(getBottomSheetVisibilityListener(binding))
         bottomSheet.show(childFragmentManager, CommentCreateBottomSheet.TAG)
     }
@@ -116,6 +123,7 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
             val result = bundle.getBoolean(CommentCreateBottomSheet.COMMENT_CREATED_RESULT_KEY)
             if (result) {
                 viewModel.reloadComments()
+                popupWindow?.dismiss()
             }
         }
     }
@@ -132,7 +140,7 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
         if (commentUiModel.isMyComment) {
             val binding = MenuOwnedDiscussionBinding.inflate(layoutInflater)
             binding.tvEdit.setOnClickListener {
-                viewModel.updateComment(commentUiModel.comment.id)
+                viewModel.updateComment(commentUiModel.comment.id, commentUiModel.comment.content)
             }
             binding.tvDelete.setOnClickListener {
                 viewModel.deleteComment(commentUiModel.comment.id)

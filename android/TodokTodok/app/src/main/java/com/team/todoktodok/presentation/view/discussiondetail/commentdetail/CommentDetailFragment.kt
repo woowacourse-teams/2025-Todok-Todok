@@ -115,6 +115,7 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
                 showCommentCreate(
                     commentDetailUiEvent.discussionId,
                     commentDetailUiEvent.commentId,
+                    commentDetailUiEvent.comment,
                     binding,
                 )
                 popupWindow?.dismiss()
@@ -152,7 +153,7 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
                 if (commentDetailItems.value.isMyComment) {
                     optionPopupView(
                         layoutInflater,
-                        { viewModel.updateComment() },
+                        { viewModel.updateComment(commentDetailItems.value.comment.content) },
                         { viewModel.deleteComment() },
                     )
                 } else {
@@ -205,9 +206,10 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
     private fun showCommentCreate(
         discussionId: Long,
         commentId: Long?,
+        content: String?,
         binding: FragmentCommentDetailBinding,
     ) {
-        val bottomSheet = CommentCreateBottomSheet.newInstance(discussionId, commentId)
+        val bottomSheet = CommentCreateBottomSheet.newInstance(discussionId, commentId, content)
         bottomSheet.setVisibilityListener(getBottomSheetVisibilityListener(binding))
         bottomSheet.show(childFragmentManager, CommentCreateBottomSheet.TAG)
     }

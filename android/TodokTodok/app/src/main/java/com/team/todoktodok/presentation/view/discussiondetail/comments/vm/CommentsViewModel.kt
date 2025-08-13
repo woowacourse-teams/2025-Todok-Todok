@@ -55,9 +55,12 @@ class CommentsViewModel(
         }
     }
 
-    fun updateComment(commentId: Long) {
+    fun updateComment(
+        commentId: Long,
+        content: String,
+    ) {
         viewModelScope.launch {
-            _uiEvent.setValue(CommentsUiEvent.ShowCommentUpdate(discussionId, commentId))
+            _uiEvent.setValue(CommentsUiEvent.ShowCommentUpdate(discussionId, commentId, content))
         }
     }
 

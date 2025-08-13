@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.team.domain.repository.CommentRepository
 import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
 import com.team.todoktodok.presentation.core.event.SingleLiveData
+import com.team.todoktodok.presentation.view.discussiondetail.commentcreate.CommentCreateState
 import com.team.todoktodok.presentation.view.discussiondetail.commentcreate.CommentCreateUiEvent
 import kotlinx.coroutines.launch
 
@@ -18,8 +19,10 @@ class CommentCreateViewModel(
     private val discussionId =
         savedStateHandle.get<Long>(KEY_DISCUSSION_ID) ?: throw IllegalStateException()
 
-    private val commentId =
-        savedStateHandle.get<Long>(KEY_COMMENT_ID)
+    val commentContent = savedStateHandle.get<String>(KEY_COMMENT_CONTENT)
+
+    private val commentCreateState =
+        CommentCreateState.create(savedStateHandle.get<Long>(KEY_COMMENT_ID))
 
     private val _uiEvent = MutableSingleLiveData<CommentCreateUiEvent>()
     val uiEvent: SingleLiveData<CommentCreateUiEvent> = _uiEvent
@@ -29,9 +32,11 @@ class CommentCreateViewModel(
 
     init {
         viewModelScope.launch {
-            if (commentId != null) {
-                val text = commentRepository.getComment(discussionId, commentId).content
-                onCommentChanged(text)
+            when (commentCreateState) {
+                CommentCreateState.Create -> Unit
+                is CommentCreateState.Update -> {
+                    onCommentChanged(commentContent)
+                }
             }
         }
     }
@@ -42,18 +47,28 @@ class CommentCreateViewModel(
 
     fun submitComment() {
         viewModelScope.launch {
-            if (commentId == null) {
-                commentRepository.saveComment(discussionId, commentText.value ?: "")
-                _uiEvent.setValue(CommentCreateUiEvent.SubmitComment)
-            } else {
-                commentRepository.updateComment(discussionId, commentId, commentText.value ?: "")
-                _uiEvent.setValue(CommentCreateUiEvent.SubmitComment)
+            when (commentCreateState) {
+                CommentCreateState.Create -> {
+                    commentRepository.saveComment(discussionId, commentText.value ?: "")
+                    _uiEvent.setValue(CommentCreateUiEvent.SubmitComment)
+                }
+
+                is CommentCreateState.Update -> {
+                    commentRepository.updateComment(
+                        discussionId,
+                        commentCreateState.commentId,
+                        commentText.value ?: "",
+                    )
+                    _uiEvent.setValue(CommentCreateUiEvent.SubmitComment)
+                }
             }
         }
     }
 
     companion object {
-        const val KEY_DISCUSSION_ID = "discussionId"
-        const val KEY_COMMENT_ID = "commentId"
+        const val KEY_DISCUSSION_ID = "key_discussion_id"
+        const val KEY_COMMENT_ID = "key_comment_id"
+
+        const val KEY_COMMENT_CONTENT = "key_comment_content"
     }
 }

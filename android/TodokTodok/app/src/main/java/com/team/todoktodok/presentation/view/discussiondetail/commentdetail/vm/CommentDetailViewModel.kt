@@ -71,8 +71,8 @@ class CommentDetailViewModel(
         )
     }
 
-    fun updateComment() {
-        _uiEvent.setValue(CommentDetailUiEvent.ShowCommentUpdate(discussionId, commentId))
+    fun updateComment(content: String) {
+        _uiEvent.setValue(CommentDetailUiEvent.ShowCommentUpdate(discussionId, commentId, content))
     }
 
     fun deleteReply(replyId: Long) {

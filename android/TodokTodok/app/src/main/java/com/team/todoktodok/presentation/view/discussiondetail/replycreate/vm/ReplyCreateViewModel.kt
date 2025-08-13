@@ -74,7 +74,7 @@ class ReplyCreateViewModel(
     }
 
     companion object {
-        const val KEY_DISCUSSION_ID = "discussionId"
+        const val KEY_DISCUSSION_ID = "discussion_id"
         const val KEY_COMMENT_ID = "comment_id"
         const val KEY_REPLY_ID = "reply_id"
         const val KEY_REPLY_CONTENT = "reply_content"

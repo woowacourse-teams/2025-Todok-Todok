@@ -4,6 +4,7 @@ sealed interface CommentDetailUiEvent {
     data class ShowCommentUpdate(
         val discussionId: Long,
         val commentId: Long,
+        val comment: String,
     ) : CommentDetailUiEvent
 
     data class ShowReplyCreate(
