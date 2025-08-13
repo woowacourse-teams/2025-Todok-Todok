@@ -121,23 +121,31 @@ public class DiscussionCommandService {
 
     private void validateHasComment(final Discussion discussion) {
         if (commentRepository.existsCommentsByDiscussion(discussion)) {
-            throw new IllegalArgumentException("댓글이 존재하는 토론방은 삭제할 수 없습니다");
+            throw new IllegalArgumentException(
+                    String.format("댓글이 존재하는 토론방은 삭제할 수 없습니다: discussionId=%d", discussion.getId())
+            );
         }
     }
 
     private Member findMember(final Long memberId) {
         return memberRepository.findById(memberId)
-                .orElseThrow(() -> new NoSuchElementException("해당 회원을 찾을 수 없습니다"));
+                .orElseThrow(() -> new NoSuchElementException(
+                        String.format("해당 회원을 찾을 수 없습니다: memberId=%d", memberId))
+                );
     }
 
     private Book findBook(final Long bookId) {
         return bookRepository.findById(bookId)
-                .orElseThrow(() -> new NoSuchElementException("해당 도서를 찾을 수 없습니다"));
+                .orElseThrow(() -> new NoSuchElementException(
+                        String.format("해당 도서를 찾을 수 없습니다: bookId=%d", bookId))
+                );
     }
 
     private Discussion findDiscussion(final Long discussionId) {
         return discussionRepository.findById(discussionId)
-                .orElseThrow(() -> new NoSuchElementException("해당 토론방을 찾을 수 없습니다"));
+                .orElseThrow(() -> new NoSuchElementException(
+                        String.format("해당 토론방을 찾을 수 없습니다: discussionId=%d", discussionId))
+                );
     }
 
     private void validateDiscussionMember(
@@ -145,7 +153,12 @@ public class DiscussionCommandService {
             final Member member
     ) {
         if (!discussion.isOwnedBy(member)) {
-            throw new IllegalArgumentException("자기 자신의 토론방만 수정/삭제 가능합니다");
+            throw new IllegalArgumentException(
+                    String.format(
+                            "자기 자신의 토론방만 수정/삭제 가능합니다: discussionId=%d, memberId=%d",
+                            discussion.getId(),
+                            member.getId())
+            );
         }
     }
 
@@ -154,7 +167,13 @@ public class DiscussionCommandService {
             final Member member
     ) {
         if (discussionReportRepository.existsByDiscussionAndMember(discussion, member)) {
-            throw new IllegalArgumentException("이미 신고한 토론방입니다");
+            throw new IllegalArgumentException(
+                    String.format(
+                            "이미 신고한 토론방입니다: discussionId=%d, memberId=%d",
+                            discussion.getId(),
+                            member.getId()
+                    )
+            );
         }
     }
 
@@ -163,7 +182,12 @@ public class DiscussionCommandService {
             final Member member
     ) {
         if (discussion.isOwnedBy(member)) {
-            throw new IllegalArgumentException("자기 자신의 토론방을 신고할 수 없습니다");
+            throw new IllegalArgumentException(
+                    String.format("자기 자신의 토론방을 신고할 수 없습니다: discussionId=%d, memberId=%d",
+                            discussion.getId(),
+                            member.getId()
+                    )
+            );
         }
     }
 }
