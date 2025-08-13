@@ -1,9 +1,9 @@
-package com.team.todoktodok.presentation.view.setting.manage.dapter
+package com.team.todoktodok.presentation.view.setting.manage.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.team.domain.model.member.BlockedMember
-import com.team.todoktodok.presentation.view.setting.manage.dapter.BlockedMemberViewHolder.Companion.BlockedMemberViewHolder
+import com.team.todoktodok.presentation.view.setting.manage.adapter.BlockedMemberViewHolder.Companion.BlockedMemberViewHolder
 
 class BlockedMembersAdapter(
     private val handler: Handler,

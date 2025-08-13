@@ -1,4 +1,4 @@
-package com.team.todoktodok.presentation.view.setting.manage.dapter
+package com.team.todoktodok.presentation.view.setting.manage.adapter
 
 import androidx.recyclerview.widget.DiffUtil
 import com.team.domain.model.member.BlockedMember

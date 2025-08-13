@@ -1,4 +1,4 @@
-package com.team.todoktodok.presentation.view.setting.manage.dapter
+package com.team.todoktodok.presentation.view.setting.manage.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

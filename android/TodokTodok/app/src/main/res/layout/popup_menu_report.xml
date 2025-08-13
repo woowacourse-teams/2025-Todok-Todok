@@ -5,6 +5,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/bg_white_stroke_radius_8dp"
     android:gravity="center_horizontal"
+
     android:orientation="vertical">
 
     <TextView
@@ -12,10 +13,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/black_18"
-        android:padding="@dimen/space_20"
+        android:padding="@dimen/space_16"
         android:layout_marginHorizontal="@dimen/space_20"
         android:fontFamily="@font/pretendard_regular"
-        android:textSize="@dimen/font_size_x_large"
+        android:textSize="@dimen/font_size_large"
         android:text="@string/all_report_action"/>
 
     <com.google.android.material.divider.MaterialDivider
@@ -28,9 +29,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/red_FF"
-        android:padding="@dimen/space_20"
-        android:layout_marginHorizontal="@dimen/space_20"
+        android:padding="@dimen/space_16"
         android:fontFamily="@font/pretendard_regular"
-        android:textSize="@dimen/font_size_x_large"
+        android:textSize="@dimen/font_size_large"
         android:text="@string/profile_menu_block"/>
 </LinearLayout>

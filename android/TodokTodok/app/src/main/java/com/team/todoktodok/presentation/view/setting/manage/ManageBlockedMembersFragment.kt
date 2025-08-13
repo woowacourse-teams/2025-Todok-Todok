@@ -7,8 +7,8 @@ import androidx.fragment.app.viewModels
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentManageBlockedMembersBinding
-import com.team.todoktodok.log.AppLogger
-import com.team.todoktodok.presentation.view.setting.manage.dapter.BlockedMembersAdapter
+import com.team.todoktodok.presentation.core.component.CommonDialog
+import com.team.todoktodok.presentation.view.setting.manage.adapter.BlockedMembersAdapter
 import com.team.todoktodok.presentation.view.setting.manage.vm.ManageBlockedMembersViewModel
 import com.team.todoktodok.presentation.view.setting.manage.vm.ManageBlockedMembersViewModelFactory
 
@@ -17,8 +17,6 @@ class ManageBlockedMembersFragment : Fragment(R.layout.fragment_manage_blocked_m
         val repositoryModule = (requireActivity().application as App).container.repositoryModule
         ManageBlockedMembersViewModelFactory(repositoryModule.memberRepository)
     }
-
-    private lateinit var unBlockDialog: UnBlockingDialog
 
     private lateinit var blockedMembersAdapter: BlockedMembersAdapter
 
@@ -34,17 +32,14 @@ class ManageBlockedMembersFragment : Fragment(R.layout.fragment_manage_blocked_m
     }
 
     private fun initView(binding: FragmentManageBlockedMembersBinding) {
-        unBlockDialog = UnBlockingDialog()
-
         blockedMembersAdapter = BlockedMembersAdapter(blockedMembersAdapterHandler)
         binding.rvBlockedMembers.adapter = blockedMembersAdapter
 
         parentFragmentManager.setFragmentResultListener(
-            UnBlockingDialog.REQUEST_KEY_SUPPORT,
+            CommonDialog.REQUEST_KEY_COMMON_DIALOG,
             viewLifecycleOwner,
         ) { _, bundle ->
-            AppLogger.d("$bundle")
-            val isConfirmed = bundle.getBoolean(UnBlockingDialog.RESULT_KEY_SUPPORT, false)
+            val isConfirmed = bundle.getBoolean(CommonDialog.RESULT_KEY_COMMON_DIALOG, false)
             if (isConfirmed) viewModel.unblockMember()
         }
     }
@@ -52,14 +47,18 @@ class ManageBlockedMembersFragment : Fragment(R.layout.fragment_manage_blocked_m
     private val blockedMembersAdapterHandler =
         object : BlockedMembersAdapter.Handler {
             override fun onUnblockClicked(index: Int) {
-                unBlockDialog.show(parentFragmentManager, UnBlockingDialog.TAG)
-                viewModel.findMember(index)
+                viewModel.onSelectMember(blockedMembersAdapter.currentList[index].memberId)
+                CommonDialog
+                    .newInstance(
+                        message = getString(R.string.setting_unblock_content),
+                        submitButtonText = getString(R.string.setting_unblock),
+                    ).show(parentFragmentManager, CommonDialog.TAG)
             }
         }
 
     private fun setUpUiState() {
-        viewModel.blockedMembers.observe(viewLifecycleOwner) {
-            blockedMembersAdapter.submitList(it)
+        viewModel.uiState.observe(viewLifecycleOwner) { value ->
+            blockedMembersAdapter.submitList(value.members)
         }
     }
 }
