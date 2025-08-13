@@ -1,6 +1,5 @@
 package todoktodok.backend.member.application.service.command;
 
-import jakarta.validation.constraints.Email;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import lombok.AllArgsConstructor;

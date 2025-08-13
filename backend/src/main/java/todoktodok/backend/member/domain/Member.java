@@ -53,7 +53,7 @@ public class Member extends TimeStamp {
             final String profileMessage
     ) {
         validateNickname(nickname);
-        validateEmail(email);
+        validateEmail(email, nickname);
 
         return new Member(
                 null, email, nickname, profileImage, profileMessage
@@ -101,25 +101,29 @@ public class Member extends TimeStamp {
 
     private static void validateForbiddenNickname(final String nickname) {
         if (nickname.equals(DELETED_MEMBER_NICKNAME)) {
-            throw new IllegalArgumentException("다른 닉네임을 사용해주세요");
+            throw new IllegalArgumentException(String.format("다른 닉네임을 사용해주세요: %s", nickname));
         }
     }
 
     private static void validateNicknamePattern(final String nickname) {
         if (!NICKNAME_PATTERN.matcher(nickname).matches()) {
-            throw new IllegalArgumentException("닉네임은 한글, 영어, 숫자만 입력해주세요 (특수문자, 공백 금지)");
+            throw new IllegalArgumentException(String.format("닉네임은 한글, 영어, 숫자만 입력해주세요 (특수문자, 공백 금지): %s", nickname));
         }
     }
 
     private static void validateNicknameLength(final String nickname) {
         if (nickname == null || nickname.isEmpty() || nickname.length() > NICKNAME_MAX_LENGTH) {
-            throw new IllegalArgumentException("닉네임은 1자 이상, 8자 이하여야 합니다");
+            throw new IllegalArgumentException(String.format("닉네임은 1자 이상, 8자 이하여야 합니다: %d자",
+                    (nickname == null ? null : nickname.length())));
         }
     }
 
-    private static void validateEmail(final String email) {
+    private static void validateEmail(
+            final String email,
+            final String nickname
+    ) {
         if (email == null || email.isBlank()) {
-            throw new IllegalArgumentException("이메일은 필수입니다");
+            throw new IllegalArgumentException(String.format("이메일은 필수입니다: nickname-%s", nickname));
         }
     }
 
@@ -129,7 +133,7 @@ public class Member extends TimeStamp {
         }
 
         if (profileMessage.length() > PROFILE_MESSAGE_MAX_LENGTH) {
-            throw new IllegalArgumentException("상태메세지는 40자 이하여야 합니다");
+            throw new IllegalArgumentException(String.format("상태메세지는 40자 이하여야 합니다: %d자", profileMessage.length()));
         }
     }
 }
