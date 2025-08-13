@@ -1,5 +1,8 @@
 package com.team.todoktodok.presentation.vm
 
+import com.team.domain.model.Support
+import com.team.domain.model.member.MemberId
+import com.team.domain.model.member.MemberId.Companion.DEFAULT_MEMBER_ID
 import com.team.domain.model.member.Profile
 import com.team.domain.repository.MemberRepository
 import com.team.todoktodok.CoroutinesTestExtension
@@ -9,6 +12,7 @@ import com.team.todoktodok.presentation.view.profile.adapter.ProfileItems
 import com.team.todoktodok.presentation.view.profile.vm.ProfileViewModel
 import io.kotest.matchers.shouldBe
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -38,11 +42,39 @@ class ProfileViewModelTest {
             coEvery { repository.getProfile(any()) } returns response
 
             // when
-            viewModel.loadProfile(1)
+            viewModel.initState(1)
 
             // then
             val expected = (viewModel.uiState.getOrAwaitValue().items[1] as ProfileItems.InformationItem).value
 
             expected shouldBe response
+        }
+
+    @Test
+    fun `유저를 차단한다`() =
+        runTest {
+            // given
+            val memberId = 2L
+            viewModel.initState(memberId)
+
+            // when
+            viewModel.supportMember(Support.BLOCK)
+
+            // then
+            coVerify { repository.supportMember(MemberId.OtherUser(memberId), Support.BLOCK) }
+        }
+
+    @Test
+    fun `유저를 신고한다`() =
+        runTest {
+            // given
+            val memberId = 2L
+            viewModel.initState(memberId)
+
+            // when
+            viewModel.supportMember(Support.REPORT)
+
+            // then
+            coVerify { repository.supportMember(MemberId.OtherUser(memberId), Support.REPORT) }
         }
 }
