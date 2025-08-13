@@ -2,7 +2,6 @@ package todoktodok.backend.discussion.application.service.query;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +13,7 @@ import todoktodok.backend.discussion.domain.repository.DiscussionLikeRepository;
 import todoktodok.backend.discussion.domain.repository.DiscussionRepository;
 import todoktodok.backend.member.domain.Member;
 import todoktodok.backend.member.domain.repository.MemberRepository;
+import todoktodok.backend.reply.domain.repository.ReplyRepository;
 
 @Service
 @Transactional(readOnly = true)
@@ -24,6 +24,7 @@ public class DiscussionQueryService {
     private final DiscussionLikeRepository discussionLikeRepository;
     private final MemberRepository memberRepository;
     private final CommentRepository commentRepository;
+    private final ReplyRepository replyRepository;
 
     public DiscussionResponse getDiscussion(
             final Long memberId,
@@ -33,7 +34,9 @@ public class DiscussionQueryService {
         final Discussion discussion = findDiscussion(discussionId);
 
         final int likeCount = Math.toIntExact(discussionLikeRepository.findLikeCountsByDiscussionId(discussionId));
-        final int commentCount = Math.toIntExact(commentRepository.findCommentCountsByDiscussionId(discussionId));
+        final int commentCount = Math.toIntExact(
+                commentRepository.countCommentsByDiscussionId(discussionId) + replyRepository.countRepliesByDiscussionId(discussionId)
+        );
         final boolean isLiked = discussionLikeRepository.existsByMemberAndDiscussion(member, discussion);
 
         return new DiscussionResponse(
@@ -129,7 +132,8 @@ public class DiscussionQueryService {
                 discussionIds);
         final List<DiscussionCommentCountDto> commentCountsById = commentRepository.findCommentCountsByDiscussionIds(
                 discussionIds);
-        final List<Long> likedDiscussionIds = discussionLikeRepository.findLikedDiscussionIdsByMember(member, discussionIds);
+        final List<Long> likedDiscussionIds = discussionLikeRepository.findLikedDiscussionIdsByMember(member,
+                discussionIds);
 
         return discussions.stream()
                 .map(discussion -> new DiscussionResponse(
@@ -148,7 +152,7 @@ public class DiscussionQueryService {
         return commentCountsById.stream()
                 .filter(count -> discussion.isSameId(count.discussionId()))
                 .findFirst()
-                .map(DiscussionCommentCountDto::commentCount)
+                .map(dto -> dto.commentCount() + dto.replyCount())
                 .orElseThrow(() -> new IllegalStateException("토론방의 댓글 수를 찾을 수 없습니다"));
     }
 
