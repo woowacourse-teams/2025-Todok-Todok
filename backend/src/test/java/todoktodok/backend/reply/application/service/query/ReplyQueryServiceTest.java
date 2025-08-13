@@ -159,7 +159,7 @@ class ReplyQueryServiceTest {
         // when - then
         assertThatThrownBy(() -> replyQueryService.getReplies(memberId, discussionId, commentId))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("해당 토론방에 있는 댓글이 아닙니다");
+                .hasMessageContaining("해당 토론방에 있는 댓글이 아닙니다");
     }
 
     @Test

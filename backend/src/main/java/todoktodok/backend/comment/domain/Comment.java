@@ -73,19 +73,21 @@ public class Comment extends TimeStamp {
 
     public void validateMatchWithDiscussion(final Discussion discussion) {
         if (!this.discussion.equals(discussion)) {
-            throw new IllegalArgumentException("해당 토론방에 있는 댓글이 아닙니다");
+            throw new IllegalArgumentException(String.format("해당 토론방에 있는 댓글이 아닙니다: discussion-%d, comment-%d"
+                    , discussion.getId(), this.id));
         }
     }
 
     public void validateSelfReport(final Member member) {
         if (this.member.equals(member)) {
-            throw new IllegalArgumentException("자기 자신이 작성한 댓글을 신고할 수 없습니다");
+            throw new IllegalArgumentException(String.format("자기 자신이 작성한 댓글을 신고할 수 없습니다: %d -> %d"
+                    , member.getId(), this.id));
         }
     }
 
     private static void validateContent(final String content) {
         if (content.isEmpty() || content.length() > CONTENT_MAX_LENGTH) {
-            throw new IllegalArgumentException("댓글 내용은 1자 이상, 1500자 이하여야 합니다");
+            throw new IllegalArgumentException(String.format("댓글 내용은 1자 이상, 1500자 이하여야 합니다: %d자", content.length()));
         }
     }
 }

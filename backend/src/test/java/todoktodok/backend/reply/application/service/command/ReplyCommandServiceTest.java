@@ -204,7 +204,7 @@ public class ReplyCommandServiceTest {
         assertThatThrownBy(
                 () -> replyCommandService.updateReply(memberId, discussionId, commentId, replyId, replyRequest))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("해당 토론방에 있는 댓글이 아닙니다");
+                .hasMessageContaining("해당 토론방에 있는 댓글이 아닙니다");
     }
 
     @Test
@@ -280,7 +280,7 @@ public class ReplyCommandServiceTest {
         // when - then
         assertThatThrownBy(() -> replyCommandService.deleteReply(memberId, discussionId, commentId, replyId))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("해당 토론방에 있는 댓글이 아닙니다");
+                .hasMessageContaining("해당 토론방에 있는 댓글이 아닙니다");
     }
 
     @Test
@@ -372,7 +372,7 @@ public class ReplyCommandServiceTest {
         // when - then
         assertThatThrownBy(() -> replyCommandService.toggleLike(memberId, discussionId, commentId, replyId))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("해당 토론방에 있는 댓글이 아닙니다");
+                .hasMessageContaining("해당 토론방에 있는 댓글이 아닙니다");
     }
 
     @Test
