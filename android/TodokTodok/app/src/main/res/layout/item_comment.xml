@@ -33,7 +33,7 @@
         android:id="@+id/iv_comment_option"
         android:layout_width="48dp"
         android:layout_height="36dp"
-        android:contentDescription="@string/content_description_reply_option"
+        android:contentDescription="@string/content_description_comment_option"
         android:focusable="true"
         android:paddingHorizontal="12dp"
         android:paddingVertical="6dp"
