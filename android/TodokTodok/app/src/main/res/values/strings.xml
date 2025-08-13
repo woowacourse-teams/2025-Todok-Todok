@@ -106,5 +106,7 @@
     <string name="setting_unblock_content">해당 유저를 차단 해제하시겠습니까?</string>
     <string name="setting_unblock">해제하기</string>
     <string name="setting_send_feedback">의견 보내기</string>
+    <string name="content_description_select_book">토론하고 싶은 도서를 선택해주세요</string>
+    <string name="empty_search_result_title">선택된 도서 없음</string>
 
 </resources>
