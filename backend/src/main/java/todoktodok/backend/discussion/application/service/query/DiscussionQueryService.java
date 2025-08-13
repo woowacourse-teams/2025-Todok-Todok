@@ -73,7 +73,7 @@ public class DiscussionQueryService {
     private Discussion findDiscussion(final Long discussionId) {
         return discussionRepository.findById(discussionId)
                 .orElseThrow(() -> new NoSuchElementException(
-                                String.format("해당 토론방을 찾을 수 없습니다: discussionId=%d", discussionId)
+                                String.format("해당 토론방을 찾을 수 없습니다: discussionId= %s", discussionId)
                         )
                 );
     }
@@ -81,7 +81,7 @@ public class DiscussionQueryService {
     private Member findMember(final Long memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new NoSuchElementException(
-                                String.format("해당 회원을 찾을 수 없습니다: memberId=%d", memberId)
+                                String.format("해당 회원을 찾을 수 없습니다: memberId= %s", memberId)
                         )
                 );
     }
@@ -161,7 +161,7 @@ public class DiscussionQueryService {
                 .findFirst()
                 .map(dto -> dto.commentCount() + dto.replyCount())
                 .orElseThrow(() -> new IllegalStateException(
-                                String.format("토론방의 댓글 수를 찾을 수 없습니다: discussionId=%d", discussion.getId())
+                                String.format("토론방의 댓글 수를 찾을 수 없습니다: discussionId= %s", discussion.getId())
                         )
                 );
     }
@@ -175,7 +175,7 @@ public class DiscussionQueryService {
                 .findFirst()
                 .map(DiscussionLikeCountDto::likeCount)
                 .orElseThrow(() -> new IllegalStateException(
-                        String.format("토론방의 좋아요 수를 찾을 수 없습니다: discussionId=%d", discussion.getId()))
+                        String.format("토론방의 좋아요 수를 찾을 수 없습니다: discussionId= %s", discussion.getId()))
                 );
     }
 
