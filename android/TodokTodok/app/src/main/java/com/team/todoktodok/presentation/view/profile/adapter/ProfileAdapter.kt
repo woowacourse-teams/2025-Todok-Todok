@@ -33,7 +33,7 @@ class ProfileAdapter(
         position: Int,
     ) {
         when (val item = getItem(position)) {
-            ProfileItems.HeaderItem -> return
+            is ProfileItems.HeaderItem -> (holder as UserProfileHeaderViewHolder).bind(item)
             is ProfileItems.TabItem -> (holder as UserTabViewHolder).bind()
             is ProfileItems.InformationItem -> (holder as UserInformationViewHolder).bind(item)
         }
