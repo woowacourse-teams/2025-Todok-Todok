@@ -5,6 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
+import android.view.WindowInsets
+import android.view.WindowInsetsAnimation
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
@@ -42,6 +44,7 @@ class SelectBookActivity : AppCompatActivity() {
         initSystemBar()
         initView()
         setupUiEvent()
+        liftViewWithIme(binding.nsvEmptySearchResult, R.dimen.space_120)
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
@@ -166,6 +169,26 @@ class SelectBookActivity : AppCompatActivity() {
         val inputMethodManager: InputMethodManager =
             this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
+    private fun liftViewWithIme(
+        view: View,
+        size: Int,
+    ) {
+        view.setWindowInsetsAnimationCallback(
+            object : WindowInsetsAnimation.Callback(DISPATCH_MODE_STOP) {
+                override fun onProgress(
+                    insets: WindowInsets,
+                    runningAnimations: MutableList<WindowInsetsAnimation>,
+                ): WindowInsets {
+                    val imeBottom = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
+                    val maxLiftPx = resources.getDimensionPixelSize(size)
+                    val lift = minOf(imeBottom, maxLiftPx)
+                    view.translationY = (-lift).toFloat()
+                    return insets
+                }
+            },
+        )
     }
 
     companion object {
