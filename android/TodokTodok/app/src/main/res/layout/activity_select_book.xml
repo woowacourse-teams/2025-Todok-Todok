@@ -126,17 +126,18 @@
                 android:textColor="@color/gray_66" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
-    <!--    <androidx.recyclerview.widget.RecyclerView-->
-    <!--        android:id="@+id/rv_searched_books"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="@dimen/space_0"-->
-    <!--        android:layout_marginTop="10dp"-->
-    <!--        android:paddingBottom="10dp"-->
-    <!--        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"-->
-    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintHorizontal_bias="1.0"-->
-    <!--        app:layout_constraintStart_toStartOf="parent"-->
-    <!--        app:layout_constraintTop_toBottomOf="@id/etl_search_keyword"-->
-    <!--        tools:listitem="@layout/item_book" />-->
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_searched_books"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/space_0"
+        android:layout_marginTop="10dp"
+        android:paddingBottom="10dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/etl_search_keyword"
+        tools:listitem="@layout/item_book" />
 </androidx.constraintlayout.widget.ConstraintLayout>

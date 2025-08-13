@@ -1,5 +1,7 @@
 package com.team.todoktodok.presentation.view.book.vm
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.team.domain.model.Books
@@ -16,13 +18,13 @@ import kotlinx.coroutines.withContext
 class SelectBookViewModel(
     private val bookRepository: BookRepository,
 ) : ViewModel() {
-    private var uiState = SelectBookUiState()
+    private val _uiState: MutableLiveData<SelectBookUiState> = MutableLiveData(SelectBookUiState())
+    val uiState: LiveData<SelectBookUiState> get() = _uiState
 
     private val _uiEvent: MutableSingleLiveData<SelectBookUiEvent> = MutableSingleLiveData()
     val uiEvent: SingleLiveData<SelectBookUiEvent> get() = _uiEvent
 
     init {
-        isLoading()
         _uiEvent.setValue(SelectBookUiEvent.RevealKeyboard)
     }
 
@@ -46,8 +48,8 @@ class SelectBookViewModel(
     }
 
     fun updateSelectedBook(position: Int) {
-        uiState = uiState.copy(selectedBook = uiState.searchedBooks[position])
-        val selectedBook = uiState.selectedBook
+        _uiState.setValue(_uiState.value?.copy(selectedBook = _uiState.value?.searchedBooks?.get(position)))
+        val selectedBook = _uiState.value?.selectedBook
         if (selectedBook == null) {
             _uiEvent.setValue(SelectBookUiEvent.ShowToast(ErrorSelectBookType.ERROR_NO_SELECTED_BOOK))
         } else {
@@ -56,34 +58,24 @@ class SelectBookViewModel(
     }
 
     private fun updateKeyword(keyword: String) {
-        uiState = uiState.copy(keyword = keyword)
+        _uiState.setValue(_uiState.value?.copy(keyword = keyword))
     }
 
     private fun updateSearchedBooks() {
-        val keyword = uiState.keyword
-        uiState = uiState.copy(isLoading = true)
-        isLoading()
+        val keyword = _uiState.value?.keyword ?: return
+        _uiState.setValue(_uiState.value?.copy(isLoading = true))
         viewModelScope.launch {
             try {
                 val books: Books =
                     withContext(Dispatchers.IO) {
                         bookRepository.fetchBooks(keyword)
                     }
-                uiState = uiState.copy(isLoading = false, searchedBooks = books)
-                isLoading()
-                _uiEvent.setValue(SelectBookUiEvent.ShowSearchResult(uiState.searchedBooks))
+                _uiState.setValue(_uiState.value?.copy(isLoading = false, searchedBooks = books))
+                _uiEvent.setValue(SelectBookUiEvent.ShowSearchResult(_uiState.value?.searchedBooks ?: Books(emptyList())))
             } catch (e: Exception) {
                 _uiEvent.setValue(SelectBookUiEvent.ShowToast(ErrorSelectBookType.ERROR_NETWORK))
             }
         }
-    }
-
-    private fun isLoading() {
-        if (uiState.isLoading) {
-            _uiEvent.setValue(SelectBookUiEvent.StartLoading)
-            return
-        }
-        _uiEvent.setValue(SelectBookUiEvent.FinishLoading)
     }
 
     companion object {

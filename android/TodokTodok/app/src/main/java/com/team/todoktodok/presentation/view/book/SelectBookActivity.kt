@@ -94,6 +94,15 @@ class SelectBookActivity : AppCompatActivity() {
         }
 
     private fun setupUiEvent() {
+        viewModel.uiState.observe(this) {
+            if (it.searchedBooks.items.isEmpty()) {
+                binding.nsvEmptySearchResult.visibility = View.VISIBLE
+                binding.rvSearchedBooks.visibility = View.GONE
+            } else {
+                binding.nsvEmptySearchResult.visibility = View.GONE
+                binding.rvSearchedBooks.visibility = View.VISIBLE
+            }
+        }
         viewModel.uiEvent.observe(this) { event ->
             when (event) {
                 is SelectBookUiEvent.StartLoading -> {
