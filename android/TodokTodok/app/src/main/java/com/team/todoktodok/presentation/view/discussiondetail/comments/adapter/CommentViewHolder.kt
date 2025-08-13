@@ -7,34 +7,34 @@ import androidx.recyclerview.widget.RecyclerView
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ItemCommentBinding
 import com.team.todoktodok.presentation.core.ext.formatWithResource
-import com.team.todoktodok.presentation.view.discussiondetail.model.CommentUiModel
+import com.team.todoktodok.presentation.view.discussiondetail.model.CommentItemUiState
 
 class CommentViewHolder private constructor(
     private val binding: ItemCommentBinding,
     private val handler: Handler,
 ) : RecyclerView.ViewHolder(binding.root) {
-    fun bind(commentUiModel: CommentUiModel) {
+    fun bind(commentItemUiState: CommentItemUiState) {
         with(binding) {
-            tvCommentOpinion.text = commentUiModel.comment.content
-            tvUserNickname.text = commentUiModel.comment.writer.nickname.value
+            tvCommentOpinion.text = commentItemUiState.comment.content
+            tvUserNickname.text = commentItemUiState.comment.writer.nickname.value
             tvDiscussionCreateAt.text =
-                commentUiModel.comment.createAt.formatWithResource(
+                commentItemUiState.comment.createAt.formatWithResource(
                     binding.root.context,
                     R.string.date_format_pattern,
                 )
             ivReply.setOnClickListener {
-                handler.onReplyClick(commentUiModel.comment.id)
+                handler.onReplyClick(commentItemUiState.comment.id)
             }
             ivCommentOption.setOnClickListener {
-                handler.onOptionClick(commentUiModel, ivCommentOption)
+                handler.onOptionClick(commentItemUiState, ivCommentOption)
             }
             tvUserNickname.setOnClickListener {
-                handler.onClickUserName(commentUiModel.comment.writer.id)
+                handler.onClickUserName(commentItemUiState.comment.writer.id)
             }
-            ivLike.setOnClickListener { handler.onToggleLike(commentUiModel.comment.id) }
-            ivLike.isSelected = commentUiModel.comment.isLikedByMe
-            tvHeartCount.text = commentUiModel.comment.likeCount.toString()
-            tvReplyCount.text = commentUiModel.comment.replyCount.toString()
+            ivLike.setOnClickListener { handler.onToggleLike(commentItemUiState.comment.id) }
+            ivLike.isSelected = commentItemUiState.comment.isLikedByMe
+            tvHeartCount.text = commentItemUiState.comment.likeCount.toString()
+            tvReplyCount.text = commentItemUiState.comment.replyCount.toString()
         }
     }
 
@@ -53,7 +53,7 @@ class CommentViewHolder private constructor(
         fun onReplyClick(commentId: Long)
 
         fun onOptionClick(
-            commentUiModel: CommentUiModel,
+            commentItemUiState: CommentItemUiState,
             view: View,
         )
 

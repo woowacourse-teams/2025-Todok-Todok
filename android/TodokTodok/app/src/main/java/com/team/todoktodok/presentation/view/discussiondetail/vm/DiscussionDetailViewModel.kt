@@ -10,7 +10,7 @@ import com.team.domain.repository.TokenRepository
 import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
 import com.team.todoktodok.presentation.core.event.SingleLiveData
 import com.team.todoktodok.presentation.view.discussiondetail.DiscussionDetailUiEvent
-import com.team.todoktodok.presentation.view.discussiondetail.model.DiscussionUiModel
+import com.team.todoktodok.presentation.view.discussiondetail.model.DiscussionItemUiState
 import kotlinx.coroutines.launch
 
 class DiscussionDetailViewModel(
@@ -21,8 +21,8 @@ class DiscussionDetailViewModel(
     private val discussionId =
         savedStateHandle.get<Long>(KEY_DISCUSSION_ID) ?: throw IllegalStateException()
 
-    private val _discussion = MutableLiveData<DiscussionUiModel>()
-    val discussion: LiveData<DiscussionUiModel> = _discussion
+    private val _discussion = MutableLiveData<DiscussionItemUiState>()
+    val discussion: LiveData<DiscussionItemUiState> = _discussion
 
     private val _uiEvent = MutableSingleLiveData<DiscussionDetailUiEvent>()
     val uiEvent: SingleLiveData<DiscussionDetailUiEvent> = _uiEvent
@@ -85,7 +85,7 @@ class DiscussionDetailViewModel(
     private suspend fun loadDiscussionRoom() {
         val discussion = discussionRepository.getDiscussion(discussionId).getOrThrow()
         _discussion.value =
-            DiscussionUiModel(
+            DiscussionItemUiState(
                 discussion,
                 discussion.writer.id == tokenRepository.getMemberId(),
             )

@@ -19,7 +19,7 @@ import com.team.todoktodok.presentation.view.discussiondetail.commentcreate.Comm
 import com.team.todoktodok.presentation.view.discussiondetail.commentdetail.CommentDetailFragment
 import com.team.todoktodok.presentation.view.discussiondetail.comments.adapter.CommentAdapter
 import com.team.todoktodok.presentation.view.discussiondetail.comments.vm.CommentsViewModel
-import com.team.todoktodok.presentation.view.discussiondetail.model.CommentUiModel
+import com.team.todoktodok.presentation.view.discussiondetail.model.CommentItemUiState
 import com.team.todoktodok.presentation.view.discussiondetail.vm.DiscussionDetailViewModel
 import com.team.todoktodok.presentation.view.profile.ProfileActivity
 
@@ -136,19 +136,22 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
             true,
         )
 
-    private fun getPopUpView(commentUiModel: CommentUiModel): PopupWindow =
-        if (commentUiModel.isMyComment) {
+    private fun getPopUpView(commentItemUiState: CommentItemUiState): PopupWindow =
+        if (commentItemUiState.isMyComment) {
             val binding = MenuOwnedDiscussionBinding.inflate(layoutInflater)
             binding.tvEdit.setOnClickListener {
-                viewModel.updateComment(commentUiModel.comment.id, commentUiModel.comment.content)
+                viewModel.updateComment(
+                    commentItemUiState.comment.id,
+                    commentItemUiState.comment.content,
+                )
             }
             binding.tvDelete.setOnClickListener {
-                viewModel.deleteComment(commentUiModel.comment.id)
+                viewModel.deleteComment(commentItemUiState.comment.id)
                 popupWindow?.dismiss()
             }
             createPopUpView(binding.root)
         } else {
-            setUpDialogResultListener(commentId = commentUiModel.comment.id)
+            setUpDialogResultListener(commentId = commentItemUiState.comment.id)
             val binding = MenuExternalDiscussionBinding.inflate(layoutInflater)
             binding.tvReport.setOnClickListener {
                 showReportDialog()
@@ -204,10 +207,10 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
             }
 
             override fun onOptionClick(
-                commentUiModel: CommentUiModel,
+                commentItemUiState: CommentItemUiState,
                 view: View,
             ) {
-                popupWindow = getPopUpView(commentUiModel)
+                popupWindow = getPopUpView(commentItemUiState)
                 if (popupWindow?.isShowing == true) {
                     popupWindow?.dismiss()
                 } else {

@@ -13,8 +13,8 @@ import com.team.todoktodok.presentation.core.event.SingleLiveData
 import com.team.todoktodok.presentation.view.discussiondetail.commentdetail.CommentDetailUiEvent
 import com.team.todoktodok.presentation.view.discussiondetail.commentdetail.CommentDetailUiState
 import com.team.todoktodok.presentation.view.discussiondetail.commentdetail.CommentDetailUiState.Companion.INIT_COMMENT
-import com.team.todoktodok.presentation.view.discussiondetail.model.CommentUiModel
-import com.team.todoktodok.presentation.view.discussiondetail.model.ReplyUiModel
+import com.team.todoktodok.presentation.view.discussiondetail.model.CommentItemUiState
+import com.team.todoktodok.presentation.view.discussiondetail.model.ReplyItemUiState
 import kotlinx.coroutines.launch
 
 class CommentDetailViewModel(
@@ -133,7 +133,7 @@ class CommentDetailViewModel(
             val comment = commentRepository.getComment(discussionId, commentId)
             _uiState.value =
                 CommentDetailUiState(
-                    CommentUiModel(
+                    CommentItemUiState(
                         comment,
                         isMyComment,
                     ),
@@ -142,7 +142,7 @@ class CommentDetailViewModel(
             _uiState.value =
                 currentUiState.copy(
                     comment =
-                        CommentUiModel(
+                        CommentItemUiState(
                             commentRepository.getComment(discussionId, commentId),
                             isMyComment,
                         ),
@@ -155,7 +155,7 @@ class CommentDetailViewModel(
         val memberId = tokenRepository.getMemberId()
         val replies =
             replyRepository.getReplies(discussionId, commentId).map { reply ->
-                ReplyUiModel(
+                ReplyItemUiState(
                     reply,
                     reply.user.id == memberId,
                 )

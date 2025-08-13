@@ -4,13 +4,13 @@ import com.team.domain.model.Comment
 import com.team.domain.model.member.Nickname
 import com.team.domain.model.member.User
 import com.team.todoktodok.presentation.view.discussiondetail.commentdetail.adapter.CommentDetailItems
-import com.team.todoktodok.presentation.view.discussiondetail.model.CommentUiModel
-import com.team.todoktodok.presentation.view.discussiondetail.model.ReplyUiModel
+import com.team.todoktodok.presentation.view.discussiondetail.model.CommentItemUiState
+import com.team.todoktodok.presentation.view.discussiondetail.model.ReplyItemUiState
 import java.time.LocalDateTime
 
 data class CommentDetailUiState(
-    val comment: CommentUiModel = INIT_COMMENT,
-    val replies: List<ReplyUiModel> = emptyList(),
+    val comment: CommentItemUiState = INIT_COMMENT,
+    val replies: List<ReplyItemUiState> = emptyList(),
 ) {
     fun getCommentDetailItems() =
         listOf(CommentDetailItems.CommentItem(comment)) +
@@ -20,7 +20,7 @@ data class CommentDetailUiState(
 
     companion object {
         val INIT_COMMENT =
-            CommentUiModel(
+            CommentItemUiState(
                 Comment(
                     id = 0,
                     "",
