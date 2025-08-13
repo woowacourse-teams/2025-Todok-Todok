@@ -31,6 +31,12 @@ android {
             "GOOGLE_CLIENT_ID",
             "\"${properties.getProperty("google_client_id")}\"",
         )
+
+        buildConfigField(
+            "String",
+            "FEEDBACK_URL",
+            "\"${properties.getProperty("feedback_url")}\"",
+        )
     }
 
     namespace = "com.team.todoktodok"
