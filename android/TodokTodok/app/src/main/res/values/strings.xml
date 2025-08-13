@@ -25,7 +25,7 @@
 
     <!--  토론 목록 페이지  -->
     <string name="content_description_add_discussion">토론방 추가 화면으로 이동합니다</string>
-    <string name="content_description_book_image">도 이미지입니다</string>
+    <string name="content_description_book_image">도서 이미지입니다</string>
 
     <!--  상세 토론방 페이지  -->
     <string name="content_description_discussion_detail_back">토론 상세 화면에서 뒤로가는 버튼</string>
@@ -85,13 +85,13 @@
 
     <string name="error_delete_keyword">검색어를 삭제했습니다</string>
     <string name="error_empty_keyword">검색어를 입력해주세요</string>
-    <string name="error_no_selected_book">도서을 선택해주세요</string>
+    <string name="error_no_selected_book">도서를 선택해주세요</string>
     <string name="error_network">네트워크 에러가 발생했어요</string>
 
    <!-- 토론방 생성 화면 -->
     <string name="create_discussion_room_appbar">토론방 생성</string>
     <string name="create">등록</string>
-    <string name="content_description_edit_book_in_discussion_room">토론방 도서을 변경합니다</string>
+    <string name="content_description_edit_book_in_discussion_room">토론방 도서를 변경합니다</string>
     <string name="hint_discussion_room_opinion">최근에 읽은 도서에서 이야기하고 싶은 내용을 입력해주세요!</string>
     <string name="hint_discussion_room_title">제목을 입력해주세요!</string>
     <string name="edit_discussion_room_title">토론방 수정</string>
