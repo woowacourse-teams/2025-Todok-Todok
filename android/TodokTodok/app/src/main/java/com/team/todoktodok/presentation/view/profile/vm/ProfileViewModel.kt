@@ -17,17 +17,24 @@ import kotlinx.coroutines.launch
 class ProfileViewModel(
     private val memberRepository: MemberRepository,
 ) : ViewModel() {
-    private val _uiState = MutableLiveData(ProfileUiState.initial())
+    private val _uiState = MutableLiveData<ProfileUiState>()
     val uiState: LiveData<ProfileUiState> get() = _uiState
 
     private val _uiEvent = MutableSingleLiveData<ProfileUiEvent>()
     val uiEvent: SingleLiveData<ProfileUiEvent> get() = _uiEvent
 
-    fun loadProfile(memberId: Long) {
+    fun initState(id: Long) {
+        val memberId = MemberId(id)
+        _uiState.value = ProfileUiState.initial(memberId)
+        loadProfile()
+    }
+
+    fun loadProfile() {
         viewModelScope.launch {
-            val memberId = MemberId(memberId)
-            val result = memberRepository.getProfile(memberId)
-            _uiState.value = _uiState.value?.modifyProfile(result, memberId)
+            _uiState.value?.memberId?.let {
+                val result = memberRepository.getProfile(it)
+                _uiState.value = _uiState.value?.modifyProfile(result)
+            }
         }
     }
 

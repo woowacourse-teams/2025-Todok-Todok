@@ -36,7 +36,7 @@ class ProfileActivity : AppCompatActivity() {
             ActivityResultContracts.StartActivityForResult(),
         ) { result ->
             if (result.resultCode == RESULT_OK) {
-                viewModel.loadProfile(DEFAULT_MEMBER_ID)
+                viewModel.loadProfile()
             }
         }
 
@@ -48,8 +48,8 @@ class ProfileActivity : AppCompatActivity() {
         setUpSystemBar()
         setUpDialogResultListener()
         setUpUiEvent()
-        initView(binding)
         setUpUiState()
+        initView(binding)
     }
 
     private fun setUpSystemBar() {
@@ -75,7 +75,7 @@ class ProfileActivity : AppCompatActivity() {
     private fun initView(binding: ActivityProfileBinding) {
         val memberId: Long? = intent?.getLongExtra(ARG_MEMBER_ID, DEFAULT_MEMBER_ID)
         requireNotNull(memberId) { MEMBER_ID_NOT_FOUND }
-        viewModel.loadProfile(memberId)
+        viewModel.initState(memberId)
 
         val viewPagerAdapter = ContentPagerAdapter(memberId, supportFragmentManager, lifecycle)
         profileAdapter = ProfileAdapter(profileAdapterHandler, viewPagerAdapter)

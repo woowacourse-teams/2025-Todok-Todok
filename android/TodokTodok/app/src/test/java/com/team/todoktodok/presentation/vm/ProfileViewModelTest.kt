@@ -34,6 +34,30 @@ class ProfileViewModelTest {
     }
 
     @Test
+    fun `전달받은 멤버 아이디가 존재하면 다른 유저의 프로필 화면으로 초기 상태가 설정된다`() =
+        runTest {
+            // when
+            viewModel.initState(10L)
+
+            // then
+            val state = viewModel.uiState.getOrAwaitValue()
+            state.memberId shouldBe MemberId.OtherUser(id = 10)
+            state.isMyProfilePage shouldBe false
+        }
+
+    @Test
+    fun `전달받은 멤버 아이디가 기본값이면 내 프로필 화면으로 초기 상태가 설정된다`() =
+        runTest {
+            // when
+            viewModel.initState(DEFAULT_MEMBER_ID)
+
+            // then
+            val state = viewModel.uiState.getOrAwaitValue()
+            state.memberId shouldBe MemberId.Mine
+            state.isMyProfilePage shouldBe true
+        }
+
+    @Test
     fun `사용자의 프로필을 불러온다`() =
         runTest {
             // given
