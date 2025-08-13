@@ -12,8 +12,8 @@ public record DiscussionCommentCountDto(
     ) {
         this(
                 discussionId,
-                commentCount.intValue(),
-                replyCount.intValue()
+                Math.toIntExact(commentCount),
+                Math.toIntExact(replyCount)
         );
     }
 }
