@@ -25,7 +25,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> handleBadRequestException(final IllegalArgumentException e) {
         log.warn(PREFIX + e.getMessage());
-        return ResponseEntity.badRequest().body(PREFIX + getSafeErrorMessage(e));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(PREFIX + getSafeErrorMessage(e));
     }
 
     @ExceptionHandler(NoSuchElementException.class)
@@ -37,11 +37,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(IllegalStateException.class)
     public ResponseEntity<String> handleIllegalStateException(final IllegalStateException e) {
         log.warn(PREFIX + e.getMessage());
-        return ResponseEntity.internalServerError().body(PREFIX + getSafeErrorMessage(e));
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(PREFIX + getSafeErrorMessage(e));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<String> handleMethodArgumentNotValidException(final MethodArgumentNotValidException e) {
+    public ResponseEntity<String> handleMethodArgumentNotValidException(
+            final MethodArgumentNotValidException e
+    ) {
         log.warn(PREFIX + e.getBindingResult().getFieldErrors().getFirst().getDefaultMessage());
         e.getBindingResult().getFieldErrors()
                 .forEach(fieldError -> {
@@ -50,30 +52,33 @@ public class GlobalExceptionHandler {
                     log.warn("{}: {}", fieldError.getField(), maskedValue);
                 });
 
-        return ResponseEntity.badRequest()
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(PREFIX + e.getBindingResult().getFieldErrors().getFirst().getDefaultMessage());
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<String> handleMethodArgumentTypeMismatchException(
-            final MethodArgumentTypeMismatchException e) {
+            final MethodArgumentTypeMismatchException e
+    ) {
         log.warn(PREFIX + String.format("유효하지 않은 %s의 값입니다", e.getRequiredType().getSimpleName()));
-        return ResponseEntity.badRequest()
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(PREFIX + String.format("유효하지 않은 %s의 값입니다", e.getRequiredType().getSimpleName()));
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ResponseEntity<String> handleMissingServletRequestParameterException(
-            final MissingServletRequestParameterException e) {
+            final MissingServletRequestParameterException e
+    ) {
         log.warn(PREFIX + String.format("파라미터 %s가 존재하지 않습니다", e.getParameterName()));
-        return ResponseEntity.badRequest()
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(PREFIX + String.format("파라미터 %s가 존재하지 않습니다", e.getParameterName()));
     }
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<String> handleRuntimeException(final RuntimeException e) {
         log.error("Unexpected error occurred", e);
-        return ResponseEntity.internalServerError().body(PREFIX + "예상하지 못한 예외가 발생하였습니다. 상세 정보: " + e.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(PREFIX + "예상하지 못한 예외가 발생하였습니다. 상세 정보: " + e.getMessage());
     }
 
     private String maskEmailValue(
