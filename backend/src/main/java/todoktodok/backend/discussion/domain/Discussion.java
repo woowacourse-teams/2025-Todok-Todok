@@ -108,13 +108,21 @@ public class Discussion extends TimeStamp {
 
     private static void validateTitle(final String title) {
         if (title.isEmpty() || title.length() > TITLE_MAX_LENGTH) {
-            throw new IllegalArgumentException("토론방 제목은 1자 이상, 50자 이하여야 합니다");
+            throw new IllegalArgumentException(
+                    String.format("토론방 제목은 1자 이상, 50자 이하여야 합니다: %d자",
+                            title.length()
+                    )
+            );
         }
     }
 
     private static void validateContent(final String content) {
         if (content.isEmpty() || content.length() > CONTENT_MAX_LENGTH) {
-            throw new IllegalArgumentException("토론방 내용은 1자 이상, 2500자 이하여야 합니다");
+            throw new IllegalArgumentException(
+                    String.format("토론방 내용은 1자 이상, 2500자 이하여야 합니다: %d자",
+                            content.length()
+                            )
+            );
         }
     }
 }
