@@ -8,7 +8,7 @@
     <string name="all_book_search">도서 검색</string>
     <string name="all_report">신고</string>
     <string name="all_report_or_block">신고/차단</string>
-    <string name="book_image">책 이미지입니다</string>
+    <string name="book_image">도서 이미지입니다</string>
     <string name="all_opinion">의견</string>
     <string name="all_comment">댓글</string>
     <string name="all_unknown_exception">알 수 없는 오류가 발생했어요</string>
@@ -25,7 +25,7 @@
 
     <!--  토론 목록 페이지  -->
     <string name="content_description_add_discussion">토론방 추가 화면으로 이동합니다</string>
-    <string name="content_description_book_image">책 이미지입니다</string>
+    <string name="content_description_book_image">도 이미지입니다</string>
 
     <!--  상세 토론방 페이지  -->
     <string name="content_description_discussion_detail_back">토론 상세 화면에서 뒤로가는 버튼</string>
@@ -47,11 +47,11 @@
     <string name="signup_invalid_nickname_message_length">1자 이상 8자 이하로 입력해주세요.</string>
 
     <!-- 토론 화면 -->
-    <string name="discussion_search_bar_hint">책 제목 또는 키워드를 입력해주세요.</string>
+    <string name="discussion_search_bar_hint">도서 제목 또는 키워드를 입력해주세요.</string>
     <string name="discussion_tab_title_all">전체</string>
     <string name="discussion_tab_title_my">내 토론방</string>
     <string name="discussion_no_search_result">검색결과가 없어요\n다른 검색어를 입력해 주세요 !</string>
-    <string name="content_description_discussion_img">토론방 책 이미지</string>
+    <string name="content_description_discussion_img">토론방 도서 이미지</string>
 
     <!-- 프로필 화면 -->
     <string name="profile_setting">설정</string>
@@ -74,25 +74,25 @@
     <string name="content_description_comment_reply">대댓글 목록 버튼</string>
     <string name="content_description_comment_like">댓글 좋아요 클릭 버튼</string>
     <string name="content_description_reply_like">대댓글 좋아요 클릭 버튼</string>
-    <!-- 토론방 책 선택 화면 -->
-    <string name="content_description_ut_discussion_img">토론방 책 이미지</string>
+    <!-- 토론방 도서 선택 화면 -->
+    <string name="content_description_ut_discussion_img">토론방 도서 이미지</string>
     <string name="create_discussion_room">토론방 생성</string>
     <string name="content_description_btn_back">메인 페이지로 이동합니다</string>
-    <string name="content_description_book_cover">책 이미지입니다</string>
+    <string name="content_description_book_cover">도서 이미지입니다</string>
     <string name="select_book">토론방 도서 선택</string>
     <string name="content_description_search_keyword">도서 검색을 합니다</string>
-    <string name="hint_search_keyword">책 제목 또는 저자를 입력해주세요</string>
+    <string name="hint_search_keyword">도서 제목 또는 저자를 입력해주세요</string>
 
     <string name="error_delete_keyword">검색어를 삭제했습니다</string>
     <string name="error_empty_keyword">검색어를 입력해주세요</string>
-    <string name="error_no_selected_book">책을 선택해주세요</string>
+    <string name="error_no_selected_book">도서을 선택해주세요</string>
     <string name="error_network">네트워크 에러가 발생했어요</string>
 
    <!-- 토론방 생성 화면 -->
     <string name="create_discussion_room_appbar">토론방 생성</string>
     <string name="create">등록</string>
-    <string name="content_description_edit_book_in_discussion_room">토론방 책을 변경합니다</string>
-    <string name="hint_discussion_room_opinion">최근에 읽은 책에서 이야기하고 싶은 내용을 입력해주세요!</string>
+    <string name="content_description_edit_book_in_discussion_room">토론방 도서을 변경합니다</string>
+    <string name="hint_discussion_room_opinion">최근에 읽은 도서에서 이야기하고 싶은 내용을 입력해주세요!</string>
     <string name="hint_discussion_room_title">제목을 입력해주세요!</string>
     <string name="edit_discussion_room_title">토론방 수정</string>
 
