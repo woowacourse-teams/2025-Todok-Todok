@@ -29,6 +29,7 @@
 
     <!--  상세 토론방 페이지  -->
     <string name="content_description_discussion_detail_back">토론 상세 화면에서 뒤로가는 버튼</string>
+    <string name="content_description_discussion_detail_option">토론방 옵션 버튼</string>
     <string name="comment_input_hint">댓글 입력</string>
     <string name="content_description_add_comment">댓글을 추가합니다</string>
 
@@ -88,7 +89,7 @@
     <string name="error_no_selected_book">도서를 선택해주세요</string>
     <string name="error_network">네트워크 에러가 발생했어요</string>
 
-   <!-- 토론방 생성 화면 -->
+    <!-- 토론방 생성 화면 -->
     <string name="create_discussion_room_appbar">토론방 생성</string>
     <string name="create">등록</string>
     <string name="content_description_edit_book_in_discussion_room">토론방 도서를 변경합니다</string>

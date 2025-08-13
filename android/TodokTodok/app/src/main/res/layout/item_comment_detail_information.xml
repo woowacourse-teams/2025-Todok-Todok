@@ -30,15 +30,17 @@
         tools:text="2024년 7월 20일" />
 
     <ImageView
+        android:id="@+id/iv_comment_option"
         android:layout_width="@dimen/space_24"
         android:layout_height="@dimen/space_24"
+        android:contentDescription="@string/content_description_comment_option"
         android:src="@drawable/btn_option"
         app:layout_constraintBottom_toBottomOf="@id/tv_user_nickname"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/tv_user_nickname" />
 
     <TextView
-        android:id="@+id/tv_discussion_opinion"
+        android:id="@+id/tv_comment_opinion"
         style="@style/BaseTextStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -56,7 +58,7 @@
         android:background="@drawable/btn_heart_background"
         android:contentDescription="@null"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_discussion_opinion" />
+        app:layout_constraintTop_toBottomOf="@id/tv_comment_opinion" />
 
     <TextView
         android:id="@+id/tv_heart_count"

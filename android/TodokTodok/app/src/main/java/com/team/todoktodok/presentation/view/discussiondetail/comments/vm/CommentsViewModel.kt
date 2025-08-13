@@ -10,7 +10,7 @@ import com.team.domain.repository.TokenRepository
 import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
 import com.team.todoktodok.presentation.core.event.SingleLiveData
 import com.team.todoktodok.presentation.view.discussiondetail.comments.CommentsUiEvent
-import com.team.todoktodok.presentation.view.discussiondetail.comments.model.CommentUiModel
+import com.team.todoktodok.presentation.view.discussiondetail.model.CommentItemUiState
 import kotlinx.coroutines.launch
 
 class CommentsViewModel(
@@ -21,8 +21,8 @@ class CommentsViewModel(
     val discussionId =
         savedStateHandle.get<Long>(KEY_DISCUSSION_ID) ?: throw IllegalStateException()
 
-    private val _comments = MutableLiveData<List<CommentUiModel>>()
-    val comments: LiveData<List<CommentUiModel>> = _comments
+    private val _comments = MutableLiveData<List<CommentItemUiState>>()
+    val comments: LiveData<List<CommentItemUiState>> = _comments
 
     private val _uiEvent = MutableSingleLiveData<CommentsUiEvent>()
     val uiEvent: SingleLiveData<CommentsUiEvent> = _uiEvent
@@ -33,7 +33,7 @@ class CommentsViewModel(
         }
     }
 
-    fun commentsReload() {
+    fun reloadComments() {
         viewModelScope.launch {
             loadComments()
             showNewComment()
@@ -51,12 +51,16 @@ class CommentsViewModel(
         viewModelScope.launch {
             commentRepository.deleteComment(discussionId, commentId)
             loadComments()
+            _uiEvent.setValue(CommentsUiEvent.DeleteComment)
         }
     }
 
-    fun updateComment(commentId: Long) {
+    fun updateComment(
+        commentId: Long,
+        content: String,
+    ) {
         viewModelScope.launch {
-            _uiEvent.setValue(CommentsUiEvent.ShowCommentUpdate(discussionId, commentId))
+            _uiEvent.setValue(CommentsUiEvent.ShowCommentUpdate(discussionId, commentId, content))
         }
     }
 
@@ -79,7 +83,7 @@ class CommentsViewModel(
             commentRepository
                 .getCommentsByDiscussionRoomId(discussionId)
                 .map {
-                    CommentUiModel(
+                    CommentItemUiState(
                         it,
                         isMyComment = tokenRepository.getMemberId() == it.writer.id,
                     )

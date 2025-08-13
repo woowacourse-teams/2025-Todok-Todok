@@ -8,7 +8,10 @@ sealed interface CommentsUiEvent {
     data class ShowCommentUpdate(
         val discussionId: Long,
         val commentId: Long,
+        val content: String,
     ) : CommentsUiEvent
 
     data object ShowNewComment : CommentsUiEvent
+
+    data object DeleteComment : CommentsUiEvent
 }

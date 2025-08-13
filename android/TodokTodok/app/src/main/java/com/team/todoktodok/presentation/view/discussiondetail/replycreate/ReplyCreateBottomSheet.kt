@@ -65,6 +65,7 @@ class ReplyCreateBottomSheet : BottomSheetDialogFragment(R.layout.fragment_comme
     private fun initView(binding: FragmentCommentCreateBottomSheetBinding) {
         with(binding) {
             etTextCommentContent.requestFocus()
+            etTextCommentContent.setText(viewModel.content)
             val imm =
                 requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.showSoftInput(etTextCommentContent, InputMethodManager.SHOW_IMPLICIT)
@@ -85,7 +86,7 @@ class ReplyCreateBottomSheet : BottomSheetDialogFragment(R.layout.fragment_comme
         viewModel.uiEvent.observe(viewLifecycleOwner) { value ->
             handleUiEvent(value)
         }
-        viewModel.commentText.observe(viewLifecycleOwner) { value ->
+        viewModel.replyContent.observe(viewLifecycleOwner) { value ->
             binding.ivAddComment.isEnabled = value.isNotBlank()
         }
     }
@@ -105,7 +106,7 @@ class ReplyCreateBottomSheet : BottomSheetDialogFragment(R.layout.fragment_comme
     private fun setupOnChangeComment(binding: FragmentCommentCreateBottomSheetBinding) {
         with(binding) {
             etTextCommentContent.addTextChangedListener { editable ->
-                viewModel.onCommentChanged(editable)
+                viewModel.onReplyChanged(editable)
             }
         }
     }
@@ -120,12 +121,16 @@ class ReplyCreateBottomSheet : BottomSheetDialogFragment(R.layout.fragment_comme
         fun newInstance(
             discussionId: Long,
             commentId: Long,
+            replyId: Long?,
+            content: String?,
         ): ReplyCreateBottomSheet =
             ReplyCreateBottomSheet().apply {
                 arguments =
                     bundleOf(
                         ReplyCreateViewModel.KEY_DISCUSSION_ID to discussionId,
                         ReplyCreateViewModel.KEY_COMMENT_ID to commentId,
+                        ReplyCreateViewModel.KEY_REPLY_ID to replyId,
+                        ReplyCreateViewModel.KEY_REPLY_CONTENT to content,
                     )
             }
     }

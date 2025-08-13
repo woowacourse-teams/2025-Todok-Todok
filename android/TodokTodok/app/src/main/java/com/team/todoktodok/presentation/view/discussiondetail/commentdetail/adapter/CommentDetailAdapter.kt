@@ -28,8 +28,8 @@ class CommentDetailAdapter(
         position: Int,
     ) {
         when (val item = getItem(position)) {
-            is CommentDetailItems.CommentItem -> (holder as CommentItemViewHolder).bind(item.value)
-            is CommentDetailItems.ReplyItem -> (holder as ReplyItemViewHolder).bind(item.value)
+            is CommentDetailItems.CommentItem -> (holder as CommentItemViewHolder).bind(item)
+            is CommentDetailItems.ReplyItem -> (holder as ReplyItemViewHolder).bind(item)
         }
     }
 
