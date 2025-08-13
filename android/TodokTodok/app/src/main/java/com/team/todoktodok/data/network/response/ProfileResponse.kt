@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 data class ProfileResponse(
     val memberId: Long,
     val nickname: String,
-    val profileMessage: String,
+    val profileMessage: String?,
     val profileImage: String,
 ) {
     fun toDomain(): Profile =

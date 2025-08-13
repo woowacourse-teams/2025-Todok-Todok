@@ -43,14 +43,14 @@ class AuthViewModel(
         profileImage: Uri?,
     ) {
         viewModelScope.launch {
-            val result =
+            val memberType =
                 memberRepository.login(
                     email,
                     nickname ?: NOT_EXIST_NICKNAME,
                     profileImage?.toString() ?: NOT_EXIST_PROFILE_IMAGE,
                 )
-            val role = MemberType(result)
-            when (role) {
+
+            when (memberType) {
                 MemberType.USER -> onUiEvent(LoginUiEvent.NavigateToMain)
                 MemberType.TEMP_USER -> onUiEvent(LoginUiEvent.NavigateToSignUp)
             }
