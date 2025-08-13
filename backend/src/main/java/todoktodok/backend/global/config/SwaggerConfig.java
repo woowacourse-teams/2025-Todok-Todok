@@ -73,7 +73,7 @@ public class SwaggerConfig {
                    -> 하단 `Response headers`에서 `authorization: Bearer` 뒤 토큰 **모두 복사** (공백 없이!)\n
                    (복사할 토큰 예시: eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJleHAiOjE3
                    NTU2MTgxNjZ9._-0qTNmPyO1m6LnpEAwkGAB92Es0yBwxNBtmsq_VrGk)
-                6. 2번 또는 4-2번에서 복사한 토큰 -> 우측 초록색 자물쇠 **Authorize** 버튼 클릭 -> Value에 붙여넣기 후 Authorize 버튼 클릭
+                6. 2번 또는 5번에서 복사한 토큰 -> 우측 초록색 자물쇠 **Authorize** 버튼 클릭 -> Value에 붙여넣기 후 Authorize 버튼 클릭
                 7. API 테스트 가능!
                 """;
 
