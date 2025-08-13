@@ -42,7 +42,7 @@
         android:textSize="@dimen/font_size_large"
         android:textColor="@color/gray_66"
         android:fontFamily="@font/pretendard_regular"
-        android:layout_marginStart="@dimen/space_20"
+        android:layout_marginStart="@dimen/space_18"
         app:layout_constraintTop_toBottomOf="@id/tv_nickname"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

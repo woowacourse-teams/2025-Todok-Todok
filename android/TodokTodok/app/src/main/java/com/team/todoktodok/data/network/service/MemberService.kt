@@ -26,7 +26,7 @@ interface MemberService {
     suspend fun signUp(
         @Query("memberEmail") request: String,
         @Body requestBody: SignUpRequest,
-    )
+    ): Response<Unit>
 
     @GET("v1/members/{memberId}/profile")
     suspend fun fetchProfile(

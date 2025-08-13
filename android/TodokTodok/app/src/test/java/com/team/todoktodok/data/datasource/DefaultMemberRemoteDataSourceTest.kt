@@ -3,6 +3,7 @@ package com.team.todoktodok.data.datasource
 import com.team.domain.model.Support
 import com.team.domain.model.member.MemberDiscussionType
 import com.team.domain.model.member.MemberId
+import com.team.domain.model.member.MemberType
 import com.team.todoktodok.data.core.JwtParser
 import com.team.todoktodok.data.datasource.member.DefaultMemberRemoteDataSource
 import com.team.todoktodok.data.datasource.token.TokenDataSource
@@ -44,13 +45,12 @@ class DefaultMemberRemoteDataSourceTest {
         runTest {
             val email = "test@example.com"
             val rawToken = "test.jwt.token"
-            val accessTokenWithPrefix = "Bearer $rawToken"
-            val memberType = "NORMAL"
+            val accessToken = "Bearer $rawToken"
             val memberId = 1L
 
             val mockResponse = mockk<Response<Unit>>()
 
-            val headers = mapOf(AUTHORIZATION_NAME to accessTokenWithPrefix)
+            val headers = mapOf(AUTHORIZATION_NAME to accessToken)
 
             val responseHeaders = headers.toHeaders()
             every { mockResponse.headers() } returns responseHeaders
@@ -58,15 +58,15 @@ class DefaultMemberRemoteDataSourceTest {
             coEvery { memberService.login(LoginRequest(email)) } returns mockResponse
 
             mockkConstructor(JwtParser::class)
-            every { anyConstructed<JwtParser>().parseMemberType() } returns memberType
-            every { anyConstructed<JwtParser>().parseMemberId() } returns memberId
+            every { anyConstructed<JwtParser>().parseToMemberType() } returns MemberType.USER
+            every { anyConstructed<JwtParser>().parseToMemberId() } returns memberId
 
             // when
             val result = dataSource.login(email)
 
             // then
-            assertEquals(memberType, result)
-            coVerify { tokenDataSource.saveToken(accessTokenWithPrefix, "", memberId) }
+            assertEquals(MemberType.USER, result)
+            coVerify { tokenDataSource.saveToken(accessToken, "", memberId) }
         }
 
     @Test
