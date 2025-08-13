@@ -60,10 +60,10 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
         setupFragmentResultListener()
     }
 
-    override fun onDestroy() {
+    override fun onDestroyView() {
         popupWindow?.dismiss()
         popupWindow = null
-        super.onDestroy()
+        super.onDestroyView()
     }
 
     fun initAdapter(binding: FragmentCommentDetailBinding) {

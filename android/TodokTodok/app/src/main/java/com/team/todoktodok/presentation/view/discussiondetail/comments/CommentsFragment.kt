@@ -46,10 +46,10 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
         setupFragmentResultListener()
     }
 
-    override fun onDestroy() {
+    override fun onDestroyView() {
         popupWindow?.dismiss()
         popupWindow = null
-        super.onDestroy()
+        super.onDestroyView()
     }
 
     private fun initAdapter(binding: FragmentCommentsBinding) {
