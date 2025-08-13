@@ -1,9 +1,12 @@
 package com.team.todoktodok.presentation.view.setting
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import com.team.todoktodok.BuildConfig
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentSettingBinding
 import com.team.todoktodok.presentation.view.setting.vm.SettingViewModel
@@ -29,6 +32,11 @@ class SettingFragment : Fragment(R.layout.fragment_setting) {
 
             llBlockMembers.setOnClickListener {
                 viewModel.changeScreen(SettingScreen.MANAGE_BLOCKED_USERS)
+            }
+
+            llSendFeedback.setOnClickListener {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(BuildConfig.FEEDBACK_URL))
+                startActivity(intent)
             }
         }
     }

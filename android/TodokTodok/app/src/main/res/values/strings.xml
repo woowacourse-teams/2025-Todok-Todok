@@ -105,5 +105,6 @@
 
     <string name="setting_unblock_content">해당 유저를 차단 해제하시겠습니까?</string>
     <string name="setting_unblock">해제하기</string>
+    <string name="setting_send_feedback">의견 보내기</string>
 
 </resources>

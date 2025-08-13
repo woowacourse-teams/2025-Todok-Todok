@@ -6,20 +6,20 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResult
 import com.team.domain.model.Support
 import com.team.todoktodok.R
-import com.team.todoktodok.databinding.DialogSupportBinding
+import com.team.todoktodok.databinding.ViewCommonDialogBinding
 import com.team.todoktodok.presentation.core.ext.getSerializableCompat
 
-class SupportMemberDialog : DialogFragment(R.layout.dialog_support) {
+class SupportMemberDialog : DialogFragment(R.layout.view_common_dialog) {
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
-        val binding = DialogSupportBinding.bind(view)
+        val binding = ViewCommonDialogBinding.bind(view)
         initView(binding)
     }
 
-    private fun initView(binding: DialogSupportBinding) {
+    private fun initView(binding: ViewCommonDialogBinding) {
         val type = arguments?.getSerializableCompat<Support>(ARG_TYPE)
         requireNotNull(type) { INVALID_SUPPORT_TYPE }
 
@@ -31,7 +31,7 @@ class SupportMemberDialog : DialogFragment(R.layout.dialog_support) {
     }
 
     private fun setTitle(
-        binding: DialogSupportBinding,
+        binding: ViewCommonDialogBinding,
         type: Support,
     ) {
         binding.tvMessage.text =
@@ -42,7 +42,7 @@ class SupportMemberDialog : DialogFragment(R.layout.dialog_support) {
     }
 
     private fun setSubmitButton(
-        binding: DialogSupportBinding,
+        binding: ViewCommonDialogBinding,
         type: Support,
     ) {
         with(binding) {
@@ -59,7 +59,7 @@ class SupportMemberDialog : DialogFragment(R.layout.dialog_support) {
         }
     }
 
-    private fun setCancelButton(binding: DialogSupportBinding) {
+    private fun setCancelButton(binding: ViewCommonDialogBinding) {
         binding.btnCancel.setOnClickListener {
             dismiss()
         }

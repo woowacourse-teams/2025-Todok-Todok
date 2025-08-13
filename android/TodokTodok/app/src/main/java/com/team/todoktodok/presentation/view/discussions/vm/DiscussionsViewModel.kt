@@ -7,6 +7,8 @@ import androidx.lifecycle.viewModelScope
 import com.team.domain.model.Discussion
 import com.team.domain.model.DiscussionFilter
 import com.team.domain.repository.DiscussionRepository
+import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
+import com.team.todoktodok.presentation.core.event.SingleLiveData
 import com.team.todoktodok.presentation.view.discussions.DiscussionsUiEvent
 import com.team.todoktodok.presentation.view.discussions.DiscussionsUiState
 import kotlinx.coroutines.Job
@@ -19,8 +21,8 @@ class DiscussionsViewModel(
     private val _uiState = MutableLiveData(DiscussionsUiState())
     val uiState: LiveData<DiscussionsUiState> get() = _uiState
 
-    private val _uiEvent = MutableLiveData<DiscussionsUiEvent>()
-    val uiEvent: LiveData<DiscussionsUiEvent> get() = _uiEvent
+    private val _uiEvent = MutableSingleLiveData<DiscussionsUiEvent>()
+    val uiEvent: SingleLiveData<DiscussionsUiEvent> get() = _uiEvent
 
     private var loadJob: Job? = null
 
@@ -47,10 +49,11 @@ class DiscussionsViewModel(
         val currentState = _uiState.value ?: return
         val currentFilter = currentState.filter
         val keyword = currentState.searchKeyword
-        toggleLoading()
 
-        DiscussionFilter.entries.forEach { filter ->
-            viewModelScope.launch {
+        setLoading()
+
+        viewModelScope.launch {
+            for (filter in DiscussionFilter.entries) {
                 val discussions = discussionRepository.getDiscussions(filter, keyword)
                 updateDiscussions(filter, discussions)
 
@@ -58,7 +61,7 @@ class DiscussionsViewModel(
                     onUiEvent(discussions, filter)
                 }
             }
-            toggleLoading()
+            setLoading()
         }
     }
 
@@ -75,7 +78,7 @@ class DiscussionsViewModel(
             }
     }
 
-    private fun toggleLoading() {
+    private fun setLoading() {
         _uiState.value = _uiState.value?.toggleLoading()
     }
 
@@ -83,7 +86,7 @@ class DiscussionsViewModel(
         discussions: List<Discussion>,
         filter: DiscussionFilter,
     ) {
-        _uiEvent.value =
+        val event =
             when {
                 discussions.isEmpty() && filter == DiscussionFilter.ALL -> DiscussionsUiEvent.ShowNotHasAllDiscussions
                 discussions.isEmpty() && filter == DiscussionFilter.MINE -> DiscussionsUiEvent.ShowNotHasMyDiscussions
@@ -91,5 +94,7 @@ class DiscussionsViewModel(
                 filter == DiscussionFilter.MINE -> DiscussionsUiEvent.ShowHasMyDiscussions
                 else -> throw IllegalArgumentException()
             }
+
+        _uiEvent.setValue(event)
     }
 }

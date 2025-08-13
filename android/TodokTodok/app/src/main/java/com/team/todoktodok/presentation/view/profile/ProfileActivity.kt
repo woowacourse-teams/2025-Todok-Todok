@@ -80,9 +80,7 @@ class ProfileActivity : AppCompatActivity() {
         val viewPagerAdapter = ContentPagerAdapter(memberId, supportFragmentManager, lifecycle)
         profileAdapter = ProfileAdapter(profileAdapterHandler, viewPagerAdapter)
 
-        with(binding) {
-            rvProfile.adapter = profileAdapter
-        }
+        binding.rvProfile.adapter = profileAdapter
     }
 
     private fun setUpUiState() {
@@ -95,7 +93,8 @@ class ProfileActivity : AppCompatActivity() {
         viewModel.uiEvent.observe(this) { event ->
             when (event) {
                 is ProfileUiEvent.OnCompleteSupport -> {
-                    val message = getString(R.string.profile_complete_support).format(event.type.name)
+                    val message =
+                        getString(R.string.profile_complete_support).format(event.type.name)
                     Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
                 }
             }

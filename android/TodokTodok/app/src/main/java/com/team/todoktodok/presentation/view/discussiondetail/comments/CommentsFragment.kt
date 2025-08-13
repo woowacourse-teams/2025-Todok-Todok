@@ -13,6 +13,7 @@ import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentCommentsBinding
 import com.team.todoktodok.databinding.MenuExternalDiscussionBinding
 import com.team.todoktodok.databinding.MenuOwnedDiscussionBinding
+import com.team.todoktodok.presentation.core.component.CommonDialog
 import com.team.todoktodok.presentation.view.discussiondetail.BottomSheetVisibilityListener
 import com.team.todoktodok.presentation.view.discussiondetail.commentcreate.CommentCreateBottomSheet
 import com.team.todoktodok.presentation.view.discussiondetail.commentdetail.CommentDetailFragment
@@ -134,16 +135,20 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
         }
 
     private fun showReportDialog() {
-        val dialog = ReportCommentDialog.newInstance()
-        dialog.show(childFragmentManager, ReportCommentDialog.TAG)
+        val dialog =
+            CommonDialog.newInstance(
+                getString(R.string.all_report_comment),
+                getString(R.string.all_report_action),
+            )
+        dialog.show(childFragmentManager, CommonDialog.TAG)
     }
 
     private fun setUpDialogResultListener(commentId: Long) {
         childFragmentManager.setFragmentResultListener(
-            ReportCommentDialog.RESULT_KEY_REPORT,
+            CommonDialog.RESULT_KEY_COMMON_DIALOG,
             this,
         ) { _, bundle ->
-            val result = bundle.getBoolean(ReportCommentDialog.RESULT_KEY_REPORT)
+            val result = bundle.getBoolean(CommonDialog.RESULT_KEY_COMMON_DIALOG)
             if (result) {
                 viewModel.report(commentId)
                 popupWindow?.dismiss()
