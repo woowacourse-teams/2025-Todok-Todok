@@ -45,7 +45,10 @@
             android:exported="false" />
         <activity
             android:name=".presentation.view.book.SelectBookActivity"
-            android:exported="false" />
+            android:windowSoftInputMode="adjustResize"
+            android:exported="false">
+
+        </activity>
     </application>
 
 </manifest>
