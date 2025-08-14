@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -176,14 +175,8 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
                     )
 
                 is CreateDiscussionUiEvent.ShowToast -> {
-                    val message = when (event.error) {
-                        ErrorCreateDiscussionType.BOOK_INFO_NOT_FOUND -> R.string.error_create_discussion_book_info_not_found
-                        ErrorCreateDiscussionType.TITLE_NOT_FOUND -> R.string.error_create_discussion_title_not_found
-                        ErrorCreateDiscussionType.CONTENT_NOT_FOUND -> R.string.error_create_discussion_content_not_found
-                        ErrorCreateDiscussionType.NOT_MY_DISCUSSION_ROOM -> R.string.error_create_discussion_not_my_discussion_room
-                        ErrorCreateDiscussionType.DISCUSSION_ROOM_INFO_NOT_FOUND -> R.string.error_create_discussion_discussion_room_info_not_found
-                        ErrorCreateDiscussionType.PLEASE_TRY_AGAIN -> R.string.error_create_discussion_please_try_again
-                    }
+                    val message =
+                        getErrorMessage(event)
                     Toast
                         .makeText(
                             this@CreateDiscussionRoomActivity,
@@ -194,6 +187,27 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
             }
         }
     }
+
+    private fun getErrorMessage(event: CreateDiscussionUiEvent.ShowToast) =
+        when (event.error) {
+            ErrorCreateDiscussionType.BOOK_INFO_NOT_FOUND,
+            -> R.string.error_create_discussion_book_info_not_found
+
+            ErrorCreateDiscussionType.TITLE_NOT_FOUND,
+            -> R.string.error_create_discussion_title_not_found
+
+            ErrorCreateDiscussionType.CONTENT_NOT_FOUND,
+            -> R.string.error_create_discussion_content_not_found
+
+            ErrorCreateDiscussionType.NOT_MY_DISCUSSION_ROOM,
+            -> R.string.error_create_discussion_not_my_discussion_room
+
+            ErrorCreateDiscussionType.DISCUSSION_ROOM_INFO_NOT_FOUND,
+            -> R.string.error_create_discussion_discussion_room_info_not_found
+
+            ErrorCreateDiscussionType.PLEASE_TRY_AGAIN,
+            -> R.string.error_create_discussion_please_try_again
+        }
 
     private fun navigateToDiscussionDetail(event: CreateDiscussionUiEvent.NavigateToDiscussionDetail) {
         val intent =

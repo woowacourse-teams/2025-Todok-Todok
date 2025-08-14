@@ -68,21 +68,24 @@ class CreateDiscussionRoomViewModel(
     }
 
     fun createDiscussionRoom() {
-        val book = book.value
-            ?: run {
-                updateErrorCreateDiscussion(ErrorCreateDiscussionType.BOOK_INFO_NOT_FOUND)
-                return
-            }
-        val title = title.value
-            ?: run {
-                updateErrorCreateDiscussion(ErrorCreateDiscussionType.TITLE_NOT_FOUND)
-                return
-            }
-        val opinion = opinion.value
-            ?: run {
-                updateErrorCreateDiscussion(ErrorCreateDiscussionType.CONTENT_NOT_FOUND)
-                return
-            }
+        val book =
+            book.value
+                ?: run {
+                    updateErrorCreateDiscussion(ErrorCreateDiscussionType.BOOK_INFO_NOT_FOUND)
+                    return
+                }
+        val title =
+            title.value
+                ?: run {
+                    updateErrorCreateDiscussion(ErrorCreateDiscussionType.TITLE_NOT_FOUND)
+                    return
+                }
+        val opinion =
+            opinion.value
+                ?: run {
+                    updateErrorCreateDiscussion(ErrorCreateDiscussionType.CONTENT_NOT_FOUND)
+                    return
+                }
         viewModelScope.launch {
             val bookId = bookRepository.saveBook(book)
             val discussionId =
@@ -115,21 +118,23 @@ class CreateDiscussionRoomViewModel(
             val discussionRoomId =
                 discussionRoomId ?: run {
                     updateErrorCreateDiscussion(
-                        ErrorCreateDiscussionType.DISCUSSION_ROOM_INFO_NOT_FOUND
+                        ErrorCreateDiscussionType.DISCUSSION_ROOM_INFO_NOT_FOUND,
                     )
                     return
                 }
-            val title = title.value
-                ?: run {
-                    updateErrorCreateDiscussion(ErrorCreateDiscussionType.TITLE_NOT_FOUND)
+            val title =
+                title.value
+                    ?: run {
+                        updateErrorCreateDiscussion(ErrorCreateDiscussionType.TITLE_NOT_FOUND)
+                        return
+                    }
+            val opinion =
+                opinion.value ?: run {
+                    updateErrorCreateDiscussion(
+                        ErrorCreateDiscussionType.CONTENT_NOT_FOUND,
+                    )
                     return
                 }
-            val opinion = opinion.value ?: run {
-                updateErrorCreateDiscussion(
-                    ErrorCreateDiscussionType.CONTENT_NOT_FOUND
-                )
-                return
-            }
 
             val discussionRoom = DiscussionRoom(title, opinion)
             viewModelScope.launch {
@@ -150,9 +155,7 @@ class CreateDiscussionRoomViewModel(
         }
     }
 
-    private fun updateErrorCreateDiscussion(
-        errorCreateDiscussionType: ErrorCreateDiscussionType
-    ) {
+    private fun updateErrorCreateDiscussion(errorCreateDiscussionType: ErrorCreateDiscussionType) {
         _uiEvent.setValue(CreateDiscussionUiEvent.ShowToast(errorCreateDiscussionType))
     }
 }

@@ -6,5 +6,5 @@ enum class ErrorCreateDiscussionType {
     CONTENT_NOT_FOUND,
     NOT_MY_DISCUSSION_ROOM,
     DISCUSSION_ROOM_INFO_NOT_FOUND,
-    PLEASE_TRY_AGAIN
+    PLEASE_TRY_AGAIN,
 }
