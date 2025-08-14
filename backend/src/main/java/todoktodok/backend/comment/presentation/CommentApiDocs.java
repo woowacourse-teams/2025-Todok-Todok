@@ -36,11 +36,11 @@ public interface CommentApiDocs {
                                             value = "{\"code\":400, \"message\":\"[ERROR] 댓글 내용을 입력해주세요\"}"
                                     ),
                                     @ExampleObject(
-                                            name = "내용 길이 초과",
+                                            name = "내용 길이 조건 부적합",
                                             value = "{\"code\":400, \"message\":\"[ERROR] 댓글 내용은 1자 이상, 1500자 이하여야 합니다\"}"
                                     )
                             }
-                    )),
+            )),
             @ApiResponse(
                     responseCode = "401",
                     description = "토큰 인증 오류",
@@ -51,7 +51,7 @@ public interface CommentApiDocs {
                                     name = "JWT 오류",
                                     value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
                             )
-                    )),
+            )),
             @ApiResponse(
                     responseCode = "404",
                     description = "존재하지 않는 리소스",
@@ -68,7 +68,7 @@ public interface CommentApiDocs {
                                             value = "{\"code\":404, \"message\":\"[ERROR] 해당 토론방을 찾을 수 없습니다\"}"
                                     )
                             }
-                    )),
+            )),
             @ApiResponse(
                     responseCode = "500",
                     description = "서버 오류",
@@ -79,23 +79,23 @@ public interface CommentApiDocs {
                                     name = "서버 오류",
                                     value = "{\"code\":500, \"message\":\"[ERROR] 서버 내부 오류가 발생했습니다\"}"
                             )
-                    ))
+            ))
     })
     ResponseEntity<Void> createComment(
             @Parameter(hidden = true) final Long memberId,
             @Parameter(
                     description = "토론방 ID",
-                    content = @Content(schema = @Schema(implementation = Long.class),
-                    examples = @ExampleObject(value = "1"))
+                    content = @Content(
+                            schema = @Schema(implementation = Long.class),
+                            examples = @ExampleObject(value = "1")
+                    )
             ) final Long discussionId,
             @RequestBody(
                     description = "생성할 댓글 정보",
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = CommentRequest.class),
-                            examples = @ExampleObject(
-                                    value = "{ \"content\": \"댓글 내용입니다.\" }"
-                            )
+                            examples = @ExampleObject(value = "{\"content\":\"댓글 내용입니다.\"}")
                     )
             ) final CommentRequest commentRequest
     );
@@ -118,9 +118,9 @@ public interface CommentApiDocs {
                             schema = @Schema(implementation = ErrorResponse.class),
                             examples = @ExampleObject(
                                     name = "토론방과 댓글 불일치",
-                                    value = "{\"code\":400, \"message\":\"[ERROR] 해당 토론방의 댓글이 아닙니다.\"}"
+                                    value = "{\"code\":400, \"message\":\"[ERROR] 해당 토론방의 댓글이 아닙니다\"}"
                             )
-                    )),
+            )),
             @ApiResponse(
                     responseCode = "401",
                     description = "토큰 인증 오류",
@@ -131,7 +131,7 @@ public interface CommentApiDocs {
                                     name = "JWT 오류",
                                     value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
                             )
-                    )),
+            )),
             @ApiResponse(
                     responseCode = "404",
                     description = "존재하지 않는 리소스",
@@ -152,7 +152,7 @@ public interface CommentApiDocs {
                                             value = "{\"code\":404, \"message\":\"[ERROR] 해당 댓글을 찾을 수 없습니다\"}"
                                     )
                             }
-                    )),
+            )),
             @ApiResponse(
                     responseCode = "500",
                     description = "서버 오류",
@@ -163,19 +163,23 @@ public interface CommentApiDocs {
                                     name = "서버 오류",
                                     value = "{\"code\":500, \"message\":\"[ERROR] 서버 내부 오류가 발생했습니다\"}"
                             )
-                    ))
+            ))
     })
     ResponseEntity<Void> toggleLike(
             @Parameter(hidden = true) final Long memberId,
             @Parameter(
                     description = "토론방 ID",
-                    content = @Content(schema = @Schema(implementation = Long.class),
-                    examples = @ExampleObject(value = "1"))
+                    content = @Content(
+                            schema = @Schema(implementation = Long.class),
+                            examples = @ExampleObject(value = "1")
+                    )
             ) final Long discussionId,
             @Parameter(
                     description = "댓글 ID",
-                    content = @Content(schema = @Schema(implementation = Long.class),
-                    examples = @ExampleObject(value = "1"))
+                    content = @Content(
+                            schema = @Schema(implementation = Long.class),
+                            examples = @ExampleObject(value = "1")
+                    )
             ) final Long commentId
     );
 
@@ -194,7 +198,7 @@ public interface CommentApiDocs {
                             examples = {
                                     @ExampleObject(
                                             name = "자신댓글 신고",
-                                            value = "{\"code\":400, \"message\":\"[ERROR] 자기 자신의 댓글은 신고할 수 없습니다.\"}"
+                                            value = "{\"code\":400, \"message\":\"[ERROR] 자기 자신의 댓글은 신고할 수 없습니다\"}"
                                     ),
                                     @ExampleObject(
                                             name = "중복 신고",
@@ -202,10 +206,10 @@ public interface CommentApiDocs {
                                     ),
                                     @ExampleObject(
                                             name = "토론방과 댓글 불일치",
-                                            value = "{\"code\":400, \"message\":\"[ERROR] 해당 토론방의 댓글이 아닙니다.\"}"
+                                            value = "{\"code\":400, \"message\":\"[ERROR] 해당 토론방의 댓글이 아닙니다\"}"
                                     )
                             }
-                    )),
+            )),
             @ApiResponse(
                     responseCode = "401",
                     description = "토큰 인증 오류",
@@ -216,7 +220,7 @@ public interface CommentApiDocs {
                                     name = "JWT 오류",
                                     value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
                             )
-                    )),
+            )),
             @ApiResponse(
                     responseCode = "404",
                     description = "존재하지 않는 리소스",
@@ -237,7 +241,7 @@ public interface CommentApiDocs {
                                             value = "{\"code\":404, \"message\":\"[ERROR] 해당 댓글을 찾을 수 없습니다\"}"
                                     )
                             }
-                    )),
+            )),
             @ApiResponse(
                     responseCode = "500",
                     description = "서버 오류",
@@ -248,19 +252,23 @@ public interface CommentApiDocs {
                                     name = "서버 오류",
                                     value = "{\"code\":500, \"message\":\"[ERROR] 서버 내부 오류가 발생했습니다\"}"
                             )
-                    ))
+            ))
     })
     ResponseEntity<Void> report(
             @Parameter(hidden = true) final Long memberId,
             @Parameter(
                     description = "토론방 ID",
-                    content = @Content(schema = @Schema(implementation = Long.class),
-                    examples = @ExampleObject(value = "1"))
+                    content = @Content(
+                            schema = @Schema(implementation = Long.class),
+                            examples = @ExampleObject(value = "1")
+                    )
             ) final Long discussionId,
             @Parameter(
                     description = "댓글 ID",
-                    content = @Content(schema = @Schema(implementation = Long.class),
-                    examples = @ExampleObject(value = "1"))
+                    content = @Content(
+                            schema = @Schema(implementation = Long.class),
+                            examples = @ExampleObject(value = "1")
+                    )
             ) final Long commentId
     );
 
@@ -279,7 +287,7 @@ public interface CommentApiDocs {
                                                 "commentId": 1,
                                                 "member": {
                                                   "id": 1,
-                                                  "nickname": "우아한 유저1",
+                                                  "nickname": "듀이",
                                                   "email": "user1@example.com",
                                                   "imageUrl": "https://example.com/image1.png"
                                                 },
@@ -293,7 +301,7 @@ public interface CommentApiDocs {
                                                 "commentId": 2,
                                                 "member": {
                                                   "id": 2,
-                                                  "nickname": "우아한 유저2",
+                                                  "nickname": "모찌",
                                                   "email": "user2@example.com",
                                                   "imageUrl": "https://example.com/image2.png"
                                                 },
@@ -306,7 +314,7 @@ public interface CommentApiDocs {
                                             ]
                                             """
                             )
-                    )),
+            )),
             @ApiResponse(
                     responseCode = "401",
                     description = "토큰 인증 오류",
@@ -317,7 +325,7 @@ public interface CommentApiDocs {
                                     name = "JWT 오류",
                                     value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
                             )
-                    )),
+            )),
             @ApiResponse(
                     responseCode = "404",
                     description = "존재하지 않는 리소스",
@@ -334,7 +342,7 @@ public interface CommentApiDocs {
                                             value = "{\"code\":404, \"message\":\"[ERROR] 해당 토론방을 찾을 수 없습니다\"}"
                                     )
                             }
-                    )),
+            )),
             @ApiResponse(
                     responseCode = "500",
                     description = "서버 오류",
@@ -345,14 +353,16 @@ public interface CommentApiDocs {
                                     name = "서버 오류",
                                     value = "{\"code\":500, \"message\":\"[ERROR] 서버 내부 오류가 발생했습니다\"}"
                             )
-                    ))
+            ))
     })
     ResponseEntity<List<CommentResponse>> getComments(
             @Parameter(hidden = true) final Long memberId,
             @Parameter(
                     description = "토론방 ID",
-                    content = @Content(schema = @Schema(implementation = Long.class),
-                    examples = @ExampleObject(value = "1"))
+                    content = @Content(
+                            schema = @Schema(implementation = Long.class),
+                            examples = @ExampleObject(value = "1")
+                    )
             ) final Long discussionId
     );
 
@@ -370,7 +380,7 @@ public interface CommentApiDocs {
                                               "commentId": 1,
                                               "member": {
                                                 "id": 1,
-                                                "nickname": "우아한 유저",
+                                                "nickname": "모다",
                                                 "email": "user@example.com",
                                                 "imageUrl": "https://example.com/image.png"
                                               },
@@ -382,7 +392,7 @@ public interface CommentApiDocs {
                                             }
                                             """
                             )
-                    )),
+            )),
             @ApiResponse(
                     responseCode = "400",
                     description = "잘못된 요청",
@@ -391,9 +401,9 @@ public interface CommentApiDocs {
                             schema = @Schema(implementation = ErrorResponse.class),
                             examples = @ExampleObject(
                                     name = "토론방과 댓글 불일치",
-                                    value = "{\"code\":400, \"message\":\"[ERROR] 해당 토론방의 댓글이 아닙니다.\"}"
+                                    value = "{\"code\":400, \"message\":\"[ERROR] 해당 토론방의 댓글이 아닙니다\"}"
                             )
-                    )),
+            )),
             @ApiResponse(
                     responseCode = "401",
                     description = "토큰 인증 오류",
@@ -404,7 +414,7 @@ public interface CommentApiDocs {
                                     name = "JWT 오류",
                                     value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
                             )
-                    )),
+            )),
             @ApiResponse(
                     responseCode = "404",
                     description = "존재하지 않는 리소스",
@@ -425,7 +435,7 @@ public interface CommentApiDocs {
                                             value = "{\"code\":404, \"message\":\"[ERROR] 해당 댓글을 찾을 수 없습니다\"}"
                                     )
                             }
-                    )),
+            )),
             @ApiResponse(
                     responseCode = "500",
                     description = "서버 오류",
@@ -436,19 +446,23 @@ public interface CommentApiDocs {
                                     name = "서버 오류",
                                     value = "{\"code\":500, \"message\":\"[ERROR] 서버 내부 오류가 발생했습니다\"}"
                             )
-                    ))
+            ))
     })
     ResponseEntity<CommentResponse> getComment(
             @Parameter(hidden = true) final Long memberId,
             @Parameter(
                     description = "토론방 ID",
-                    content = @Content(schema = @Schema(implementation = Long.class),
-                    examples = @ExampleObject(value = "1"))
+                    content = @Content(
+                            schema = @Schema(implementation = Long.class),
+                            examples = @ExampleObject(value = "1")
+                    )
             ) final Long discussionId,
             @Parameter(
                     description = "댓글 ID",
-                    content = @Content(schema = @Schema(implementation = Long.class),
-                    examples = @ExampleObject(value = "1"))
+                    content = @Content(
+                            schema = @Schema(implementation = Long.class),
+                            examples = @ExampleObject(value = "1")
+                    )
             ) final Long commentId
     );
 
@@ -470,7 +484,7 @@ public interface CommentApiDocs {
                                             value = "{\"code\":400, \"message\":\"[ERROR] 댓글 내용을 입력해주세요\"}"
                                     ),
                                     @ExampleObject(
-                                            name = "내용 길이 초과",
+                                            name = "내용 길이 조건 부적합",
                                             value = "{\"code\":400, \"message\":\"[ERROR] 댓글 내용은 1자 이상, 1500자 이하여야 합니다\"}"
                                     ),
                                     @ExampleObject(
@@ -479,10 +493,10 @@ public interface CommentApiDocs {
                                     ),
                                     @ExampleObject(
                                             name = "토론방과 댓글 불일치",
-                                            value = "{\"code\":400, \"message\":\"[ERROR] 해당 토론방의 댓글이 아닙니다.\"}"
+                                            value = "{\"code\":400, \"message\":\"[ERROR] 해당 토론방의 댓글이 아닙니다\"}"
                                     )
                             }
-                    )),
+            )),
             @ApiResponse(
                     responseCode = "401",
                     description = "토큰 인증 오류",
@@ -493,7 +507,7 @@ public interface CommentApiDocs {
                                     name = "JWT 오류",
                                     value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
                             )
-                    )),
+            )),
             @ApiResponse(
                     responseCode = "404",
                     description = "존재하지 않는 리소스",
@@ -514,7 +528,7 @@ public interface CommentApiDocs {
                                             value = "{\"code\":404, \"message\":\"[ERROR] 해당 댓글을 찾을 수 없습니다\"}"
                                     )
                             }
-                    )),
+            )),
             @ApiResponse(
                     responseCode = "500",
                     description = "서버 오류",
@@ -525,28 +539,30 @@ public interface CommentApiDocs {
                                     name = "서버 오류",
                                     value = "{\"code\":500, \"message\":\"[ERROR] 서버 내부 오류가 발생했습니다\"}"
                             )
-                    ))
+            ))
     })
     ResponseEntity<Void> updateComment(
             @Parameter(hidden = true) final Long memberId,
             @Parameter(
                     description = "토론방 ID",
-                    content = @Content(schema = @Schema(implementation = Long.class),
-                    examples = @ExampleObject(value = "1"))
+                    content = @Content(
+                            schema = @Schema(implementation = Long.class),
+                            examples = @ExampleObject(value = "1")
+                    )
             ) final Long discussionId,
             @Parameter(
                     description = "댓글 ID",
-                    content = @Content(schema = @Schema(implementation = Long.class),
-                    examples = @ExampleObject(value = "1"))
+                    content = @Content(
+                            schema = @Schema(implementation = Long.class),
+                            examples = @ExampleObject(value = "1")
+                    )
             ) final Long commentId,
             @RequestBody(
                     description = "수정할 댓글 정보",
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = CommentRequest.class),
-                            examples = @ExampleObject(
-                                    value = "{\"content\":\"수정된 댓글 내용입니다.\"}"
-                            )
+                            examples = @ExampleObject(value = "{\"content\":\"수정된 댓글 내용입니다.\"}")
                     )
             ) final CommentRequest commentRequest
     );
@@ -574,10 +590,10 @@ public interface CommentApiDocs {
                                     ),
                                     @ExampleObject(
                                             name = "토론방과 댓글 불일치",
-                                            value = "{\"code\":400, \"message\":\"[ERROR] 해당 토론방의 댓글이 아닙니다.\"}"
+                                            value = "{\"code\":400, \"message\":\"[ERROR] 해당 토론방의 댓글이 아닙니다\"}"
                                     )
                             }
-                    )),
+            )),
             @ApiResponse(
                     responseCode = "401",
                     description = "토큰 인증 오류",
@@ -588,7 +604,7 @@ public interface CommentApiDocs {
                                     name = "JWT 오류",
                                     value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
                             )
-                    )),
+            )),
             @ApiResponse(
                     responseCode = "404",
                     description = "존재하지 않는 리소스",
@@ -609,7 +625,7 @@ public interface CommentApiDocs {
                                             value = "{\"code\":404, \"message\":\"[ERROR] 해당 댓글을 찾을 수 없습니다\"}"
                                     )
                             }
-                    )),
+            )),
             @ApiResponse(
                     responseCode = "500",
                     description = "서버 오류",
@@ -620,19 +636,23 @@ public interface CommentApiDocs {
                                     name = "서버 오류",
                                     value = "{\"code\":500, \"message\":\"[ERROR] 서버 내부 오류가 발생했습니다\"}"
                             )
-                    ))
+            ))
     })
     ResponseEntity<Void> deleteComment(
             @Parameter(hidden = true) final Long memberId,
             @Parameter(
                     description = "토론방 ID",
-                    content = @Content(schema = @Schema(implementation = Long.class),
-                    examples = @ExampleObject(value = "1"))
+                    content = @Content(
+                            schema = @Schema(implementation = Long.class),
+                            examples = @ExampleObject(value = "1")
+                    )
             ) final Long discussionId,
             @Parameter(
                     description = "댓글 ID",
-                    content = @Content(schema = @Schema(implementation = Long.class),
-                    examples = @ExampleObject(value = "1"))
+                    content = @Content(
+                            schema = @Schema(implementation = Long.class),
+                            examples = @ExampleObject(value = "1")
+                    )
             ) final Long commentId
     );
 }
