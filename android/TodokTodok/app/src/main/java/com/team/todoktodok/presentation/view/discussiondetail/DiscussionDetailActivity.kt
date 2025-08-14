@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupWindow
 import android.widget.Toast
-import androidx.activity.addCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -26,7 +25,6 @@ import com.team.todoktodok.presentation.view.discussiondetail.comments.CommentsF
 import com.team.todoktodok.presentation.view.discussiondetail.vm.DiscussionDetailViewModel
 import com.team.todoktodok.presentation.view.discussiondetail.vm.DiscussionDetailViewModel.Companion.KEY_DISCUSSION_ID
 import com.team.todoktodok.presentation.view.discussiondetail.vm.DiscussionDetailViewModelFactory
-import com.team.todoktodok.presentation.view.discussions.DiscussionsActivity
 import com.team.todoktodok.presentation.view.profile.ProfileActivity
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -54,7 +52,6 @@ class DiscussionDetailActivity : AppCompatActivity() {
         setContentView(binding.root)
         setupOnClick()
         setupObserve()
-        setPopBackStack()
         setUpDialogResultListener()
     }
 
@@ -183,6 +180,10 @@ class DiscussionDetailActivity : AppCompatActivity() {
         }
     }
 
+    private fun navigateUp() {
+        onBackPressedDispatcher.onBackPressed()
+    }
+
     private fun navigateToProfile(memberId: Long) {
         val intent = ProfileActivity.Intent(this, memberId)
         startActivity(intent)
@@ -190,21 +191,6 @@ class DiscussionDetailActivity : AppCompatActivity() {
 
     private fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-    }
-
-    private fun setPopBackStack() {
-        onBackPressedDispatcher.addCallback(this) {
-            navigateUp()
-        }
-    }
-
-    private fun navigateUp() {
-        val intent =
-            Intent(this@DiscussionDetailActivity, DiscussionsActivity::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-            }
-        startActivity(intent)
-        finish()
     }
 
     private fun showComments(discussionId: Long) {
