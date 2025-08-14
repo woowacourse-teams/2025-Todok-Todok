@@ -80,7 +80,7 @@ public class Comment extends TimeStamp {
 
     public void validateSelfReport(final Member member) {
         if (this.member.equals(member)) {
-            throw new IllegalArgumentException(String.format("자기 자신이 작성한 댓글을 신고할 수 없습니다: %s -> %s"
+            throw new IllegalArgumentException(String.format("자기 자신이 작성한 댓글을 신고할 수 없습니다: memberId = %s -> commentId = %s"
                     , member.getId(), this.id));
         }
     }

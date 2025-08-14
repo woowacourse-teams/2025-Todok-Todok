@@ -74,18 +74,18 @@ public class CommentQueryService {
 
     private void validateIsExistMember(final Long memberId) {
         if (!memberRepository.existsById(memberId)) {
-            throw new NoSuchElementException(String.format("해당 회원을 찾을 수 없습니다: %s", memberId));
+            throw new NoSuchElementException(String.format("해당 회원을 찾을 수 없습니다: memberId = %s", memberId));
         }
     }
 
     private Discussion findDiscussion(final Long discussionId) {
         return discussionRepository.findById(discussionId)
-                .orElseThrow(() -> new NoSuchElementException(String.format("해당 토론방을 찾을 수 없습니다: %s", discussionId)));
+                .orElseThrow(() -> new NoSuchElementException(String.format("해당 토론방을 찾을 수 없습니다: discussionId = %s", discussionId)));
     }
 
     private Comment findComment(final Long commentId) {
         return commentRepository.findById(commentId)
-                .orElseThrow(() -> new NoSuchElementException(String.format("해당 댓글을 찾을 수 없습니다: %s", commentId)));
+                .orElseThrow(() -> new NoSuchElementException(String.format("해당 댓글을 찾을 수 없습니다: commentId = %s", commentId)));
     }
 
     private int findReplyCount(

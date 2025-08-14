@@ -118,13 +118,13 @@ public class MemberCommandService {
 
     private void validateDuplicatedNickname(final String nickname) {
         if (memberRepository.existsByNickname(nickname)) {
-            throw new IllegalArgumentException(String.format("이미 존재하는 닉네임입니다: %s", nickname));
+            throw new IllegalArgumentException(String.format("이미 존재하는 닉네임입니다: nickname = %s", nickname));
         }
     }
 
     private void validateDuplicatedEmail(final SignupRequest signupRequest) {
         if (memberRepository.existsByEmail(signupRequest.email())) {
-            throw new IllegalArgumentException(String.format("이미 가입된 이메일입니다: %s", maskEmail(signupRequest.email())));
+            throw new IllegalArgumentException(String.format("이미 가입된 이메일입니다: email = %s", maskEmail(signupRequest.email())));
         }
     }
 
@@ -133,13 +133,13 @@ public class MemberCommandService {
             final String tokenEmail
     ) {
         if (!tokenEmail.equals(signupRequest.email())) {
-            throw new IllegalArgumentException(String.format("소셜 로그인을 하지 않은 이메일입니다: %s", maskEmail(signupRequest.email())));
+            throw new IllegalArgumentException(String.format("소셜 로그인을 하지 않은 이메일입니다: email = %s", maskEmail(signupRequest.email())));
         }
     }
 
     private Member findMember(final Long memberId) {
         return memberRepository.findById(memberId)
-                .orElseThrow(() -> new NoSuchElementException(String.format("해당 회원을 찾을 수 없습니다: %s", memberId)));
+                .orElseThrow(() -> new NoSuchElementException(String.format("해당 회원을 찾을 수 없습니다: memberId = %s", memberId)));
     }
 
     private void validateDuplicatedBlock(
@@ -147,7 +147,7 @@ public class MemberCommandService {
             final Member target
     ) {
         if (blockRepository.existsByMemberAndTarget(member, target)) {
-            throw new IllegalArgumentException(String.format("이미 차단한 회원입니다: %s -> %s", member.getId(), target.getId()));
+            throw new IllegalArgumentException(String.format("이미 차단한 회원입니다: memberId = %s -> targetId = %s", member.getId(), target.getId()));
         }
     }
 
@@ -156,7 +156,7 @@ public class MemberCommandService {
             final Member target
     ) {
         if (memberReportRepository.existsByMemberAndTarget(member, target)) {
-            throw new IllegalArgumentException(String.format("이미 신고한 회원입니다: %s -> %s", member.getId(), target.getId()));
+            throw new IllegalArgumentException(String.format("이미 신고한 회원입니다: memberId = %s -> targetId = %s", member.getId(), target.getId()));
         }
     }
 
@@ -175,7 +175,7 @@ public class MemberCommandService {
             final Member target
     ) {
         if (!blockRepository.existsByMemberAndTarget(member, target)) {
-            throw new IllegalArgumentException(String.format("차단한 회원이 아닙니다: %s -> %s", member.getId(), target.getId()));
+            throw new IllegalArgumentException(String.format("차단한 회원이 아닙니다: memberId = %s -> targetId = %s", member.getId(), target.getId()));
         }
     }
 

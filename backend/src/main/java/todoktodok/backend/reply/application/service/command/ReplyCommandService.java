@@ -146,22 +146,22 @@ public class ReplyCommandService {
 
     private Member findMember(final Long memberId) {
         return memberRepository.findById(memberId)
-                .orElseThrow(() -> new NoSuchElementException(String.format("해당 회원을 찾을 수 없습니다: %s", memberId)));
+                .orElseThrow(() -> new NoSuchElementException(String.format("해당 회원을 찾을 수 없습니다: memberId = %s", memberId)));
     }
 
     private Discussion findDiscussion(final Long discussionId) {
         return discussionRepository.findById(discussionId)
-                .orElseThrow(() -> new NoSuchElementException(String.format("해당 토론방을 찾을 수 없습니다: %s", discussionId)));
+                .orElseThrow(() -> new NoSuchElementException(String.format("해당 토론방을 찾을 수 없습니다: discussionId = %s", discussionId)));
     }
 
     private Comment findComment(final Long commentId) {
         return commentRepository.findById(commentId)
-                .orElseThrow(() -> new NoSuchElementException(String.format("해당 댓글을 찾을 수 없습니다: %s", commentId)));
+                .orElseThrow(() -> new NoSuchElementException(String.format("해당 댓글을 찾을 수 없습니다: commentId = %s", commentId)));
     }
 
     private Reply findReply(final Long replyId) {
         return replyRepository.findById(replyId)
-                .orElseThrow(() -> new NoSuchElementException(String.format("해당 대댓글을 찾을 수 없습니다: %s", replyId)));
+                .orElseThrow(() -> new NoSuchElementException(String.format("해당 대댓글을 찾을 수 없습니다: replyId = %s", replyId)));
     }
 
     private void validateDuplicatedReport(
@@ -169,7 +169,7 @@ public class ReplyCommandService {
             final Reply reply
     ) {
         if (replyReportRepository.existsByMemberAndReply(member, reply)) {
-            throw new IllegalArgumentException(String.format("이미 신고한 대댓글입니다: %s -> %s", member.getId(), reply.getId()));
+            throw new IllegalArgumentException(String.format("이미 신고한 대댓글입니다: memberId = %s -> replyId = %s", member.getId(), reply.getId()));
         }
     }
 
