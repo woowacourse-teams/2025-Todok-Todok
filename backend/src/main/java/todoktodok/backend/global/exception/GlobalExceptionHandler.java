@@ -3,7 +3,6 @@ package todoktodok.backend.global.exception;
 import io.jsonwebtoken.JwtException;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,20 +45,18 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<String> handleMethodArgumentNotValidException(final MethodArgumentNotValidException e) {
         final List<FieldError> fieldErrors = e.getBindingResult().getFieldErrors();
-        final String firstMessage = fieldErrors.getFirst().getDefaultMessage();
+        final String errorMessage = fieldErrors.getFirst().getDefaultMessage();
 
-        log.warn(PREFIX + firstMessage);
+        fieldErrors.forEach(fieldError -> {
+            final Object rejectedValue = fieldError.getRejectedValue();
+            final String maskedValue = maskEmailValue(rejectedValue, fieldError.getField());
+            log.warn(String.format("%s: %s = %s",
+                    PREFIX + errorMessage,
+                    fieldError.getField(),
+                    maskedValue));
+        });
 
-        fieldErrors.stream()
-                .collect(Collectors.groupingBy(FieldError::getField))
-                .forEach((field, errors) -> {
-                    FieldError firstError = errors.getFirst();
-                    Object rejectedValue = firstError.getRejectedValue();
-                    String maskedValue = maskEmailValue(rejectedValue, field);
-                    log.warn("{}: {}", field, maskedValue);
-                });
-
-        return ResponseEntity.badRequest().body(PREFIX + firstMessage);
+        return ResponseEntity.badRequest().body(PREFIX + errorMessage);
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
