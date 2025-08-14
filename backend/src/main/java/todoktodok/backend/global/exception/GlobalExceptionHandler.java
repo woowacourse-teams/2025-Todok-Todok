@@ -45,7 +45,7 @@ public class GlobalExceptionHandler {
         e.getBindingResult().getFieldErrors()
                 .forEach(fieldError -> {
                     final Object rejectedValue = fieldError.getRejectedValue();
-                    final String maskedValue = maskEmailValue(rejectedValue, fieldError.getField());
+                    final String maskedValue = toSafeLogValue(rejectedValue, fieldError.getField());
                     log.warn(String.format("%s: %s = %s",
                             PREFIX + e.getBindingResult().getFieldErrors().getFirst().getDefaultMessage(),
                             fieldError.getField(),
@@ -78,7 +78,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.internalServerError().body(PREFIX + "예상하지 못한 예외가 발생하였습니다. 상세 정보: " + e.getMessage());
     }
 
-    private String maskEmailValue(
+    private String toSafeLogValue(
             final Object value,
             final String field
     ) {
@@ -87,17 +87,22 @@ public class GlobalExceptionHandler {
         }
 
         final String str = value.toString();
-        if (!field.equals("email")) {
-            return str;
+
+        if (field.equals("content")) {
+            return str.length() + "자";
         }
 
-        if (str.length() <= 4) {
-            return str;
+        if (field.equals("email")) {
+            if (str.length() <= 4) {
+                return str;
+            }
+
+            final String visiblePart = str.substring(0, 4);
+            final String maskedPart = "*".repeat(str.length() - 4);
+            return visiblePart + maskedPart;
         }
 
-        final String visiblePart = str.substring(0, 4);
-        final String maskedPart = "*".repeat(str.length() - 4);
-        return visiblePart + maskedPart;
+        return str;
     }
 
     private String getSafeErrorMessage(final RuntimeException e) {
