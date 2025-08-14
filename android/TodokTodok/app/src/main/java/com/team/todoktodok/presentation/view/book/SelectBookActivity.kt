@@ -97,25 +97,23 @@ class SelectBookActivity : AppCompatActivity() {
         }
 
     private fun setupUiEvent() {
-        viewModel.uiState.observe(this) {
-            if (it.searchedBooks.items.isEmpty()) {
+        viewModel.uiState.observe(this) { state: SelectBookUiState ->
+            if (state.searchedBooks.items.isEmpty()) {
                 binding.nsvEmptySearchResult.visibility = View.VISIBLE
                 binding.rvSearchedBooks.visibility = View.GONE
             } else {
                 binding.nsvEmptySearchResult.visibility = View.GONE
                 binding.rvSearchedBooks.visibility = View.VISIBLE
             }
+            if (state.isLoading == true) {
+                binding.progressBar.visibility = View.VISIBLE
+                binding.nsvEmptySearchResult.visibility = View.GONE
+            } else {
+                binding.progressBar.visibility = View.GONE
+            }
         }
         viewModel.uiEvent.observe(this) { event ->
             when (event) {
-                is SelectBookUiEvent.StartLoading -> {
-                    // 로딩 중 스페너 넣기
-                }
-
-                is SelectBookUiEvent.FinishLoading -> {
-                    // 로딩 중 스페너 치우기
-                }
-
                 is SelectBookUiEvent.NavigateToCreateDiscussionRoom -> {
                     val book = event.book.toSerialization()
                     val intent =
