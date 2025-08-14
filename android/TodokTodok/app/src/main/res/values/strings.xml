@@ -97,6 +97,7 @@
     <string name="hint_discussion_room_opinion">최근에 읽은 도서에서 이야기하고 싶은 내용을 입력해주세요!</string>
     <string name="hint_discussion_room_title">제목을 입력해주세요!</string>
     <string name="edit_discussion_room_title">토론방 수정</string>
+    <string name="edit">수정</string>
 
     <!-- 설정 화면 -->
     <string name="setting_modify_profile">프로필 정보 수정</string>
