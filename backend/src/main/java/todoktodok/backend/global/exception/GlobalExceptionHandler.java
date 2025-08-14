@@ -34,12 +34,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(PREFIX + getSafeErrorMessage(e));
     }
 
-    @ExceptionHandler(IllegalStateException.class)
-    public ResponseEntity<String> handleIllegalStateException(final IllegalStateException e) {
-        log.warn(PREFIX + e.getMessage());
-        return ResponseEntity.internalServerError().body(PREFIX + getSafeErrorMessage(e));
-    }
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<String> handleMethodArgumentNotValidException(final MethodArgumentNotValidException e) {
         e.getBindingResult().getFieldErrors()
@@ -70,6 +64,12 @@ public class GlobalExceptionHandler {
         log.warn(PREFIX + String.format("파라미터 %s가 존재하지 않습니다", e.getParameterName()));
         return ResponseEntity.badRequest()
                 .body(PREFIX + String.format("파라미터 %s가 존재하지 않습니다", e.getParameterName()));
+    }
+
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<String> handleIllegalStateException(final IllegalStateException e) {
+        log.error(PREFIX + e.getMessage());
+        return ResponseEntity.internalServerError().body(PREFIX + getSafeErrorMessage(e));
     }
 
     @ExceptionHandler(RuntimeException.class)

@@ -11,7 +11,8 @@ import org.springframework.web.servlet.HandlerInterceptor;
 public class LogInterceptor implements HandlerInterceptor {
 
     private static final int HTTP_STATUS_SUCCESS_MIN = 200;
-    private static final int HTTP_STATUS_ERROR_MIN = 400;
+    private static final int HTTP_STATUS_CLIENT_ERROR_MIN = 400;
+    private static final int HTTPS_STATUS_SERVER_ERROR_MIN = 500;
 
     private static final Logger log = LoggerFactory.getLogger(LogInterceptor.class);
 
@@ -41,8 +42,10 @@ public class LogInterceptor implements HandlerInterceptor {
         final int status = response.getStatus();
         final String clientIp = (String) request.getAttribute("clientIp");
 
-        if (status >= HTTP_STATUS_SUCCESS_MIN && status < HTTP_STATUS_ERROR_MIN) {
+        if (status >= HTTP_STATUS_SUCCESS_MIN && status < HTTP_STATUS_CLIENT_ERROR_MIN) {
             log.info("[API RESPONSE] [{}] {} -> {}: {}", clientIp, method, requestURI, status);
+        } else if (status >= HTTP_STATUS_CLIENT_ERROR_MIN && status < HTTPS_STATUS_SERVER_ERROR_MIN) {
+            log.warn("[API RESPONSE] [{}] {} -> {}: {}", clientIp, method, requestURI, status);
         } else {
             log.error("[API RESPONSE] [{}] {} -> {}: {}", clientIp, method, requestURI, status);
         }
