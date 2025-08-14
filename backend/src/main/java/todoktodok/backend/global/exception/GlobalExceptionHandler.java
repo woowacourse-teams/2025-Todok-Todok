@@ -1,12 +1,12 @@
 package todoktodok.backend.global.exception;
 
 import io.jsonwebtoken.JwtException;
-
+import java.util.List;
 import java.util.NoSuchElementException;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -21,37 +21,40 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(JwtException.class)
     public ResponseEntity<String> handleJwtException(final JwtException e) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PREFIX + e.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(PREFIX + e.getMessage());
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> handleBadRequestException(final IllegalArgumentException e) {
         log.warn(PREFIX + e.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(PREFIX + getSafeErrorMessage(e));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(PREFIX + getSafeErrorMessage(e));
     }
 
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<String> handleNotFoundException(final NoSuchElementException e) {
         log.warn(PREFIX + e.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(PREFIX + getSafeErrorMessage(e));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(PREFIX + getSafeErrorMessage(e));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<String> handleMethodArgumentNotValidException(
-            final MethodArgumentNotValidException e
-    ) {
-        e.getBindingResult().getFieldErrors()
-                .forEach(fieldError -> {
-                    final Object rejectedValue = fieldError.getRejectedValue();
-                    final String maskedValue = toSafeLogValue(rejectedValue, fieldError.getField());
-                    log.warn(String.format("%s: %s = %s",
-                            PREFIX + e.getBindingResult().getFieldErrors().getFirst().getDefaultMessage(),
-                            fieldError.getField(),
-                            maskedValue));
-                });
+    public ResponseEntity<String> handleMethodArgumentNotValidException(final MethodArgumentNotValidException e) {
+        final List<FieldError> fieldErrors = e.getBindingResult().getFieldErrors();
+        final String errorMessage = fieldErrors.getFirst().getDefaultMessage();
+
+        fieldErrors.forEach(fieldError -> {
+            final Object rejectedValue = fieldError.getRejectedValue();
+            final String safeLogValue = toSafeLogValue(rejectedValue, fieldError.getField());
+            log.warn(String.format("%s: %s = %s",
+                    PREFIX + fieldError.getDefaultMessage(),
+                    fieldError.getField(),
+                    safeLogValue));
+        });
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(PREFIX + e.getBindingResult().getFieldErrors().getFirst().getDefaultMessage());
+                .body(PREFIX + errorMessage);
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
@@ -94,7 +97,10 @@ public class GlobalExceptionHandler {
 
         final String str = value.toString();
 
-        if (field.equals("content")) {
+        if (field.equals("discussionTitle")
+                || field.equals("discussionOpinion")
+                || field.equals("content")
+        ) {
             return str.length() + "자";
         }
 
@@ -102,7 +108,6 @@ public class GlobalExceptionHandler {
             if (str.length() <= 4) {
                 return str;
             }
-
             final String visiblePart = str.substring(0, 4);
             final String maskedPart = "*".repeat(str.length() - 4);
             return visiblePart + maskedPart;
