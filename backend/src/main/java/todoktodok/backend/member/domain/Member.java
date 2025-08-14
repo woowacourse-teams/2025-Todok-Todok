@@ -75,6 +75,18 @@ public class Member extends TimeStamp {
         return this.nickname.equals(nickname);
     }
 
+    public void validateSelfBlock(final Member target) {
+        if (this.equals(target)) {
+            throw new IllegalArgumentException(String.format("자기 자신을 차단할 수 없습니다: %d", this.id));
+        }
+    }
+
+    public void validateSelfReport(final Member target) {
+        if (this.equals(target)) {
+            throw new IllegalArgumentException(String.format("자기 자신을 신고할 수 없습니다: %d", this.id));
+        }
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -113,7 +125,7 @@ public class Member extends TimeStamp {
 
     private static void validateNicknameLength(final String nickname) {
         if (nickname == null || nickname.isEmpty() || nickname.length() > NICKNAME_MAX_LENGTH) {
-            throw new IllegalArgumentException(String.format("닉네임은 1자 이상, 8자 이하여야 합니다: %d자",
+            throw new IllegalArgumentException(String.format("닉네임은 1자 이상, 8자 이하여야 합니다: %s자",
                     (nickname == null ? null : nickname.length())));
         }
     }
@@ -133,7 +145,7 @@ public class Member extends TimeStamp {
         }
 
         if (profileMessage.length() > PROFILE_MESSAGE_MAX_LENGTH) {
-            throw new IllegalArgumentException(String.format("상태메세지는 40자 이하여야 합니다: %d자", profileMessage.length()));
+            throw new IllegalArgumentException(String.format("상태메세지는 40자 이하여야 합니다: %s자", profileMessage.length()));
         }
     }
 }

@@ -60,7 +60,7 @@ public class MemberCommandService {
         final Member member = findMember(memberId);
         final Member target = findMember(targetId);
 
-        validateSelfBlock(member, target);
+        member.validateSelfBlock(target);
         validateDuplicatedBlock(member, target);
 
         final Block block = Block.builder()
@@ -77,7 +77,7 @@ public class MemberCommandService {
         final Member member = findMember(memberId);
         final Member target = findMember(targetId);
 
-        validateSelfReport(member, target);
+        member.validateSelfReport(target);
         validateDuplicatedReport(member, target);
 
         final MemberReport memberReport = MemberReport.builder()
@@ -142,30 +142,12 @@ public class MemberCommandService {
                 .orElseThrow(() -> new NoSuchElementException(String.format("해당 회원을 찾을 수 없습니다: %d", memberId)));
     }
 
-    private static void validateSelfBlock(
-            final Member member,
-            final Member target
-    ) {
-        if (member.equals(target)) {
-            throw new IllegalArgumentException(String.format("자기 자신을 차단할 수 없습니다: %d", member.getId()));
-        }
-    }
-
     private void validateDuplicatedBlock(
             final Member member,
             final Member target
     ) {
         if (blockRepository.existsByMemberAndTarget(member, target)) {
             throw new IllegalArgumentException(String.format("이미 차단한 회원입니다: %d -> %d", member.getId(), target.getId()));
-        }
-    }
-
-    private static void validateSelfReport(
-            final Member member,
-            final Member target
-    ) {
-        if (member.equals(target)) {
-            throw new IllegalArgumentException(String.format("자기 자신을 신고할 수 없습니다: %d", member.getId()));
         }
     }
 
