@@ -1,10 +1,13 @@
 package todoktodok.backend.global.exception;
 
 import io.jsonwebtoken.JwtException;
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -42,16 +45,21 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<String> handleMethodArgumentNotValidException(final MethodArgumentNotValidException e) {
-        log.warn(PREFIX + e.getBindingResult().getFieldErrors().getFirst().getDefaultMessage());
-        e.getBindingResult().getFieldErrors()
-                .forEach(fieldError -> {
-                    Object rejectedValue = fieldError.getRejectedValue();
-                    String maskedValue = maskEmailValue(rejectedValue, fieldError.getField());
-                    log.warn("{}: {}", fieldError.getField(), maskedValue);
+        final List<FieldError> fieldErrors = e.getBindingResult().getFieldErrors();
+        final String firstMessage = fieldErrors.getFirst().getDefaultMessage();
+
+        log.warn(PREFIX + firstMessage);
+
+        fieldErrors.stream()
+                .collect(Collectors.groupingBy(FieldError::getField))
+                .forEach((field, errors) -> {
+                    FieldError firstError = errors.getFirst();
+                    Object rejectedValue = firstError.getRejectedValue();
+                    String maskedValue = maskEmailValue(rejectedValue, field);
+                    log.warn("{}: {}", field, maskedValue);
                 });
 
-        return ResponseEntity.badRequest()
-                .body(PREFIX + e.getBindingResult().getFieldErrors().getFirst().getDefaultMessage());
+        return ResponseEntity.badRequest().body(PREFIX + firstMessage);
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
