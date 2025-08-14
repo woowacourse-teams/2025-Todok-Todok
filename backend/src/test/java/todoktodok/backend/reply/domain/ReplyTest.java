@@ -44,14 +44,14 @@ public class ReplyTest {
                         .comment(comment)
                         .build()
         ).isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("대댓글 내용은 1자 이상, 1500자 이하여야 합니다");
+                .hasMessageContaining("대댓글 내용은 1자 이상, 2000자 이하여야 합니다");
     }
 
     @Test
-    @DisplayName("대댓글 내용이 1500자를 초과하면 예외가 발생한다")
+    @DisplayName("대댓글 내용이 2000자를 초과하면 예외가 발생한다")
     void validateContent_tooLongContent_fail() {
         // given
-        final String content = "a".repeat(1501);
+        final String content = "a".repeat(2001);
 
         // when - then
         assertThatThrownBy(
@@ -61,7 +61,7 @@ public class ReplyTest {
                         .comment(comment)
                         .build()
         ).isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("대댓글 내용은 1자 이상, 1500자 이하여야 합니다");
+                .hasMessageContaining("대댓글 내용은 1자 이상, 2000자 이하여야 합니다");
     }
 
     @Test
