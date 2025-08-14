@@ -1,12 +1,8 @@
 package todoktodok.backend.reply.presentation;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
-
 import java.net.URI;
 import java.util.List;
-
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,16 +19,15 @@ import todoktodok.backend.reply.application.service.query.ReplyQueryService;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/v1/discussions/{discussionId}/comments/{commentId}/replies")
-public class ReplyController {
+public class ReplyController implements ReplyApiDocs {
 
     private final ReplyCommandService replyCommandService;
     private final ReplyQueryService replyQueryService;
 
-    @Operation(summary = "대댓글 생성 API")
     @Auth(value = Role.USER)
     @PostMapping
     public ResponseEntity<Void> createReply(
-            @Parameter(hidden = true) @LoginMember final Long memberId,
+            @LoginMember final Long memberId,
             @PathVariable final Long discussionId,
             @PathVariable final Long commentId,
             @RequestBody @Valid final ReplyRequest replyRequest
@@ -44,11 +39,10 @@ public class ReplyController {
                 .build();
     }
 
-    @Operation(summary = "대댓글 신고 API")
     @Auth(value = Role.USER)
     @PostMapping("/{replyId}/report")
     public ResponseEntity<Void> report(
-            @Parameter(hidden = true) @LoginMember final Long memberId,
+            @LoginMember final Long memberId,
             @PathVariable final Long discussionId,
             @PathVariable final Long commentId,
             @PathVariable final Long replyId
@@ -59,11 +53,10 @@ public class ReplyController {
                 .build();
     }
 
-    @Operation(summary = "댓글별 대댓글 목록 조회 API")
     @Auth(value = Role.USER)
     @GetMapping
     public ResponseEntity<List<ReplyResponse>> getReplies(
-            @Parameter(hidden = true) @LoginMember final Long memberId,
+            @LoginMember final Long memberId,
             @PathVariable final Long discussionId,
             @PathVariable final Long commentId
     ) {
@@ -71,11 +64,10 @@ public class ReplyController {
                 .body(replyQueryService.getReplies(memberId, discussionId, commentId));
     }
 
-    @Operation(summary = "대댓글 수정 API")
     @Auth(value = Role.USER)
     @PatchMapping("/{replyId}")
     public ResponseEntity<Void> updateReply(
-            @Parameter(hidden = true) @LoginMember final Long memberId,
+            @LoginMember final Long memberId,
             @PathVariable final Long discussionId,
             @PathVariable final Long commentId,
             @PathVariable final Long replyId,
@@ -88,11 +80,10 @@ public class ReplyController {
                 .build();
     }
 
-    @Operation(summary = "대댓글 삭제 API")
     @Auth(value = Role.USER)
     @DeleteMapping("/{replyId}")
     public ResponseEntity<Void> deleteReply(
-            @Parameter(hidden = true) @LoginMember final Long memberId,
+            @LoginMember final Long memberId,
             @PathVariable final Long discussionId,
             @PathVariable final Long commentId,
             @PathVariable final Long replyId
@@ -103,11 +94,10 @@ public class ReplyController {
                 .build();
     }
 
-    @Operation(summary = "대댓글 좋아요 API")
     @Auth(value = Role.USER)
     @PostMapping("/{replyId}/like")
     public ResponseEntity<Void> toggleLike(
-            @Parameter(hidden = true) @LoginMember final Long memberId,
+            @LoginMember final Long memberId,
             @PathVariable final Long discussionId,
             @PathVariable final Long commentId,
             @PathVariable final Long replyId
