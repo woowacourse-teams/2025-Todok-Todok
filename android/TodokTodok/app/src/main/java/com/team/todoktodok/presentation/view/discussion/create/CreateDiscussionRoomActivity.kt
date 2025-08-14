@@ -104,8 +104,11 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
             btnEdit.visibility = View.INVISIBLE
             etDiscussionRoomTitle.setText(viewModel.title.value)
             etDiscussionRoomOpinion.setText(viewModel.opinion.value)
-            btnCreate.setOnClickListener {
-                viewModel.editDiscussionRoom()
+            btnCreate.apply {
+                text = getString(R.string.edit)
+                setOnClickListener {
+                    viewModel.editDiscussionRoom()
+                }
             }
         }
     }
