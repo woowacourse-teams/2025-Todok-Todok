@@ -74,8 +74,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<String> handleRuntimeException(final RuntimeException e) {
-        log.error("Unexpected error occurred", e);
-        return ResponseEntity.internalServerError().body(PREFIX + "예상하지 못한 예외가 발생하였습니다. 상세 정보: " + e.getMessage());
+        log.error(String.format("Unexpected error occurred: %s", e.getMessage()));
+        return ResponseEntity.internalServerError().body(PREFIX + "서버 내부 오류가 발생했습니다");
     }
 
     private String toSafeLogValue(
