@@ -77,13 +77,13 @@ public class Member extends TimeStamp {
 
     public void validateSelfBlock(final Member target) {
         if (this.equals(target)) {
-            throw new IllegalArgumentException(String.format("자기 자신을 차단할 수 없습니다: %s", this.id));
+            throw new IllegalArgumentException(String.format("자기 자신을 차단할 수 없습니다: memberId = %s", this.id));
         }
     }
 
     public void validateSelfReport(final Member target) {
         if (this.equals(target)) {
-            throw new IllegalArgumentException(String.format("자기 자신을 신고할 수 없습니다: %s", this.id));
+            throw new IllegalArgumentException(String.format("자기 자신을 신고할 수 없습니다: memberId = %s", this.id));
         }
     }
 
@@ -113,13 +113,13 @@ public class Member extends TimeStamp {
 
     private static void validateForbiddenNickname(final String nickname) {
         if (nickname.equals(DELETED_MEMBER_NICKNAME)) {
-            throw new IllegalArgumentException(String.format("다른 닉네임을 사용해주세요: %s", nickname));
+            throw new IllegalArgumentException(String.format("다른 닉네임을 사용해주세요: nickname = %s", nickname));
         }
     }
 
     private static void validateNicknamePattern(final String nickname) {
         if (!NICKNAME_PATTERN.matcher(nickname).matches()) {
-            throw new IllegalArgumentException(String.format("닉네임은 한글, 영어, 숫자만 입력해주세요 (특수문자, 공백 금지): %s", nickname));
+            throw new IllegalArgumentException(String.format("닉네임은 한글, 영어, 숫자만 입력해주세요 (특수문자, 공백 금지): nickname = %s", nickname));
         }
     }
 
@@ -135,7 +135,7 @@ public class Member extends TimeStamp {
             final String nickname
     ) {
         if (email == null || email.isBlank()) {
-            throw new IllegalArgumentException(String.format("이메일은 필수입니다: nickname-%s", nickname));
+            throw new IllegalArgumentException(String.format("이메일은 필수입니다: nickname = %s", nickname));
         }
     }
 

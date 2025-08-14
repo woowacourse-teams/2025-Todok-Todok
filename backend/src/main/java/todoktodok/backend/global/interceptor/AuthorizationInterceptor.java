@@ -34,7 +34,7 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
         final Method method = handlerMethod.getMethod();
 
         if (!method.isAnnotationPresent(Auth.class)) {
-            log.warn(String.format("Auth 어노테이션이 없는 메서드에 대한 요청입니다: requestURI = %s", request.getRequestURI()));
+            log.error(String.format("Auth 어노테이션이 없는 메서드에 대한 요청입니다: requestURI = %s", request.getRequestURI()));
             throw new IllegalStateException("서버 내부 오류가 발생했습니다");
         }
 

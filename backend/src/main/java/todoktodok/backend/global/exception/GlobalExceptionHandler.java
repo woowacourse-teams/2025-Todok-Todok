@@ -97,14 +97,14 @@ public class GlobalExceptionHandler {
 
         final String str = value.toString();
 
-        if (field.equals("discussionTitle")
-                || field.equals("discussionOpinion")
-                || field.equals("content")
+        if ("discussionTitle".equals(field)
+                || "discussionOpinion".equals(field)
+                || "content".equals(field)
         ) {
             return str.length() + "자";
         }
 
-        if (field.equals("email")) {
+        if ("email".equals(field)) {
             if (str.length() <= 4) {
                 return str;
             }
