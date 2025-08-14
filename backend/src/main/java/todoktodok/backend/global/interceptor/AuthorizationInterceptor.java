@@ -1,5 +1,6 @@
 package todoktodok.backend.global.interceptor;
 
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
@@ -52,6 +53,6 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
         }
 
         log.warn(String.format("접근 권한이 없습니다: requiredRole = %s, tokenRole = %s", requiredRole.name(), tokenInfo.role().name()));
-        throw new IllegalStateException("접근 권한이 없습니다");
+        throw new JwtException("접근 권한이 없습니다");
     }
 }
