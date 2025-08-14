@@ -28,7 +28,7 @@ import todoktodok.backend.member.domain.Member;
 @SQLDelete(sql = "UPDATE comment SET deleted_at = NOW() WHERE id = ?")
 public class Comment extends TimeStamp {
 
-    public static final int CONTENT_MAX_LENGTH = 1500;
+    public static final int CONTENT_MAX_LENGTH = 2000;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -87,7 +87,7 @@ public class Comment extends TimeStamp {
 
     private static void validateContent(final String content) {
         if (content.isEmpty() || content.length() > CONTENT_MAX_LENGTH) {
-            throw new IllegalArgumentException(String.format("댓글 내용은 1자 이상, 1500자 이하여야 합니다: %s자", content.length()));
+            throw new IllegalArgumentException(String.format("댓글 내용은 1자 이상, 2000자 이하여야 합니다: %s자", content.length()));
         }
     }
 }
