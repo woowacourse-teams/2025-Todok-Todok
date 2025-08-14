@@ -87,7 +87,7 @@ public class MemberController {
                 .build();
     }
 
-    @Operation(summary = "프로필 정보 조회 API")
+    @Operation(summary = "회원별 프로필 정보 조회 API")
     @Auth(value = Role.USER)
     @GetMapping("/{memberId}/profile")
     public ResponseEntity<ProfileResponse> getProfile(
@@ -97,7 +97,7 @@ public class MemberController {
                 .body(memberQueryService.getProfile(memberId));
     }
 
-    @Operation(summary = "활동 도서 전체 조회 API")
+    @Operation(summary = "회원별 활동 도서 전체 조회 API")
     @Auth(value = Role.USER)
     @GetMapping("/{memberId}/books")
     public ResponseEntity<List<BookResponse>> getActiveBooks(

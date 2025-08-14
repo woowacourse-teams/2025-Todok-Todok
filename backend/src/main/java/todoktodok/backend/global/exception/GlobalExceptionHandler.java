@@ -1,7 +1,9 @@
 package todoktodok.backend.global.exception;
 
 import io.jsonwebtoken.JwtException;
+
 import java.util.NoSuchElementException;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +27,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> handleBadRequestException(final IllegalArgumentException e) {
         log.warn(PREFIX + e.getMessage());
-        return ResponseEntity.badRequest().body(PREFIX + getSafeErrorMessage(e));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(PREFIX + getSafeErrorMessage(e));
     }
 
     @ExceptionHandler(NoSuchElementException.class)
@@ -35,7 +37,9 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<String> handleMethodArgumentNotValidException(final MethodArgumentNotValidException e) {
+    public ResponseEntity<String> handleMethodArgumentNotValidException(
+            final MethodArgumentNotValidException e
+    ) {
         e.getBindingResult().getFieldErrors()
                 .forEach(fieldError -> {
                     final Object rejectedValue = fieldError.getRejectedValue();
@@ -46,23 +50,25 @@ public class GlobalExceptionHandler {
                             maskedValue));
                 });
 
-        return ResponseEntity.badRequest()
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(PREFIX + e.getBindingResult().getFieldErrors().getFirst().getDefaultMessage());
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<String> handleMethodArgumentTypeMismatchException(
-            final MethodArgumentTypeMismatchException e) {
+            final MethodArgumentTypeMismatchException e
+    ) {
         log.warn(PREFIX + String.format("유효하지 않은 %s의 값입니다", e.getRequiredType().getSimpleName()));
-        return ResponseEntity.badRequest()
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(PREFIX + String.format("유효하지 않은 %s의 값입니다", e.getRequiredType().getSimpleName()));
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ResponseEntity<String> handleMissingServletRequestParameterException(
-            final MissingServletRequestParameterException e) {
+            final MissingServletRequestParameterException e
+    ) {
         log.warn(PREFIX + String.format("파라미터 %s가 존재하지 않습니다", e.getParameterName()));
-        return ResponseEntity.badRequest()
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(PREFIX + String.format("파라미터 %s가 존재하지 않습니다", e.getParameterName()));
     }
 
@@ -75,7 +81,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<String> handleRuntimeException(final RuntimeException e) {
         log.error(String.format("Unexpected error occurred: %s", e.getMessage()));
-        return ResponseEntity.internalServerError().body(PREFIX + "서버 내부 오류가 발생했습니다");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(PREFIX + "서버 내부 오류가 발생했습니다");
     }
 
     private String toSafeLogValue(
