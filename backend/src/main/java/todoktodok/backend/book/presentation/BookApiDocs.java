@@ -84,7 +84,7 @@ public interface BookApiDocs {
                             schema = @Schema(implementation = ErrorResponse.class),
                             examples = @ExampleObject(
                                     name = "서버 오류",
-                                    value = "{\"code\":500, \"message\":\"[ERROR] 예상하지 못한 예외가 발생하였습니다. 상세 정보: \"}"
+                                    value = "{\"code\":500, \"message\":\"[ERROR] 서버 내부 오류가 발생했습니다\"}"
                             )
                     ))
     })
@@ -169,7 +169,7 @@ public interface BookApiDocs {
                             schema = @Schema(implementation = ErrorResponse.class),
                             examples = @ExampleObject(
                                     name = "서버 오류",
-                                    value = "{\"code\":500, \"message\":\"[ERROR] 예상하지 못한 예외가 발생하였습니다. 상세 정보: \"}"
+                                    value = "{\"code\":500, \"message\":\"[ERROR] 서버 내부 오류가 발생했습니다\"}"
                             )
                     ))
     })

@@ -26,7 +26,7 @@ public interface CommentApiDocs {
             ),
             @ApiResponse(
                     responseCode = "400",
-                    description = "요청 값 입력 오류",
+                    description = "잘못된 요청",
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class),
@@ -77,7 +77,7 @@ public interface CommentApiDocs {
                             schema = @Schema(implementation = ErrorResponse.class),
                             examples = @ExampleObject(
                                     name = "서버 오류",
-                                    value = "{\"code\":500, \"message\":\"[ERROR] 예상하지 못한 예외가 발생하였습니다. 상세 정보: \"}"
+                                    value = "{\"code\":500, \"message\":\"[ERROR] 서버 내부 오류가 발생했습니다\"}"
                             )
                     ))
     })
@@ -161,7 +161,7 @@ public interface CommentApiDocs {
                             schema = @Schema(implementation = ErrorResponse.class),
                             examples = @ExampleObject(
                                     name = "서버 오류",
-                                    value = "{\"code\":500, \"message\":\"[ERROR] 예상하지 못한 예외가 발생하였습니다. 상세 정보: \"}"
+                                    value = "{\"code\":500, \"message\":\"[ERROR] 서버 내부 오류가 발생했습니다\"}"
                             )
                     ))
     })
@@ -246,7 +246,7 @@ public interface CommentApiDocs {
                             schema = @Schema(implementation = ErrorResponse.class),
                             examples = @ExampleObject(
                                     name = "서버 오류",
-                                    value = "{\"code\":500, \"message\":\"[ERROR] 예상하지 못한 예외가 발생하였습니다. 상세 정보: \"}"
+                                    value = "{\"code\":500, \"message\":\"[ERROR] 서버 내부 오류가 발생했습니다\"}"
                             )
                     ))
     })
@@ -343,7 +343,7 @@ public interface CommentApiDocs {
                             schema = @Schema(implementation = ErrorResponse.class),
                             examples = @ExampleObject(
                                     name = "서버 오류",
-                                    value = "{\"code\":500, \"message\":\"[ERROR] 예상하지 못한 예외가 발생하였습니다. 상세 정보: \"}"
+                                    value = "{\"code\":500, \"message\":\"[ERROR] 서버 내부 오류가 발생했습니다\"}"
                             )
                     ))
     })
@@ -434,7 +434,7 @@ public interface CommentApiDocs {
                             schema = @Schema(implementation = ErrorResponse.class),
                             examples = @ExampleObject(
                                     name = "서버 오류",
-                                    value = "{\"code\":500, \"message\":\"[ERROR] 예상하지 못한 예외가 발생하였습니다. 상세 정보: \"}"
+                                    value = "{\"code\":500, \"message\":\"[ERROR] 서버 내부 오류가 발생했습니다\"}"
                             )
                     ))
     })
@@ -523,7 +523,7 @@ public interface CommentApiDocs {
                             schema = @Schema(implementation = ErrorResponse.class),
                             examples = @ExampleObject(
                                     name = "서버 오류",
-                                    value = "{\"code\":500, \"message\":\"[ERROR] 예상하지 못한 예외가 발생하였습니다. 상세 정보: \"}"
+                                    value = "{\"code\":500, \"message\":\"[ERROR] 서버 내부 오류가 발생했습니다\"}"
                             )
                     ))
     })
@@ -618,7 +618,7 @@ public interface CommentApiDocs {
                             schema = @Schema(implementation = ErrorResponse.class),
                             examples = @ExampleObject(
                                     name = "서버 오류",
-                                    value = "{\"code\":500, \"message\":\"[ERROR] 예상하지 못한 예외가 발생하였습니다. 상세 정보: \"}"
+                                    value = "{\"code\":500, \"message\":\"[ERROR] 서버 내부 오류가 발생했습니다\"}"
                             )
                     ))
     })
