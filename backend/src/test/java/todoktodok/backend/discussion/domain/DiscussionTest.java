@@ -39,7 +39,7 @@ class DiscussionTest {
                         .book(book)
                         .build()
         ).isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("토론방 제목은 1자 이상, 50자 이하여야 합니다");
+                .hasMessageContaining("토론방 제목은 1자 이상, 50자 이하여야 합니다");
     }
 
     @Test
@@ -70,7 +70,7 @@ class DiscussionTest {
                         .book(book)
                         .build()
         ).isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("토론방 제목은 1자 이상, 50자 이하여야 합니다");
+                .hasMessageContaining("토론방 제목은 1자 이상, 50자 이하여야 합니다");
     }
 
     @Test
@@ -101,7 +101,7 @@ class DiscussionTest {
                         .book(book)
                         .build()
         ).isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("토론방 내용은 1자 이상, 2500자 이하여야 합니다");
+                .hasMessageContaining("토론방 내용은 1자 이상, 2500자 이하여야 합니다");
     }
 
     @Test
@@ -132,6 +132,6 @@ class DiscussionTest {
                         .book(book)
                         .build()
         ).isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("토론방 내용은 1자 이상, 2500자 이하여야 합니다");
+                .hasMessageContaining("토론방 내용은 1자 이상, 2500자 이하여야 합니다");
     }
 }

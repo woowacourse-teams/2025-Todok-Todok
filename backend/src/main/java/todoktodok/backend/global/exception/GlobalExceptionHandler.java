@@ -1,10 +1,12 @@
 package todoktodok.backend.global.exception;
 
 import io.jsonwebtoken.JwtException;
+import java.util.List;
 import java.util.NoSuchElementException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -56,19 +58,23 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(
             final MethodArgumentNotValidException e
     ) {
+        final List<FieldError> fieldErrors = e.getBindingResult().getFieldErrors();
+        final String errorMessage = fieldErrors.getFirst().getDefaultMessage();
         final HttpStatus status = HttpStatus.BAD_REQUEST;
-        log.warn(PREFIX + e.getBindingResult().getFieldErrors().getFirst().getDefaultMessage());
-        e.getBindingResult().getFieldErrors()
-                .forEach(fieldError -> {
-                    Object rejectedValue = fieldError.getRejectedValue();
-                    String maskedValue = maskEmailValue(rejectedValue, fieldError.getField());
-                    log.warn("{}: {}", fieldError.getField(), maskedValue);
-                });
+
+        fieldErrors.forEach(fieldError -> {
+            final Object rejectedValue = fieldError.getRejectedValue();
+            final String maskedValue = maskEmailValue(rejectedValue, fieldError.getField());
+            log.warn(String.format("%s: %s = %s",
+                    PREFIX + errorMessage,
+                    fieldError.getField(),
+                    maskedValue));
+        });
 
         return ResponseEntity.status(status)
                 .body(new ErrorResponse(
                         status.value(),
-                        PREFIX + e.getBindingResult().getFieldErrors().getFirst().getDefaultMessage()
+                        PREFIX + errorMessage
                 ));
     }
 
@@ -120,6 +126,11 @@ public class GlobalExceptionHandler {
         }
 
         final String str = value.toString();
+
+        if (field.equals("discussionTitle") || field.equals("discussionOpinion")) {
+            return str.length() + "자";
+        }
+
         if (!field.equals("email")) {
             return str;
         }

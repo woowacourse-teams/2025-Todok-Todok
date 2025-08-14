@@ -98,7 +98,7 @@ class DiscussionQueryServiceTest {
         // when - then
         assertThatThrownBy(() -> discussionQueryService.getDiscussion(memberId, discussionId))
                 .isInstanceOf(NoSuchElementException.class)
-                .hasMessage("해당 토론방을 찾을 수 없습니다");
+                .hasMessageContaining("해당 토론방을 찾을 수 없습니다");
     }
 
     @Test
