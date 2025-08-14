@@ -140,8 +140,16 @@
     <string name="error_io_exception">서버에서 데이터를 가져올 수 없습니다.</string>
     <string name="error_request_cancelled">요청이 취소되었습니다.</string>
     <string name="error_empty_body">서버에서 올바른 응답을 받지 못했습니다. 잠시 후 다시 시도해주세요</string>
-  
-    <!-- 차단/신고 관련 --> 
+
+    <!-- 차단/신고 관련 -->
     <string name="error_already_blocked">이미 차단된 회원이에요</string>
     <string name="error_already_reported">이미 신고한 회원이에요</string>
+
+    <!-- 토론방 생성 관련 에러 -->
+    <string name="error_create_discussion_book_info_not_found">책 정보가 없습니다</string>
+    <string name="error_create_discussion_title_not_found">제목이 없습니다</string>
+    <string name="error_create_discussion_content_not_found">내용이 없습니다</string>
+    <string name="error_create_discussion_not_my_discussion_room">내가 작성한 토론방이 아닙니다</string>
+    <string name="error_create_discussion_discussion_room_info_not_found">토론방 정보가 없습니다</string>
+    <string name="error_create_discussion_please_try_again">다시 시도해주세요</string>
 </resources>

@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -74,6 +75,7 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
 
     private fun initView() {
         binding.apply {
+            btnCreate.isEnabled = false
             btnBack.setOnClickListener { finish() }
             btnEdit.setOnClickListener {
                 navigateToSelectBook()
@@ -173,13 +175,22 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
                         event,
                     )
 
-                is CreateDiscussionUiEvent.ShowToast ->
+                is CreateDiscussionUiEvent.ShowToast -> {
+                    val message = when (event.error) {
+                        ErrorCreateDiscussionType.BOOK_INFO_NOT_FOUND -> R.string.error_create_discussion_book_info_not_found
+                        ErrorCreateDiscussionType.TITLE_NOT_FOUND -> R.string.error_create_discussion_title_not_found
+                        ErrorCreateDiscussionType.CONTENT_NOT_FOUND -> R.string.error_create_discussion_content_not_found
+                        ErrorCreateDiscussionType.NOT_MY_DISCUSSION_ROOM -> R.string.error_create_discussion_not_my_discussion_room
+                        ErrorCreateDiscussionType.DISCUSSION_ROOM_INFO_NOT_FOUND -> R.string.error_create_discussion_discussion_room_info_not_found
+                        ErrorCreateDiscussionType.PLEASE_TRY_AGAIN -> R.string.error_create_discussion_please_try_again
+                    }
                     Toast
                         .makeText(
                             this@CreateDiscussionRoomActivity,
-                            event.error,
+                            message,
                             Toast.LENGTH_LONG,
                         ).show()
+                }
             }
         }
     }
