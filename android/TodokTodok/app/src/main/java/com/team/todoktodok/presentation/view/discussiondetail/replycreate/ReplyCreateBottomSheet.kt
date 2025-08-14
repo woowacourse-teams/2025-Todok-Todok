@@ -8,8 +8,11 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.DEFAULT_ARGS_KEY
+import androidx.lifecycle.viewmodel.MutableCreationExtras
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.team.todoktodok.App
@@ -20,11 +23,40 @@ import com.team.todoktodok.presentation.view.discussiondetail.replycreate.vm.Rep
 import com.team.todoktodok.presentation.view.discussiondetail.replycreate.vm.ReplyCreateViewModelFactory
 
 class ReplyCreateBottomSheet : BottomSheetDialogFragment(R.layout.fragment_comment_create_bottom_sheet) {
-    private val viewModel by viewModels<ReplyCreateViewModel> {
-        val repositoryModule = (requireActivity().application as App).container.repositoryModule
-        ReplyCreateViewModelFactory(
-            repositoryModule.replyRepository,
-        )
+    private val viewModel by viewModels<ReplyCreateViewModel>(
+        ownerProducer = { requireActivity() },
+        factoryProducer = {
+            val repoModule = (requireActivity().application as App).container.repositoryModule
+            ReplyCreateViewModelFactory(repoModule.replyRepository)
+        },
+        extrasProducer = {
+            MutableCreationExtras(requireActivity().defaultViewModelCreationExtras).apply {
+                this[DEFAULT_ARGS_KEY] = buildReplyArgs()
+            }
+        },
+    )
+
+    private fun buildReplyArgs(): Bundle {
+        val args = requireArguments()
+        return Bundle().apply {
+            putLong(
+                ReplyCreateViewModel.KEY_DISCUSSION_ID,
+                args.getLong(ReplyCreateViewModel.KEY_DISCUSSION_ID),
+            )
+            putLong(
+                ReplyCreateViewModel.KEY_COMMENT_ID,
+                args.getLong(ReplyCreateViewModel.KEY_COMMENT_ID),
+            )
+            if (args.containsKey(ReplyCreateViewModel.KEY_REPLY_ID)) {
+                putLong(
+                    ReplyCreateViewModel.KEY_REPLY_ID,
+                    args.getLong(ReplyCreateViewModel.KEY_REPLY_ID),
+                )
+            }
+            args.getString(ReplyCreateViewModel.KEY_REPLY_CONTENT)?.let {
+                putString(ReplyCreateViewModel.KEY_REPLY_CONTENT, it)
+            }
+        }
     }
 
     private var visibilityListener: BottomSheetVisibilityListener? = null
@@ -65,7 +97,7 @@ class ReplyCreateBottomSheet : BottomSheetDialogFragment(R.layout.fragment_comme
     private fun initView(binding: FragmentCommentCreateBottomSheetBinding) {
         with(binding) {
             etTextCommentContent.requestFocus()
-            etTextCommentContent.setText(viewModel.content)
+            etTextCommentContent.setText(viewModel.replyContent.value)
             val imm =
                 requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.showSoftInput(etTextCommentContent, InputMethodManager.SHOW_IMPLICIT)

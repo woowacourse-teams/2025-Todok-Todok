@@ -8,8 +8,11 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.DEFAULT_ARGS_KEY
+import androidx.lifecycle.viewmodel.MutableCreationExtras
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.team.todoktodok.App
@@ -18,13 +21,41 @@ import com.team.todoktodok.databinding.FragmentCommentCreateBottomSheetBinding
 import com.team.todoktodok.presentation.view.discussiondetail.BottomSheetVisibilityListener
 import com.team.todoktodok.presentation.view.discussiondetail.commentcreate.vm.CommentCreateViewModel
 import com.team.todoktodok.presentation.view.discussiondetail.commentcreate.vm.CommentCreateViewModelFactory
+import com.team.todoktodok.presentation.view.discussiondetail.replycreate.vm.ReplyCreateViewModelFactory
 
 class CommentCreateBottomSheet : BottomSheetDialogFragment(R.layout.fragment_comment_create_bottom_sheet) {
-    private val viewModel by viewModels<CommentCreateViewModel> {
-        val repositoryModule = (requireActivity().application as App).container.repositoryModule
-        CommentCreateViewModelFactory(
-            repositoryModule.commentRepository,
-        )
+    private val viewModel by viewModels<CommentCreateViewModel>(
+        ownerProducer = { requireActivity() },
+        factoryProducer = {
+            val repositoryModule = (requireActivity().application as App).container.repositoryModule
+            CommentCreateViewModelFactory(
+                repositoryModule.commentRepository,
+            )
+        },
+        extrasProducer = {
+            MutableCreationExtras(requireActivity().defaultViewModelCreationExtras).apply {
+                this[DEFAULT_ARGS_KEY] = buildCommentArgs()
+            }
+        },
+    )
+
+    private fun buildCommentArgs(): Bundle {
+        val args = requireArguments()
+        return Bundle().apply {
+            putLong(
+                CommentCreateViewModel.KEY_DISCUSSION_ID,
+                args.getLong(CommentCreateViewModel.KEY_DISCUSSION_ID),
+            )
+            if (args.containsKey(CommentCreateViewModel.KEY_COMMENT_ID)) {
+                putLong(
+                    CommentCreateViewModel.KEY_COMMENT_ID,
+                    args.getLong(CommentCreateViewModel.KEY_COMMENT_ID),
+                )
+            }
+            args.getString(CommentCreateViewModel.KEY_COMMENT_CONTENT)?.let {
+                putString(CommentCreateViewModel.KEY_COMMENT_CONTENT, it)
+            }
+        }
     }
 
     private var visibilityListener: BottomSheetVisibilityListener? = null
@@ -65,7 +96,7 @@ class CommentCreateBottomSheet : BottomSheetDialogFragment(R.layout.fragment_com
     private fun initView(binding: FragmentCommentCreateBottomSheetBinding) {
         with(binding) {
             etTextCommentContent.requestFocus()
-            etTextCommentContent.setText(viewModel.commentContent)
+            etTextCommentContent.setText(viewModel.commentText.value)
             val imm =
                 requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.showSoftInput(etTextCommentContent, InputMethodManager.SHOW_IMPLICIT)

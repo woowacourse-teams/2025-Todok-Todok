@@ -13,7 +13,7 @@ import com.team.todoktodok.presentation.view.discussiondetail.commentcreate.Comm
 import kotlinx.coroutines.launch
 
 class CommentCreateViewModel(
-    savedStateHandle: SavedStateHandle,
+    private val savedStateHandle: SavedStateHandle,
     private val commentRepository: CommentRepository,
 ) : ViewModel() {
     private val discussionId =
