@@ -42,12 +42,14 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<String> handleMethodArgumentNotValidException(final MethodArgumentNotValidException e) {
-        log.warn(PREFIX + e.getBindingResult().getFieldErrors().getFirst().getDefaultMessage());
         e.getBindingResult().getFieldErrors()
                 .forEach(fieldError -> {
-                    Object rejectedValue = fieldError.getRejectedValue();
-                    String maskedValue = maskEmailValue(rejectedValue, fieldError.getField());
-                    log.warn("{}: {}", fieldError.getField(), maskedValue);
+                    final Object rejectedValue = fieldError.getRejectedValue();
+                    final String maskedValue = maskEmailValue(rejectedValue, fieldError.getField());
+                    log.warn(String.format("%s: %s = %s",
+                            PREFIX + e.getBindingResult().getFieldErrors().getFirst().getDefaultMessage(),
+                            fieldError.getField(),
+                            maskedValue));
                 });
 
         return ResponseEntity.badRequest()
