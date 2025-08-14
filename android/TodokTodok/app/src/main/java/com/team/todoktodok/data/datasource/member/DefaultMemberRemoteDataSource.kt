@@ -3,6 +3,7 @@ package com.team.todoktodok.data.datasource.member
 import com.team.domain.model.Support
 import com.team.domain.model.member.MemberDiscussionType
 import com.team.domain.model.member.MemberId
+import com.team.domain.model.member.MemberType
 import com.team.todoktodok.data.core.JwtParser
 import com.team.todoktodok.data.datasource.token.TokenDataSource
 import com.team.todoktodok.data.network.auth.AuthInterceptor.Companion.AUTHORIZATION_NAME
@@ -19,23 +20,36 @@ class DefaultMemberRemoteDataSource(
     private val memberService: MemberService,
     private val tokenDataSource: TokenDataSource,
 ) : MemberRemoteDataSource {
-    override suspend fun login(request: String): String {
+    override suspend fun login(request: String): MemberType {
         val response = memberService.login(LoginRequest(request))
         val token = response.headers()[AUTHORIZATION_NAME] ?: throw IllegalArgumentException()
 
         val parser = JwtParser(token)
-        val memberType = parser.parseMemberType()
-        val memberId = parser.parseMemberId()
-        tokenDataSource.saveToken(accessToken = token, memberId = memberId)
+        val memberType = parser.parseToMemberType()
 
+        when (memberType) {
+            MemberType.USER -> saveMemberSetting(parser, token)
+            MemberType.TEMP_USER -> {
+                tokenDataSource.saveToken(accessToken = token)
+            }
+        }
         return memberType
     }
 
     override suspend fun signUp(request: SignUpRequest) {
-        memberService.signUp(
-            request.email,
-            request,
-        )
+        val response = memberService.signUp(request.email, request)
+        val token = response.headers()[AUTHORIZATION_NAME] ?: throw IllegalArgumentException()
+
+        val parser = JwtParser(token)
+        saveMemberSetting(parser, token)
+    }
+
+    private suspend fun saveMemberSetting(
+        parser: JwtParser,
+        accessToken: String,
+    ) {
+        val memberId = parser.parseToMemberId()
+        tokenDataSource.saveToken(accessToken = accessToken, memberId = memberId)
     }
 
     override suspend fun fetchProfile(request: MemberId): ProfileResponse {

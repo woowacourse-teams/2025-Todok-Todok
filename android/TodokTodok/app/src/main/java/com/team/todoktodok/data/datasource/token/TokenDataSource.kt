@@ -18,8 +18,8 @@ class TokenDataSource(
 
     suspend fun saveToken(
         accessToken: String,
-        refreshToken: String = "",
-        memberId: Long,
+        refreshToken: String = TEMPORARY_TOKEN,
+        memberId: Long = TEMPORARY_MEMBER_ID,
     ) {
         dataStore.updateData {
             it.copy(
@@ -28,5 +28,10 @@ class TokenDataSource(
                 memberId,
             )
         }
+    }
+
+    companion object {
+        private const val TEMPORARY_TOKEN = ""
+        private const val TEMPORARY_MEMBER_ID = -1L
     }
 }

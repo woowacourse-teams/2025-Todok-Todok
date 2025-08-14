@@ -1,20 +1,18 @@
 package com.team.todoktodok.data.core
 
-import android.util.Base64
+import com.team.domain.model.member.MemberType
+import com.team.domain.model.member.MemberType.Companion.MemberType
 import org.json.JSONObject
+import java.util.Base64
 
 class JwtParser(
-    private val jwt: String,
+    jwt: String,
 ) {
-    fun parseMemberType(): String {
-        val json = decodeJwt(jwt)
-        return json.getString(KEY_MEMBER_TYPE)
-    }
+    private val decodeJson = decodeJwt(jwt)
 
-    fun parseMemberId(): Long {
-        val json = decodeJwt(jwt)
-        return json.getLong(KEY_MEMBER_ID)
-    }
+    fun parseToMemberType(): MemberType = MemberType(decodeJson.getString(KEY_MEMBER_TYPE))
+
+    fun parseToMemberId(): Long = decodeJson.getLong(KEY_MEMBER_ID)
 
     fun decodeJwt(jwt: String): JSONObject {
         val parts = jwt.split(".")
@@ -23,13 +21,7 @@ class JwtParser(
         }
 
         val payload = parts[1]
-        val decoded =
-            String(
-                Base64.decode(
-                    payload,
-                    Base64.URL_SAFE or Base64.NO_PADDING or Base64.NO_WRAP,
-                ),
-            )
+        val decoded = String(Base64.getUrlDecoder().decode(payload))
         return JSONObject(decoded)
     }
 

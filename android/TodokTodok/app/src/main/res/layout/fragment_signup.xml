@@ -60,11 +60,11 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/basic_btn_height"
         android:layout_marginHorizontal="@dimen/space_20"
-        android:layout_marginTop="@dimen/space_12"
+        android:layout_marginTop="@dimen/space_24"
         android:layout_marginBottom="@dimen/space_12"
         android:gravity="center"
         android:text="@string/signup_btn_text"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/et_nickname_layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

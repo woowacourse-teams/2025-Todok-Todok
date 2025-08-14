@@ -7,6 +7,7 @@ import com.team.domain.model.member.BlockedMember
 import com.team.domain.model.member.MemberDiscussion
 import com.team.domain.model.member.MemberDiscussionType
 import com.team.domain.model.member.MemberId
+import com.team.domain.model.member.MemberType
 import com.team.domain.model.member.Profile
 import com.team.domain.repository.MemberRepository
 import com.team.todoktodok.data.datasource.member.MemberRemoteDataSource
@@ -24,7 +25,7 @@ class DefaultMemberRepository(
         email: String,
         nickname: String,
         profileImage: String,
-    ): String {
+    ): MemberType {
         cachedMember = Member(nickname, profileImage, email)
 
         return remoteMemberRemoteDataSource.login(email)
