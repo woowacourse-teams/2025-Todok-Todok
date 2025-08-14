@@ -18,32 +18,45 @@ public class GlobalExceptionHandler {
     private static final String PREFIX = "[ERROR] ";
 
     @ExceptionHandler(JwtException.class)
-    public ResponseEntity<String> handleJwtException(final JwtException e) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(PREFIX + e.getMessage());
+    public ResponseEntity<ErrorResponse> handleJwtException(final JwtException e) {
+        final HttpStatus status = HttpStatus.UNAUTHORIZED;
+
+        return ResponseEntity.status(status)
+                .body(new ErrorResponse(status.value(), PREFIX + e.getMessage()));
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> handleBadRequestException(final IllegalArgumentException e) {
+    public ResponseEntity<ErrorResponse> handleBadRequestException(final IllegalArgumentException e) {
+        final HttpStatus status = HttpStatus.BAD_REQUEST;
         log.warn(PREFIX + e.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(PREFIX + getSafeErrorMessage(e));
+
+        return ResponseEntity.status(status)
+                .body(new ErrorResponse(status.value(), PREFIX + getSafeErrorMessage(e)));
     }
 
     @ExceptionHandler(NoSuchElementException.class)
-    public ResponseEntity<String> handleNotFoundException(final NoSuchElementException e) {
+    public ResponseEntity<ErrorResponse> handleNotFoundException(final NoSuchElementException e) {
+        final HttpStatus status = HttpStatus.NOT_FOUND;
         log.warn(PREFIX + e.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(PREFIX + getSafeErrorMessage(e));
+
+        return ResponseEntity.status(status)
+                .body(new ErrorResponse(status.value(), PREFIX + getSafeErrorMessage(e)));
     }
 
     @ExceptionHandler(IllegalStateException.class)
-    public ResponseEntity<String> handleIllegalStateException(final IllegalStateException e) {
+    public ResponseEntity<ErrorResponse> handleIllegalStateException(final IllegalStateException e) {
+        final HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
         log.warn(PREFIX + e.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(PREFIX + getSafeErrorMessage(e));
+
+        return ResponseEntity.status(status)
+                .body(new ErrorResponse(status.value(), PREFIX + getSafeErrorMessage(e)));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<String> handleMethodArgumentNotValidException(
+    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(
             final MethodArgumentNotValidException e
     ) {
+        final HttpStatus status = HttpStatus.BAD_REQUEST;
         log.warn(PREFIX + e.getBindingResult().getFieldErrors().getFirst().getDefaultMessage());
         e.getBindingResult().getFieldErrors()
                 .forEach(fieldError -> {
@@ -52,33 +65,50 @@ public class GlobalExceptionHandler {
                     log.warn("{}: {}", fieldError.getField(), maskedValue);
                 });
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(PREFIX + e.getBindingResult().getFieldErrors().getFirst().getDefaultMessage());
+        return ResponseEntity.status(status)
+                .body(new ErrorResponse(
+                        status.value(),
+                        PREFIX + e.getBindingResult().getFieldErrors().getFirst().getDefaultMessage()
+                ));
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public ResponseEntity<String> handleMethodArgumentTypeMismatchException(
+    public ResponseEntity<ErrorResponse> handleMethodArgumentTypeMismatchException(
             final MethodArgumentTypeMismatchException e
     ) {
+        final HttpStatus status = HttpStatus.BAD_REQUEST;
         log.warn(PREFIX + String.format("유효하지 않은 %s의 값입니다", e.getRequiredType().getSimpleName()));
+
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(PREFIX + String.format("유효하지 않은 %s의 값입니다", e.getRequiredType().getSimpleName()));
+                .body(new ErrorResponse(
+                        status.value(),
+                        PREFIX + String.format("유효하지 않은 %s의 값입니다", e.getRequiredType().getSimpleName())
+                ));
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
-    public ResponseEntity<String> handleMissingServletRequestParameterException(
+    public ResponseEntity<ErrorResponse> handleMissingServletRequestParameterException(
             final MissingServletRequestParameterException e
     ) {
+        final HttpStatus status = HttpStatus.BAD_REQUEST;
         log.warn(PREFIX + String.format("파라미터 %s가 존재하지 않습니다", e.getParameterName()));
+
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(PREFIX + String.format("파라미터 %s가 존재하지 않습니다", e.getParameterName()));
+                .body(new ErrorResponse(
+                        status.value(),
+                        PREFIX + String.format("파라미터 %s가 존재하지 않습니다", e.getParameterName())
+                ));
     }
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<String> handleRuntimeException(final RuntimeException e) {
+    public ResponseEntity<ErrorResponse> handleRuntimeException(final RuntimeException e) {
+        final HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
         log.error("Unexpected error occurred", e);
+
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(PREFIX + "예상하지 못한 예외가 발생하였습니다. 상세 정보: " + e.getMessage());
+                .body(new ErrorResponse(
+                        status.value(), PREFIX + "예상하지 못한 예외가 발생하였습니다. 상세 정보: " + e.getMessage()
+                ));
     }
 
     private String maskEmailValue(
