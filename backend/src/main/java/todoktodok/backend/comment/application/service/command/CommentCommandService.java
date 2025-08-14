@@ -130,17 +130,17 @@ public class CommentCommandService {
 
     private Member findMember(final Long memberId) {
         return memberRepository.findById(memberId)
-                .orElseThrow(() -> new NoSuchElementException(String.format("해당 회원을 찾을 수 없습니다: %d", memberId)));
+                .orElseThrow(() -> new NoSuchElementException(String.format("해당 회원을 찾을 수 없습니다: %s", memberId)));
     }
 
     private Comment findComment(final Long commentId) {
         return commentRepository.findById(commentId)
-                .orElseThrow(() -> new NoSuchElementException(String.format("해당 댓글을 찾을 수 없습니다: %d", commentId)));
+                .orElseThrow(() -> new NoSuchElementException(String.format("해당 댓글을 찾을 수 없습니다: %s", commentId)));
     }
 
     private Discussion findDiscussion(final Long discussionId) {
         return discussionRepository.findById(discussionId)
-                .orElseThrow(() -> new NoSuchElementException(String.format("해당 토론방을 찾을 수 없습니다: %d", discussionId)));
+                .orElseThrow(() -> new NoSuchElementException(String.format("해당 토론방을 찾을 수 없습니다: %s", discussionId)));
     }
 
     private void validateDuplicatedReport(
@@ -148,7 +148,7 @@ public class CommentCommandService {
             final Comment comment
     ) {
         if (commentReportRepository.existsByMemberAndComment(member, comment)) {
-            throw new IllegalArgumentException(String.format("이미 신고한 댓글입니다: %d -> %d", member.getId(), comment.getId()));
+            throw new IllegalArgumentException(String.format("이미 신고한 댓글입니다: %s -> %s", member.getId(), comment.getId()));
         }
     }
 
@@ -157,14 +157,14 @@ public class CommentCommandService {
             final Member member
     ) {
         if (!comment.isOwnedBy(member)) {
-            throw new IllegalArgumentException(String.format("자기 자신의 댓글만 수정/삭제 가능합니다: member-%d, comment-%d",
+            throw new IllegalArgumentException(String.format("자기 자신의 댓글만 수정/삭제 가능합니다: memberId = %s, commentId = %s",
                     member.getId(), comment.getId()));
         }
     }
 
     private void validateHasReply(final Comment comment) {
         if (replyRepository.existsByComment(comment)) {
-            throw new IllegalArgumentException(String.format("대댓글이 존재하는 댓글은 삭제할 수 없습니다: %d", comment.getId()));
+            throw new IllegalArgumentException(String.format("대댓글이 존재하는 댓글은 삭제할 수 없습니다: %s", comment.getId()));
         }
     }
 }

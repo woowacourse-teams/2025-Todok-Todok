@@ -70,7 +70,7 @@ public class MemberQueryService {
 
     private Member findMember(final Long memberId) {
         return memberRepository.findById(memberId)
-                .orElseThrow(() -> new NoSuchElementException(String.format("해당 회원을 찾을 수 없습니다: %d", memberId)));
+                .orElseThrow(() -> new NoSuchElementException(String.format("해당 회원을 찾을 수 없습니다: %s", memberId)));
     }
 
     private List<MemberDiscussionResponse> getCreatedDiscussions(final Member member) {

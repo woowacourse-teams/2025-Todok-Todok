@@ -77,13 +77,13 @@ public class Member extends TimeStamp {
 
     public void validateSelfBlock(final Member target) {
         if (this.equals(target)) {
-            throw new IllegalArgumentException(String.format("자기 자신을 차단할 수 없습니다: %d", this.id));
+            throw new IllegalArgumentException(String.format("자기 자신을 차단할 수 없습니다: %s", this.id));
         }
     }
 
     public void validateSelfReport(final Member target) {
         if (this.equals(target)) {
-            throw new IllegalArgumentException(String.format("자기 자신을 신고할 수 없습니다: %d", this.id));
+            throw new IllegalArgumentException(String.format("자기 자신을 신고할 수 없습니다: %s", this.id));
         }
     }
 
