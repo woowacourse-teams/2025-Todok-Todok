@@ -42,9 +42,9 @@ public class LogInterceptor implements HandlerInterceptor {
         final String clientIp = (String) request.getAttribute("clientIp");
 
         if (status >= HTTP_STATUS_SUCCESS_MIN && status < HTTP_STATUS_ERROR_MIN) {
-            log.info("[API RESPONSE] [{}] {} from {}: {}", method, requestURI, clientIp, status);
+            log.info("[API RESPONSE] [{}] {} -> {}: {}", clientIp, method, requestURI, status);
         } else {
-            log.error("[API RESPONSE] [{}] {} from {}: {}", method, requestURI, clientIp, status);
+            log.error("[API RESPONSE] [{}] {} -> {}: {}", clientIp, method, requestURI, status);
         }
     }
 
