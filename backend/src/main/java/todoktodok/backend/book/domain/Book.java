@@ -75,13 +75,21 @@ public class Book extends TimeStamp {
 
     private static void validateEmpty(final String value) {
         if (value == null || value.isEmpty()) {
-            throw new IllegalArgumentException("1자 이상 입력해야 하는 정보입니다");
+            throw new IllegalArgumentException(
+                    String.format("1자 이상 입력해야 하는 정보입니다: value= %s", value)
+            );
         }
     }
 
     private static void validateIsbn(final String isbn) {
-        if (isbn == null || isbn.length() != ISBN_LENGTH) {
-            throw new IllegalArgumentException("ISBN은 13자여야 합니다");
+        if (isbn == null) {
+            throw new IllegalArgumentException("ISBN은 13자여야 합니다: isbn= null");
+        }
+
+        if (isbn.length() != ISBN_LENGTH) {
+            throw new IllegalArgumentException(
+                    String.format("ISBN은 13자여야 합니다: value= %s, isbn= %d", isbn, isbn.length())
+            );
         }
     }
 
