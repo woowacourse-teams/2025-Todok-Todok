@@ -18,6 +18,7 @@
     <dimen name="space_28">28dp</dimen>
     <dimen name="space_32">32dp</dimen>
     <dimen name="space_56">56dp</dimen>
+    <dimen name="space_120">120dp</dimen>
 
     <dimen name="toolbar_height">56dp</dimen>
     <dimen name="basic_btn_height">56dp</dimen>

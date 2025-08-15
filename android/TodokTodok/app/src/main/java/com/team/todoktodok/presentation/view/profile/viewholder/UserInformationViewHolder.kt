@@ -9,6 +9,7 @@ import android.widget.PopupWindow
 import androidx.core.graphics.drawable.toDrawable
 import androidx.recyclerview.widget.RecyclerView
 import com.team.domain.model.Support
+import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ItemUserInformationBinding
 import com.team.todoktodok.databinding.PopupMenuReportBinding
 import com.team.todoktodok.presentation.view.profile.adapter.ProfileItems
@@ -67,7 +68,8 @@ class UserInformationViewHolder private constructor(
 
             ivReport.visibility = reportButtonVisibility
             tvNickname.text = content.nickname
-            tvDescription.text = content.description
+
+            tvDescription.text = content.message ?: itemView.context.getString(R.string.profile_message_placeholder)
 
 //            Glide
 //                .with(binding.root)

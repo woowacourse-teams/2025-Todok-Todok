@@ -6,11 +6,15 @@ import android.view.View
 import android.view.WindowManager
 import androidx.core.os.bundleOf
 import androidx.fragment.app.commit
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.presentation.view.discussiondetail.comments.CommentsFragment
+import com.team.todoktodok.presentation.view.discussiondetail.comments.vm.CommentsViewModel
+import com.team.todoktodok.presentation.view.discussiondetail.comments.vm.CommentsViewModelFactory
 
 class CommentBottomSheet : BottomSheetDialogFragment(R.layout.fragment_comment_bottom_sheet) {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
@@ -19,9 +23,14 @@ class CommentBottomSheet : BottomSheetDialogFragment(R.layout.fragment_comment_b
             window?.setDimAmount(DIM_AMOUNT)
         }
 
-    private val discussionId: Long by lazy {
-        requireArguments().getLong(KEY_DISCUSSION_ID)
-    }
+    override val defaultViewModelProviderFactory: ViewModelProvider.Factory
+        by lazy {
+            val repoModule = (requireActivity().application as App).container.repositoryModule
+            CommentsViewModelFactory(
+                repoModule.commentRepository,
+                repoModule.tokenRepository,
+            )
+        }
 
     override fun onViewCreated(
         view: View,
@@ -31,7 +40,7 @@ class CommentBottomSheet : BottomSheetDialogFragment(R.layout.fragment_comment_b
         if (savedInstanceState == null) {
             childFragmentManager.commit {
                 setReorderingAllowed(true)
-                add(R.id.fcv_comment, CommentsFragment.newInstance(discussionId))
+                add(R.id.fcv_comment, CommentsFragment.newInstance())
             }
         }
     }
@@ -96,11 +105,10 @@ class CommentBottomSheet : BottomSheetDialogFragment(R.layout.fragment_comment_b
     companion object {
         private const val LOCATION_INDEX_Y = 1
         private const val DIM_AMOUNT = 0.001f
-        const val KEY_DISCUSSION_ID = "discussion_id"
 
         fun newInstance(discussionId: Long): CommentBottomSheet =
             CommentBottomSheet().apply {
-                arguments = bundleOf(KEY_DISCUSSION_ID to discussionId)
+                arguments = bundleOf(CommentsViewModel.KEY_DISCUSSION_ID to discussionId)
             }
     }
 }

@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.team.domain.repository.ReplyRepository
 import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
 import com.team.todoktodok.presentation.core.event.SingleLiveData
+import com.team.todoktodok.presentation.view.discussiondetail.replycreate.ReplyCreateState
 import com.team.todoktodok.presentation.view.discussiondetail.replycreate.ReplyCreateUiEvent
 import kotlinx.coroutines.launch
 
@@ -21,29 +22,61 @@ class ReplyCreateViewModel(
     private val commentId =
         savedStateHandle.get<Long>(KEY_COMMENT_ID) ?: throw IllegalStateException()
 
+    private val replyCreateState =
+        ReplyCreateState.create(savedStateHandle.get<Long>(KEY_REPLY_ID))
+
+    val content = savedStateHandle.get<String>(KEY_REPLY_CONTENT)
+
     private val _uiEvent = MutableSingleLiveData<ReplyCreateUiEvent>()
     val uiEvent: SingleLiveData<ReplyCreateUiEvent> = _uiEvent
 
-    private val _commentText = MutableLiveData("")
-    val commentText: LiveData<String> = _commentText
+    private val _replyContent = MutableLiveData("")
+    val replyContent: LiveData<String> = _replyContent
 
-    fun onCommentChanged(text: CharSequence?) {
-        _commentText.value = text?.toString() ?: ""
+    init {
+        initReplyContent()
+    }
+
+    private fun initReplyContent() {
+        when (replyCreateState) {
+            ReplyCreateState.Create -> Unit
+            is ReplyCreateState.Update -> onReplyChanged(content ?: "")
+        }
+    }
+
+    fun onReplyChanged(text: CharSequence?) {
+        _replyContent.value = text?.toString() ?: ""
     }
 
     fun submitReply() {
         viewModelScope.launch {
-            replyRepository.saveReply(
-                discussionId,
-                commentId,
-                commentText.value ?: throw IllegalStateException(),
-            )
-            _uiEvent.setValue(ReplyCreateUiEvent.CreateReply)
+            when (replyCreateState) {
+                ReplyCreateState.Create -> {
+                    replyRepository.saveReply(
+                        discussionId,
+                        commentId,
+                        replyContent.value ?: throw IllegalStateException(),
+                    )
+                    _uiEvent.setValue(ReplyCreateUiEvent.CreateReply)
+                }
+
+                is ReplyCreateState.Update -> {
+                    replyRepository.updateReply(
+                        discussionId,
+                        commentId,
+                        replyCreateState.replyId,
+                        replyContent.value ?: throw IllegalStateException(),
+                    )
+                    _uiEvent.setValue(ReplyCreateUiEvent.CreateReply)
+                }
+            }
         }
     }
 
     companion object {
-        const val KEY_DISCUSSION_ID = "discussionId"
+        const val KEY_DISCUSSION_ID = "discussion_id"
         const val KEY_COMMENT_ID = "comment_id"
+        const val KEY_REPLY_ID = "reply_id"
+        const val KEY_REPLY_CONTENT = "reply_content"
     }
 }

@@ -6,6 +6,7 @@ import com.team.domain.model.member.BlockedMember
 import com.team.domain.model.member.MemberDiscussion
 import com.team.domain.model.member.MemberDiscussionType
 import com.team.domain.model.member.MemberId
+import com.team.domain.model.member.MemberType
 import com.team.domain.model.member.Profile
 
 interface MemberRepository {
@@ -13,7 +14,7 @@ interface MemberRepository {
         email: String,
         nickname: String,
         profileImage: String,
-    ): String
+    ): MemberType
 
     suspend fun signUp(nickname: String)
 

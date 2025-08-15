@@ -65,6 +65,7 @@ class CommentCreateBottomSheet : BottomSheetDialogFragment(R.layout.fragment_com
     private fun initView(binding: FragmentCommentCreateBottomSheetBinding) {
         with(binding) {
             etTextCommentContent.requestFocus()
+            etTextCommentContent.setText(viewModel.commentContent)
             val imm =
                 requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.showSoftInput(etTextCommentContent, InputMethodManager.SHOW_IMPLICIT)
@@ -117,12 +118,14 @@ class CommentCreateBottomSheet : BottomSheetDialogFragment(R.layout.fragment_com
         fun newInstance(
             discussionId: Long,
             commentId: Long?,
+            commentContent: String?,
         ): CommentCreateBottomSheet =
             CommentCreateBottomSheet().apply {
                 arguments =
                     bundleOf(
                         CommentCreateViewModel.KEY_DISCUSSION_ID to discussionId,
                         CommentCreateViewModel.KEY_COMMENT_ID to commentId,
+                        CommentCreateViewModel.KEY_COMMENT_CONTENT to commentContent,
                     )
             }
     }

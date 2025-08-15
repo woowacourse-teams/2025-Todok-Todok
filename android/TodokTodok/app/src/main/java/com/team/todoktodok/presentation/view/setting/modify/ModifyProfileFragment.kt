@@ -99,7 +99,7 @@ class ModifyProfileFragment : Fragment(R.layout.fragment_modify_profile) {
     private fun setUpUiState(binding: FragmentModifyProfileBinding) {
         viewModel.profile.observe(viewLifecycleOwner) { value ->
             binding.etNickname.setText(value.nickname)
-            binding.etMessage.setText(value.description)
+            binding.etMessage.setText(value.message)
         }
     }
 

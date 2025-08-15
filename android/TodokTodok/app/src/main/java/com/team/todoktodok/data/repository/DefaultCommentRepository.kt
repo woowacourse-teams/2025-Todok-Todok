@@ -20,7 +20,7 @@ class DefaultCommentRepository(
         commentRemoteDataSource
             .fetchCommentsByDiscussionRoomId(id)
             .map { it.toDomain() }
-            .sortedByDescending { it.createAt }
+            .sortedBy { it.createAt }
 
     override suspend fun saveComment(
         discussionId: Long,

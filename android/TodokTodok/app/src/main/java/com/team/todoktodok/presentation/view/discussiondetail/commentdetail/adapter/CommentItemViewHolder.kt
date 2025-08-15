@@ -1,9 +1,9 @@
 package com.team.todoktodok.presentation.view.discussiondetail.commentdetail.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.team.domain.model.Comment
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ItemCommentDetailInformationBinding
 import com.team.todoktodok.presentation.core.ext.formatWithResource
@@ -12,17 +12,24 @@ class CommentItemViewHolder private constructor(
     private val binding: ItemCommentDetailInformationBinding,
     private val handler: Handler,
 ) : RecyclerView.ViewHolder(binding.root) {
-    fun bind(comment: Comment) {
+    fun bind(commentItem: CommentDetailItems.CommentItem) {
+        val comment = commentItem.value.comment
         with(binding) {
             tvUserNickname.text = comment.writer.nickname.value
             tvDiscussionCreateAt.text =
-                comment.createAt.formatWithResource(root.context, R.string.date_format_pattern)
-            tvDiscussionOpinion.text = comment.content
+                comment.createAt.formatWithResource(
+                    root.context,
+                    R.string.date_format_pattern,
+                )
+            tvCommentOpinion.text = comment.content
             ivLike.isSelected = comment.isLikedByMe
-            ivLike.setOnClickListener { handler.onClickCommentLike(comment.id) }
+            ivLike.setOnClickListener { handler.onClickCommentLike() }
             tvHeartCount.text = comment.likeCount.toString()
             tvUserNickname.setOnClickListener {
                 handler.onClickCommentUserName(comment.writer.id)
+            }
+            ivCommentOption.setOnClickListener {
+                handler.onClickCommentOption(commentItem, ivCommentOption)
             }
         }
     }
@@ -39,8 +46,13 @@ class CommentItemViewHolder private constructor(
     }
 
     interface Handler {
-        fun onClickCommentLike(commentId: Long)
+        fun onClickCommentLike()
 
         fun onClickCommentUserName(userId: Long)
+
+        fun onClickCommentOption(
+            item: CommentDetailItems.CommentItem,
+            anchorView: View,
+        )
     }
 }
