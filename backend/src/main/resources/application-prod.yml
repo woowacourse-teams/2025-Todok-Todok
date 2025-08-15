@@ -1,12 +1,12 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ${database.url}
-    username: ${database.username}
-    password: ${database.password}
+    url: ${database.prod.url}
+    username: ${database.prod.username}
+    password: ${database.prod.password}
   sql:
     init:
-      mode: always
+      mode: never
       schema-locations:
       data-locations:
   jpa:
@@ -17,6 +17,17 @@ spring:
     hibernate:
       ddl-auto: validate
     defer-datasource-initialization: false
+
+  flyway:
+    enabled: true
+    user: ${database.prod.username}
+    password: ${database.prod.password}
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    validate-on-migrate: true
+    clean-disabled: true
+    out-of-order: false
+    encoding: UTF-8
 
   config:
     activate:

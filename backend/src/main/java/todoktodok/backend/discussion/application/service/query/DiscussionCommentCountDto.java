@@ -2,15 +2,18 @@ package todoktodok.backend.discussion.application.service.query;
 
 public record DiscussionCommentCountDto(
         Long discussionId,
-        int commentCount
+        int commentCount,
+        int replyCount
 ) {
     public DiscussionCommentCountDto(
             final Long discussionId,
-            final Long commentCount
+            final Long commentCount,
+            final Long replyCount
     ) {
         this(
                 discussionId,
-                commentCount.intValue()
+                Math.toIntExact(commentCount),
+                Math.toIntExact(replyCount)
         );
     }
 }

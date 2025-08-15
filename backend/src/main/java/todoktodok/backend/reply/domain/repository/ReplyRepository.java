@@ -24,4 +24,12 @@ public interface ReplyRepository extends JpaRepository<Reply, Long> {
     List<Reply> findRepliesByComment(final Comment comment);
 
     boolean existsByComment(final Comment comment);
+
+    @Query("""
+        SELECT COUNT(r)
+        FROM Reply r
+        JOIN r.comment c
+        WHERE c.discussion.id = :discussionId
+    """)
+    Long countRepliesByDiscussionId(@Param("discussionId") Long discussionId);
 }

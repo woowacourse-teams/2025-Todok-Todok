@@ -11,7 +11,7 @@ public record CommentLikeCountDto(
     ) {
         this(
                 commentId,
-                likeCount.intValue()
+                Math.toIntExact(likeCount)
         );
     }
 }

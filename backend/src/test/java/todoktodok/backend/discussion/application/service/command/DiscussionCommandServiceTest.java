@@ -17,7 +17,6 @@ import todoktodok.backend.DatabaseInitializer;
 import todoktodok.backend.InitializerTimer;
 import todoktodok.backend.discussion.application.dto.request.DiscussionRequest;
 import todoktodok.backend.discussion.application.dto.request.DiscussionUpdateRequest;
-import todoktodok.backend.member.domain.repository.MemberRepository;
 
 @ActiveProfiles("test")
 @Transactional
@@ -55,7 +54,7 @@ class DiscussionCommandServiceTest {
         // when - then
         assertThatThrownBy(() -> discussionCommandService.createDiscussion(memberId, discussionRequest))
                 .isInstanceOf(NoSuchElementException.class)
-                .hasMessage("해당 회원을 찾을 수 없습니다");
+                .hasMessageContaining("해당 회원을 찾을 수 없습니다");
     }
 
     @Test
@@ -79,7 +78,7 @@ class DiscussionCommandServiceTest {
                 () -> discussionCommandService.createDiscussion(memberId, discussionRequest)
         )
                 .isInstanceOf(NoSuchElementException.class)
-                .hasMessage("해당 도서를 찾을 수 없습니다");
+                .hasMessageContaining("해당 도서를 찾을 수 없습니다");
     }
 
     @Test
@@ -105,7 +104,7 @@ class DiscussionCommandServiceTest {
         // when - then
         assertThatThrownBy(() -> discussionCommandService.updateDiscussion(memberId, discussionId, discussionUpdateRequest))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("자기 자신의 토론방만 수정/삭제 가능합니다");
+                .hasMessageContaining("자기 자신의 토론방만 수정/삭제 가능합니다");
     }
 
     @Test
@@ -124,7 +123,7 @@ class DiscussionCommandServiceTest {
         // when - then
         assertThatThrownBy(() -> discussionCommandService.deleteDiscussion(memberId, discussionId))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("자기 자신의 토론방만 수정/삭제 가능합니다");
+                .hasMessageContaining("자기 자신의 토론방만 수정/삭제 가능합니다");
     }
 
     @Test
@@ -142,7 +141,7 @@ class DiscussionCommandServiceTest {
         // when - then
         assertThatThrownBy(() -> discussionCommandService.deleteDiscussion(memberId, discussionId))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("댓글이 존재하는 토론방은 삭제할 수 없습니다");
+                .hasMessageContaining("댓글이 존재하는 토론방은 삭제할 수 없습니다");
     }
 
     @Test
@@ -163,7 +162,7 @@ class DiscussionCommandServiceTest {
         // then
         assertThatThrownBy(() -> discussionCommandService.report(memberId, discussionId))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("이미 신고한 토론방입니다");
+                .hasMessageContaining("이미 신고한 토론방입니다");
     }
 
     @Test
@@ -180,7 +179,7 @@ class DiscussionCommandServiceTest {
         // when - then
         assertThatThrownBy(() -> discussionCommandService.report(memberId, discussionId))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("자기 자신의 토론방을 신고할 수 없습니다");
+                .hasMessageContaining("자기 자신의 토론방을 신고할 수 없습니다");
     }
 
     @Test

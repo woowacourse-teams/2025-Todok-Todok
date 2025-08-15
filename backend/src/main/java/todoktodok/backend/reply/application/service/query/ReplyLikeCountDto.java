@@ -11,7 +11,7 @@ public record ReplyLikeCountDto(
     ) {
         this(
                 replyId,
-                likeCount.intValue()
+                Math.toIntExact(likeCount)
         );
     }
 }

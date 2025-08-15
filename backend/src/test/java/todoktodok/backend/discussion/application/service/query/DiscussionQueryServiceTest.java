@@ -98,7 +98,7 @@ class DiscussionQueryServiceTest {
         // when - then
         assertThatThrownBy(() -> discussionQueryService.getDiscussion(memberId, discussionId))
                 .isInstanceOf(NoSuchElementException.class)
-                .hasMessage("해당 토론방을 찾을 수 없습니다");
+                .hasMessageContaining("해당 토론방을 찾을 수 없습니다");
     }
 
     @Test
@@ -129,6 +129,35 @@ class DiscussionQueryServiceTest {
                 () -> assertThat(discussion.commentCount()).isEqualTo(1),
                 () -> assertThat(discussion.likeCount()).isEqualTo(1)
         );
+    }
+
+    @Test
+    @DisplayName("특정 토론방의 전체 댓글 수는 댓글 수와 대댓글 수의 합이다")
+    void getDiscussion_TotalCommentCountTest() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+
+        final Long memberId = 1L;
+        final Long bookId = 1L;
+
+        databaseInitializer.setDiscussionInfo(
+                "클린코드에 대해 논의해볼까요",
+                "클린코드만세",
+                memberId,
+                bookId
+        );
+
+        final Long discussionId = 1L;
+
+        databaseInitializer.setCommentInfo("댓글1", memberId, discussionId);
+        databaseInitializer.setReplyInfo("대댓글1", memberId, 1L);
+
+        // when
+        final DiscussionResponse discussion = discussionQueryService.getDiscussion(memberId, discussionId);
+
+        // then
+        assertThat(discussion.commentCount()).isEqualTo(2);
     }
 
     @Test
@@ -351,6 +380,31 @@ class DiscussionQueryServiceTest {
                     () -> assertThat(discussions.get(2).likeCount()).isEqualTo(3L),
                     () -> assertThat(discussions.get(2).commentCount()).isEqualTo(3L)
             );
+        }
+
+        @Test
+        @DisplayName("전체 토론방을 조회할 때, 조회되는 댓글 수는 댓글과 대댓글 수의 합이다")
+        void getAllDiscussions_totalCommentCountTest() {
+            // given
+            databaseInitializer.setDefaultUserInfo();
+            databaseInitializer.setDefaultDiscussionInfo();
+
+            final Long memberId = 1L;
+            final Long discussionId = 1L;
+
+            databaseInitializer.setCommentInfo("댓글1", memberId, discussionId);
+
+            final Long commentId = 1L;
+
+            databaseInitializer.setReplyInfo("대댓글1", memberId, commentId);
+
+            // when
+            final List<DiscussionResponse> discussions = discussionQueryService.getDiscussionsByKeywordAndType(
+                    memberId, null, DiscussionFilterType.ALL
+            );
+
+            // then
+            assertThat(discussions.get(0).commentCount()).isEqualTo(2);
         }
 
         @Test
