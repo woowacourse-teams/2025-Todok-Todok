@@ -1,13 +1,14 @@
 package com.team.todoktodok.presentation.view.profile.activated
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.team.domain.model.member.MemberId.Companion.DEFAULT_MEMBER_ID
 import com.team.todoktodok.App
-import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentActivatedBooksBinding
 import com.team.todoktodok.presentation.view.profile.ProfileActivity.Companion.ARG_MEMBER_ID
 import com.team.todoktodok.presentation.view.profile.ProfileActivity.Companion.MEMBER_ID_NOT_FOUND
@@ -15,19 +16,29 @@ import com.team.todoktodok.presentation.view.profile.activated.adapter.BooksAdap
 import com.team.todoktodok.presentation.view.profile.activated.vm.ActivatedBooksViewModel
 import com.team.todoktodok.presentation.view.profile.activated.vm.ActivatedBooksViewModelFactory
 
-class ActivatedBooksFragment : Fragment(R.layout.fragment_activated_books) {
+class ActivatedBooksFragment : Fragment() {
+    private var _binding: FragmentActivatedBooksBinding? = null
+    private val binding get() = _binding!!
+
     private val viewModel: ActivatedBooksViewModel by viewModels {
         val repositoryModule = (requireActivity().application as App).container.repositoryModule
         ActivatedBooksViewModelFactory(repositoryModule.memberRepository)
     }
     private lateinit var booksAdapter: BooksAdapter
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View? {
+        _binding = FragmentActivatedBooksBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
     ) {
-        val binding = FragmentActivatedBooksBinding.bind(view)
-
         initView(binding)
         setUpUiState()
     }
@@ -57,5 +68,10 @@ class ActivatedBooksFragment : Fragment(R.layout.fragment_activated_books) {
             ActivatedBooksFragment().apply {
                 memberId?.let { arguments = bundleOf(ARG_MEMBER_ID to it) }
             }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.root.requestLayout()
     }
 }

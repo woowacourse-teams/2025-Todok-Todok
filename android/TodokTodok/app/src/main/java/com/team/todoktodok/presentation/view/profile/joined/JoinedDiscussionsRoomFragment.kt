@@ -1,7 +1,9 @@
 package com.team.todoktodok.presentation.view.profile.joined
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -9,6 +11,7 @@ import com.team.domain.model.member.MemberId.Companion.DEFAULT_MEMBER_ID
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentCreatedDiscussionsRoomBinding
+import com.team.todoktodok.databinding.FragmentJoinedDiscussionsRoomBinding
 import com.team.todoktodok.presentation.view.discussiondetail.DiscussionDetailActivity
 import com.team.todoktodok.presentation.view.profile.ProfileActivity.Companion.ARG_MEMBER_ID
 import com.team.todoktodok.presentation.view.profile.ProfileActivity.Companion.MEMBER_ID_NOT_FOUND
@@ -19,12 +22,24 @@ import com.team.todoktodok.presentation.view.profile.joined.vm.JoinedDiscussions
 import kotlin.getValue
 
 class JoinedDiscussionsRoomFragment : Fragment(R.layout.fragment_joined_discussions_room) {
+    private var _binding: FragmentJoinedDiscussionsRoomBinding? = null
+    private val binding get() = _binding!!
+
     private val viewModel: JoinedDiscussionsViewModel by viewModels {
         val repositoryModule = (requireActivity().application as App).container.repositoryModule
         JoinedDiscussionsViewModelFactory(repositoryModule.memberRepository)
     }
 
     private lateinit var discussionAdapter: UserDiscussionAdapter
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View? {
+        _binding = FragmentJoinedDiscussionsRoomBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
     override fun onViewCreated(
         view: View,
@@ -71,6 +86,16 @@ class JoinedDiscussionsRoomFragment : Fragment(R.layout.fragment_joined_discussi
                 viewModel.findSelectedDiscussion(index)
             }
         }
+
+    override fun onResume() {
+        super.onResume()
+        binding.root.requestLayout()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
     companion object {
         fun newInstance(memberId: Long): JoinedDiscussionsRoomFragment =
