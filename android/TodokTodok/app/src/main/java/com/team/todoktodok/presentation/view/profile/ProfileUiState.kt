@@ -1,20 +1,24 @@
 package com.team.todoktodok.presentation.view.profile
 
+import com.team.domain.model.Book
+import com.team.domain.model.member.MemberDiscussion
 import com.team.domain.model.member.MemberId
 import com.team.domain.model.member.Profile
 import com.team.todoktodok.presentation.view.profile.adapter.ProfileItems
+import com.team.todoktodok.presentation.view.serialization.SerializationBook
+import com.team.todoktodok.presentation.view.serialization.SerializationMemberDiscussion
+import com.team.todoktodok.presentation.view.serialization.toSerialization
 
 data class ProfileUiState(
-    val items: List<ProfileItems>,
-    val memberId: MemberId,
-    val isMyProfilePage: Boolean,
+    val items: List<ProfileItems> = emptyList(),
+    val activatedBooks: List<SerializationBook> = emptyList(),
+    val joinedDiscussions: List<SerializationMemberDiscussion> = emptyList(),
+    val createdDiscussions: List<SerializationMemberDiscussion> = emptyList(),
+    val memberId: MemberId = MemberId.Mine,
+    val isMyProfilePage: Boolean = false,
 ) {
     fun modifyProfile(profile: Profile): ProfileUiState {
         val currentItems = items.toMutableList()
-
-        currentItems[PROFILE_HEADER_INDEX] =
-            ProfileItems.HeaderItem(isMyProfilePage)
-
         currentItems[PROFILE_INFORMATION_INDEX] =
             ProfileItems.InformationItem(profile, isMyProfilePage)
 
@@ -22,27 +26,31 @@ data class ProfileUiState(
     }
 
     companion object {
-        fun initial(memberId: MemberId): ProfileUiState {
+        fun initial(
+            memberId: MemberId,
+            profile: Profile,
+            books: List<Book>,
+            joinedDiscussions: List<MemberDiscussion>,
+            createdDiscussions: List<MemberDiscussion>,
+        ): ProfileUiState {
             val isMyProfilePage = memberId is MemberId.Mine
             val initialItems =
                 listOf(
                     ProfileItems.HeaderItem(isMyProfilePage),
-                    ProfileItems.InformationItem(
-                        Profile(
-                            0L,
-                            INITIALIZE_VALUE,
-                            INITIALIZE_VALUE,
-                            INITIALIZE_VALUE,
-                        ),
-                        false,
-                    ),
+                    ProfileItems.InformationItem(profile, isMyProfilePage),
                     ProfileItems.TabItem,
                 )
-            return ProfileUiState(items = initialItems, memberId, isMyProfilePage)
+
+            return ProfileUiState(
+                initialItems,
+                books.map { it.toSerialization() },
+                joinedDiscussions.map { it.toSerialization() },
+                createdDiscussions.map { it.toSerialization() },
+                memberId,
+                isMyProfilePage,
+            )
         }
 
-        private const val INITIALIZE_VALUE = ""
-        private const val PROFILE_HEADER_INDEX = 0
         private const val PROFILE_INFORMATION_INDEX = 1
     }
 }

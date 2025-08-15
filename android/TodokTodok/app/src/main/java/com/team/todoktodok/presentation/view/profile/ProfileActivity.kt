@@ -19,8 +19,11 @@ import com.team.todoktodok.presentation.core.ext.getSerializableCompat
 import com.team.todoktodok.presentation.view.discussions.DiscussionsActivity
 import com.team.todoktodok.presentation.view.profile.adapter.ContentPagerAdapter
 import com.team.todoktodok.presentation.view.profile.adapter.ProfileAdapter
+import com.team.todoktodok.presentation.view.profile.adapter.ProfileItems
 import com.team.todoktodok.presentation.view.profile.vm.ProfileViewModel
 import com.team.todoktodok.presentation.view.profile.vm.ProfileViewModelFactory
+import com.team.todoktodok.presentation.view.serialization.SerializationBook
+import com.team.todoktodok.presentation.view.serialization.SerializationMemberDiscussion
 import com.team.todoktodok.presentation.view.setting.SettingActivity
 
 class ProfileActivity : AppCompatActivity() {
@@ -29,14 +32,13 @@ class ProfileActivity : AppCompatActivity() {
         val repositoryModule = (application as App).container.repositoryModule
         ProfileViewModelFactory(repositoryModule.memberRepository)
     }
-    private lateinit var profileAdapter: ProfileAdapter
 
     private val launcher =
         registerForActivityResult(
             ActivityResultContracts.StartActivityForResult(),
         ) { result ->
             if (result.resultCode == RESULT_OK) {
-                viewModel.loadProfile()
+                viewModel.refreshProfile()
             }
         }
 
@@ -44,12 +46,16 @@ class ProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        val memberId: Long? = intent?.getLongExtra(ARG_MEMBER_ID, DEFAULT_MEMBER_ID)
+        requireNotNull(memberId) { MEMBER_ID_NOT_FOUND }
 
+        viewModel.setMemberId(memberId)
+        viewModel.initState()
+
+        setUpUiState()
+        setUpUiEvent()
         setUpSystemBar()
         setUpDialogResultListener()
-        setUpUiEvent()
-        setUpUiState()
-        initView(binding)
     }
 
     private fun setUpSystemBar() {
@@ -72,21 +78,36 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
-    private fun initView(binding: ActivityProfileBinding) {
-        val memberId: Long? = intent?.getLongExtra(ARG_MEMBER_ID, DEFAULT_MEMBER_ID)
-        requireNotNull(memberId) { MEMBER_ID_NOT_FOUND }
-        viewModel.initState(memberId)
-
-        val viewPagerAdapter = ContentPagerAdapter(memberId, supportFragmentManager, lifecycle)
-        profileAdapter = ProfileAdapter(profileAdapterHandler, viewPagerAdapter)
-
-        binding.rvProfile.adapter = profileAdapter
-    }
-
     private fun setUpUiState() {
         viewModel.uiState.observe(this) { value ->
-            profileAdapter.submitList(value.items)
+            initView(
+                binding,
+                value.items,
+                value.activatedBooks,
+                value.createdDiscussions,
+                value.joinedDiscussions,
+            )
         }
+    }
+
+    private fun initView(
+        binding: ActivityProfileBinding,
+        profileItems: List<ProfileItems>,
+        activatedBooks: List<SerializationBook>,
+        createdDiscussions: List<SerializationMemberDiscussion>,
+        joinedDiscussions: List<SerializationMemberDiscussion>,
+    ) {
+        val viewPagerAdapter =
+            ContentPagerAdapter(
+                activatedBooks,
+                createdDiscussions,
+                joinedDiscussions,
+                supportFragmentManager,
+                lifecycle,
+            )
+        val profileAdapter = ProfileAdapter(profileAdapterHandler, viewPagerAdapter)
+        binding.rvProfile.adapter = profileAdapter
+        profileAdapter.submitList(profileItems)
     }
 
     private fun setUpUiEvent() {
