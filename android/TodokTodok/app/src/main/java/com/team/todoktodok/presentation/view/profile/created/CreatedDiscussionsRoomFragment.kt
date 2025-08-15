@@ -20,7 +20,7 @@ import com.team.todoktodok.presentation.view.profile.created.vm.CreatedDiscussio
 
 class CreatedDiscussionsRoomFragment : Fragment(R.layout.fragment_created_discussions_room) {
     private var _binding: FragmentCreatedDiscussionsRoomBinding? = null
-    private val binding get() = _binding!!
+    val binding get() = _binding!!
     private val viewModel: CreatedDiscussionsViewModel by viewModels {
         val repositoryModule = (requireActivity().application as App).container.repositoryModule
         CreatedDiscussionsViewModelFactory(repositoryModule.memberRepository)
