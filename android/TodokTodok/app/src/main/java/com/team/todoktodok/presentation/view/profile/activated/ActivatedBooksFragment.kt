@@ -6,23 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import com.team.todoktodok.App
 import com.team.todoktodok.databinding.FragmentActivatedBooksBinding
 import com.team.todoktodok.presentation.core.ext.getParcelableArrayListCompat
 import com.team.todoktodok.presentation.view.profile.activated.adapter.BooksAdapter
-import com.team.todoktodok.presentation.view.profile.activated.vm.ActivatedBooksViewModel
-import com.team.todoktodok.presentation.view.profile.activated.vm.ActivatedBooksViewModelFactory
 import com.team.todoktodok.presentation.view.serialization.SerializationBook
 
 class ActivatedBooksFragment : Fragment() {
     private var _binding: FragmentActivatedBooksBinding? = null
     val binding get() = _binding!!
 
-    private val viewModel: ActivatedBooksViewModel by viewModels {
-        val repositoryModule = (requireActivity().application as App).container.repositoryModule
-        ActivatedBooksViewModelFactory(repositoryModule.memberRepository)
-    }
     private lateinit var booksAdapter: BooksAdapter
 
     override fun onCreateView(
@@ -39,7 +31,6 @@ class ActivatedBooksFragment : Fragment() {
         savedInstanceState: Bundle?,
     ) {
         initView(binding)
-        setUpUiState()
     }
 
     private fun initView(binding: FragmentActivatedBooksBinding) {
@@ -52,12 +43,6 @@ class ActivatedBooksFragment : Fragment() {
         activatedBooks?.let {
             val books = it.map { book -> book.toDomain() }
             booksAdapter.submitList(books)
-        }
-    }
-
-    private fun setUpUiState() {
-        viewModel.books.observe(viewLifecycleOwner) { value ->
-            booksAdapter.submitList(value)
         }
     }
 
