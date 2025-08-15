@@ -23,7 +23,7 @@ import kotlin.getValue
 
 class JoinedDiscussionsRoomFragment : Fragment(R.layout.fragment_joined_discussions_room) {
     private var _binding: FragmentJoinedDiscussionsRoomBinding? = null
-    private val binding get() = _binding!!
+    val binding get() = _binding!!
 
     private val viewModel: JoinedDiscussionsViewModel by viewModels {
         val repositoryModule = (requireActivity().application as App).container.repositoryModule

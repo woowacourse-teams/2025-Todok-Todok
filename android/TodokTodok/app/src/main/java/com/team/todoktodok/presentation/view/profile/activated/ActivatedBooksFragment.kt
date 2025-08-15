@@ -18,7 +18,7 @@ import com.team.todoktodok.presentation.view.profile.activated.vm.ActivatedBooks
 
 class ActivatedBooksFragment : Fragment() {
     private var _binding: FragmentActivatedBooksBinding? = null
-    private val binding get() = _binding!!
+    val binding get() = _binding!!
 
     private val viewModel: ActivatedBooksViewModel by viewModels {
         val repositoryModule = (requireActivity().application as App).container.repositoryModule
@@ -73,5 +73,10 @@ class ActivatedBooksFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         binding.root.requestLayout()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
