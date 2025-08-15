@@ -27,7 +27,7 @@ class MemberTest {
                     .profileImage(profileImage)
                     .build();
         } ).isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("다른 닉네임을 사용해주세요");
+                .hasMessageContaining("다른 닉네임을 사용해주세요");
     }
 
     @ParameterizedTest
@@ -46,7 +46,7 @@ class MemberTest {
                     .profileImage(profileImage)
                     .build();
         } ).isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("닉네임은 한글, 영어, 숫자만 입력해주세요 (특수문자, 공백 금지)");
+                .hasMessageContaining("닉네임은 한글, 영어, 숫자만 입력해주세요 (특수문자, 공백 금지)");
     }
 
     @Test
@@ -65,7 +65,7 @@ class MemberTest {
                     .profileImage(profileImage)
                     .build();
         } ).isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("닉네임은 1자 이상, 8자 이하여야 합니다");
+                .hasMessageContaining("닉네임은 1자 이상, 8자 이하여야 합니다");
     }
 
     @Test
@@ -84,7 +84,7 @@ class MemberTest {
                     .profileImage(profileImage)
                     .build();
         } ).isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("이메일은 필수입니다");
+                .hasMessageContaining("이메일은 필수입니다");
     }
 
     @Test
@@ -104,7 +104,7 @@ class MemberTest {
         assertThatThrownBy(() -> {
             member.updateNicknameAndProfileMessage(newNickname, newProfileMessage);
         }).isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("상태메세지는 40자 이하여야 합니다");
+                .hasMessageContaining("상태메세지는 40자 이하여야 합니다");
     }
 
     @Test

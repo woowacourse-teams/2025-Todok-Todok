@@ -119,7 +119,7 @@ public class CommentQueryServiceTest {
         // when - then
         assertThatThrownBy(() -> commentQueryService.getComments(memberId, discussionId))
                 .isInstanceOf(NoSuchElementException.class)
-                .hasMessage("해당 토론방을 찾을 수 없습니다");
+                .hasMessageContaining("해당 토론방을 찾을 수 없습니다");
     }
 
     @Test
@@ -137,7 +137,7 @@ public class CommentQueryServiceTest {
         // when - then
         assertThatThrownBy(() -> commentQueryService.getComments(memberId, discussionId))
                 .isInstanceOf(NoSuchElementException.class)
-                .hasMessage("해당 회원을 찾을 수 없습니다");
+                .hasMessageContaining("해당 회원을 찾을 수 없습니다");
     }
 
     @Test

@@ -45,15 +45,6 @@ public class GlobalExceptionHandler {
                 .body(new ErrorResponse(status.value(), PREFIX + getSafeErrorMessage(e)));
     }
 
-    @ExceptionHandler(IllegalStateException.class)
-    public ResponseEntity<ErrorResponse> handleIllegalStateException(final IllegalStateException e) {
-        final HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
-        log.warn(PREFIX + e.getMessage());
-
-        return ResponseEntity.status(status)
-                .body(new ErrorResponse(status.value(), PREFIX + getSafeErrorMessage(e)));
-    }
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(
             final MethodArgumentNotValidException e
@@ -64,18 +55,15 @@ public class GlobalExceptionHandler {
 
         fieldErrors.forEach(fieldError -> {
             final Object rejectedValue = fieldError.getRejectedValue();
-            final String maskedValue = maskEmailValue(rejectedValue, fieldError.getField());
+            final String safeLogValue = toSafeLogValue(rejectedValue, fieldError.getField());
             log.warn(String.format("%s: %s = %s",
-                    PREFIX + errorMessage,
+                    PREFIX + fieldError.getDefaultMessage(),
                     fieldError.getField(),
-                    maskedValue));
+                    safeLogValue));
         });
 
         return ResponseEntity.status(status)
-                .body(new ErrorResponse(
-                        status.value(),
-                        PREFIX + errorMessage
-                ));
+                .body(new ErrorResponse(status.value(), PREFIX + errorMessage));
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
@@ -106,18 +94,25 @@ public class GlobalExceptionHandler {
                 ));
     }
 
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<ErrorResponse> handleIllegalStateException(final IllegalStateException e) {
+        final HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+        log.error(PREFIX + e.getMessage());
+
+        return ResponseEntity.status(status)
+                .body(new ErrorResponse(status.value(), PREFIX + getSafeErrorMessage(e)));
+    }
+
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorResponse> handleRuntimeException(final RuntimeException e) {
         final HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
-        log.error("Unexpected error occurred", e);
+        log.error(String.format("Unexpected error occurred: %s", e));
 
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ErrorResponse(
-                        status.value(), PREFIX + "예상하지 못한 예외가 발생하였습니다. 상세 정보: " + e.getMessage()
-                ));
+        return ResponseEntity.status(status)
+                .body(new ErrorResponse(status.value(), PREFIX + "서버 내부 오류가 발생했습니다"));
     }
 
-    private String maskEmailValue(
+    private String toSafeLogValue(
             final Object value,
             final String field
     ) {
@@ -127,21 +122,23 @@ public class GlobalExceptionHandler {
 
         final String str = value.toString();
 
-        if (field.equals("discussionTitle") || field.equals("discussionOpinion")) {
+        if ("discussionTitle".equals(field)
+                || "discussionOpinion".equals(field)
+                || "content".equals(field)
+        ) {
             return str.length() + "자";
         }
 
-        if (!field.equals("email")) {
-            return str;
+        if ("email".equals(field)) {
+            if (str.length() <= 4) {
+                return str;
+            }
+            final String visiblePart = str.substring(0, 4);
+            final String maskedPart = "*".repeat(str.length() - 4);
+            return visiblePart + maskedPart;
         }
 
-        if (str.length() <= 4) {
-            return str;
-        }
-
-        final String visiblePart = str.substring(0, 4);
-        final String maskedPart = "*".repeat(str.length() - 4);
-        return visiblePart + maskedPart;
+        return str;
     }
 
     private String getSafeErrorMessage(final RuntimeException e) {
