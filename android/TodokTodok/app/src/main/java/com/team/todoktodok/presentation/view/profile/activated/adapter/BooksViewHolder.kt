@@ -7,6 +7,7 @@ import com.bumptech.glide.Glide
 import com.team.domain.model.Book
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ItemActivatedBookBinding
+import com.team.todoktodok.presentation.core.ext.extractSubtitle
 
 class BooksViewHolder private constructor(
     private val binding: ItemActivatedBookBinding,
@@ -21,7 +22,7 @@ class BooksViewHolder private constructor(
 
     fun bind(item: Book) {
         with(binding) {
-            tvBookTitle.text = extractSubtitle(item.title)
+            tvBookTitle.text = item.title.extractSubtitle()
             tvBookAuthor.text = extractAuthorText(item.author)
 
             Glide
@@ -30,8 +31,6 @@ class BooksViewHolder private constructor(
                 .into(ivBook)
         }
     }
-
-    private fun extractSubtitle(text: String): String = text.split("-").first()
 
     private fun extractAuthorText(text: String): String = text.split("(").first()
 
