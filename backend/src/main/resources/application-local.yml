@@ -8,8 +8,8 @@ spring:
   sql:
     init:
       mode: always
-      schema-locations: classpath:db/schema.sql
-      data-locations: classpath:db/data.sql
+      schema-locations: classpath:db/migration_dev/V1__init.sql
+      data-locations: classpath:db/seed_dev/V2__init.sql
   jpa:
     show-sql: true
     properties:
@@ -23,7 +23,7 @@ spring:
 
   config:
     activate:
-      on-profile: dev
+      on-profile: local
 
 management:
   endpoints:
