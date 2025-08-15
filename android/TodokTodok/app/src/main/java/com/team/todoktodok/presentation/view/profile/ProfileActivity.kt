@@ -85,7 +85,7 @@ class ProfileActivity : AppCompatActivity() {
                 value.items,
                 value.activatedBooks,
                 value.createdDiscussions,
-                value.joinedDiscussions,
+                value.participatedDiscussions,
             )
         }
     }
@@ -95,13 +95,13 @@ class ProfileActivity : AppCompatActivity() {
         profileItems: List<ProfileItems>,
         activatedBooks: List<SerializationBook>,
         createdDiscussions: List<SerializationMemberDiscussion>,
-        joinedDiscussions: List<SerializationMemberDiscussion>,
+        participatedDiscussions: List<SerializationMemberDiscussion>,
     ) {
         val viewPagerAdapter =
             ContentPagerAdapter(
                 activatedBooks,
                 createdDiscussions,
-                joinedDiscussions,
+                participatedDiscussions,
                 supportFragmentManager,
                 lifecycle,
             )

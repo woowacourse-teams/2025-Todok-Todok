@@ -39,11 +39,11 @@ class ProfileViewModel(
     fun initState() {
         val memberId = _uiState.value?.memberId ?: return
         viewModelScope.launch {
-            val (profile, books, joinedDiscussions, createdDiscussions) =
+            val (profile, books, participatedDiscussions, createdDiscussions) =
                 listOf(
                     loadProfile(memberId),
                     loadActivatedBooks(memberId),
-                    loadJoinedDiscussions(memberId),
+                    loadParticipatedDiscussions(memberId),
                     loadCreatedDiscussions(memberId),
                 ).awaitAll()
 
@@ -52,7 +52,7 @@ class ProfileViewModel(
                     memberId,
                     profile as Profile,
                     books as List<Book>,
-                    joinedDiscussions as List<MemberDiscussion>,
+                    participatedDiscussions as List<MemberDiscussion>,
                     createdDiscussions as List<MemberDiscussion>,
                 )
         }
@@ -68,7 +68,7 @@ class ProfileViewModel(
             memberRepository.getMemberBooks(id)
         }
 
-    fun loadJoinedDiscussions(id: MemberId): Deferred<List<MemberDiscussion>> =
+    fun loadParticipatedDiscussions(id: MemberId): Deferred<List<MemberDiscussion>> =
         viewModelScope.async {
             memberRepository.getMemberDiscussionRooms(id, MemberDiscussionType.PARTICIPATED)
         }

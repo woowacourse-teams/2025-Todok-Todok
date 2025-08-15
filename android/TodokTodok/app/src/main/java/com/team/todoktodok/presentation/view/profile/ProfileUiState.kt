@@ -12,7 +12,7 @@ import com.team.todoktodok.presentation.view.serialization.toSerialization
 data class ProfileUiState(
     val items: List<ProfileItems> = emptyList(),
     val activatedBooks: List<SerializationBook> = emptyList(),
-    val joinedDiscussions: List<SerializationMemberDiscussion> = emptyList(),
+    val participatedDiscussions: List<SerializationMemberDiscussion> = emptyList(),
     val createdDiscussions: List<SerializationMemberDiscussion> = emptyList(),
     val memberId: MemberId = MemberId.Mine,
     val isMyProfilePage: Boolean = false,

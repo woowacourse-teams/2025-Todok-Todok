@@ -1,22 +1,20 @@
-package com.team.todoktodok.presentation.view.profile.joined
+package com.team.todoktodok.presentation.view.profile.participated
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import com.team.todoktodok.R
-import com.team.todoktodok.databinding.FragmentJoinedDiscussionsRoomBinding
+import com.team.todoktodok.databinding.FragmentParticipatedDiscussionsRoomBinding
 import com.team.todoktodok.presentation.core.ext.getParcelableArrayListCompat
 import com.team.todoktodok.presentation.view.discussiondetail.DiscussionDetailActivity
 import com.team.todoktodok.presentation.view.profile.created.adapter.UserDiscussionAdapter
 import com.team.todoktodok.presentation.view.serialization.SerializationMemberDiscussion
-import kotlin.getValue
 
-class JoinedDiscussionsRoomFragment : Fragment(R.layout.fragment_joined_discussions_room) {
-    private var _binding: FragmentJoinedDiscussionsRoomBinding? = null
+class ParticipatedDiscussionsRoomFragment : Fragment(R.layout.fragment_participated_discussions_room) {
+    private var _binding: FragmentParticipatedDiscussionsRoomBinding? = null
     val binding get() = _binding!!
 
     private lateinit var discussionAdapter: UserDiscussionAdapter
@@ -26,7 +24,7 @@ class JoinedDiscussionsRoomFragment : Fragment(R.layout.fragment_joined_discussi
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        _binding = FragmentJoinedDiscussionsRoomBinding.inflate(inflater, container, false)
+        _binding = FragmentParticipatedDiscussionsRoomBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -49,7 +47,6 @@ class JoinedDiscussionsRoomFragment : Fragment(R.layout.fragment_joined_discussi
 
         discussions?.let {
             val participatedDiscussions = it.map { discussion -> discussion.toDomain() }
-            Log.d("sdadsa", "$participatedDiscussions: ")
             discussionAdapter.submitList(participatedDiscussions)
         }
     }
@@ -81,8 +78,8 @@ class JoinedDiscussionsRoomFragment : Fragment(R.layout.fragment_joined_discussi
     companion object {
         private const val ARG_PARTICIPATED_MEMBER_DISCUSSIONS = "participated_member_discussions"
 
-        fun newInstance(discussions: List<SerializationMemberDiscussion>): JoinedDiscussionsRoomFragment =
-            JoinedDiscussionsRoomFragment().apply {
+        fun newInstance(discussions: List<SerializationMemberDiscussion>): ParticipatedDiscussionsRoomFragment =
+            ParticipatedDiscussionsRoomFragment().apply {
                 arguments = bundleOf(ARG_PARTICIPATED_MEMBER_DISCUSSIONS to discussions)
             }
     }
