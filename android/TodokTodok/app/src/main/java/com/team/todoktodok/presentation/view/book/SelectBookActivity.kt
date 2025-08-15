@@ -199,6 +199,7 @@ class SelectBookActivity : AppCompatActivity() {
 
     companion object {
         private const val IS_EMPTY_SEARCH_RESULT: Int = 0
+
         fun Intent(context: Context): Intent = Intent(context, SelectBookActivity::class.java)
     }
 }
