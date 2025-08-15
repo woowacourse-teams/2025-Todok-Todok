@@ -10,10 +10,10 @@ spring:
       schema-locations:
       data-locations:
   jpa:
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
-        format_sql: true
+        format_sql: false
     hibernate:
       ddl-auto: validate
     defer-datasource-initialization: false

@@ -47,7 +47,7 @@ public class ReplyCommandServiceTest {
         // when - then
         assertThatThrownBy(() -> replyCommandService.createReply(1L, 1L, 1L, replyRequest))
                 .isInstanceOf(NoSuchElementException.class)
-                .hasMessage("해당 토론방을 찾을 수 없습니다");
+                .hasMessageContaining("해당 토론방을 찾을 수 없습니다");
     }
 
     @Test
@@ -63,7 +63,7 @@ public class ReplyCommandServiceTest {
         // when - then
         assertThatThrownBy(() -> replyCommandService.createReply(1L, 1L, 1L, replyRequest))
                 .isInstanceOf(NoSuchElementException.class)
-                .hasMessage("해당 댓글을 찾을 수 없습니다");
+                .hasMessageContaining("해당 댓글을 찾을 수 없습니다");
     }
 
     @Test
@@ -80,7 +80,7 @@ public class ReplyCommandServiceTest {
         // when - then
         assertThatThrownBy(() -> replyCommandService.createReply(2L, 1L, 1L, replyRequest))
                 .isInstanceOf(NoSuchElementException.class)
-                .hasMessage("해당 회원을 찾을 수 없습니다");
+                .hasMessageContaining("해당 회원을 찾을 수 없습니다");
     }
 
     @Test
@@ -101,7 +101,7 @@ public class ReplyCommandServiceTest {
         // when - then
         assertThatThrownBy(() -> replyCommandService.report(memberId, discussionId, commentId, replyId))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("자기 자신이 작성한 대댓글을 신고할 수 없습니다");
+                .hasMessageContaining("자기 자신이 작성한 대댓글을 신고할 수 없습니다");
     }
 
     @Test
@@ -122,7 +122,7 @@ public class ReplyCommandServiceTest {
         // when - then
         assertThatThrownBy(() -> replyCommandService.report(memberId, discussionId, commentId, replyId))
                 .isInstanceOf(NoSuchElementException.class)
-                .hasMessage("해당 대댓글을 찾을 수 없습니다");
+                .hasMessageContaining("해당 대댓글을 찾을 수 없습니다");
     }
 
     @Test
@@ -148,7 +148,7 @@ public class ReplyCommandServiceTest {
         // when - then
         assertThatThrownBy(() -> replyCommandService.report(memberId, discussionId, commentId, replyId))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("이미 신고한 대댓글입니다");
+                .hasMessageContaining("이미 신고한 대댓글입니다");
     }
 
     @Test
@@ -176,7 +176,7 @@ public class ReplyCommandServiceTest {
         assertThatThrownBy(
                 () -> replyCommandService.updateReply(memberId, discussionId, commentId, replyId, replyRequest))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("자기 자신의 대댓글만 수정/삭제 가능합니다");
+                .hasMessageContaining("자기 자신의 대댓글만 수정/삭제 가능합니다");
     }
 
     @Test
@@ -204,7 +204,7 @@ public class ReplyCommandServiceTest {
         assertThatThrownBy(
                 () -> replyCommandService.updateReply(memberId, discussionId, commentId, replyId, replyRequest))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("해당 토론방에 있는 댓글이 아닙니다");
+                .hasMessageContaining("해당 토론방에 있는 댓글이 아닙니다");
     }
 
     @Test
@@ -232,7 +232,7 @@ public class ReplyCommandServiceTest {
         assertThatThrownBy(
                 () -> replyCommandService.updateReply(memberId, discussionId, commentId, replyId, replyRequest))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("해당 댓글에 있는 대댓글이 아닙니다");
+                .hasMessageContaining("해당 댓글에 있는 대댓글이 아닙니다");
     }
 
     @Test
@@ -256,7 +256,7 @@ public class ReplyCommandServiceTest {
         // when - then
         assertThatThrownBy(() -> replyCommandService.deleteReply(memberId, discussionId, commentId, replyId))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("자기 자신의 대댓글만 수정/삭제 가능합니다");
+                .hasMessageContaining("자기 자신의 대댓글만 수정/삭제 가능합니다");
     }
 
     @Test
@@ -280,7 +280,7 @@ public class ReplyCommandServiceTest {
         // when - then
         assertThatThrownBy(() -> replyCommandService.deleteReply(memberId, discussionId, commentId, replyId))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("해당 토론방에 있는 댓글이 아닙니다");
+                .hasMessageContaining("해당 토론방에 있는 댓글이 아닙니다");
     }
 
     @Test
@@ -303,7 +303,7 @@ public class ReplyCommandServiceTest {
         // when - then
         assertThatThrownBy(() -> replyCommandService.deleteReply(memberId, discussionId, commentId, replyId))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("해당 댓글에 있는 대댓글이 아닙니다");
+                .hasMessageContaining("해당 댓글에 있는 대댓글이 아닙니다");
     }
 
     @Test
@@ -372,7 +372,7 @@ public class ReplyCommandServiceTest {
         // when - then
         assertThatThrownBy(() -> replyCommandService.toggleLike(memberId, discussionId, commentId, replyId))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("해당 토론방에 있는 댓글이 아닙니다");
+                .hasMessageContaining("해당 토론방에 있는 댓글이 아닙니다");
     }
 
     @Test
@@ -395,7 +395,7 @@ public class ReplyCommandServiceTest {
         // when - then
         assertThatThrownBy(() -> replyCommandService.toggleLike(memberId, discussionId, commentId, replyId))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("해당 댓글에 있는 대댓글이 아닙니다");
+                .hasMessageContaining("해당 댓글에 있는 대댓글이 아닙니다");
     }
 
     @Test
@@ -416,7 +416,7 @@ public class ReplyCommandServiceTest {
         // when - then
         assertThatThrownBy(() -> replyCommandService.toggleLike(nonExistentMemberId, discussionId, commentId, replyId))
                 .isInstanceOf(NoSuchElementException.class)
-                .hasMessage("해당 회원을 찾을 수 없습니다");
+                .hasMessageContaining("해당 회원을 찾을 수 없습니다");
     }
 
     @Test
@@ -437,6 +437,6 @@ public class ReplyCommandServiceTest {
         // when - then
         assertThatThrownBy(() -> replyCommandService.toggleLike(memberId, discussionId, commentId, nonExistentReplyId))
                 .isInstanceOf(NoSuchElementException.class)
-                .hasMessage("해당 대댓글을 찾을 수 없습니다");
+                .hasMessageContaining("해당 대댓글을 찾을 수 없습니다");
     }
 }

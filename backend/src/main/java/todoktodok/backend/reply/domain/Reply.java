@@ -28,7 +28,7 @@ import todoktodok.backend.member.domain.Member;
 @SQLDelete(sql = "UPDATE reply SET deleted_at = NOW() WHERE id = ?")
 public class Reply extends TimeStamp {
 
-    public static final int CONTENT_MAX_LENGTH = 1500;
+    public static final int CONTENT_MAX_LENGTH = 2000;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -73,19 +73,21 @@ public class Reply extends TimeStamp {
 
     public void validateMatchWithComment(final Comment comment) {
         if (!this.comment.equals(comment)) {
-            throw new IllegalArgumentException("해당 댓글에 있는 대댓글이 아닙니다");
+            throw new IllegalArgumentException(String.format("해당 댓글에 있는 대댓글이 아닙니다: commentId = %s, replyId = %s"
+                    , comment.getId(), this.id));
         }
     }
 
     public void validateSelfReport(final Member member) {
         if (this.member.equals(member)) {
-            throw new IllegalArgumentException("자기 자신이 작성한 대댓글을 신고할 수 없습니다");
+            throw new IllegalArgumentException(String.format("자기 자신이 작성한 대댓글을 신고할 수 없습니다: memberId = %s, replyId = %s"
+                    , member.getId(), this.getId()));
         }
     }
 
     private static void validateContent(final String content) {
         if (content.isEmpty() || content.length() > CONTENT_MAX_LENGTH) {
-            throw new IllegalArgumentException("대댓글 내용은 1자 이상, 1500자 이하여야 합니다");
+            throw new IllegalArgumentException(String.format("대댓글 내용은 1자 이상, 2000자 이하여야 합니다: %s자", content.length()));
         }
     }
 }

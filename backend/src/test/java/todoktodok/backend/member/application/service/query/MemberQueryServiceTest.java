@@ -48,7 +48,7 @@ public class MemberQueryServiceTest {
         // when - then
         assertThatThrownBy(() -> memberQueryService.getProfile(notExistsMemberId))
                 .isInstanceOf(NoSuchElementException.class)
-                .hasMessage("해당 회원을 찾을 수 없습니다");
+                .hasMessageContaining("해당 회원을 찾을 수 없습니다");
     }
 
     @Test
@@ -60,7 +60,7 @@ public class MemberQueryServiceTest {
         // when - then
         assertThatThrownBy(() -> memberQueryService.getActiveBooks(notExistsMemberId))
                 .isInstanceOf(NoSuchElementException.class)
-                .hasMessage("해당 회원을 찾을 수 없습니다");
+                .hasMessageContaining("해당 회원을 찾을 수 없습니다");
     }
 
     @Test
@@ -122,7 +122,7 @@ public class MemberQueryServiceTest {
         // when - then
         assertThatThrownBy(() -> memberQueryService.getMemberDiscussionsByType(notExistsMemberId, type))
                 .isInstanceOf(NoSuchElementException.class)
-                .hasMessage("해당 회원을 찾을 수 없습니다");
+                .hasMessageContaining("해당 회원을 찾을 수 없습니다");
     }
 
     @Test
@@ -134,7 +134,7 @@ public class MemberQueryServiceTest {
         // when - then
         assertThatThrownBy(() -> memberQueryService.getBlockMembers(notExistsMemberId))
                 .isInstanceOf(NoSuchElementException.class)
-                .hasMessage("해당 회원을 찾을 수 없습니다");
+                .hasMessageContaining("해당 회원을 찾을 수 없습니다");
     }
 
     @Test

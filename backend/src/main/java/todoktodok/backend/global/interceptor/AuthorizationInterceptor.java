@@ -1,5 +1,6 @@
 package todoktodok.backend.global.interceptor;
 
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
@@ -33,7 +34,7 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
         final Method method = handlerMethod.getMethod();
 
         if (!method.isAnnotationPresent(Auth.class)) {
-            log.warn("Auth 어노테이션을 확인해주세요");
+            log.error(String.format("Auth 어노테이션이 없는 메서드에 대한 요청입니다: requestURI = %s", request.getRequestURI()));
             throw new IllegalStateException("서버 내부 오류가 발생했습니다");
         }
 
@@ -51,7 +52,7 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        log.warn("Authorization failed");
-        throw new IllegalStateException("접근 권한이 없습니다");
+        log.warn(String.format("접근 권한이 없습니다: requiredRole = %s, tokenRole = %s", requiredRole.name(), tokenInfo.role().name()));
+        throw new JwtException("접근 권한이 없습니다");
     }
 }
