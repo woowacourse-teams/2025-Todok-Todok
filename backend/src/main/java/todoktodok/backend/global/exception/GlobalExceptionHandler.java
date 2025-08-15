@@ -73,7 +73,7 @@ public class GlobalExceptionHandler {
         final HttpStatus status = HttpStatus.BAD_REQUEST;
         log.warn(PREFIX + String.format("유효하지 않은 %s의 값입니다", e.getRequiredType().getSimpleName()));
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        return ResponseEntity.status(status)
                 .body(new ErrorResponse(
                         status.value(),
                         PREFIX + String.format("유효하지 않은 %s의 값입니다", e.getRequiredType().getSimpleName())
@@ -87,7 +87,7 @@ public class GlobalExceptionHandler {
         final HttpStatus status = HttpStatus.BAD_REQUEST;
         log.warn(PREFIX + String.format("파라미터 %s가 존재하지 않습니다", e.getParameterName()));
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        return ResponseEntity.status(status)
                 .body(new ErrorResponse(
                         status.value(),
                         PREFIX + String.format("파라미터 %s가 존재하지 않습니다", e.getParameterName())
