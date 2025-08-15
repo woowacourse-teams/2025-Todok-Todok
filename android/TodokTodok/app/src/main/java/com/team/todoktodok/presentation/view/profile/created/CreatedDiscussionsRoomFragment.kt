@@ -1,7 +1,9 @@
 package com.team.todoktodok.presentation.view.profile.created
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -17,9 +19,20 @@ import com.team.todoktodok.presentation.view.profile.created.vm.CreatedDiscussio
 import com.team.todoktodok.presentation.view.profile.created.vm.CreatedDiscussionsViewModelFactory
 
 class CreatedDiscussionsRoomFragment : Fragment(R.layout.fragment_created_discussions_room) {
+    private var _binding: FragmentCreatedDiscussionsRoomBinding? = null
+    private val binding get() = _binding!!
     private val viewModel: CreatedDiscussionsViewModel by viewModels {
         val repositoryModule = (requireActivity().application as App).container.repositoryModule
         CreatedDiscussionsViewModelFactory(repositoryModule.memberRepository)
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View? {
+        _binding = FragmentCreatedDiscussionsRoomBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     private lateinit var discussionAdapter: UserDiscussionAdapter
@@ -69,6 +82,16 @@ class CreatedDiscussionsRoomFragment : Fragment(R.layout.fragment_created_discus
                 viewModel.findSelectedDiscussion(index)
             }
         }
+
+    override fun onResume() {
+        super.onResume()
+        binding.root.requestLayout()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
     companion object {
         fun newInstance(memberId: Long?): CreatedDiscussionsRoomFragment =
