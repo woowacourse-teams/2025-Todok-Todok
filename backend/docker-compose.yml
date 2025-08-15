@@ -7,15 +7,20 @@ services:
       context: .
       dockerfile: Dockerfile.dev
       args:
-        JAR_FILE: /build/libs/*.jar  # 빌드 시에 전달할 인자 (필요 시)
+        JAR_FILE: /build/libs/*.jar
     image: woowajeff/todoktodok:dev
     ports:
       - "80:8080"
     volumes:
-      - ./log:/log   # 로그 공유
+      - ./log:/log
     environment:
       - SPRING_PROFILES_ACTIVE=dev
     restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - dev-network
 
   promtail:
     container_name: promtail
@@ -27,3 +32,25 @@ services:
       - ./log:/log
     command: -config.file=/etc/promtail/promtail.yml
     restart: always
+    networks:
+      - dev-network
+
+  db:
+    image: mysql:8
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: todoktodokdb
+      MYSQL_DATABASE: todoktodok_dev_db
+    ports:
+      - "3306:3306"
+    networks:
+      - dev-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-ptodoktodokdb"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+networks:
+  dev-network:
+    driver: bridge
