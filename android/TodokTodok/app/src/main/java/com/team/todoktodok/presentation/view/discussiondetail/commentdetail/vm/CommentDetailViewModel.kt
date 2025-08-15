@@ -75,6 +75,10 @@ class CommentDetailViewModel(
         _uiEvent.setValue(CommentDetailUiEvent.ShowCommentUpdate(discussionId, commentId, content))
     }
 
+    fun updateContent(content: String) {
+        _uiState.value = _uiState.value?.copy(content = content)
+    }
+
     fun deleteReply(replyId: Long) {
         viewModelScope.launch {
             replyRepository.deleteReply(discussionId, commentId, replyId)
@@ -118,7 +122,8 @@ class CommentDetailViewModel(
     }
 
     fun showReplyCreate() {
-        _uiEvent.setValue(CommentDetailUiEvent.ShowReplyCreate(discussionId, commentId))
+        val content = _uiState.value?.content ?: ""
+        _uiEvent.setValue(CommentDetailUiEvent.ShowReplyCreate(discussionId, commentId, content))
     }
 
     private fun showNewReply() {

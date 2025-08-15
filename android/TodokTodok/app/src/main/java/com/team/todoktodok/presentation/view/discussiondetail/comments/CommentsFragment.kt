@@ -4,11 +4,15 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupWindow
+import androidx.core.os.bundleOf
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.DEFAULT_ARGS_KEY
+import androidx.lifecycle.viewmodel.MutableCreationExtras
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentCommentsBinding
 import com.team.todoktodok.databinding.MenuExternalDiscussionBinding
@@ -19,6 +23,7 @@ import com.team.todoktodok.presentation.view.discussiondetail.commentcreate.Comm
 import com.team.todoktodok.presentation.view.discussiondetail.commentdetail.CommentDetailFragment
 import com.team.todoktodok.presentation.view.discussiondetail.comments.adapter.CommentAdapter
 import com.team.todoktodok.presentation.view.discussiondetail.comments.vm.CommentsViewModel
+import com.team.todoktodok.presentation.view.discussiondetail.comments.vm.CommentsViewModelFactory
 import com.team.todoktodok.presentation.view.discussiondetail.model.CommentItemUiState
 import com.team.todoktodok.presentation.view.discussiondetail.vm.DiscussionDetailViewModel
 import com.team.todoktodok.presentation.view.profile.ProfileActivity
@@ -29,8 +34,30 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
     private val sharedViewModel: DiscussionDetailViewModel by activityViewModels()
 
     private val viewModel by viewModels<CommentsViewModel>(
-        ownerProducer = { requireParentFragment() },
+        ownerProducer = { requireActivity() },
+        factoryProducer = {
+            val repositoryModule = (requireActivity().application as App).container.repositoryModule
+            CommentsViewModelFactory(
+                repositoryModule.commentRepository,
+                repositoryModule.tokenRepository,
+            )
+        },
+        extrasProducer = {
+            MutableCreationExtras(requireActivity().defaultViewModelCreationExtras).apply {
+                this[DEFAULT_ARGS_KEY] = buildCommentArgs()
+            }
+        },
     )
+
+    private fun buildCommentArgs(): Bundle {
+        val args = requireArguments()
+        return Bundle().apply {
+            putLong(
+                CommentsViewModel.KEY_DISCUSSION_ID,
+                args.getLong(CommentsViewModel.KEY_DISCUSSION_ID),
+            )
+        }
+    }
 
     private var popupWindow: PopupWindow? = null
 
@@ -63,8 +90,12 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
     }
 
     private fun setupObserve(binding: FragmentCommentsBinding) {
-        viewModel.comments.observe(viewLifecycleOwner) { value ->
-            adapter.submitList(value)
+        viewModel.uiState.observe(viewLifecycleOwner) { value ->
+            adapter.submitList(value.comments)
+            val commentText = value.commentContent
+            if (commentText.isNotBlank()) {
+                binding.tvInputComment.text = commentText
+            }
         }
         viewModel.uiEvent.observe(viewLifecycleOwner) { value ->
             handleEvent(value, binding)
@@ -235,6 +266,12 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
     companion object {
         const val TAG = "COMMENTS"
 
-        fun newInstance(): CommentsFragment = CommentsFragment()
+        fun newInstance(discussionId: Long): CommentsFragment =
+            CommentsFragment().apply {
+                arguments =
+                    bundleOf(
+                        CommentsViewModel.KEY_DISCUSSION_ID to discussionId,
+                    )
+            }
     }
 }

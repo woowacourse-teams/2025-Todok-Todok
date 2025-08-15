@@ -19,45 +19,19 @@ import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentCommentCreateBottomSheetBinding
 import com.team.todoktodok.presentation.view.discussiondetail.BottomSheetVisibilityListener
+import com.team.todoktodok.presentation.view.discussiondetail.commentdetail.vm.CommentDetailViewModel
 import com.team.todoktodok.presentation.view.discussiondetail.replycreate.vm.ReplyCreateViewModel
 import com.team.todoktodok.presentation.view.discussiondetail.replycreate.vm.ReplyCreateViewModelFactory
 
 class ReplyCreateBottomSheet : BottomSheetDialogFragment(R.layout.fragment_comment_create_bottom_sheet) {
-    private val viewModel by viewModels<ReplyCreateViewModel>(
-        ownerProducer = { requireActivity() },
-        factoryProducer = {
-            val repoModule = (requireActivity().application as App).container.repositoryModule
-            ReplyCreateViewModelFactory(repoModule.replyRepository)
-        },
-        extrasProducer = {
-            MutableCreationExtras(requireActivity().defaultViewModelCreationExtras).apply {
-                this[DEFAULT_ARGS_KEY] = buildReplyArgs()
-            }
-        },
-    )
-
-    private fun buildReplyArgs(): Bundle {
-        val args = requireArguments()
-        return Bundle().apply {
-            putLong(
-                ReplyCreateViewModel.KEY_DISCUSSION_ID,
-                args.getLong(ReplyCreateViewModel.KEY_DISCUSSION_ID),
-            )
-            putLong(
-                ReplyCreateViewModel.KEY_COMMENT_ID,
-                args.getLong(ReplyCreateViewModel.KEY_COMMENT_ID),
-            )
-            if (args.containsKey(ReplyCreateViewModel.KEY_REPLY_ID)) {
-                putLong(
-                    ReplyCreateViewModel.KEY_REPLY_ID,
-                    args.getLong(ReplyCreateViewModel.KEY_REPLY_ID),
-                )
-            }
-            args.getString(ReplyCreateViewModel.KEY_REPLY_CONTENT)?.let {
-                putString(ReplyCreateViewModel.KEY_REPLY_CONTENT, it)
-            }
-        }
+    private val viewModel by viewModels<ReplyCreateViewModel> {
+        val repoModule = (requireActivity().application as App).container.repositoryModule
+        ReplyCreateViewModelFactory(repoModule.replyRepository)
     }
+
+    private val commentDetailViewModel by viewModels<CommentDetailViewModel>(
+        ownerProducer = { requireParentFragment().requireParentFragment() },
+    )
 
     private var visibilityListener: BottomSheetVisibilityListener? = null
 
@@ -88,8 +62,9 @@ class ReplyCreateBottomSheet : BottomSheetDialogFragment(R.layout.fragment_comme
     }
 
     override fun onDismiss(dialog: DialogInterface) {
-        super.onDismiss(dialog)
+        viewModel.saveReply()
         visibilityListener?.onBottomSheetDismissed()
+        super.onDismiss(dialog)
     }
 
     override fun getTheme(): Int = R.style.BottomSheetDialogTheme
@@ -97,7 +72,9 @@ class ReplyCreateBottomSheet : BottomSheetDialogFragment(R.layout.fragment_comme
     private fun initView(binding: FragmentCommentCreateBottomSheetBinding) {
         with(binding) {
             etTextCommentContent.requestFocus()
-            etTextCommentContent.setText(viewModel.replyContent.value)
+            val content = viewModel.replyContent.value ?: ""
+            etTextCommentContent.setText(content)
+            viewModel.onReplyChanged(content)
             val imm =
                 requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.showSoftInput(etTextCommentContent, InputMethodManager.SHOW_IMPLICIT)
@@ -131,6 +108,10 @@ class ReplyCreateBottomSheet : BottomSheetDialogFragment(R.layout.fragment_comme
                     bundleOf(REPLY_CREATED_RESULT_KEY to true),
                 )
                 dismiss()
+            }
+
+            is ReplyCreateUiEvent.OnCreateDismiss -> {
+                commentDetailViewModel.updateContent(uiEvent.content)
             }
         }
     }

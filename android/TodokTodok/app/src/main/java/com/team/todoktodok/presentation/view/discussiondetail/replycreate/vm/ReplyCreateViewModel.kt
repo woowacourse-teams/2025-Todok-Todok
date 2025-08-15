@@ -8,6 +8,8 @@ import androidx.lifecycle.viewModelScope
 import com.team.domain.repository.ReplyRepository
 import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
 import com.team.todoktodok.presentation.core.event.SingleLiveData
+import com.team.todoktodok.presentation.view.discussiondetail.commentcreate.CommentCreateState
+import com.team.todoktodok.presentation.view.discussiondetail.commentcreate.CommentCreateUiEvent
 import com.team.todoktodok.presentation.view.discussiondetail.replycreate.ReplyCreateState
 import com.team.todoktodok.presentation.view.discussiondetail.replycreate.ReplyCreateUiEvent
 import kotlinx.coroutines.launch
@@ -39,7 +41,7 @@ class ReplyCreateViewModel(
 
     private fun initReplyContent() {
         when (replyCreateState) {
-            ReplyCreateState.Create -> Unit
+            ReplyCreateState.Create -> onReplyChanged(content ?: "")
             is ReplyCreateState.Update -> onReplyChanged(content ?: "")
         }
     }
@@ -70,6 +72,20 @@ class ReplyCreateViewModel(
                     _uiEvent.setValue(ReplyCreateUiEvent.CreateReply)
                 }
             }
+        }
+    }
+
+    fun saveReply() {
+        when (replyCreateState) {
+            ReplyCreateState.Create -> {
+                _uiEvent.setValue(
+                    ReplyCreateUiEvent.OnCreateDismiss(
+                        _replyContent.value ?: "",
+                    ),
+                )
+            }
+
+            is ReplyCreateState.Update -> Unit
         }
     }
 

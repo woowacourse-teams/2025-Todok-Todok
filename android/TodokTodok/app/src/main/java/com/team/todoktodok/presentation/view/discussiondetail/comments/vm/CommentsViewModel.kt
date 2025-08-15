@@ -10,6 +10,7 @@ import com.team.domain.repository.TokenRepository
 import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
 import com.team.todoktodok.presentation.core.event.SingleLiveData
 import com.team.todoktodok.presentation.view.discussiondetail.comments.CommentsUiEvent
+import com.team.todoktodok.presentation.view.discussiondetail.comments.CommentsUiState
 import com.team.todoktodok.presentation.view.discussiondetail.model.CommentItemUiState
 import kotlinx.coroutines.launch
 
@@ -21,8 +22,8 @@ class CommentsViewModel(
     val discussionId =
         savedStateHandle.get<Long>(KEY_DISCUSSION_ID) ?: throw IllegalStateException()
 
-    private val _comments = MutableLiveData<List<CommentItemUiState>>()
-    val comments: LiveData<List<CommentItemUiState>> = _comments
+    private val _uiState = MutableLiveData(CommentsUiState())
+    val uiState: LiveData<CommentsUiState> = _uiState
 
     private val _uiEvent = MutableSingleLiveData<CommentsUiEvent>()
     val uiEvent: SingleLiveData<CommentsUiEvent> = _uiEvent
@@ -59,9 +60,7 @@ class CommentsViewModel(
         commentId: Long,
         content: String,
     ) {
-        viewModelScope.launch {
-            _uiEvent.setValue(CommentsUiEvent.ShowCommentUpdate(discussionId, commentId, content))
-        }
+        _uiEvent.setValue(CommentsUiEvent.ShowCommentUpdate(discussionId, commentId, content))
     }
 
     fun report(commentId: Long) {
@@ -74,20 +73,26 @@ class CommentsViewModel(
         _uiEvent.setValue(CommentsUiEvent.ShowCommentCreate(discussionId))
     }
 
+    fun updateCommentContent(content: String) {
+        _uiState.value = _uiState.value?.copy(commentContent = content)
+    }
+
     private fun showNewComment() {
         _uiEvent.setValue(CommentsUiEvent.ShowNewComment)
     }
 
     private suspend fun loadComments() {
-        _comments.value =
-            commentRepository
-                .getCommentsByDiscussionRoomId(discussionId)
-                .map {
-                    CommentItemUiState(
-                        it,
-                        isMyComment = tokenRepository.getMemberId() == it.writer.id,
-                    )
-                }
+        _uiState.value =
+            _uiState.value?.copy(
+                commentRepository
+                    .getCommentsByDiscussionRoomId(discussionId)
+                    .map {
+                        CommentItemUiState(
+                            it,
+                            isMyComment = tokenRepository.getMemberId() == it.writer.id,
+                        )
+                    },
+            )
     }
 
     companion object {

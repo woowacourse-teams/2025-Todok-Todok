@@ -30,14 +30,24 @@ class CommentCreateViewModel(
     private val _commentText = MutableLiveData("")
     val commentText: LiveData<String> = _commentText
 
-    init {
+    fun initUiState() {
         viewModelScope.launch {
             when (commentCreateState) {
-                CommentCreateState.Create -> Unit
-                is CommentCreateState.Update -> {
+                CommentCreateState.Create -> {
                     onCommentChanged(commentContent)
                 }
+
+                is CommentCreateState.Update -> {
+                    val content =
+                        commentRepository
+                            .getComment(
+                                discussionId,
+                                commentCreateState.commentId,
+                            ).content
+                    onCommentChanged(content)
+                }
             }
+            _uiEvent.setValue(CommentCreateUiEvent.InitState(_commentText.value ?: ""))
         }
     }
 
@@ -62,6 +72,20 @@ class CommentCreateViewModel(
                     _uiEvent.setValue(CommentCreateUiEvent.SubmitComment)
                 }
             }
+        }
+    }
+
+    fun saveContent() {
+        when (commentCreateState) {
+            CommentCreateState.Create -> {
+                _uiEvent.setValue(
+                    CommentCreateUiEvent.OnCreateDismiss(
+                        _commentText.value ?: "",
+                    ),
+                )
+            }
+
+            is CommentCreateState.Update -> Unit
         }
     }
 
