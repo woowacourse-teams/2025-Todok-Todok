@@ -582,7 +582,7 @@ public interface MemberApiDocs {
                             schema = @Schema(implementation = ErrorResponse.class),
                             examples = @ExampleObject(
                                     name = "차단자 불일치",
-                                    value = "{\"code\":400, \"messgae\":\"[ERROR] 차단한 회원이 아닙니다\"}"
+                                    value = "{\"code\":400, \"message\":\"[ERROR] 차단한 회원이 아닙니다\"}"
                             )
             )),
             @ApiResponse(
