@@ -29,6 +29,6 @@ class ResourceNotFoundView
         }
 
         fun hide() {
-            visibility = INVISIBLE
+            visibility = GONE
         }
     }
