@@ -11,6 +11,8 @@ import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.DEFAULT_ARGS_KEY
 import androidx.lifecycle.viewmodel.MutableCreationExtras
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.team.todoktodok.App
 import com.team.todoktodok.R
@@ -30,6 +32,8 @@ import com.team.todoktodok.presentation.view.profile.ProfileActivity
 
 class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
     private val adapter by lazy { CommentAdapter(adapterHandler) }
+
+    private val layoutManager by lazy { LinearLayoutManager(requireContext()) }
 
     private val sharedViewModel: DiscussionDetailViewModel by activityViewModels()
 
@@ -71,6 +75,17 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
         setupOnClick(binding)
         setupObserve(binding)
         setupFragmentResultListener()
+        adapter.stateRestorationPolicy =
+            RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+    }
+
+    override fun onStop() {
+        super.onStop()
+        saveRvStateIfPossible()
+    }
+
+    private fun saveRvStateIfPossible() {
+        viewModel.loadCommentsShowState(layoutManager.onSaveInstanceState())
     }
 
     override fun onDestroyView() {
@@ -80,7 +95,11 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
     }
 
     private fun initAdapter(binding: FragmentCommentsBinding) {
-        binding.rvComments.adapter = adapter
+        binding.rvComments.apply {
+            layoutManager = this@CommentsFragment.layoutManager
+            adapter = this@CommentsFragment.adapter
+            setHasFixedSize(true)
+        }
     }
 
     private fun setupOnClick(binding: FragmentCommentsBinding) {
@@ -90,13 +109,20 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
     }
 
     private fun setupObserve(binding: FragmentCommentsBinding) {
-        viewModel.uiState.observe(viewLifecycleOwner) { value ->
-            adapter.submitList(value.comments)
-            val commentText = value.commentContent
-            if (commentText.isNotBlank()) {
-                binding.tvInputComment.text = commentText
+        viewModel.uiState.observe(viewLifecycleOwner) { state ->
+            adapter.submitList(state.comments) {
+                viewModel.commentsRvState?.let { saved ->
+                    binding.rvComments.layoutManager?.onRestoreInstanceState(saved)
+                    viewModel.loadCommentsShowState(null)
+                }
+            }
+
+            val draft = state.commentContent
+            if (draft.isNotBlank() && binding.tvInputComment.text.toString() != draft) {
+                binding.tvInputComment.text = draft
             }
         }
+
         viewModel.uiEvent.observe(viewLifecycleOwner) { value ->
             handleEvent(value, binding)
         }
@@ -265,6 +291,7 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
 
     companion object {
         const val TAG = "COMMENTS"
+        private const val KEY_RV_STATE = "rv_state"
 
         fun newInstance(discussionId: Long): CommentsFragment =
             CommentsFragment().apply {

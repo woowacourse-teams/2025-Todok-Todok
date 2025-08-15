@@ -1,7 +1,7 @@
 package com.team.todoktodok.presentation.view.discussiondetail.replycreate
 
 sealed interface ReplyCreateUiEvent {
-    data class OnCreateDismiss(
+    data class SaveContent(
         val content: String,
     ) : ReplyCreateUiEvent
 

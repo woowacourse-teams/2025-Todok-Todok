@@ -124,11 +124,7 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
                 )
 
             is CommentDetailUiEvent.ShowNewReply -> {
-                commentsViewModel.reloadComments()
-                sharedViewModel.reloadDiscussion()
-                binding.rvItems.doOnPreDraw {
-                    binding.rvItems.smoothScrollToPosition(adapter.itemCount)
-                }
+                onNewReplyCommitted(binding)
             }
 
             is CommentDetailUiEvent.ShowCommentUpdate -> {
@@ -164,6 +160,14 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
                 popupWindow?.dismiss()
                 commentsViewModel.reloadComments()
             }
+        }
+    }
+
+    private fun onNewReplyCommitted(binding: FragmentCommentDetailBinding) {
+        commentsViewModel.reloadComments()
+        sharedViewModel.reloadDiscussion()
+        binding.rvItems.doOnPreDraw {
+            binding.rvItems.smoothScrollToPosition(adapter.itemCount)
         }
     }
 

@@ -8,11 +8,8 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.DEFAULT_ARGS_KEY
-import androidx.lifecycle.viewmodel.MutableCreationExtras
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.team.todoktodok.App
@@ -110,7 +107,7 @@ class ReplyCreateBottomSheet : BottomSheetDialogFragment(R.layout.fragment_comme
                 dismiss()
             }
 
-            is ReplyCreateUiEvent.OnCreateDismiss -> {
+            is ReplyCreateUiEvent.SaveContent -> {
                 commentDetailViewModel.updateContent(uiEvent.content)
             }
         }

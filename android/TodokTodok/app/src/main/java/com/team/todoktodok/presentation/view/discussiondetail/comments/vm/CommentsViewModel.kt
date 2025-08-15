@@ -1,5 +1,6 @@
 package com.team.todoktodok.presentation.view.discussiondetail.comments.vm
 
+import android.os.Parcelable
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -28,10 +29,16 @@ class CommentsViewModel(
     private val _uiEvent = MutableSingleLiveData<CommentsUiEvent>()
     val uiEvent: SingleLiveData<CommentsUiEvent> = _uiEvent
 
+    var commentsRvState: Parcelable? = null
+
     init {
         viewModelScope.launch {
             loadComments()
         }
+    }
+
+    fun loadCommentsShowState(showState: Parcelable?) {
+        commentsRvState = showState
     }
 
     fun reloadComments() {
