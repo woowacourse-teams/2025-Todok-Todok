@@ -1,9 +1,9 @@
 package com.team.todoktodok.data.repository
 
 import com.team.domain.model.Book
-import com.team.domain.model.member.Member
 import com.team.domain.model.Support
 import com.team.domain.model.member.BlockedMember
+import com.team.domain.model.member.Member
 import com.team.domain.model.member.MemberDiscussion
 import com.team.domain.model.member.MemberDiscussionType
 import com.team.domain.model.member.MemberId
@@ -14,7 +14,6 @@ import com.team.todoktodok.data.datasource.member.MemberRemoteDataSource
 import com.team.todoktodok.data.network.request.ModifyProfileRequest
 import com.team.todoktodok.data.network.request.toRequest
 import com.team.todoktodok.data.network.response.discussion.toDomain
-import java.time.LocalDate
 
 class DefaultMemberRepository(
     private val remoteMemberRemoteDataSource: MemberRemoteDataSource,
@@ -65,9 +64,7 @@ class DefaultMemberRepository(
         message: String,
     ) = remoteMemberRemoteDataSource.modifyProfile(ModifyProfileRequest(nickname, message))
 
-    override suspend fun getBlockedMembers(): List<BlockedMember> {
-        return remoteMemberRemoteDataSource.fetchBlockedMembers().map { it.toDomain() }
-    }
+    override suspend fun getBlockedMembers(): List<BlockedMember> = remoteMemberRemoteDataSource.fetchBlockedMembers().map { it.toDomain() }
 
     override suspend fun unblock(id: Long) = remoteMemberRemoteDataSource.unblock(id)
 }
