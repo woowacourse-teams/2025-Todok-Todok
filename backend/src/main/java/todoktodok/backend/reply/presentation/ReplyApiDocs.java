@@ -37,7 +37,7 @@ public interface ReplyApiDocs {
                                     ),
                                     @ExampleObject(
                                             name = "내용 길이 조건 부적합",
-                                            value = "{\"code\":400, \"message\":\"[ERROR] 대댓글 내용은 1자 이상, 1500자 이하여야 합니다\"}"
+                                            value = "{\"code\":400, \"message\":\"[ERROR] 대댓글 내용은 1자 이상, 2000자 이하여야 합니다\"}"
                                     )
                             }
             )),
@@ -320,7 +320,7 @@ public interface ReplyApiDocs {
                                     ),
                                     @ExampleObject(
                                             name = "내용 길이 조건 부적합",
-                                            value = "{\"code\":400, \"message\":\"[ERROR] 대댓글 내용은 1자 이상, 1500자 이하여야 합니다\"}"
+                                            value = "{\"code\":400, \"message\":\"[ERROR] 대댓글 내용은 1자 이상, 2000자 이하여야 합니다\"}"
                                     ),
                                     @ExampleObject(
                                             name = "작성자 불일치",
