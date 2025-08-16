@@ -18,6 +18,8 @@ data class ProfileUiState(
     val isMyProfilePage: Boolean = false,
 ) {
     fun modifyProfile(profile: Profile): ProfileUiState {
+        if (items.size <= PROFILE_INFORMATION_INDEX) return this
+
         val currentItems = items.toMutableList()
         currentItems[PROFILE_INFORMATION_INDEX] =
             ProfileItems.InformationItem(profile, isMyProfilePage)
