@@ -12,7 +12,6 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.bumptech.glide.Glide
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivityDiscussionDetailBinding
@@ -85,6 +84,9 @@ class DiscussionDetailActivity : AppCompatActivity() {
             ivComment.setOnClickListener {
                 viewModel.showComments()
             }
+            tvCommentCount.setOnClickListener {
+                viewModel.showComments()
+            }
             ivUserProfile.setOnClickListener {
                 viewModel.navigateToProfile()
             }
@@ -98,6 +100,10 @@ class DiscussionDetailActivity : AppCompatActivity() {
     private fun setupLikeClick() {
         with(binding) {
             ivLike.setOnClickListener {
+                ivLike.isSelected = !ivLike.isSelected
+                viewModel.toggleLike()
+            }
+            tvLikeCount.setOnClickListener {
                 ivLike.isSelected = !ivLike.isSelected
                 viewModel.toggleLike()
             }
@@ -154,7 +160,7 @@ class DiscussionDetailActivity : AppCompatActivity() {
                 tvDiscussionCreateAt.text = value.discussion.createAt.formatDate()
                 tvDiscussionOpinion.text = value.discussion.discussionOpinion
                 ivLike.isSelected = value.discussion.isLikedByMe
-                tvHeartCount.text = value.discussion.likeCount.toString()
+                tvLikeCount.text = value.discussion.likeCount.toString()
                 tvCommentCount.text = value.discussion.commentCount.toString()
             }
             setupPopUpDiscussionClick(value.isMyDiscussion)

@@ -37,28 +37,12 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
         ownerProducer = { requireActivity() },
     )
 
-    private val viewModel by viewModels<CommentDetailViewModel>(
-        ownerProducer = { requireParentFragment() },
-        factoryProducer = {
-            val repositoryModule = (requireActivity().application as App).container.repositoryModule
-            CommentDetailViewModelFactory(
-                repositoryModule.commentRepository,
-                repositoryModule.replyRepository,
-                repositoryModule.tokenRepository,
-            )
-        },
-        extrasProducer = {
-            MutableCreationExtras(requireActivity().defaultViewModelCreationExtras).apply {
-                this[DEFAULT_ARGS_KEY] = buildCommentArgs()
-            }
-        },
-    )
-
-    private fun buildCommentArgs(): Bundle {
-        val args = requireArguments()
-        return bundleOf(
-            CommentDetailViewModel.KEY_DISCUSSION_ID to args.getLong(CommentDetailViewModel.KEY_DISCUSSION_ID),
-            CommentDetailViewModel.KEY_COMMENT_ID to args.getLong(CommentDetailViewModel.KEY_COMMENT_ID),
+    private val viewModel by viewModels<CommentDetailViewModel> {
+        val repositoryModule = (requireActivity().application as App).container.repositoryModule
+        CommentDetailViewModelFactory(
+            repositoryModule.commentRepository,
+            repositoryModule.replyRepository,
+            repositoryModule.tokenRepository,
         )
     }
 
@@ -103,7 +87,8 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
     fun setupObserve(binding: FragmentCommentDetailBinding) {
         viewModel.uiState.observe(viewLifecycleOwner) { value ->
             adapter.submitList(value.getCommentDetailItems())
-            binding.tvInputComment.text = value.content
+            val currentContent = value.content
+            if (currentContent.isNotBlank()) binding.tvInputComment.text = currentContent
         }
         viewModel.uiEvent.observe(this) { value ->
             handleEvent(value, binding)

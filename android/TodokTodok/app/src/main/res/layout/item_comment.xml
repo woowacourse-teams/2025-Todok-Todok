@@ -73,7 +73,7 @@
         app:layout_constraintTop_toBottomOf="@id/tv_comment_opinion" />
 
     <TextView
-        android:id="@+id/tv_heart_count"
+        android:id="@+id/tv_like_count"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/space_24"
         android:layout_marginStart="@dimen/space_8"
@@ -91,7 +91,7 @@
         android:contentDescription="@string/content_description_comment_reply"
         android:src="@drawable/btn_comment"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/tv_heart_count" />
+        app:layout_constraintStart_toEndOf="@id/tv_like_count" />
 
     <TextView
         android:id="@+id/tv_reply_count"

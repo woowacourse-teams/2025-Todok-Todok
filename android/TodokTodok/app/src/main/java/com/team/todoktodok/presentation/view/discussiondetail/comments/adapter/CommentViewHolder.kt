@@ -38,8 +38,12 @@ class CommentViewHolder private constructor(
             }
             ivLike.setOnClickListener { handler.onToggleLike(commentItemUiState.comment.id) }
             ivLike.isSelected = commentItemUiState.comment.isLikedByMe
-            tvHeartCount.text = commentItemUiState.comment.likeCount.toString()
+            tvLikeCount.text = commentItemUiState.comment.likeCount.toString()
+            tvLikeCount.setOnClickListener { handler.onToggleLike(commentItemUiState.comment.id) }
             tvReplyCount.text = commentItemUiState.comment.replyCount.toString()
+            tvReplyCount.setOnClickListener {
+                handler.onReplyClick(commentItemUiState.comment.id)
+            }
         }
     }
 
