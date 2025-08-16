@@ -47,6 +47,8 @@ class DiscussionDetailActivity : AppCompatActivity() {
 
     private var popupWindow: PopupWindow? = null
 
+    private var commonDialog: CommonDialog? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initView()
@@ -125,7 +127,9 @@ class DiscussionDetailActivity : AppCompatActivity() {
         if (isMyDiscussion) {
             val binding = MenuOwnedDiscussionBinding.inflate(layoutInflater)
             binding.tvEdit.setOnClickListener { viewModel.updateDiscussion() }
-            binding.tvDelete.setOnClickListener { viewModel.deleteDiscussion() }
+            binding.tvDelete.setOnClickListener {
+                showDeleteDialog()
+            }
             createPopUpView(binding.root)
         } else {
             val binding = MenuExternalDiscussionBinding.inflate(layoutInflater)
@@ -133,11 +137,22 @@ class DiscussionDetailActivity : AppCompatActivity() {
             createPopUpView(binding.root)
         }
 
+    private fun showDeleteDialog() {
+        val dialog =
+            CommonDialog.newInstance(
+                getString(R.string.all_discussion_delete_confirm),
+                getString(R.string.all_delete_action),
+                DISCUSSION_DELETE_DIALOG_KEY,
+            )
+        dialog.show(supportFragmentManager, CommonDialog.TAG)
+    }
+
     private fun showReportDialog() {
         val dialog =
             CommonDialog.newInstance(
                 getString(R.string.all_report_action),
                 getString(R.string.all_report_action),
+                DISCUSSION_REPORT_DIALOG_KEY,
             )
         dialog.show(supportFragmentManager, CommonDialog.TAG)
     }
@@ -212,12 +227,23 @@ class DiscussionDetailActivity : AppCompatActivity() {
 
     private fun setUpDialogResultListener() {
         supportFragmentManager.setFragmentResultListener(
-            CommonDialog.RESULT_KEY_COMMON_DIALOG,
+            DISCUSSION_REPORT_DIALOG_KEY,
             this,
         ) { _, bundle ->
             val result = bundle.getBoolean(CommonDialog.RESULT_KEY_COMMON_DIALOG)
             if (result) {
                 viewModel.reportDiscussion()
+                popupWindow?.dismiss()
+            }
+        }
+
+        supportFragmentManager.setFragmentResultListener(
+            DISCUSSION_DELETE_DIALOG_KEY,
+            this,
+        ) { _, bundle ->
+            val result = bundle.getBoolean(CommonDialog.RESULT_KEY_COMMON_DIALOG)
+            if (result) {
+                viewModel.deleteDiscussion()
                 popupWindow?.dismiss()
             }
         }
@@ -230,6 +256,9 @@ class DiscussionDetailActivity : AppCompatActivity() {
     }
 
     companion object {
+        private const val DISCUSSION_DELETE_DIALOG_KEY = "discussion_delete_dialog_key"
+        private const val DISCUSSION_REPORT_DIALOG_KEY = "discussion_report_dialog_key"
+
         fun Intent(
             context: Context,
             discussionId: Long,

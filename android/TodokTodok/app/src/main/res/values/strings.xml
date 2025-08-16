@@ -20,8 +20,12 @@
     <string name="all_cancel">취소하기</string>
     <string name="all_report_comment">댓글을 신고하시겠습니까?</string>
     <string name="all_report_discussion">토론방을 신고하시겠습니까?</string>
+    <string name="all_report_reply">답글을 신고하시겠습니까?</string>
     <string name="all_already_report_discussion">이미 신고한 토론방 입니다</string>
     <string name="all_nickname">닉네임</string>
+    <string name="all_discussion_delete_confirm">토론방을 정말 삭제 하시겠습니까?</string>
+    <string name="all_comment_delete_confirm">댓글을 정말 삭제 하시겠습니까?</string>
+    <string name="all_reply_delete_confirm">답글을 정말 삭제 하시겠습니까?</string>
 
     <!--  토론 목록 페이지  -->
     <string name="content_description_add_discussion">토론방 추가 화면으로 이동합니다</string>

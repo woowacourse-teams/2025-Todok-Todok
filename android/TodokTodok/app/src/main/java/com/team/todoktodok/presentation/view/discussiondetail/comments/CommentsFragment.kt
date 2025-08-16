@@ -193,47 +193,70 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
             true,
         )
 
-    private fun getPopUpView(commentItemUiState: CommentItemUiState): PopupWindow =
-        if (commentItemUiState.isMyComment) {
+    private fun getPopUpView(commentItemUiState: CommentItemUiState): PopupWindow {
+        setUpDialogResultListener(commentId = commentItemUiState.comment.id)
+        return if (commentItemUiState.isMyComment) {
             val binding = MenuOwnedDiscussionBinding.inflate(layoutInflater)
             binding.tvEdit.setOnClickListener {
                 viewModel.updateComment(
                     commentItemUiState.comment.id,
                     commentItemUiState.comment.content,
                 )
+                popupWindow?.dismiss()
             }
             binding.tvDelete.setOnClickListener {
-                viewModel.deleteComment(commentItemUiState.comment.id)
+                showDeleteDialog()
                 popupWindow?.dismiss()
             }
             createPopUpView(binding.root)
         } else {
-            setUpDialogResultListener(commentId = commentItemUiState.comment.id)
             val binding = MenuExternalDiscussionBinding.inflate(layoutInflater)
             binding.tvReport.setOnClickListener {
                 showReportDialog()
+                popupWindow?.dismiss()
             }
             createPopUpView(binding.root)
         }
+    }
 
     private fun showReportDialog() {
         val dialog =
             CommonDialog.newInstance(
                 getString(R.string.all_report_comment),
                 getString(R.string.all_report_action),
+                COMMENT_REPORT_DIALOG_KEY,
+            )
+        dialog.show(childFragmentManager, CommonDialog.TAG)
+    }
+
+    private fun showDeleteDialog() {
+        val dialog =
+            CommonDialog.newInstance(
+                getString(R.string.all_comment_delete_confirm),
+                getString(R.string.all_delete_action),
+                COMMENT_DELETE_DIALOG_KEY,
             )
         dialog.show(childFragmentManager, CommonDialog.TAG)
     }
 
     private fun setUpDialogResultListener(commentId: Long) {
         childFragmentManager.setFragmentResultListener(
-            CommonDialog.RESULT_KEY_COMMON_DIALOG,
+            COMMENT_REPORT_DIALOG_KEY,
             this,
         ) { _, bundle ->
             val result = bundle.getBoolean(CommonDialog.RESULT_KEY_COMMON_DIALOG)
             if (result) {
                 viewModel.report(commentId)
-                popupWindow?.dismiss()
+            }
+        }
+
+        childFragmentManager.setFragmentResultListener(
+            COMMENT_DELETE_DIALOG_KEY,
+            this,
+        ) { _, bundle ->
+            val result = bundle.getBoolean(CommonDialog.RESULT_KEY_COMMON_DIALOG)
+            if (result) {
+                viewModel.deleteComment(commentId)
             }
         }
     }
@@ -291,6 +314,9 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
 
     companion object {
         const val TAG = "COMMENTS"
+
+        private const val COMMENT_DELETE_DIALOG_KEY = "comment_delete_dialog_key"
+        private const val COMMENT_REPORT_DIALOG_KEY = "comment_report_dialog_key"
 
         fun newInstance(discussionId: Long): CommentsFragment =
             CommentsFragment().apply {

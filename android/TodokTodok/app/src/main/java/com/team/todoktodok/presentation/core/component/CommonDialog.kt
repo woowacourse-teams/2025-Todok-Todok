@@ -25,12 +25,16 @@ class CommonDialog : DialogFragment(R.layout.view_common_dialog) {
             btnCancel.setOnClickListener { dismiss() }
             btnSubmit.setOnClickListener {
                 setFragmentResult(
-                    REQUEST_KEY_COMMON_DIALOG,
+                    requestKey,
                     bundleOf(RESULT_KEY_COMMON_DIALOG to true),
                 )
                 dismiss()
             }
         }
+    }
+
+    private val requestKey: String by lazy {
+        requireArguments().getString(ARG_REQUEST_KEY) ?: REQUEST_KEY_COMMON_DIALOG
     }
 
     override fun getTheme(): Int = R.style.cornerRadiusDialog
@@ -39,15 +43,18 @@ class CommonDialog : DialogFragment(R.layout.view_common_dialog) {
         fun newInstance(
             message: String,
             submitButtonText: String,
+            requestKey: String = REQUEST_KEY_COMMON_DIALOG,
         ): CommonDialog =
             CommonDialog().apply {
                 arguments =
                     bundleOf(
                         ARG_MESSAGE to message,
                         ARG_SUBMIT_BUTTON_TEXT to submitButtonText,
+                        ARG_REQUEST_KEY to requestKey,
                     )
             }
 
+        private const val ARG_REQUEST_KEY = "arg_request_key"
         const val ARG_MESSAGE = "message"
         const val ARG_SUBMIT_BUTTON_TEXT = "submitButtonText"
 
