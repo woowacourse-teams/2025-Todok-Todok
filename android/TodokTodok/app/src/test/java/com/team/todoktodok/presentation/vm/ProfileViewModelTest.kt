@@ -30,7 +30,7 @@ class ProfileViewModelTest {
 
     private fun setMockProfileData() {
         coEvery { repository.getProfile(any()) } returns
-                Profile(1, "페토", "안녕하세요", "")
+            Profile(1, "페토", "안녕하세요", "")
         coEvery { repository.getMemberBooks(any()) } returns emptyList()
         coEvery { repository.getMemberDiscussionRooms(any(), any()) } returns emptyList()
     }
@@ -169,13 +169,13 @@ class ProfileViewModelTest {
             coVerify(exactly = 1) {
                 repository.getMemberDiscussionRooms(
                     any(),
-                    MemberDiscussionType.PARTICIPATED
+                    MemberDiscussionType.PARTICIPATED,
                 )
             }
             coVerify(exactly = 1) {
                 repository.getMemberDiscussionRooms(
                     any(),
-                    MemberDiscussionType.CREATED
+                    MemberDiscussionType.CREATED,
                 )
             }
         }
