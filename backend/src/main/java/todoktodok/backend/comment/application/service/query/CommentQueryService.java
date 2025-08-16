@@ -2,6 +2,7 @@ package todoktodok.backend.comment.application.service.query;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -73,18 +74,18 @@ public class CommentQueryService {
 
     private void validateIsExistMember(final Long memberId) {
         if (!memberRepository.existsById(memberId)) {
-            throw new NoSuchElementException("해당 회원을 찾을 수 없습니다");
+            throw new NoSuchElementException(String.format("해당 회원을 찾을 수 없습니다: memberId = %s", memberId));
         }
     }
 
     private Discussion findDiscussion(final Long discussionId) {
         return discussionRepository.findById(discussionId)
-                .orElseThrow(() -> new NoSuchElementException("해당 토론방을 찾을 수 없습니다"));
+                .orElseThrow(() -> new NoSuchElementException(String.format("해당 토론방을 찾을 수 없습니다: discussionId = %s", discussionId)));
     }
 
     private Comment findComment(final Long commentId) {
         return commentRepository.findById(commentId)
-                .orElseThrow(() -> new NoSuchElementException("해당 댓글을 찾을 수 없습니다"));
+                .orElseThrow(() -> new NoSuchElementException(String.format("해당 댓글을 찾을 수 없습니다: commentId = %s", commentId)));
     }
 
     private int findReplyCount(
@@ -95,7 +96,7 @@ public class CommentQueryService {
                 .filter(count -> comment.isSameId(count.commentId()))
                 .findFirst()
                 .map(CommentReplyCountDto::replyCount)
-                .orElseThrow(() -> new IllegalStateException("댓글의 대댓글 수를 찾을 수 없습니다"));
+                .orElseThrow(() -> new IllegalStateException(String.format("댓글의 대댓글 수를 찾을 수 없습니다: commentId = %s", comment.getId())));
     }
 
     private int findLikeCount(
@@ -106,7 +107,7 @@ public class CommentQueryService {
                 .filter(count -> comment.isSameId(count.commentId()))
                 .findFirst()
                 .map(CommentLikeCountDto::likeCount)
-                .orElseThrow(() -> new IllegalStateException("댓글의 좋아요 수를 찾을 수 없습니다"));
+                .orElseThrow(() -> new IllegalStateException(String.format("댓글의 좋아요 수를 찾을 수 없습니다: commentId = %s", comment.getId())));
     }
 
     private boolean checkIsLikedByMe(

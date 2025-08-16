@@ -40,14 +40,14 @@ public class CommentTest {
                         .discussion(discussion)
                         .build()
         ).isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("댓글 내용은 1자 이상, 1500자 이하여야 합니다");
+                .hasMessageContaining("댓글 내용은 1자 이상, 2000자 이하여야 합니다");
     }
 
     @Test
-    @DisplayName("댓글 내용이 1500자를 초과하면 예외가 발생한다")
+    @DisplayName("댓글 내용이 2000자를 초과하면 예외가 발생한다")
     void validateContent_tooLongContent_fail() {
         // given
-        final String content = "a".repeat(1501);
+        final String content = "a".repeat(2001);
 
         // when - then
         assertThatThrownBy(
@@ -57,7 +57,7 @@ public class CommentTest {
                         .discussion(discussion)
                         .build()
         ).isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("댓글 내용은 1자 이상, 1500자 이하여야 합니다");
+                .hasMessageContaining("댓글 내용은 1자 이상, 2000자 이하여야 합니다");
     }
 
     @Test
@@ -80,7 +80,7 @@ public class CommentTest {
         // when - then
         assertThatThrownBy(() -> comment.validateMatchWithDiscussion(anotherDiscussion))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("해당 토론방에 있는 댓글이 아닙니다");
+                .hasMessageContaining("해당 토론방에 있는 댓글이 아닙니다");
     }
 
     @Test
@@ -96,6 +96,6 @@ public class CommentTest {
         // when - then
         assertThatThrownBy(() -> comment.validateSelfReport(member))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("자기 자신이 작성한 댓글을 신고할 수 없습니다");
+                .hasMessageContaining("자기 자신이 작성한 댓글을 신고할 수 없습니다");
     }
 }
