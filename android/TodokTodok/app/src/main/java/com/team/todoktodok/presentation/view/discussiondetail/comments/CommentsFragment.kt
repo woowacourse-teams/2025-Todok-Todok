@@ -276,6 +276,13 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
         object : CommentAdapter.Handler {
             override fun onReplyClick(commentId: Long) {
                 parentFragmentManager.commit {
+                    setReorderingAllowed(true)
+                    setCustomAnimations(
+                        R.anim.slide_in_right,
+                        R.anim.slide_out_left,
+                        R.anim.slide_in_left,
+                        R.anim.slide_out_right,
+                    )
                     hide(this@CommentsFragment)
                     add(
                         R.id.fcv_comment,
