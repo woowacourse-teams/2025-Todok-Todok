@@ -98,27 +98,27 @@ class SelectBookActivity : AppCompatActivity() {
 
     private fun setupUiEvent() {
         viewModel.uiState.observe(this) { state: SelectBookUiState ->
-            dealWithUiState(state)
+            updateSearchedBooks(state.searchedBooks, binding, adapter)
+            updateLoadingState(state, binding)
         }
         viewModel.uiEvent.observe(this) { event ->
             dealWithUiEvent(event)
         }
     }
 
-    private fun dealWithUiState(state: SelectBookUiState) {
-        if (state.searchedBooks.size == IS_EMPTY_SEARCH_RESULT) {
+    private fun updateSearchedBooks(
+        searchedBooks: Books,
+        binding: ActivitySelectBookBinding,
+        adapter: SearchBooksAdapter,
+    ) {
+        if (searchedBooks.size == IS_EMPTY_SEARCH_RESULT) {
             binding.nsvEmptySearchResult.visibility = View.VISIBLE
             binding.rvSearchedBooks.visibility = View.GONE
-        } else {
-            binding.nsvEmptySearchResult.visibility = View.GONE
-            binding.rvSearchedBooks.visibility = View.VISIBLE
+            return
         }
-        if (state.isLoading) {
-            binding.progressBar.visibility = View.VISIBLE
-            binding.nsvEmptySearchResult.visibility = View.GONE
-        } else {
-            binding.progressBar.visibility = View.GONE
-        }
+        binding.nsvEmptySearchResult.visibility = View.GONE
+        binding.rvSearchedBooks.visibility = View.VISIBLE
+        adapter.submitList(searchedBooks.items)
     }
 
     private fun dealWithUiEvent(event: SelectBookUiEvent) {
