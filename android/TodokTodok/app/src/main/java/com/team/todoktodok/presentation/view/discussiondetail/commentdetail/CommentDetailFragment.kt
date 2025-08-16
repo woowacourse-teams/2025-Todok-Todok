@@ -10,13 +10,12 @@ import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.DEFAULT_ARGS_KEY
-import androidx.lifecycle.viewmodel.MutableCreationExtras
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentCommentDetailBinding
 import com.team.todoktodok.databinding.MenuExternalDiscussionBinding
 import com.team.todoktodok.databinding.MenuOwnedDiscussionBinding
+import com.team.todoktodok.presentation.core.component.CommonDialog
 import com.team.todoktodok.presentation.view.discussiondetail.BottomSheetVisibilityListener
 import com.team.todoktodok.presentation.view.discussiondetail.commentcreate.CommentCreateBottomSheet
 import com.team.todoktodok.presentation.view.discussiondetail.commentdetail.adapter.CommentDetailAdapter
@@ -47,6 +46,8 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
     }
 
     private var popupWindow: PopupWindow? = null
+
+    private var confirmDialog: CommonDialog? = null
 
     override fun onViewCreated(
         view: View,
@@ -90,9 +91,38 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
             val currentContent = value.content
             if (currentContent.isNotBlank()) binding.tvInputComment.text = currentContent
         }
-        viewModel.uiEvent.observe(this) { value ->
+        viewModel.uiEvent.observe(viewLifecycleOwner) { value ->
             handleEvent(value, binding)
         }
+    }
+
+    fun setOnNavigateUp(binding: FragmentCommentDetailBinding) {
+        binding.ivCommentDetailBack.setOnClickListener {
+            requestClose()
+        }
+    }
+
+    private fun requestClose() {
+        if (viewModel.uiState.value
+                ?.content
+                ?.isNotEmpty() == true
+        ) {
+            showConfirmClose()
+        } else {
+            parentFragmentManager.popBackStack()
+        }
+    }
+
+    private fun showConfirmClose() {
+        if (confirmDialog == null) {
+            confirmDialog =
+                CommonDialog
+                    .newInstance(
+                        getString(R.string.confirm_delete_message),
+                        getString(R.string.all_delete_action),
+                    )
+        }
+        confirmDialog?.show(childFragmentManager, CommonDialog.TAG)
     }
 
     private fun handleEvent(
@@ -276,6 +306,16 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
                 viewModel.reloadComment()
             }
         }
+
+        childFragmentManager.setFragmentResultListener(
+            CommonDialog.REQUEST_KEY_COMMON_DIALOG,
+            this,
+        ) { _, bundle ->
+            val result = bundle.getBoolean(CommonDialog.RESULT_KEY_COMMON_DIALOG)
+            if (result) {
+                parentFragmentManager.popBackStack()
+            }
+        }
     }
 
     private fun getBottomSheetVisibilityListener(binding: FragmentCommentDetailBinding) =
@@ -290,12 +330,6 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
                 popupWindow?.dismiss()
             }
         }
-
-    fun setOnNavigateUp(binding: FragmentCommentDetailBinding) {
-        binding.ivCommentDetailBack.setOnClickListener {
-            parentFragmentManager.popBackStack()
-        }
-    }
 
     private val commentDetailHandler =
         object : CommentDetailAdapter.Handler {
