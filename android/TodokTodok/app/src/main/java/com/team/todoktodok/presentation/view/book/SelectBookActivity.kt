@@ -70,6 +70,7 @@ class SelectBookActivity : AppCompatActivity() {
 
     private fun initView() {
         binding.apply {
+            etSearchKeyword.requestFocus()
             rvSearchedBooks.adapter = adapter
             btnBack.setOnClickListener {
                 finish()
