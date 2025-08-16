@@ -158,15 +158,11 @@ class SelectBookActivity : AppCompatActivity() {
                             getString(R.string.error_empty_keyword)
                         }
 
-                        ErrorSelectBookType.ERROR_DELETE_KEYWORD -> {
-                            getString(R.string.error_delete_keyword)
-                        }
-                    }
-                Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-            }
-
-            is SelectBookUiEvent.ShowSearchResult -> {
-                adapter.submitList(event.books.items)
+                is SelectBookUiEvent.ShowErrorMessage -> {
+                    Snackbar
+                        .make(binding.root, getString(event.message.id), Snackbar.LENGTH_SHORT)
+                        .show()
+                }
             }
         }
     }
