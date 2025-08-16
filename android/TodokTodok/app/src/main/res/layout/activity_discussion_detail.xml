@@ -38,17 +38,25 @@
         app:layout_constraintStart_toStartOf="@id/abl_discussion_detail"
         app:layout_constraintTop_toTopOf="@id/abl_discussion_detail" />
 
+    <ImageView
+        android:id="@+id/iv_book_image"
+        android:layout_width="@dimen/space_16"
+        android:layout_height="@dimen/space_0"
+        app:layout_constraintBottom_toBottomOf="@id/tv_book_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_book_title" />
 
     <TextView
         android:id="@+id/tv_book_title"
         style="@style/BaseTextStyle"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/space_20"
+        android:layout_marginStart="4dp"
         android:layout_marginTop="@dimen/space_8"
         android:fontFamily="@font/pretendard_medium"
         android:textColor="@color/gray_66"
-        android:textSize="@dimen/font_size_normal"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="@dimen/font_size_large"
+        app:layout_constraintStart_toEndOf="@id/iv_book_image"
         app:layout_constraintTop_toBottomOf="@id/abl_discussion_detail"
         tools:text="오브젝트" />
 
@@ -76,32 +84,32 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/tv_discussion_title" />
 
+    <ImageView
+        android:id="@+id/iv_userProfile"
+        android:layout_width="@dimen/space_16"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@id/tv_user_nickname"
+        app:layout_constraintEnd_toStartOf="@id/tv_user_nickname"
+        app:layout_constraintTop_toTopOf="@id/tv_user_nickname" />
+
     <TextView
         android:id="@+id/tv_user_nickname"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/item_discussion_detail_meta_line_height"
         android:gravity="center"
-        app:layout_constraintEnd_toStartOf="@id/tv_divider_dot"
+        android:textSize="@dimen/font_size_large"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_discussion_title"
         tools:text="코드마스터" />
-
-    <TextView
-        android:id="@+id/tv_divider_dot"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/item_discussion_detail_meta_line_height"
-        android:gravity="center"
-        android:text="@string/all_divider_dot"
-        app:layout_constraintBottom_toBottomOf="@id/tv_user_nickname"
-        app:layout_constraintEnd_toStartOf="@id/tv_discussion_create_at"
-        tools:text=" · " />
 
     <TextView
         android:id="@+id/tv_discussion_create_at"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/item_discussion_detail_meta_line_height"
         android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="@id/tv_user_nickname"
+        android:textSize="@dimen/font_size_large"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_user_nickname"
         tools:text="2024년 7월 20일" />
 
     <TextView
@@ -111,7 +119,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/pretendard_regular"
         android:textSize="@dimen/font_size_large"
-        app:layout_constraintTop_toBottomOf="@id/tv_user_nickname"
+        app:layout_constraintTop_toBottomOf="@id/tv_discussion_create_at"
         tools:text="캡슐화를 하면 데이터를 보호할 수 있다는 것에는 동의하는데, 실제로 완벽히 캡슐화가 되는 지는 의문입니다.getter/setter 메서드를 통해 객체 내부의 데이터가 외부로 드러나는 것은 캡슐화가 잘 된 것이 맞을까요?" />
 
     <ImageView
@@ -129,6 +137,8 @@
         android:layout_width="wrap_content"
         android:layout_height="@dimen/space_32"
         android:layout_marginStart="@dimen/space_8"
+        android:fontFamily="@font/pretendard_regular"
+        android:textSize="@dimen/font_size_large"
         app:layout_constraintBottom_toBottomOf="@id/iv_like"
         app:layout_constraintStart_toEndOf="@id/iv_like"
         app:layout_constraintTop_toTopOf="@id/iv_like"
@@ -148,9 +158,12 @@
 
     <TextView
         android:id="@+id/tv_comment_count"
+        style="@style/BaseTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/space_32"
         android:layout_marginStart="@dimen/space_8"
+        android:fontFamily="@font/pretendard_regular"
+        android:textSize="@dimen/font_size_large"
         app:layout_constraintBottom_toBottomOf="@id/iv_comment"
         app:layout_constraintStart_toEndOf="@id/iv_comment"
         app:layout_constraintTop_toTopOf="@id/iv_comment"

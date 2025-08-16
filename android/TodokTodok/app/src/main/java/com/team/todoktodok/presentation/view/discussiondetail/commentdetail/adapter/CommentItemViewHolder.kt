@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ItemCommentDetailInformationBinding
 import com.team.todoktodok.presentation.core.ext.formatWithResource
+import com.team.todoktodok.presentation.core.ext.loadImage
 
 class CommentItemViewHolder private constructor(
     private val binding: ItemCommentDetailInformationBinding,
@@ -25,6 +26,10 @@ class CommentItemViewHolder private constructor(
             ivLike.isSelected = comment.isLikedByMe
             ivLike.setOnClickListener { handler.onClickCommentLike() }
             tvHeartCount.text = comment.likeCount.toString()
+            ivUserProfile.loadImage("")
+            ivUserProfile.setOnClickListener {
+                handler.onClickCommentUserName(comment.writer.id)
+            }
             tvUserNickname.setOnClickListener {
                 handler.onClickCommentUserName(comment.writer.id)
             }

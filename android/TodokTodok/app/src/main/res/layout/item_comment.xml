@@ -7,13 +7,21 @@
     android:layout_marginBottom="@dimen/space_16"
     android:paddingHorizontal="@dimen/space_24">
 
+    <ImageView
+        android:id="@+id/iv_user_profile"
+        android:layout_width="@dimen/space_16"
+        android:layout_height="@dimen/space_0"
+        app:layout_constraintBottom_toBottomOf="@id/tv_user_nickname"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_user_nickname" />
+
     <TextView
         android:id="@+id/tv_user_nickname"
         style="@style/BaseTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="34dp"
         android:gravity="center_vertical"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/iv_user_profile"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="코드마스터" />
 

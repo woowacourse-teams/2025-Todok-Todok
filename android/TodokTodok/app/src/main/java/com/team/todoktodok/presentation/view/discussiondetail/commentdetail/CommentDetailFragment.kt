@@ -318,7 +318,7 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
                 viewModel.toggleReplyLike(replyId)
             }
 
-            override fun onClickReplyUserName(userId: Long) {
+            override fun onClickReplyUser(userId: Long) {
                 navigateToProfile(userId)
             }
 

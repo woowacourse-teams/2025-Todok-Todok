@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ItemReplyBinding
 import com.team.todoktodok.presentation.core.ext.formatWithResource
+import com.team.todoktodok.presentation.core.ext.loadImage
 
 class ReplyItemViewHolder private constructor(
     private val binding: ItemReplyBinding,
@@ -25,8 +26,12 @@ class ReplyItemViewHolder private constructor(
             ivLike.isSelected = reply.isLikedByMe
             ivLike.setOnClickListener { handler.onClickReplyLike(reply.replyId) }
             tvLikeCount.text = reply.likeCount.toString()
+            ivUserProfile.loadImage("")
+            ivUserProfile.setOnClickListener {
+                handler.onClickReplyUser(reply.user.id)
+            }
             tvUserNickname.setOnClickListener {
-                handler.onClickReplyUserName(reply.user.id)
+                handler.onClickReplyUser(reply.user.id)
             }
             ivReplyOption.setOnClickListener {
                 handler.onClickReplyOption(replyItem, ivReplyOption)
@@ -48,7 +53,7 @@ class ReplyItemViewHolder private constructor(
     interface Handler {
         fun onClickReplyLike(replyId: Long)
 
-        fun onClickReplyUserName(userId: Long)
+        fun onClickReplyUser(userId: Long)
 
         fun onClickReplyOption(
             item: CommentDetailItems.ReplyItem,

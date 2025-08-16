@@ -12,12 +12,14 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.bumptech.glide.Glide
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivityDiscussionDetailBinding
 import com.team.todoktodok.databinding.MenuExternalDiscussionBinding
 import com.team.todoktodok.databinding.MenuOwnedDiscussionBinding
 import com.team.todoktodok.presentation.core.component.CommonDialog
+import com.team.todoktodok.presentation.core.ext.loadImage
 import com.team.todoktodok.presentation.view.discussion.create.CreateDiscussionRoomActivity
 import com.team.todoktodok.presentation.view.discussion.create.SerializationCreateDiscussionRoomMode.Edit
 import com.team.todoktodok.presentation.view.discussiondetail.comment.CommentBottomSheet
@@ -83,14 +85,17 @@ class DiscussionDetailActivity : AppCompatActivity() {
             ivComment.setOnClickListener {
                 viewModel.showComments()
             }
+            ivUserProfile.setOnClickListener {
+                viewModel.navigateToProfile()
+            }
             tvUserNickname.setOnClickListener {
                 viewModel.navigateToProfile()
             }
-            setupLickClick()
+            setupLikeClick()
         }
     }
 
-    private fun setupLickClick() {
+    private fun setupLikeClick() {
         with(binding) {
             ivLike.setOnClickListener {
                 ivLike.isSelected = !ivLike.isSelected
@@ -145,6 +150,7 @@ class DiscussionDetailActivity : AppCompatActivity() {
                 tvBookTitle.text = value.discussion.book.title
                 tvDiscussionTitle.text = value.discussion.discussionTitle
                 tvUserNickname.text = value.discussion.writer.nickname.value
+                ivUserProfile.loadImage("")
                 tvDiscussionCreateAt.text = value.discussion.createAt.formatDate()
                 tvDiscussionOpinion.text = value.discussion.discussionOpinion
                 ivLike.isSelected = value.discussion.isLikedByMe

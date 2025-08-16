@@ -279,7 +279,7 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
                 viewModel.toggleLike(commentId)
             }
 
-            override fun onClickUserName(userId: Long) {
+            override fun onClickUser(userId: Long) {
                 navigateToProfile(userId)
             }
         }

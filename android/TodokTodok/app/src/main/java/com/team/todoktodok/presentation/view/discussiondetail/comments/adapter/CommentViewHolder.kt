@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ItemCommentBinding
 import com.team.todoktodok.presentation.core.ext.formatWithResource
+import com.team.todoktodok.presentation.core.ext.loadImage
 import com.team.todoktodok.presentation.view.discussiondetail.model.CommentItemUiState
 
 class CommentViewHolder private constructor(
@@ -28,8 +29,12 @@ class CommentViewHolder private constructor(
             ivCommentOption.setOnClickListener {
                 handler.onOptionClick(commentItemUiState, ivCommentOption)
             }
+            ivUserProfile.loadImage("")
+            ivUserProfile.setOnClickListener {
+                handler.onClickUser(commentItemUiState.comment.writer.id)
+            }
             tvUserNickname.setOnClickListener {
-                handler.onClickUserName(commentItemUiState.comment.writer.id)
+                handler.onClickUser(commentItemUiState.comment.writer.id)
             }
             ivLike.setOnClickListener { handler.onToggleLike(commentItemUiState.comment.id) }
             ivLike.isSelected = commentItemUiState.comment.isLikedByMe
@@ -59,6 +64,6 @@ class CommentViewHolder private constructor(
 
         fun onToggleLike(commentId: Long)
 
-        fun onClickUserName(userId: Long)
+        fun onClickUser(userId: Long)
     }
 }
