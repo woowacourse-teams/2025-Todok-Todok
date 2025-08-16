@@ -56,7 +56,7 @@ class ActivatedBooksFragment : Fragment() {
 
         fun newInstance(books: List<SerializationBook>) =
             ActivatedBooksFragment().apply {
-                arguments = bundleOf(ARG_ACTIVATED_BOOKS to books)
+                arguments = bundleOf(ARG_ACTIVATED_BOOKS to ArrayList(books))
             }
     }
 

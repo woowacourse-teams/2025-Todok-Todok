@@ -80,7 +80,7 @@ class ParticipatedDiscussionsRoomFragment : Fragment(R.layout.fragment_participa
 
         fun newInstance(discussions: List<SerializationMemberDiscussion>): ParticipatedDiscussionsRoomFragment =
             ParticipatedDiscussionsRoomFragment().apply {
-                arguments = bundleOf(ARG_PARTICIPATED_MEMBER_DISCUSSIONS to discussions)
+                arguments = bundleOf(ARG_PARTICIPATED_MEMBER_DISCUSSIONS to ArrayList(discussions))
             }
     }
 }

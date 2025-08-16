@@ -80,7 +80,7 @@ class CreatedDiscussionsRoomFragment : Fragment(R.layout.fragment_created_discus
 
         fun newInstance(discussions: List<SerializationMemberDiscussion>): CreatedDiscussionsRoomFragment =
             CreatedDiscussionsRoomFragment().apply {
-                arguments = bundleOf(ARG_CREATED_MEMBER_DISCUSSIONS to discussions)
+                arguments = bundleOf(ARG_CREATED_MEMBER_DISCUSSIONS to ArrayList(discussions))
             }
     }
 }
