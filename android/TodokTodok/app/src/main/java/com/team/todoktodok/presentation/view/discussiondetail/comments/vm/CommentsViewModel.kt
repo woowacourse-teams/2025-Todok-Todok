@@ -77,7 +77,12 @@ class CommentsViewModel(
     }
 
     fun showCommentCreate() {
-        _uiEvent.setValue(CommentsUiEvent.ShowCommentCreate(discussionId))
+        _uiEvent.setValue(
+            CommentsUiEvent.ShowCommentCreate(
+                discussionId,
+                _uiState.value?.commentContent ?: "",
+            ),
+        )
     }
 
     fun updateCommentContent(content: String) {

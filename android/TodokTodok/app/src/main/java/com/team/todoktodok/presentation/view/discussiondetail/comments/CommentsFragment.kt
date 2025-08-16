@@ -138,7 +138,7 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
                     commentsUiEvent.discussionId,
                     binding,
                     null,
-                    null,
+                    commentsUiEvent.content,
                 )
 
             CommentsUiEvent.ShowNewComment -> {
@@ -291,7 +291,6 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
 
     companion object {
         const val TAG = "COMMENTS"
-        private const val KEY_RV_STATE = "rv_state"
 
         fun newInstance(discussionId: Long): CommentsFragment =
             CommentsFragment().apply {
