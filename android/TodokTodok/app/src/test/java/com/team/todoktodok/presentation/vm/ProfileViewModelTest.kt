@@ -30,7 +30,7 @@ class ProfileViewModelTest {
 
     private fun setMockProfileData() {
         coEvery { repository.getProfile(any()) } returns
-            Profile(1, "페토", "안녕하세요", "")
+                Profile(1, "페토", "안녕하세요", "")
         coEvery { repository.getMemberBooks(any()) } returns emptyList()
         coEvery { repository.getMemberDiscussionRooms(any(), any()) } returns emptyList()
     }
@@ -89,7 +89,8 @@ class ProfileViewModelTest {
             viewModel.initState()
 
             // then
-            val expected = (viewModel.uiState.getOrAwaitValue().items[1] as ProfileItems.InformationItem).value
+            val expected =
+                (viewModel.uiState.getOrAwaitValue().items[1] as ProfileItems.InformationItem).value
             expected shouldBe profileResponse
         }
 
@@ -146,7 +147,10 @@ class ProfileViewModelTest {
 
             // then
             val state = viewModel.uiState.getOrAwaitValue()
-            (state.items[1] as ProfileItems.InformationItem).value shouldBe updatedProfile
+            val infoItem =
+                state.items
+                    .first { it is ProfileItems.InformationItem } as ProfileItems.InformationItem
+            infoItem.value shouldBe updatedProfile
         }
 
     @Test
@@ -162,7 +166,17 @@ class ProfileViewModelTest {
             // then
             coVerify(exactly = 1) { repository.getProfile(any()) }
             coVerify(exactly = 1) { repository.getMemberBooks(any()) }
-            coVerify(exactly = 1) { repository.getMemberDiscussionRooms(any(), MemberDiscussionType.PARTICIPATED) }
-            coVerify(exactly = 1) { repository.getMemberDiscussionRooms(any(), MemberDiscussionType.CREATED) }
+            coVerify(exactly = 1) {
+                repository.getMemberDiscussionRooms(
+                    any(),
+                    MemberDiscussionType.PARTICIPATED
+                )
+            }
+            coVerify(exactly = 1) {
+                repository.getMemberDiscussionRooms(
+                    any(),
+                    MemberDiscussionType.CREATED
+                )
+            }
         }
 }
