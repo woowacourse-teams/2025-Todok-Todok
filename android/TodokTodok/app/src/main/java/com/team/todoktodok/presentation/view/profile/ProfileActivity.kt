@@ -128,7 +128,7 @@ class ProfileActivity : AppCompatActivity() {
                 launcher.launch(SettingActivity.Intent(this@ProfileActivity))
             }
 
-            override fun onClickLogo() {
+            override fun onClickBack() {
                 if (viewModel.uiState.value?.isMyProfilePage == true) {
                     finish()
                 } else {

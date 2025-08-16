@@ -14,7 +14,7 @@ class UserProfileHeaderViewHolder private constructor(
     init {
         with(binding) {
             ivBack.setOnClickListener {
-                handler.onClickLogo()
+                handler.onClickBack()
             }
 
             ivSetting.setOnClickListener {
@@ -41,6 +41,6 @@ class UserProfileHeaderViewHolder private constructor(
     interface Handler {
         fun onClickSetting()
 
-        fun onClickLogo()
+        fun onClickBack()
     }
 }
