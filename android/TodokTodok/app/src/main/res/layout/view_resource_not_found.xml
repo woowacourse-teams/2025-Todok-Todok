@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -10,26 +9,23 @@
     <ImageView
         android:id="@+id/iv_empty_search_result"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="180dp"
         android:src="@drawable/img_mascort_outline" />
 
     <TextView
         android:id="@+id/tv_empty_resource_title"
-        style="@style/HeaderTitleText"
-        android:fontFamily="@font/pretendard_bold"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:textSize="@dimen/font_size_2x_large"
+        android:textSize="@dimen/font_size_x_large"
         tools:text="@string/empty_search_result_title" />
 
     <TextView
         android:id="@+id/tv_empty_resource_subtitle"
-        style="@style/BaseTextStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:textColor="@color/gray_66"
-        android:textSize="@dimen/font_size_x_large"
-        tools:text="도서를 선택해주세요"/>
+        android:textSize="@dimen/font_size_large"
+        tools:text="도서를 선택해주세요" />
 </LinearLayout>
