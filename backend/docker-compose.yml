@@ -16,11 +16,8 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=dev
     restart: always
-    depends_on:
-      db:
-        condition: service_healthy
     networks:
-      - dev-network
+      - dev_network
 
   promtail:
     container_name: promtail
@@ -33,24 +30,8 @@ services:
     command: -config.file=/etc/promtail/promtail.yml
     restart: always
     networks:
-      - dev-network
-
-  db:
-    image: mysql:8
-    container_name: mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: todoktodokdb
-      MYSQL_DATABASE: todoktodok_dev_db
-    ports:
-      - "3306:3306"
-    networks:
-      - dev-network
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-ptodoktodokdb"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
+      - dev_network
 
 networks:
-  dev-network:
-    driver: bridge
+  dev_network:
+    external: true
