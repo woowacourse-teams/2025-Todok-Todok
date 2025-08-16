@@ -8,8 +8,8 @@ spring:
   sql:
     init:
       mode: always
-      schema-locations: classpath:db/migration_dev/V1__init.sql
-      data-locations: classpath:db/seed_dev/V2__init.sql
+      schema-locations: classpath:db/local/schema.sql
+      data-locations: classpath:db/local/data.sql
   jpa:
     show-sql: true
     properties:
@@ -24,19 +24,3 @@ spring:
   config:
     activate:
       on-profile: local
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: prometheus
-  prometheus:
-    metrics:
-      export:
-        enabled: true
-  metrics:
-    distribution:
-      percentiles-histogram:
-        http:
-          server:
-            requests: true
