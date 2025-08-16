@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_gravity="center"
     android:orientation="vertical">
 
     <ImageView
@@ -14,6 +14,8 @@
 
     <TextView
         android:id="@+id/tv_empty_resource_title"
+        style="@style/HeaderTitleText"
+        android:fontFamily="@font/pretendard_bold"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
@@ -22,10 +24,22 @@
 
     <TextView
         android:id="@+id/tv_empty_resource_subtitle"
+        style="@style/BaseTextStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:textColor="@color/gray_66"
         android:textSize="@dimen/font_size_large"
-        tools:text="도서를 선택해주세요" />
+        tools:text="도서를 선택해주세요"/>
+
+    <TextView
+        android:id="@+id/tv_action"
+        style="@style/BaseTextStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:textColor="@color/gray_66"
+        android:textSize="@dimen/font_size_large"
+        tools:text="도서 선택하기"/>
+
 </LinearLayout>
