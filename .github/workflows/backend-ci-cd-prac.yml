@@ -60,6 +60,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
+          fetch-depth: 0
+          submodules: recursive
           token: ${{ secrets.SECRETS_SUBMODULE_ACCESS_TOKEN }}
 
       - name: Fix dev log permissions and clean
