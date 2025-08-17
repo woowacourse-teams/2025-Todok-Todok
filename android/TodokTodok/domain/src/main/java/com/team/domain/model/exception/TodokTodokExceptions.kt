@@ -7,12 +7,6 @@ import com.team.domain.model.exception.TodokTodokExceptions.SignUpException.Dupl
 import com.team.domain.model.exception.TodokTodokExceptions.SignUpException.InvalidFormatEmailException
 import com.team.domain.model.exception.TodokTodokExceptions.SignUpException.InvalidTokenException
 import com.team.domain.model.exception.TodokTodokExceptions.SignUpException.ProfileImageNotExistException
-import java.io.IOException
-import java.net.ConnectException
-import java.net.SocketException
-import java.net.UnknownHostException
-import java.util.concurrent.CancellationException
-import java.util.concurrent.TimeoutException
 
 /**
  * 애플리케이션에서 발생할 수 있는 네트워크/도메인 예외를 정의한 sealed class.
@@ -145,11 +139,11 @@ sealed class TodokTodokExceptions : Throwable() {
  */
 fun Throwable.toDomain(): TodokTodokExceptions =
     when (this) {
-        is ConnectException -> TodokTodokExceptions.ConnectException // 서버 연결 실패
-        is TimeoutException -> TodokTodokExceptions.TimeoutError // 요청 시간 초과
-        is UnknownHostException -> TodokTodokExceptions.UnknownHostError // 호스트를 찾을 수 없음
-        is SocketException -> TodokTodokExceptions.SocketException // 소켓 오류
-        is IOException -> TodokTodokExceptions.IOException // 일반 IO 예외
-        is CancellationException -> TodokTodokExceptions.CancellationException // 코루틴/작업 취소
+        is java.net.ConnectException -> TodokTodokExceptions.ConnectException // 서버 연결 실패
+        is java.util.concurrent.TimeoutException -> TodokTodokExceptions.TimeoutError // 요청 시간 초과
+        is java.net.UnknownHostException -> TodokTodokExceptions.UnknownHostError // 호스트를 찾을 수 없음
+        is java.net.SocketException -> TodokTodokExceptions.SocketException // 소켓 오류
+        is java.io.IOException -> TodokTodokExceptions.IOException // 일반 IO 예외
+        is kotlin.coroutines.cancellation.CancellationException -> TodokTodokExceptions.CancellationException // 코루틴/작업 취소
         else -> TodokTodokExceptions.UnknownException // 그 외 알 수 없는 예외
     }
