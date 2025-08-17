@@ -4,15 +4,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.team.domain.model.Book
 import com.team.domain.model.Discussion
-import com.team.domain.model.member.DiscussionRoom.Companion.DiscussionRoom
+import com.team.domain.model.DiscussionRoom.Companion.DiscussionRoom
 import com.team.domain.repository.BookRepository
 import com.team.domain.repository.DiscussionRepository
 import com.team.domain.repository.TokenRepository
 import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
 import com.team.todoktodok.presentation.core.event.SingleLiveData
 import com.team.todoktodok.presentation.view.discussion.create.CreateDiscussionUiEvent
+import com.team.todoktodok.presentation.view.discussion.create.CreateDiscussionUiState
 import com.team.todoktodok.presentation.view.discussion.create.ErrorCreateDiscussionType
 import com.team.todoktodok.presentation.view.discussion.create.SerializationCreateDiscussionRoomMode
 import kotlinx.coroutines.launch
@@ -23,19 +23,10 @@ class CreateDiscussionRoomViewModel(
     private val discussionRepository: DiscussionRepository,
     private val tokenRepository: TokenRepository,
 ) : ViewModel() {
-    private val _isCreate: MutableLiveData<Boolean> = MutableLiveData(false)
-    val isCreate: LiveData<Boolean> = _isCreate
-
-    private val _book: MutableLiveData<Book> = MutableLiveData()
-    val book: LiveData<Book> = _book
-
-    private val _title: MutableLiveData<String> = MutableLiveData()
-    val title: LiveData<String> = _title
-
-    private val _opinion: MutableLiveData<String> = MutableLiveData()
-    val opinion: LiveData<String> = _opinion
-
-    private var discussionRoomId: Long? = null
+    private val _uiState: MutableLiveData<CreateDiscussionUiState> = MutableLiveData(
+        CreateDiscussionUiState()
+    )
+    val uiState: LiveData<CreateDiscussionUiState> = _uiState
 
     private val _uiEvent: MutableSingleLiveData<CreateDiscussionUiEvent> = MutableSingleLiveData()
     val uiEvent: SingleLiveData<CreateDiscussionUiEvent> get() = _uiEvent
@@ -47,41 +38,39 @@ class CreateDiscussionRoomViewModel(
     private fun decideMode() {
         when (mode) {
             is SerializationCreateDiscussionRoomMode.Create -> {
-                _book.value = mode.selectedBook.toDomain()
+                _uiState.value = _uiState.value?.copy(book = mode.selectedBook.toDomain())
             }
 
             is SerializationCreateDiscussionRoomMode.Edit -> {
-                discussionRoomId = mode.discussionRoomId
+                _uiState.value = _uiState.value?.copy(discussionRoomId = mode.discussionRoomId)
                 getDiscussionRoom(mode.discussionRoomId)
             }
         }
     }
 
-    fun onTitleChanged(title: String) {
-        _title.value = title
-        _isCreate.value = title.isNotEmpty() && opinion.value?.isNotEmpty() == true
+    fun updateTitle(title: String) {
+        _uiState.value = _uiState.value?.copy(title = title)
     }
 
-    fun onOpinionChanged(opinion: String) {
-        _opinion.value = opinion
-        _isCreate.value = title.value?.isNotEmpty() == true && opinion.isNotEmpty()
+    fun updateOpinion(opinion: String) {
+        _uiState.value = _uiState.value?.copy(opinion = opinion)
     }
 
     fun createDiscussionRoom() {
         val book =
-            book.value
+            _uiState.value?.book
                 ?: run {
                     updateErrorCreateDiscussion(ErrorCreateDiscussionType.BOOK_INFO_NOT_FOUND)
                     return
                 }
         val title =
-            title.value
+            _uiState.value?.title
                 ?: run {
                     updateErrorCreateDiscussion(ErrorCreateDiscussionType.TITLE_NOT_FOUND)
                     return
                 }
         val opinion =
-            opinion.value
+            _uiState.value?.opinion
                 ?: run {
                     updateErrorCreateDiscussion(ErrorCreateDiscussionType.CONTENT_NOT_FOUND)
                     return
@@ -107,29 +96,31 @@ class CreateDiscussionRoomViewModel(
             if (result.writer.id != myMemberId) {
                 updateErrorCreateDiscussion(ErrorCreateDiscussionType.NOT_MY_DISCUSSION_ROOM)
             }
-            _book.value = result.book
-            _title.value = result.discussionTitle
-            _opinion.value = result.discussionOpinion
+            _uiState.value = _uiState.value?.copy(
+                book = result.book,
+                title = result.discussionTitle,
+                opinion = result.discussionOpinion
+            )
         }
     }
 
     fun editDiscussionRoom() {
         try {
             val discussionRoomId =
-                discussionRoomId ?: run {
+                _uiState.value?.discussionRoomId ?: run {
                     updateErrorCreateDiscussion(
                         ErrorCreateDiscussionType.DISCUSSION_ROOM_INFO_NOT_FOUND,
                     )
                     return
                 }
             val title =
-                title.value
+                _uiState.value?.title
                     ?: run {
                         updateErrorCreateDiscussion(ErrorCreateDiscussionType.TITLE_NOT_FOUND)
                         return
                     }
             val opinion =
-                opinion.value ?: run {
+                _uiState.value?.opinion ?: run {
                     updateErrorCreateDiscussion(
                         ErrorCreateDiscussionType.CONTENT_NOT_FOUND,
                     )

@@ -7,7 +7,6 @@ import android.text.Editable
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -15,6 +14,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.widget.doAfterTextChanged
+import com.google.android.material.snackbar.Snackbar
 import com.team.domain.model.Book
 import com.team.todoktodok.App
 import com.team.todoktodok.R
@@ -27,7 +27,6 @@ import com.team.todoktodok.presentation.view.discussion.create.vm.CreateDiscussi
 import com.team.todoktodok.presentation.view.discussiondetail.DiscussionDetailActivity
 
 class CreateDiscussionRoomActivity : AppCompatActivity() {
-    private val binding by lazy { ActivityCreateDiscussionRoomBinding.inflate(layoutInflater) }
     private val mode by lazy {
         intent.getParcelableCompat<SerializationCreateDiscussionRoomMode>(
             EXTRA_MODE,
@@ -45,10 +44,12 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val binding = ActivityCreateDiscussionRoomBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        initSystemBar()
-        initView()
-        setupObserve()
+        initSystemBar(binding)
+        initView(binding)
+        setupUiState(binding)
+        setupUiEvent(binding)
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
@@ -58,7 +59,7 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
         return super.dispatchTouchEvent(ev)
     }
 
-    private fun initSystemBar() {
+    private fun initSystemBar(binding: ActivityCreateDiscussionRoomBinding) {
         enableEdgeToEdge()
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -72,47 +73,48 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
         }
     }
 
-    private fun initView() {
+    private fun initView(binding: ActivityCreateDiscussionRoomBinding) {
         binding.apply {
+            when (mode) {
+                is SerializationCreateDiscussionRoomMode.Create -> settingCreateMode(binding)
+                is SerializationCreateDiscussionRoomMode.Edit -> settingEditMode(binding)
+            }
             btnCreate.isEnabled = false
             btnBack.setOnClickListener { finish() }
-            btnEdit.setOnClickListener {
-                navigateToSelectBook()
-            }
+            btnEdit.setOnClickListener { navigateToSelectBook() }
             etDiscussionRoomTitle.doAfterTextChanged { text: Editable? ->
-                viewModel.onTitleChanged(text.toString())
+                viewModel.updateTitle(text.toString())
             }
             etDiscussionRoomOpinion.doAfterTextChanged { text: Editable? ->
-                viewModel.onOpinionChanged(text.toString())
+                viewModel.updateOpinion(text.toString())
             }
-            when (mode) {
-                is SerializationCreateDiscussionRoomMode.Create -> settingCreateMode()
-                is SerializationCreateDiscussionRoomMode.Edit -> settingEditMode()
-            }
+            etDiscussionRoomTitle.requestFocus()
         }
     }
 
-    private fun settingCreateMode() {
+    private fun settingCreateMode(binding: ActivityCreateDiscussionRoomBinding) {
         binding.btnCreate.setOnClickListener {
             viewModel.createDiscussionRoom()
         }
     }
 
-    private fun settingEditMode() {
+    private fun settingEditMode(binding: ActivityCreateDiscussionRoomBinding) {
         binding.apply {
             tvCreateDiscussionRoomTitle.text =
                 getString(R.string.edit_discussion_room_title)
             btnEdit.visibility = View.INVISIBLE
-            etDiscussionRoomTitle.setText(viewModel.title.value)
-            etDiscussionRoomOpinion.setText(viewModel.opinion.value)
             btnCreate.apply {
                 text = getString(R.string.edit)
                 setOnClickListener {
                     viewModel.editDiscussionRoom()
                 }
+            etDiscussionRoomTitle.setText(viewModel.uiState.value?.title)
+            etDiscussionRoomOpinion.setText(viewModel.uiState.value?.opinion)
+            btnCreate.setOnClickListener {
+                viewModel.editDiscussionRoom()
             }
         }
-    }
+    }}
 
     private fun navigateToSelectBook() {
         val intent = SelectBookActivity.Intent(this@CreateDiscussionRoomActivity)
@@ -120,80 +122,65 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
         finish()
     }
 
-    private fun setupObserve() {
-        observeBook()
-        observeUiEvent()
-        observeTitle()
-        observeOpinion()
-        observeIsCreate()
-    }
-
-    private fun observeIsCreate() {
-        viewModel.isCreate.observe(this@CreateDiscussionRoomActivity) { isCreate: Boolean ->
-            if (isCreate) {
-                binding.btnCreate.isEnabled = true
-                binding.btnCreate.setTextColor(
-                    ContextCompat.getColor(
-                        this@CreateDiscussionRoomActivity,
-                        R.color.green_1A,
-                    ),
-                )
-            }
+    private fun setupUiState(binding: ActivityCreateDiscussionRoomBinding) {
+        viewModel.uiState.observe(this@CreateDiscussionRoomActivity) { uiState: CreateDiscussionUiState ->
+            observeBook(uiState.book, binding)
+            observeTitle(uiState.title, binding)
+            observeOpinion(uiState.opinion, binding)
+            observeIsCreate(uiState.isCreate, binding)
         }
     }
 
-    private fun observeOpinion() {
-        viewModel.opinion.observe(this@CreateDiscussionRoomActivity) { opinion ->
-            if (binding.etDiscussionRoomOpinion.text.toString() != opinion) {
-                binding.etDiscussionRoomOpinion.setText(opinion)
-            }
+    private fun observeIsCreate(isCreate: Boolean, binding: ActivityCreateDiscussionRoomBinding) {
+        if (isCreate) {
+            binding.btnCreate.isEnabled = true
+            binding.btnCreate.setTextColor(
+                ContextCompat.getColor(
+                    this@CreateDiscussionRoomActivity,
+                    R.color.green_1A,
+                ),
+            )
         }
     }
 
-    private fun observeTitle() {
-        viewModel.title.observe(this@CreateDiscussionRoomActivity) { title ->
-            if (binding.etDiscussionRoomTitle.text.toString() != title) {
-                binding.etDiscussionRoomTitle.setText(title)
-            }
+    private fun observeOpinion(opinion: String, binding: ActivityCreateDiscussionRoomBinding) {
+        if (binding.etDiscussionRoomOpinion.text.toString() != opinion) {
+            binding.etDiscussionRoomOpinion.setText(opinion)
         }
     }
 
-    private fun observeBook() {
-        viewModel.book.observe(this@CreateDiscussionRoomActivity) { book: Book ->
-            binding.tvBookTitle.text = book.title
-            binding.tvBookAuthor.text = book.author
-            binding.ivBookImage.loadImage(book.image)
+    private fun observeTitle(title: String, binding: ActivityCreateDiscussionRoomBinding) {
+        if (binding.etDiscussionRoomTitle.text.toString() != title) {
+            binding.etDiscussionRoomTitle.setText(title)
         }
     }
 
-    private fun observeUiEvent() {
+    private fun observeBook(book: Book?, binding: ActivityCreateDiscussionRoomBinding) {
+        binding.tvBookTitle.text = book?.title
+        binding.tvBookAuthor.text = book?.author
+        binding.ivBookImage.loadImage(book?.image)
+    }
+
+    private fun setupUiEvent(binding: ActivityCreateDiscussionRoomBinding) {
         viewModel.uiEvent.observe(this@CreateDiscussionRoomActivity) { event ->
             when (event) {
                 is CreateDiscussionUiEvent.NavigateToDiscussionDetail ->
-                    navigateToDiscussionDetail(
-                        event,
-                    )
+                    navigateToDiscussionDetail(event.discussionRoomId)
 
                 is CreateDiscussionUiEvent.ShowToast -> {
-                    val message =
-                        getErrorMessage(event)
-                    Toast
-                        .makeText(
-                            this@CreateDiscussionRoomActivity,
-                            message,
-                            Toast.LENGTH_LONG,
-                        ).show()
+                    Snackbar
+                        .make(binding.root, getString(event.error.id), Snackbar.LENGTH_LONG)
+                        .show()
                 }
             }
         }
     }
 
-    private fun getErrorMessage(event: CreateDiscussionUiEvent.ShowToast) = event.error.id
-    private fun navigateToDiscussionDetail(event: CreateDiscussionUiEvent.NavigateToDiscussionDetail) {
+    private fun navigateToDiscussionDetail(discussionRoomId: Long) {
         val intent =
             DiscussionDetailActivity.Intent(
                 this@CreateDiscussionRoomActivity,
-                event.discussionRoomId,
+                discussionRoomId,
             )
         startActivity(intent)
         finish()
