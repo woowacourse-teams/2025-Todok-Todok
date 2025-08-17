@@ -59,9 +59,7 @@ jobs:
     steps:
       - name: Fix permissions before checkout
         run: |
-          sudo rm -rf backend/log/dev/* || true
-          sudo mkdir -p backend/log/dev
-          sudo chown -R ubuntu:ubuntu backend/log/dev
+          sudo rm -rf backend/log/dev || true
 
       - name: Checkout repository
         uses: actions/checkout@v4
