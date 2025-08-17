@@ -3,6 +3,7 @@ package com.team.todoktodok.data.repository
 import com.team.domain.model.Book
 import com.team.domain.model.Member
 import com.team.domain.model.Support
+import com.team.domain.model.exception.NetworkResult
 import com.team.domain.model.member.BlockedMember
 import com.team.domain.model.member.MemberDiscussion
 import com.team.domain.model.member.MemberDiscussionType
@@ -25,7 +26,7 @@ class DefaultMemberRepository(
         email: String,
         nickname: String,
         profileImage: String,
-    ): MemberType {
+    ): NetworkResult<MemberType> {
         cachedMember = Member(nickname, profileImage, email)
 
         return remoteMemberRemoteDataSource.login(email)

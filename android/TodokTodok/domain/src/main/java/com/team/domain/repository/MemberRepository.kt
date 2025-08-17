@@ -2,6 +2,7 @@ package com.team.domain.repository
 
 import com.team.domain.model.Book
 import com.team.domain.model.Support
+import com.team.domain.model.exception.NetworkResult
 import com.team.domain.model.member.BlockedMember
 import com.team.domain.model.member.MemberDiscussion
 import com.team.domain.model.member.MemberDiscussionType
@@ -14,7 +15,7 @@ interface MemberRepository {
         email: String,
         nickname: String,
         profileImage: String,
-    ): MemberType
+    ): NetworkResult<MemberType>
 
     suspend fun signUp(nickname: String)
 
