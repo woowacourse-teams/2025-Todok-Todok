@@ -14,5 +14,9 @@ suspend fun <R, T> Response<T>.extractAccessToken(onTokenReceived: suspend (toke
         headers()[AUTHORIZATION_NAME]
             ?: return NetworkResult.Failure(TokdokTodokExceptions.MissingLocationHeaderException)
 
-    return NetworkResult.Success(onTokenReceived(accessToken))
+    return runCatching {
+        NetworkResult.Success(onTokenReceived(accessToken))
+    }.getOrElse {
+        NetworkResult.Failure(TokdokTodokExceptions.UnknownException)
+    }
 }
