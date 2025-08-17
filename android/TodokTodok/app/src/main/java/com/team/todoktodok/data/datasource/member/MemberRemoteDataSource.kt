@@ -17,7 +17,7 @@ interface MemberRemoteDataSource {
 
     suspend fun signUp(request: SignUpRequest): NetworkResult<Unit>
 
-    suspend fun fetchProfile(request: MemberId): ProfileResponse
+    suspend fun fetchProfile(request: MemberId): NetworkResult<ProfileResponse>
 
     suspend fun fetchMemberDiscussionRooms(
         request: MemberId,

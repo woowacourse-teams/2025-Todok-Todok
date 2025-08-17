@@ -1,5 +1,6 @@
 package com.team.todoktodok.data.network.service
 
+import com.team.domain.model.exception.NetworkResult
 import com.team.todoktodok.data.network.request.LoginRequest
 import com.team.todoktodok.data.network.request.ModifyProfileRequest
 import com.team.todoktodok.data.network.request.SignUpRequest
@@ -31,7 +32,7 @@ interface MemberService {
     @GET("v1/members/{memberId}/profile")
     suspend fun fetchProfile(
         @Path("memberId") memberId: Long,
-    ): ProfileResponse
+    ): NetworkResult<ProfileResponse>
 
     @GET("v1/members/{memberId}/discussions")
     suspend fun fetchMemberDiscussionRooms(

@@ -97,13 +97,32 @@ class DefaultMemberRemoteDataSourceTest {
             val memberId = MemberId.OtherUser(1L)
             val profileResponse = mockk<ProfileResponse>()
 
-            coEvery { memberService.fetchProfile(memberId.id) } returns profileResponse
+            coEvery { memberService.fetchProfile(memberId.id) } returns
+                NetworkResult.Success(
+                    profileResponse,
+                )
 
             // when
             val result = dataSource.fetchProfile(memberId)
 
             // then
-            assertEquals(profileResponse, result)
+            assertEquals(NetworkResult.Success(profileResponse), result)
+        }
+
+    @Test
+    fun `유저 정보 API 호출 시 실패하면 Failure를 반환한다`() =
+        runTest {
+            // given
+            val memberId = 2L
+            val exception = TokdokTodokExceptions.UnknownException
+            coEvery { tokenDataSource.getMemberId() } returns memberId
+            coEvery { memberService.fetchProfile(memberId) } returns NetworkResult.Failure(exception)
+
+            // when
+            val result = dataSource.fetchProfile(MemberId.Mine)
+
+            // then
+            assertEquals(NetworkResult.Failure(exception), result)
         }
 
     @Test
@@ -113,13 +132,16 @@ class DefaultMemberRemoteDataSourceTest {
             val memberId = 2L
             val profileResponse = mockk<ProfileResponse>()
             coEvery { tokenDataSource.getMemberId() } returns memberId
-            coEvery { memberService.fetchProfile(memberId) } returns profileResponse
+            coEvery { memberService.fetchProfile(memberId) } returns
+                NetworkResult.Success(
+                    profileResponse,
+                )
 
             // when
             val result = dataSource.fetchProfile(MemberId.Mine)
 
             // then
-            assertEquals(profileResponse, result)
+            assertEquals(NetworkResult.Success(profileResponse), result)
         }
 
     @Test
@@ -133,7 +155,8 @@ class DefaultMemberRemoteDataSourceTest {
             coEvery { memberService.fetchMemberDiscussionRooms(memberId.id, type) } returns response
 
             // when
-            val result = dataSource.fetchMemberDiscussionRooms(memberId, MemberDiscussionType.CREATED)
+            val result =
+                dataSource.fetchMemberDiscussionRooms(memberId, MemberDiscussionType.CREATED)
 
             // then
             assertEquals(response, result)
@@ -148,7 +171,12 @@ class DefaultMemberRemoteDataSourceTest {
             val response = mockk<List<MemberDiscussionResponse>>()
 
             coEvery { tokenDataSource.getMemberId() } returns memberId
-            coEvery { memberService.fetchMemberDiscussionRooms(memberId, type.name) } returns response
+            coEvery {
+                memberService.fetchMemberDiscussionRooms(
+                    memberId,
+                    type.name,
+                )
+            } returns response
 
             // when
             val result = dataSource.fetchMemberDiscussionRooms(MemberId.Mine, type)

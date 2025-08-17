@@ -19,7 +19,7 @@ interface MemberRepository {
 
     suspend fun signUp(nickname: String): NetworkResult<Unit>
 
-    suspend fun getProfile(id: MemberId): Profile
+    suspend fun getProfile(id: MemberId): NetworkResult<Profile>
 
     suspend fun getMemberDiscussionRooms(
         id: MemberId,

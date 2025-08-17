@@ -5,6 +5,7 @@ import com.team.domain.model.Member
 import com.team.domain.model.Support
 import com.team.domain.model.exception.NetworkResult
 import com.team.domain.model.exception.TokdokTodokExceptions
+import com.team.domain.model.exception.map
 import com.team.domain.model.member.BlockedMember
 import com.team.domain.model.member.MemberDiscussion
 import com.team.domain.model.member.MemberDiscussionType
@@ -39,7 +40,8 @@ class DefaultMemberRepository(
             remoteMemberRemoteDataSource.signUp(request)
         } ?: NetworkResult.Failure(TokdokTodokExceptions.SignUpException.InvalidTokenException)
 
-    override suspend fun getProfile(id: MemberId): Profile = remoteMemberRemoteDataSource.fetchProfile(id).toDomain()
+    override suspend fun getProfile(id: MemberId): NetworkResult<Profile> =
+        remoteMemberRemoteDataSource.fetchProfile(id).map { it.toDomain() }
 
     override suspend fun getMemberDiscussionRooms(
         id: MemberId,

@@ -60,7 +60,7 @@ class DefaultMemberRemoteDataSource(
         tokenDataSource.saveToken(accessToken = accessToken, memberId = memberId)
     }
 
-    override suspend fun fetchProfile(request: MemberId): ProfileResponse {
+    override suspend fun fetchProfile(request: MemberId): NetworkResult<ProfileResponse> {
         val memberId = adjustMemberType(request)
         return memberService.fetchProfile(memberId)
     }
