@@ -18,8 +18,13 @@ import com.team.todoktodok.databinding.FragmentCommentCreateBottomSheetBinding
 import com.team.todoktodok.presentation.view.discussiondetail.BottomSheetVisibilityListener
 import com.team.todoktodok.presentation.view.discussiondetail.commentcreate.vm.CommentCreateViewModel
 import com.team.todoktodok.presentation.view.discussiondetail.commentcreate.vm.CommentCreateViewModelFactory
+import com.team.todoktodok.presentation.view.discussiondetail.comments.vm.CommentsViewModel
 
 class CommentCreateBottomSheet : BottomSheetDialogFragment(R.layout.fragment_comment_create_bottom_sheet) {
+    private val commentsViewModel by viewModels<CommentsViewModel>(
+        ownerProducer = { requireActivity() },
+    )
+
     private val viewModel by viewModels<CommentCreateViewModel> {
         val repositoryModule = (requireActivity().application as App).container.repositoryModule
         CommentCreateViewModelFactory(
@@ -49,28 +54,19 @@ class CommentCreateBottomSheet : BottomSheetDialogFragment(R.layout.fragment_com
     ) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentCommentCreateBottomSheetBinding.bind(view)
-        initView(binding)
         setupOnClickAddComment(binding)
         setupOnChangeComment(binding)
         setupObserve(binding)
+        viewModel.initUiState()
     }
 
     override fun onDismiss(dialog: DialogInterface) {
-        super.onDismiss(dialog)
+        viewModel.saveContent()
         visibilityListener?.onBottomSheetDismissed()
+        super.onDismiss(dialog)
     }
 
     override fun getTheme(): Int = R.style.BottomSheetDialogTheme
-
-    private fun initView(binding: FragmentCommentCreateBottomSheetBinding) {
-        with(binding) {
-            etTextCommentContent.requestFocus()
-            etTextCommentContent.setText(viewModel.commentContent)
-            val imm =
-                requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.showSoftInput(etTextCommentContent, InputMethodManager.SHOW_IMPLICIT)
-        }
-    }
 
     private fun setupOnClickAddComment(binding: FragmentCommentCreateBottomSheetBinding) {
         with(binding) {
@@ -84,19 +80,41 @@ class CommentCreateBottomSheet : BottomSheetDialogFragment(R.layout.fragment_com
 
     private fun setupObserve(binding: FragmentCommentCreateBottomSheetBinding) {
         viewModel.uiEvent.observe(viewLifecycleOwner) { value ->
-            handleUiEvent(value)
+            handleUiEvent(value, binding)
         }
         viewModel.commentText.observe(viewLifecycleOwner) { value ->
             binding.ivAddComment.isEnabled = value.isNotBlank()
         }
     }
 
-    private fun handleUiEvent(uiEvent: CommentCreateUiEvent) {
+    private fun handleUiEvent(
+        uiEvent: CommentCreateUiEvent,
+        binding: FragmentCommentCreateBottomSheetBinding,
+    ) {
         when (uiEvent) {
             is CommentCreateUiEvent.SubmitComment -> {
                 setFragmentResult(COMMENT_REQUEST_KEY, bundleOf(COMMENT_CREATED_RESULT_KEY to true))
                 dismiss()
             }
+
+            is CommentCreateUiEvent.InitState -> {
+                initContentInputState(binding)
+            }
+
+            is CommentCreateUiEvent.OnCreateDismiss -> {
+                commentsViewModel.updateCommentContent(uiEvent.content)
+            }
+        }
+    }
+
+    private fun initContentInputState(binding: FragmentCommentCreateBottomSheetBinding) {
+        with(binding) {
+            etTextCommentContent.requestFocus()
+            val commentContent = viewModel.commentText.value ?: ""
+            etTextCommentContent.setText(commentContent)
+            val imm =
+                requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.showSoftInput(etTextCommentContent, InputMethodManager.SHOW_IMPLICIT)
         }
     }
 

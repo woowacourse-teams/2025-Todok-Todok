@@ -16,16 +16,19 @@ import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentCommentCreateBottomSheetBinding
 import com.team.todoktodok.presentation.view.discussiondetail.BottomSheetVisibilityListener
+import com.team.todoktodok.presentation.view.discussiondetail.commentdetail.vm.CommentDetailViewModel
 import com.team.todoktodok.presentation.view.discussiondetail.replycreate.vm.ReplyCreateViewModel
 import com.team.todoktodok.presentation.view.discussiondetail.replycreate.vm.ReplyCreateViewModelFactory
 
 class ReplyCreateBottomSheet : BottomSheetDialogFragment(R.layout.fragment_comment_create_bottom_sheet) {
     private val viewModel by viewModels<ReplyCreateViewModel> {
-        val repositoryModule = (requireActivity().application as App).container.repositoryModule
-        ReplyCreateViewModelFactory(
-            repositoryModule.replyRepository,
-        )
+        val repoModule = (requireActivity().application as App).container.repositoryModule
+        ReplyCreateViewModelFactory(repoModule.replyRepository)
     }
+
+    private val commentDetailViewModel by viewModels<CommentDetailViewModel>(
+        ownerProducer = { requireParentFragment().requireParentFragment() },
+    )
 
     private var visibilityListener: BottomSheetVisibilityListener? = null
 
@@ -56,8 +59,9 @@ class ReplyCreateBottomSheet : BottomSheetDialogFragment(R.layout.fragment_comme
     }
 
     override fun onDismiss(dialog: DialogInterface) {
-        super.onDismiss(dialog)
+        viewModel.saveReply()
         visibilityListener?.onBottomSheetDismissed()
+        super.onDismiss(dialog)
     }
 
     override fun getTheme(): Int = R.style.BottomSheetDialogTheme
@@ -65,7 +69,9 @@ class ReplyCreateBottomSheet : BottomSheetDialogFragment(R.layout.fragment_comme
     private fun initView(binding: FragmentCommentCreateBottomSheetBinding) {
         with(binding) {
             etTextCommentContent.requestFocus()
-            etTextCommentContent.setText(viewModel.content)
+            val content = viewModel.replyContent.value ?: ""
+            etTextCommentContent.setText(content)
+            viewModel.onReplyChanged(content)
             val imm =
                 requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.showSoftInput(etTextCommentContent, InputMethodManager.SHOW_IMPLICIT)
@@ -99,6 +105,10 @@ class ReplyCreateBottomSheet : BottomSheetDialogFragment(R.layout.fragment_comme
                     bundleOf(REPLY_CREATED_RESULT_KEY to true),
                 )
                 dismiss()
+            }
+
+            is ReplyCreateUiEvent.SaveContent -> {
+                commentDetailViewModel.updateContent(uiEvent.content)
             }
         }
     }
