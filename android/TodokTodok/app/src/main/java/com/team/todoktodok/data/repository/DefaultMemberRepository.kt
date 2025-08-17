@@ -4,8 +4,8 @@ import com.team.domain.model.Book
 import com.team.domain.model.Member
 import com.team.domain.model.Support
 import com.team.domain.model.exception.NetworkResult
-import com.team.domain.model.exception.TokdokTodokExceptions
 import com.team.domain.model.exception.map
+import com.team.domain.model.exception.TodokTodokExceptions
 import com.team.domain.model.member.BlockedMember
 import com.team.domain.model.member.MemberDiscussion
 import com.team.domain.model.member.MemberDiscussionType
@@ -38,7 +38,7 @@ class DefaultMemberRepository(
         cachedMember?.let {
             val request = it.copy(nickName = nickname).toRequest()
             remoteMemberRemoteDataSource.signUp(request)
-        } ?: NetworkResult.Failure(TokdokTodokExceptions.SignUpException.InvalidTokenException)
+        } ?: NetworkResult.Failure(TodokTodokExceptions.SignUpException.InvalidTokenException)
 
     override suspend fun getProfile(id: MemberId): NetworkResult<Profile> =
         remoteMemberRemoteDataSource.fetchProfile(id).map { it.toDomain() }
@@ -69,13 +69,7 @@ class DefaultMemberRepository(
     ) = remoteMemberRemoteDataSource.modifyProfile(ModifyProfileRequest(nickname, message))
 
     override suspend fun getBlockedMembers(): List<BlockedMember> {
-        // remoteMemberRemoteDataSource.fetchBlockedMembers().map { it.toDomain() }
-        return listOf(
-            BlockedMember(0, "페토", LocalDate.of(2025, 2, 3)),
-            BlockedMember(1, "페토", LocalDate.of(2025, 2, 3)),
-            BlockedMember(2, "페토", LocalDate.of(2025, 2, 3)),
-            BlockedMember(3, "페토", LocalDate.of(2025, 2, 3)),
-        )
+        remoteMemberRemoteDataSource.fetchBlockedMembers().map { it.toDomain() }
     }
 
     override suspend fun unblock(id: Long) = remoteMemberRemoteDataSource.unblock(id)
