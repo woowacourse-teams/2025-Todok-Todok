@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
@@ -16,6 +17,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentLoginBinding
+import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.view.auth.signup.SignUpFragment
 import com.team.todoktodok.presentation.view.auth.vm.AuthViewModel
 import com.team.todoktodok.presentation.view.auth.vm.AuthViewModelFactory
@@ -24,6 +26,7 @@ import kotlinx.coroutines.launch
 
 class LoginFragment : Fragment(R.layout.fragment_login) {
     private lateinit var googleLoginManager: GoogleLoginManager
+    private lateinit var messageConverter: ExceptionMessageConverter
     private val viewModel: AuthViewModel by viewModels {
         val repositoryModule = (requireActivity().application as App).container.repositoryModule
         AuthViewModelFactory(
@@ -39,6 +42,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentLoginBinding.bind(view)
         googleLoginManager = GoogleLoginManager(requireContext())
+        messageConverter = ExceptionMessageConverter()
 
         setUpUiEvent(binding)
         showAnimation(binding)
@@ -94,6 +98,14 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                 LoginUiEvent.NavigateToMain -> moveToMain()
                 LoginUiEvent.NavigateToSignUp -> moveToSignUp()
                 LoginUiEvent.ShowLoginButton -> showLoginButton(binding)
+                is LoginUiEvent.ShowErrorMessage -> {
+                    Toast
+                        .makeText(
+                            requireContext(),
+                            messageConverter(it.exception),
+                            Toast.LENGTH_SHORT,
+                        ).show()
+                }
             }
         }
     }
