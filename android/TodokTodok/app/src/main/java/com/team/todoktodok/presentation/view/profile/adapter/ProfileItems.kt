@@ -6,7 +6,9 @@ import java.lang.IllegalArgumentException
 sealed class ProfileItems(
     val viewType: ViewType,
 ) {
-    data object HeaderItem : ProfileItems(ViewType.HEADER)
+    data class HeaderItem(
+        val isMyProfile: Boolean,
+    ) : ProfileItems(ViewType.HEADER)
 
     data class InformationItem(
         val value: Profile,

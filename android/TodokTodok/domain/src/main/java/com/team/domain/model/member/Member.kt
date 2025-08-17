@@ -1,4 +1,4 @@
-package com.team.domain.model
+package com.team.domain.model.member
 
 data class Member(
     val nickName: String,

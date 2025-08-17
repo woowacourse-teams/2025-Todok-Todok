@@ -64,8 +64,9 @@ class UserInformationViewHolder private constructor(
     fun bind(item: ProfileItems.InformationItem) {
         val content = item.value
         with(binding) {
-            if (item.isMyProfile) ivReport.visibility = View.GONE
+            val reportButtonVisibility = if (item.isMyProfile) View.GONE else View.VISIBLE
 
+            ivReport.visibility = reportButtonVisibility
             tvNickname.text = content.nickname
 
             tvDescription.text = content.message ?: itemView.context.getString(R.string.profile_message_placeholder)

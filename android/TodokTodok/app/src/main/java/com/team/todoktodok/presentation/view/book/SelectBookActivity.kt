@@ -97,70 +97,76 @@ class SelectBookActivity : AppCompatActivity() {
         }
 
     private fun setupUiEvent() {
-        viewModel.uiState.observe(this) {
-            if (it.searchedBooks.items.isEmpty()) {
-                binding.nsvEmptySearchResult.visibility = View.VISIBLE
-                binding.rvSearchedBooks.visibility = View.GONE
-            } else {
-                binding.nsvEmptySearchResult.visibility = View.GONE
-                binding.rvSearchedBooks.visibility = View.VISIBLE
-            }
+        viewModel.uiState.observe(this) { state: SelectBookUiState ->
+            dealWithUiState(state)
         }
         viewModel.uiEvent.observe(this) { event ->
-            when (event) {
-                is SelectBookUiEvent.StartLoading -> {
-                    // 로딩 중 스페너 넣기
-                }
+            dealWithUiEvent(event)
+        }
+    }
 
-                is SelectBookUiEvent.FinishLoading -> {
-                    // 로딩 중 스페너 치우기
-                }
+    private fun dealWithUiState(state: SelectBookUiState) {
+        if (state.searchedBooks.size == IS_EMPTY_SEARCH_RESULT) {
+            binding.nsvEmptySearchResult.visibility = View.VISIBLE
+            binding.rvSearchedBooks.visibility = View.GONE
+        } else {
+            binding.nsvEmptySearchResult.visibility = View.GONE
+            binding.rvSearchedBooks.visibility = View.VISIBLE
+        }
+        if (state.isLoading) {
+            binding.progressBar.visibility = View.VISIBLE
+            binding.nsvEmptySearchResult.visibility = View.GONE
+        } else {
+            binding.progressBar.visibility = View.GONE
+        }
+    }
 
-                is SelectBookUiEvent.NavigateToCreateDiscussionRoom -> {
-                    val book = event.book.toSerialization()
-                    val intent =
-                        CreateDiscussionRoomActivity.Intent(
-                            this,
-                            SerializationCreateDiscussionRoomMode.Create(book),
-                        )
-                    startActivity(intent)
-                    finish()
-                }
+    private fun dealWithUiEvent(event: SelectBookUiEvent) {
+        when (event) {
+            is SelectBookUiEvent.NavigateToCreateDiscussionRoom -> {
+                val book = event.book.toSerialization()
+                val intent =
+                    CreateDiscussionRoomActivity.Intent(
+                        this,
+                        SerializationCreateDiscussionRoomMode.Create(book),
+                    )
+                startActivity(intent)
+                finish()
+            }
 
-                is SelectBookUiEvent.HideKeyboard -> {
-                    binding.etSearchKeyword.clearFocus()
-                    hideKeyBoard(binding.etSearchKeyword)
-                }
+            is SelectBookUiEvent.HideKeyboard -> {
+                binding.etSearchKeyword.clearFocus()
+                hideKeyBoard(binding.etSearchKeyword)
+            }
 
-                is SelectBookUiEvent.RevealKeyboard -> {
-                    binding.etSearchKeyword.requestFocus()
-                }
+            is SelectBookUiEvent.RevealKeyboard -> {
+                binding.etSearchKeyword.requestFocus()
+            }
 
-                is SelectBookUiEvent.ShowToast -> {
-                    val message: String =
-                        when (event.error) {
-                            ErrorSelectBookType.ERROR_NO_SELECTED_BOOK -> {
-                                getString(R.string.error_no_selected_book)
-                            }
-
-                            ErrorSelectBookType.ERROR_NETWORK -> {
-                                getString(R.string.error_network)
-                            }
-
-                            ErrorSelectBookType.ERROR_EMPTY_KEYWORD -> {
-                                getString(R.string.error_empty_keyword)
-                            }
-
-                            ErrorSelectBookType.ERROR_DELETE_KEYWORD -> {
-                                getString(R.string.error_delete_keyword)
-                            }
+            is SelectBookUiEvent.ShowToast -> {
+                val message: String =
+                    when (event.error) {
+                        ErrorSelectBookType.ERROR_NO_SELECTED_BOOK -> {
+                            getString(R.string.error_no_selected_book)
                         }
-                    Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-                }
 
-                is SelectBookUiEvent.ShowSearchResult -> {
-                    adapter.submitList(event.books.items)
-                }
+                        ErrorSelectBookType.ERROR_NETWORK -> {
+                            getString(R.string.error_network)
+                        }
+
+                        ErrorSelectBookType.ERROR_EMPTY_KEYWORD -> {
+                            getString(R.string.error_empty_keyword)
+                        }
+
+                        ErrorSelectBookType.ERROR_DELETE_KEYWORD -> {
+                            getString(R.string.error_delete_keyword)
+                        }
+                    }
+                Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+            }
+
+            is SelectBookUiEvent.ShowSearchResult -> {
+                adapter.submitList(event.books.items)
             }
         }
     }
@@ -192,6 +198,8 @@ class SelectBookActivity : AppCompatActivity() {
     }
 
     companion object {
+        private const val IS_EMPTY_SEARCH_RESULT: Int = 0
+
         fun Intent(context: Context): Intent = Intent(context, SelectBookActivity::class.java)
     }
 }

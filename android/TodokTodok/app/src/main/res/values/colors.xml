@@ -5,12 +5,15 @@
     <color name="green_1A">#1AB25D</color>
     <color name="green_63">#638773</color>
     <color name="green_73">#738764</color>
-    <color name="gray_e0">#E0E0E0</color>
+    <color name="gray_83">#838383</color>
+	<color name="gray_e0">#E0E0E0</color>
     <color name="gray_76">#767676</color>
     <color name="gray_66">#666666</color>
     <color name="gray_9F">#9FA1A6</color>
+    <color name="gray_E8">#E8E8E8</color>
     <color name="gray_ED">#EDEDED</color>
     <color name="black_18">#181A1A</color>
+    <color name="black_32">#323232</color>
     <color name="green_70">#1A708764</color>
     <color name="red_FF">#FF0000</color>
 </resources>
