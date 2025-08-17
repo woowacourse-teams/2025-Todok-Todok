@@ -65,5 +65,7 @@ class ExceptionMessageConverter {
 
             is TodokTodokExceptions.UnknownHostError ->
                 R.string.error_no_internet
+
+            TodokTodokExceptions.EmptyBodyException -> TODO()
         }
 }
