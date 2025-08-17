@@ -6,7 +6,7 @@ sealed class NetworkResult<out T> {
     ) : NetworkResult<T>()
 
     data class Failure(
-        val exception: TokdokTodokExceptions,
+        val exception: TodokTodokExceptions,
     ) : NetworkResult<Nothing>()
 }
 
@@ -21,7 +21,7 @@ fun <T> NetworkResult<T>.onSuccess(action: (T) -> Unit): NetworkResult<T> =
         }
     }
 
-fun <T> NetworkResult<T>.onFailure(action: (TokdokTodokExceptions) -> Unit): NetworkResult<T> =
+fun <T> NetworkResult<T>.onFailure(action: (TodokTodokExceptions) -> Unit): NetworkResult<T> =
     when (this) {
         is NetworkResult.Success<T> -> {
             this

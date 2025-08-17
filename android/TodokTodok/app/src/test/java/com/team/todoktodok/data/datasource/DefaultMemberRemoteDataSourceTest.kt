@@ -2,7 +2,7 @@ package com.team.todoktodok.data.datasource
 
 import com.team.domain.model.Support
 import com.team.domain.model.exception.NetworkResult
-import com.team.domain.model.exception.TokdokTodokExceptions
+import com.team.domain.model.exception.TodokTodokExceptions
 import com.team.domain.model.member.MemberDiscussionType
 import com.team.domain.model.member.MemberId
 import com.team.domain.model.member.MemberType
@@ -87,7 +87,7 @@ class DefaultMemberRemoteDataSourceTest {
             assertTrue(result is NetworkResult.Failure)
 
             val failure = result as NetworkResult.Failure
-            assertTrue(failure.exception is TokdokTodokExceptions.MissingLocationHeaderException)
+            assertTrue(failure.exception is TodokTodokExceptions.MissingLocationHeaderException)
         }
 
     @Test

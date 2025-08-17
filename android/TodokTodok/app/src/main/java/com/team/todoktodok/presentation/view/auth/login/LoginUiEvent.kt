@@ -1,6 +1,6 @@
 package com.team.todoktodok.presentation.view.auth.login
 
-import com.team.domain.model.exception.TokdokTodokExceptions
+import com.team.domain.model.exception.TodokTodokExceptions
 
 sealed interface LoginUiEvent {
     data object ShowLoginButton : LoginUiEvent
@@ -10,6 +10,6 @@ sealed interface LoginUiEvent {
     data object NavigateToSignUp : LoginUiEvent
 
     data class ShowErrorMessage(
-        val exception: TokdokTodokExceptions,
+        val exception: TodokTodokExceptions,
     ) : LoginUiEvent
 }

@@ -1,7 +1,7 @@
 package com.team.todoktodok.data.network.adapter
 
 import com.team.domain.model.exception.NetworkResult
-import com.team.domain.model.exception.TokdokTodokExceptions
+import com.team.domain.model.exception.TodokTodokExceptions
 import com.team.domain.model.exception.toDomain
 import kotlinx.serialization.json.Json
 import okhttp3.Request
@@ -62,7 +62,7 @@ class ResponseCall<T>(
         call: Call<T>,
         t: Throwable,
     ) = if (call.isCanceled) {
-        TokdokTodokExceptions.CancellationException
+        TodokTodokExceptions.CancellationException
     } else {
         t.toDomain()
     }
@@ -82,8 +82,8 @@ class ResponseCall<T>(
             val exceptionResponse = errorBody?.let { parseToResponse(it) }
             val exception =
                 exceptionResponse?.let {
-                    TokdokTodokExceptions.from(it.code, it.message)
-                } ?: TokdokTodokExceptions.UnknownException
+                    TodokTodokExceptions.from(it.code, it.message)
+                } ?: TodokTodokExceptions.UnknownException
             return NetworkResult.Failure(exception)
         }
 
@@ -91,7 +91,7 @@ class ResponseCall<T>(
             NetworkResult.Success(it)
         } ?: when (response.code()) {
             204 -> NetworkResult.Success(Unit as T)
-            else -> NetworkResult.Failure(TokdokTodokExceptions.EmptyBodyException)
+            else -> NetworkResult.Failure(TodokTodokExceptions.EmptyBodyException)
         }
     }
 

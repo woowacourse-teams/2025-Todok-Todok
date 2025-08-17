@@ -1,69 +1,69 @@
 package com.team.todoktodok.presentation.core
 
-import com.team.domain.model.exception.TokdokTodokExceptions
+import com.team.domain.model.exception.TodokTodokExceptions
 import com.team.todoktodok.R
 
 class ExceptionMessageConverter {
-    operator fun invoke(exception: TokdokTodokExceptions): Int =
+    operator fun invoke(exception: TodokTodokExceptions): Int =
         when (exception) {
-            is TokdokTodokExceptions.NicknameException.DuplicateNicknameException ->
+            is TodokTodokExceptions.NicknameException.DuplicateNicknameException ->
                 R.string.error_duplicate_nickname
 
-            is TokdokTodokExceptions.NicknameException.InvalidNicknameLengthException ->
+            is TodokTodokExceptions.NicknameException.InvalidNicknameLengthException ->
                 R.string.error_invalid_nickname_length
 
-            is TokdokTodokExceptions.NicknameException.EmptyNicknameLengthException ->
+            is TodokTodokExceptions.NicknameException.EmptyNicknameLengthException ->
                 R.string.error_empty_nickname
 
-            is TokdokTodokExceptions.SignUpException.DuplicateEmailException ->
+            is TodokTodokExceptions.SignUpException.DuplicateEmailException ->
                 R.string.error_duplicate_email
 
-            is TokdokTodokExceptions.SignUpException.InvalidTokenException ->
+            is TodokTodokExceptions.SignUpException.InvalidTokenException ->
                 R.string.error_invalid_token
 
-            is TokdokTodokExceptions.SignUpException.InvalidFormatEmailException ->
+            is TodokTodokExceptions.SignUpException.InvalidFormatEmailException ->
                 R.string.error_invalid_email_format
 
-            is TokdokTodokExceptions.SignUpException.ProfileImageNotExistException ->
+            is TodokTodokExceptions.SignUpException.ProfileImageNotExistException ->
                 R.string.error_profile_image_not_exist
 
-            is TokdokTodokExceptions.HttpExceptions.AuthenticationException ->
+            is TodokTodokExceptions.HttpExceptions.AuthenticationException ->
                 R.string.error_authentication
 
-            is TokdokTodokExceptions.HttpExceptions.AuthorizationException ->
+            is TodokTodokExceptions.HttpExceptions.AuthorizationException ->
                 R.string.error_authorization
 
-            is TokdokTodokExceptions.HttpExceptions.NotFoundException ->
+            is TodokTodokExceptions.HttpExceptions.NotFoundException ->
                 R.string.error_not_found
 
-            is TokdokTodokExceptions.HttpExceptions.ServerException ->
+            is TodokTodokExceptions.HttpExceptions.ServerException ->
                 R.string.error_server
 
-            is TokdokTodokExceptions.HttpExceptions.BadRequestException ->
+            is TodokTodokExceptions.HttpExceptions.BadRequestException ->
                 R.string.error_bad_request
 
-            is TokdokTodokExceptions.UnknownException ->
+            is TodokTodokExceptions.UnknownException ->
                 R.string.error_unknown
 
-            is TokdokTodokExceptions.MissingLocationHeaderException ->
+            is TodokTodokExceptions.MissingLocationHeaderException ->
                 R.string.error_missing_location
 
-            is TokdokTodokExceptions.CancellationException ->
+            is TodokTodokExceptions.CancellationException ->
                 R.string.error_request_cancelled
 
-            is TokdokTodokExceptions.ConnectException ->
+            is TodokTodokExceptions.ConnectException ->
                 R.string.error_no_internet
 
-            is TokdokTodokExceptions.IOException ->
+            is TodokTodokExceptions.IOException ->
                 R.string.error_io_exception
 
-            is TokdokTodokExceptions.SocketException ->
+            is TodokTodokExceptions.SocketException ->
                 R.string.error_no_internet
 
-            is TokdokTodokExceptions.TimeoutError ->
+            is TodokTodokExceptions.TimeoutError ->
                 R.string.error_timeout
 
-            is TokdokTodokExceptions.UnknownHostError ->
+            is TodokTodokExceptions.UnknownHostError ->
                 R.string.error_no_internet
         }
 }
