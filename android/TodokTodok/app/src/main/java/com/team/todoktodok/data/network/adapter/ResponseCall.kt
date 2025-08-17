@@ -48,14 +48,23 @@ class ResponseCall<T>(
                     call: Call<T>,
                     t: Throwable,
                 ) {
+                    val exception = checkCanceled(call, t)
                     callback.onResponse(
                         this@ResponseCall,
-                        Response.success(NetworkResult.Failure(t.toDomain())),
+                        Response.success(NetworkResult.Failure(exception)),
                     )
-                    call.cancel()
                 }
             },
         )
+    }
+
+    private fun checkCanceled(
+        call: Call<T>,
+        t: Throwable,
+    ) = if (call.isCanceled) {
+        TokdokTodokExceptions.CancellationException
+    } else {
+        t.toDomain()
     }
 
     /**
