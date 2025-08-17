@@ -89,7 +89,10 @@ class ResponseCall<T>(
 
         return response.body()?.let {
             NetworkResult.Success(it)
-        } ?: NetworkResult.Failure(TokdokTodokExceptions.UnknownException)
+        } ?: when (response.code()) {
+            204 -> NetworkResult.Success(Unit as T)
+            else -> NetworkResult.Failure(TokdokTodokExceptions.EmptyBodyException)
+        }
     }
 
     /**

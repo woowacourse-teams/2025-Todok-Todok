@@ -39,6 +39,9 @@ sealed class TokdokTodokExceptions : Throwable() {
     /** 헤더의 Location 필드가 누락된 경우 발생 */
     data object MissingLocationHeaderException : TokdokTodokExceptions()
 
+    /** 바디가 비어있는 경우 발생 */
+    data object EmptyBodyException : TokdokTodokExceptions()
+
     /**
      * HTTP 상태 코드 기반 예외
      */
