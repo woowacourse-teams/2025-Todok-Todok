@@ -1,49 +1,48 @@
 package com.team.todoktodok.presentation.view.profile.activated
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import com.team.domain.model.member.MemberId.Companion.DEFAULT_MEMBER_ID
-import com.team.todoktodok.App
-import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentActivatedBooksBinding
-import com.team.todoktodok.presentation.view.profile.ProfileActivity.Companion.ARG_MEMBER_ID
-import com.team.todoktodok.presentation.view.profile.ProfileActivity.Companion.MEMBER_ID_NOT_FOUND
+import com.team.todoktodok.presentation.core.ext.getParcelableArrayListCompat
 import com.team.todoktodok.presentation.view.profile.activated.adapter.BooksAdapter
-import com.team.todoktodok.presentation.view.profile.activated.vm.ActivatedBooksViewModel
-import com.team.todoktodok.presentation.view.profile.activated.vm.ActivatedBooksViewModelFactory
+import com.team.todoktodok.presentation.view.serialization.SerializationBook
 
-class ActivatedBooksFragment : Fragment(R.layout.fragment_activated_books) {
-    private val viewModel: ActivatedBooksViewModel by viewModels {
-        val repositoryModule = (requireActivity().application as App).container.repositoryModule
-        ActivatedBooksViewModelFactory(repositoryModule.memberRepository)
-    }
+class ActivatedBooksFragment : Fragment() {
+    private var _binding: FragmentActivatedBooksBinding? = null
+    val binding get() = _binding!!
+
     private lateinit var booksAdapter: BooksAdapter
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View? {
+        _binding = FragmentActivatedBooksBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
     ) {
-        val binding = FragmentActivatedBooksBinding.bind(view)
-
         initView(binding)
-        setUpUiState()
     }
 
     private fun initView(binding: FragmentActivatedBooksBinding) {
-        val memberId = arguments?.getLong(ARG_MEMBER_ID, DEFAULT_MEMBER_ID)
-        requireNotNull(memberId) { MEMBER_ID_NOT_FOUND }
-        viewModel.loadActivatedBooks(memberId)
+        val activatedBooks =
+            arguments?.getParcelableArrayListCompat<SerializationBook>(ARG_ACTIVATED_BOOKS)
 
         booksAdapter = BooksAdapter(bookAdapterHandler)
         binding.rvBooks.adapter = booksAdapter
-    }
 
-    private fun setUpUiState() {
-        viewModel.books.observe(viewLifecycleOwner) { value ->
-            booksAdapter.submitList(value)
+        activatedBooks?.let {
+            val books = it.map { book -> book.toDomain() }
+            booksAdapter.submitList(books)
         }
     }
 
@@ -53,9 +52,21 @@ class ActivatedBooksFragment : Fragment(R.layout.fragment_activated_books) {
         }
 
     companion object {
-        fun newInstance(memberId: Long?) =
+        private const val ARG_ACTIVATED_BOOKS = "ACTIVATED_BOOKS"
+
+        fun newInstance(books: List<SerializationBook>) =
             ActivatedBooksFragment().apply {
-                memberId?.let { arguments = bundleOf(ARG_MEMBER_ID to it) }
+                arguments = bundleOf(ARG_ACTIVATED_BOOKS to ArrayList(books))
             }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.root.requestLayout()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

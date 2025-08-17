@@ -21,7 +21,6 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="40dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@id/tv_input_comment"
         app:layout_constraintTop_toBottomOf="@id/iv_bottom_sheet_header"
         tools:listitem="@layout/item_comment" />

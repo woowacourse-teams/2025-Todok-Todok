@@ -39,7 +39,7 @@ class ReplyCreateViewModel(
 
     private fun initReplyContent() {
         when (replyCreateState) {
-            ReplyCreateState.Create -> Unit
+            ReplyCreateState.Create -> onReplyChanged(content ?: "")
             is ReplyCreateState.Update -> onReplyChanged(content ?: "")
         }
     }
@@ -70,6 +70,20 @@ class ReplyCreateViewModel(
                     _uiEvent.setValue(ReplyCreateUiEvent.CreateReply)
                 }
             }
+        }
+    }
+
+    fun saveReply() {
+        when (replyCreateState) {
+            ReplyCreateState.Create -> {
+                _uiEvent.setValue(
+                    ReplyCreateUiEvent.SaveContent(
+                        _replyContent.value ?: "",
+                    ),
+                )
+            }
+
+            is ReplyCreateState.Update -> Unit
         }
     }
 

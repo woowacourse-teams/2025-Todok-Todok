@@ -11,6 +11,7 @@ import java.time.LocalDateTime
 data class CommentDetailUiState(
     val comment: CommentItemUiState = INIT_COMMENT,
     val replies: List<ReplyItemUiState> = emptyList(),
+    val content: String = "",
 ) {
     fun getCommentDetailItems() =
         listOf(CommentDetailItems.CommentItem(comment)) +

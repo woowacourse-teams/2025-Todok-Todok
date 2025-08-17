@@ -1,6 +1,6 @@
 package com.team.todoktodok.data.network.request
 
-import com.team.domain.model.Member
+import com.team.domain.model.member.Member
 import kotlinx.serialization.Serializable
 
 @Serializable

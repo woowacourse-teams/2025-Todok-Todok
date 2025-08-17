@@ -6,30 +6,18 @@ import android.view.View
 import android.view.WindowManager
 import androidx.core.os.bundleOf
 import androidx.fragment.app.commit
-import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.presentation.view.discussiondetail.comments.CommentsFragment
 import com.team.todoktodok.presentation.view.discussiondetail.comments.vm.CommentsViewModel
-import com.team.todoktodok.presentation.view.discussiondetail.comments.vm.CommentsViewModelFactory
 
 class CommentBottomSheet : BottomSheetDialogFragment(R.layout.fragment_comment_bottom_sheet) {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         BottomSheetDialog(requireContext(), theme).apply {
             window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
             window?.setDimAmount(DIM_AMOUNT)
-        }
-
-    override val defaultViewModelProviderFactory: ViewModelProvider.Factory
-        by lazy {
-            val repoModule = (requireActivity().application as App).container.repositoryModule
-            CommentsViewModelFactory(
-                repoModule.commentRepository,
-                repoModule.tokenRepository,
-            )
         }
 
     override fun onViewCreated(
@@ -40,7 +28,14 @@ class CommentBottomSheet : BottomSheetDialogFragment(R.layout.fragment_comment_b
         if (savedInstanceState == null) {
             childFragmentManager.commit {
                 setReorderingAllowed(true)
-                add(R.id.fcv_comment, CommentsFragment.newInstance())
+                add(
+                    R.id.fcv_comment,
+                    CommentsFragment.newInstance(
+                        arguments?.getLong(
+                            CommentsViewModel.KEY_DISCUSSION_ID,
+                        ) ?: return@commit,
+                    ),
+                )
             }
         }
     }

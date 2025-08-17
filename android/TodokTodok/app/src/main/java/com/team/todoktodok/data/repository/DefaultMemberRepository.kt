@@ -1,12 +1,12 @@
 package com.team.todoktodok.data.repository
 
 import com.team.domain.model.Book
-import com.team.domain.model.Member
 import com.team.domain.model.Support
 import com.team.domain.model.exception.NetworkResult
 import com.team.domain.model.exception.map
 import com.team.domain.model.exception.TodokTodokExceptions
 import com.team.domain.model.member.BlockedMember
+import com.team.domain.model.member.Member
 import com.team.domain.model.member.MemberDiscussion
 import com.team.domain.model.member.MemberDiscussionType
 import com.team.domain.model.member.MemberId
@@ -17,7 +17,6 @@ import com.team.todoktodok.data.datasource.member.MemberRemoteDataSource
 import com.team.todoktodok.data.network.request.ModifyProfileRequest
 import com.team.todoktodok.data.network.request.toRequest
 import com.team.todoktodok.data.network.response.discussion.toDomain
-import java.time.LocalDate
 
 class DefaultMemberRepository(
     private val remoteMemberRemoteDataSource: MemberRemoteDataSource,
