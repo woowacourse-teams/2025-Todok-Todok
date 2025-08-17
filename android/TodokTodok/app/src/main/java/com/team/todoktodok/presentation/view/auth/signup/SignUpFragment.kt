@@ -9,6 +9,7 @@ import com.team.domain.model.member.NickNameException
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentSignupBinding
+import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.view.auth.signup.vm.SignUpViewModel
 import com.team.todoktodok.presentation.view.auth.signup.vm.SignUpViewModelFactory
 import com.team.todoktodok.presentation.view.discussions.DiscussionsActivity
@@ -19,6 +20,8 @@ class SignUpFragment : Fragment(R.layout.fragment_signup) {
         SignUpViewModelFactory(repositoryModule.memberRepository)
     }
 
+    private lateinit var messageConverter: ExceptionMessageConverter
+
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
@@ -26,6 +29,7 @@ class SignUpFragment : Fragment(R.layout.fragment_signup) {
         super.onViewCreated(view, savedInstanceState)
 
         val binding = FragmentSignupBinding.bind(view)
+        messageConverter = ExceptionMessageConverter()
         initView(binding)
         setUpObserveUiEvent(binding)
     }
@@ -49,11 +53,15 @@ class SignUpFragment : Fragment(R.layout.fragment_signup) {
     }
 
     private fun setUpObserveUiEvent(binding: FragmentSignupBinding) {
-        viewModel.uiEvent.observe(viewLifecycleOwner) { value ->
-            when (value) {
+        viewModel.uiEvent.observe(viewLifecycleOwner) { event ->
+            when (event) {
                 SignUpUiEvent.NavigateToMain -> moveToMain()
                 is SignUpUiEvent.ShowInvalidNickNameMessage -> {
-                    handleNickNameErrorEvent(value.exception, binding)
+                    handleNickNameErrorEvent(event.exception, binding)
+                }
+
+                is SignUpUiEvent.ShowErrorMessage -> {
+                    messageConverter(event.exception)
                 }
             }
         }

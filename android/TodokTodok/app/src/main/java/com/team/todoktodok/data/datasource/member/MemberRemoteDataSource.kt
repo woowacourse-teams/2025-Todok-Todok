@@ -15,7 +15,7 @@ import com.team.todoktodok.data.network.response.discussion.MemberDiscussionResp
 interface MemberRemoteDataSource {
     suspend fun login(request: String): NetworkResult<MemberType>
 
-    suspend fun signUp(request: SignUpRequest)
+    suspend fun signUp(request: SignUpRequest): NetworkResult<Unit>
 
     suspend fun fetchProfile(request: MemberId): ProfileResponse
 

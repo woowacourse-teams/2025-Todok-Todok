@@ -39,15 +39,18 @@ class DefaultMemberRemoteDataSource(
         }.getOrElse { throwable ->
             NetworkResult.Failure(throwable.toDomain())
         }
-    }
 
-    override suspend fun signUp(request: SignUpRequest) {
-        val response = memberService.signUp(request.email, request)
-        val token = response.headers()[AUTHORIZATION_NAME] ?: throw IllegalArgumentException()
-
-        val parser = JwtParser(token)
-        saveMemberSetting(parser, token)
-    }
+    override suspend fun signUp(request: SignUpRequest): NetworkResult<Unit> =
+        runCatching {
+            memberService
+                .signUp(request.email, request)
+                .extractAccessToken { token ->
+                    val parser = JwtParser(token)
+                    saveMemberSetting(parser, token)
+                }
+        }.getOrElse { throwable ->
+            NetworkResult.Failure(throwable.toDomain())
+        }
 
     private suspend fun saveMemberSetting(
         parser: JwtParser,

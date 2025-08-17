@@ -17,7 +17,7 @@ interface MemberRepository {
         profileImage: String,
     ): NetworkResult<MemberType>
 
-    suspend fun signUp(nickname: String)
+    suspend fun signUp(nickname: String): NetworkResult<Unit>
 
     suspend fun getProfile(id: MemberId): Profile
 

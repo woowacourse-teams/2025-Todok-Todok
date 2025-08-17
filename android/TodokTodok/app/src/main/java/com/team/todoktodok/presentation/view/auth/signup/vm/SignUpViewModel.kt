@@ -2,6 +2,8 @@ package com.team.todoktodok.presentation.view.auth.signup.vm
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.team.domain.model.exception.onFailure
+import com.team.domain.model.exception.onSuccess
 import com.team.domain.model.member.NickNameException
 import com.team.domain.model.member.Nickname
 import com.team.domain.repository.MemberRepository
@@ -28,8 +30,10 @@ class SignUpViewModel(
 
     private fun signUp(nickname: Nickname) {
         viewModelScope.launch {
-            memberRepository.signUp(nickname.value)
-            _uiEvent.setValue(SignUpUiEvent.NavigateToMain)
+            memberRepository
+                .signUp(nickname.value)
+                .onSuccess { _uiEvent.setValue(SignUpUiEvent.NavigateToMain) }
+                .onFailure { _uiEvent.setValue(SignUpUiEvent.ShowErrorMessage(it)) }
         }
     }
 }

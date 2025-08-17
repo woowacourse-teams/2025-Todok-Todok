@@ -4,6 +4,7 @@ import com.team.domain.model.Book
 import com.team.domain.model.Member
 import com.team.domain.model.Support
 import com.team.domain.model.exception.NetworkResult
+import com.team.domain.model.exception.TokdokTodokExceptions
 import com.team.domain.model.member.BlockedMember
 import com.team.domain.model.member.MemberDiscussion
 import com.team.domain.model.member.MemberDiscussionType
@@ -32,12 +33,11 @@ class DefaultMemberRepository(
         return remoteMemberRemoteDataSource.login(email)
     }
 
-    override suspend fun signUp(nickname: String) {
+    override suspend fun signUp(nickname: String): NetworkResult<Unit> =
         cachedMember?.let {
             val request = it.copy(nickName = nickname).toRequest()
             remoteMemberRemoteDataSource.signUp(request)
-        }
-    }
+        } ?: NetworkResult.Failure(TokdokTodokExceptions.SignUpException.InvalidTokenException)
 
     override suspend fun getProfile(id: MemberId): Profile = remoteMemberRemoteDataSource.fetchProfile(id).toDomain()
 
