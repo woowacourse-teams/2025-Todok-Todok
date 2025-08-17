@@ -93,7 +93,19 @@ public interface MemberApiDocs {
                                     @ExampleObject(
                                             name = "이메일 형식 오류",
                                             value = "{\"code\":400, \"message\":\"[ERROR] 올바른 이메일 형식을 입력해주세요\"}"
-                                    )
+                                    ),
+                                    @ExampleObject(
+                                            name = "닉네임 중복",
+                                            value = "{\"code\":400, \"message\":\"[ERROR] 이미 존재하는 닉네임입니다\"}"
+                                    ),
+                                    @ExampleObject(
+                                            name = "이메일 중복",
+                                            value = "{\"code\":400, \"message\":\"[ERROR] 이미 가입된 이메일입니다\"}"
+                                    ),
+                                    @ExampleObject(
+                                            name = "입력한 이메일과 토큰 이메일 불일치",
+                                            value = "{\"code\":400, \"message\":\"[ERROR] 소셜 로그인을 하지 않은 이메일입니다\"}"
+                                    ),
                             }
             )),
             @ApiResponse(
@@ -530,7 +542,11 @@ public interface MemberApiDocs {
                                     @ExampleObject(
                                             name = "상태메시지 길이 조건 부적합",
                                             value = "{\"code\":400, \"message\":\"[ERROR] 상태메세지는 40자 이하여야 합니다\"}"
-                                    )
+                                    ),
+                                    @ExampleObject(
+                                            name = "닉네임 중복",
+                                            value = "{\"code\":400, \"message\":\"[ERROR] 이미 존재하는 닉네임입니다\"}"
+                                    ),
                             }
             )),
             @ApiResponse(
