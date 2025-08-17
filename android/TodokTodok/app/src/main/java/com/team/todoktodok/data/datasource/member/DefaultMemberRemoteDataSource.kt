@@ -2,14 +2,13 @@ package com.team.todoktodok.data.datasource.member
 
 import com.team.domain.model.Support
 import com.team.domain.model.exception.NetworkResult
-import com.team.domain.model.exception.TokdokTodokExceptions
 import com.team.domain.model.exception.toDomain
 import com.team.domain.model.member.MemberDiscussionType
 import com.team.domain.model.member.MemberId
 import com.team.domain.model.member.MemberType
 import com.team.todoktodok.data.core.JwtParser
+import com.team.todoktodok.data.core.ext.extractAccessToken
 import com.team.todoktodok.data.datasource.token.TokenDataSource
-import com.team.todoktodok.data.network.auth.AuthInterceptor.Companion.AUTHORIZATION_NAME
 import com.team.todoktodok.data.network.request.LoginRequest
 import com.team.todoktodok.data.network.request.ModifyProfileRequest
 import com.team.todoktodok.data.network.request.SignUpRequest
@@ -23,32 +22,20 @@ class DefaultMemberRemoteDataSource(
     private val memberService: MemberService,
     private val tokenDataSource: TokenDataSource,
 ) : MemberRemoteDataSource {
-    override suspend fun login(request: String): NetworkResult<MemberType> {
-        return runCatching {
-            val response = memberService.login(LoginRequest(request))
+    override suspend fun login(request: String): NetworkResult<MemberType> =
+        runCatching {
+            memberService
+                .login(LoginRequest(request))
+                .extractAccessToken { token ->
+                    val parser = JwtParser(token)
+                    val memberType = parser.parseToMemberType()
 
-            if (!response.isSuccessful) {
-                return NetworkResult.Failure(
-                    TokdokTodokExceptions.from(
-                        response.code(),
-                        response.message(),
-                    ),
-                )
-            }
-
-            val token =
-                response.headers()[AUTHORIZATION_NAME]
-                    ?: return NetworkResult.Failure(TokdokTodokExceptions.MissingLocationHeaderException)
-
-            val parser = JwtParser(token)
-            val memberType = parser.parseToMemberType()
-
-            when (memberType) {
-                MemberType.USER -> saveMemberSetting(parser, token)
-                MemberType.TEMP_USER -> tokenDataSource.saveToken(token)
-            }
-
-            NetworkResult.Success(memberType)
+                    when (memberType) {
+                        MemberType.USER -> saveMemberSetting(parser, token)
+                        MemberType.TEMP_USER -> tokenDataSource.saveToken(token)
+                    }
+                    memberType
+                }
         }.getOrElse { throwable ->
             NetworkResult.Failure(throwable.toDomain())
         }
