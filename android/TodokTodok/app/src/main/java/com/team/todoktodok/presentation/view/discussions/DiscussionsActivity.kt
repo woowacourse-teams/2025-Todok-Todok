@@ -19,6 +19,7 @@ import com.team.domain.model.DiscussionFilter
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivityDiscussionsBinding
+import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
 import com.team.todoktodok.presentation.core.ext.clearHintOnFocus
 import com.team.todoktodok.presentation.view.book.SelectBookActivity
 import com.team.todoktodok.presentation.view.discussions.all.AllDiscussionFragment
@@ -59,7 +60,10 @@ class DiscussionsActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
+        AlertSnackBar(
+            binding.root,
+            R.string.error_io_exception,
+        ).show()
         supportActionBar?.apply {
             setDisplayShowTitleEnabled(false)
             setDisplayShowHomeEnabled(false)
