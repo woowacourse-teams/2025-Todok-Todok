@@ -12,6 +12,7 @@
         android:layout_width="@dimen/space_0"
         android:layout_height="wrap_content"
         android:layout_marginVertical="@dimen/space_16"
+        android:padding="@dimen/space_8"
         android:background="@drawable/bg_green_f0_radius_8dp"
         app:boxBackgroundMode="none"
         app:cursorColor="@color/black_18"

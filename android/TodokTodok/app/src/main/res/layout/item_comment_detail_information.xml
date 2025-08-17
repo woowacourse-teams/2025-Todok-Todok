@@ -53,7 +53,6 @@
         style="@style/BaseTextStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/pretendard_regular"
         android:textSize="@dimen/font_size_large"
         app:layout_constraintTop_toBottomOf="@id/tv_user_nickname"
         tools:text="캡슐화를 하면 데이터를 보호할 수 있다는 것에는 동의하는데, 실제로 완벽히 캡슐화가 되는 지는 의문입니다.getter/setter 메서드를 통해 객체 내부의 데이터가 외부로 드러나는 것은 캡슐화가 잘 된 것이 맞을까요?" />

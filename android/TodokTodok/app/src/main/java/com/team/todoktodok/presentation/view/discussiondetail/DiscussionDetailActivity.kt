@@ -172,6 +172,7 @@ class DiscussionDetailActivity : AppCompatActivity() {
                 tvDiscussionTitle.text = value.discussion.discussionTitle
                 tvUserNickname.text = value.discussion.writer.nickname.value
                 ivUserProfile.loadImage("")
+                ivBookImage.loadImage(value.discussion.book.image)
                 tvDiscussionCreateAt.text = value.discussion.createAt.formatDate()
                 tvDiscussionOpinion.text = value.discussion.discussionOpinion
                 ivLike.isSelected = value.discussion.isLikedByMe
