@@ -45,6 +45,9 @@ ksp = "2.2.0-2.0.2"
 timber = "5.0.1"
 logger = "2.2.0"
 
+# room
+room-runtime = "2.7.2"
+
 # Test
 androidx-espresso-core = "3.6.1"
 androidx-test-ext-junit = "1.2.1"
@@ -68,6 +71,8 @@ androidx-fragment = { group = "androidx.fragment", name = "fragment-ktx", versio
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }
 androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "androidx-recyclerview" }
 androidx-datastore = { module = "androidx.datastore:datastore-preferences", version.ref = "androidx-datastore" }
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room-runtime" }
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room-runtime" }
 
 # Kotlin
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization-json" }
@@ -121,6 +126,8 @@ androidx = [
     "androidx-datastore",
     "androidx-credentials",
     "androidx-credentials-play-services-auth",
+    "androidx-room-runtime",
+    "androidx-room-compiler",
 ]
 
 kotlin = [
