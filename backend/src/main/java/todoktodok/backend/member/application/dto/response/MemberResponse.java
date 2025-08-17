@@ -4,13 +4,15 @@ import todoktodok.backend.member.domain.Member;
 
 public record MemberResponse(
         Long memberId,
-        String nickname
+        String nickname,
+        String profileImage
 ) {
 
     public MemberResponse(final Member member) {
         this(
                 member.getId(),
-                member.getNickname()
+                member.getNickname(),
+                member.getProfileImage()
         );
     }
 }

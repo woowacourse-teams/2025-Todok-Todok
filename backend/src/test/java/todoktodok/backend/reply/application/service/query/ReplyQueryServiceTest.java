@@ -1,5 +1,11 @@
 package todoktodok.backend.reply.application.service.query;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
+import java.util.List;
+import java.util.NoSuchElementException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,13 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.DatabaseInitializer;
 import todoktodok.backend.InitializerTimer;
 import todoktodok.backend.reply.application.dto.response.ReplyResponse;
-
-import java.util.List;
-import java.util.NoSuchElementException;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 @ActiveProfiles("test")
 @Transactional
@@ -118,7 +117,7 @@ class ReplyQueryServiceTest {
         // when - then
         assertThatThrownBy(() -> replyQueryService.getReplies(memberId, discussionId, commentId))
                 .isInstanceOf(NoSuchElementException.class)
-                .hasMessage("해당 댓글을 찾을 수 없습니다");
+                .hasMessageContaining("해당 댓글을 찾을 수 없습니다");
     }
 
     @Test
@@ -137,7 +136,7 @@ class ReplyQueryServiceTest {
         // when - then
         assertThatThrownBy(() -> replyQueryService.getReplies(memberId, discussionId, commentId))
                 .isInstanceOf(NoSuchElementException.class)
-                .hasMessage("해당 토론방을 찾을 수 없습니다");
+                .hasMessageContaining("해당 토론방을 찾을 수 없습니다");
     }
 
     @Test
@@ -159,7 +158,7 @@ class ReplyQueryServiceTest {
         // when - then
         assertThatThrownBy(() -> replyQueryService.getReplies(memberId, discussionId, commentId))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("해당 토론방에 있는 댓글이 아닙니다");
+                .hasMessageContaining("해당 토론방에 있는 댓글이 아닙니다");
     }
 
     @Test

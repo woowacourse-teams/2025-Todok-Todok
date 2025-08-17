@@ -7,15 +7,17 @@ services:
       context: .
       dockerfile: Dockerfile.dev
       args:
-        JAR_FILE: /build/libs/*.jar  # 빌드 시에 전달할 인자 (필요 시)
+        JAR_FILE: /build/libs/*.jar
     image: woowajeff/todoktodok:dev
     ports:
       - "80:8080"
     volumes:
-      - ./log:/log   # 로그 공유
+      - ./log:/log
     environment:
       - SPRING_PROFILES_ACTIVE=dev
     restart: always
+    networks:
+      - dev_network
 
   promtail:
     container_name: promtail
@@ -27,3 +29,9 @@ services:
       - ./log:/log
     command: -config.file=/etc/promtail/promtail.yml
     restart: always
+    networks:
+      - dev_network
+
+networks:
+  dev_network:
+    external: true

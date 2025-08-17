@@ -1,5 +1,7 @@
 package todoktodok.backend.reply.application.service.query;
 
+import java.util.List;
+import java.util.NoSuchElementException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,9 +15,6 @@ import todoktodok.backend.reply.application.dto.response.ReplyResponse;
 import todoktodok.backend.reply.domain.Reply;
 import todoktodok.backend.reply.domain.repository.ReplyLikeRepository;
 import todoktodok.backend.reply.domain.repository.ReplyRepository;
-
-import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 @Transactional(readOnly = true)
@@ -58,17 +57,17 @@ public class ReplyQueryService {
 
     private Member findMember(final Long memberId) {
         return memberRepository.findById(memberId)
-                .orElseThrow(() -> new NoSuchElementException("해당 회원을 찾을 수 없습니다"));
+                .orElseThrow(() -> new NoSuchElementException(String.format("해당 회원을 찾을 수 없습니다: memberId = %s", memberId)));
     }
 
     private Discussion findDiscussion(final Long discussionId) {
         return discussionRepository.findById(discussionId)
-                .orElseThrow(() -> new NoSuchElementException("해당 토론방을 찾을 수 없습니다"));
+                .orElseThrow(() -> new NoSuchElementException(String.format("해당 토론방을 찾을 수 없습니다: discussionId = %s", discussionId)));
     }
 
     private Comment findComment(final Long commentId) {
         return commentRepository.findById(commentId)
-                .orElseThrow(() -> new NoSuchElementException("해당 댓글을 찾을 수 없습니다"));
+                .orElseThrow(() -> new NoSuchElementException(String.format("해당 댓글을 찾을 수 없습니다: commentId = %s", commentId)));
     }
 
     private int findLikeCount(
@@ -79,7 +78,7 @@ public class ReplyQueryService {
                 .filter(count -> reply.isSameId(count.replyId()))
                 .findFirst()
                 .map(ReplyLikeCountDto::likeCount)
-                .orElseThrow(() -> new IllegalStateException("대댓글별 좋아요 수를 찾을 수 없습니다"));
+                .orElseThrow(() -> new IllegalStateException(String.format("대댓글별 좋아요 수를 찾을 수 없습니다: replyId = %s", reply.getId())));
     }
 
     private boolean checkIsLikedByMe(
