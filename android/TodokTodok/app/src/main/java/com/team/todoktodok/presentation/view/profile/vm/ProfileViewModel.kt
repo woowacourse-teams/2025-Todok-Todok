@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.team.domain.model.Support
+import com.team.domain.model.exception.onFailure
+import com.team.domain.model.exception.onSuccess
 import com.team.domain.model.member.MemberId
 import com.team.domain.model.member.MemberId.Companion.MemberId
 import com.team.domain.repository.MemberRepository
@@ -26,8 +28,10 @@ class ProfileViewModel(
     fun loadProfile(memberId: Long) {
         viewModelScope.launch {
             val memberId = MemberId(memberId)
-            val result = memberRepository.getProfile(memberId)
-            _uiState.value = _uiState.value?.modifyProfile(result, memberId)
+            memberRepository
+                .getProfile(memberId)
+                .onSuccess { _uiState.value = _uiState.value?.modifyProfile(it, memberId) }
+                .onFailure { onUiEvent(ProfileUiEvent.ShowErrorMessage(it)) }
         }
     }
 

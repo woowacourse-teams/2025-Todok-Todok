@@ -12,6 +12,7 @@ import com.team.domain.model.member.NickNameException
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentModifyProfileBinding
+import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.view.setting.SettingScreen
 import com.team.todoktodok.presentation.view.setting.modify.vm.ModifyProfileViewModel
 import com.team.todoktodok.presentation.view.setting.modify.vm.ModifyProfileViewModelFactory
@@ -25,6 +26,8 @@ class ModifyProfileFragment : Fragment(R.layout.fragment_modify_profile) {
         ModifyProfileViewModelFactory(repositoryModule.memberRepository)
     }
 
+    private lateinit var messageConverter: ExceptionMessageConverter
+
     private val settingViewModel: SettingViewModel by activityViewModels { SettingViewModelFactory() }
 
     override fun onViewCreated(
@@ -33,6 +36,7 @@ class ModifyProfileFragment : Fragment(R.layout.fragment_modify_profile) {
     ) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentModifyProfileBinding.bind(view)
+        messageConverter = ExceptionMessageConverter()
 
         initView(binding)
         setUpUiEvent(binding)
@@ -104,14 +108,18 @@ class ModifyProfileFragment : Fragment(R.layout.fragment_modify_profile) {
     }
 
     private fun setUpUiEvent(binding: FragmentModifyProfileBinding) {
-        viewModel.uiEvent.observe(viewLifecycleOwner) { value ->
-            when (value) {
+        viewModel.uiEvent.observe(viewLifecycleOwner) { event ->
+            when (event) {
                 ModifyProfileUiEvent.OnCompleteModification -> {
                     settingViewModel.changeScreen(SettingScreen.SETTING_MAIN)
                 }
 
                 is ModifyProfileUiEvent.ShowInvalidNickNameMessage -> {
-                    handleNickNameErrorEvent(value.exception, binding)
+                    handleNickNameErrorEvent(event.exception, binding)
+                }
+
+                is ModifyProfileUiEvent.ShowErrorMessage -> {
+                    messageConverter(event.exception)
                 }
             }
         }

@@ -1,5 +1,6 @@
 package com.team.todoktodok.presentation.view.setting.modify
 
+import com.team.domain.model.exception.TokdokTodokExceptions
 import com.team.domain.model.member.NickNameException
 
 sealed interface ModifyProfileUiEvent {
@@ -8,4 +9,8 @@ sealed interface ModifyProfileUiEvent {
     ) : ModifyProfileUiEvent
 
     data object OnCompleteModification : ModifyProfileUiEvent
+
+    data class ShowErrorMessage(
+        val exception: TokdokTodokExceptions,
+    ) : ModifyProfileUiEvent
 }

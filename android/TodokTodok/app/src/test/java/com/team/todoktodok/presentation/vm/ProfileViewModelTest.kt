@@ -1,5 +1,6 @@
 package com.team.todoktodok.presentation.vm
 
+import com.team.domain.model.exception.NetworkResult
 import com.team.domain.model.member.Profile
 import com.team.domain.repository.MemberRepository
 import com.team.todoktodok.CoroutinesTestExtension
@@ -35,7 +36,7 @@ class ProfileViewModelTest {
             // given
             val response = Profile(1, "페토", "나나를 좋아하는", "")
 
-            coEvery { repository.getProfile(any()) } returns response
+            coEvery { repository.getProfile(any()) } returns NetworkResult.Success(response)
 
             // when
             viewModel.loadProfile(1)

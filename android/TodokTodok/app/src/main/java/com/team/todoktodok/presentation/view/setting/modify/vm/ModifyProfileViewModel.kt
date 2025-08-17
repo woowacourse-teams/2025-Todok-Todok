@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.team.domain.model.exception.onFailure
+import com.team.domain.model.exception.onSuccess
 import com.team.domain.model.member.MemberId
 import com.team.domain.model.member.NickNameException
 import com.team.domain.model.member.Nickname
@@ -29,8 +31,10 @@ class ModifyProfileViewModel(
 
     private fun loadProfile() {
         viewModelScope.launch {
-            val profile = memberRepository.getProfile(MemberId.Mine)
-            _profile.value = profile
+            memberRepository
+                .getProfile(MemberId.Mine)
+                .onSuccess { _profile.value = it }
+                .onFailure { onUiEvent(ModifyProfileUiEvent.ShowErrorMessage(it)) }
         }
     }
 
@@ -48,5 +52,9 @@ class ModifyProfileViewModel(
         }.onFailure { e ->
             _uiEvent.setValue(ModifyProfileUiEvent.ShowInvalidNickNameMessage(e as NickNameException))
         }
+    }
+
+    private fun onUiEvent(event: ModifyProfileUiEvent) {
+        _uiEvent.setValue(event)
     }
 }
