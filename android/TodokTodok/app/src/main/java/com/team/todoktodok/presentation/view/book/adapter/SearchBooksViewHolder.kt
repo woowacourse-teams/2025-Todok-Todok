@@ -13,7 +13,7 @@ class SearchBooksViewHolder private constructor(
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
         binding.root.setOnClickListener {
-            selectBook.onClick(absoluteAdapterPosition)
+            selectBook.onClick(bindingAdapterPosition)
         }
     }
 
