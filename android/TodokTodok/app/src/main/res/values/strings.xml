@@ -26,7 +26,15 @@
     <string name="all_discussion_delete_confirm">토론방을 정말 삭제 하시겠습니까?</string>
     <string name="all_comment_delete_confirm">댓글을 정말 삭제 하시겠습니까?</string>
     <string name="all_reply_delete_confirm">답글을 정말 삭제 하시겠습니까?</string>
-
+    <string name="all_relative_just_now">방금전</string>
+    <string name="all_relative_soon">곧</string>
+    <string name="all_relative_seconds">%d초전</string>
+    <string name="all_relative_minutes">%d분전</string>
+    <string name="all_relative_hours">%d시간전</string>
+    <string name="all_relative_days">%d일전</string>
+    <string name="all_relative_weeks">%d주전</string>
+    <string name="all_relative_months">%d달전</string>
+    <string name="all_relative_years">%d년전</string>
     <!--  토론 목록 페이지  -->
     <string name="content_description_add_discussion">토론방 추가 화면으로 이동합니다</string>
     <string name="content_description_book_image">도서 이미지입니다</string>

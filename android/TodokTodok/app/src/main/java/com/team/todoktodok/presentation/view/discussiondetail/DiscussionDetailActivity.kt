@@ -19,6 +19,7 @@ import com.team.todoktodok.databinding.MenuExternalDiscussionBinding
 import com.team.todoktodok.databinding.MenuOwnedDiscussionBinding
 import com.team.todoktodok.presentation.core.component.CommonDialog
 import com.team.todoktodok.presentation.core.ext.loadImage
+import com.team.todoktodok.presentation.core.ext.toRelativeString
 import com.team.todoktodok.presentation.view.discussion.create.CreateDiscussionRoomActivity
 import com.team.todoktodok.presentation.view.discussion.create.SerializationCreateDiscussionRoomMode.Edit
 import com.team.todoktodok.presentation.view.discussiondetail.comment.CommentBottomSheet
@@ -173,7 +174,8 @@ class DiscussionDetailActivity : AppCompatActivity() {
                 tvUserNickname.text = value.discussion.writer.nickname.value
                 ivUserProfile.loadImage("")
                 ivBookImage.loadImage(value.discussion.book.image)
-                tvDiscussionCreateAt.text = value.discussion.createAt.formatDate()
+                tvDiscussionCreateAt.text =
+                    value.discussion.createAt.toRelativeString(this@DiscussionDetailActivity)
                 tvDiscussionOpinion.text = value.discussion.discussionOpinion
                 ivLike.isSelected = value.discussion.isLikedByMe
                 tvLikeCount.text = value.discussion.likeCount.toString()
@@ -248,12 +250,6 @@ class DiscussionDetailActivity : AppCompatActivity() {
                 popupWindow?.dismiss()
             }
         }
-    }
-
-    private fun LocalDateTime.formatDate(): String {
-        val pattern = this@DiscussionDetailActivity.getString(R.string.date_format_pattern)
-        val formatter = DateTimeFormatter.ofPattern(pattern, Locale.KOREA)
-        return format(formatter)
     }
 
     companion object {
