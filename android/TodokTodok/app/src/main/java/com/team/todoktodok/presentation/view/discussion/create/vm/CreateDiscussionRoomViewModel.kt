@@ -50,10 +50,16 @@ class CreateDiscussionRoomViewModel(
 
     fun updateTitle(title: String) {
         _uiState.value = _uiState.value?.copy(title = title)
+        if (title.length == MAX_TITLE_LENGTH) {
+            _uiEvent.setValue(CreateDiscussionUiEvent.ShowToast(ErrorCreateDiscussionType.TITLE_LENGTH_OVER))
+        }
     }
 
     fun updateOpinion(opinion: String) {
         _uiState.value = _uiState.value?.copy(opinion = opinion)
+        if (opinion.length == MAX_OPINION_LENGTH) {
+            _uiEvent.setValue(CreateDiscussionUiEvent.ShowToast(ErrorCreateDiscussionType.OPINION_LENGTH_OVER))
+        }
     }
 
     fun createDiscussionRoom() {
@@ -148,5 +154,10 @@ class CreateDiscussionRoomViewModel(
 
     private fun updateErrorCreateDiscussion(errorCreateDiscussionType: ErrorCreateDiscussionType) {
         _uiEvent.setValue(CreateDiscussionUiEvent.ShowToast(errorCreateDiscussionType))
+    }
+
+    companion object {
+        private const val MAX_OPINION_LENGTH: Int = 2500
+        private const val MAX_TITLE_LENGTH: Int = 50
     }
 }

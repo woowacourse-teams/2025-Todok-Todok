@@ -125,8 +125,6 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
     private fun setupUiState(binding: ActivityCreateDiscussionRoomBinding) {
         viewModel.uiState.observe(this@CreateDiscussionRoomActivity) { uiState: CreateDiscussionUiState ->
             observeBook(uiState.book, binding)
-            observeTitle(uiState.title, binding)
-            observeOpinion(uiState.opinion, binding)
             observeIsCreate(uiState.isCreate, binding)
         }
     }
@@ -143,17 +141,6 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
         }
     }
 
-    private fun observeOpinion(opinion: String, binding: ActivityCreateDiscussionRoomBinding) {
-        if (binding.etDiscussionRoomOpinion.text.toString() != opinion) {
-            binding.etDiscussionRoomOpinion.setText(opinion)
-        }
-    }
-
-    private fun observeTitle(title: String, binding: ActivityCreateDiscussionRoomBinding) {
-        if (binding.etDiscussionRoomTitle.text.toString() != title) {
-            binding.etDiscussionRoomTitle.setText(title)
-        }
-    }
 
     private fun observeBook(book: Book?, binding: ActivityCreateDiscussionRoomBinding) {
         binding.tvBookTitle.text = book?.title
