@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.util.UriBuilder;
+import todoktodok.backend.book.infrastructure.aladin.exception.AladinApiException;
 
 @Component
 public class AladinRestClient {
@@ -23,11 +24,11 @@ public class AladinRestClient {
     private final RestClient restClient;
 
     public AladinRestClient(
-        @Value("${aladin.base-url}") final String aladinBaseUrl,
-        @Value("${aladin.item-search-uri}") final String aladinItemSearchUri,
-        @Value("${aladin.api-key}") final String aladinApiKey,
-        @Value("${aladin.item-lookup-uri}") final String aladinItemLookupUri,
-        final RestClient.Builder restClientBuilder
+            @Value("${aladin.base-url}") final String aladinBaseUrl,
+            @Value("${aladin.item-search-uri}") final String aladinItemSearchUri,
+            @Value("${aladin.api-key}") final String aladinApiKey,
+            @Value("${aladin.item-lookup-uri}") final String aladinItemLookupUri,
+            final RestClient.Builder restClientBuilder
     ) {
         this.aladinItemSearchUri = aladinItemSearchUri;
         this.aladinApiKey = aladinApiKey;
@@ -36,25 +37,17 @@ public class AladinRestClient {
     }
 
     public AladinItemResponses searchBooksByKeyword(final String searchBookKeyword) {
-        try {
-            return restClient.get()
-                    .uri(createSearchBooksUri(searchBookKeyword))
-                    .retrieve()
-                    .body(AladinItemResponses.class);
-        } catch (RestClientException e) {
-            throw new RuntimeException("[ERROR] API 통신 중 문제 발생");
-        }
+        return getAladinItemResponses(
+                createSearchBooksUri(searchBookKeyword),
+                String.format("searchBookKeyword= %s", searchBookKeyword)
+        );
     }
 
     public AladinItemResponses searchBookByIsbn(final String isbn) {
-        try {
-            return restClient.get()
-                    .uri(createSearchBookUri(isbn))
-                    .retrieve()
-                    .body(AladinItemResponses.class);
-        } catch (RestClientException e) {
-            throw new RuntimeException("[ERROR] API 통신 중 문제 발생");
-        }
+        return getAladinItemResponses(
+                createSearchBookUri(isbn),
+                String.format("isbn= %s", isbn)
+        );
     }
 
     private Function<UriBuilder, URI> createSearchBooksUri(final String searchBookKeyword) {
@@ -78,5 +71,29 @@ public class AladinRestClient {
                 .queryParam("Output", OUTPUT)
                 .queryParam("Version", LATEST_VERSION)
                 .build();
+    }
+
+    private AladinItemResponses getAladinItemResponses(
+            final Function<UriBuilder, URI> uri,
+            final String context
+    ) {
+        try {
+            final AladinItemResponses response = restClient.get()
+                    .uri(uri)
+                    .retrieve()
+                    .body(AladinItemResponses.class);
+
+            if (response == null || response.item() == null) {
+                throw new AladinApiException(
+                        String.format("알라딘 API 응답이 비정상입니다: %s, item= null", context)
+                );
+            }
+            return response;
+
+        } catch (RestClientException e) {
+            throw new AladinApiException(
+                    String.format("알라딘 API 통신 중 오류: %s, errorMessage= %s", context, e.getMessage())
+            );
+        }
     }
 }
