@@ -8,7 +8,7 @@ enum class UserProfileTab(
 ) {
     ACTIVATED_BOOKS(R.string.profile_active_books),
     CREATED_DISCUSSIONS(R.string.profile_created_discussion_room),
-    JOINED_DISCUSSIONS(R.string.profile_joined_discussion_room),
+    PARTICIPATED_DISCUSSIONS(R.string.profile_participated_discussion_room),
     ;
 
     companion object {
@@ -16,7 +16,7 @@ enum class UserProfileTab(
             when (index) {
                 0 -> ACTIVATED_BOOKS
                 1 -> CREATED_DISCUSSIONS
-                2 -> JOINED_DISCUSSIONS
+                2 -> PARTICIPATED_DISCUSSIONS
                 else -> throw IllegalArgumentException(INVALID_INDEX__EXCEPTION_MESSAGE.format(index))
             }
 

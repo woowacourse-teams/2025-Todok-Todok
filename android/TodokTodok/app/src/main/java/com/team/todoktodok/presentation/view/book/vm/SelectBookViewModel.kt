@@ -8,12 +8,10 @@ import com.team.domain.model.Books
 import com.team.domain.repository.BookRepository
 import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
 import com.team.todoktodok.presentation.core.event.SingleLiveData
-import com.team.todoktodok.presentation.view.book.ErrorSelectBookType
+import com.team.todoktodok.presentation.view.book.SelectBookErrorType
 import com.team.todoktodok.presentation.view.book.SelectBookUiEvent
 import com.team.todoktodok.presentation.view.book.SelectBookUiState
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class SelectBookViewModel(
     private val bookRepository: BookRepository,
@@ -24,61 +22,54 @@ class SelectBookViewModel(
     private val _uiEvent: MutableSingleLiveData<SelectBookUiEvent> = MutableSingleLiveData()
     val uiEvent: SingleLiveData<SelectBookUiEvent> get() = _uiEvent
 
-    init {
-        _uiEvent.setValue(SelectBookUiEvent.RevealKeyboard)
-    }
-
-    fun onDeleteKeywordButtonClicked() {
-        searchWithCurrentKeyword(NO_KEYWORD)
-        _uiEvent.setValue(SelectBookUiEvent.ShowToast(ErrorSelectBookType.ERROR_DELETE_KEYWORD))
-    }
-
-    fun onSearchAction(keyword: String) {
-        if (keyword.isBlank()) {
-            _uiEvent.setValue(SelectBookUiEvent.ShowToast(ErrorSelectBookType.ERROR_EMPTY_KEYWORD))
-            return
-        }
+    fun searchWithCurrentKeyword(keyword: String) {
         _uiEvent.setValue(SelectBookUiEvent.HideKeyboard)
-        searchWithCurrentKeyword(keyword)
-    }
-
-    private fun searchWithCurrentKeyword(keyword: String) {
+        val isPossibleSearchKeyword = checkKeyword(keyword)
         updateKeyword(keyword)
-        updateSearchedBooks()
+        if (isPossibleSearchKeyword) updateSearchedBooks()
     }
 
     fun updateSelectedBook(position: Int) {
-        _uiState.setValue(_uiState.value?.copy(selectedBook = _uiState.value?.searchedBooks?.get(position)))
-        val selectedBook = _uiState.value?.selectedBook
-        if (selectedBook == null) {
-            _uiEvent.setValue(SelectBookUiEvent.ShowToast(ErrorSelectBookType.ERROR_NO_SELECTED_BOOK))
-        } else {
-            _uiEvent.setValue(SelectBookUiEvent.NavigateToCreateDiscussionRoom(selectedBook))
+        if (_uiState.value?.isExist(position) == false) {
+            _uiEvent.setValue(SelectBookUiEvent.ShowErrorMessage(SelectBookErrorType.ERROR_NO_SELECTED_BOOK))
+            return
         }
+        val selectedBook =
+            _uiState.value?.searchedBooks?.get(position) ?: run {
+                _uiEvent.setValue(SelectBookUiEvent.ShowErrorMessage(SelectBookErrorType.ERROR_NO_SELECTED_BOOK))
+                return
+            }
+        _uiState.value = _uiState.value?.copy(selectedBook = selectedBook)
+        _uiEvent.setValue(SelectBookUiEvent.NavigateToCreateDiscussionRoom(selectedBook))
     }
 
-    private fun updateKeyword(keyword: String) {
-        _uiState.setValue(_uiState.value?.copy(keyword = keyword))
+    fun updateKeyword(keyword: String) {
+        _uiState.value = _uiState.value?.copy(keyword = keyword)
+    }
+
+    private fun checkKeyword(keyword: String): Boolean {
+        if (keyword.isBlank()) {
+            _uiEvent.setValue(SelectBookUiEvent.ShowErrorMessage(SelectBookErrorType.ERROR_EMPTY_KEYWORD))
+            return false
+        }
+        if (keyword == _uiState.value?.keyword) {
+            _uiEvent.setValue(SelectBookUiEvent.ShowErrorMessage(SelectBookErrorType.ERROR_SAME_KEYWORD))
+            return false
+        }
+        return true
     }
 
     private fun updateSearchedBooks() {
         val keyword = _uiState.value?.keyword ?: return
-        _uiState.setValue(_uiState.value?.copy(isLoading = true))
+        _uiState.value = _uiState.value?.copy(isLoading = true)
         viewModelScope.launch {
             try {
-                val books: Books =
-                    withContext(Dispatchers.IO) {
-                        bookRepository.fetchBooks(keyword)
-                    }
-                _uiState.setValue(_uiState.value?.copy(isLoading = false, searchedBooks = books))
-                _uiEvent.setValue(SelectBookUiEvent.ShowSearchResult(_uiState.value?.searchedBooks ?: Books(emptyList())))
+                val books: Books = bookRepository.fetchBooks(keyword)
+                _uiState.value = _uiState.value?.copy(isLoading = false, searchedBooks = books)
             } catch (e: Exception) {
-                _uiEvent.setValue(SelectBookUiEvent.ShowToast(ErrorSelectBookType.ERROR_NETWORK))
+                _uiState.value = _uiState.value?.copy(isLoading = false)
+                _uiEvent.setValue(SelectBookUiEvent.ShowErrorMessage(SelectBookErrorType.ERROR_NETWORK))
             }
         }
-    }
-
-    companion object {
-        private const val NO_KEYWORD: String = ""
     }
 }

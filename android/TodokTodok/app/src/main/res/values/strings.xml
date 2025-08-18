@@ -58,7 +58,7 @@
     <string name="profile_setting">설정</string>
     <string name="profile_active_books">활동 도서</string>
     <string name="profile_created_discussion_room">생성한 토론방</string>
-    <string name="profile_joined_discussion_room">참여한 토론방</string>
+    <string name="profile_participated_discussion_room">참여한 토론방</string>
     <string name="profile_report_dialog_title">해당 회원을 신고하시겠습니까?</string>
     <string name="profile_block_dialog_title">해당 회원을 차단하시겠습니까?</string>
     <string name="profile_complete_support">%s 완료되었습니다."</string>
@@ -85,10 +85,10 @@
     <string name="content_description_search_keyword">도서 검색을 합니다</string>
     <string name="hint_search_keyword">도서 제목 또는 저자를 입력해주세요</string>
 
-    <string name="error_delete_keyword">검색어를 삭제했습니다</string>
     <string name="error_empty_keyword">검색어를 입력해주세요</string>
     <string name="error_no_selected_book">도서를 선택해주세요</string>
     <string name="error_network">네트워크 에러가 발생했어요</string>
+    <string name="error_same_keyword">동일한 키워드를 입력했습니다</string>
 
     <!-- 토론방 생성 화면 -->
     <string name="create_discussion_room_appbar">토론방 생성</string>
@@ -110,6 +110,6 @@
     <string name="setting_unblock">해제하기</string>
     <string name="setting_send_feedback">의견 보내기</string>
     <string name="content_description_select_book">토론하고 싶은 도서를 선택해주세요</string>
-    <string name="empty_search_result_title">선택된 도서 없음</string>
+    <string name="empty_search_result_title">선택된 도서 없습니다</string>
 
 </resources>

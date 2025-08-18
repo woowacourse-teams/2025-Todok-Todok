@@ -10,12 +10,14 @@ import android.view.WindowInsetsAnimation
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.android.material.snackbar.Snackbar
+import com.team.domain.model.Book
+import com.team.domain.model.Books
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivitySelectBookBinding
@@ -24,15 +26,10 @@ import com.team.todoktodok.presentation.view.book.vm.SelectBookViewModel
 import com.team.todoktodok.presentation.view.book.vm.SelectBookViewModelFactory
 import com.team.todoktodok.presentation.view.discussion.create.CreateDiscussionRoomActivity
 import com.team.todoktodok.presentation.view.discussion.create.SerializationCreateDiscussionRoomMode
+import com.team.todoktodok.presentation.view.serialization.SerializationBook
 import com.team.todoktodok.presentation.view.serialization.toSerialization
 
 class SelectBookActivity : AppCompatActivity() {
-    private val binding by lazy { ActivitySelectBookBinding.inflate(layoutInflater) }
-
-    private val adapter by lazy {
-        SearchBooksAdapter { position -> viewModel.updateSelectedBook(position) }
-    }
-
     private val viewModel by viewModels<SelectBookViewModel> {
         val repositoryModule = (application as App).container.repositoryModule
         SelectBookViewModelFactory(repositoryModule.bookRepository)
@@ -40,10 +37,15 @@ class SelectBookActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val binding = ActivitySelectBookBinding.inflate(layoutInflater)
+        val adapter = SearchBooksAdapter { position -> viewModel.updateSelectedBook(position) }
+
         setContentView(binding.main)
-        initSystemBar()
-        initView()
-        setupUiEvent()
+        initSystemBar(binding)
+        initView(binding, adapter)
+        setupUiState(binding, adapter)
+        setupUiEvent(binding)
         liftViewWithIme(binding.nsvEmptySearchResult, R.dimen.space_120)
     }
 
@@ -54,7 +56,7 @@ class SelectBookActivity : AppCompatActivity() {
         return super.dispatchTouchEvent(ev)
     }
 
-    private fun initSystemBar() {
+    private fun initSystemBar(binding: ActivitySelectBookBinding) {
         enableEdgeToEdge()
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -68,15 +70,19 @@ class SelectBookActivity : AppCompatActivity() {
         }
     }
 
-    private fun initView() {
+    private fun initView(
+        binding: ActivitySelectBookBinding,
+        adapter: SearchBooksAdapter,
+    ) {
         binding.apply {
+            etSearchKeyword.requestFocus()
             rvSearchedBooks.adapter = adapter
             btnBack.setOnClickListener {
                 finish()
             }
             etlSearchKeyword.setEndIconOnClickListener {
                 binding.etSearchKeyword.text = null
-                viewModel.onDeleteKeywordButtonClicked()
+                viewModel.updateKeyword(binding.etSearchKeyword.text.toString())
             }
             etSearchKeyword.setOnEditorActionListener { view, actionId, _ ->
                 handleSearchAction(view, actionId)
@@ -88,87 +94,79 @@ class SelectBookActivity : AppCompatActivity() {
         view: TextView,
         actionId: Int,
     ): Boolean =
-        if (actionId == EditorInfo.IME_ACTION_SEARCH || actionId == EditorInfo.IME_ACTION_DONE) {
+        if (actionId == EditorInfo.IME_ACTION_SEARCH) {
             val keyword = view.text.toString()
-            viewModel.onSearchAction(keyword)
+            viewModel.searchWithCurrentKeyword(keyword)
             true
         } else {
             false
         }
 
-    private fun setupUiEvent() {
+    private fun setupUiState(
+        binding: ActivitySelectBookBinding,
+        adapter: SearchBooksAdapter,
+    ) {
         viewModel.uiState.observe(this) { state: SelectBookUiState ->
-            dealWithUiState(state)
-        }
-        viewModel.uiEvent.observe(this) { event ->
-            dealWithUiEvent(event)
+            updateSearchedBooks(state.searchedBooks, binding, adapter)
+            updateLoadingState(state, binding)
         }
     }
 
-    private fun dealWithUiState(state: SelectBookUiState) {
-        if (state.searchedBooks.size == IS_EMPTY_SEARCH_RESULT) {
-            binding.nsvEmptySearchResult.visibility = View.VISIBLE
-            binding.rvSearchedBooks.visibility = View.GONE
-        } else {
-            binding.nsvEmptySearchResult.visibility = View.GONE
-            binding.rvSearchedBooks.visibility = View.VISIBLE
-        }
+    private fun updateLoadingState(
+        state: SelectBookUiState,
+        binding: ActivitySelectBookBinding,
+    ) {
         if (state.isLoading) {
             binding.progressBar.visibility = View.VISIBLE
             binding.nsvEmptySearchResult.visibility = View.GONE
-        } else {
-            binding.progressBar.visibility = View.GONE
+            binding.rvSearchedBooks.visibility = View.GONE
+            return
+        }
+        binding.progressBar.visibility = View.GONE
+    }
+
+    private fun updateSearchedBooks(
+        searchedBooks: Books,
+        binding: ActivitySelectBookBinding,
+        adapter: SearchBooksAdapter,
+    ) {
+        if (searchedBooks.size == IS_EMPTY_SEARCH_RESULT) {
+            binding.nsvEmptySearchResult.visibility = View.VISIBLE
+            binding.rvSearchedBooks.visibility = View.GONE
+            return
+        }
+        binding.nsvEmptySearchResult.visibility = View.GONE
+        binding.rvSearchedBooks.visibility = View.VISIBLE
+        adapter.submitList(searchedBooks.items)
+    }
+
+    private fun setupUiEvent(binding: ActivitySelectBookBinding) {
+        viewModel.uiEvent.observe(this) { event ->
+            when (event) {
+                is SelectBookUiEvent.NavigateToCreateDiscussionRoom ->
+                    navigateToCreateDiscussionRoom(event.book)
+
+                is SelectBookUiEvent.HideKeyboard ->
+                    hideKeyBoard(binding.etSearchKeyword)
+
+                is SelectBookUiEvent.ShowErrorMessage -> {
+                    Snackbar
+                        .make(binding.root, getString(event.message.id), Snackbar.LENGTH_SHORT)
+                        .show()
+                }
+            }
         }
     }
 
-    private fun dealWithUiEvent(event: SelectBookUiEvent) {
-        when (event) {
-            is SelectBookUiEvent.NavigateToCreateDiscussionRoom -> {
-                val book = event.book.toSerialization()
-                val intent =
-                    CreateDiscussionRoomActivity.Intent(
-                        this,
-                        SerializationCreateDiscussionRoomMode.Create(book),
-                    )
-                startActivity(intent)
-                finish()
-            }
-
-            is SelectBookUiEvent.HideKeyboard -> {
-                binding.etSearchKeyword.clearFocus()
-                hideKeyBoard(binding.etSearchKeyword)
-            }
-
-            is SelectBookUiEvent.RevealKeyboard -> {
-                binding.etSearchKeyword.requestFocus()
-            }
-
-            is SelectBookUiEvent.ShowToast -> {
-                val message: String =
-                    when (event.error) {
-                        ErrorSelectBookType.ERROR_NO_SELECTED_BOOK -> {
-                            getString(R.string.error_no_selected_book)
-                        }
-
-                        ErrorSelectBookType.ERROR_NETWORK -> {
-                            getString(R.string.error_network)
-                        }
-
-                        ErrorSelectBookType.ERROR_EMPTY_KEYWORD -> {
-                            getString(R.string.error_empty_keyword)
-                        }
-
-                        ErrorSelectBookType.ERROR_DELETE_KEYWORD -> {
-                            getString(R.string.error_delete_keyword)
-                        }
-                    }
-                Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-            }
-
-            is SelectBookUiEvent.ShowSearchResult -> {
-                adapter.submitList(event.books.items)
-            }
-        }
+    private fun navigateToCreateDiscussionRoom(book: Book) {
+        val serializationBook: SerializationBook = book.toSerialization()
+        val intent =
+            CreateDiscussionRoomActivity.Intent(
+                this,
+                SerializationCreateDiscussionRoomMode.Create(serializationBook),
+            )
+        startActivity(intent)
+        finish()
     }
 
     private fun hideKeyBoard(view: View) {
