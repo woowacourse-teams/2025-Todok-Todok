@@ -7,6 +7,8 @@ import androidx.lifecycle.viewModelScope
 import com.team.domain.model.Book
 import com.team.domain.model.Support
 import com.team.domain.model.exception.NetworkResult
+import com.team.domain.model.exception.onFailure
+import com.team.domain.model.exception.onSuccess
 import com.team.domain.model.member.MemberDiscussion
 import com.team.domain.model.member.MemberDiscussionType
 import com.team.domain.model.member.MemberId
@@ -113,8 +115,10 @@ class ProfileViewModel(
         viewModelScope.launch {
             val memberId = _uiState.value?.memberId
             if (memberId is MemberId.OtherUser) {
-                memberRepository.supportMember(memberId, type)
-                onUiEvent(ProfileUiEvent.OnCompleteSupport(type))
+                memberRepository
+                    .supportMember(memberId, type)
+                    .onSuccess { onUiEvent(ProfileUiEvent.OnCompleteSupport(type)) }
+                    .onFailure { onUiEvent(ProfileUiEvent.ShowErrorMessage(it)) }
             }
         }
     }

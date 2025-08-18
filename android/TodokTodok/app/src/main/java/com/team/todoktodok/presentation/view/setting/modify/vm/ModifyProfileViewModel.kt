@@ -46,11 +46,10 @@ class ModifyProfileViewModel(
             Nickname(text)
         }.onSuccess { nickname ->
             viewModelScope.launch {
-                memberRepository.modifyProfile(text, description)
-//                    .onSuccess { data , header -> onUiEvent(ModifyProfileUiEvent.OnCompleteModification) }
-//                    .onFailure { exception ->
-//                        onUiEvent(ModifyProfileUiEvent.ShowErrorMessage(exception))
-//                    }
+                memberRepository
+                    .modifyProfile(text, description)
+                    .onSuccess { onUiEvent(ModifyProfileUiEvent.OnCompleteModification) }
+                    .onFailure { onUiEvent(ModifyProfileUiEvent.ShowErrorMessage(it)) }
             }
         }.onFailure { e ->
             _uiEvent.setValue(ModifyProfileUiEvent.ShowInvalidNickNameMessage(e as NickNameException))

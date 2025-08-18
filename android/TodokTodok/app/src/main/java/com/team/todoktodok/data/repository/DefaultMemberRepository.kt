@@ -53,9 +53,7 @@ class DefaultMemberRepository(
     override suspend fun supportMember(
         id: MemberId.OtherUser,
         type: Support,
-    ) {
-        remoteMemberRemoteDataSource.supportMember(id, type)
-    }
+    ): NetworkResult<Unit> = remoteMemberRemoteDataSource.supportMember(id, type)
 
     override suspend fun getMemberBooks(id: MemberId): NetworkResult<List<Book>> =
         remoteMemberRemoteDataSource
@@ -65,9 +63,12 @@ class DefaultMemberRepository(
     override suspend fun modifyProfile(
         nickname: String,
         message: String,
-    ) = remoteMemberRemoteDataSource.modifyProfile(ModifyProfileRequest(nickname, message))
+    ): NetworkResult<Unit> = remoteMemberRemoteDataSource.modifyProfile(ModifyProfileRequest(nickname, message))
 
-    override suspend fun getBlockedMembers(): List<BlockedMember> = remoteMemberRemoteDataSource.fetchBlockedMembers().map { it.toDomain() }
+    override suspend fun getBlockedMembers(): NetworkResult<List<BlockedMember>> =
+        remoteMemberRemoteDataSource
+            .fetchBlockedMembers()
+            .map { members -> members.map { it.toDomain() } }
 
-    override suspend fun unblock(id: Long) = remoteMemberRemoteDataSource.unblock(id)
+    override suspend fun unblock(id: Long): NetworkResult<Unit> = remoteMemberRemoteDataSource.unblock(id)
 }

@@ -76,12 +76,11 @@ class DefaultMemberRemoteDataSource(
     override suspend fun supportMember(
         request: MemberId.OtherUser,
         type: Support,
-    ) {
+    ): NetworkResult<Unit> =
         when (type) {
             Support.BLOCK -> memberService.block(request.id)
             Support.REPORT -> memberService.report(request.id)
         }
-    }
 
     override suspend fun fetchMemberBooks(request: MemberId): NetworkResult<List<BookResponse>> {
         val memberId = adjustMemberType(request)
@@ -94,11 +93,9 @@ class DefaultMemberRemoteDataSource(
             is MemberId.OtherUser -> request.id
         }
 
-    override suspend fun modifyProfile(request: ModifyProfileRequest) {
-        memberService.modifyProfile(request)
-    }
+    override suspend fun modifyProfile(request: ModifyProfileRequest): NetworkResult<Unit> = memberService.modifyProfile(request)
 
-    override suspend fun fetchBlockedMembers(): List<BlockedMemberResponse> = memberService.fetchBlockedMembers()
+    override suspend fun fetchBlockedMembers(): NetworkResult<List<BlockedMemberResponse>> = memberService.fetchBlockedMembers()
 
     override suspend fun unblock(request: Long) = memberService.unblock(request)
 }

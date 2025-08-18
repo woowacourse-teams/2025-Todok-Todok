@@ -43,12 +43,12 @@ interface MemberService {
     @POST("v1/members/{memberId}/report")
     suspend fun report(
         @Path("memberId") memberId: Long,
-    )
+    ): NetworkResult<Unit>
 
     @POST("v1/members/{memberId}/block")
     suspend fun block(
         @Path("memberId") memberId: Long,
-    )
+    ): NetworkResult<Unit>
 
     @GET("v1/members/{memberId}/books")
     suspend fun fetchMemberBooks(
@@ -58,13 +58,13 @@ interface MemberService {
     @PUT("v1/members/profile")
     suspend fun modifyProfile(
         @Body requestBody: ModifyProfileRequest,
-    )
+    ): NetworkResult<Unit>
 
     @GET("v1/members/block")
-    suspend fun fetchBlockedMembers(): List<BlockedMemberResponse>
+    suspend fun fetchBlockedMembers(): NetworkResult<List<BlockedMemberResponse>>
 
     @DELETE("v1/members/{memberId}/block")
     suspend fun unblock(
         @Path("memberId") memberId: Long,
-    )
+    ): NetworkResult<Unit>
 }
