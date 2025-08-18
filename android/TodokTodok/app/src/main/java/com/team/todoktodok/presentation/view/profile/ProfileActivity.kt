@@ -50,6 +50,7 @@ class ProfileActivity : AppCompatActivity() {
         setContentView(binding.root)
         val memberId: Long? = intent?.getLongExtra(ARG_MEMBER_ID, DEFAULT_MEMBER_ID)
         requireNotNull(memberId) { MEMBER_ID_NOT_FOUND }
+        messageConverter = ExceptionMessageConverter()
 
         viewModel.setMemberId(memberId)
         viewModel.initState()
