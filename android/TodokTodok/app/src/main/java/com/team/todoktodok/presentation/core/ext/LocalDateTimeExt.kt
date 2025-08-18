@@ -17,40 +17,106 @@ fun LocalDateTime.toRelativeString(
     targetZone: ZoneId = KST,
     now: ZonedDateTime = ZonedDateTime.now(targetZone),
     justNowThresholdSeconds: Long = 5L,
-): String {
-    val then = this.atZone(sourceZone).withZoneSameInstant(targetZone)
+): String = toRelative(sourceZone, targetZone, now, justNowThresholdSeconds).format(context)
+
+private fun RelativeTime.format(context: Context): String =
+    when (this) {
+        RelativeTime.JustNow -> context.getString(R.string.all_relative_just_now)
+        RelativeTime.Soon -> context.getString(R.string.all_relative_soon)
+        is RelativeTime.Years -> context.getString(R.string.all_relative_years, value)
+        is RelativeTime.Months -> context.getString(R.string.all_relative_months, value)
+        is RelativeTime.Weeks -> context.getString(R.string.all_relative_weeks, value)
+        is RelativeTime.Days -> context.getString(R.string.all_relative_days, value)
+        is RelativeTime.Hours -> context.getString(R.string.all_relative_hours, value)
+        is RelativeTime.Minutes -> context.getString(R.string.all_relative_minutes, value)
+        is RelativeTime.Seconds -> context.getString(R.string.all_relative_seconds, value)
+    }
+
+private fun LocalDateTime.toRelative(
+    sourceZone: ZoneId = ZoneOffset.UTC,
+    targetZone: ZoneId = KST,
+    now: ZonedDateTime = ZonedDateTime.now(targetZone),
+    justNowThresholdSeconds: Long = 5L,
+): RelativeTime {
+    val then: ZonedDateTime = this.atZone(sourceZone).withZoneSameInstant(targetZone)
 
     if (then.isAfter(now)) {
         val aheadSec = Duration.between(now, then).seconds
-        return if (aheadSec <= justNowThresholdSeconds) {
-            context.getString(R.string.all_relative_just_now)
-        } else {
-            context.getString(R.string.all_relative_soon)
-        }
+        return if (aheadSec <= justNowThresholdSeconds) RelativeTime.JustNow else RelativeTime.Soon
     }
 
-    val years = ChronoUnit.YEARS.between(then, now).toInt()
-    if (years > 0) return context.getString(R.string.all_relative_years, years)
-
-    val months = ChronoUnit.MONTHS.between(then, now).toInt()
-    if (months > 0) return context.getString(R.string.all_relative_months, months)
-
-    val weeks = ChronoUnit.WEEKS.between(then, now).toInt()
-    if (weeks > 0) return context.getString(R.string.all_relative_weeks, weeks)
-
-    val days = ChronoUnit.DAYS.between(then, now).toInt()
-    if (days > 0) return context.getString(R.string.all_relative_days, days)
-
-    val hours = ChronoUnit.HOURS.between(then, now).toInt()
-    if (hours > 0) return context.getString(R.string.all_relative_hours, hours)
-
-    val minutes = ChronoUnit.MINUTES.between(then, now).toInt()
-    if (minutes > 0) return context.getString(R.string.all_relative_minutes, minutes)
+    ChronoUnit.YEARS
+        .between(then, now)
+        .toInt()
+        .let { if (it > 0) return RelativeTime.Years(it) }
+    ChronoUnit.MONTHS
+        .between(then, now)
+        .toInt()
+        .let { if (it > 0) return RelativeTime.Months(it) }
+    ChronoUnit.WEEKS
+        .between(then, now)
+        .toInt()
+        .let { if (it > 0) return RelativeTime.Weeks(it) }
+    ChronoUnit.DAYS
+        .between(then, now)
+        .toInt()
+        .let { if (it > 0) return RelativeTime.Days(it) }
+    ChronoUnit.HOURS
+        .between(then, now)
+        .toInt()
+        .let { if (it > 0) return RelativeTime.Hours(it) }
+    ChronoUnit.MINUTES
+        .between(then, now)
+        .toInt()
+        .let { if (it > 0) return RelativeTime.Minutes(it) }
 
     val seconds = ChronoUnit.SECONDS.between(then, now).toInt()
     return if (seconds <= justNowThresholdSeconds) {
-        context.getString(R.string.all_relative_just_now)
+        RelativeTime.JustNow
     } else {
-        context.getString(R.string.all_relative_seconds, seconds)
+        RelativeTime.Seconds(
+            seconds,
+        )
     }
+}
+
+sealed interface RelativeTime {
+    data object JustNow : RelativeTime // "방금 전"
+
+    data object Soon : RelativeTime // "곧"
+
+    @JvmInline
+    value class Years(
+        val value: Int,
+    ) : RelativeTime
+
+    @JvmInline
+    value class Months(
+        val value: Int,
+    ) : RelativeTime
+
+    @JvmInline
+    value class Weeks(
+        val value: Int,
+    ) : RelativeTime
+
+    @JvmInline
+    value class Days(
+        val value: Int,
+    ) : RelativeTime
+
+    @JvmInline
+    value class Hours(
+        val value: Int,
+    ) : RelativeTime
+
+    @JvmInline
+    value class Minutes(
+        val value: Int,
+    ) : RelativeTime
+
+    @JvmInline
+    value class Seconds(
+        val value: Int,
+    ) : RelativeTime
 }
