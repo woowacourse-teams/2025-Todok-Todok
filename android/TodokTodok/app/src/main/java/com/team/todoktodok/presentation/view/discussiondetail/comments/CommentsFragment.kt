@@ -202,10 +202,11 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
 
     private fun createOwnedCommentPopup(state: CommentItemUiState): PopupWindow {
         val commentId = state.comment.id
+        val requestKey = COMMENT_DELETE_DIALOG_REQUEST_KEY.format(commentId)
 
         childFragmentManager.registerPositiveResultListener(
             viewLifecycleOwner,
-            COMMENT_DELETE_DIALOG_REQUEST_KEY.format(commentId),
+            requestKey,
             CommonDialog.RESULT_KEY_COMMON_DIALOG,
         ) { viewModel.deleteComment(commentId) }
 
@@ -217,7 +218,7 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
         }
 
         binding.tvDelete.setOnClickListener {
-            showDeleteDialog(commentId)
+            showDeleteDialog(requestKey)
             popupWindow?.dismiss()
         }
 
@@ -226,39 +227,40 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
 
     private fun createExternalCommentPopup(state: CommentItemUiState): PopupWindow {
         val commentId = state.comment.id
+        val requestKey = COMMENT_REPORT_DIALOG_REQUEST_KEY.format(commentId)
 
         childFragmentManager.registerPositiveResultListener(
             viewLifecycleOwner,
-            COMMENT_REPORT_DIALOG_REQUEST_KEY.format(commentId),
+            requestKey,
             CommonDialog.RESULT_KEY_COMMON_DIALOG,
         ) { viewModel.reportComment(commentId) }
 
         val binding = MenuExternalDiscussionBinding.inflate(layoutInflater)
 
         binding.tvReport.setOnClickListener {
-            showReportDialog(commentId)
+            showReportDialog(requestKey)
             popupWindow?.dismiss()
         }
 
         return createPopUpView(binding.root)
     }
 
-    private fun showReportDialog(commentId: Long) {
+    private fun showReportDialog(requestKey: String) {
         val dialog =
             CommonDialog.newInstance(
                 getString(R.string.all_report_comment),
                 getString(R.string.all_report_action),
-                COMMENT_REPORT_DIALOG_REQUEST_KEY.format(commentId),
+                requestKey,
             )
         dialog.show(childFragmentManager, CommonDialog.TAG)
     }
 
-    private fun showDeleteDialog(commentId: Long) {
+    private fun showDeleteDialog(requestKey: String) {
         val dialog =
             CommonDialog.newInstance(
                 getString(R.string.all_comment_delete_confirm),
                 getString(R.string.all_delete_action),
-                COMMENT_DELETE_DIALOG_REQUEST_KEY.format(commentId),
+                requestKey,
             )
         dialog.show(childFragmentManager, CommonDialog.TAG)
     }
