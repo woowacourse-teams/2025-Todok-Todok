@@ -1,7 +1,5 @@
 package todoktodok.backend.comment.presentation;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
@@ -28,16 +26,15 @@ import todoktodok.backend.global.resolver.LoginMember;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/v1/discussions/{discussionId}/comments")
-public class CommentController {
+public class CommentController implements CommentApiDocs {
 
     private final CommentCommandService commentCommandService;
     private final CommentQueryService commentQueryService;
 
-    @Operation(summary = "댓글 생성 API")
     @Auth(value = Role.USER)
     @PostMapping
     public ResponseEntity<Void> createComment(
-            @Parameter(hidden = true) @LoginMember final Long memberId,
+            @LoginMember final Long memberId,
             @PathVariable final Long discussionId,
             @RequestBody @Valid final CommentRequest commentRequest
     ) {
@@ -48,11 +45,10 @@ public class CommentController {
                 .build();
     }
 
-    @Operation(summary = "댓글 좋아요 API")
     @Auth(value = Role.USER)
     @PostMapping("/{commentId}/like")
     public ResponseEntity<Void> toggleLike(
-            @Parameter(hidden = true) @LoginMember final Long memberId,
+            @LoginMember final Long memberId,
             @PathVariable final Long discussionId,
             @PathVariable final Long commentId
     ) {
@@ -66,11 +62,10 @@ public class CommentController {
                 .build();
     }
 
-    @Operation(summary = "댓글 신고 API")
     @Auth(value = Role.USER)
     @PostMapping("/{commentId}/report")
     public ResponseEntity<Void> report(
-            @Parameter(hidden = true) @LoginMember final Long memberId,
+            @LoginMember final Long memberId,
             @PathVariable final Long discussionId,
             @PathVariable final Long commentId
     ) {
@@ -80,22 +75,20 @@ public class CommentController {
                 .build();
     }
 
-    @Operation(summary = "토론방별 댓글 목록 조회 API")
     @Auth(value = Role.USER)
     @GetMapping
     public ResponseEntity<List<CommentResponse>> getComments(
-            @Parameter(hidden = true) @LoginMember final Long memberId,
+            @LoginMember final Long memberId,
             @PathVariable final Long discussionId
     ) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(commentQueryService.getComments(memberId, discussionId));
     }
 
-    @Operation(summary = "댓글 단일 조회 API")
     @Auth(value = Role.USER)
     @GetMapping("/{commentId}")
     public ResponseEntity<CommentResponse> getComment(
-            @Parameter(hidden = true) @LoginMember final Long memberId,
+            @LoginMember final Long memberId,
             @PathVariable final Long discussionId,
             @PathVariable final Long commentId
     ) {
@@ -103,11 +96,10 @@ public class CommentController {
                 .body(commentQueryService.getComment(memberId, discussionId, commentId));
     }
 
-    @Operation(summary = "댓글 수정 API")
     @Auth(value = Role.USER)
     @PatchMapping("/{commentId}")
     public ResponseEntity<Void> updateComment(
-            @Parameter(hidden = true) @LoginMember final Long memberId,
+            @LoginMember final Long memberId,
             @PathVariable final Long discussionId,
             @PathVariable final Long commentId,
             @RequestBody @Valid final CommentRequest commentRequest
@@ -119,11 +111,10 @@ public class CommentController {
                 .build();
     }
 
-    @Operation(summary = "댓글 삭제 API")
     @Auth(value = Role.USER)
     @DeleteMapping("/{commentId}")
     public ResponseEntity<Void> deleteComment(
-            @Parameter(hidden = true) @LoginMember final Long memberId,
+            @LoginMember final Long memberId,
             @PathVariable final Long discussionId,
             @PathVariable final Long commentId
     ) {
