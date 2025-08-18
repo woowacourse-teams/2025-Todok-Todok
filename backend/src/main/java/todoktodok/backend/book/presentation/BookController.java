@@ -1,7 +1,5 @@
 package todoktodok.backend.book.presentation;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -24,25 +22,23 @@ import todoktodok.backend.global.resolver.LoginMember;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/v1/books")
-public class BookController {
+public class BookController implements BookApiDocs {
 
     private final BookCommandService bookCommandService;
     private final BookQueryService bookQueryService;
 
-    @Operation(summary = "도서 생성 API")
     @Auth(value = Role.USER)
     @PostMapping
     public ResponseEntity<Long> createBook(
-            @Parameter(hidden = true) @LoginMember final Long memberId,
+            @LoginMember final Long memberId,
             @RequestBody @Valid final BookRequest bookRequest
     ) {
-        Long bookId = bookCommandService.createOrUpdateBook(memberId, bookRequest);
+        final Long bookId = bookCommandService.createOrUpdateBook(memberId, bookRequest);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(bookId);
     }
 
-    @Operation(summary = "도서 검색 API")
     @Auth(value = Role.USER)
     @GetMapping("/search")
     public ResponseEntity<List<AladinBookResponse>> search(
