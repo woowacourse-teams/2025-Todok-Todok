@@ -97,7 +97,6 @@ sealed class TodokTodokExceptions : Throwable() {
     /**
      * 차단 관련 도메인 예외
      */
-
     sealed class BlockException(
         override val message: String,
     ) : TodokTodokExceptions() {
