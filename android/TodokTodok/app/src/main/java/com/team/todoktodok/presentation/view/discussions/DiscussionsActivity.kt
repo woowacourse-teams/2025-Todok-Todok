@@ -14,12 +14,15 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.team.domain.model.DiscussionFilter
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivityDiscussionsBinding
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
+import com.team.todoktodok.presentation.core.component.AlertSnackBar
+import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
 import com.team.todoktodok.presentation.core.ext.clearHintOnFocus
 import com.team.todoktodok.presentation.view.book.SelectBookActivity
 import com.team.todoktodok.presentation.view.discussions.all.AllDiscussionFragment
@@ -91,7 +94,7 @@ class DiscussionsActivity : AppCompatActivity() {
         viewModel.uiEvent.observe(this) { event ->
             when (event) {
                 is DiscussionsUiEvent.ShowErrorMessage -> {
-                    messageConverter(event.exception)
+                    AlertSnackBar(binding.root, messageConverter(event.exception)).show()
                 }
 
                 else -> Unit
