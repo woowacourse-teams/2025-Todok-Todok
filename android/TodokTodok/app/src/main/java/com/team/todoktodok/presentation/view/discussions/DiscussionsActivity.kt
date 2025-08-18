@@ -19,6 +19,7 @@ import com.team.domain.model.DiscussionFilter
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivityDiscussionsBinding
+import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.ext.clearHintOnFocus
 import com.team.todoktodok.presentation.view.book.SelectBookActivity
 import com.team.todoktodok.presentation.view.discussions.all.AllDiscussionFragment
@@ -35,6 +36,10 @@ class DiscussionsActivity : AppCompatActivity() {
         DiscussionsViewModelFactory(repositoryModule.discussionRepository)
     }
 
+    private val messageConverter: ExceptionMessageConverter by lazy {
+        ExceptionMessageConverter()
+    }
+
     private lateinit var manager: InputMethodManager
 
     private val allDiscussionFragment = AllDiscussionFragment()
@@ -49,6 +54,7 @@ class DiscussionsActivity : AppCompatActivity() {
         setupSystemBars()
         initFragments()
         setupUiState()
+        setupUiEvent()
         initView()
     }
 
@@ -78,6 +84,18 @@ class DiscussionsActivity : AppCompatActivity() {
         viewModel.uiState.observe(this) { state ->
             updateTabs(state.allDiscussionsSize, state.myDiscussionsSize)
             updateLoadingState(state.isLoading)
+        }
+    }
+
+    private fun setupUiEvent() {
+        viewModel.uiEvent.observe(this) { event ->
+            when (event) {
+                is DiscussionsUiEvent.ShowErrorMessage -> {
+                    messageConverter(event.exception)
+                }
+
+                else -> Unit
+            }
         }
     }
 

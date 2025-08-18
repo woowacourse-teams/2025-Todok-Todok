@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.team.domain.model.Discussion
 import com.team.domain.model.DiscussionFilter
+import com.team.domain.model.exception.onFailure
+import com.team.domain.model.exception.onSuccess
 import com.team.domain.repository.DiscussionRepository
 import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
 import com.team.todoktodok.presentation.core.event.SingleLiveData
@@ -54,12 +56,14 @@ class DiscussionsViewModel(
 
         viewModelScope.launch {
             for (filter in DiscussionFilter.entries) {
-                val discussions = discussionRepository.getDiscussions(filter, keyword)
-                updateDiscussions(filter, discussions)
-
-                if (filter == currentFilter) {
-                    onUiEvent(discussions, filter)
-                }
+                discussionRepository
+                    .getDiscussions(filter, keyword)
+                    .onSuccess {
+                        updateDiscussions(filter, it)
+                        if (filter == currentFilter) onUiEvent(it, filter)
+                    }.onFailure {
+                        onUiEvent(DiscussionsUiEvent.ShowErrorMessage(it))
+                    }
             }
             setLoading()
         }
@@ -80,6 +84,10 @@ class DiscussionsViewModel(
 
     private fun setLoading() {
         _uiState.value = _uiState.value?.toggleLoading()
+    }
+
+    private fun onUiEvent(event: DiscussionsUiEvent) {
+        _uiEvent.setValue(event)
     }
 
     private fun onUiEvent(

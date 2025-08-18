@@ -2,6 +2,7 @@ package com.team.todoktodok.presentation.vm
 
 import com.team.domain.model.Discussion
 import com.team.domain.model.DiscussionFilter
+import com.team.domain.model.exception.NetworkResult
 import com.team.domain.repository.DiscussionRepository
 import com.team.todoktodok.CoroutinesTestExtension
 import com.team.todoktodok.InstantTaskExecutorExtension
@@ -42,7 +43,7 @@ class DiscussionsViewModelTest {
             DiscussionFilter.entries.forEach { filter ->
                 coEvery {
                     mockDiscussionRepository.getDiscussions(filter, "")
-                } returns emptyList()
+                } returns NetworkResult.Success(emptyList())
             }
 
             // When
@@ -66,7 +67,7 @@ class DiscussionsViewModelTest {
             DiscussionFilter.entries.forEach { filter ->
                 coEvery {
                     mockDiscussionRepository.getDiscussions(filter, any())
-                } returns emptyList()
+                } returns NetworkResult.Success(emptyList())
             }
 
             // When
@@ -90,7 +91,7 @@ class DiscussionsViewModelTest {
             DiscussionFilter.entries.forEach { filter ->
                 coEvery {
                     mockDiscussionRepository.getDiscussions(filter, any())
-                } returns emptyList()
+                } returns NetworkResult.Success(emptyList())
             }
 
             // When
@@ -115,7 +116,7 @@ class DiscussionsViewModelTest {
             DiscussionFilter.entries.forEach { filter ->
                 coEvery {
                     mockDiscussionRepository.getDiscussions(filter, any())
-                } returns DISCUSSIONS
+                } returns NetworkResult.Success(DISCUSSIONS)
             }
 
             // When
@@ -140,7 +141,7 @@ class DiscussionsViewModelTest {
             DiscussionFilter.entries.forEach { filter ->
                 coEvery {
                     mockDiscussionRepository.getDiscussions(filter, any())
-                } returns DISCUSSIONS
+                } returns NetworkResult.Success(DISCUSSIONS)
             }
 
             // When
@@ -163,7 +164,7 @@ class DiscussionsViewModelTest {
             DiscussionFilter.entries.forEach { filter ->
                 coEvery {
                     mockDiscussionRepository.getDiscussions(filter, any())
-                } returns emptyList()
+                } returns NetworkResult.Success(emptyList())
             }
 
             // When
