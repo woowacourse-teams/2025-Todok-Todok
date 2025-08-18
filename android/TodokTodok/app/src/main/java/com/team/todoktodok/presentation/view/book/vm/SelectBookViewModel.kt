@@ -6,21 +6,41 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.team.domain.model.Books
 import com.team.domain.repository.BookRepository
+import com.team.domain.repository.DiscussionRepository
 import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
 import com.team.todoktodok.presentation.core.event.SingleLiveData
 import com.team.todoktodok.presentation.view.book.SelectBookErrorType
 import com.team.todoktodok.presentation.view.book.SelectBookUiEvent
 import com.team.todoktodok.presentation.view.book.SelectBookUiState
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 class SelectBookViewModel(
     private val bookRepository: BookRepository,
+    private val discussionRepository: DiscussionRepository,
 ) : ViewModel() {
     private val _uiState: MutableLiveData<SelectBookUiState> = MutableLiveData(SelectBookUiState())
     val uiState: LiveData<SelectBookUiState> get() = _uiState
 
     private val _uiEvent: MutableSingleLiveData<SelectBookUiEvent> = MutableSingleLiveData()
     val uiEvent: SingleLiveData<SelectBookUiEvent> get() = _uiEvent
+
+    init {
+        viewModelScope.launch {
+            val hasDiscussion = async { discussionRepository.hasDiscussion() }
+            if (hasDiscussion.await()) {
+                _uiEvent.setValue(SelectBookUiEvent.ShowSavedDiscussionRoom)
+            }
+        }
+    }
+
+    fun getBook() {
+        viewModelScope.launch {
+            val book = async { discussionRepository.getBook() }
+            _uiEvent.setValue(SelectBookUiEvent.NavigateToCreateDiscussionRoom(book.await()))
+        }
+    }
 
     fun searchWithCurrentKeyword(keyword: String) {
         _uiEvent.setValue(SelectBookUiEvent.HideKeyboard)
