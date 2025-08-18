@@ -57,6 +57,10 @@ jobs:
     needs: ci
     runs-on: [self-hosted, dev]
     steps:
+      - name: Cleanup backend log directory before checkout
+        run: |
+          sudo rm -rf backend/log/dev || true
+
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
