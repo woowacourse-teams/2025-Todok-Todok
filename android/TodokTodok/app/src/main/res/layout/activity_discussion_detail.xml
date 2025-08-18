@@ -42,6 +42,7 @@
         android:id="@+id/iv_book_image"
         android:layout_width="@dimen/space_16"
         android:layout_height="@dimen/space_0"
+        android:contentDescription="@string/content_description_discussion_detail_book_profile"
         app:layout_constraintBottom_toBottomOf="@id/tv_book_title"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/tv_book_title" />
@@ -91,6 +92,7 @@
         android:id="@+id/iv_userProfile"
         android:layout_width="@dimen/space_16"
         android:layout_height="0dp"
+        android:contentDescription="@string/content_description_discussion_detail_user_profile"
         app:layout_constraintBottom_toBottomOf="@id/tv_user_nickname"
         app:layout_constraintEnd_toStartOf="@id/tv_user_nickname"
         app:layout_constraintTop_toTopOf="@id/tv_user_nickname" />

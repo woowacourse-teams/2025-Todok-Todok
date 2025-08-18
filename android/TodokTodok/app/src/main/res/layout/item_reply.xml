@@ -11,6 +11,7 @@
         android:id="@+id/iv_user_profile"
         android:layout_width="@dimen/space_16"
         android:layout_height="@dimen/space_0"
+        android:contentDescription="@string/content_description_comment_detail_reply_user_profile"
         app:layout_constraintBottom_toBottomOf="@id/tv_user_nickname"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/tv_user_nickname" />
