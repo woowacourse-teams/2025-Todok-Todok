@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -19,6 +20,7 @@ import com.team.domain.model.Book
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivityCreateDiscussionRoomBinding
+import com.team.todoktodok.presentation.core.component.CommonDialog
 import com.team.todoktodok.presentation.core.ext.getParcelableCompat
 import com.team.todoktodok.presentation.core.ext.loadImage
 import com.team.todoktodok.presentation.view.book.SelectBookActivity
@@ -74,6 +76,19 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
     }
 
     private fun initView(binding: ActivityCreateDiscussionRoomBinding) {
+        supportFragmentManager.setFragmentResultListener(
+            CommonDialog.REQUEST_KEY_COMMON_DIALOG,
+            this
+        ) { _, bundle ->
+            val confirmed = bundle.getBoolean(CommonDialog.RESULT_KEY_COMMON_DIALOG)
+            if (confirmed) {
+                viewModel.saveDraft()
+                   finish()
+            } else {
+                finish()
+            }
+
+        }
         binding.apply {
             when (mode) {
                 is SerializationCreateDiscussionRoomMode.Create -> settingCreateMode(binding)
@@ -96,6 +111,10 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
         binding.btnCreate.setOnClickListener {
             viewModel.createDiscussionRoom()
         }
+
+            binding.etDiscussionRoomTitle.setText(viewModel.uiState.value?.title)
+            binding.etDiscussionRoomOpinion.setText(viewModel.uiState.value?.opinion)
+
     }
 
     private fun settingEditMode(binding: ActivityCreateDiscussionRoomBinding) {
@@ -126,9 +145,20 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
         viewModel.uiState.observe(this@CreateDiscussionRoomActivity) { uiState: CreateDiscussionUiState ->
             observeBook(uiState.book, binding)
             observeIsCreate(uiState.isCreate, binding)
+            observeTitle(uiState.title, binding)
+            observeOpinion(uiState.opinion, binding)
         }
     }
 
+    private fun observeTitle(title: String, binding: ActivityCreateDiscussionRoomBinding) {
+        if ( binding.etDiscussionRoomTitle.text.toString() != title) {
+            binding.etDiscussionRoomTitle.setText(title)}
+    }
+
+    private fun observeOpinion(opinion: String, binding: ActivityCreateDiscussionRoomBinding) {
+        if ( binding.etDiscussionRoomOpinion.text.toString() != opinion) {
+        binding.etDiscussionRoomOpinion.setText(opinion)}
+    }
     private fun observeIsCreate(isCreate: Boolean, binding: ActivityCreateDiscussionRoomBinding) {
         if (isCreate) {
             binding.btnCreate.isEnabled = true
@@ -138,6 +168,10 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
                     R.color.green_1A,
                 ),
             )
+            binding.btnBack.setOnClickListener {
+                val dialog = CommonDialog.newInstance("작성중인 내용을 임시저장하시겠습니까?", "저장")
+                dialog.show(supportFragmentManager, CommonDialog.TAG)
+            }
         }
     }
 

@@ -1,5 +1,6 @@
 package com.team.todoktodok.presentation.view.discussion.create.vm
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,11 +12,15 @@ import com.team.domain.repository.DiscussionRepository
 import com.team.domain.repository.TokenRepository
 import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
 import com.team.todoktodok.presentation.core.event.SingleLiveData
+import com.team.todoktodok.presentation.view.book.SelectBookUiEvent
 import com.team.todoktodok.presentation.view.discussion.create.CreateDiscussionUiEvent
 import com.team.todoktodok.presentation.view.discussion.create.CreateDiscussionUiState
 import com.team.todoktodok.presentation.view.discussion.create.ErrorCreateDiscussionType
 import com.team.todoktodok.presentation.view.discussion.create.SerializationCreateDiscussionRoomMode
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class CreateDiscussionRoomViewModel(
     private val mode: SerializationCreateDiscussionRoomMode,
@@ -39,6 +44,16 @@ class CreateDiscussionRoomViewModel(
         when (mode) {
             is SerializationCreateDiscussionRoomMode.Create -> {
                 _uiState.value = _uiState.value?.copy(book = mode.selectedBook.toDomain())
+                viewModelScope.launch(Dispatchers.IO) {
+                    val book = async { discussionRepository.getBook() }.await()
+                    if (_uiState.value?.book == book) {
+                        val discussion = async { discussionRepository.getDiscussion() }.await()
+                        if (discussion != null) {
+                            withContext(Dispatchers.Main) {
+                            _uiState.value = _uiState.value?.copy(title = discussion.title, opinion = discussion.opinion)}
+                        }
+                    }
+                }
             }
 
             is SerializationCreateDiscussionRoomMode.Edit -> {
@@ -46,6 +61,13 @@ class CreateDiscussionRoomViewModel(
                 getDiscussionRoom(mode.discussionRoomId)
             }
         }
+    }
+
+    fun saveDraft() {
+        val book = _uiState.value?.book ?: return
+        val title = _uiState.value?.title ?: return
+        val opinion = _uiState.value?.opinion ?: return
+        viewModelScope.launch { discussionRepository.saveDiscussionRoom(book, title, opinion) }
     }
 
     fun updateTitle(title: String) {
