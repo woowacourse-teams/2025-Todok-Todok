@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.team.domain.model.Book
 import com.team.domain.model.Support
+import com.team.domain.model.exception.NetworkResult
 import com.team.domain.model.member.MemberDiscussion
 import com.team.domain.model.member.MemberDiscussionType
 import com.team.domain.model.member.MemberId
@@ -60,22 +61,52 @@ class ProfileViewModel(
 
     fun loadProfile(id: MemberId): Deferred<Profile> =
         viewModelScope.async {
-            memberRepository.getProfile(id)
+            when (val result = memberRepository.getProfile(id)) {
+                is NetworkResult.Success -> result.data
+                is NetworkResult.Failure -> {
+                    onUiEvent(ProfileUiEvent.ShowErrorMessage(result.exception))
+                    Profile.EMPTY
+                }
+            }
         }
 
     fun loadActivatedBooks(id: MemberId): Deferred<List<Book>> =
         viewModelScope.async {
-            memberRepository.getMemberBooks(id)
+            when (val result = memberRepository.getMemberBooks(id)) {
+                is NetworkResult.Success -> result.data
+                is NetworkResult.Failure -> {
+                    onUiEvent(ProfileUiEvent.ShowErrorMessage(result.exception))
+                    emptyList()
+                }
+            }
         }
 
     fun loadParticipatedDiscussions(id: MemberId): Deferred<List<MemberDiscussion>> =
         viewModelScope.async {
-            memberRepository.getMemberDiscussionRooms(id, MemberDiscussionType.PARTICIPATED)
+            when (
+                val result =
+                    memberRepository.getMemberDiscussionRooms(id, MemberDiscussionType.PARTICIPATED)
+            ) {
+                is NetworkResult.Success -> result.data
+                is NetworkResult.Failure -> {
+                    onUiEvent(ProfileUiEvent.ShowErrorMessage(result.exception))
+                    emptyList()
+                }
+            }
         }
 
     fun loadCreatedDiscussions(id: MemberId): Deferred<List<MemberDiscussion>> =
         viewModelScope.async {
-            memberRepository.getMemberDiscussionRooms(id, MemberDiscussionType.CREATED)
+            when (
+                val result =
+                    memberRepository.getMemberDiscussionRooms(id, MemberDiscussionType.CREATED)
+            ) {
+                is NetworkResult.Success -> result.data
+                is NetworkResult.Failure -> {
+                    onUiEvent(ProfileUiEvent.ShowErrorMessage(result.exception))
+                    emptyList()
+                }
+            }
         }
 
     fun supportMember(type: Support) {

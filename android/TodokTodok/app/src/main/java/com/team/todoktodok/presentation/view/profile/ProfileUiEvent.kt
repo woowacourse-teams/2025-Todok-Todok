@@ -1,7 +1,7 @@
 package com.team.todoktodok.presentation.view.profile
 
 import com.team.domain.model.Support
-import com.team.domain.model.exception.TokdokTodokExceptions
+import com.team.domain.model.exception.TodokTodokExceptions
 
 sealed interface ProfileUiEvent {
     data class OnCompleteSupport(
@@ -9,6 +9,6 @@ sealed interface ProfileUiEvent {
     ) : ProfileUiEvent
 
     data class ShowErrorMessage(
-        val exceptions: TokdokTodokExceptions,
+        val exceptions: TodokTodokExceptions,
     ) : ProfileUiEvent
 }

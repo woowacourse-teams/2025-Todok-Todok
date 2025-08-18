@@ -33,6 +33,7 @@ class ProfileActivity : AppCompatActivity() {
         val repositoryModule = (application as App).container.repositoryModule
         ProfileViewModelFactory(repositoryModule.memberRepository)
     }
+    private lateinit var messageConverter: ExceptionMessageConverter
 
     private val launcher =
         registerForActivityResult(

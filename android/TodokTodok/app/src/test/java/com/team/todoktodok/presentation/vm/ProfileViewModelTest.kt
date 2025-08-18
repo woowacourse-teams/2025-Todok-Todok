@@ -1,6 +1,7 @@
 package com.team.todoktodok.presentation.vm
 
 import com.team.domain.model.Support
+import com.team.domain.model.exception.NetworkResult
 import com.team.domain.model.member.MemberDiscussionType
 import com.team.domain.model.member.MemberId
 import com.team.domain.model.member.MemberId.Companion.DEFAULT_MEMBER_ID
@@ -30,9 +31,9 @@ class ProfileViewModelTest {
 
     private fun setMockProfileData() {
         coEvery { repository.getProfile(any()) } returns
-            Profile(1, "페토", "안녕하세요", "")
-        coEvery { repository.getMemberBooks(any()) } returns emptyList()
-        coEvery { repository.getMemberDiscussionRooms(any(), any()) } returns emptyList()
+            NetworkResult.Success(Profile(1, "페토", "안녕하세요", ""))
+        coEvery { repository.getMemberBooks(any()) } returns NetworkResult.Success(emptyList())
+        coEvery { repository.getMemberDiscussionRooms(any(), any()) } returns NetworkResult.Success(emptyList())
     }
 
     @BeforeEach
@@ -79,9 +80,9 @@ class ProfileViewModelTest {
         runTest {
             // given
             val profileResponse = Profile(1, "페토", "나나를 좋아하는", "")
-            coEvery { repository.getProfile(any()) } returns profileResponse
-            coEvery { repository.getMemberBooks(any()) } returns emptyList()
-            coEvery { repository.getMemberDiscussionRooms(any(), any()) } returns emptyList()
+            coEvery { repository.getProfile(any()) } returns NetworkResult.Success(profileResponse)
+            coEvery { repository.getMemberBooks(any()) } returns NetworkResult.Success(emptyList())
+            coEvery { repository.getMemberDiscussionRooms(any(), any()) } returns NetworkResult.Success(emptyList())
 
             viewModel.setMemberId(1)
 
@@ -133,14 +134,14 @@ class ProfileViewModelTest {
             val initialProfile = Profile(1, "페토", "하나코", "")
             val updatedProfile = Profile(1, "정페토", "나나", "")
 
-            coEvery { repository.getProfile(any()) } returns initialProfile
-            coEvery { repository.getMemberBooks(any()) } returns emptyList()
-            coEvery { repository.getMemberDiscussionRooms(any(), any()) } returns emptyList()
+            coEvery { repository.getProfile(any()) } returns NetworkResult.Success(initialProfile)
+            coEvery { repository.getMemberBooks(any()) } returns NetworkResult.Success(emptyList())
+            coEvery { repository.getMemberDiscussionRooms(any(), any()) } returns NetworkResult.Success(emptyList())
 
             viewModel.setMemberId(1)
             viewModel.initState()
 
-            coEvery { repository.getProfile(any()) } returns updatedProfile
+            coEvery { repository.getProfile(any()) } returns NetworkResult.Success(updatedProfile)
 
             // when
             viewModel.refreshProfile()
