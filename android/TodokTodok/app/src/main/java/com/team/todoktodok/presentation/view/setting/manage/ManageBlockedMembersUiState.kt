@@ -5,8 +5,11 @@ import com.team.domain.model.member.BlockedMember
 data class ManageBlockedMembersUiState(
     val members: List<BlockedMember> = emptyList(),
     val selectedMemberId: Long = NOT_HAS_SELECTED_MEMBER,
+    val isLoading: Boolean = false,
 ) {
     fun modifySelectedMember(memberId: Long) = copy(selectedMemberId = memberId)
+
+    fun toggleLoading() = copy(isLoading = !isLoading)
 
     fun removeSelectedMember() =
         copy(

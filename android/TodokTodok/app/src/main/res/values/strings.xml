@@ -144,4 +144,5 @@
     <!-- 차단/신고 관련 --> 
     <string name="error_already_blocked">이미 차단된 회원이에요</string>
     <string name="error_already_reported">이미 신고한 회원이에요</string>
+    <string name="setting_manage_blocked_members_empty_message">차단한 사용자가 없어요</string>
 </resources>
