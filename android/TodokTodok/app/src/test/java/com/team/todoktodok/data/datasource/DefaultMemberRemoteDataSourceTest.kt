@@ -193,7 +193,7 @@ class DefaultMemberRemoteDataSourceTest {
             val request = MemberId.OtherUser(memberId)
             val type = Support.REPORT
 
-            coEvery { memberService.report(memberId) } just Runs
+            coEvery { memberService.report(memberId) } returns NetworkResult.Success(Unit)
 
             // when
             dataSource.supportMember(request, type)
@@ -204,6 +204,27 @@ class DefaultMemberRemoteDataSourceTest {
         }
 
     @Test
+    fun `이미 신고한 회원이면 Failure를 반환한다`() =
+        runTest {
+            // given
+            val memberId = 42L
+            val request = MemberId.OtherUser(memberId)
+            val type = Support.REPORT
+
+            val exception = TodokTodokExceptions.ReportException.AlreadyReportedException
+
+            coEvery { memberService.report(memberId) } returns NetworkResult.Failure(exception)
+
+            // when
+            val result = dataSource.supportMember(request, type)
+
+            // then
+            assertTrue(result is NetworkResult.Failure)
+            assertEquals(exception, (result as NetworkResult.Failure).exception)
+            assertEquals("[ERROR] 이미 신고한 회원입니다", exception.message)
+        }
+
+    @Test
     fun `신고 타입이 BLOCK이면 차단 API를 호출한다`() =
         runTest {
             // given
@@ -211,7 +232,7 @@ class DefaultMemberRemoteDataSourceTest {
             val request = MemberId.OtherUser(memberId)
             val type = Support.BLOCK
 
-            coEvery { memberService.block(memberId) } just Runs
+            coEvery { memberService.block(memberId) } returns NetworkResult.Success(Unit)
 
             // when
             dataSource.supportMember(request, type)
@@ -219,6 +240,27 @@ class DefaultMemberRemoteDataSourceTest {
             // then
             coVerify(exactly = 0) { memberService.report(any()) }
             coVerify(exactly = 1) { memberService.block(memberId) }
+        }
+
+    @Test
+    fun `이미 차단한 회원이면 Failure를 반환한다`() =
+        runTest {
+            // given
+            val memberId = 42L
+            val request = MemberId.OtherUser(memberId)
+            val type = Support.BLOCK
+
+            val exception = TodokTodokExceptions.BlockException.AlreadyBlockedException
+
+            coEvery { memberService.block(memberId) } returns NetworkResult.Failure(exception)
+
+            // when
+            val result = dataSource.supportMember(request, type)
+
+            // then
+            assertTrue(result is NetworkResult.Failure)
+            assertEquals(exception, (result as NetworkResult.Failure).exception)
+            assertEquals("[ERROR] 이미 차단한 회원입니다", exception.message)
         }
 
     @Test

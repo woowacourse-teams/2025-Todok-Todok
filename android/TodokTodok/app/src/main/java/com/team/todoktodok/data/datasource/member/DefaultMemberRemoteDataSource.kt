@@ -76,12 +76,11 @@ class DefaultMemberRemoteDataSource(
     override suspend fun supportMember(
         request: MemberId.OtherUser,
         type: Support,
-    ) {
+    ): NetworkResult<Unit> =
         when (type) {
             Support.BLOCK -> memberService.block(request.id)
             Support.REPORT -> memberService.report(request.id)
         }
-    }
 
     override suspend fun fetchMemberBooks(request: MemberId): NetworkResult<List<BookResponse>> {
         val memberId = adjustMemberType(request)

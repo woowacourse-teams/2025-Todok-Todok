@@ -27,7 +27,7 @@ interface MemberRemoteDataSource {
     suspend fun supportMember(
         request: MemberId.OtherUser,
         type: Support,
-    )
+    ): NetworkResult<Unit>
 
     suspend fun fetchMemberBooks(request: MemberId): NetworkResult<List<BookResponse>>
 

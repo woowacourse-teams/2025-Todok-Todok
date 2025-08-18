@@ -43,12 +43,12 @@ interface MemberService {
     @POST("v1/members/{memberId}/report")
     suspend fun report(
         @Path("memberId") memberId: Long,
-    )
+    ): NetworkResult<Unit>
 
     @POST("v1/members/{memberId}/block")
     suspend fun block(
         @Path("memberId") memberId: Long,
-    )
+    ): NetworkResult<Unit>
 
     @GET("v1/members/{memberId}/books")
     suspend fun fetchMemberBooks(
