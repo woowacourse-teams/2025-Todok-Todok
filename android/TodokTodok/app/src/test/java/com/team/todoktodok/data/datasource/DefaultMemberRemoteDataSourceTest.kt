@@ -114,7 +114,7 @@ class DefaultMemberRemoteDataSourceTest {
         runTest {
             // given
             val memberId = 2L
-            val exception = TokdokTodokExceptions.UnknownException
+            val exception = TodokTodokExceptions.UnknownException
             coEvery { tokenDataSource.getMemberId() } returns memberId
             coEvery { memberService.fetchProfile(memberId) } returns NetworkResult.Failure(exception)
 
@@ -150,7 +150,7 @@ class DefaultMemberRemoteDataSourceTest {
             // given
             val memberId = MemberId.OtherUser(1L)
             val type = MemberDiscussionType.CREATED.name
-            val response = mockk<List<MemberDiscussionResponse>>()
+            val response = NetworkResult.Success(mockk<List<MemberDiscussionResponse>>())
 
             coEvery { memberService.fetchMemberDiscussionRooms(memberId.id, type) } returns response
 
@@ -168,7 +168,7 @@ class DefaultMemberRemoteDataSourceTest {
             // given
             val memberId = 1L
             val type = MemberDiscussionType.PARTICIPATED
-            val response = mockk<List<MemberDiscussionResponse>>()
+            val response = NetworkResult.Success(mockk<List<MemberDiscussionResponse>>())
 
             coEvery { tokenDataSource.getMemberId() } returns memberId
             coEvery {

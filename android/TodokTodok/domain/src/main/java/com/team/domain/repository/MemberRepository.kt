@@ -24,14 +24,14 @@ interface MemberRepository {
     suspend fun getMemberDiscussionRooms(
         id: MemberId,
         type: MemberDiscussionType,
-    ): List<MemberDiscussion>
+    ): NetworkResult<List<MemberDiscussion>>
 
     suspend fun supportMember(
         id: MemberId.OtherUser,
         type: Support,
     )
 
-    suspend fun getMemberBooks(id: MemberId): List<Book>
+    suspend fun getMemberBooks(id: MemberId): NetworkResult<List<Book>>
 
     suspend fun modifyProfile(
         nickname: String,

@@ -38,7 +38,7 @@ interface MemberService {
     suspend fun fetchMemberDiscussionRooms(
         @Path("memberId") memberId: Long,
         @Query("type") type: String,
-    ): List<MemberDiscussionResponse>
+    ): NetworkResult<List<MemberDiscussionResponse>>
 
     @POST("v1/members/{memberId}/report")
     suspend fun report(
@@ -53,7 +53,7 @@ interface MemberService {
     @GET("v1/members/{memberId}/books")
     suspend fun fetchMemberBooks(
         @Path("memberId") memberId: Long,
-    ): List<BookResponse>
+    ): NetworkResult<List<BookResponse>>
 
     @PUT("v1/members/profile")
     suspend fun modifyProfile(

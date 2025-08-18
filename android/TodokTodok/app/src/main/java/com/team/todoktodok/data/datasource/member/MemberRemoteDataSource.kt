@@ -22,14 +22,14 @@ interface MemberRemoteDataSource {
     suspend fun fetchMemberDiscussionRooms(
         request: MemberId,
         type: MemberDiscussionType,
-    ): List<MemberDiscussionResponse>
+    ): NetworkResult<List<MemberDiscussionResponse>>
 
     suspend fun supportMember(
         request: MemberId.OtherUser,
         type: Support,
     )
 
-    suspend fun fetchMemberBooks(request: MemberId): List<BookResponse>
+    suspend fun fetchMemberBooks(request: MemberId): NetworkResult<List<BookResponse>>
 
     suspend fun modifyProfile(request: ModifyProfileRequest)
 

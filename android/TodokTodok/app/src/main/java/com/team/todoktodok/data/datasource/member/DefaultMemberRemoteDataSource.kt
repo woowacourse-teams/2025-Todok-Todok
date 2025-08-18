@@ -68,7 +68,7 @@ class DefaultMemberRemoteDataSource(
     override suspend fun fetchMemberDiscussionRooms(
         request: MemberId,
         type: MemberDiscussionType,
-    ): List<MemberDiscussionResponse> {
+    ): NetworkResult<List<MemberDiscussionResponse>> {
         val memberId = adjustMemberType(request)
         return memberService.fetchMemberDiscussionRooms(memberId, type.name)
     }
@@ -83,7 +83,7 @@ class DefaultMemberRemoteDataSource(
         }
     }
 
-    override suspend fun fetchMemberBooks(request: MemberId): List<BookResponse> {
+    override suspend fun fetchMemberBooks(request: MemberId): NetworkResult<List<BookResponse>> {
         val memberId = adjustMemberType(request)
         return memberService.fetchMemberBooks(memberId)
     }

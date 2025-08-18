@@ -3,8 +3,8 @@ package com.team.todoktodok.data.repository
 import com.team.domain.model.Book
 import com.team.domain.model.Support
 import com.team.domain.model.exception.NetworkResult
-import com.team.domain.model.exception.map
 import com.team.domain.model.exception.TodokTodokExceptions
+import com.team.domain.model.exception.map
 import com.team.domain.model.member.BlockedMember
 import com.team.domain.model.member.Member
 import com.team.domain.model.member.MemberDiscussion
@@ -45,10 +45,10 @@ class DefaultMemberRepository(
     override suspend fun getMemberDiscussionRooms(
         id: MemberId,
         type: MemberDiscussionType,
-    ): List<MemberDiscussion> =
+    ): NetworkResult<List<MemberDiscussion>> =
         remoteMemberRemoteDataSource
             .fetchMemberDiscussionRooms(id, type)
-            .map { it.toDomain() }
+            .map { discussions -> discussions.map { it.toDomain() } }
 
     override suspend fun supportMember(
         id: MemberId.OtherUser,
@@ -57,19 +57,17 @@ class DefaultMemberRepository(
         remoteMemberRemoteDataSource.supportMember(id, type)
     }
 
-    override suspend fun getMemberBooks(id: MemberId): List<Book> =
+    override suspend fun getMemberBooks(id: MemberId): NetworkResult<List<Book>> =
         remoteMemberRemoteDataSource
             .fetchMemberBooks(id)
-            .map { it.toDomain() }
+            .map { books -> books.map { it.toDomain() } }
 
     override suspend fun modifyProfile(
         nickname: String,
         message: String,
     ) = remoteMemberRemoteDataSource.modifyProfile(ModifyProfileRequest(nickname, message))
 
-    override suspend fun getBlockedMembers(): List<BlockedMember> {
-        remoteMemberRemoteDataSource.fetchBlockedMembers().map { it.toDomain() }
-    }
+    override suspend fun getBlockedMembers(): List<BlockedMember> = remoteMemberRemoteDataSource.fetchBlockedMembers().map { it.toDomain() }
 
     override suspend fun unblock(id: Long) = remoteMemberRemoteDataSource.unblock(id)
 }
