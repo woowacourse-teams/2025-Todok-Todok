@@ -16,6 +16,8 @@ import com.team.todoktodok.databinding.FragmentCommentDetailBinding
 import com.team.todoktodok.databinding.MenuExternalDiscussionBinding
 import com.team.todoktodok.databinding.MenuOwnedDiscussionBinding
 import com.team.todoktodok.presentation.core.component.CommonDialog
+import com.team.todoktodok.presentation.core.ext.registerPositiveResultListener
+import com.team.todoktodok.presentation.core.ext.registerResultListener
 import com.team.todoktodok.presentation.view.discussiondetail.BottomSheetVisibilityListener
 import com.team.todoktodok.presentation.view.discussiondetail.commentcreate.CommentCreateBottomSheet
 import com.team.todoktodok.presentation.view.discussiondetail.commentdetail.adapter.CommentDetailAdapter
@@ -58,7 +60,7 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
         initView(binding)
         setupOnClickAddReply(binding)
         setupObserve(binding)
-        setupFragmentCommentResultListener()
+        setupFragmentResultListener()
     }
 
     override fun onDestroyView() {
@@ -117,7 +119,7 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
                 .newInstance(
                     getString(R.string.confirm_delete_message),
                     getString(R.string.all_delete_action),
-                    REPLY_CONTENT_DELETE_DIALOG_KEY,
+                    REPLY_CONTENT_DELETE_DIALOG_REQUEST_KEY,
                 )
         confirmDialog.show(childFragmentManager, CommonDialog.TAG)
     }
@@ -227,7 +229,7 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
             CommonDialog.newInstance(
                 getString(R.string.all_report_comment),
                 getString(R.string.all_report_action),
-                COMMENT_REPORT_DIALOG_KEY,
+                COMMENT_REPORT_DIALOG_REQUEST_KEY,
             )
         dialog.show(childFragmentManager, CommonDialog.TAG)
     }
@@ -237,7 +239,7 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
             CommonDialog.newInstance(
                 getString(R.string.all_comment_delete_confirm),
                 getString(R.string.all_delete_action),
-                COMMENT_DELETE_DIALOG_KEY,
+                COMMENT_DELETE_DIALOG_REQUEST_KEY,
             )
         dialog.show(childFragmentManager, CommonDialog.TAG)
     }
@@ -247,7 +249,7 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
             CommonDialog.newInstance(
                 getString(R.string.all_report_reply),
                 getString(R.string.all_report_action),
-                REPLY_REPORT_DIALOG_KEY.format(replyId),
+                REPLY_REPORT_DIALOG_REQUEST_KEY.format(replyId),
             )
         dialog.show(childFragmentManager, CommonDialog.TAG)
     }
@@ -257,7 +259,7 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
             CommonDialog.newInstance(
                 getString(R.string.all_reply_delete_confirm),
                 getString(R.string.all_delete_action),
-                REPLY_DELETE_DIALOG_KEY.format(replyId),
+                REPLY_DELETE_DIALOG_REQUEST_KEY.format(replyId),
             )
         dialog.show(childFragmentManager, CommonDialog.TAG)
     }
@@ -327,74 +329,49 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
             true,
         )
 
-    private fun setupFragmentCommentResultListener() {
-        childFragmentManager.setFragmentResultListener(
+    private fun setupFragmentResultListener() {
+        childFragmentManager.registerResultListener(
+            viewLifecycleOwner,
             CommentCreateBottomSheet.COMMENT_REQUEST_KEY,
-            this,
-        ) { _, bundle ->
-            val result = bundle.getBoolean(CommentCreateBottomSheet.COMMENT_CREATED_RESULT_KEY)
-            if (result) {
-                viewModel.updatedComment()
-            }
-        }
-        childFragmentManager.setFragmentResultListener(
-            ReplyCreateBottomSheet.REPLY_REQUEST_KEY,
-            this,
-        ) { _, bundle ->
-            val result = bundle.getBoolean(ReplyCreateBottomSheet.REPLY_CREATED_RESULT_KEY)
-            if (result) {
-                viewModel.reloadComment()
-            }
-        }
+            CommentCreateBottomSheet.COMMENT_CREATED_RESULT_KEY,
+        ) { viewModel.updatedComment() }
 
-        childFragmentManager.setFragmentResultListener(
-            REPLY_CONTENT_DELETE_DIALOG_KEY,
-            this,
-        ) { _, bundle ->
-            val result = bundle.getBoolean(CommonDialog.RESULT_KEY_COMMON_DIALOG)
-            if (result) {
-                parentFragmentManager.popBackStack()
-            }
-        }
-        childFragmentManager.setFragmentResultListener(
-            COMMENT_REPORT_DIALOG_KEY,
-            this,
-        ) { _, bundle ->
-            val result = bundle.getBoolean(CommonDialog.RESULT_KEY_COMMON_DIALOG)
-            if (result) {
-                viewModel.reportComment()
-            }
-        }
-        childFragmentManager.setFragmentResultListener(
-            COMMENT_DELETE_DIALOG_KEY,
-            this,
-        ) { _, bundle ->
-            val result = bundle.getBoolean(CommonDialog.RESULT_KEY_COMMON_DIALOG)
-            if (result) {
-                viewModel.deleteComment()
-            }
-        }
+        childFragmentManager.registerResultListener(
+            viewLifecycleOwner,
+            ReplyCreateBottomSheet.REPLY_REQUEST_KEY,
+            ReplyCreateBottomSheet.REPLY_CREATED_RESULT_KEY,
+        ) { viewModel.reloadComment() }
+
+        childFragmentManager.registerPositiveResultListener(
+            viewLifecycleOwner,
+            REPLY_CONTENT_DELETE_DIALOG_REQUEST_KEY,
+            CommonDialog.RESULT_KEY_COMMON_DIALOG,
+        ) { parentFragmentManager.popBackStack() }
+
+        childFragmentManager.registerPositiveResultListener(
+            viewLifecycleOwner,
+            COMMENT_REPORT_DIALOG_REQUEST_KEY,
+            CommonDialog.RESULT_KEY_COMMON_DIALOG,
+        ) { viewModel.reportComment() }
+        childFragmentManager.registerPositiveResultListener(
+            viewLifecycleOwner,
+            COMMENT_DELETE_DIALOG_REQUEST_KEY,
+            CommonDialog.RESULT_KEY_COMMON_DIALOG,
+        ) { viewModel.deleteComment() }
     }
 
     private fun setupFragmentReplyResultListener(replyId: Long) {
-        childFragmentManager.setFragmentResultListener(
-            REPLY_REPORT_DIALOG_KEY.format(replyId),
-            this,
-        ) { _, bundle ->
-            val result = bundle.getBoolean(CommonDialog.RESULT_KEY_COMMON_DIALOG)
-            if (result) {
-                viewModel.reportReply(replyId)
-            }
-        }
-        childFragmentManager.setFragmentResultListener(
-            REPLY_DELETE_DIALOG_KEY.format(replyId),
-            this,
-        ) { _, bundle ->
-            val result = bundle.getBoolean(CommonDialog.RESULT_KEY_COMMON_DIALOG)
-            if (result) {
-                viewModel.deleteReply(replyId)
-            }
-        }
+        childFragmentManager.registerPositiveResultListener(
+            viewLifecycleOwner,
+            REPLY_REPORT_DIALOG_REQUEST_KEY.format(replyId),
+            CommonDialog.RESULT_KEY_COMMON_DIALOG,
+        ) { viewModel.reportReply(replyId) }
+
+        childFragmentManager.registerPositiveResultListener(
+            viewLifecycleOwner,
+            REPLY_DELETE_DIALOG_REQUEST_KEY.format(replyId),
+            CommonDialog.RESULT_KEY_COMMON_DIALOG,
+        ) { viewModel.deleteReply(replyId) }
     }
 
     private fun getBottomSheetVisibilityListener(binding: FragmentCommentDetailBinding) =
@@ -462,11 +439,12 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
 
     companion object {
         const val TAG = "TAG_COMMENT_DETAIL"
-        private const val COMMENT_DELETE_DIALOG_KEY = "comment_delete_dialog_key"
-        private const val COMMENT_REPORT_DIALOG_KEY = "comment_report_dialog_key"
-        private const val REPLY_CONTENT_DELETE_DIALOG_KEY = "reply_content_delete_dialog_key"
-        private const val REPLY_REPORT_DIALOG_KEY = "reply_report_dialog_%d"
-        private const val REPLY_DELETE_DIALOG_KEY = "reply_delete_dialog_%d"
+        private const val COMMENT_DELETE_DIALOG_REQUEST_KEY = "comment_delete_dialog_request_key"
+        private const val COMMENT_REPORT_DIALOG_REQUEST_KEY = "comment_delete_dialog_request_key"
+        private const val REPLY_CONTENT_DELETE_DIALOG_REQUEST_KEY =
+            "reply_content_delete_dialog_request_key"
+        private const val REPLY_REPORT_DIALOG_REQUEST_KEY = "reply_report_dialog_request_key_%d"
+        private const val REPLY_DELETE_DIALOG_REQUEST_KEY = "reply_delete_dialog_request_key_%d"
 
         fun newInstance(
             discussionId: Long,

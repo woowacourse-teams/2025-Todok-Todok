@@ -19,6 +19,7 @@ import com.team.todoktodok.databinding.MenuExternalDiscussionBinding
 import com.team.todoktodok.databinding.MenuOwnedDiscussionBinding
 import com.team.todoktodok.presentation.core.component.CommonDialog
 import com.team.todoktodok.presentation.core.ext.loadImage
+import com.team.todoktodok.presentation.core.ext.registerPositiveResultListener
 import com.team.todoktodok.presentation.core.ext.toRelativeString
 import com.team.todoktodok.presentation.view.discussion.create.CreateDiscussionRoomActivity
 import com.team.todoktodok.presentation.view.discussion.create.SerializationCreateDiscussionRoomMode.Edit
@@ -138,7 +139,7 @@ class DiscussionDetailActivity : AppCompatActivity() {
             CommonDialog.newInstance(
                 getString(R.string.all_discussion_delete_confirm),
                 getString(R.string.all_delete_action),
-                DISCUSSION_DELETE_DIALOG_KEY,
+                DISCUSSION_DELETE_DIALOG_REQUEST_KEY,
             )
         dialog.show(supportFragmentManager, CommonDialog.TAG)
     }
@@ -148,7 +149,7 @@ class DiscussionDetailActivity : AppCompatActivity() {
             CommonDialog.newInstance(
                 getString(R.string.all_report_action),
                 getString(R.string.all_report_action),
-                DISCUSSION_REPORT_DIALOG_KEY,
+                DISCUSSION_REPORT_DIALOG_REQUEST_KEY,
             )
         dialog.show(supportFragmentManager, CommonDialog.TAG)
     }
@@ -224,32 +225,30 @@ class DiscussionDetailActivity : AppCompatActivity() {
     }
 
     private fun setUpDialogResultListener() {
-        supportFragmentManager.setFragmentResultListener(
-            DISCUSSION_REPORT_DIALOG_KEY,
+        supportFragmentManager.registerPositiveResultListener(
             this,
-        ) { _, bundle ->
-            val result = bundle.getBoolean(CommonDialog.RESULT_KEY_COMMON_DIALOG)
-            if (result) {
-                viewModel.reportDiscussion()
-                popupWindow?.dismiss()
-            }
+            DISCUSSION_REPORT_DIALOG_REQUEST_KEY,
+            CommonDialog.RESULT_KEY_COMMON_DIALOG,
+        ) {
+            viewModel.reportDiscussion()
+            popupWindow?.dismiss()
         }
 
-        supportFragmentManager.setFragmentResultListener(
-            DISCUSSION_DELETE_DIALOG_KEY,
+        supportFragmentManager.registerPositiveResultListener(
             this,
-        ) { _, bundle ->
-            val result = bundle.getBoolean(CommonDialog.RESULT_KEY_COMMON_DIALOG)
-            if (result) {
-                viewModel.deleteDiscussion()
-                popupWindow?.dismiss()
-            }
+            DISCUSSION_DELETE_DIALOG_REQUEST_KEY,
+            CommonDialog.RESULT_KEY_COMMON_DIALOG,
+        ) {
+            viewModel.deleteDiscussion()
+            popupWindow?.dismiss()
         }
     }
 
     companion object {
-        private const val DISCUSSION_DELETE_DIALOG_KEY = "discussion_delete_dialog_key"
-        private const val DISCUSSION_REPORT_DIALOG_KEY = "discussion_report_dialog_key"
+        private const val DISCUSSION_DELETE_DIALOG_REQUEST_KEY =
+            "discussion_delete_dialog_request_key"
+        private const val DISCUSSION_REPORT_DIALOG_REQUEST_KEY =
+            "discussion_report_dialog_request_key"
 
         fun Intent(
             context: Context,
