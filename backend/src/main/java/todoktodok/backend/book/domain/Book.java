@@ -74,7 +74,7 @@ public class Book extends TimeStamp {
     }
 
     private static void validateEmpty(final String value) {
-        if (value == null || value.isEmpty()) {
+        if (value == null || value.isBlank()) {
             throw new IllegalArgumentException(
                     String.format("1자 이상 입력해야 하는 정보입니다: value= %s", value)
             );
