@@ -3,6 +3,7 @@ package com.team.domain.repository
 import com.team.domain.model.Discussion
 import com.team.domain.model.DiscussionFilter
 import com.team.domain.model.LikeStatus
+import com.team.domain.model.exception.NetworkResult
 import com.team.domain.model.member.DiscussionRoom
 
 interface DiscussionRepository {
@@ -11,7 +12,7 @@ interface DiscussionRepository {
     suspend fun getDiscussions(
         type: DiscussionFilter,
         keyword: String? = null,
-    ): List<Discussion>
+    ): NetworkResult<List<Discussion>>
 
     suspend fun saveDiscussionRoom(
         bookId: Long,

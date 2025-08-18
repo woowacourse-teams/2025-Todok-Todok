@@ -3,6 +3,7 @@ package com.team.todoktodok.fake
 import com.team.domain.model.Discussion
 import com.team.domain.model.DiscussionFilter
 import com.team.domain.model.LikeStatus
+import com.team.domain.model.exception.NetworkResult
 import com.team.domain.model.member.DiscussionRoom
 import com.team.domain.repository.DiscussionRepository
 import com.team.todoktodok.fixture.DISCUSSIONS
@@ -18,7 +19,7 @@ class FakeDiscussionRepository : DiscussionRepository {
     override suspend fun getDiscussions(
         type: DiscussionFilter,
         keyword: String?,
-    ): List<Discussion> = discussions
+    ): NetworkResult<List<Discussion>> = NetworkResult.Success(discussions)
 
     override suspend fun saveDiscussionRoom(
         bookId: Long,
