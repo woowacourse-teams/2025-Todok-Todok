@@ -38,10 +38,13 @@
     <!--  토론 목록 페이지  -->
     <string name="content_description_add_discussion">토론방 추가 화면으로 이동합니다</string>
     <string name="content_description_book_image">도서 이미지입니다</string>
+    <string name="content_description_comments_user_profile">댓글 유저 이미지 버튼</string>
 
     <!--  상세 토론방 페이지  -->
     <string name="content_description_discussion_detail_back">토론 상세 화면에서 뒤로가는 버튼</string>
     <string name="content_description_discussion_detail_option">토론방 옵션 버튼</string>
+    <string name="content_description_discussion_detail_book_profile">토론방 도서 이미지 버튼</string>
+    <string name="content_description_discussion_detail_user_profile">토론방 유저 이미지 버튼</string>
     <string name="comment_input_hint">댓글 입력</string>
     <string name="content_description_add_comment">댓글을 추가합니다</string>
 
@@ -89,6 +92,7 @@
     <string name="content_description_comment_like">댓글 좋아요 클릭 버튼</string>
     <string name="content_description_reply_like">대댓글 좋아요 클릭 버튼</string>
     <string name="confirm_delete_message">작성중인 댓글을 삭제할까요?</string>
+    <string name="content_description_comment_detail_reply_user_profile">대댓글 유저 이미지 버튼</string>
     <!-- 토론방 도서 선택 화면 -->
     <string name="content_description_ut_discussion_img">토론방 도서 이미지</string>
     <string name="create_discussion_room">토론방 생성</string>

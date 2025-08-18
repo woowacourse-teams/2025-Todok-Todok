@@ -34,7 +34,10 @@ class CommonDialog : DialogFragment(R.layout.view_common_dialog) {
     }
 
     private val requestKey: String by lazy {
-        requireArguments().getString(ARG_REQUEST_KEY) ?: REQUEST_KEY_COMMON_DIALOG
+        requireArguments()
+            .getString(ARG_REQUEST_KEY)
+            .orEmpty()
+            .ifBlank { REQUEST_KEY_COMMON_DIALOG }
     }
 
     override fun getTheme(): Int = R.style.cornerRadiusDialog

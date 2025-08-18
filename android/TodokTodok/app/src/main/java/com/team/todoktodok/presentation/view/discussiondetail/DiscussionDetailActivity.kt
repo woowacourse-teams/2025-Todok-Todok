@@ -28,9 +28,6 @@ import com.team.todoktodok.presentation.view.discussiondetail.vm.DiscussionDetai
 import com.team.todoktodok.presentation.view.discussiondetail.vm.DiscussionDetailViewModel.Companion.KEY_DISCUSSION_ID
 import com.team.todoktodok.presentation.view.discussiondetail.vm.DiscussionDetailViewModelFactory
 import com.team.todoktodok.presentation.view.profile.ProfileActivity
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.util.Locale
 
 class DiscussionDetailActivity : AppCompatActivity() {
     private val viewModel by viewModels<DiscussionDetailViewModel> {
@@ -47,8 +44,6 @@ class DiscussionDetailActivity : AppCompatActivity() {
     }
 
     private var popupWindow: PopupWindow? = null
-
-    private var commonDialog: CommonDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

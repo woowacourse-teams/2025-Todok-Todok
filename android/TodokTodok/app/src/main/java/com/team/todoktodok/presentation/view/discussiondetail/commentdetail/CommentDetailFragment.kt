@@ -47,8 +47,6 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
 
     private var popupWindow: PopupWindow? = null
 
-    private var confirmDialog: CommonDialog? = null
-
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
@@ -114,16 +112,14 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
     }
 
     private fun showConfirmClose() {
-        if (confirmDialog == null) {
-            confirmDialog =
-                CommonDialog
-                    .newInstance(
-                        getString(R.string.confirm_delete_message),
-                        getString(R.string.all_delete_action),
-                        REPLY_CONTENT_DELETE_DIALOG_KEY,
-                    )
-        }
-        confirmDialog?.show(childFragmentManager, CommonDialog.TAG)
+        val confirmDialog =
+            CommonDialog
+                .newInstance(
+                    getString(R.string.confirm_delete_message),
+                    getString(R.string.all_delete_action),
+                    REPLY_CONTENT_DELETE_DIALOG_KEY,
+                )
+        confirmDialog.show(childFragmentManager, CommonDialog.TAG)
     }
 
     private fun handleEvent(
@@ -217,14 +213,13 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
                     )
                 },
                 {
-                    showReplyDeleteDialog()
+                    showReplyDeleteDialog(commentDetailItems.value.reply.replyId)
                 },
             )
         } else {
             reportPopupView(
                 layoutInflater,
-                ::showReplyReportDialog,
-            )
+            ) { showReplyReportDialog(commentDetailItems.value.reply.replyId) }
         }
 
     private fun showCommentReportDialog() {
@@ -247,22 +242,22 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
         dialog.show(childFragmentManager, CommonDialog.TAG)
     }
 
-    private fun showReplyReportDialog() {
+    private fun showReplyReportDialog(replyId: Long) {
         val dialog =
             CommonDialog.newInstance(
                 getString(R.string.all_report_reply),
                 getString(R.string.all_report_action),
-                REPLY_REPORT_DIALOG_KEY,
+                REPLY_REPORT_DIALOG_KEY.format(replyId),
             )
         dialog.show(childFragmentManager, CommonDialog.TAG)
     }
 
-    private fun showReplyDeleteDialog() {
+    private fun showReplyDeleteDialog(replyId: Long) {
         val dialog =
             CommonDialog.newInstance(
                 getString(R.string.all_reply_delete_confirm),
                 getString(R.string.all_delete_action),
-                REPLY_DELETE_DIALOG_KEY,
+                REPLY_DELETE_DIALOG_KEY.format(replyId),
             )
         dialog.show(childFragmentManager, CommonDialog.TAG)
     }
@@ -383,7 +378,7 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
 
     private fun setupFragmentReplyResultListener(replyId: Long) {
         childFragmentManager.setFragmentResultListener(
-            REPLY_REPORT_DIALOG_KEY,
+            REPLY_REPORT_DIALOG_KEY.format(replyId),
             this,
         ) { _, bundle ->
             val result = bundle.getBoolean(CommonDialog.RESULT_KEY_COMMON_DIALOG)
@@ -392,7 +387,7 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
             }
         }
         childFragmentManager.setFragmentResultListener(
-            REPLY_DELETE_DIALOG_KEY,
+            REPLY_DELETE_DIALOG_KEY.format(replyId),
             this,
         ) { _, bundle ->
             val result = bundle.getBoolean(CommonDialog.RESULT_KEY_COMMON_DIALOG)
@@ -470,8 +465,8 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
         private const val COMMENT_DELETE_DIALOG_KEY = "comment_delete_dialog_key"
         private const val COMMENT_REPORT_DIALOG_KEY = "comment_report_dialog_key"
         private const val REPLY_CONTENT_DELETE_DIALOG_KEY = "reply_content_delete_dialog_key"
-        private const val REPLY_DELETE_DIALOG_KEY = "reply_delete_dialog_key"
-        private const val REPLY_REPORT_DIALOG_KEY = "reply_report_dialog_key"
+        private const val REPLY_REPORT_DIALOG_KEY = "reply_report_dialog_%d"
+        private const val REPLY_DELETE_DIALOG_KEY = "reply_delete_dialog_%d"
 
         fun newInstance(
             discussionId: Long,

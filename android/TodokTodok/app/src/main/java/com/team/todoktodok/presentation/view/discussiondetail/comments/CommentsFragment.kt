@@ -205,43 +205,43 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
                 popupWindow?.dismiss()
             }
             binding.tvDelete.setOnClickListener {
-                showDeleteDialog()
+                showDeleteDialog(commentItemUiState.comment.id)
                 popupWindow?.dismiss()
             }
             createPopUpView(binding.root)
         } else {
             val binding = MenuExternalDiscussionBinding.inflate(layoutInflater)
             binding.tvReport.setOnClickListener {
-                showReportDialog()
+                showReportDialog(commentItemUiState.comment.id)
                 popupWindow?.dismiss()
             }
             createPopUpView(binding.root)
         }
     }
 
-    private fun showReportDialog() {
+    private fun showReportDialog(commentId: Long) {
         val dialog =
             CommonDialog.newInstance(
                 getString(R.string.all_report_comment),
                 getString(R.string.all_report_action),
-                COMMENT_REPORT_DIALOG_KEY,
+                COMMENT_REPORT_DIALOG_KEY.format(commentId),
             )
         dialog.show(childFragmentManager, CommonDialog.TAG)
     }
 
-    private fun showDeleteDialog() {
+    private fun showDeleteDialog(commentId: Long) {
         val dialog =
             CommonDialog.newInstance(
                 getString(R.string.all_comment_delete_confirm),
                 getString(R.string.all_delete_action),
-                COMMENT_DELETE_DIALOG_KEY,
+                COMMENT_DELETE_DIALOG_KEY.format(commentId),
             )
         dialog.show(childFragmentManager, CommonDialog.TAG)
     }
 
     private fun setUpDialogResultListener(commentId: Long) {
         childFragmentManager.setFragmentResultListener(
-            COMMENT_REPORT_DIALOG_KEY,
+            COMMENT_REPORT_DIALOG_KEY.format(commentId),
             this,
         ) { _, bundle ->
             val result = bundle.getBoolean(CommonDialog.RESULT_KEY_COMMON_DIALOG)
@@ -251,7 +251,7 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
         }
 
         childFragmentManager.setFragmentResultListener(
-            COMMENT_DELETE_DIALOG_KEY,
+            COMMENT_DELETE_DIALOG_KEY.format(commentId),
             this,
         ) { _, bundle ->
             val result = bundle.getBoolean(CommonDialog.RESULT_KEY_COMMON_DIALOG)
@@ -322,8 +322,8 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
     companion object {
         const val TAG = "COMMENTS"
 
-        private const val COMMENT_DELETE_DIALOG_KEY = "comment_delete_dialog_key"
-        private const val COMMENT_REPORT_DIALOG_KEY = "comment_report_dialog_key"
+        private const val COMMENT_DELETE_DIALOG_KEY = "comment_delete_dialog_%d"
+        private const val COMMENT_REPORT_DIALOG_KEY = "comment_report_dialog_%d"
 
         fun newInstance(discussionId: Long): CommentsFragment =
             CommentsFragment().apply {
