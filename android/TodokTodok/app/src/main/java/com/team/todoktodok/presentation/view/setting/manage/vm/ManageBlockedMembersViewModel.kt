@@ -4,7 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.team.domain.model.exception.onFailure
+import com.team.domain.model.exception.onSuccess
 import com.team.domain.repository.MemberRepository
+import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
+import com.team.todoktodok.presentation.core.event.SingleLiveData
+import com.team.todoktodok.presentation.view.setting.manage.ManageBlockedMembersUiEvent
 import com.team.todoktodok.presentation.view.setting.manage.ManageBlockedMembersUiState
 import kotlinx.coroutines.launch
 
@@ -14,14 +19,19 @@ class ManageBlockedMembersViewModel(
     private val _uiState = MutableLiveData(ManageBlockedMembersUiState())
     val uiState: LiveData<ManageBlockedMembersUiState> get() = _uiState
 
+    private val _uiEvent = MutableSingleLiveData<ManageBlockedMembersUiEvent>()
+    val uiEvent: SingleLiveData<ManageBlockedMembersUiEvent> get() = _uiEvent
+
     init {
         loadBlockedMembers()
     }
 
     private fun loadBlockedMembers() {
         viewModelScope.launch {
-            val result = memberRepository.getBlockedMembers()
-            _uiState.value = _uiState.value?.copy(members = result)
+            memberRepository
+                .getBlockedMembers()
+                .onSuccess { _uiState.value = _uiState.value?.copy(members = it) }
+                .onFailure { onUiEvent(ManageBlockedMembersUiEvent.ShowErrorMessage(it)) }
         }
     }
 
@@ -38,6 +48,10 @@ class ManageBlockedMembersViewModel(
             _uiState.value = currentUiState.removeSelectedMember()
             memberRepository.unblock(memberId)
         }
+    }
+
+    private fun onUiEvent(event: ManageBlockedMembersUiEvent) {
+        _uiEvent.setValue(event)
     }
 
     companion object {

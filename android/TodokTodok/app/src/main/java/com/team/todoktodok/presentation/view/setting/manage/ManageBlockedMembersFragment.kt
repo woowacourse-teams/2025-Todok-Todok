@@ -7,6 +7,7 @@ import androidx.fragment.app.viewModels
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentManageBlockedMembersBinding
+import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.component.CommonDialog
 import com.team.todoktodok.presentation.view.setting.manage.adapter.BlockedMembersAdapter
 import com.team.todoktodok.presentation.view.setting.manage.vm.ManageBlockedMembersViewModel
@@ -20,6 +21,10 @@ class ManageBlockedMembersFragment : Fragment(R.layout.fragment_manage_blocked_m
 
     private lateinit var blockedMembersAdapter: BlockedMembersAdapter
 
+    private val messageConverter: ExceptionMessageConverter by lazy {
+        ExceptionMessageConverter()
+    }
+
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
@@ -28,6 +33,7 @@ class ManageBlockedMembersFragment : Fragment(R.layout.fragment_manage_blocked_m
         val binding = FragmentManageBlockedMembersBinding.bind(view)
 
         setUpUiState()
+        setUpUiEvent()
         initView(binding)
     }
 
@@ -59,6 +65,16 @@ class ManageBlockedMembersFragment : Fragment(R.layout.fragment_manage_blocked_m
     private fun setUpUiState() {
         viewModel.uiState.observe(viewLifecycleOwner) { value ->
             blockedMembersAdapter.submitList(value.members)
+        }
+    }
+
+    private fun setUpUiEvent() {
+        viewModel.uiEvent.observe(viewLifecycleOwner) { event ->
+            when (event) {
+                is ManageBlockedMembersUiEvent.ShowErrorMessage -> {
+                    messageConverter(event.exception)
+                }
+            }
         }
     }
 }
