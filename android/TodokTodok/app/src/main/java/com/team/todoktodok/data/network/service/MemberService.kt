@@ -66,5 +66,5 @@ interface MemberService {
     @DELETE("v1/members/{memberId}/block")
     suspend fun unblock(
         @Path("memberId") memberId: Long,
-    )
+    ): NetworkResult<Unit>
 }

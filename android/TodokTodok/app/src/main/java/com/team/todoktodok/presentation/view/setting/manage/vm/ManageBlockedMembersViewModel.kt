@@ -45,8 +45,10 @@ class ManageBlockedMembersViewModel(
             val memberId = currentUiState.selectedMemberId
             require(memberId != ManageBlockedMembersUiState.NOT_HAS_SELECTED_MEMBER) { NOT_FOUND_MEMBER }
 
-            _uiState.value = currentUiState.removeSelectedMember()
-            memberRepository.unblock(memberId)
+            memberRepository
+                .unblock(memberId)
+                .onSuccess { _uiState.value = currentUiState.removeSelectedMember() }
+                .onFailure { onUiEvent(ManageBlockedMembersUiEvent.ShowErrorMessage(it)) }
         }
     }
 

@@ -12,6 +12,7 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -58,11 +59,15 @@ class ManageBlockedMembersViewModelTest {
                     BlockedMember(2L, "user2", "2025-07-30T07:54:24.604Z".toLocalDate()),
                 )
             coEvery { repository.getBlockedMembers() } returns NetworkResult.Success(members)
+            coEvery { repository.unblock(unblockMemberId) } returns NetworkResult.Success(Unit)
+
             viewModel = ManageBlockedMembersViewModel(repository)
 
             // when
             viewModel.onSelectMember(unblockMemberId)
             viewModel.unblockMember()
+
+            advanceUntilIdle()
 
             // then
             val actual = viewModel.uiState.getOrAwaitValue()

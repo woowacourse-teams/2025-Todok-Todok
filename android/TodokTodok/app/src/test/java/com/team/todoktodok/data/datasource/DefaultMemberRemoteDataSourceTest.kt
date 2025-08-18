@@ -297,7 +297,7 @@ class DefaultMemberRemoteDataSourceTest {
         runTest {
             // given
             val memberId = 123L
-            coEvery { memberService.unblock(memberId) } just Runs
+            coEvery { memberService.unblock(memberId) } returns NetworkResult.Success(Unit)
 
             // when
             dataSource.unblock(memberId)
