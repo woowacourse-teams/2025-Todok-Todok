@@ -3,6 +3,8 @@ package com.team.todoktodok.presentation.view.auth.vm
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.team.domain.model.exception.onFailure
+import com.team.domain.model.exception.onSuccess
 import com.team.domain.model.member.MemberType
 import com.team.domain.model.member.MemberType.Companion.MemberType
 import com.team.domain.repository.MemberRepository
@@ -43,17 +45,19 @@ class AuthViewModel(
         profileImage: Uri?,
     ) {
         viewModelScope.launch {
-            val memberType =
-                memberRepository.login(
+            memberRepository
+                .login(
                     email,
                     nickname ?: NOT_EXIST_NICKNAME,
                     profileImage?.toString() ?: NOT_EXIST_PROFILE_IMAGE,
-                )
-
-            when (memberType) {
-                MemberType.USER -> onUiEvent(LoginUiEvent.NavigateToMain)
-                MemberType.TEMP_USER -> onUiEvent(LoginUiEvent.NavigateToSignUp)
-            }
+                ).onSuccess { type: MemberType ->
+                    when (type) {
+                        MemberType.USER -> onUiEvent(LoginUiEvent.NavigateToMain)
+                        MemberType.TEMP_USER -> onUiEvent(LoginUiEvent.NavigateToSignUp)
+                    }
+                }.onFailure {
+                    onUiEvent(LoginUiEvent.ShowErrorMessage(it))
+                }
         }
     }
 

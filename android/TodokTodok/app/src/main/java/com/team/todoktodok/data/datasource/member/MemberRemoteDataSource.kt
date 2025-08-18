@@ -1,6 +1,7 @@
 package com.team.todoktodok.data.datasource.member
 
 import com.team.domain.model.Support
+import com.team.domain.model.exception.NetworkResult
 import com.team.domain.model.member.MemberDiscussionType
 import com.team.domain.model.member.MemberId
 import com.team.domain.model.member.MemberType
@@ -12,9 +13,9 @@ import com.team.todoktodok.data.network.response.discussion.BookResponse
 import com.team.todoktodok.data.network.response.discussion.MemberDiscussionResponse
 
 interface MemberRemoteDataSource {
-    suspend fun login(request: String): MemberType
+    suspend fun login(request: String): NetworkResult<MemberType>
 
-    suspend fun signUp(request: SignUpRequest)
+    suspend fun signUp(request: SignUpRequest): NetworkResult<Unit>
 
     suspend fun fetchProfile(request: MemberId): ProfileResponse
 

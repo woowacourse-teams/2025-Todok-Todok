@@ -2,6 +2,7 @@ package com.team.todoktodok.data.di
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.team.todoktodok.BuildConfig
+import com.team.todoktodok.data.network.adapter.TodokTodokCallAdapterFactory
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
@@ -12,7 +13,6 @@ class RetrofitModule(
 ) {
     private val baseUrl = BuildConfig.BASE_URL
     private val json = Json { ignoreUnknownKeys = true }
-
     private val contentType = "application/json".toMediaType()
 
     @OptIn(ExperimentalSerializationApi::class)
@@ -21,7 +21,7 @@ class RetrofitModule(
             .Builder()
             .baseUrl(baseUrl)
             .client(okHttpClient.instance)
-            .addConverterFactory(
-                json.asConverterFactory(contentType),
-            ).build()
+            .addCallAdapterFactory(TodokTodokCallAdapterFactory())
+            .addConverterFactory(json.asConverterFactory(contentType))
+            .build()
 }

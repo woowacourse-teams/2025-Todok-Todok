@@ -1,6 +1,8 @@
 package com.team.todoktodok.data.datasource
 
 import com.team.domain.model.Support
+import com.team.domain.model.exception.NetworkResult
+import com.team.domain.model.exception.TodokTodokExceptions
 import com.team.domain.model.member.MemberDiscussionType
 import com.team.domain.model.member.MemberId
 import com.team.domain.model.member.MemberType
@@ -24,6 +26,7 @@ import io.mockk.mockkConstructor
 import kotlinx.coroutines.test.runTest
 import okhttp3.Headers.Companion.toHeaders
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import retrofit2.Response
@@ -49,11 +52,8 @@ class DefaultMemberRemoteDataSourceTest {
             val memberId = 1L
 
             val mockResponse = mockk<Response<Unit>>()
-
-            val headers = mapOf(AUTHORIZATION_NAME to accessToken)
-
-            val responseHeaders = headers.toHeaders()
-            every { mockResponse.headers() } returns responseHeaders
+            every { mockResponse.isSuccessful } returns true
+            every { mockResponse.headers() } returns mapOf(AUTHORIZATION_NAME to accessToken).toHeaders()
 
             coEvery { memberService.login(LoginRequest(email)) } returns mockResponse
 
@@ -65,8 +65,29 @@ class DefaultMemberRemoteDataSourceTest {
             val result = dataSource.login(email)
 
             // then
-            assertEquals(MemberType.USER, result)
+            assertTrue(result is NetworkResult.Success)
+            assertEquals(MemberType.USER, (result as NetworkResult.Success).data)
             coVerify { tokenDataSource.saveToken(accessToken, "", memberId) }
+        }
+
+    @Test
+    fun `로그인 실패 시 토큰을 담은 헤더가 없으면 MissingLocationHeaderException을 반환한다`() =
+        runTest {
+            val email = "test@example.com"
+            val mockResponse = mockk<Response<Unit>>()
+
+            every { mockResponse.isSuccessful } returns true
+            every { mockResponse.headers() } returns emptyMap<String, String>().toHeaders()
+
+            coEvery { memberService.login(LoginRequest(email)) } returns mockResponse
+
+            val result = dataSource.login(email)
+
+            // then
+            assertTrue(result is NetworkResult.Failure)
+
+            val failure = result as NetworkResult.Failure
+            assertTrue(failure.exception is TodokTodokExceptions.MissingLocationHeaderException)
         }
 
     @Test
