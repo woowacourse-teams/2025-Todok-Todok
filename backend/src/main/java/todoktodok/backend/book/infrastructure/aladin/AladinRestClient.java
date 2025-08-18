@@ -90,7 +90,7 @@ public class AladinRestClient {
             }
             return response;
 
-        } catch (RestClientException e) {
+        } catch (final RestClientException e) {
             throw new AladinApiException(
                     String.format("알라딘 API 통신 중 오류: %s, errorMessage= %s", context, e.getMessage())
             );
