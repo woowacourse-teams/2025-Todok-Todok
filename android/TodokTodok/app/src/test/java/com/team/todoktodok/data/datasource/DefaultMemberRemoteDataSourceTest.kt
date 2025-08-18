@@ -16,11 +16,9 @@ import com.team.todoktodok.data.network.response.BlockedMemberResponse
 import com.team.todoktodok.data.network.response.ProfileResponse
 import com.team.todoktodok.data.network.response.discussion.MemberDiscussionResponse
 import com.team.todoktodok.data.network.service.MemberService
-import io.mockk.Runs
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
-import io.mockk.just
 import io.mockk.mockk
 import io.mockk.mockkConstructor
 import kotlinx.coroutines.test.runTest
@@ -97,13 +95,32 @@ class DefaultMemberRemoteDataSourceTest {
             val memberId = MemberId.OtherUser(1L)
             val profileResponse = mockk<ProfileResponse>()
 
-            coEvery { memberService.fetchProfile(memberId.id) } returns profileResponse
+            coEvery { memberService.fetchProfile(memberId.id) } returns
+                NetworkResult.Success(
+                    profileResponse,
+                )
 
             // when
             val result = dataSource.fetchProfile(memberId)
 
             // then
-            assertEquals(profileResponse, result)
+            assertEquals(NetworkResult.Success(profileResponse), result)
+        }
+
+    @Test
+    fun `유저 정보 API 호출 시 실패하면 Failure를 반환한다`() =
+        runTest {
+            // given
+            val memberId = 2L
+            val exception = TodokTodokExceptions.UnknownException
+            coEvery { tokenDataSource.getMemberId() } returns memberId
+            coEvery { memberService.fetchProfile(memberId) } returns NetworkResult.Failure(exception)
+
+            // when
+            val result = dataSource.fetchProfile(MemberId.Mine)
+
+            // then
+            assertEquals(NetworkResult.Failure(exception), result)
         }
 
     @Test
@@ -113,13 +130,16 @@ class DefaultMemberRemoteDataSourceTest {
             val memberId = 2L
             val profileResponse = mockk<ProfileResponse>()
             coEvery { tokenDataSource.getMemberId() } returns memberId
-            coEvery { memberService.fetchProfile(memberId) } returns profileResponse
+            coEvery { memberService.fetchProfile(memberId) } returns
+                NetworkResult.Success(
+                    profileResponse,
+                )
 
             // when
             val result = dataSource.fetchProfile(MemberId.Mine)
 
             // then
-            assertEquals(profileResponse, result)
+            assertEquals(NetworkResult.Success(profileResponse), result)
         }
 
     @Test
@@ -128,12 +148,13 @@ class DefaultMemberRemoteDataSourceTest {
             // given
             val memberId = MemberId.OtherUser(1L)
             val type = MemberDiscussionType.CREATED.name
-            val response = mockk<List<MemberDiscussionResponse>>()
+            val response = NetworkResult.Success(mockk<List<MemberDiscussionResponse>>())
 
             coEvery { memberService.fetchMemberDiscussionRooms(memberId.id, type) } returns response
 
             // when
-            val result = dataSource.fetchMemberDiscussionRooms(memberId, MemberDiscussionType.CREATED)
+            val result =
+                dataSource.fetchMemberDiscussionRooms(memberId, MemberDiscussionType.CREATED)
 
             // then
             assertEquals(response, result)
@@ -145,10 +166,15 @@ class DefaultMemberRemoteDataSourceTest {
             // given
             val memberId = 1L
             val type = MemberDiscussionType.PARTICIPATED
-            val response = mockk<List<MemberDiscussionResponse>>()
+            val response = NetworkResult.Success(mockk<List<MemberDiscussionResponse>>())
 
             coEvery { tokenDataSource.getMemberId() } returns memberId
-            coEvery { memberService.fetchMemberDiscussionRooms(memberId, type.name) } returns response
+            coEvery {
+                memberService.fetchMemberDiscussionRooms(
+                    memberId,
+                    type.name,
+                )
+            } returns response
 
             // when
             val result = dataSource.fetchMemberDiscussionRooms(MemberId.Mine, type)
@@ -165,7 +191,7 @@ class DefaultMemberRemoteDataSourceTest {
             val request = MemberId.OtherUser(memberId)
             val type = Support.REPORT
 
-            coEvery { memberService.report(memberId) } just Runs
+            coEvery { memberService.report(memberId) } returns NetworkResult.Success(Unit)
 
             // when
             dataSource.supportMember(request, type)
@@ -176,6 +202,27 @@ class DefaultMemberRemoteDataSourceTest {
         }
 
     @Test
+    fun `이미 신고한 회원이면 Failure를 반환한다`() =
+        runTest {
+            // given
+            val memberId = 42L
+            val request = MemberId.OtherUser(memberId)
+            val type = Support.REPORT
+
+            val exception = TodokTodokExceptions.ReportException.AlreadyReportedException
+
+            coEvery { memberService.report(memberId) } returns NetworkResult.Failure(exception)
+
+            // when
+            val result = dataSource.supportMember(request, type)
+
+            // then
+            assertTrue(result is NetworkResult.Failure)
+            assertEquals(exception, (result as NetworkResult.Failure).exception)
+            assertEquals("[ERROR] 이미 신고한 회원입니다", exception.message)
+        }
+
+    @Test
     fun `신고 타입이 BLOCK이면 차단 API를 호출한다`() =
         runTest {
             // given
@@ -183,7 +230,7 @@ class DefaultMemberRemoteDataSourceTest {
             val request = MemberId.OtherUser(memberId)
             val type = Support.BLOCK
 
-            coEvery { memberService.block(memberId) } just Runs
+            coEvery { memberService.block(memberId) } returns NetworkResult.Success(Unit)
 
             // when
             dataSource.supportMember(request, type)
@@ -194,12 +241,33 @@ class DefaultMemberRemoteDataSourceTest {
         }
 
     @Test
+    fun `이미 차단한 회원이면 Failure를 반환한다`() =
+        runTest {
+            // given
+            val memberId = 42L
+            val request = MemberId.OtherUser(memberId)
+            val type = Support.BLOCK
+
+            val exception = TodokTodokExceptions.BlockException.AlreadyBlockedException
+
+            coEvery { memberService.block(memberId) } returns NetworkResult.Failure(exception)
+
+            // when
+            val result = dataSource.supportMember(request, type)
+
+            // then
+            assertTrue(result is NetworkResult.Failure)
+            assertEquals(exception, (result as NetworkResult.Failure).exception)
+            assertEquals("[ERROR] 이미 차단한 회원입니다", exception.message)
+        }
+
+    @Test
     fun `프로필 수정 요청 시 modifyProfile API를 호출한다`() =
         runTest {
             // given
             val request = ModifyProfileRequest("나는", "페토다!")
 
-            coEvery { memberService.modifyProfile(request) } just Runs
+            coEvery { memberService.modifyProfile(request) } returns NetworkResult.Success(Unit)
 
             // when
             dataSource.modifyProfile(request)
@@ -212,7 +280,7 @@ class DefaultMemberRemoteDataSourceTest {
     fun `차단된 멤버 목록을 가져온다`() =
         runTest {
             // given
-            val response = mockk<List<BlockedMemberResponse>>()
+            val response = NetworkResult.Success(mockk<List<BlockedMemberResponse>>())
             coEvery { memberService.fetchBlockedMembers() } returns response
 
             // when
@@ -227,7 +295,7 @@ class DefaultMemberRemoteDataSourceTest {
         runTest {
             // given
             val memberId = 123L
-            coEvery { memberService.unblock(memberId) } just Runs
+            coEvery { memberService.unblock(memberId) } returns NetworkResult.Success(Unit)
 
             // when
             dataSource.unblock(memberId)

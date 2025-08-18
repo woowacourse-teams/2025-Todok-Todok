@@ -19,6 +19,7 @@ import com.team.domain.model.DiscussionFilter
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivityDiscussionsBinding
+import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
 import com.team.todoktodok.presentation.core.ext.clearHintOnFocus
 import com.team.todoktodok.presentation.view.book.SelectBookActivity
@@ -36,6 +37,10 @@ class DiscussionsActivity : AppCompatActivity() {
         DiscussionsViewModelFactory(repositoryModule.discussionRepository)
     }
 
+    private val messageConverter: ExceptionMessageConverter by lazy {
+        ExceptionMessageConverter()
+    }
+
     private lateinit var manager: InputMethodManager
 
     private val allDiscussionFragment = AllDiscussionFragment()
@@ -50,6 +55,7 @@ class DiscussionsActivity : AppCompatActivity() {
         setupSystemBars()
         initFragments()
         setupUiState()
+        setupUiEvent()
         initView()
     }
 
@@ -60,10 +66,7 @@ class DiscussionsActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        AlertSnackBar(
-            binding.root,
-            R.string.error_io_exception,
-        ).show()
+
         supportActionBar?.apply {
             setDisplayShowTitleEnabled(false)
             setDisplayShowHomeEnabled(false)
@@ -82,6 +85,18 @@ class DiscussionsActivity : AppCompatActivity() {
         viewModel.uiState.observe(this) { state ->
             updateTabs(state.allDiscussionsSize, state.myDiscussionsSize)
             updateLoadingState(state.isLoading)
+        }
+    }
+
+    private fun setupUiEvent() {
+        viewModel.uiEvent.observe(this) { event ->
+            when (event) {
+                is DiscussionsUiEvent.ShowErrorMessage -> {
+                    AlertSnackBar(binding.root, messageConverter(event.exception)).show()
+                }
+
+                else -> Unit
+            }
         }
     }
 

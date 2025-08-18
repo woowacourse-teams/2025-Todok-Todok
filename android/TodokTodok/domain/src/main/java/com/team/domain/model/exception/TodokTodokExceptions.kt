@@ -85,6 +85,24 @@ sealed class TodokTodokExceptions : Throwable() {
         data object ProfileImageNotExistException : SignUpException("[ERROR] 프로필 이미지를 입력해주세요")
     }
 
+    /**
+     * 신고 관련 도메인 예외
+     */
+    sealed class ReportException(
+        override val message: String,
+    ) : TodokTodokExceptions() {
+        data object AlreadyReportedException : ReportException("[ERROR] 이미 신고한 회원입니다")
+    }
+
+    /**
+     * 차단 관련 도메인 예외
+     */
+    sealed class BlockException(
+        override val message: String,
+    ) : TodokTodokExceptions() {
+        data object AlreadyBlockedException : BlockException("[ERROR] 이미 차단한 회원입니다")
+    }
+
     companion object {
         /**
          * 서버 HTTP 상태 코드와 메시지를 기반으로 [TodokTodokExceptions] 객체를 생성
@@ -124,6 +142,12 @@ sealed class TodokTodokExceptions : Throwable() {
                 InvalidTokenException.message -> InvalidTokenException
                 InvalidFormatEmailException.message -> InvalidFormatEmailException
                 ProfileImageNotExistException.message -> ProfileImageNotExistException
+
+                // 신고 관련 예외
+                ReportException.AlreadyReportedException.message -> ReportException.AlreadyReportedException
+
+                // 차단 관련 예외
+                BlockException.AlreadyBlockedException.message -> BlockException.AlreadyBlockedException
 
                 // 서버 메시지와 일치하지 않으면 기본 BadRequest 예외 반환
                 else -> HttpExceptions.BadRequestException

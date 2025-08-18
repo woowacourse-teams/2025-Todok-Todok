@@ -1,5 +1,6 @@
 package com.team.todoktodok.presentation.vm
 
+import com.team.domain.model.exception.NetworkResult
 import com.team.domain.model.member.BlockedMember
 import com.team.domain.repository.MemberRepository
 import com.team.todoktodok.CoroutinesTestExtension
@@ -11,6 +12,7 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -36,7 +38,7 @@ class ManageBlockedMembersViewModelTest {
         runTest {
             // given
             val blockedList = listOf(BlockedMember(1L, "닉네임", "2025-07-30T07:54:24.604Z".toLocalDate()))
-            coEvery { repository.getBlockedMembers() } returns blockedList
+            coEvery { repository.getBlockedMembers() } returns NetworkResult.Success(blockedList)
 
             // when
             viewModel = ManageBlockedMembersViewModel(repository)
@@ -56,12 +58,16 @@ class ManageBlockedMembersViewModelTest {
                     BlockedMember(1L, "user1", "2025-07-30T07:54:24.604Z".toLocalDate()),
                     BlockedMember(2L, "user2", "2025-07-30T07:54:24.604Z".toLocalDate()),
                 )
-            coEvery { repository.getBlockedMembers() } returns members
+            coEvery { repository.getBlockedMembers() } returns NetworkResult.Success(members)
+            coEvery { repository.unblock(unblockMemberId) } returns NetworkResult.Success(Unit)
+
             viewModel = ManageBlockedMembersViewModel(repository)
 
             // when
             viewModel.onSelectMember(unblockMemberId)
             viewModel.unblockMember()
+
+            advanceUntilIdle()
 
             // then
             val actual = viewModel.uiState.getOrAwaitValue()

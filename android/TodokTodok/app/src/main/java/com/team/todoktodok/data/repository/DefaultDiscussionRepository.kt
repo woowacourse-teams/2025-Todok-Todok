@@ -3,6 +3,8 @@ package com.team.todoktodok.data.repository
 import com.team.domain.model.Discussion
 import com.team.domain.model.DiscussionFilter
 import com.team.domain.model.LikeStatus
+import com.team.domain.model.exception.NetworkResult
+import com.team.domain.model.exception.map
 import com.team.domain.model.member.DiscussionRoom
 import com.team.domain.repository.DiscussionRepository
 import com.team.todoktodok.data.datasource.discussion.DiscussionRemoteDataSource
@@ -17,7 +19,10 @@ class DefaultDiscussionRepository(
     override suspend fun getDiscussions(
         type: DiscussionFilter,
         keyword: String?,
-    ): List<Discussion> = discussionRemoteDataSource.getDiscussions(type, keyword).map { it.toDomain() }
+    ): NetworkResult<List<Discussion>> =
+        discussionRemoteDataSource
+            .getDiscussions(type, keyword)
+            .map { discussions -> discussions.map { it.toDomain() } }
 
     override suspend fun saveDiscussionRoom(
         bookId: Long,

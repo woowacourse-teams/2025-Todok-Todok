@@ -19,26 +19,26 @@ interface MemberRepository {
 
     suspend fun signUp(nickname: String): NetworkResult<Unit>
 
-    suspend fun getProfile(id: MemberId): Profile
+    suspend fun getProfile(id: MemberId): NetworkResult<Profile>
 
     suspend fun getMemberDiscussionRooms(
         id: MemberId,
         type: MemberDiscussionType,
-    ): List<MemberDiscussion>
+    ): NetworkResult<List<MemberDiscussion>>
 
     suspend fun supportMember(
         id: MemberId.OtherUser,
         type: Support,
-    )
+    ): NetworkResult<Unit>
 
-    suspend fun getMemberBooks(id: MemberId): List<Book>
+    suspend fun getMemberBooks(id: MemberId): NetworkResult<List<Book>>
 
     suspend fun modifyProfile(
         nickname: String,
         message: String,
-    )
+    ): NetworkResult<Unit>
 
-    suspend fun getBlockedMembers(): List<BlockedMember>
+    suspend fun getBlockedMembers(): NetworkResult<List<BlockedMember>>
 
-    suspend fun unblock(id: Long)
+    suspend fun unblock(id: Long): NetworkResult<Unit>
 }

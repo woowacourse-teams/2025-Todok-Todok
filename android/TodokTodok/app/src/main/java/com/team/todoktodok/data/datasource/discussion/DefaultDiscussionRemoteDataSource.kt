@@ -1,6 +1,7 @@
 package com.team.todoktodok.data.datasource.discussion
 
 import com.team.domain.model.DiscussionFilter
+import com.team.domain.model.exception.NetworkResult
 import com.team.todoktodok.data.network.model.LikeAction
 import com.team.todoktodok.data.network.request.DiscussionRoomRequest
 import com.team.todoktodok.data.network.request.EditDiscussionRoomRequest
@@ -16,7 +17,7 @@ class DefaultDiscussionRemoteDataSource(
     override suspend fun getDiscussions(
         type: DiscussionFilter,
         keyword: String?,
-    ): List<DiscussionResponse> = discussionService.fetchDiscussions(keyword, type.name)
+    ): NetworkResult<List<DiscussionResponse>> = discussionService.fetchDiscussions(keyword, type.name)
 
     override suspend fun saveDiscussionRoom(
         bookId: Long,

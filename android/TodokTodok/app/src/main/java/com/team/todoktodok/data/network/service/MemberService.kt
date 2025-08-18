@@ -1,5 +1,6 @@
 package com.team.todoktodok.data.network.service
 
+import com.team.domain.model.exception.NetworkResult
 import com.team.todoktodok.data.network.request.LoginRequest
 import com.team.todoktodok.data.network.request.ModifyProfileRequest
 import com.team.todoktodok.data.network.request.SignUpRequest
@@ -31,39 +32,39 @@ interface MemberService {
     @GET("v1/members/{memberId}/profile")
     suspend fun fetchProfile(
         @Path("memberId") memberId: Long,
-    ): ProfileResponse
+    ): NetworkResult<ProfileResponse>
 
     @GET("v1/members/{memberId}/discussions")
     suspend fun fetchMemberDiscussionRooms(
         @Path("memberId") memberId: Long,
         @Query("type") type: String,
-    ): List<MemberDiscussionResponse>
+    ): NetworkResult<List<MemberDiscussionResponse>>
 
     @POST("v1/members/{memberId}/report")
     suspend fun report(
         @Path("memberId") memberId: Long,
-    )
+    ): NetworkResult<Unit>
 
     @POST("v1/members/{memberId}/block")
     suspend fun block(
         @Path("memberId") memberId: Long,
-    )
+    ): NetworkResult<Unit>
 
     @GET("v1/members/{memberId}/books")
     suspend fun fetchMemberBooks(
         @Path("memberId") memberId: Long,
-    ): List<BookResponse>
+    ): NetworkResult<List<BookResponse>>
 
     @PUT("v1/members/profile")
     suspend fun modifyProfile(
         @Body requestBody: ModifyProfileRequest,
-    )
+    ): NetworkResult<Unit>
 
     @GET("v1/members/block")
-    suspend fun fetchBlockedMembers(): List<BlockedMemberResponse>
+    suspend fun fetchBlockedMembers(): NetworkResult<List<BlockedMemberResponse>>
 
     @DELETE("v1/members/{memberId}/block")
     suspend fun unblock(
         @Path("memberId") memberId: Long,
-    )
+    ): NetworkResult<Unit>
 }

@@ -60,7 +60,7 @@ class DefaultMemberRemoteDataSource(
         tokenDataSource.saveToken(accessToken = accessToken, memberId = memberId)
     }
 
-    override suspend fun fetchProfile(request: MemberId): ProfileResponse {
+    override suspend fun fetchProfile(request: MemberId): NetworkResult<ProfileResponse> {
         val memberId = adjustMemberType(request)
         return memberService.fetchProfile(memberId)
     }
@@ -68,7 +68,7 @@ class DefaultMemberRemoteDataSource(
     override suspend fun fetchMemberDiscussionRooms(
         request: MemberId,
         type: MemberDiscussionType,
-    ): List<MemberDiscussionResponse> {
+    ): NetworkResult<List<MemberDiscussionResponse>> {
         val memberId = adjustMemberType(request)
         return memberService.fetchMemberDiscussionRooms(memberId, type.name)
     }
@@ -76,14 +76,13 @@ class DefaultMemberRemoteDataSource(
     override suspend fun supportMember(
         request: MemberId.OtherUser,
         type: Support,
-    ) {
+    ): NetworkResult<Unit> =
         when (type) {
             Support.BLOCK -> memberService.block(request.id)
             Support.REPORT -> memberService.report(request.id)
         }
-    }
 
-    override suspend fun fetchMemberBooks(request: MemberId): List<BookResponse> {
+    override suspend fun fetchMemberBooks(request: MemberId): NetworkResult<List<BookResponse>> {
         val memberId = adjustMemberType(request)
         return memberService.fetchMemberBooks(memberId)
     }
@@ -94,11 +93,9 @@ class DefaultMemberRemoteDataSource(
             is MemberId.OtherUser -> request.id
         }
 
-    override suspend fun modifyProfile(request: ModifyProfileRequest) {
-        memberService.modifyProfile(request)
-    }
+    override suspend fun modifyProfile(request: ModifyProfileRequest): NetworkResult<Unit> = memberService.modifyProfile(request)
 
-    override suspend fun fetchBlockedMembers(): List<BlockedMemberResponse> = memberService.fetchBlockedMembers()
+    override suspend fun fetchBlockedMembers(): NetworkResult<List<BlockedMemberResponse>> = memberService.fetchBlockedMembers()
 
     override suspend fun unblock(request: Long) = memberService.unblock(request)
 }

@@ -17,23 +17,23 @@ interface MemberRemoteDataSource {
 
     suspend fun signUp(request: SignUpRequest): NetworkResult<Unit>
 
-    suspend fun fetchProfile(request: MemberId): ProfileResponse
+    suspend fun fetchProfile(request: MemberId): NetworkResult<ProfileResponse>
 
     suspend fun fetchMemberDiscussionRooms(
         request: MemberId,
         type: MemberDiscussionType,
-    ): List<MemberDiscussionResponse>
+    ): NetworkResult<List<MemberDiscussionResponse>>
 
     suspend fun supportMember(
         request: MemberId.OtherUser,
         type: Support,
-    )
+    ): NetworkResult<Unit>
 
-    suspend fun fetchMemberBooks(request: MemberId): List<BookResponse>
+    suspend fun fetchMemberBooks(request: MemberId): NetworkResult<List<BookResponse>>
 
-    suspend fun modifyProfile(request: ModifyProfileRequest)
+    suspend fun modifyProfile(request: ModifyProfileRequest): NetworkResult<Unit>
 
-    suspend fun fetchBlockedMembers(): List<BlockedMemberResponse>
+    suspend fun fetchBlockedMembers(): NetworkResult<List<BlockedMemberResponse>>
 
-    suspend fun unblock(request: Long)
+    suspend fun unblock(request: Long): NetworkResult<Unit>
 }

@@ -51,19 +51,27 @@ class MyDiscussionFragment : Fragment(R.layout.fragment_my_discussion) {
             viewModel.uiEvent.observe(viewLifecycleOwner) { event ->
                 when (event) {
                     DiscussionsUiEvent.ShowNotHasMyDiscussions -> {
-                        tvNoResult.visibility = View.VISIBLE
-                        rvDiscussions.visibility = View.GONE
+                        displayNoResultsView(binding)
                     }
 
                     DiscussionsUiEvent.ShowHasMyDiscussions -> {
-                        tvNoResult.visibility = View.GONE
-                        rvDiscussions.visibility = View.VISIBLE
+                        displayResultsView(binding)
                     }
 
                     else -> Unit
                 }
             }
         }
+
+    private fun displayResultsView(binding: FragmentMyDiscussionBinding) {
+        binding.tvNoResult.visibility = View.GONE
+        binding.rvDiscussions.visibility = View.VISIBLE
+    }
+
+    private fun displayNoResultsView(binding: FragmentMyDiscussionBinding) {
+        binding.tvNoResult.visibility = View.VISIBLE
+        binding.rvDiscussions.visibility = View.GONE
+    }
 
     private val adapterHandler =
         object : DiscussionAdapter.Handler {

@@ -15,6 +15,7 @@ import com.team.domain.model.member.MemberId.Companion.DEFAULT_MEMBER_ID
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivityProfileBinding
+import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.ext.getSerializableCompat
 import com.team.todoktodok.presentation.view.discussions.DiscussionsActivity
 import com.team.todoktodok.presentation.view.profile.adapter.ContentPagerAdapter
@@ -32,6 +33,7 @@ class ProfileActivity : AppCompatActivity() {
         val repositoryModule = (application as App).container.repositoryModule
         ProfileViewModelFactory(repositoryModule.memberRepository)
     }
+    private lateinit var messageConverter: ExceptionMessageConverter
 
     private val launcher =
         registerForActivityResult(
@@ -48,6 +50,7 @@ class ProfileActivity : AppCompatActivity() {
         setContentView(binding.root)
         val memberId: Long? = intent?.getLongExtra(ARG_MEMBER_ID, DEFAULT_MEMBER_ID)
         requireNotNull(memberId) { MEMBER_ID_NOT_FOUND }
+        messageConverter = ExceptionMessageConverter()
 
         viewModel.setMemberId(memberId)
         viewModel.initState()
@@ -117,6 +120,10 @@ class ProfileActivity : AppCompatActivity() {
                     val message =
                         getString(R.string.profile_complete_support).format(event.type.name)
                     Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+                }
+
+                is ProfileUiEvent.ShowErrorMessage -> {
+                    messageConverter(event.exceptions)
                 }
             }
         }

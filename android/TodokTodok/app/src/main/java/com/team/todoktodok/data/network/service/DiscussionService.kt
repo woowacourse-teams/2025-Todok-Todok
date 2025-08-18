@@ -1,5 +1,6 @@
 package com.team.todoktodok.data.network.service
 
+import com.team.domain.model.exception.NetworkResult
 import com.team.todoktodok.data.network.request.DiscussionRoomRequest
 import com.team.todoktodok.data.network.request.EditDiscussionRoomRequest
 import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
@@ -22,7 +23,7 @@ interface DiscussionService {
     suspend fun fetchDiscussions(
         @Query("keyword") keyword: String?,
         @Query("type") type: String,
-    ): List<DiscussionResponse>
+    ): NetworkResult<List<DiscussionResponse>>
 
     @POST("v1/discussions")
     suspend fun saveDiscussionRoom(

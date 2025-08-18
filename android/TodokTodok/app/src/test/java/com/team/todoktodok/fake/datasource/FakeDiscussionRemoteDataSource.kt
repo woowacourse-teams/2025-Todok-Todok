@@ -1,6 +1,7 @@
 package com.team.todoktodok.fake.datasource
 
 import com.team.domain.model.DiscussionFilter
+import com.team.domain.model.exception.NetworkResult
 import com.team.todoktodok.data.datasource.discussion.DiscussionRemoteDataSource
 import com.team.todoktodok.data.network.model.LikeAction
 import com.team.todoktodok.data.network.response.discussion.BookResponse
@@ -76,20 +77,22 @@ class FakeDiscussionRemoteDataSource : DiscussionRemoteDataSource {
     override suspend fun getDiscussions(
         type: DiscussionFilter,
         keyword: String?,
-    ): List<DiscussionResponse> =
-        discussionResponses.filter { discussion ->
-            val matchesKeyword =
-                keyword.isNullOrBlank() ||
-                    discussion.discussionTitle.contains(keyword, ignoreCase = true)
+    ): NetworkResult<List<DiscussionResponse>> =
+        NetworkResult.Success(
+            discussionResponses.filter { discussion ->
+                val matchesKeyword =
+                    keyword.isNullOrBlank() ||
+                        discussion.discussionTitle.contains(keyword, ignoreCase = true)
 
-            val matchesType =
-                when (type) {
-                    DiscussionFilter.ALL -> true
-                    DiscussionFilter.MINE -> discussion.memberResponse.memberId == 1L
-                }
+                val matchesType =
+                    when (type) {
+                        DiscussionFilter.ALL -> true
+                        DiscussionFilter.MINE -> discussion.memberResponse.memberId == 1L
+                    }
 
-            matchesKeyword && matchesType
-        }
+                matchesKeyword && matchesType
+            },
+        )
 
     override suspend fun saveDiscussionRoom(
         bookId: Long,
