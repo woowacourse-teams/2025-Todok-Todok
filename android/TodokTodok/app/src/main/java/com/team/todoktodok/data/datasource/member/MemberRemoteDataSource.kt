@@ -33,7 +33,7 @@ interface MemberRemoteDataSource {
 
     suspend fun modifyProfile(request: ModifyProfileRequest)
 
-    suspend fun fetchBlockedMembers(): List<BlockedMemberResponse>
+    suspend fun fetchBlockedMembers(): NetworkResult<List<BlockedMemberResponse>>
 
     suspend fun unblock(request: Long)
 }

@@ -38,7 +38,7 @@ interface MemberRepository {
         message: String,
     )
 
-    suspend fun getBlockedMembers(): List<BlockedMember>
+    suspend fun getBlockedMembers(): NetworkResult<List<BlockedMember>>
 
     suspend fun unblock(id: Long)
 }

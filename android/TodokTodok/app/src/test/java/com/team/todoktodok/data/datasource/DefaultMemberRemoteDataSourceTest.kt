@@ -282,7 +282,7 @@ class DefaultMemberRemoteDataSourceTest {
     fun `차단된 멤버 목록을 가져온다`() =
         runTest {
             // given
-            val response = mockk<List<BlockedMemberResponse>>()
+            val response = NetworkResult.Success(mockk<List<BlockedMemberResponse>>())
             coEvery { memberService.fetchBlockedMembers() } returns response
 
             // when

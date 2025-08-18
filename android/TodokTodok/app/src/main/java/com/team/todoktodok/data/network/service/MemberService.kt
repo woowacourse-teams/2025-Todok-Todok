@@ -61,7 +61,7 @@ interface MemberService {
     )
 
     @GET("v1/members/block")
-    suspend fun fetchBlockedMembers(): List<BlockedMemberResponse>
+    suspend fun fetchBlockedMembers(): NetworkResult<List<BlockedMemberResponse>>
 
     @DELETE("v1/members/{memberId}/block")
     suspend fun unblock(

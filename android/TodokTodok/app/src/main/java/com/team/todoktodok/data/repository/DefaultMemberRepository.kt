@@ -65,7 +65,10 @@ class DefaultMemberRepository(
         message: String,
     ) = remoteMemberRemoteDataSource.modifyProfile(ModifyProfileRequest(nickname, message))
 
-    override suspend fun getBlockedMembers(): List<BlockedMember> = remoteMemberRemoteDataSource.fetchBlockedMembers().map { it.toDomain() }
+    override suspend fun getBlockedMembers(): NetworkResult<List<BlockedMember>> =
+        remoteMemberRemoteDataSource
+            .fetchBlockedMembers()
+            .map { members -> members.map { it.toDomain() } }
 
     override suspend fun unblock(id: Long) = remoteMemberRemoteDataSource.unblock(id)
 }
