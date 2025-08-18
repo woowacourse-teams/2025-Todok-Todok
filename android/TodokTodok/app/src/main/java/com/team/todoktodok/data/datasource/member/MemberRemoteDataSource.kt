@@ -31,7 +31,7 @@ interface MemberRemoteDataSource {
 
     suspend fun fetchMemberBooks(request: MemberId): NetworkResult<List<BookResponse>>
 
-    suspend fun modifyProfile(request: ModifyProfileRequest)
+    suspend fun modifyProfile(request: ModifyProfileRequest): NetworkResult<Unit>
 
     suspend fun fetchBlockedMembers(): NetworkResult<List<BlockedMemberResponse>>
 

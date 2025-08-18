@@ -93,7 +93,7 @@ class DefaultMemberRemoteDataSource(
             is MemberId.OtherUser -> request.id
         }
 
-    override suspend fun modifyProfile(request: ModifyProfileRequest) = memberService.modifyProfile(request)
+    override suspend fun modifyProfile(request: ModifyProfileRequest): NetworkResult<Unit> = memberService.modifyProfile(request)
 
     override suspend fun fetchBlockedMembers(): NetworkResult<List<BlockedMemberResponse>> = memberService.fetchBlockedMembers()
 

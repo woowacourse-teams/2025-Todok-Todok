@@ -63,7 +63,7 @@ class DefaultMemberRepository(
     override suspend fun modifyProfile(
         nickname: String,
         message: String,
-    ) = remoteMemberRemoteDataSource.modifyProfile(ModifyProfileRequest(nickname, message))
+    ): NetworkResult<Unit> = remoteMemberRemoteDataSource.modifyProfile(ModifyProfileRequest(nickname, message))
 
     override suspend fun getBlockedMembers(): NetworkResult<List<BlockedMember>> =
         remoteMemberRemoteDataSource

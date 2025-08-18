@@ -16,11 +16,9 @@ import com.team.todoktodok.data.network.response.BlockedMemberResponse
 import com.team.todoktodok.data.network.response.ProfileResponse
 import com.team.todoktodok.data.network.response.discussion.MemberDiscussionResponse
 import com.team.todoktodok.data.network.service.MemberService
-import io.mockk.Runs
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
-import io.mockk.just
 import io.mockk.mockk
 import io.mockk.mockkConstructor
 import kotlinx.coroutines.test.runTest
@@ -269,7 +267,7 @@ class DefaultMemberRemoteDataSourceTest {
             // given
             val request = ModifyProfileRequest("나는", "페토다!")
 
-            coEvery { memberService.modifyProfile(request) } just Runs
+            coEvery { memberService.modifyProfile(request) } returns NetworkResult.Success(Unit)
 
             // when
             dataSource.modifyProfile(request)

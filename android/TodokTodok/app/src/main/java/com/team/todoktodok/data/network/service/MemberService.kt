@@ -58,7 +58,7 @@ interface MemberService {
     @PUT("v1/members/profile")
     suspend fun modifyProfile(
         @Body requestBody: ModifyProfileRequest,
-    )
+    ): NetworkResult<Unit>
 
     @GET("v1/members/block")
     suspend fun fetchBlockedMembers(): NetworkResult<List<BlockedMemberResponse>>

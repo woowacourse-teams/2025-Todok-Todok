@@ -36,7 +36,7 @@ interface MemberRepository {
     suspend fun modifyProfile(
         nickname: String,
         message: String,
-    )
+    ): NetworkResult<Unit>
 
     suspend fun getBlockedMembers(): NetworkResult<List<BlockedMember>>
 
