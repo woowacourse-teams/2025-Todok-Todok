@@ -127,7 +127,6 @@ androidx = [
     "androidx-credentials",
     "androidx-credentials-play-services-auth",
     "androidx-room-runtime",
-    "androidx-room-compiler",
 ]
 
 kotlin = [

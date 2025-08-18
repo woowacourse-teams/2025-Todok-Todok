@@ -19,6 +19,7 @@ class RepositoryModule(
     val discussionRepository: DiscussionRepository by lazy {
         DefaultDiscussionRepository(
             dataSourceModule.discussionRemoteDataSource,
+            dataSourceModule.discussionLocalDataSource,
         )
     }
 
