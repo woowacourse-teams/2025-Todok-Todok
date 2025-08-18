@@ -3,6 +3,7 @@ package com.team.todoktodok.data.repository
 import com.team.domain.model.Book
 import com.team.domain.model.Discussion
 import com.team.domain.model.DiscussionFilter
+import com.team.domain.model.exception.NetworkResult
 import com.team.domain.model.member.Nickname
 import com.team.domain.model.member.User
 import com.team.todoktodok.data.datasource.discussion.DiscussionRemoteDataSource
@@ -40,7 +41,7 @@ class DefaultDiscussionRepositoryTest {
     fun `모든 토론방을 반환한다`() =
         runTest {
             // given
-            val expected = DISCUSSIONS
+            val expected = NetworkResult.Success(DISCUSSIONS)
 
             // when
             val result = defaultDiscussionRepository.getDiscussions(DiscussionFilter.ALL)
@@ -55,23 +56,25 @@ class DefaultDiscussionRepositoryTest {
             // given
             val type = DiscussionFilter.MINE
             val expected =
-                listOf(
-                    Discussion(
-                        id = 1,
-                        discussionTitle = "JPA 성능 최적화",
-                        book =
-                            Book(
-                                id = 1,
-                                title = "자바 ORM 표준 JPA 프로그래밍",
-                                author = "김영한",
-                                image = "",
-                            ),
-                        writer = User(id = 1, nickname = Nickname(value = "홍길동")),
-                        createAt = LocalDateTime.of(2025, 7, 12, 12, 0),
-                        discussionOpinion = "fetch join을 남발하면 안됩니다.",
-                        likeCount = 0,
-                        commentCount = 0,
-                        isLikedByMe = false,
+                NetworkResult.Success(
+                    listOf(
+                        Discussion(
+                            id = 1,
+                            discussionTitle = "JPA 성능 최적화",
+                            book =
+                                Book(
+                                    id = 1,
+                                    title = "자바 ORM 표준 JPA 프로그래밍",
+                                    author = "김영한",
+                                    image = "",
+                                ),
+                            writer = User(id = 1, nickname = Nickname(value = "홍길동")),
+                            createAt = LocalDateTime.of(2025, 7, 12, 12, 0),
+                            discussionOpinion = "fetch join을 남발하면 안됩니다.",
+                            likeCount = 0,
+                            commentCount = 0,
+                            isLikedByMe = false,
+                        ),
                     ),
                 )
 
@@ -87,7 +90,7 @@ class DefaultDiscussionRepositoryTest {
         runTest {
             // given
             val type = DiscussionFilter.ALL
-            val expected = DISCUSSIONS
+            val expected = NetworkResult.Success(DISCUSSIONS)
             // when
             val result = defaultDiscussionRepository.getDiscussions(type)
 
@@ -102,17 +105,19 @@ class DefaultDiscussionRepositoryTest {
             val keyword = "JPA"
             val type = DiscussionFilter.MINE
             val expected =
-                listOf(
-                    Discussion(
-                        id = 1L,
-                        discussionTitle = "JPA 성능 최적화",
-                        book = Book(1L, "자바 ORM 표준 JPA 프로그래밍", "김영한", ""),
-                        writer = User(1L, Nickname("홍길동")),
-                        createAt = LocalDateTime.of(2025, 7, 12, 12, 0),
-                        discussionOpinion = "fetch join을 남발하면 안됩니다.",
-                        likeCount = 0,
-                        commentCount = 0,
-                        isLikedByMe = false,
+                NetworkResult.Success(
+                    listOf(
+                        Discussion(
+                            id = 1L,
+                            discussionTitle = "JPA 성능 최적화",
+                            book = Book(1L, "자바 ORM 표준 JPA 프로그래밍", "김영한", ""),
+                            writer = User(1L, Nickname("홍길동")),
+                            createAt = LocalDateTime.of(2025, 7, 12, 12, 0),
+                            discussionOpinion = "fetch join을 남발하면 안됩니다.",
+                            likeCount = 0,
+                            commentCount = 0,
+                            isLikedByMe = false,
+                        ),
                     ),
                 )
 
