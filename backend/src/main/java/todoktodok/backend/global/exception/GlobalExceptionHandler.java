@@ -114,10 +114,12 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(AladinApiException.class)
-    public ResponseEntity<String> handleAladinApiException(final AladinApiException e) {
+    public ResponseEntity<ErrorResponse> handleAladinApiException(final AladinApiException e) {
+        final HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
         log.error(PREFIX + e.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(PREFIX + getSafeErrorMessage(e));
+
+        return ResponseEntity.status(status)
+                .body(new ErrorResponse(status.value(), PREFIX + getSafeErrorMessage(e)));
     }
 
     private String toSafeLogValue(
