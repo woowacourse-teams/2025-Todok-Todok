@@ -1,5 +1,6 @@
 package com.team.todoktodok.data.repository
 
+import com.team.domain.model.Book
 import com.team.domain.model.Discussion
 import com.team.domain.model.DiscussionFilter
 import com.team.domain.model.LikeStatus
@@ -7,14 +8,22 @@ import com.team.domain.model.exception.NetworkResult
 import com.team.domain.model.exception.map
 import com.team.domain.model.member.DiscussionRoom
 import com.team.domain.repository.DiscussionRepository
+import com.team.todoktodok.data.datasource.discussion.DiscussionLocalDataSource
 import com.team.todoktodok.data.datasource.discussion.DiscussionRemoteDataSource
+import com.team.todoktodok.data.local.discussion.DiscussionRoomEntity
+import com.team.todoktodok.data.local.discussion.toDomain
+import com.team.todoktodok.data.local.discussion.toEntity
 import com.team.todoktodok.data.network.model.toStatus
 import com.team.todoktodok.data.network.response.discussion.toDomain
 
 class DefaultDiscussionRepository(
     private val discussionRemoteDataSource: DiscussionRemoteDataSource,
+    private val discussionLocalDataSource: DiscussionLocalDataSource,
 ) : DiscussionRepository {
     override suspend fun getDiscussion(id: Long): Result<Discussion> = discussionRemoteDataSource.getDiscussion(id).map { it.toDomain() }
+    override suspend fun getDiscussion(): DiscussionRoom? =
+        discussionLocalDataSource.getDiscussion()?.discussionRoomEntity?.toDomain()
+
 
     override suspend fun getDiscussions(
         type: DiscussionFilter,
@@ -64,6 +73,27 @@ class DefaultDiscussionRepository(
     override suspend fun reportDiscussion(discussionId: Long) {
         discussionRemoteDataSource.reportDiscussion(discussionId)
     }
+
+    override suspend fun hasDiscussion(): Boolean = discussionLocalDataSource.hasDiscussion()
+    override suspend fun getBook(): Book =
+        discussionLocalDataSource.getBook().toDomain()
+
+
+    override suspend fun saveDiscussionRoom(
+        book: Book,
+        discussionTitle: String,
+        discussionOpinion: String
+    ) {
+        discussionLocalDataSource.saveDiscussion(
+            discussionEntity = DiscussionRoomEntity(
+                title = discussionTitle,
+                opinion = discussionOpinion,
+                bookId = book.id
+            ),
+            bookEntity = book.toEntity()
+        )
+    }
+
 
     companion object {
         private const val HEADER_LOCATION: String = "location"
