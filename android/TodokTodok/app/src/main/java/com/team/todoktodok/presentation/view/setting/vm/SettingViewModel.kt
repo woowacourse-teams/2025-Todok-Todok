@@ -3,7 +3,6 @@ package com.team.todoktodok.presentation.view.setting.vm
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.team.todoktodok.log.AppLogger
 import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
 import com.team.todoktodok.presentation.core.event.SingleLiveData
 import com.team.todoktodok.presentation.view.setting.SettingScreen
@@ -19,6 +18,5 @@ class SettingViewModel : ViewModel() {
 
     fun changeScreen(screen: SettingScreen) {
         _uiState.value = _uiState.value?.copy(screen)
-        AppLogger.d(_uiState.value.toString())
     }
 }
