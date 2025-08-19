@@ -59,6 +59,26 @@ public class DiscussionQueryService {
         );
     }
 
+    public SlicedDiscussionResponse getDiscussions(
+            final Long memberId,
+            final int size,
+            final String cursor
+    ) {
+        validatePageSize(size);
+        final Member member = findMember(memberId);
+
+        final Slice<Discussion> slicedDiscussions = sliceDiscussionsBy(cursor, size);
+
+        final List<Discussion> discussions = slicedDiscussions.getContent();
+        final boolean hasNextPage = slicedDiscussions.hasNext();
+        final String nextCursor = findNextCursor(hasNextPage, discussions);
+
+        return new SlicedDiscussionResponse(
+                getDiscussionsResponses(discussions, member),
+                new PageInfo(hasNextPage, nextCursor)
+        );
+    }
+
     public List<DiscussionResponse> getDiscussionsByKeywordAndType(
             final Long memberId,
             final String keyword,
@@ -95,6 +115,47 @@ public class DiscussionQueryService {
                                 String.format("해당 회원을 찾을 수 없습니다: memberId= %s", memberId)
                         )
                 );
+    }
+
+    private Slice<Discussion> sliceDiscussionsBy(
+            final String cursor,
+            final int size
+    ) {
+        final Pageable pageable = PageRequest.of(0, size, Sort.Direction.DESC, "id");
+
+        if (cursor == null || cursor.isBlank()) {
+            return discussionRepository.findAllBy(pageable);
+        }
+
+        final Long cursorId = decodeCursor(cursor);
+        return discussionRepository.findByIdLessThanOrderByIdDesc(cursorId, pageable);
+    }
+
+    private String findNextCursor(
+            final boolean hasNextPage,
+            final List<Discussion> discussions
+    ) {
+        if (!hasNextPage || discussions.isEmpty()) {
+            return null;
+        }
+        return encodeCursorId(discussions.getLast().getId());
+    }
+
+    private Long decodeCursor(final String cursor) {
+        try {
+            if (cursor == null || cursor.isBlank()) {
+                return null;
+            }
+
+            final String decoded = new String(Base64.getUrlDecoder().decode(cursor));
+            return Long.valueOf(decoded);
+        } catch (final Exception e) {
+            throw new IllegalArgumentException(String.format("Base64로 디코드할 수 없는 cursor 값입니다: cursor = %s", cursor));
+        }
+    }
+
+    public String encodeCursorId(final Long id) {
+        return Base64.getUrlEncoder().encodeToString(id.toString().getBytes());
     }
 
     private List<DiscussionResponse> getDiscussionsByType(
@@ -197,70 +258,9 @@ public class DiscussionQueryService {
         return likedDiscussionIds.contains(discussion.getId());
     }
 
-    public SlicedDiscussionResponse getDiscussions(
-            final Long memberId,
-            final int size,
-            final String cursor
-    ) {
-        validatePageSize(size);
-        final Member member = findMember(memberId);
-
-        final Slice<Discussion> slicedDiscussions = sliceDiscussionsBy(cursor, size);
-
-        final List<Discussion> discussions = slicedDiscussions.getContent();
-        final boolean hasNextPage = slicedDiscussions.hasNext();
-        final String nextCursor = findNextCursor(hasNextPage, discussions);
-
-        return new SlicedDiscussionResponse(
-                getDiscussionsResponses(discussions, member),
-                new PageInfo(hasNextPage, nextCursor)
-        );
-    }
-
     private void validatePageSize(final int size) {
         if (size < MIN_PAGE_SIZE || size > MAX_PAGE_SIZE) {
             throw new IllegalArgumentException(String.format("유효하지 않은 페이지 사이즈입니다. 1 이상 50 이하의 페이징을 시도해주세요: size = %d", size));
         }
-    }
-
-    private Slice<Discussion> sliceDiscussionsBy(
-            final String cursor,
-            final int size
-    ) {
-        final Pageable pageable = PageRequest.of(0, size, Sort.Direction.DESC, "id");
-
-        if (cursor == null || cursor.isBlank()) {
-            return discussionRepository.findAllBy(pageable);
-        }
-
-        final Long cursorId = decodeCursor(cursor);
-        return discussionRepository.findByIdLessThanOrderByIdDesc(cursorId, pageable);
-    }
-
-    private String findNextCursor(
-            final boolean hasNextPage,
-            final List<Discussion> discussions
-    ) {
-        if (!hasNextPage || discussions.isEmpty()) {
-            return null;
-        }
-        return encode(discussions.getLast().getId());
-    }
-
-    private Long decodeCursor(final String cursor) {
-        try {
-            if (cursor == null || cursor.isBlank()) {
-                return null;
-            }
-
-            final String decoded = new String(Base64.getUrlDecoder().decode(cursor));
-            return Long.valueOf(decoded);
-        } catch (final Exception e) {
-            throw new IllegalArgumentException(String.format("Base64로 디코드할 수 없는 cursor 값입니다: cursor = %s", cursor));
-        }
-    }
-
-    public String encode(final Long id) {
-        return Base64.getUrlEncoder().encodeToString(id.toString().getBytes());
     }
 }
