@@ -20,6 +20,8 @@ import todoktodok.backend.discussion.application.dto.request.DiscussionRequest;
 import todoktodok.backend.discussion.application.dto.request.DiscussionUpdateRequest;
 import todoktodok.backend.member.presentation.fixture.MemberFixture;
 
+import static org.hamcrest.Matchers.is;
+
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(initializers = InitializerTimer.class)
@@ -110,7 +112,7 @@ class DiscussionControllerTest {
         databaseInitializer.setDefaultDiscussionInfo();
 
         final String updatedTitle = "상속과 조합은 어떤 상황에 쓰이나요?";
-        final String updatedContent= "상속과 조합의 차이점이 궁금합니다.";
+        final String updatedContent = "상속과 조합의 차이점이 궁금합니다.";
         final DiscussionUpdateRequest discussionUpdateRequest = new DiscussionUpdateRequest(
                 updatedTitle,
                 updatedContent
@@ -250,6 +252,33 @@ class DiscussionControllerTest {
                     .then().log().all()
                     .statusCode(HttpStatus.BAD_REQUEST.value());
         }
+    }
+
+    @Test
+    @DisplayName("인기 토론방을 조회한다")
+    void getHotDiscussionsTest() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setUserInfo("user2@gmail.com", "user2", "user2.png", "");
+        databaseInitializer.setUserInfo("user3@gmail.com", "user2", "user2.png", "");
+        databaseInitializer.setUserInfo("user4@gmail.com", "user2", "user2.png", "");
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDiscussionInfo("오브젝트", "오브젝트 토론입니다", 1L, 1L);
+        databaseInitializer.setDiscussionInfo("캡슐화", "캡슐화 토론입니다", 1L, 1L);
+        databaseInitializer.setDiscussionInfo("JPA", "JPA 토론입니다", 1L, 1L);
+
+        databaseInitializer.setDiscussionLikeInfo(1L, 1L);
+
+        final String token = MemberFixture.login("user@gmail.com");
+
+        // when - then
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .header("Authorization", token)
+                .when().get("/api/v1/discussions/hot?period=0&count=1")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("[0].discussionId", is(1));
     }
 
     @Test

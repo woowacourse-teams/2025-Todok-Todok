@@ -4,8 +4,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -433,5 +436,114 @@ class DiscussionQueryServiceTest {
                     () -> assertThat(notLikedDiscussion.isLikedByMe()).isFalse()
             );
         }
+    }
+
+    @Nested
+    @DisplayName("인기 토론방 조회 테스트")
+    class HotDiscussionsTest {
+
+        @BeforeEach
+        void setUp() {
+            final LocalDateTime today = LocalDate.now().atStartOfDay();
+            final LocalDateTime aWeekAgo = today.minusDays(7);
+
+            databaseInitializer.setUserInfo("user1@gmail.com", "user1", "user1.png", "");
+            databaseInitializer.setUserInfo("user2@gmail.com", "user2", "user2.png", "");
+            databaseInitializer.setUserInfo("user3@gmail.com", "user3", "user3.png", "");
+            databaseInitializer.setUserInfo("user4@gmail.com", "user4", "user4.png", "");
+            databaseInitializer.setUserInfo("user5@gmail.com", "user5", "user5.png", "");
+            databaseInitializer.setDefaultBookInfo();
+
+            databaseInitializer.setDiscussionInfo("토론방 1", "토론방 1입니다", 1L, 1L, aWeekAgo);
+            databaseInitializer.setDiscussionInfo("토론방 2", "토론방 2입니다", 1L, 1L, aWeekAgo);
+            databaseInitializer.setDiscussionInfo("토론방 3", "토론방 3입니다", 1L, 1L, aWeekAgo);
+            databaseInitializer.setDiscussionInfo("토론방 4", "토론방 4입니다", 1L, 1L, aWeekAgo);
+
+            // 토론방 1 : 일주일 기준 총 6개 / 오늘 기준 총 1개
+            databaseInitializer.setDiscussionLikeInfo(1L, 1L, aWeekAgo);
+            databaseInitializer.setDiscussionLikeInfo(2L, 1L, aWeekAgo);
+            databaseInitializer.setCommentInfo("토론방 1의 댓글입니다", 1L, 1L, aWeekAgo);
+            databaseInitializer.setCommentInfo("토론방 1의 댓글입니다", 1L, 1L, aWeekAgo);
+            databaseInitializer.setReplyInfo("댓글 1의 대댓글입니다", 1L, 1L, aWeekAgo);
+
+            databaseInitializer.setReplyInfo("댓글 2의 대댓글입니다", 1L, 2L, today);
+
+            // 토론방 2 : 일주일 기준 총 4개 / 오늘 기준 총 2개
+            databaseInitializer.setDiscussionLikeInfo(1L, 2L, aWeekAgo);
+            databaseInitializer.setDiscussionLikeInfo(2L, 2L, aWeekAgo);
+
+            databaseInitializer.setDiscussionLikeInfo(3L, 2L, today);
+            databaseInitializer.setDiscussionLikeInfo(4L, 2L, today);
+
+            // 토론방 3 : 일주일 기준 총 3개 / 오늘 기준 총 3개
+            databaseInitializer.setCommentInfo("토론방 3의 댓글입니다", 1L, 3L, today);
+            databaseInitializer.setCommentInfo("토론방 3의 댓글입니다", 1L, 3L, today);
+            databaseInitializer.setCommentInfo("토론방 3의 댓글입니다", 1L, 3L, today);
+
+            // 토론방 4 : 일주일 기준 총 4개 / 오늘 기준 총 1개
+            databaseInitializer.setCommentInfo("토론방 4의 댓글입니다", 1L, 4L, aWeekAgo);
+            databaseInitializer.setReplyInfo("댓글 6의 대댓글입니다", 1L, 6L, aWeekAgo);
+            databaseInitializer.setReplyInfo("댓글 6의 대댓글입니다", 1L, 6L, aWeekAgo);
+            databaseInitializer.setReplyInfo("댓글 6의 대댓글입니다", 1L, 6L, aWeekAgo);
+        }
+
+        @Test
+        @DisplayName("좋아요, 댓글, 대댓글의 합이 높은 순서대로 조회하고, 합이 같은 경우 최신순으로 조회된다")
+        void hotDiscussionsTest_sortBySum() {
+            //when
+            final Long memberId = 1L;
+            final int period = 7;
+            final int count = 5;
+
+            final List<DiscussionResponse> hotDiscussions = discussionQueryService.getHotDiscussions(memberId, period, count);
+
+            // then
+            assertAll(
+                    () -> assertThat(hotDiscussions).hasSize(4),
+                    () -> assertThat(hotDiscussions.get(0).discussionId()).isEqualTo(1L),
+                    () -> assertThat(hotDiscussions.get(1).discussionId()).isEqualTo(4L),
+                    () -> assertThat(hotDiscussions.get(2).discussionId()).isEqualTo(2L),
+                    () -> assertThat(hotDiscussions.get(3).discussionId()).isEqualTo(3L)
+            );
+        }
+
+        @Test
+        @DisplayName("인기 토론방으로 조회되는 개수는 count 값 이하이다")
+        void hotDiscussionsTest_sliceByCount() {
+            //when
+            final Long memberId = 1L;
+            final int period = 7;
+            final int count = 2;
+
+            final List<DiscussionResponse> hotDiscussions = discussionQueryService.getHotDiscussions(memberId, period, count);
+
+            // then
+            assertAll(
+                    () -> assertThat(hotDiscussions).hasSize(count),
+                    () -> assertThat(hotDiscussions.get(0).discussionId()).isEqualTo(1L),
+                    () -> assertThat(hotDiscussions.get(1).discussionId()).isEqualTo(4L)
+            );
+        }
+
+        @Test
+        @DisplayName("period로 주어진 기간 안에 생성된 좋아요, 댓글, 대댓를 수를 기준으로 인기 토론방을 조회한다")
+        void hotDiscussionsTest_findByPeriod() {
+            //when
+            final Long memberId = 1L;
+            final int period = 0;
+            final int count = 5;
+
+            final List<DiscussionResponse> hotDiscussions = discussionQueryService.getHotDiscussions(memberId, period, count);
+
+            // then
+            assertAll(
+                    () -> assertThat(hotDiscussions).hasSize(4),
+                    () -> assertThat(hotDiscussions.get(0).discussionId()).isEqualTo(3L),
+                    () -> assertThat(hotDiscussions.get(1).discussionId()).isEqualTo(2L),
+                    () -> assertThat(hotDiscussions.get(2).discussionId()).isEqualTo(4L),
+                    () -> assertThat(hotDiscussions.get(3).discussionId()).isEqualTo(1L)
+            );
+        }
+
     }
 }
