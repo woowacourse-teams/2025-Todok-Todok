@@ -2,7 +2,7 @@ package com.team.todoktodok.presentation.view.discussions.all.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
-import com.team.domain.model.Discussion
+import com.team.todoktodok.presentation.view.discussions.DiscussionUiState
 
 class DiscussionAdapter(
     private val handler: Handler,
