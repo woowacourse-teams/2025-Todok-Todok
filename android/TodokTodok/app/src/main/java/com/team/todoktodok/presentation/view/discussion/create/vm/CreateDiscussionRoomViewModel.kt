@@ -77,9 +77,18 @@ class CreateDiscussionRoomViewModel(
     }
 
     fun saveDraft() {
-        val book = _uiState.value?.book ?: return
-        val title = _uiState.value?.title ?: return
-        val opinion = _uiState.value?.opinion ?: return
+        val book = _uiState.value?.book ?: run {
+            _uiEvent.setValue(CreateDiscussionUiEvent.ShowToast(ErrorCreateDiscussionType.BOOK_INFO_NOT_FOUND))
+            return
+        }
+        val title = _uiState.value?.title ?: run {
+            _uiEvent.setValue(CreateDiscussionUiEvent.ShowToast(ErrorCreateDiscussionType.TITLE_NOT_FOUND))
+            return
+        }
+        val opinion = _uiState.value?.opinion ?: run {
+            _uiEvent.setValue(CreateDiscussionUiEvent.ShowToast(ErrorCreateDiscussionType.CONTENT_NOT_FOUND))
+            return
+        }
         viewModelScope.launch { discussionRepository.saveDiscussionRoom(book, title, opinion) }
         _uiEvent.setValue(CreateDiscussionUiEvent.Finish)
     }
