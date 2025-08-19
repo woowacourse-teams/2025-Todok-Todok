@@ -84,6 +84,8 @@
     <string name="select_book">토론방 도서 선택</string>
     <string name="content_description_search_keyword">도서 검색을 합니다</string>
     <string name="hint_search_keyword">도서 제목 또는 저자를 입력해주세요</string>
+    <string name="draft_discussion_exist">임시저장된 문서를 불러오시겠습니까?</string>
+    <string name="load">불러오기</string>
 
     <string name="error_empty_keyword">검색어를 입력해주세요</string>
     <string name="error_no_selected_book">도서를 선택해주세요</string>

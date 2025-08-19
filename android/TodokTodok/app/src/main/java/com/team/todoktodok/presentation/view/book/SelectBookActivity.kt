@@ -157,7 +157,7 @@ class SelectBookActivity : AppCompatActivity() {
         viewModel.uiEvent.observe(this) { event ->
             when (event) {
                 is SelectBookUiEvent.ShowSavedDiscussionRoom -> {
-                    val dialog = CommonDialog.newInstance("임시저장된 문서를 불러오시겠습니까?", "불러오기")
+                    val dialog = CommonDialog.newInstance(getString(R.string.draft_discussion_exist), getString(R.string.load))
                     dialog.show(supportFragmentManager, CommonDialog.TAG)
                 }
 
