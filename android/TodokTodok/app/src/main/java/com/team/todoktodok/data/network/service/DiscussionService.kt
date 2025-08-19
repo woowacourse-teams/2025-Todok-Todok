@@ -17,7 +17,7 @@ interface DiscussionService {
     @GET("v1/discussions/{discussionId}")
     suspend fun fetchDiscussion(
         @Path("discussionId") discussionId: Long,
-    ): DiscussionResponse
+    ): NetworkResult<DiscussionResponse>
 
     @GET("v1/discussions")
     suspend fun fetchDiscussions(
@@ -39,7 +39,7 @@ interface DiscussionService {
     @DELETE("v1/discussions/{discussionId}")
     suspend fun deleteDiscussion(
         @Path("discussionId") discussionId: Long,
-    )
+    ): NetworkResult<Unit>
 
     @POST("v1/discussions/{discussionId}/like")
     suspend fun toggleLike(
@@ -49,5 +49,5 @@ interface DiscussionService {
     @POST("v1/discussions/{discussionId}/report")
     suspend fun reportDiscussion(
         @Path("discussionId") discussionId: Long,
-    )
+    ): NetworkResult<Unit>
 }

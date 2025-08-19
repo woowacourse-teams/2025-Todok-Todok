@@ -2,17 +2,22 @@ package com.team.todoktodok.data.datasource.discussion
 
 import com.team.domain.model.DiscussionFilter
 import com.team.domain.model.exception.NetworkResult
+import com.team.domain.model.exception.TodokTodokExceptions
+import com.team.domain.model.exception.toDomain
+import com.team.todoktodok.data.core.ext.mapToggleLikeResponse
 import com.team.todoktodok.data.network.model.LikeAction
 import com.team.todoktodok.data.network.request.DiscussionRoomRequest
 import com.team.todoktodok.data.network.request.EditDiscussionRoomRequest
 import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
 import com.team.todoktodok.data.network.service.DiscussionService
 import retrofit2.Response
+import java.net.HttpURLConnection.HTTP_CREATED
+import java.net.HttpURLConnection.HTTP_NO_CONTENT
 
 class DefaultDiscussionRemoteDataSource(
     private val discussionService: DiscussionService,
 ) : DiscussionRemoteDataSource {
-    override suspend fun getDiscussion(id: Long): Result<DiscussionResponse> = runCatching { discussionService.fetchDiscussion(id) }
+    override suspend fun getDiscussion(id: Long): NetworkResult<DiscussionResponse> = discussionService.fetchDiscussion(id)
 
     override suspend fun getDiscussions(
         type: DiscussionFilter,
@@ -47,20 +52,16 @@ class DefaultDiscussionRemoteDataSource(
                 ),
         )
 
-    override suspend fun deleteDiscussion(discussionId: Long) {
-        discussionService.deleteDiscussion(discussionId)
-    }
+    override suspend fun deleteDiscussion(discussionId: Long) = discussionService.deleteDiscussion(discussionId)
 
-    override suspend fun toggleLike(discussionId: Long): LikeAction =
-        when (discussionService.toggleLike(discussionId).code()) {
-            201 -> LikeAction.LIKE
-            204 -> LikeAction.UNLIKE
-            else -> throw IllegalStateException()
+    override suspend fun toggleLike(discussionId: Long): NetworkResult<LikeAction> =
+        runCatching {
+            discussionService.toggleLike(discussionId).mapToggleLikeResponse()
+        }.getOrElse {
+            NetworkResult.Failure(it.toDomain())
         }
 
-    override suspend fun reportDiscussion(discussionId: Long) {
-        discussionService.reportDiscussion(discussionId)
-    }
+    override suspend fun reportDiscussion(discussionId: Long): NetworkResult<Unit> = discussionService.reportDiscussion(discussionId)
 
     private fun Response<*>.extractDiscussionId(): Long {
         val locationHeader = headers()[HEADER_LOCATION]
