@@ -67,6 +67,7 @@
     <string name="profile_message_placeholder">상태 메시지를 입력해주세요</string>
     <string name="profile_not_has_activated_book_title">아직 활동한 책이 없어요 !</string>
     <string name="profile_not_has_activated_book_subtitle">토론에 참여하고 활동한 책을 추가해보세요</string>
+    <string name="profile_action_activated_discussion">토론방 둘러보기 ></string>
     <string name="profile_action_activated_book">토론방 둘러보기 ></string>
     <string name="profile_not_has_created_discussion_title">아직 생성한 토론방이 없어요 !</string>
     <string name="profile_not_has_created_discussion_subtitle">나만의 주제로 토론방을 생성해보세요</string>

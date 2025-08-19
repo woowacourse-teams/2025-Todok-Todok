@@ -50,7 +50,7 @@ class ActivatedBooksFragment : Fragment() {
             viewResourceNotFound.show(
                 getString(R.string.profile_not_has_activated_book_title),
                 getString(R.string.profile_not_has_activated_book_subtitle),
-                getString(R.string.profile_action_participated_discussion),
+                getString(R.string.profile_action_activated_book),
                 { moveToDiscussions() },
             )
         }
