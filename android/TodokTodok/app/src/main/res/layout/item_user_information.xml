@@ -17,6 +17,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:shapeAppearanceOverlay="@style/circleImageView"
+        android:padding="1dp"
         app:strokeWidth="1dp"
         app:strokeColor="@color/black_18" />
 
