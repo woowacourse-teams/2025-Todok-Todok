@@ -1,11 +1,20 @@
 package todoktodok.backend.discussion.application.service.query;
 
+import java.time.Clock;
+import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.comment.domain.repository.CommentRepository;
+import todoktodok.backend.discussion.application.dto.DiscussionCursor;
+import todoktodok.backend.discussion.application.dto.response.DiscussionCursorResponse;
+import todoktodok.backend.discussion.application.dto.response.DiscussionPageResponse;
 import todoktodok.backend.discussion.application.dto.response.DiscussionResponse;
 import todoktodok.backend.discussion.domain.Discussion;
 import todoktodok.backend.discussion.domain.DiscussionFilterType;
@@ -25,6 +34,7 @@ public class DiscussionQueryService {
     private final MemberRepository memberRepository;
     private final CommentRepository commentRepository;
     private final ReplyRepository replyRepository;
+    private final Clock clock;
 
     public DiscussionResponse getDiscussion(
             final Long memberId,
@@ -184,5 +194,48 @@ public class DiscussionQueryService {
             final List<Long> likedDiscussionIds
     ) {
         return likedDiscussionIds.contains(discussion.getId());
+    }
+
+    public DiscussionPageResponse getActiveDiscussions(
+            final Long memberId,
+            final int periodDays,
+            final int size,
+            @Nullable final String cursor
+    ) {
+        final Member member = findMember(memberId);
+        final LocalDateTime periodStart = LocalDateTime.now(clock).minusDays(periodDays);
+
+        final DiscussionCursor discussionCursor = Optional.ofNullable(DiscussionCursor.fromEncoded(cursor))
+                .orElse(DiscussionCursor.empty());
+
+        final Pageable pageable = Pageable.ofSize(size + 1);
+
+        final List<DiscussionCursorResponse> discussions = discussionRepository.findDiscussionsByCursor(
+                member,
+                periodStart,
+                discussionCursor.lastCommentedAt(),
+                discussionCursor.cursorId(),
+                pageable
+        );
+
+        if (discussions.isEmpty()) {
+            return new DiscussionPageResponse(Collections.emptyList(), false, null);
+        }
+
+        final boolean hasNext = discussions.size() > size;
+        if (hasNext) {
+            discussions.removeLast();
+        }
+
+        String nextCursor = null;
+        if (hasNext) {
+            DiscussionCursorResponse last = discussions.getLast();
+            nextCursor = discussionCursor.toEncoded(
+                    last.lastCommentedAt(),
+                    last.discussionId()
+            );
+        }
+
+        return new DiscussionPageResponse(discussions, hasNext, nextCursor);
     }
 }

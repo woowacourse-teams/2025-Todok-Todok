@@ -1,9 +1,12 @@
 package todoktodok.backend.discussion.domain.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import todoktodok.backend.discussion.application.dto.response.DiscussionCursorResponse;
 import todoktodok.backend.discussion.domain.Discussion;
 import todoktodok.backend.member.domain.Member;
 
@@ -71,4 +74,32 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
         AND r.deleted_at IS NULL
     """, nativeQuery = true)
     List<Discussion> findParticipatedDiscussionsByMember(@Param("memberId") final Long memberId);
+
+    @Query("""
+            SELECT new todoktodok.backend.discussion.application.dto.response.DiscussionCursorResponse(
+                         d,
+                         COUNT(DISTINCT c.id),
+                         COUNT(DISTINCT dl.id),
+                         CASE WHEN COUNT(DISTINCT dlByMe.id) > 0 THEN true ELSE false END,
+                         MAX(c.createdAt)
+             )
+            FROM Discussion d
+            JOIN Comment c ON c.discussion = d AND c.createdAt >= :periodStart
+            LEFT JOIN DiscussionLike dl ON dl.discussion = d
+            LEFT JOIN DiscussionLike dlByMe ON dlByMe.discussion = d AND dlByMe.member = :member
+            GROUP BY d
+            HAVING (
+                :lastCommentedAt IS NULL
+                OR MAX(c.createdAt) < :lastCommentedAt
+                OR MAX(c.createdAt) = :lastCommentedAt AND d.id < :cursorId
+            )
+            ORDER BY MAX(c.createdAt) DESC, d.id DESC
+    """)
+    List<DiscussionCursorResponse> findDiscussionsByCursor(
+            @Param("member") Member member,
+            @Param("periodStart") LocalDateTime periodStart,
+            @Param("lastCommentedAt") LocalDateTime lastCommentedAt,
+            @Param("cursorId") Long cursorId,
+            Pageable pageable
+    );
 }

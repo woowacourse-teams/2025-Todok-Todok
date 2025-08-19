@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import todoktodok.backend.discussion.application.dto.request.DiscussionRequest;
 import todoktodok.backend.discussion.application.dto.request.DiscussionUpdateRequest;
+import todoktodok.backend.discussion.application.dto.response.DiscussionPageResponse;
 import todoktodok.backend.discussion.application.dto.response.DiscussionResponse;
 import todoktodok.backend.discussion.application.service.command.DiscussionCommandService;
 import todoktodok.backend.discussion.application.service.query.DiscussionQueryService;
@@ -127,5 +128,17 @@ public class DiscussionController implements DiscussionApiDocs {
                 .path("/{id}")
                 .buildAndExpand(id)
                 .toUri();
+    }
+
+    @Auth(value = Role.USER)
+    @GetMapping("/active")
+    public ResponseEntity<DiscussionPageResponse> getActiveDiscussions(
+            @LoginMember final Long memberId,
+            @RequestParam final int period,
+            @RequestParam(defaultValue = "10") final int size,
+            @RequestParam(required = false) final String cursor
+    ) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(discussionQueryService.getActiveDiscussions(memberId, period, size, cursor));
     }
 }
