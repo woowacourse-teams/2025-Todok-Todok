@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.util.UriBuilder;
+import org.springframework.web.util.UriComponentsBuilder;
 import todoktodok.backend.book.infrastructure.aladin.exception.AladinApiException;
 
 @Component
@@ -77,22 +78,24 @@ public class AladinRestClient {
             final Function<UriBuilder, URI> uri,
             final String context
     ) {
+        final URI requestUri = uri.apply(UriComponentsBuilder.newInstance());
+
         try {
             final AladinItemResponses response = restClient.get()
-                    .uri(uri)
+                    .uri(requestUri)
                     .retrieve()
                     .body(AladinItemResponses.class);
 
             if (response == null || response.item() == null) {
                 throw new AladinApiException(
-                        String.format("알라딘 API 응답이 비정상입니다: %s, item= null", context)
+                        String.format("알라딘 API 응답이 비정상입니다: %s, uri= %s, item= null", context, requestUri)
                 );
             }
             return response;
 
         } catch (final RestClientException e) {
             throw new AladinApiException(
-                    String.format("알라딘 API 통신 중 오류: %s, errorMessage= %s", context, e.getMessage())
+                    String.format("알라딘 API 통신 중 오류: %s, uri= %s, errorMessage= %s", context, requestUri, e.getMessage())
             );
         }
     }
