@@ -57,6 +57,10 @@ jobs:
     needs: ci
     runs-on: [self-hosted, prac]
     steps:
+      - name: Cleanup backend log directory before checkout
+        run: |
+          sudo rm -rf backend/log/dev || true
+
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
@@ -84,12 +88,6 @@ jobs:
           else
             echo "중지할 컨테이너 없음 (포트 80)"
           fi
-
-#      - name: Run docker image
-#        run: |
-#          echo "새 Docker 컨테이너 실행 중..."
-#          docker run -d -p 80:8080 woowajeff/todoktodok:dev
-#          echo "컨테이너 실행 완료"
 
       - name: Docker Compose Down (if exists)
         run: |
