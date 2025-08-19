@@ -18,7 +18,7 @@ services:
     restart: always
 
   promtail:
-    container_name: promtail
+    container_name: promtail_dev
     image: grafana/promtail:latest
     restart: always
     volumes:
