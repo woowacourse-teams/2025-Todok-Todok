@@ -23,5 +23,5 @@ services:
     restart: always
     volumes:
       - ./promtail-config-dev.yml:/etc/promtail/promtail.yml
-      - ./log:/log
+      - ../log:/log
     command: -config.file=/etc/promtail/promtail.yml
