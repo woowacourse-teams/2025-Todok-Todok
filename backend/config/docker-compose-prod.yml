@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  prod:
+    container_name: prod
+    build:
+      context: ..
+      dockerfile: ../Dockerfile.prod
+      args:
+        JAR_FILE: /build/libs/*.jar
+    image: woowajeff/todoktodok:prod
+    ports:
+      - "80:8080"
+    volumes:
+      - ../log:/log
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    restart: always
+    networks:
+      - prod_network
+
+  promtail:
+    container_name: promtail_prod
+    image: grafana/promtail:latest
+    ports:
+      - "9080:9080"
+    volumes:
+      - ../config/promtail-config-prod.yml:/etc/promtail/promtail.yml
+      - ../log:/log
+    command: -config.file=/etc/promtail/promtail.yml
+    restart: always
+    networks:
+      - prod_network
+
+networks:
+  prod_network:
+    external: true
