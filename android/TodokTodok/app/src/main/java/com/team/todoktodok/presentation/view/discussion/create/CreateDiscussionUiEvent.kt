@@ -13,5 +13,5 @@ sealed interface CreateDiscussionUiEvent {
         val possible: Boolean,
     ) : CreateDiscussionUiEvent
 
-    data object Finish: CreateDiscussionUiEvent
+    data object Finish : CreateDiscussionUiEvent
 }

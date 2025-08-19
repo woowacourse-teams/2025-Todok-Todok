@@ -1,6 +1,5 @@
 package com.team.todoktodok.presentation.view.discussion.create.vm
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -38,7 +37,7 @@ class CreateDiscussionRoomViewModel(
         decideMode()
     }
 
-    fun checkIsPossibleToSave(){
+    fun checkIsPossibleToSave() {
         viewModelScope.launch {
             val discussion = async { discussionRepository.getDiscussion() }.await()
             if (discussion == null) {
@@ -47,8 +46,8 @@ class CreateDiscussionRoomViewModel(
             }
             _uiEvent.setValue(CreateDiscussionUiEvent.SaveDraft(false))
         }
-
     }
+
     private fun decideMode() {
         when (mode) {
             is SerializationCreateDiscussionRoomMode.Create -> {
@@ -88,6 +87,7 @@ class CreateDiscussionRoomViewModel(
     fun finish() {
         _uiEvent.setValue(CreateDiscussionUiEvent.Finish)
     }
+
     fun updateTitle(title: String) {
         _uiState.value = _uiState.value?.copy(title = title)
         if (title.length == MAX_TITLE_LENGTH) {

@@ -27,7 +27,8 @@ class CommonDialog : DialogFragment(R.layout.view_common_dialog) {
                     REQUEST_KEY_COMMON_DIALOG,
                     bundleOf(RESULT_KEY_COMMON_DIALOG to false),
                 )
-                dismiss() }
+                dismiss()
+            }
             btnSubmit.setOnClickListener {
                 setFragmentResult(
                     REQUEST_KEY_COMMON_DIALOG,

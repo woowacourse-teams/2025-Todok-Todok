@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -211,10 +210,11 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
 
                 is CreateDiscussionUiEvent.SaveDraft -> {
                     if (event.possible) {
-                        val dialog = CommonDialog.newInstance(
-                            "작성중인 글을 취소하시겠습니까? 취소하기 선택시, 작성된 글은 저장되지 않습니다.",
-                            "임시저장"
-                        )
+                        val dialog =
+                            CommonDialog.newInstance(
+                                "작성중인 글을 취소하시겠습니까? 취소하기 선택시, 작성된 글은 저장되지 않습니다.",
+                                "임시저장",
+                            )
                         dialog.show(supportFragmentManager, CommonDialog.TAG)
                         return@observe
                     }
