@@ -2,8 +2,10 @@ package todoktodok.backend;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,6 +14,9 @@ public class DatabaseInitializer {
 
     @PersistenceContext
     private EntityManager em;
+
+    @Autowired
+    private Clock clock;
 
     @Transactional
     public void clear() {
@@ -33,13 +38,18 @@ public class DatabaseInitializer {
 
     @Transactional
     public void setDefaultUserInfo() {
+        final LocalDateTime now = LocalDateTime.now(clock);
+
         em.createNativeQuery(
-                """
-                        INSERT INTO MEMBER (email, nickname, profile_image, profile_message, created_at, modified_at)
-                        VALUES
-                        ('user@gmail.com', 'user', 'https://user.png', 'user', CURRENT_TIME, CURRENT_TIME)
                         """
-        ).executeUpdate();
+                                INSERT INTO MEMBER (email, nickname, profile_image, profile_message, created_at, modified_at)
+                                VALUES
+                                ('user@gmail.com', 'user', 'https://user.png', 'user', :createdAt, :modifiedAt)
+                                """
+                )
+                .setParameter("createdAt", now)
+                .setParameter("modifiedAt", now)
+                .executeUpdate();
     }
 
     @Transactional
@@ -49,29 +59,38 @@ public class DatabaseInitializer {
             final String profileImage,
             final String profileMessage
     ) {
+        final LocalDateTime now = LocalDateTime.now(clock);
+
         em.createNativeQuery(
                         """
                                 INSERT INTO MEMBER (email, nickname, profile_image, profile_message, created_at, modified_at)
                                 VALUES 
-                                (:email, :nickname, :profileImage, :profileMessage, CURRENT_TIME, CURRENT_TIME)
+                                (:email, :nickname, :profileImage, :profileMessage, :createdAt, :modifiedAt)
                                 """
                 )
                 .setParameter("email", email)
                 .setParameter("nickname", nickname)
                 .setParameter("profileImage", profileImage)
                 .setParameter("profileMessage", profileMessage)
+                .setParameter("createdAt", now)
+                .setParameter("modifiedAt", now)
                 .executeUpdate();
     }
 
     @Transactional
     public void setDefaultBookInfo() {
+        final LocalDateTime now = LocalDateTime.now(clock);
+
         em.createNativeQuery(
-                """
-                        INSERT INTO BOOK (title, summary, author, publisher, isbn, image, created_at, modified_at)
-                        VALUES
-                        ('오브젝트', '오브젝트 설명', '조영호', '위키북스', '9791158391409', 'image.png', CURRENT_TIME, CURRENT_TIME)
                         """
-        ).executeUpdate();
+                                INSERT INTO BOOK (title, summary, author, publisher, isbn, image, created_at, modified_at)
+                                VALUES
+                                ('오브젝트', '오브젝트 설명', '조영호', '위키북스', '9791158391409', 'image.png', :createdAt, :modifiedAt)
+                                """
+                )
+                .setParameter("createdAt", now)
+                .setParameter("modifiedAt", now)
+                .executeUpdate();
     }
 
     @Transactional
@@ -83,11 +102,13 @@ public class DatabaseInitializer {
             final String isbn,
             final String image
     ) {
+        final LocalDateTime now = LocalDateTime.now(clock);
+
         em.createNativeQuery(
                         """
                                 INSERT INTO BOOK (title, summary, author, publisher, isbn, image, created_at, modified_at)
                                 VALUES 
-                                (:title, :summary, :author, :publisher, :isbn, :image, CURRENT_TIME, CURRENT_TIME)
+                                (:title, :summary, :author, :publisher, :isbn, :image, :createdAt, :modifiedAt)
                                 """
                 )
                 .setParameter("title", title)
@@ -96,18 +117,25 @@ public class DatabaseInitializer {
                 .setParameter("publisher", publisher)
                 .setParameter("isbn", isbn)
                 .setParameter("image", image)
+                .setParameter("createdAt", now)
+                .setParameter("modifiedAt", now)
                 .executeUpdate();
     }
 
     @Transactional
     public void setDefaultDiscussionInfo() {
+        final LocalDateTime now = LocalDateTime.now(clock);
+
         em.createNativeQuery(
-                """
-                        INSERT INTO DISCUSSION (title, content, member_id, book_id, created_at, modified_at)
-                        VALUES 
-                        ('상속과 조합의 차이', '코드 재사용에 있어 조합이 유리하다면, 상속의 목적은 무엇인가요?', 1L, 1L, CURRENT_TIME, CURRENT_TIME)
                         """
-        ).executeUpdate();
+                                INSERT INTO DISCUSSION (title, content, member_id, book_id, created_at, modified_at)
+                                VALUES 
+                                ('상속과 조합의 차이', '코드 재사용에 있어 조합이 유리하다면, 상속의 목적은 무엇인가요?', 1L, 1L, :createdAt, :modifiedAt)
+                                """
+                )
+                .setParameter("createdAt", now)
+                .setParameter("modifiedAt", now)
+                .executeUpdate();
     }
 
     @Transactional
@@ -117,17 +145,21 @@ public class DatabaseInitializer {
             final Long memberId,
             final Long bookId
     ) {
+        final LocalDateTime now = LocalDateTime.now(clock);
+
         em.createNativeQuery(
                         """
                                 INSERT INTO DISCUSSION (title, content, member_id, book_id, created_at, modified_at)
                                 VALUES 
-                                (:title, :content, :memberId, :bookId, CURRENT_TIME, CURRENT_TIME)
+                                (:title, :content, :memberId, :bookId, :createdAt, :modifiedAt)
                                 """
                 )
                 .setParameter("title", title)
                 .setParameter("content", content)
                 .setParameter("memberId", memberId)
                 .setParameter("bookId", bookId)
+                .setParameter("createdAt", now)
+                .setParameter("modifiedAt", now)
                 .executeUpdate();
     }
 
@@ -136,27 +168,36 @@ public class DatabaseInitializer {
             final Long memberId,
             final Long discussionId
     ) {
+        final LocalDateTime now = LocalDateTime.now(clock);
+
         em.createNativeQuery(
                         """
                                 INSERT INTO DISCUSSION_LIKE (member_id, discussion_id, created_at, modified_at)
                                 VALUES 
-                                (:memberId, :discussionId, CURRENT_TIME, CURRENT_TIME)
+                                (:memberId, :discussionId, :createdAt, :modifiedAt)
                                 """
                 )
                 .setParameter("memberId", memberId)
                 .setParameter("discussionId", discussionId)
+                .setParameter("createdAt", now)
+                .setParameter("modifiedAt", now)
                 .executeUpdate();
     }
 
     @Transactional
     public void setDefaultCommentInfo() {
+        final LocalDateTime now = LocalDateTime.now(clock);
+
         em.createNativeQuery(
-                """
-                        INSERT INTO COMMENT (content, member_id, discussion_id, created_at, modified_at)
-                        VALUES 
-                        ('상속의 핵심 목적은 타입 계층의 구축입니다!', 1L, 1L, CURRENT_TIME, CURRENT_TIME)
                         """
-        ).executeUpdate();
+                                INSERT INTO COMMENT (content, member_id, discussion_id, created_at, modified_at)
+                                VALUES 
+                                ('상속의 핵심 목적은 타입 계층의 구축입니다!', 1L, 1L, :createdAt, :modifiedAt)
+                                """
+                )
+                .setParameter("createdAt", now)
+                .setParameter("modifiedAt", now)
+                .executeUpdate();
     }
 
     @Transactional
@@ -166,17 +207,20 @@ public class DatabaseInitializer {
             final Long discussionId,
             LocalDateTime createdAt
     ) {
+        final LocalDateTime now = LocalDateTime.now(clock);
+
         em.createNativeQuery(
                         """
                                 INSERT INTO COMMENT (content, member_id, discussion_id, created_at, modified_at)
                                 VALUES 
-                                (:content, :memberId, :discussionId, :createdAt, CURRENT_TIME)
+                                (:content, :memberId, :discussionId, :createdAt, :modifiedAt)
                                 """
                 )
                 .setParameter("content", content)
                 .setParameter("memberId", memberId)
                 .setParameter("discussionId", discussionId)
                 .setParameter("createdAt", createdAt)
+                .setParameter("modifiedAt", now)
                 .executeUpdate();
     }
 
@@ -186,16 +230,20 @@ public class DatabaseInitializer {
             final Long memberId,
             final Long discussionId
     ) {
+        final LocalDateTime now = LocalDateTime.now(clock);
+
         em.createNativeQuery(
                         """
                                 INSERT INTO COMMENT (content, member_id, discussion_id, created_at, modified_at)
                                 VALUES 
-                                (:content, :memberId, :discussionId, CURRENT_TIME, CURRENT_TIME)
+                                (:content, :memberId, :discussionId, :createdAt, :modifiedAt)
                                 """
                 )
                 .setParameter("content", content)
                 .setParameter("memberId", memberId)
                 .setParameter("discussionId", discussionId)
+                .setParameter("createdAt", now)
+                .setParameter("modifiedAt", now)
                 .executeUpdate();
     }
 
@@ -204,27 +252,36 @@ public class DatabaseInitializer {
             final Long memberId,
             final Long commentId
     ) {
+        final LocalDateTime now = LocalDateTime.now(clock);
+
         em.createNativeQuery(
                         """
                                 INSERT INTO COMMENT_LIKE (member_id, comment_id, created_at, modified_at)
                                 VALUES 
-                                (:memberId, :commentId, CURRENT_TIME, CURRENT_TIME)
+                                (:memberId, :commentId, :createdAt, :modifiedAt)
                                 """
                 )
                 .setParameter("memberId", memberId)
                 .setParameter("commentId", commentId)
+                .setParameter("createdAt", now)
+                .setParameter("modifiedAt", now)
                 .executeUpdate();
     }
 
     @Transactional
     public void setDefaultReplyInfo() {
+        final LocalDateTime now = LocalDateTime.now(clock);
+
         em.createNativeQuery(
-                """
-                        INSERT INTO REPLY (content, member_id, comment_id, created_at, modified_at)
-                        VALUES 
-                        ('저도 같은 의견입니다!', 1L, 1L, CURRENT_TIME, CURRENT_TIME)
                         """
-        ).executeUpdate();
+                                INSERT INTO REPLY (content, member_id, comment_id, created_at, modified_at)
+                                VALUES 
+                                ('저도 같은 의견입니다!', 1L, 1L, :createdAt, :modifiedAt)
+                                """
+                )
+                .setParameter("createdAt", now)
+                .setParameter("modifiedAt", now)
+                .executeUpdate();
     }
 
     @Transactional
@@ -233,16 +290,20 @@ public class DatabaseInitializer {
             final Long memberId,
             final Long commentId
     ) {
+        final LocalDateTime now = LocalDateTime.now(clock);
+
         em.createNativeQuery(
                         """
                                 INSERT INTO REPLY (content, member_id, comment_id, created_at, modified_at)
                                 VALUES 
-                                (:content, :memberId, :commentId, CURRENT_TIME, CURRENT_TIME)
+                                (:content, :memberId, :commentId, :createdAt, :modifiedAt)
                                 """
                 )
                 .setParameter("content", content)
                 .setParameter("memberId", memberId)
                 .setParameter("commentId", commentId)
+                .setParameter("createdAt", now)
+                .setParameter("modifiedAt", now)
                 .executeUpdate();
     }
 
@@ -251,15 +312,19 @@ public class DatabaseInitializer {
             final Long memberId,
             final Long replyId
     ) {
+        final LocalDateTime now = LocalDateTime.now(clock);
+
         em.createNativeQuery(
                         """
                                 INSERT INTO REPLY_LIKE (member_id, reply_id, created_at, modified_at)
                                 VALUES 
-                                (:memberId, :replyId, CURRENT_TIME, CURRENT_TIME)
+                                (:memberId, :replyId, :createdAt, :modifiedAt)
                                 """
                 )
                 .setParameter("memberId", memberId)
                 .setParameter("replyId", replyId)
+                .setParameter("createdAt", now)
+                .setParameter("modifiedAt", now)
                 .executeUpdate();
     }
 
@@ -268,15 +333,19 @@ public class DatabaseInitializer {
             final Long memberId,
             final Long targetId
     ) {
+        final LocalDateTime now = LocalDateTime.now(clock);
+
         em.createNativeQuery(
                         """
-                        INSERT INTO BLOCK (member_id, target_id, created_at, modified_at)
-                        VALUES 
-                        (:memberId, :targetId, CURRENT_TIME, CURRENT_TIME)
-                        """
-                 )
+                                INSERT INTO BLOCK (member_id, target_id, created_at, modified_at)
+                                VALUES 
+                                (:memberId, :targetId, :createdAt, :modifiedAt)
+                                """
+                )
                 .setParameter("memberId", memberId)
                 .setParameter("targetId", targetId)
+                .setParameter("createdAt", now)
+                .setParameter("modifiedAt", now)
                 .executeUpdate();
     }
 }
