@@ -1,4 +1,4 @@
-package com.team.todoktodok.presentation.view.discussions.all.adapter
+package com.team.todoktodok.presentation.view.discussions.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
@@ -6,7 +6,7 @@ import com.team.todoktodok.presentation.view.discussions.DiscussionUiState
 
 class DiscussionAdapter(
     private val handler: Handler,
-) : ListAdapter<Discussion, DiscussionViewHolder>(DiscussionDiffUtil()) {
+) : ListAdapter<DiscussionUiState, DiscussionViewHolder>(DiscussionDiffUtil()) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,

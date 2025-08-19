@@ -1,11 +1,12 @@
-package com.team.todoktodok.presentation.view.discussions.all.adapter
+package com.team.todoktodok.presentation.view.discussions.adapter
 
 import android.view.LayoutInflater
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.team.domain.model.Discussion
 import com.team.todoktodok.databinding.ItemDiscussionBinding
 import com.team.todoktodok.presentation.core.ext.loadImage
+import com.team.todoktodok.presentation.view.discussions.DiscussionUiState
 
 class DiscussionViewHolder private constructor(
     private val binding: ItemDiscussionBinding,
@@ -17,14 +18,23 @@ class DiscussionViewHolder private constructor(
         }
     }
 
-    fun bind(item: Discussion) {
+    fun bind(item: DiscussionUiState) {
         with(binding) {
-            tvBookTitle.text = item.getBookTitle()
-            tvBookAuthor.text = item.getBookAuthor()
+            tvBookTitle.text = item.bookTitle
+            tvBookAuthor.text = item.bookAuthor
             ivBook.loadImage(item.bookImage)
 
             tvDiscussionTitle.text = item.discussionTitle
             tvDiscussionWriterNickname.text = item.writerNickname
+
+            if (item.opinionVisibility) {
+                tvDiscussionOpinion.visibility = VISIBLE
+                tvDiscussionOpinion.text = item.discussionOpinion
+            }
+
+            tvLikeCount.text = item.likeCount
+            tvCommentCount.text = item.commentCount
+            tvViews.text = item.likeCount
         }
     }
 

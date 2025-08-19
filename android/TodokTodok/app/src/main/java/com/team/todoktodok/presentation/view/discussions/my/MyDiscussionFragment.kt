@@ -80,7 +80,7 @@ class MyDiscussionFragment : Fragment(R.layout.fragment_my_discussion) {
                 startActivity(
                     DiscussionDetailActivity.Intent(
                         requireContext(),
-                        discussion.id,
+                        discussion.item.id,
                     ),
                 )
             }
