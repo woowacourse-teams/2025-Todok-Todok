@@ -42,7 +42,7 @@ class MyDiscussionFragment : Fragment(R.layout.fragment_my_discussion) {
 
     private fun setUpUiState() {
         viewModel.uiState.observe(viewLifecycleOwner) { value ->
-            discussionAdapter.submitList(value.activatedDiscussions)
+            discussionAdapter.submitList(value.myDiscussions)
         }
     }
 

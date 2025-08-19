@@ -11,6 +11,7 @@ import com.team.domain.model.exception.onSuccess
 import com.team.domain.repository.DiscussionRepository
 import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
 import com.team.todoktodok.presentation.core.event.SingleLiveData
+import com.team.todoktodok.presentation.view.discussions.DiscussionUiState
 import com.team.todoktodok.presentation.view.discussions.DiscussionsUiEvent
 import com.team.todoktodok.presentation.view.discussions.DiscussionsUiState
 import kotlinx.coroutines.Job
@@ -60,9 +61,10 @@ class DiscussionsViewModel(
                 if (filter == DiscussionFilter.HOT) continue
                 discussionRepository
                     .getDiscussions(filter, keyword)
-                    .onSuccess {
-                        updateDiscussions(filter, it)
-                        if (filter == currentFilter) onUiEvent(it, filter)
+                    .onSuccess { result: List<Discussion> ->
+                        val discussion = result.map { DiscussionUiState(it) }
+                        updateDiscussions(filter, discussion)
+                        if (filter == currentFilter) onUiEvent(result, filter)
                     }.onFailure {
                         onUiEvent(DiscussionsUiEvent.ShowErrorMessage(it))
                     }
@@ -73,7 +75,7 @@ class DiscussionsViewModel(
 
     private fun updateDiscussions(
         filter: DiscussionFilter,
-        discussions: List<Discussion>,
+        discussions: List<DiscussionUiState>,
     ) {
         _uiState.value =
             _uiState.value?.let {
