@@ -29,20 +29,18 @@ class ModifyProfileViewModel(
         loadProfile()
     }
 
-    private fun loadProfile() {
-        changeLoadingState()
-        viewModelScope.launch {
+    private fun loadProfile() =
+        withLoading {
             memberRepository
                 .getProfile(MemberId.Mine)
                 .onSuccess {
                     _uiState.value =
-                        _uiState.value?.copy(
-                            profile = it,
-                            isLoading = false,
+                        _uiState.value?.modifyProfile(
+                            it.nickname,
+                            it.message ?: EMPTY_MESSAGE,
                         )
                 }.onFailure { onUiEvent(ModifyProfileUiEvent.ShowErrorMessage(it)) }
         }
-    }
 
     fun checkProfileValidation(
         nickname: String,
@@ -60,28 +58,36 @@ class ModifyProfileViewModel(
     private fun modifyProfile(
         nickname: Nickname,
         message: String,
-    ) {
-        viewModelScope.launch {
-            val currentUiState = _uiState.value ?: return@launch
-            _uiState.value =
-                currentUiState
-                    .modifyProfile(nickname.value, message.ifBlank { EMPTY_MESSAGE })
+    ) = withLoading {
+        val currentUiState = _uiState.value ?: return@withLoading
 
-            memberRepository
-                .modifyProfile(nickname.value, message)
-                .onSuccess {
-                    onUiEvent(ModifyProfileUiEvent.OnCompleteModification)
-                }.onFailure { onUiEvent(ModifyProfileUiEvent.ShowErrorMessage(it)) }
-            changeLoadingState()
-        }
-    }
-
-    fun changeLoadingState() {
-        _uiState.value = _uiState.value?.toggleLoading()
+        _uiState.value =
+            currentUiState
+                .modifyProfile(
+                    nickname.value,
+                    message.ifBlank { EMPTY_MESSAGE },
+                )
+        memberRepository
+            .modifyProfile(nickname.value, message)
+            .onSuccess {
+                onUiEvent(ModifyProfileUiEvent.OnCompleteModification)
+            }.onFailure { onUiEvent(ModifyProfileUiEvent.ShowErrorMessage(it)) }
     }
 
     private fun onUiEvent(event: ModifyProfileUiEvent) {
         _uiEvent.setValue(event)
+    }
+
+    private fun withLoading(action: suspend () -> Unit) {
+        viewModelScope.launch {
+            changeLoadingState()
+            action()
+            changeLoadingState()
+        }
+    }
+
+    private fun changeLoadingState() {
+        _uiState.value = _uiState.value?.toggleLoading()
     }
 
     companion object {

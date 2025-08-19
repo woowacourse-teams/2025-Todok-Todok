@@ -13,11 +13,9 @@ data class ProfileUiState(
         message: String,
     ): ProfileUiState =
         copy(
-            profile =
-                profile.copy(
-                    nickname = nickname,
-                    message = message,
-                ),
-            isLoading = !isLoading,
+            profile.copy(
+                nickname = nickname,
+                message = message,
+            ),
         )
 }
