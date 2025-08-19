@@ -27,7 +27,7 @@ class ReplyCreateBottomSheet : BottomSheetDialogFragment(R.layout.fragment_comme
     }
 
     private val commentDetailViewModel by viewModels<CommentDetailViewModel>(
-        ownerProducer = { requireParentFragment().requireParentFragment() },
+        ownerProducer = { requireParentFragment() },
     )
 
     private var visibilityListener: BottomSheetVisibilityListener? = null

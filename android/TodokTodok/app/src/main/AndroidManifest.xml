@@ -9,9 +9,9 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_app_icon"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_app_icon_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TodokTodok"
         android:usesCleartextTraffic="true"
@@ -20,13 +20,12 @@
             android:name=".presentation.view.discussion.create.CreateDiscussionRoomActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustPan" />
-      <activity
+        <activity
             android:name=".presentation.view.setting.SettingActivity"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".presentation.view.discussions.DiscussionsActivity"
-            android:exported="false" >
-        </activity>
+            android:exported="false"></activity>
         <activity
             android:name=".presentation.view.profile.ProfileActivity"
             android:exported="true">
@@ -45,8 +44,8 @@
             android:exported="false" />
         <activity
             android:name=".presentation.view.book.SelectBookActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:exported="false">
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize">
 
         </activity>
     </application>

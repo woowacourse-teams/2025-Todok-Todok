@@ -20,16 +20,31 @@
     <string name="all_cancel">취소하기</string>
     <string name="all_report_comment">댓글을 신고하시겠습니까?</string>
     <string name="all_report_discussion">토론방을 신고하시겠습니까?</string>
+    <string name="all_report_reply">답글을 신고하시겠습니까?</string>
     <string name="all_already_report_discussion">이미 신고한 토론방 입니다</string>
     <string name="all_nickname">닉네임</string>
-
+    <string name="all_discussion_delete_confirm">토론방을 정말 삭제 하시겠습니까?</string>
+    <string name="all_comment_delete_confirm">댓글을 정말 삭제 하시겠습니까?</string>
+    <string name="all_reply_delete_confirm">답글을 정말 삭제 하시겠습니까?</string>
+    <string name="all_relative_just_now">방금전</string>
+    <string name="all_relative_soon">곧</string>
+    <string name="all_relative_seconds">%d초전</string>
+    <string name="all_relative_minutes">%d분전</string>
+    <string name="all_relative_hours">%d시간전</string>
+    <string name="all_relative_days">%d일전</string>
+    <string name="all_relative_weeks">%d주전</string>
+    <string name="all_relative_months">%d달전</string>
+    <string name="all_relative_years">%d년전</string>
     <!--  토론 목록 페이지  -->
     <string name="content_description_add_discussion">토론방 추가 화면으로 이동합니다</string>
     <string name="content_description_book_image">도서 이미지입니다</string>
+    <string name="content_description_comments_user_profile">댓글 유저 이미지 버튼</string>
 
     <!--  상세 토론방 페이지  -->
     <string name="content_description_discussion_detail_back">토론 상세 화면에서 뒤로가는 버튼</string>
     <string name="content_description_discussion_detail_option">토론방 옵션 버튼</string>
+    <string name="content_description_discussion_detail_book_profile">토론방 도서 이미지 버튼</string>
+    <string name="content_description_discussion_detail_user_profile">토론방 유저 이미지 버튼</string>
     <string name="comment_input_hint">댓글 입력</string>
     <string name="content_description_add_comment">댓글을 추가합니다</string>
 
@@ -76,6 +91,8 @@
     <string name="content_description_comment_reply">대댓글 목록 버튼</string>
     <string name="content_description_comment_like">댓글 좋아요 클릭 버튼</string>
     <string name="content_description_reply_like">대댓글 좋아요 클릭 버튼</string>
+    <string name="confirm_delete_message">작성중인 댓글을 삭제할까요?</string>
+    <string name="content_description_comment_detail_reply_user_profile">대댓글 유저 이미지 버튼</string>
     <!-- 토론방 도서 선택 화면 -->
     <string name="content_description_ut_discussion_img">토론방 도서 이미지</string>
     <string name="create_discussion_room">토론방 생성</string>

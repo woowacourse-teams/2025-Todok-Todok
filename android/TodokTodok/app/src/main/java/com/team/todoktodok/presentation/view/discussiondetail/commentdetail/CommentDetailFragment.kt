@@ -10,13 +10,14 @@ import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.DEFAULT_ARGS_KEY
-import androidx.lifecycle.viewmodel.MutableCreationExtras
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentCommentDetailBinding
 import com.team.todoktodok.databinding.MenuExternalDiscussionBinding
 import com.team.todoktodok.databinding.MenuOwnedDiscussionBinding
+import com.team.todoktodok.presentation.core.component.CommonDialog
+import com.team.todoktodok.presentation.core.ext.registerPositiveResultListener
+import com.team.todoktodok.presentation.core.ext.registerResultListener
 import com.team.todoktodok.presentation.view.discussiondetail.BottomSheetVisibilityListener
 import com.team.todoktodok.presentation.view.discussiondetail.commentcreate.CommentCreateBottomSheet
 import com.team.todoktodok.presentation.view.discussiondetail.commentdetail.adapter.CommentDetailAdapter
@@ -37,28 +38,12 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
         ownerProducer = { requireActivity() },
     )
 
-    private val viewModel by viewModels<CommentDetailViewModel>(
-        ownerProducer = { requireParentFragment() },
-        factoryProducer = {
-            val repositoryModule = (requireActivity().application as App).container.repositoryModule
-            CommentDetailViewModelFactory(
-                repositoryModule.commentRepository,
-                repositoryModule.replyRepository,
-                repositoryModule.tokenRepository,
-            )
-        },
-        extrasProducer = {
-            MutableCreationExtras(requireActivity().defaultViewModelCreationExtras).apply {
-                this[DEFAULT_ARGS_KEY] = buildCommentArgs()
-            }
-        },
-    )
-
-    private fun buildCommentArgs(): Bundle {
-        val args = requireArguments()
-        return bundleOf(
-            CommentDetailViewModel.KEY_DISCUSSION_ID to args.getLong(CommentDetailViewModel.KEY_DISCUSSION_ID),
-            CommentDetailViewModel.KEY_COMMENT_ID to args.getLong(CommentDetailViewModel.KEY_COMMENT_ID),
+    private val viewModel by viewModels<CommentDetailViewModel> {
+        val repositoryModule = (requireActivity().application as App).container.repositoryModule
+        CommentDetailViewModelFactory(
+            repositoryModule.commentRepository,
+            repositoryModule.replyRepository,
+            repositoryModule.tokenRepository,
         )
     }
 
@@ -103,11 +88,40 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
     fun setupObserve(binding: FragmentCommentDetailBinding) {
         viewModel.uiState.observe(viewLifecycleOwner) { value ->
             adapter.submitList(value.getCommentDetailItems())
-            binding.tvInputComment.text = value.content
+            val currentContent = value.content
+            if (currentContent.isNotBlank()) binding.tvInputComment.text = currentContent
         }
-        viewModel.uiEvent.observe(this) { value ->
+        viewModel.uiEvent.observe(viewLifecycleOwner) { value ->
             handleEvent(value, binding)
         }
+    }
+
+    fun setOnNavigateUp(binding: FragmentCommentDetailBinding) {
+        binding.ivCommentDetailBack.setOnClickListener {
+            requestClose()
+        }
+    }
+
+    private fun requestClose() {
+        if (viewModel.uiState.value
+                ?.content
+                ?.isNotEmpty() == true
+        ) {
+            showConfirmClose()
+        } else {
+            parentFragmentManager.popBackStack()
+        }
+    }
+
+    private fun showConfirmClose() {
+        val confirmDialog =
+            CommonDialog
+                .newInstance(
+                    getString(R.string.confirm_delete_message),
+                    getString(R.string.all_delete_action),
+                    REPLY_CONTENT_DELETE_DIALOG_REQUEST_KEY,
+                )
+        confirmDialog.show(childFragmentManager, CommonDialog.TAG)
     }
 
     private fun handleEvent(
@@ -178,14 +192,13 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
                     optionPopupView(
                         layoutInflater,
                         { viewModel.updateComment(commentDetailItems.value.comment.content) },
-                        { viewModel.deleteComment() },
+                        { showCommentDeleteDialog() },
                     )
                 } else {
                     reportPopupView(
                         layoutInflater,
-                    ) {
-                        viewModel.reportComment()
-                    }
+                        ::showCommentReportDialog,
+                    )
                 }
 
             is CommentDetailItems.ReplyItem -> showReplyOptions(commentDetailItems)
@@ -201,13 +214,55 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
                         commentDetailItems.value.reply.content,
                     )
                 },
-                { viewModel.deleteReply(commentDetailItems.value.reply.replyId) },
+                {
+                    showReplyDeleteDialog(commentDetailItems.value.reply.replyId)
+                },
             )
         } else {
             reportPopupView(
                 layoutInflater,
-            ) { viewModel.reportReply(commentDetailItems.value.reply.replyId) }
+            ) { showReplyReportDialog(commentDetailItems.value.reply.replyId) }
         }
+
+    private fun showCommentReportDialog() {
+        val dialog =
+            CommonDialog.newInstance(
+                getString(R.string.all_report_comment),
+                getString(R.string.all_report_action),
+                COMMENT_REPORT_DIALOG_REQUEST_KEY,
+            )
+        dialog.show(childFragmentManager, CommonDialog.TAG)
+    }
+
+    private fun showCommentDeleteDialog() {
+        val dialog =
+            CommonDialog.newInstance(
+                getString(R.string.all_comment_delete_confirm),
+                getString(R.string.all_delete_action),
+                COMMENT_DELETE_DIALOG_REQUEST_KEY,
+            )
+        dialog.show(childFragmentManager, CommonDialog.TAG)
+    }
+
+    private fun showReplyReportDialog(replyId: Long) {
+        val dialog =
+            CommonDialog.newInstance(
+                getString(R.string.all_report_reply),
+                getString(R.string.all_report_action),
+                REPLY_REPORT_DIALOG_REQUEST_KEY.format(replyId),
+            )
+        dialog.show(childFragmentManager, CommonDialog.TAG)
+    }
+
+    private fun showReplyDeleteDialog(replyId: Long) {
+        val dialog =
+            CommonDialog.newInstance(
+                getString(R.string.all_reply_delete_confirm),
+                getString(R.string.all_delete_action),
+                REPLY_DELETE_DIALOG_REQUEST_KEY.format(replyId),
+            )
+        dialog.show(childFragmentManager, CommonDialog.TAG)
+    }
 
     private fun optionPopupView(
         layoutInflater: LayoutInflater,
@@ -225,7 +280,9 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
         onReport: () -> Unit,
     ): PopupWindow {
         val binding = MenuExternalDiscussionBinding.inflate(layoutInflater)
-        binding.tvReport.setOnClickListener { onReport() }
+        binding.tvReport.setOnClickListener {
+            onReport()
+        }
         return createPopupView(binding.root)
     }
 
@@ -273,24 +330,48 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
         )
 
     private fun setupFragmentResultListener() {
-        childFragmentManager.setFragmentResultListener(
+        childFragmentManager.registerResultListener(
+            viewLifecycleOwner,
             CommentCreateBottomSheet.COMMENT_REQUEST_KEY,
-            this,
-        ) { _, bundle ->
-            val result = bundle.getBoolean(CommentCreateBottomSheet.COMMENT_CREATED_RESULT_KEY)
-            if (result) {
-                viewModel.updatedComment()
-            }
-        }
-        childFragmentManager.setFragmentResultListener(
+            CommentCreateBottomSheet.COMMENT_CREATED_RESULT_KEY,
+        ) { viewModel.updatedComment() }
+
+        childFragmentManager.registerResultListener(
+            viewLifecycleOwner,
             ReplyCreateBottomSheet.REPLY_REQUEST_KEY,
-            this,
-        ) { _, bundle ->
-            val result = bundle.getBoolean(ReplyCreateBottomSheet.REPLY_CREATED_RESULT_KEY)
-            if (result) {
-                viewModel.reloadComment()
-            }
-        }
+            ReplyCreateBottomSheet.REPLY_CREATED_RESULT_KEY,
+        ) { viewModel.reloadComment() }
+
+        childFragmentManager.registerPositiveResultListener(
+            viewLifecycleOwner,
+            REPLY_CONTENT_DELETE_DIALOG_REQUEST_KEY,
+            CommonDialog.RESULT_KEY_COMMON_DIALOG,
+        ) { parentFragmentManager.popBackStack() }
+
+        childFragmentManager.registerPositiveResultListener(
+            viewLifecycleOwner,
+            COMMENT_REPORT_DIALOG_REQUEST_KEY,
+            CommonDialog.RESULT_KEY_COMMON_DIALOG,
+        ) { viewModel.reportComment() }
+        childFragmentManager.registerPositiveResultListener(
+            viewLifecycleOwner,
+            COMMENT_DELETE_DIALOG_REQUEST_KEY,
+            CommonDialog.RESULT_KEY_COMMON_DIALOG,
+        ) { viewModel.deleteComment() }
+    }
+
+    private fun setupFragmentReplyResultListener(replyId: Long) {
+        childFragmentManager.registerPositiveResultListener(
+            viewLifecycleOwner,
+            REPLY_REPORT_DIALOG_REQUEST_KEY.format(replyId),
+            CommonDialog.RESULT_KEY_COMMON_DIALOG,
+        ) { viewModel.reportReply(replyId) }
+
+        childFragmentManager.registerPositiveResultListener(
+            viewLifecycleOwner,
+            REPLY_DELETE_DIALOG_REQUEST_KEY.format(replyId),
+            CommonDialog.RESULT_KEY_COMMON_DIALOG,
+        ) { viewModel.deleteReply(replyId) }
     }
 
     private fun getBottomSheetVisibilityListener(binding: FragmentCommentDetailBinding) =
@@ -306,19 +387,13 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
             }
         }
 
-    fun setOnNavigateUp(binding: FragmentCommentDetailBinding) {
-        binding.ivCommentDetailBack.setOnClickListener {
-            parentFragmentManager.popBackStack()
-        }
-    }
-
     private val commentDetailHandler =
         object : CommentDetailAdapter.Handler {
             override fun onClickReplyLike(replyId: Long) {
                 viewModel.toggleReplyLike(replyId)
             }
 
-            override fun onClickReplyUserName(userId: Long) {
+            override fun onClickReplyUser(userId: Long) {
                 navigateToProfile(userId)
             }
 
@@ -326,6 +401,7 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
                 item: CommentDetailItems.ReplyItem,
                 anchorView: View,
             ) {
+                setupFragmentReplyResultListener(item.value.reply.replyId)
                 popupWindow = bindCommentDetailPopupView(item)
                 if (popupWindow?.isShowing == true) {
                     popupWindow?.dismiss()
@@ -363,6 +439,12 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
 
     companion object {
         const val TAG = "TAG_COMMENT_DETAIL"
+        private const val COMMENT_DELETE_DIALOG_REQUEST_KEY = "comment_delete_dialog_request_key"
+        private const val COMMENT_REPORT_DIALOG_REQUEST_KEY = "comment_delete_dialog_request_key"
+        private const val REPLY_CONTENT_DELETE_DIALOG_REQUEST_KEY =
+            "reply_content_delete_dialog_request_key"
+        private const val REPLY_REPORT_DIALOG_REQUEST_KEY = "reply_report_dialog_request_key_%d"
+        private const val REPLY_DELETE_DIALOG_REQUEST_KEY = "reply_delete_dialog_request_key_%d"
 
         fun newInstance(
             discussionId: Long,
