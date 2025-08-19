@@ -1,5 +1,6 @@
 package com.team.todoktodok.presentation.view.auth.signup.vm
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -17,7 +18,7 @@ class SignUpViewModel(
     private val memberRepository: MemberRepository,
 ) : ViewModel() {
     private val _isLoading: MutableLiveData<Boolean> = MutableLiveData(false)
-    val isLoading: MutableLiveData<Boolean> get() = _isLoading
+    val isLoading: LiveData<Boolean> get() = _isLoading
 
     private val _uiEvent = MutableSingleLiveData<SignUpUiEvent>()
     val uiEvent: SingleLiveData<SignUpUiEvent> get() = _uiEvent
