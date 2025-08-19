@@ -61,7 +61,8 @@
     <string name="profile_participated_discussion_room">참여한 토론방</string>
     <string name="profile_report_dialog_title">해당 회원을 신고하시겠습니까?</string>
     <string name="profile_block_dialog_title">해당 회원을 차단하시겠습니까?</string>
-    <string name="profile_complete_support">%s 완료되었습니다."</string>
+    <string name="profile_complete_report">신고가 완료되었습니다."</string>
+    <string name="profile_complete_block">차단이 완료되었습니다."</string>
     <string name="profile_menu_block">차단하기</string>
     <string name="profile_message_placeholder">상태 메시지를 입력해주세요</string>
     <string name="content_description_profile_setting">설정 버튼</string>

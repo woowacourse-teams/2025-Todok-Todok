@@ -3,7 +3,6 @@ package com.team.todoktodok.presentation.view.profile
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -11,6 +10,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.team.domain.model.Support
+import com.team.domain.model.exception.TodokTodokExceptions
+import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
 import com.team.domain.model.member.MemberId.Companion.DEFAULT_MEMBER_ID
 import com.team.todoktodok.App
 import com.team.todoktodok.R
@@ -90,6 +91,15 @@ class ProfileActivity : AppCompatActivity() {
                 value.createdDiscussions,
                 value.participatedDiscussions,
             )
+            setupLoading(value.isLoading)
+        }
+    }
+
+    private fun setupLoading(isLoading: Boolean) {
+        if (isLoading) {
+            binding.progressBar.show()
+        } else {
+            binding.progressBar.hide()
         }
     }
 
@@ -117,16 +127,27 @@ class ProfileActivity : AppCompatActivity() {
         viewModel.uiEvent.observe(this) { event ->
             when (event) {
                 is ProfileUiEvent.OnCompleteSupport -> {
-                    val message =
-                        getString(R.string.profile_complete_support).format(event.type.name)
-                    Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+                    showSupportCompeteMessage(event.type)
                 }
 
                 is ProfileUiEvent.ShowErrorMessage -> {
-                    messageConverter(event.exceptions)
+                    showErrorMessage(event.exceptions)
                 }
             }
         }
+    }
+
+    private fun showSupportCompeteMessage(type: Support) {
+        val messageResource =
+            when (type) {
+                Support.BLOCK -> R.string.profile_complete_block
+                Support.REPORT -> R.string.profile_complete_report
+            }
+        AlertSnackBar(binding.root, messageResource).show()
+    }
+
+    private fun showErrorMessage(exception: TodokTodokExceptions) {
+        AlertSnackBar(binding.root, messageConverter(exception)).show()
     }
 
     private val profileAdapterHandler =
