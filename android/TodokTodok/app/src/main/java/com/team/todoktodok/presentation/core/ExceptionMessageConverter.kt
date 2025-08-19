@@ -1,7 +1,5 @@
 package com.team.todoktodok.presentation.core
 
-import com.team.domain.model.exception.BooksExceptions
-import com.team.domain.model.exception.CommentExceptions
 import com.team.domain.model.exception.DiscussionExceptions
 import com.team.domain.model.exception.TodokTodokExceptions
 import com.team.todoktodok.R
