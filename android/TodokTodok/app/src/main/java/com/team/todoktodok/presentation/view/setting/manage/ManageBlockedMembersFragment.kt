@@ -102,7 +102,7 @@ class ManageBlockedMembersFragment : Fragment(R.layout.fragment_manage_blocked_m
                     AlertSnackBar(
                         binding.root,
                         messageConverter(event.exception),
-                    )
+                    ).show()
                 }
             }
         }
