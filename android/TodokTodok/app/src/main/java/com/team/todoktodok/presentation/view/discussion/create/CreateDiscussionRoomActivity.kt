@@ -93,6 +93,7 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
             when (mode) {
                 is SerializationCreateDiscussionRoomMode.Create -> settingCreateMode(binding)
                 is SerializationCreateDiscussionRoomMode.Edit -> settingEditMode(binding)
+                is SerializationCreateDiscussionRoomMode.Draft -> settingCreateMode(binding)
             }
             btnCreate.isEnabled = false
             btnBack.setOnClickListener { finish() }
@@ -108,13 +109,13 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
     }
 
     private fun settingCreateMode(binding: ActivityCreateDiscussionRoomBinding) {
-        binding.btnCreate.setOnClickListener {
-            viewModel.createDiscussionRoom()
+        binding.apply {
+            btnCreate.setOnClickListener {
+                viewModel.createDiscussionRoom()
+            }
+            etDiscussionRoomTitle.setText(viewModel.uiState.value?.title)
+            etDiscussionRoomOpinion.setText(viewModel.uiState.value?.opinion)
         }
-
-            binding.etDiscussionRoomTitle.setText(viewModel.uiState.value?.title)
-            binding.etDiscussionRoomOpinion.setText(viewModel.uiState.value?.opinion)
-
     }
 
     private fun settingEditMode(binding: ActivityCreateDiscussionRoomBinding) {
@@ -235,6 +236,8 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
                         putExtra(EXTRA_MODE, mode)
                         putExtra(EXTRA_DISCUSSION_ROOM_ID, mode.discussionRoomId)
                     }
+                is SerializationCreateDiscussionRoomMode.Draft ->
+                    intent.putExtra(EXTRA_MODE, mode)
             }
             return intent
         }

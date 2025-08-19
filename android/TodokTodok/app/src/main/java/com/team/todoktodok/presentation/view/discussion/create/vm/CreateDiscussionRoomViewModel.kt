@@ -44,21 +44,24 @@ class CreateDiscussionRoomViewModel(
         when (mode) {
             is SerializationCreateDiscussionRoomMode.Create -> {
                 _uiState.value = _uiState.value?.copy(book = mode.selectedBook.toDomain())
+            }
+
+            is SerializationCreateDiscussionRoomMode.Edit -> {
+                _uiState.value = _uiState.value?.copy(discussionRoomId = mode.discussionRoomId)
+                getDiscussionRoom(mode.discussionRoomId)
+            }
+
+            is SerializationCreateDiscussionRoomMode.Draft -> {
                 viewModelScope.launch(Dispatchers.IO) {
                     val book = async { discussionRepository.getBook() }.await()
                     if (_uiState.value?.book == book) {
                         val discussion = async { discussionRepository.getDiscussion() }.await()
                         if (discussion != null) {
                             withContext(Dispatchers.Main) {
-                            _uiState.value = _uiState.value?.copy(title = discussion.title, opinion = discussion.opinion)}
+                                _uiState.value = _uiState.value?.copy(title = discussion.title, opinion = discussion.opinion)}
                         }
                     }
                 }
-            }
-
-            is SerializationCreateDiscussionRoomMode.Edit -> {
-                _uiState.value = _uiState.value?.copy(discussionRoomId = mode.discussionRoomId)
-                getDiscussionRoom(mode.discussionRoomId)
             }
         }
     }

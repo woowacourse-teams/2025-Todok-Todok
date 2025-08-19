@@ -14,4 +14,7 @@ sealed class SerializationCreateDiscussionRoomMode : Parcelable {
     data class Edit(
         val discussionRoomId: Long,
     ) : SerializationCreateDiscussionRoomMode()
+
+    @Parcelize
+    data object Draft: SerializationCreateDiscussionRoomMode()
 }
