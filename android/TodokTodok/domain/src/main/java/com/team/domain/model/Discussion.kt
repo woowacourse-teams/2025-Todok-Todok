@@ -13,4 +13,11 @@ data class Discussion(
     val likeCount: Int,
     val commentCount: Int,
     val isLikedByMe: Boolean,
-)
+) {
+    val bookImage get() = book.image
+    val writerNickname get() = writer.nickname.value
+
+    fun getBookTitle(): String = book.extractSubtitle()
+
+    fun getBookAuthor(): String = book.extractAuthor()
+}
