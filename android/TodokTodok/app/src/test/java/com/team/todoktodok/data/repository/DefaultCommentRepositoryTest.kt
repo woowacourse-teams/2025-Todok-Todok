@@ -1,6 +1,7 @@
 package com.team.todoktodok.data.repository
 
 import com.team.domain.model.Comment
+import com.team.domain.model.exception.onSuccess
 import com.team.domain.model.member.Nickname
 import com.team.domain.model.member.User
 import com.team.todoktodok.data.datasource.comment.CommentRemoteDataSource
@@ -30,6 +31,8 @@ class DefaultCommentRepositoryTest {
             // when
             val comments = defaultCommentRepository.getCommentsByDiscussionId(0)
             // then
-            assertThat(comments).isEqualTo(expected)
+            comments.onSuccess {
+                assertThat(it).isEqualTo(expected)
+            }
         }
 }
