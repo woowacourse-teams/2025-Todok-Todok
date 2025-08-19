@@ -3,11 +3,6 @@ version: '3.8'
 services:
   prod:
     container_name: prod
-    build:
-      context: ..
-      dockerfile: ../Dockerfile.prod
-      args:
-        JAR_FILE: /build/libs/*.jar
     image: woowajeff/todoktodok:prod
     ports:
       - "80:8080"

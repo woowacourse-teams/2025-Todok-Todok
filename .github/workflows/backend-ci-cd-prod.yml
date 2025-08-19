@@ -72,12 +72,6 @@ jobs:
           username: ${{ secrets.DOCKERHUB_DEPLOY_USERNAME }}
           password: ${{ secrets.DOCKERHUB_DEPLOY_TOKEN }}
 
-      - name: Pull Docker image
-        run: |
-          echo "Docker 이미지 pull 시작"
-          docker pull woowajeff/todoktodok:prod
-          echo "Docker 이미지 pull 완료"
-
       - name: Stop running Container (without removing)
         run: |
           echo "prod 컨테이너 중지 중..."
@@ -85,10 +79,11 @@ jobs:
           echo "promtail_prod 컨테이너 중지 중..."
           docker stop promtail_prod && echo "promtail_prod 컨테이너 중지 완료" || echo "promtail_prod 컨테이너 없음"
 
-      - name: Docker Compose Up
+      - name: Docker Compose Pull & Up (no-build)
         run: |
           cd backend
-          docker compose -f config/docker-compose-prod.yml up -d
+          docker compose -f config/docker-compose-prod.yml pull
+          docker compose -f config/docker-compose-prod.yml up -d --no-build
           echo "docker compose-prod up"
 
       - name: Docker image Prune

@@ -72,12 +72,6 @@ jobs:
           username: ${{ secrets.DOCKERHUB_DEPLOY_USERNAME }}
           password: ${{ secrets.DOCKERHUB_DEPLOY_TOKEN }}
 
-      - name: Pull Docker image
-        run: |
-          echo "Docker 이미지 pull 시작"
-          docker pull woowajeff/todoktodok:dev
-          echo "Docker 이미지 pull 완료"
-
       - name: Stop running Container (without removing)
         run: |
           echo "dev 컨테이너 중지 중..."
@@ -89,9 +83,10 @@ jobs:
         run: |
           docker network create dev_network && echo "docker network 생성" || echo "docker network 이미 존재"
 
-      - name: Docker Compose Up
+      - name: Docker Compose Pull & Up
         run: |
           cd backend
+          docker compose -f config/docker-compose-dev.yml pull
           docker compose -f config/docker-compose-dev.yml up -d
           echo "docker compose-dev up"
 
