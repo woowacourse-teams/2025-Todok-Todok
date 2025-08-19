@@ -208,7 +208,8 @@ public class DiscussionQueryService {
         final Member member = findMember(memberId);
         final LocalDateTime periodStart = LocalDateTime.now(clock).minusDays(periodDays);
 
-        final DiscussionCursor discussionCursor = Optional.ofNullable(DiscussionCursor.fromEncoded(cursor))
+        final DiscussionCursor discussionCursor = Optional.ofNullable(cursor)
+                .map(DiscussionCursor::fromEncoded)
                 .orElse(DiscussionCursor.empty());
 
         final Pageable pageable = Pageable.ofSize(size + 1);
