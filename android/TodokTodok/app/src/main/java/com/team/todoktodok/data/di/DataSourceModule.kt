@@ -56,11 +56,13 @@ class DataSourceModule(
 
     val discussionLocalDataSource: DiscussionLocalDataSource by lazy {
         DefaultDiscussionLocalDataSource(
-            Room.databaseBuilder(
-                context,
-                DiscussionDatabase::class.java,
-                DATABASE_NAME
-            ).build().discussionDao()
+            Room
+                .databaseBuilder(
+                    context,
+                    DiscussionDatabase::class.java,
+                    DATABASE_NAME,
+                ).build()
+                .discussionDao(),
         )
     }
 

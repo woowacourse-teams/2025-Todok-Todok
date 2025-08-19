@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -78,7 +77,7 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
     private fun initView(binding: ActivityCreateDiscussionRoomBinding) {
         supportFragmentManager.setFragmentResultListener(
             CommonDialog.REQUEST_KEY_COMMON_DIALOG,
-            this
+            this,
         ) { _, bundle ->
             val confirmed = bundle.getBoolean(CommonDialog.RESULT_KEY_COMMON_DIALOG)
             if (confirmed) {
@@ -87,7 +86,6 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
             } else {
                 finish()
             }
-
         }
         binding.apply {
             when (mode) {
@@ -152,19 +150,28 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
         }
     }
 
-    private fun observeTitle(title: String, binding: ActivityCreateDiscussionRoomBinding) {
+    private fun observeTitle(
+        title: String,
+        binding: ActivityCreateDiscussionRoomBinding,
+    ) {
         if (binding.etDiscussionRoomTitle.text.toString() != title) {
             binding.etDiscussionRoomTitle.setText(title)
         }
     }
 
-    private fun observeOpinion(opinion: String, binding: ActivityCreateDiscussionRoomBinding) {
+    private fun observeOpinion(
+        opinion: String,
+        binding: ActivityCreateDiscussionRoomBinding,
+    ) {
         if (binding.etDiscussionRoomOpinion.text.toString() != opinion) {
             binding.etDiscussionRoomOpinion.setText(opinion)
         }
     }
 
-    private fun observeIsCreate(isCreate: Boolean, binding: ActivityCreateDiscussionRoomBinding) {
+    private fun observeIsCreate(
+        isCreate: Boolean,
+        binding: ActivityCreateDiscussionRoomBinding,
+    ) {
         if (isCreate) {
             binding.btnCreate.isEnabled = true
             binding.btnCreate.setTextColor(
@@ -182,8 +189,10 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
         }
     }
 
-
-    private fun observeBook(book: Book?, binding: ActivityCreateDiscussionRoomBinding) {
+    private fun observeBook(
+        book: Book?,
+        binding: ActivityCreateDiscussionRoomBinding,
+    ) {
         binding.tvBookTitle.text = book?.title
         binding.tvBookAuthor.text = book?.author
         binding.ivBookImage.loadImage(book?.image)

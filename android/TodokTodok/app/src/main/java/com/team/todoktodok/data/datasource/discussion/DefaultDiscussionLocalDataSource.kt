@@ -10,22 +10,14 @@ class DefaultDiscussionLocalDataSource(
 ) : DiscussionLocalDataSource {
     override suspend fun saveDiscussion(
         discussionEntity: DiscussionRoomEntity,
-        bookEntity: BookEntity
+        bookEntity: BookEntity,
     ) {
         dao.saveDiscussionWithBook(discussionEntity, bookEntity)
     }
 
     override suspend fun getDiscussion(): DiscussionWithBook? = dao.getDiscussionWithBook()
+
     override suspend fun hasDiscussion(): Boolean = dao.hasDiscussion()
-    override suspend fun getBook(): BookEntity =
-        dao.getBook()
 
+    override suspend fun getBook(): BookEntity = dao.getBook()
 }
-
-
-
-
-
-
-
-

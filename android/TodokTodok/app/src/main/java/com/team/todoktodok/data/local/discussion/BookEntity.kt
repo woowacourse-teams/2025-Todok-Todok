@@ -14,16 +14,18 @@ data class BookEntity(
     @ColumnInfo(name = "book_image") val bookImage: String,
 )
 
-fun Book.toEntity() = BookEntity(
-    bookId = id,
-    bookTitle = title,
-    bookAuthor = author,
-    bookImage = image,
-)
+fun Book.toEntity() =
+    BookEntity(
+        bookId = id,
+        bookTitle = title,
+        bookAuthor = author,
+        bookImage = image,
+    )
 
-fun BookEntity.toDomain() = Book(
-    id = bookId,
-    title = bookTitle,
-    author = bookAuthor,
-    image = bookImage,
-)
+fun BookEntity.toDomain() =
+    Book(
+        id = bookId,
+        title = bookTitle,
+        author = bookAuthor,
+        image = bookImage,
+    )

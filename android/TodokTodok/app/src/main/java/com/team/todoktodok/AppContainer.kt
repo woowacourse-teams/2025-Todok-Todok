@@ -9,7 +9,7 @@ import com.team.todoktodok.data.di.RetrofitModule
 import com.team.todoktodok.data.di.ServiceModule
 import com.team.todoktodok.data.network.auth.AuthInterceptor
 
-class  AppContainer(
+class AppContainer(
     context: Context,
 ) {
     private val tokenDataSource: TokenDataSource by lazy {

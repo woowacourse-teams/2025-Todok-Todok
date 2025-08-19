@@ -12,15 +12,12 @@ import com.team.domain.repository.DiscussionRepository
 import com.team.domain.repository.TokenRepository
 import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
 import com.team.todoktodok.presentation.core.event.SingleLiveData
-import com.team.todoktodok.presentation.view.book.SelectBookUiEvent
 import com.team.todoktodok.presentation.view.discussion.create.CreateDiscussionUiEvent
 import com.team.todoktodok.presentation.view.discussion.create.CreateDiscussionUiState
 import com.team.todoktodok.presentation.view.discussion.create.ErrorCreateDiscussionType
 import com.team.todoktodok.presentation.view.discussion.create.SerializationCreateDiscussionRoomMode
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class CreateDiscussionRoomViewModel(
     private val mode: SerializationCreateDiscussionRoomMode,
@@ -28,9 +25,10 @@ class CreateDiscussionRoomViewModel(
     private val discussionRepository: DiscussionRepository,
     private val tokenRepository: TokenRepository,
 ) : ViewModel() {
-    private val _uiState: MutableLiveData<CreateDiscussionUiState> = MutableLiveData(
-        CreateDiscussionUiState()
-    )
+    private val _uiState: MutableLiveData<CreateDiscussionUiState> =
+        MutableLiveData(
+            CreateDiscussionUiState(),
+        )
     val uiState: LiveData<CreateDiscussionUiState> = _uiState
 
     private val _uiEvent: MutableSingleLiveData<CreateDiscussionUiEvent> = MutableSingleLiveData()
@@ -52,14 +50,16 @@ class CreateDiscussionRoomViewModel(
             }
 
             is SerializationCreateDiscussionRoomMode.Draft -> {
-                viewModelScope.launch(Dispatchers.IO) {
+                viewModelScope.launch {
                     val book = async { discussionRepository.getBook() }.await()
-                    if (_uiState.value?.book == book) {
-                        val discussion = async { discussionRepository.getDiscussion() }.await()
-                        if (discussion != null) {
-                            withContext(Dispatchers.Main) {
-                                _uiState.value = _uiState.value?.copy(title = discussion.title, opinion = discussion.opinion)}
-                        }
+                    val discussion = async { discussionRepository.getDiscussion() }.await()
+                    if (discussion != null) {
+                        _uiState.value =
+                            _uiState.value?.copy(
+                                book = book,
+                                title = discussion.title,
+                                opinion = discussion.opinion,
+                            )
                     }
                 }
             }
@@ -127,11 +127,12 @@ class CreateDiscussionRoomViewModel(
             if (result.writer.id != myMemberId) {
                 updateErrorCreateDiscussion(ErrorCreateDiscussionType.NOT_MY_DISCUSSION_ROOM)
             }
-            _uiState.value = _uiState.value?.copy(
-                book = result.book,
-                title = result.discussionTitle,
-                opinion = result.discussionOpinion
-            )
+            _uiState.value =
+                _uiState.value?.copy(
+                    book = result.book,
+                    title = result.discussionTitle,
+                    opinion = result.discussionOpinion,
+                )
         }
     }
 

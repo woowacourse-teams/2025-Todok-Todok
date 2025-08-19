@@ -21,9 +21,8 @@ class DefaultDiscussionRepository(
     private val discussionLocalDataSource: DiscussionLocalDataSource,
 ) : DiscussionRepository {
     override suspend fun getDiscussion(id: Long): Result<Discussion> = discussionRemoteDataSource.getDiscussion(id).map { it.toDomain() }
-    override suspend fun getDiscussion(): DiscussionRoom? =
-        discussionLocalDataSource.getDiscussion()?.discussionRoomEntity?.toDomain()
 
+    override suspend fun getDiscussion(): DiscussionRoom? = discussionLocalDataSource.getDiscussion()?.discussionRoomEntity?.toDomain()
 
     override suspend fun getDiscussions(
         type: DiscussionFilter,
@@ -75,25 +74,24 @@ class DefaultDiscussionRepository(
     }
 
     override suspend fun hasDiscussion(): Boolean = discussionLocalDataSource.hasDiscussion()
-    override suspend fun getBook(): Book =
-        discussionLocalDataSource.getBook().toDomain()
 
+    override suspend fun getBook(): Book = discussionLocalDataSource.getBook().toDomain()
 
     override suspend fun saveDiscussionRoom(
         book: Book,
         discussionTitle: String,
-        discussionOpinion: String
+        discussionOpinion: String,
     ) {
         discussionLocalDataSource.saveDiscussion(
-            discussionEntity = DiscussionRoomEntity(
-                title = discussionTitle,
-                opinion = discussionOpinion,
-                bookId = book.id
-            ),
-            bookEntity = book.toEntity()
+            discussionEntity =
+                DiscussionRoomEntity(
+                    title = discussionTitle,
+                    opinion = discussionOpinion,
+                    bookId = book.id,
+                ),
+            bookEntity = book.toEntity(),
         )
     }
-
 
     companion object {
         private const val HEADER_LOCATION: String = "location"

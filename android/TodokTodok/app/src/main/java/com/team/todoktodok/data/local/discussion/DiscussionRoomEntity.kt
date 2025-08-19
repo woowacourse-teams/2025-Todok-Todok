@@ -7,14 +7,15 @@ import androidx.room.PrimaryKey
 import com.team.domain.model.member.DiscussionRoom.Companion.DiscussionRoom
 
 @Entity(
-    tableName = "discussion", foreignKeys = [
+    tableName = "discussion",
+    foreignKeys = [
         ForeignKey(
             entity = BookEntity::class,
             parentColumns = ["id"],
             childColumns = ["book_id"],
             onDelete = ForeignKey.CASCADE,
-        )
-    ]
+        ),
+    ],
 )
 data class DiscussionRoomEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0L,
@@ -23,7 +24,8 @@ data class DiscussionRoomEntity(
     @ColumnInfo(name = "book_id") val bookId: Long,
 )
 
-fun DiscussionRoomEntity.toDomain() = DiscussionRoom(
-    title = title,
-    opinion = opinion,
-)
+fun DiscussionRoomEntity.toDomain() =
+    DiscussionRoom(
+        title = title,
+        opinion = opinion,
+    )

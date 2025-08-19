@@ -6,7 +6,7 @@ import androidx.room.RoomDatabase
 @Database(
     entities = [DiscussionRoomEntity::class, BookEntity::class],
     version = 1,
-    exportSchema = false
+    exportSchema = false,
 )
 abstract class DiscussionDatabase : RoomDatabase() {
     abstract fun discussionDao(): DiscussionDao

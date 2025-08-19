@@ -33,17 +33,19 @@ interface DiscussionDao {
     SELECT * FROM discussion
     ORDER BY id DESC
     LIMIT 1
-"""
+""",
     )
     suspend fun getDiscussionWithBook(): DiscussionWithBook?
 
-    @Query("""
+    @Query(
+        """
     SELECT * FROM book
     WHERE id = (
         SELECT book_id FROM discussion
         ORDER BY id DESC
         LIMIT 1
     )
-""")
+""",
+    )
     suspend fun getBook(): BookEntity
 }
