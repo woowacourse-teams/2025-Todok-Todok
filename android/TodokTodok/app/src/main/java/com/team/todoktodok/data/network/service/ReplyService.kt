@@ -1,5 +1,6 @@
 package com.team.todoktodok.data.network.service
 
+import com.team.domain.model.exception.NetworkResult
 import com.team.todoktodok.data.network.request.ReplyRequest
 import com.team.todoktodok.data.network.response.comment.ReplyResponse
 import retrofit2.Response
@@ -15,21 +16,21 @@ interface ReplyService {
     suspend fun fetchReplies(
         @Path("discussionId") discussionId: Long,
         @Path("commentId") commentId: Long,
-    ): List<ReplyResponse>
+    ): NetworkResult<List<ReplyResponse>>
 
     @POST("v1/discussions/{discussionId}/comments/{commentId}/replies")
     suspend fun saveReply(
         @Path("discussionId") discussionId: Long,
         @Path("commentId") commentId: Long,
         @Body replyRequest: ReplyRequest,
-    ): Response<Unit>
+    ): NetworkResult<Unit>
 
     @POST("v1/discussions/{discussionId}/comments/{commentId}/replies/{replyId}/report")
     suspend fun report(
         @Path("discussionId") discussionId: Long,
         @Path("commentId") commentId: Long,
         @Path("replyId") replyId: Long,
-    ): Response<Unit>
+    ): NetworkResult<Unit>
 
     @POST("v1/discussions/{discussionId}/comments/{commentId}/replies/{replyId}/like")
     suspend fun toggleLike(
@@ -44,12 +45,12 @@ interface ReplyService {
         @Path("commentId") commentId: Long,
         @Path("replyId") replyId: Long,
         @Body replyRequest: ReplyRequest,
-    )
+    ): NetworkResult<Unit>
 
     @DELETE("v1/discussions/{discussionId}/comments/{commentId}/replies/{replyId}")
     suspend fun deleteReply(
         @Path("discussionId") discussionId: Long,
         @Path("commentId") commentId: Long,
         @Path("replyId") replyId: Long,
-    )
+    ): NetworkResult<Unit>
 }
