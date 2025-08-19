@@ -1,12 +1,20 @@
 package todoktodok.backend.discussion.application.service.query;
 
+import java.util.Base64;
 import java.util.List;
 import java.util.NoSuchElementException;
+
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.comment.domain.repository.CommentRepository;
 import todoktodok.backend.discussion.application.dto.response.DiscussionResponse;
+import todoktodok.backend.discussion.application.dto.response.PageInfo;
+import todoktodok.backend.discussion.application.dto.response.SlicedDiscussionResponse;
 import todoktodok.backend.discussion.domain.Discussion;
 import todoktodok.backend.discussion.domain.DiscussionFilterType;
 import todoktodok.backend.discussion.domain.repository.DiscussionLikeRepository;
@@ -184,5 +192,65 @@ public class DiscussionQueryService {
             final List<Long> likedDiscussionIds
     ) {
         return likedDiscussionIds.contains(discussion.getId());
+    }
+
+    public SlicedDiscussionResponse getDiscussions(
+            final Long memberId,
+            final int size,
+            final String cursor
+    ) {
+        final Member member = findMember(memberId);
+
+        final Slice<Discussion> slicedDiscussions = sliceDiscussionsBy(cursor, size);
+
+        final List<Discussion> discussions = slicedDiscussions.getContent();
+        final boolean hasNextPage = slicedDiscussions.hasNext();
+        final String nextCursor = findNextCursor(hasNextPage, discussions);
+
+        return new SlicedDiscussionResponse(
+                getDiscussionsResponses(discussions, member),
+                new PageInfo(hasNextPage, nextCursor)
+        );
+    }
+
+    private Slice<Discussion> sliceDiscussionsBy(
+            final String cursor,
+            final int size
+    ) {
+        final Pageable pageable = PageRequest.of(0, size, Sort.Direction.DESC, "id");
+
+        if (cursor == null || cursor.isBlank()) {
+            return discussionRepository.findAllBy(pageable);
+        }
+
+        final Long cursorId = decodeCursor(cursor);
+        return discussionRepository.findByIdLessThanOrderByIdDesc(cursorId, pageable);
+    }
+
+    private String findNextCursor(
+            final boolean hasNextPage,
+            final List<Discussion> discussions
+    ) {
+        if (!hasNextPage || discussions.isEmpty()) {
+            return null;
+        }
+        return encode(discussions.getLast().getId());
+    }
+
+    private Long decodeCursor(final String cursor) {
+        try {
+            if (cursor == null || cursor.isBlank()) {
+                return null;
+            }
+
+            final String decoded = new String(Base64.getUrlDecoder().decode(cursor));
+            return Long.valueOf(decoded);
+        } catch (final Exception e) {
+            throw new IllegalArgumentException(String.format("Base64로 디코드할 수 없는 cursor 값입니다: cursor = %s", cursor));
+        }
+    }
+
+    public String encode(final Long id) {
+        return Base64.getUrlEncoder().encodeToString(id.toString().getBytes());
     }
 }
