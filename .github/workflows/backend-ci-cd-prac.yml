@@ -89,12 +89,13 @@ jobs:
             echo "중지할 컨테이너 없음 (포트 80)"
           fi
 
-      - name: Docker Compose Down (if exists)
+      - name: Docker Compose Down & Remove (if exists)
         run: |
           cd backend
           if [ -f config/docker-compose-dev.yml ]; then
             docker compose -f config/docker-compose-dev.yml down --remove-orphans
-          echo "docker compose-dev down"
+            docker rm -f dev promtail_dev || true
+          echo "docker compose-dev down & remove"
           else
             echo "config/docker-compose-dev.yml 없음 - down 스킵"
           fi
