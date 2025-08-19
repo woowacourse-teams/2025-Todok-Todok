@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import java.time.Clock;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,6 +20,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.DatabaseInitializer;
 import todoktodok.backend.InitializerTimer;
+import todoktodok.backend.discussion.application.dto.response.DiscussionPageResponse;
 import todoktodok.backend.discussion.application.dto.response.DiscussionResponse;
 import todoktodok.backend.discussion.domain.DiscussionFilterType;
 
@@ -32,6 +35,9 @@ class DiscussionQueryServiceTest {
 
     @Autowired
     private DiscussionQueryService discussionQueryService;
+
+    @Autowired
+    private Clock clock;
 
     @BeforeEach
     void setUp() {
@@ -433,5 +439,160 @@ class DiscussionQueryServiceTest {
                     () -> assertThat(notLikedDiscussion.isLikedByMe()).isFalse()
             );
         }
+    }
+
+    @Test
+    @DisplayName("활성화된 토론방 조회 시, 조회된 토론방 수가 size보다 적으면 다음 페이지 없음")
+    void getActiveDiscussions_whenResultLessThanSize_hasNextFalse() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+
+        final Long memberId = 1L;
+        final Long bookId = 1L;
+
+        databaseInitializer.setDiscussionInfo("게시글1", "내용1", memberId, bookId);
+        databaseInitializer.setDiscussionInfo("게시글2", "내용2", memberId, bookId);
+        databaseInitializer.setDiscussionInfo("게시글3", "내용3", memberId, bookId);
+        databaseInitializer.setDiscussionInfo("게시글4", "내용4", memberId, bookId);
+
+        databaseInitializer.setCommentInfo("댓글1-1", memberId, 1L);
+        databaseInitializer.setCommentInfo("댓글2-1", memberId, 2L);
+        databaseInitializer.setCommentInfo("댓글2-2", memberId, 2L);
+        databaseInitializer.setCommentInfo("댓글3-1", memberId, 3L);
+        databaseInitializer.setCommentInfo("댓글3-2", memberId, 3L);
+        databaseInitializer.setCommentInfo("댓글3-3", memberId, 3L);
+        databaseInitializer.setCommentInfo("댓글4-1", memberId, 4L);
+
+        final int periodDays = 2;
+        final int size = 5;
+
+        // when
+        final DiscussionPageResponse page1 = discussionQueryService.getActiveDiscussions(
+                memberId, periodDays, size, null
+        );
+
+        // then
+        assertThat(page1.hasNext()).isFalse();
+    }
+
+    @Test
+    @DisplayName("활성화된 토론방 조회 시, 조회된 토론방 수가 size와 같으면 다음 페이지 없음")
+    void getActiveDiscussions_whenResultEqualSize_hasNextFalse() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+
+        final Long memberId = 1L;
+        final Long bookId = 1L;
+
+        databaseInitializer.setDiscussionInfo("게시글1", "내용1", memberId, bookId);
+        databaseInitializer.setDiscussionInfo("게시글2", "내용2", memberId, bookId);
+        databaseInitializer.setDiscussionInfo("게시글3", "내용3", memberId, bookId);
+        databaseInitializer.setDiscussionInfo("게시글4", "내용4", memberId, bookId);
+
+        databaseInitializer.setCommentInfo("댓글1-1", memberId, 1L);
+        databaseInitializer.setCommentInfo("댓글2-1", memberId, 2L);
+        databaseInitializer.setCommentInfo("댓글2-2", memberId, 2L);
+        databaseInitializer.setCommentInfo("댓글3-1", memberId, 3L);
+        databaseInitializer.setCommentInfo("댓글3-2", memberId, 3L);
+        databaseInitializer.setCommentInfo("댓글3-3", memberId, 3L);
+        databaseInitializer.setCommentInfo("댓글4-1", memberId, 4L);
+
+        final int periodDays = 2;
+        final int size = 4;
+
+        // when
+        final DiscussionPageResponse page1 = discussionQueryService.getActiveDiscussions(
+                memberId, periodDays, size, null
+        );
+
+        // then
+        assertThat(page1.hasNext()).isFalse();
+    }
+
+    @Test
+    @DisplayName("활성화된 토론방 조회 시, 조회된 토론방 수가 size보다 많으면 다음 페이지 있음")
+    void getActiveDiscussions_whenResultGreaterThanSize_hasNextFalse1() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+
+        final Long memberId = 1L;
+        final Long bookId = 1L;
+
+        databaseInitializer.setDiscussionInfo("게시글1", "내용1", memberId, bookId);
+        databaseInitializer.setDiscussionInfo("게시글2", "내용2", memberId, bookId);
+        databaseInitializer.setDiscussionInfo("게시글3", "내용3", memberId, bookId);
+        databaseInitializer.setDiscussionInfo("게시글4", "내용4", memberId, bookId);
+
+        databaseInitializer.setCommentInfo("댓글1-1", memberId, 1L);
+        databaseInitializer.setCommentInfo("댓글2-1", memberId, 2L);
+        databaseInitializer.setCommentInfo("댓글2-2", memberId, 2L);
+        databaseInitializer.setCommentInfo("댓글3-1", memberId, 3L);
+        databaseInitializer.setCommentInfo("댓글3-2", memberId, 3L);
+        databaseInitializer.setCommentInfo("댓글3-3", memberId, 3L);
+        databaseInitializer.setCommentInfo("댓글4-1", memberId, 4L);
+
+        final int periodDays = 2;
+        final int size = 3;
+
+        // when
+        final DiscussionPageResponse page1 = discussionQueryService.getActiveDiscussions(
+                memberId, periodDays, size, null
+        );
+
+        // then
+        assertThat(page1.hasNext()).isTrue();
+    }
+
+    @Test
+    @DisplayName("댓글을 기준으로 활성화된 토론방을 조회한다")
+    void getActiveDiscussions() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+
+        final Long memberId = 1L;
+        final Long bookId = 1L;
+
+        databaseInitializer.setDiscussionInfo("게시글1", "내용1", memberId, bookId);
+        databaseInitializer.setDiscussionInfo("게시글2", "내용2", memberId, bookId);
+        databaseInitializer.setDiscussionInfo("게시글3", "내용3", memberId, bookId);
+        databaseInitializer.setDiscussionInfo("게시글4", "내용4", memberId, bookId);
+
+        final LocalDateTime baseTime = LocalDateTime.now(clock);
+
+        // 활성화 된 토론방 순서: DAY1 > DAY2 > DAY3 > DAY4
+        databaseInitializer.setCommentInfo("댓글1-1", memberId, 1L, baseTime.minusMinutes(10));
+        databaseInitializer.setCommentInfo("댓글2-1", memberId, 2L, baseTime.minusMinutes(20));
+        databaseInitializer.setCommentInfo("댓글2-2", memberId, 2L, baseTime.minusMinutes(30));
+        databaseInitializer.setCommentInfo("댓글3-1", memberId, 3L, baseTime.minusMinutes(40));
+        databaseInitializer.setCommentInfo("댓글3-2", memberId, 3L, baseTime.minusMinutes(50));
+        databaseInitializer.setCommentInfo("댓글3-3", memberId, 3L, baseTime.minusMinutes(60));
+        databaseInitializer.setCommentInfo("댓글4-1", memberId, 4L, baseTime.minusMinutes(70));
+
+        final int periodDays = 2;
+        final int size = 2;
+
+        // when
+        final DiscussionPageResponse page1 = discussionQueryService.getActiveDiscussions(
+                memberId, periodDays, size, null
+        );
+
+        // then
+        assertAll(
+                () -> assertThat(page1.discussions()).hasSize(size),
+                () -> assertThat(page1.hasNext()).isTrue(),
+                () -> assertThat(page1.discussions())
+                        .extracting("lastCommentedAt")
+                        .containsExactly(
+                                baseTime.minusMinutes(10),
+                                baseTime.minusMinutes(20)
+                        ),
+                () -> assertThat(page1.discussions())
+                        .extracting("discussionId")
+                        .containsExactly(1L, 2L)
+        );
     }
 }

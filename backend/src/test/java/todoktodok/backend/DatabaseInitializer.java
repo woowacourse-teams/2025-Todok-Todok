@@ -2,9 +2,8 @@ package todoktodok.backend;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-
+import java.time.LocalDateTime;
 import java.util.List;
-
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -158,6 +157,27 @@ public class DatabaseInitializer {
                         ('상속의 핵심 목적은 타입 계층의 구축입니다!', 1L, 1L, CURRENT_TIME, CURRENT_TIME)
                         """
         ).executeUpdate();
+    }
+
+    @Transactional
+    public void setCommentInfo(
+            final String content,
+            final Long memberId,
+            final Long discussionId,
+            LocalDateTime createdAt
+    ) {
+        em.createNativeQuery(
+                        """
+                                INSERT INTO COMMENT (content, member_id, discussion_id, created_at, modified_at)
+                                VALUES 
+                                (:content, :memberId, :discussionId, :createdAt, CURRENT_TIME)
+                                """
+                )
+                .setParameter("content", content)
+                .setParameter("memberId", memberId)
+                .setParameter("discussionId", discussionId)
+                .setParameter("createdAt", createdAt)
+                .executeUpdate();
     }
 
     @Transactional
