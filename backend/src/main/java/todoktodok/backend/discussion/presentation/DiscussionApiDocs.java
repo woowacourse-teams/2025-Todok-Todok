@@ -393,7 +393,7 @@ public interface DiscussionApiDocs {
                                               ],
                                               "pageInfo": {
                                                 "hasNext": true,
-                                                "nextCursor": "eyJsYXN0Q29tbWVudGVkQXQiOiIyMDI1LTA3LTI4VDIxOjA4OjUwWiIsImRpc2N1c3Npb25JZCI6NH0="
+                                                "nextCursor": "NA=="
                                               }
                                             }
                                             """
