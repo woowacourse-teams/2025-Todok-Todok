@@ -35,7 +35,7 @@ class SelectBookActivity : AppCompatActivity() {
         val repositoryModule = (application as App).container.repositoryModule
         SelectBookViewModelFactory(
             repositoryModule.bookRepository,
-            repositoryModule.discussionRepository
+            repositoryModule.discussionRepository,
         )
     }
 
@@ -80,7 +80,7 @@ class SelectBookActivity : AppCompatActivity() {
     ) {
         supportFragmentManager.setFragmentResultListener(
             CommonDialog.REQUEST_KEY_COMMON_DIALOG,
-            this
+            this,
         ) { _, bundle ->
             val confirmed = bundle.getBoolean(CommonDialog.RESULT_KEY_COMMON_DIALOG)
             if (confirmed) {
