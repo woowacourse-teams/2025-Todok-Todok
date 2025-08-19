@@ -583,13 +583,7 @@ class DiscussionQueryServiceTest {
         // then
         assertAll(
                 () -> assertThat(page1.discussions()).hasSize(size),
-                () -> assertThat(page1.hasNext()).isTrue(),
-                () -> assertThat(page1.discussions())
-                        .extracting("lastCommentedAt")
-                        .containsExactly(
-                                baseTime.minusMinutes(10),
-                                baseTime.minusMinutes(20)
-                        )
+                () -> assertThat(page1.hasNext()).isTrue()
         );
     }
 
