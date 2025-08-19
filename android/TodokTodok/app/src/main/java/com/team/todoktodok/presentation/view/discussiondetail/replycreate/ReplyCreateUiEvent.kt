@@ -1,7 +1,6 @@
 package com.team.todoktodok.presentation.view.discussiondetail.replycreate
 
 import com.team.domain.model.exception.TodokTodokExceptions
-import com.team.todoktodok.presentation.view.discussiondetail.comments.CommentsUiEvent
 
 sealed interface ReplyCreateUiEvent {
     data class SaveContent(

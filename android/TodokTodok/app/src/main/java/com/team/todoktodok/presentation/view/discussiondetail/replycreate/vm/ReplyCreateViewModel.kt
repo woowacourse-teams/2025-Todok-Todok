@@ -9,7 +9,6 @@ import com.team.domain.model.exception.NetworkResult
 import com.team.domain.repository.ReplyRepository
 import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
 import com.team.todoktodok.presentation.core.event.SingleLiveData
-import com.team.todoktodok.presentation.view.discussiondetail.comments.CommentsUiEvent
 import com.team.todoktodok.presentation.view.discussiondetail.replycreate.ReplyCreateState
 import com.team.todoktodok.presentation.view.discussiondetail.replycreate.ReplyCreateUiEvent
 import kotlinx.coroutines.launch

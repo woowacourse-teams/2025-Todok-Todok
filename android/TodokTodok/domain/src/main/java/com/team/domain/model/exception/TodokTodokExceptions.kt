@@ -178,7 +178,7 @@ sealed class TodokTodokExceptions : Throwable() {
                 ReplyExceptions.CommentNotBelongToDiscussion.message -> ReplyExceptions.CommentNotBelongToDiscussion
                 ReplyExceptions.ReplyNotBelongToComment.message -> ReplyExceptions.ReplyNotBelongToComment
                 ReplyExceptions.OnlyOwnerCanModifyOrDelete.message -> ReplyExceptions.OnlyOwnerCanModifyOrDelete
-                
+
                 // 서버 메시지와 일치하지 않으면 기본 BadRequest 예외 반환
                 else -> HttpExceptions.BadRequestException
             }
