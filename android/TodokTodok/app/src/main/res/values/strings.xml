@@ -84,6 +84,8 @@
     <string name="select_book">토론방 도서 선택</string>
     <string name="content_description_search_keyword">도서 검색을 합니다</string>
     <string name="hint_search_keyword">도서 제목 또는 저자를 입력해주세요</string>
+    <string name="empty_search_result">도서 \'%s\' 검색 결과가 없습니다</string>
+    <string name="empty_search_result_description">입력한 검색어의 철자 또는 띄어쓰기가 정확한지 다시 한번 확인해 주세요.</string>
 
     <string name="error_empty_keyword">검색어를 입력해주세요</string>
     <string name="error_no_selected_book">도서를 선택해주세요</string>
@@ -110,7 +112,7 @@
     <string name="setting_unblock">해제하기</string>
     <string name="setting_send_feedback">의견 보내기</string>
     <string name="content_description_select_book">토론하고 싶은 도서를 선택해주세요</string>
-    <string name="empty_search_result_title">선택된 도서 없습니다</string>
+    <string name="empty_search_result_title">선택된 도서가 없습니다</string>
 
     <!-- 닉네임 관련 -->
     <string name="error_duplicate_nickname">이미 사용 중인 닉네임입니다.</string>
