@@ -94,17 +94,18 @@ jobs:
       - name: Docker Compose Down (if exists)
         run: |
           cd backend
-          if [ -f docker-compose.yml ]; then
-            docker compose down
+          if [ -f config/docker-compose-dev.yml ]; then
+            docker compose -f config/docker-compose-dev.yml down
+          echo "docker compose-dev down"
           else
-            echo "docker-compose.yml 없음 - down 스킵"
+            echo "config/docker-compose-dev.yml 없음 - down 스킵"
           fi
 
       - name: Docker Compose Up
         run: |
           cd backend
-          docker compose up -d
-          echo "docker compose up"
+          docker compose -f config/docker-compose-dev.yml up -d
+          echo "docker compose-dev up"
 
       - name: Docker image Prune
         run: |
