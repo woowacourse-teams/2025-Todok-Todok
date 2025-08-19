@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentCreatedDiscussionsRoomBinding
 import com.team.todoktodok.presentation.core.ext.getParcelableArrayListCompat
+import com.team.todoktodok.presentation.view.book.SelectBookActivity
 import com.team.todoktodok.presentation.view.discussiondetail.DiscussionDetailActivity
 import com.team.todoktodok.presentation.view.profile.created.adapter.UserDiscussionAdapter
 import com.team.todoktodok.presentation.view.serialization.SerializationMemberDiscussion
@@ -37,17 +38,42 @@ class CreatedDiscussionsRoomFragment : Fragment(R.layout.fragment_created_discus
     }
 
     private fun initView() {
+        discussionAdapter = UserDiscussionAdapter(userDiscussionAdapterHandler)
         val discussions =
             arguments?.getParcelableArrayListCompat<SerializationMemberDiscussion>(
                 ARG_CREATED_MEMBER_DISCUSSIONS,
+            ) ?: emptyList()
+
+        if (discussions.isEmpty()) {
+            showEmptyResourceView()
+        } else {
+            showCreatedDiscussions(discussions)
+        }
+    }
+
+    private fun showEmptyResourceView() {
+        with(binding) {
+            rvDiscussions.visibility = View.GONE
+            viewResourceNotFound.show(
+                getString(R.string.profile_not_has_created_discussion_title),
+                getString(R.string.profile_not_has_created_discussion_subtitle),
+                getString(R.string.profile_action_created_discussion),
+                { moveToCreateDiscussion() },
             )
+        }
+    }
 
-        discussionAdapter = UserDiscussionAdapter(userDiscussionAdapterHandler)
-        binding.rvDiscussions.adapter = discussionAdapter
+    private fun moveToCreateDiscussion() {
+        val intent = SelectBookActivity.Intent(requireContext())
+        startActivity(intent)
+    }
 
-        discussions?.let {
-            val discussions = it.map { discussion -> discussion.toDomain() }
-            discussionAdapter.submitList(discussions)
+    private fun showCreatedDiscussions(discussions: List<SerializationMemberDiscussion>) {
+        with(binding) {
+            val createdDiscussions = discussions.map { discussion -> discussion.toDomain() }
+            rvDiscussions.visibility = View.VISIBLE
+            rvDiscussions.adapter = discussionAdapter
+            discussionAdapter.submitList(createdDiscussions)
         }
     }
 

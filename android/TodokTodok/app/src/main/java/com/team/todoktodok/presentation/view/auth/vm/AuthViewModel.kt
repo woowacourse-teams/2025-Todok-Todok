@@ -1,6 +1,7 @@
 package com.team.todoktodok.presentation.view.auth.vm
 
 import android.net.Uri
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.team.domain.model.exception.onFailure
@@ -19,6 +20,9 @@ class AuthViewModel(
     private val memberRepository: MemberRepository,
     private val tokenRepository: TokenRepository,
 ) : ViewModel() {
+    private val _isLoading: MutableLiveData<Boolean> = MutableLiveData(false)
+    val isLoading: MutableLiveData<Boolean> get() = _isLoading
+
     private val _uiEvent: MutableSingleLiveData<LoginUiEvent> = MutableSingleLiveData()
     val uiEvent: SingleLiveData<LoginUiEvent> get() = _uiEvent
 
@@ -34,6 +38,7 @@ class AuthViewModel(
                     delay(SPLASH_DURATION)
                     onUiEvent(LoginUiEvent.NavigateToMain)
                 }
+
                 MemberType.TEMP_USER -> onUiEvent(LoginUiEvent.ShowLoginButton)
             }
         }
@@ -45,6 +50,7 @@ class AuthViewModel(
         profileImage: Uri?,
     ) {
         viewModelScope.launch {
+            _isLoading.value = true
             memberRepository
                 .login(
                     email,
@@ -58,6 +64,7 @@ class AuthViewModel(
                 }.onFailure {
                     onUiEvent(LoginUiEvent.ShowErrorMessage(it))
                 }
+            _isLoading.value = false
         }
     }
 

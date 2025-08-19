@@ -16,7 +16,10 @@ data class ProfileUiState(
     val createdDiscussions: List<SerializationMemberDiscussion> = emptyList(),
     val memberId: MemberId = MemberId.Mine,
     val isMyProfilePage: Boolean = false,
+    val isLoading: Boolean = false,
 ) {
+    fun toggleLoading(isLoading: Boolean): ProfileUiState = copy(isLoading = isLoading)
+
     fun modifyProfile(profile: Profile): ProfileUiState {
         if (items.size <= PROFILE_INFORMATION_INDEX) return this
 

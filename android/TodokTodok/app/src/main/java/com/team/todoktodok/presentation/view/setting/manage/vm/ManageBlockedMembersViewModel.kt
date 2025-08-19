@@ -27,7 +27,7 @@ class ManageBlockedMembersViewModel(
     }
 
     private fun loadBlockedMembers() {
-        viewModelScope.launch {
+        withLoading {
             memberRepository
                 .getBlockedMembers()
                 .onSuccess { _uiState.value = _uiState.value?.copy(members = it) }
@@ -40,7 +40,7 @@ class ManageBlockedMembersViewModel(
     }
 
     fun unblockMember() {
-        viewModelScope.launch {
+        withLoading {
             val currentUiState = _uiState.value ?: throw IllegalArgumentException(NOT_FOUND_MEMBER)
             val memberId = currentUiState.selectedMemberId
             require(memberId != ManageBlockedMembersUiState.NOT_HAS_SELECTED_MEMBER) { NOT_FOUND_MEMBER }
@@ -54,6 +54,12 @@ class ManageBlockedMembersViewModel(
 
     private fun onUiEvent(event: ManageBlockedMembersUiEvent) {
         _uiEvent.setValue(event)
+    }
+
+    private fun withLoading(action: suspend () -> Unit) {
+        _uiState.value = _uiState.value?.toggleLoading()
+        viewModelScope.launch { action() }
+        _uiState.value = _uiState.value?.toggleLoading()
     }
 
     companion object {
