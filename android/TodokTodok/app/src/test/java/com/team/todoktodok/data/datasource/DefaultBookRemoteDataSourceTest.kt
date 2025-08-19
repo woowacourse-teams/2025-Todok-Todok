@@ -1,5 +1,6 @@
 package com.team.todoktodok.data.datasource
 
+import com.team.domain.model.exception.NetworkResult
 import com.team.todoktodok.data.datasource.book.DefaultBookRemoteDataSource
 import com.team.todoktodok.data.network.response.discussion.BookResponse
 import com.team.todoktodok.data.network.service.BookService
@@ -27,12 +28,14 @@ class DefaultBookRemoteDataSourceTest {
             // given
             val keyword = "오브젝트"
             val expectedBooks =
-                listOf(
-                    BookResponse(
-                        bookId = 5L,
-                        bookTitle = "오브젝트",
-                        bookAuthor = "조영호",
-                        bookImage = "https://image.aladin.co.kr/product/19368/10/cover200/k972635015_1.jpg",
+                NetworkResult.Success(
+                    listOf(
+                        BookResponse(
+                            bookId = 5L,
+                            bookTitle = "오브젝트",
+                            bookAuthor = "조영호",
+                            bookImage = "https://image.aladin.co.kr/product/19368/10/cover200/k972635015_1.jpg",
+                        ),
                     ),
                 )
             coEvery { service.fetchBooks(keyword) } returns expectedBooks
@@ -50,8 +53,8 @@ class DefaultBookRemoteDataSourceTest {
         runTest {
             // given
             val keyword = ""
-            val expectedBooks = emptyList<BookResponse>()
-            coEvery { service.fetchBooks(keyword) } returns emptyList()
+            val expectedBooks = NetworkResult.Success(emptyList<BookResponse>())
+            coEvery { service.fetchBooks(keyword) } returns expectedBooks
 
             // when
             val result = dataSource.fetchBooks(keyword)
