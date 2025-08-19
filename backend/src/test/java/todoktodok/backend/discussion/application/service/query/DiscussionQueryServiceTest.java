@@ -7,10 +7,13 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import io.swagger.v3.oas.annotations.Parameter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -228,8 +231,8 @@ class DiscussionQueryServiceTest {
             // then
             assertAll(
                     () -> assertThat(items).hasSize(size),
-                    () -> assertThat(items.get(0).createdAt()).isBeforeOrEqualTo(items.get(1).createdAt()),
-                    () -> assertThat(items.get(1).createdAt()).isBeforeOrEqualTo(items.get(2).createdAt())
+                    () -> assertThat(items.get(0).discussionId()).isGreaterThan(items.get(1).discussionId()),
+                    () -> assertThat(items.get(1).discussionId()).isGreaterThan(items.get(2).discussionId())
             );
         }
 
@@ -404,6 +407,52 @@ class DiscussionQueryServiceTest {
 
             // then
             assertThat(items).hasSize(2);
+        }
+
+        @ParameterizedTest
+        @DisplayName("토론방 최신순 조회 시 사이즈 값이 범위를 초과할 경우 예외가 발생한다")
+        @ValueSource(ints = {-1, 0, 51, 100})
+        void getDiscussionsFromNewestTest_wrongSize(final int size) {
+            // given
+            databaseInitializer.setDefaultUserInfo();
+            databaseInitializer.setDefaultBookInfo();
+
+            databaseInitializer.setDefaultDiscussionInfo();
+            databaseInitializer.setDefaultDiscussionInfo();
+            databaseInitializer.setDefaultDiscussionInfo();
+            databaseInitializer.setDefaultDiscussionInfo();
+            databaseInitializer.setDefaultDiscussionInfo();
+
+            final Long memberId = 1L;
+            final String cursor = null;
+
+            // when - then
+            assertThatThrownBy(() -> discussionQueryService.getDiscussions(memberId, size, cursor))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessageContaining("유효하지 않은 페이지 사이즈입니다. 1 이상 50 이하의 페이징을 시도해주세요");
+        }
+
+        @Test
+        @DisplayName("토론방 최신순 조회 시 커서 값이 유효하지 않을 경우 예외가 발생한다")
+        void getDiscussionsFromNewestTest_wrongCursor() {
+            // given
+            databaseInitializer.setDefaultUserInfo();
+            databaseInitializer.setDefaultBookInfo();
+
+            databaseInitializer.setDefaultDiscussionInfo();
+            databaseInitializer.setDefaultDiscussionInfo();
+            databaseInitializer.setDefaultDiscussionInfo();
+            databaseInitializer.setDefaultDiscussionInfo();
+            databaseInitializer.setDefaultDiscussionInfo();
+
+            final Long memberId = 1L;
+            final int size = 3;
+            final String cursor = "woowa";
+
+            // when - then
+            assertThatThrownBy(() -> discussionQueryService.getDiscussions(memberId, size, cursor))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessageContaining("Base64로 디코드할 수 없는 cursor 값입니다");
         }
     }
 

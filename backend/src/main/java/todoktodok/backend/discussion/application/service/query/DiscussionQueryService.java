@@ -28,6 +28,9 @@ import todoktodok.backend.reply.domain.repository.ReplyRepository;
 @AllArgsConstructor
 public class DiscussionQueryService {
 
+    private static final int MAX_PAGE_SIZE = 50;
+    private static final int MIN_PAGE_SIZE = 1;
+
     private final DiscussionRepository discussionRepository;
     private final DiscussionLikeRepository discussionLikeRepository;
     private final MemberRepository memberRepository;
@@ -46,13 +49,13 @@ public class DiscussionQueryService {
                 commentRepository.countCommentsByDiscussionId(discussionId)
                         + replyRepository.countRepliesByDiscussionId(discussionId)
         );
-        final boolean isLiked = discussionLikeRepository.existsByMemberAndDiscussion(member, discussion);
+        final boolean isLikedByMe = discussionLikeRepository.existsByMemberAndDiscussion(member, discussion);
 
         return new DiscussionResponse(
                 discussion,
                 likeCount,
                 commentCount,
-                isLiked
+                isLikedByMe
         );
     }
 
@@ -199,6 +202,7 @@ public class DiscussionQueryService {
             final int size,
             final String cursor
     ) {
+        validatePageSize(size);
         final Member member = findMember(memberId);
 
         final Slice<Discussion> slicedDiscussions = sliceDiscussionsBy(cursor, size);
@@ -211,6 +215,12 @@ public class DiscussionQueryService {
                 getDiscussionsResponses(discussions, member),
                 new PageInfo(hasNextPage, nextCursor)
         );
+    }
+
+    private void validatePageSize(final int size) {
+        if (size < MIN_PAGE_SIZE || size > MAX_PAGE_SIZE) {
+            throw new IllegalArgumentException(String.format("유효하지 않은 페이지 사이즈입니다. 1 이상 50 이하의 페이징을 시도해주세요: size = %d", size));
+        }
     }
 
     private Slice<Discussion> sliceDiscussionsBy(
