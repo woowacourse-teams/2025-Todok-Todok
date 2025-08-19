@@ -116,7 +116,8 @@
     <string name="empty_search_result">도서 \'%s\' 검색 결과가 없습니다</string>
     <string name="empty_search_result_description">입력한 검색어의 철자 또는 띄어쓰기가 정확한지 다시 한번 확인해 주세요.</string>
 
-    <string name="error_empty_keyword">검색어를 입력해주세요</string>
+    <string name="error_empty_keyword">검색어는 1자 이상이어야 합니다</string>
+    <string name="error_empty_isbn">도서 ISBN을 입력해주세요</string>
     <string name="error_no_selected_book">도서를 선택해주세요</string>
     <string name="error_network">네트워크 에러가 발생했어요</string>
     <string name="error_same_keyword">동일한 키워드를 입력했습니다</string>

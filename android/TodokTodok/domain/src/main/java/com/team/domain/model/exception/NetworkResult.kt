@@ -21,6 +21,17 @@ fun <T> NetworkResult<T>.onSuccess(action: (T) -> Unit): NetworkResult<T> =
         }
     }
 
+suspend fun <T> NetworkResult<T>.onSuccessSuspend(action: suspend (T) -> Unit): NetworkResult<T> =
+    when (this) {
+        is NetworkResult.Success<T> -> {
+            action(data)
+            this
+        }
+        is NetworkResult.Failure -> {
+            this
+        }
+    }
+
 fun <T> NetworkResult<T>.onFailure(action: (TodokTodokExceptions) -> Unit): NetworkResult<T> =
     when (this) {
         is NetworkResult.Success<T> -> {

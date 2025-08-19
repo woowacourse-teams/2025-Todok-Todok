@@ -155,6 +155,10 @@ sealed class TodokTodokExceptions : Throwable() {
                 DiscussionExceptions.CannotDeleteWithComments.message -> DiscussionExceptions.CannotDeleteWithComments
                 DiscussionExceptions.OnlyOwnerCanModifyOrDelete.message -> DiscussionExceptions.OnlyOwnerCanModifyOrDelete
 
+                // 도서 관련 예외
+                BooksExceptions.EmptyKeywordException.message -> BooksExceptions.EmptyKeywordException
+                BooksExceptions.EmptyISBNException.message -> BooksExceptions.EmptyISBNException
+
                 // 서버 메시지와 일치하지 않으면 기본 BadRequest 예외 반환
                 else -> HttpExceptions.BadRequestException
             }
