@@ -7,18 +7,21 @@ import androidx.recyclerview.widget.RecyclerView
 import com.team.todoktodok.databinding.ItemHotPopularDiscussionBinding
 import com.team.todoktodok.presentation.view.discussions.adapter.DiscussionAdapter
 
-class HotPopularDiscussionViewHolder(
-    private val binding: ItemHotPopularDiscussionBinding,
-    private val handler: Handler,
+class HotPopularDiscussionViewHolder private constructor(
+    binding: ItemHotPopularDiscussionBinding,
+    handler: Handler,
 ) : RecyclerView.ViewHolder(binding.root) {
-    fun bind(item: HotDiscussionItems.PopularItem) {
-        val discussionAdapter = DiscussionAdapter(handler)
-        val manager = LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
+    private val discussionAdapter = DiscussionAdapter(handler)
+    private val manager = LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
 
-        with(binding.rvPopularDiscussion) {
-            adapter = discussionAdapter
-            layoutManager = manager
+    init {
+        with(binding) {
+            rvPopularDiscussion.adapter = discussionAdapter
+            rvPopularDiscussion.layoutManager = manager
         }
+    }
+
+    fun bind(item: HotDiscussionItems.PopularItem) {
         discussionAdapter.submitList(item.items)
     }
 
