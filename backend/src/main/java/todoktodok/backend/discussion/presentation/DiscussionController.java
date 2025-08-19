@@ -1,8 +1,10 @@
 package todoktodok.backend.discussion.presentation;
 
 import jakarta.validation.Valid;
+
 import java.net.URI;
 import java.util.List;
+
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

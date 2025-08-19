@@ -225,7 +225,7 @@ public class DiscussionQueryService {
 
     private static void validateHotDiscussionCount(final int count) {
         if (count <= MIN_HOT_DISCUSSION_COUNT) {
-            throw new IllegalArgumentException(String.format("양수의 개수를 조회해주세요: count = %d", count));
+            throw new IllegalArgumentException(String.format("유효하지 않은 개수입니다. 양수의 개수를 조회해주세요: count = %d", count));
         }
     }
 
