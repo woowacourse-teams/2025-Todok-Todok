@@ -16,8 +16,6 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=prod
     restart: always
-    networks:
-      - prod_network
 
   promtail:
     container_name: promtail_prod
@@ -30,12 +28,6 @@ services:
       - promtail_positions:/tmp/positions-prod.yaml
     command: -config.file=/etc/promtail/promtail.yml
     restart: always
-    networks:
-      - prod_network
-
-networks:
-  prod_network:
-    external: true
 
 volumes:
   promtail_positions:
