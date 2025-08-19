@@ -171,19 +171,20 @@ class SelectBookActivity : AppCompatActivity() {
     }
 
     private fun highlightKeyword(keyword: String): SpannableString {
-        val strongKeyword = SpannableString(
-            getString(
-                R.string.empty_search_result,
-                keyword
+        val strongKeyword =
+            SpannableString(
+                getString(
+                    R.string.empty_search_result,
+                    keyword,
+                ),
             )
-        )
         strongKeyword.setSpan(
             ForegroundColorSpan(
-                getColor(R.color.green_1A)
+                getColor(R.color.green_1A),
             ),
             FIRST_HIGHLIGHT_CHAR_POSITION,
             LAST_HIGHLIGHT_CHAR_POSITION + (keyword.length),
-            SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
+            SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE,
         )
         return strongKeyword
     }
