@@ -44,3 +44,6 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### log ###
+../backend/log/

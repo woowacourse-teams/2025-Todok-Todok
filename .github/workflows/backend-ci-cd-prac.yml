@@ -57,10 +57,6 @@ jobs:
     needs: ci
     runs-on: [self-hosted, prac]
     steps:
-      - name: Fix permissions before checkout
-        run: |
-          sudo rm -rf backend/log/dev || true
-
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
