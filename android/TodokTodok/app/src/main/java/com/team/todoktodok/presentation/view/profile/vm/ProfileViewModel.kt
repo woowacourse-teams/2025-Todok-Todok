@@ -41,7 +41,7 @@ class ProfileViewModel(
     @Suppress("UNCHECKED_CAST")
     fun initState() {
         val memberId = _uiState.value?.memberId ?: return
-        viewModelScope.launch {
+        withLoading {
             val (profile, books, participatedDiscussions, createdDiscussions) =
                 listOf(
                     loadProfile(memberId),
@@ -61,7 +61,7 @@ class ProfileViewModel(
         }
     }
 
-    fun loadProfile(id: MemberId): Deferred<Profile> =
+    private fun loadProfile(id: MemberId): Deferred<Profile> =
         viewModelScope.async {
             when (val result = memberRepository.getProfile(id)) {
                 is NetworkResult.Success -> result.data
@@ -72,7 +72,7 @@ class ProfileViewModel(
             }
         }
 
-    fun loadActivatedBooks(id: MemberId): Deferred<List<Book>> =
+    private fun loadActivatedBooks(id: MemberId): Deferred<List<Book>> =
         viewModelScope.async {
             when (val result = memberRepository.getMemberBooks(id)) {
                 is NetworkResult.Success -> result.data
@@ -83,7 +83,7 @@ class ProfileViewModel(
             }
         }
 
-    fun loadParticipatedDiscussions(id: MemberId): Deferred<List<MemberDiscussion>> =
+    private fun loadParticipatedDiscussions(id: MemberId): Deferred<List<MemberDiscussion>> =
         viewModelScope.async {
             when (
                 val result =
@@ -97,7 +97,7 @@ class ProfileViewModel(
             }
         }
 
-    fun loadCreatedDiscussions(id: MemberId): Deferred<List<MemberDiscussion>> =
+    private fun loadCreatedDiscussions(id: MemberId): Deferred<List<MemberDiscussion>> =
         viewModelScope.async {
             when (
                 val result =
@@ -112,7 +112,7 @@ class ProfileViewModel(
         }
 
     fun supportMember(type: Support) {
-        viewModelScope.launch {
+        withLoading {
             val memberId = _uiState.value?.memberId
             if (memberId is MemberId.OtherUser) {
                 memberRepository
@@ -125,9 +125,17 @@ class ProfileViewModel(
 
     fun refreshProfile() {
         val memberId = _uiState.value?.memberId ?: return
-        viewModelScope.launch {
+        withLoading {
             val profile = loadProfile(memberId)
             _uiState.value = _uiState.value?.modifyProfile(profile.await())
+        }
+    }
+
+    private fun withLoading(action: suspend () -> Unit) {
+        viewModelScope.launch {
+            _uiState.value = _uiState.value?.toggleLoading(true)
+            action()
+            _uiState.value = _uiState.value?.toggleLoading(false)
         }
     }
 

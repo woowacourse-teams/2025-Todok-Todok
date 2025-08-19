@@ -9,54 +9,88 @@ import com.team.domain.model.exception.onSuccess
 import com.team.domain.model.member.MemberId
 import com.team.domain.model.member.NickNameException
 import com.team.domain.model.member.Nickname
-import com.team.domain.model.member.Profile
 import com.team.domain.repository.MemberRepository
 import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
 import com.team.todoktodok.presentation.core.event.SingleLiveData
 import com.team.todoktodok.presentation.view.setting.modify.ModifyProfileUiEvent
+import com.team.todoktodok.presentation.view.setting.modify.ProfileUiState
 import kotlinx.coroutines.launch
 
 class ModifyProfileViewModel(
     private val memberRepository: MemberRepository,
 ) : ViewModel() {
-    init {
-        loadProfile()
-    }
-
-    private val _profile = MutableLiveData<Profile>()
-    val profile: LiveData<Profile> get() = _profile
+    private val _uiState = MutableLiveData(ProfileUiState())
+    val uiState: LiveData<ProfileUiState> get() = _uiState
 
     private val _uiEvent = MutableSingleLiveData<ModifyProfileUiEvent>()
     val uiEvent: SingleLiveData<ModifyProfileUiEvent> get() = _uiEvent
 
-    private fun loadProfile() {
-        viewModelScope.launch {
-            memberRepository
-                .getProfile(MemberId.Mine)
-                .onSuccess { _profile.value = it }
-                .onFailure { onUiEvent(ModifyProfileUiEvent.ShowErrorMessage(it)) }
-        }
+    init {
+        loadProfile()
     }
 
-    fun modifyProfile(
-        text: String,
-        description: String,
+    private fun loadProfile() =
+        withLoading {
+            memberRepository
+                .getProfile(MemberId.Mine)
+                .onSuccess {
+                    _uiState.value =
+                        _uiState.value?.modifyProfile(
+                            it.nickname,
+                            it.message ?: EMPTY_MESSAGE,
+                        )
+                }.onFailure { onUiEvent(ModifyProfileUiEvent.ShowErrorMessage(it)) }
+        }
+
+    fun checkProfileValidation(
+        nickname: String,
+        message: String,
     ) {
         runCatching {
-            Nickname(text)
+            Nickname(nickname)
         }.onSuccess { nickname ->
-            viewModelScope.launch {
-                memberRepository
-                    .modifyProfile(text, description)
-                    .onSuccess { onUiEvent(ModifyProfileUiEvent.OnCompleteModification) }
-                    .onFailure { onUiEvent(ModifyProfileUiEvent.ShowErrorMessage(it)) }
-            }
+            modifyProfile(nickname, message)
         }.onFailure { e ->
             _uiEvent.setValue(ModifyProfileUiEvent.ShowInvalidNickNameMessage(e as NickNameException))
         }
     }
 
+    private fun modifyProfile(
+        nickname: Nickname,
+        message: String,
+    ) = withLoading {
+        val currentUiState = _uiState.value ?: return@withLoading
+
+        _uiState.value =
+            currentUiState
+                .modifyProfile(
+                    nickname.value,
+                    message.ifBlank { EMPTY_MESSAGE },
+                )
+        memberRepository
+            .modifyProfile(nickname.value, message)
+            .onSuccess {
+                onUiEvent(ModifyProfileUiEvent.OnCompleteModification)
+            }.onFailure { onUiEvent(ModifyProfileUiEvent.ShowErrorMessage(it)) }
+    }
+
     private fun onUiEvent(event: ModifyProfileUiEvent) {
         _uiEvent.setValue(event)
+    }
+
+    private fun withLoading(action: suspend () -> Unit) {
+        viewModelScope.launch {
+            changeLoadingState()
+            action()
+            changeLoadingState()
+        }
+    }
+
+    private fun changeLoadingState() {
+        _uiState.value = _uiState.value?.toggleLoading()
+    }
+
+    companion object {
+        private const val EMPTY_MESSAGE = ""
     }
 }

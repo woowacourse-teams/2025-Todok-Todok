@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
@@ -18,6 +17,7 @@ import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentLoginBinding
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
+import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
 import com.team.todoktodok.presentation.view.auth.signup.SignUpFragment
 import com.team.todoktodok.presentation.view.auth.vm.AuthViewModel
 import com.team.todoktodok.presentation.view.auth.vm.AuthViewModelFactory
@@ -44,6 +44,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         googleLoginManager = GoogleLoginManager(requireContext())
         messageConverter = ExceptionMessageConverter()
 
+        setupLoading(binding)
         setUpUiEvent(binding)
         showAnimation(binding)
         initView(binding)
@@ -92,6 +93,16 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         animatorSet.start()
     }
 
+    private fun setupLoading(binding: FragmentLoginBinding) {
+        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            if (isLoading) {
+                binding.progressBar.show()
+            } else {
+                binding.progressBar.hide()
+            }
+        }
+    }
+
     private fun setUpUiEvent(binding: FragmentLoginBinding) {
         viewModel.uiEvent.observe(viewLifecycleOwner) {
             when (it) {
@@ -99,12 +110,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                 LoginUiEvent.NavigateToSignUp -> moveToSignUp()
                 LoginUiEvent.ShowLoginButton -> showLoginButton(binding)
                 is LoginUiEvent.ShowErrorMessage -> {
-                    Toast
-                        .makeText(
-                            requireContext(),
-                            messageConverter(it.exception),
-                            Toast.LENGTH_SHORT,
-                        ).show()
+                    AlertSnackBar(binding.root, messageConverter(it.exception)).show()
                 }
             }
         }

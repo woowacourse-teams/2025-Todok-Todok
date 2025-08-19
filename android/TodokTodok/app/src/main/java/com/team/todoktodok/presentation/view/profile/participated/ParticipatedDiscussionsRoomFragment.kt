@@ -37,18 +37,44 @@ class ParticipatedDiscussionsRoomFragment : Fragment(R.layout.fragment_participa
     }
 
     private fun initView() {
+        discussionAdapter = UserDiscussionAdapter(userDiscussionAdapterHandler)
+
         val discussions =
             arguments?.getParcelableArrayListCompat<SerializationMemberDiscussion>(
                 ARG_PARTICIPATED_MEMBER_DISCUSSIONS,
+            ) ?: emptyList()
+
+        if (discussions.isEmpty()) {
+            showEmptyResourceView()
+        } else {
+            binding.viewResourceNotFound.hide()
+            showParticipatedDiscussions(discussions)
+        }
+    }
+
+    private fun showEmptyResourceView() {
+        with(binding) {
+            rvDiscussions.visibility = View.GONE
+            viewResourceNotFound.show(
+                getString(R.string.profile_not_has_participated_discussions_title),
+                getString(R.string.profile_not_has_participated_discussions_subtitle),
+                getString(R.string.profile_action_participated_discussion),
+                { moveToDiscussions() },
             )
+        }
+    }
 
-        discussionAdapter = UserDiscussionAdapter(userDiscussionAdapterHandler)
-        binding.rvDiscussions.adapter = discussionAdapter
-
-        discussions?.let {
-            val participatedDiscussions = it.map { discussion -> discussion.toDomain() }
+    private fun showParticipatedDiscussions(discussions: List<SerializationMemberDiscussion>) {
+        with(binding) {
+            val participatedDiscussions = discussions.map { discussion -> discussion.toDomain() }
+            rvDiscussions.visibility = View.VISIBLE
+            rvDiscussions.adapter = discussionAdapter
             discussionAdapter.submitList(participatedDiscussions)
         }
+    }
+
+    private fun moveToDiscussions() {
+        requireActivity().finish()
     }
 
     private val userDiscussionAdapterHandler =

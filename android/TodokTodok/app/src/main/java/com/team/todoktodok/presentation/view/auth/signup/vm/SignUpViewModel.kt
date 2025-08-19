@@ -1,5 +1,7 @@
 package com.team.todoktodok.presentation.view.auth.signup.vm
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.team.domain.model.exception.onFailure
@@ -15,6 +17,9 @@ import kotlinx.coroutines.launch
 class SignUpViewModel(
     private val memberRepository: MemberRepository,
 ) : ViewModel() {
+    private val _isLoading: MutableLiveData<Boolean> = MutableLiveData(false)
+    val isLoading: LiveData<Boolean> get() = _isLoading
+
     private val _uiEvent = MutableSingleLiveData<SignUpUiEvent>()
     val uiEvent: SingleLiveData<SignUpUiEvent> get() = _uiEvent
 
@@ -30,10 +35,12 @@ class SignUpViewModel(
 
     private fun signUp(nickname: Nickname) {
         viewModelScope.launch {
+            _isLoading.value = true
             memberRepository
                 .signUp(nickname.value)
                 .onSuccess { _uiEvent.setValue(SignUpUiEvent.NavigateToMain) }
                 .onFailure { _uiEvent.setValue(SignUpUiEvent.ShowErrorMessage(it)) }
+            _isLoading.value = false
         }
     }
 }

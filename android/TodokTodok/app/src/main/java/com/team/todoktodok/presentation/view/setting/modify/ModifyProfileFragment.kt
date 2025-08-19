@@ -6,19 +6,15 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.team.domain.model.member.NickNameException
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentModifyProfileBinding
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
-import com.team.todoktodok.presentation.view.setting.SettingScreen
+import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
 import com.team.todoktodok.presentation.view.setting.modify.vm.ModifyProfileViewModel
 import com.team.todoktodok.presentation.view.setting.modify.vm.ModifyProfileViewModelFactory
-import com.team.todoktodok.presentation.view.setting.vm.SettingViewModel
-import com.team.todoktodok.presentation.view.setting.vm.SettingViewModelFactory
-import kotlin.getValue
 
 class ModifyProfileFragment : Fragment(R.layout.fragment_modify_profile) {
     private val viewModel: ModifyProfileViewModel by viewModels {
@@ -27,8 +23,6 @@ class ModifyProfileFragment : Fragment(R.layout.fragment_modify_profile) {
     }
 
     private lateinit var messageConverter: ExceptionMessageConverter
-
-    private val settingViewModel: SettingViewModel by activityViewModels { SettingViewModelFactory() }
 
     override fun onViewCreated(
         view: View,
@@ -52,24 +46,30 @@ class ModifyProfileFragment : Fragment(R.layout.fragment_modify_profile) {
     }
 
     private fun setUpNicknameEditText(binding: FragmentModifyProfileBinding) {
-        with(binding.etNickname) {
-            onFocusChangeListener =
-                View.OnFocusChangeListener { v, hasFocus ->
-                    if (hasFocus) binding.etNicknameLayout.hint = null
-                }
-
-            doAfterTextChanged {
-                binding.etNicknameLayout.error = null
+        with(binding) {
+            etNicknameLayout.setEndIconOnClickListener {
+                binding.etNickname.text = null
             }
 
-            setOnEditorActionListener { _, actionId, event ->
-                if (actionId == EditorInfo.IME_ACTION_NEXT ||
-                    (event?.keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_DOWN)
-                ) {
-                    binding.etMessage.requestFocus()
-                    true
-                } else {
-                    false
+            with(etNickname) {
+                onFocusChangeListener =
+                    View.OnFocusChangeListener { v, hasFocus ->
+                        if (hasFocus) binding.etNicknameLayout.hint = null
+                    }
+
+                doAfterTextChanged {
+                    binding.etNicknameLayout.error = null
+                }
+
+                setOnEditorActionListener { _, actionId, event ->
+                    if (actionId == EditorInfo.IME_ACTION_NEXT ||
+                        (event?.keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_DOWN)
+                    ) {
+                        binding.etMessage.requestFocus()
+                        true
+                    } else {
+                        false
+                    }
                 }
             }
         }
@@ -77,6 +77,10 @@ class ModifyProfileFragment : Fragment(R.layout.fragment_modify_profile) {
 
     private fun setUpMessageEditText(binding: FragmentModifyProfileBinding) {
         with(binding) {
+            etMessageLayout.setEndIconOnClickListener {
+                binding.etMessage.text = null
+            }
+
             etMessage.setOnEditorActionListener { _, actionId, event ->
                 if (actionId == EditorInfo.IME_ACTION_DONE ||
                     (event?.keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_DOWN)
@@ -95,15 +99,32 @@ class ModifyProfileFragment : Fragment(R.layout.fragment_modify_profile) {
             btnModify.setOnClickListener {
                 val nickname = etNickname.text.toString()
                 val message = etMessage.text.toString()
-                viewModel.modifyProfile(nickname, message)
+                viewModel.checkProfileValidation(nickname, message)
             }
         }
     }
 
     private fun setUpUiState(binding: FragmentModifyProfileBinding) {
-        viewModel.profile.observe(viewLifecycleOwner) { value ->
-            binding.etNickname.setText(value.nickname)
-            binding.etMessage.setText(value.message)
+        with(binding) {
+            viewModel.uiState.observe(viewLifecycleOwner) { value ->
+                etNickname.setText(value.profile.nickname)
+                etMessage.setText(value.profile.message)
+
+                setUpLoading(value.isLoading, binding)
+            }
+        }
+    }
+
+    private fun setUpLoading(
+        isLoading: Boolean,
+        binding: FragmentModifyProfileBinding,
+    ) {
+        with(binding) {
+            if (isLoading) {
+                progressBar.show()
+            } else {
+                progressBar.hide()
+            }
         }
     }
 
@@ -111,7 +132,10 @@ class ModifyProfileFragment : Fragment(R.layout.fragment_modify_profile) {
         viewModel.uiEvent.observe(viewLifecycleOwner) { event ->
             when (event) {
                 ModifyProfileUiEvent.OnCompleteModification -> {
-                    settingViewModel.changeScreen(SettingScreen.SETTING_MAIN)
+                    AlertSnackBar(
+                        binding.root,
+                        R.string.setting_modify_profile_complete,
+                    ).show()
                 }
 
                 is ModifyProfileUiEvent.ShowInvalidNickNameMessage -> {
@@ -119,7 +143,10 @@ class ModifyProfileFragment : Fragment(R.layout.fragment_modify_profile) {
                 }
 
                 is ModifyProfileUiEvent.ShowErrorMessage -> {
-                    messageConverter(event.exception)
+                    AlertSnackBar(
+                        binding.root,
+                        messageConverter(event.exception),
+                    ).show()
                 }
             }
         }
