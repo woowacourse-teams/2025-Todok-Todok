@@ -3,9 +3,9 @@ package com.team.todoktodok.presentation.view.discussions.all.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.team.domain.model.Discussion
 import com.team.todoktodok.databinding.ItemDiscussionBinding
+import com.team.todoktodok.presentation.core.ext.loadImage
 
 class DiscussionViewHolder private constructor(
     private val binding: ItemDiscussionBinding,
@@ -19,14 +19,12 @@ class DiscussionViewHolder private constructor(
 
     fun bind(item: Discussion) {
         with(binding) {
-            tvBookTitle.text = item.book.title
-            tvDiscussionTitle.text = item.discussionTitle
-            tvDiscussionContent.text = item.discussionOpinion
+            tvBookTitle.text = item.getBookTitle()
+            tvBookAuthor.text = item.getBookAuthor()
+            ivBook.loadImage(item.bookImage)
 
-            Glide
-                .with(binding.root.context)
-                .load(item.book.image)
-                .into(ivBook)
+            tvDiscussionTitle.text = item.discussionTitle
+            tvDiscussionWriterNickname.text = item.writerNickname
         }
     }
 
