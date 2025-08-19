@@ -1,9 +1,6 @@
 package com.team.todoktodok.data.repository
 
-import com.team.domain.model.Comment
 import com.team.domain.model.exception.onSuccess
-import com.team.domain.model.member.Nickname
-import com.team.domain.model.member.User
 import com.team.todoktodok.data.datasource.comment.CommentRemoteDataSource
 import com.team.todoktodok.fake.datasource.FakeCommentRemoteDataSource
 import com.team.todoktodok.fixture.COMMENTS
@@ -11,7 +8,6 @@ import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.time.LocalDateTime
 
 class DefaultCommentRepositoryTest {
     private lateinit var commentRemoteDataSource: CommentRemoteDataSource
