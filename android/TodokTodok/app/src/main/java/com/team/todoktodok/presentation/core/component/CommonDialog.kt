@@ -22,7 +22,12 @@ class CommonDialog : DialogFragment(R.layout.view_common_dialog) {
         with(binding) {
             tvMessage.text = arguments?.getString(ARG_MESSAGE)
             btnSubmit.text = arguments?.getString(ARG_SUBMIT_BUTTON_TEXT)
-            btnCancel.setOnClickListener { dismiss() }
+            btnCancel.setOnClickListener {
+                setFragmentResult(
+                    REQUEST_KEY_COMMON_DIALOG,
+                    bundleOf(RESULT_KEY_COMMON_DIALOG to false),
+                )
+                dismiss() }
             btnSubmit.setOnClickListener {
                 setFragmentResult(
                     REQUEST_KEY_COMMON_DIALOG,

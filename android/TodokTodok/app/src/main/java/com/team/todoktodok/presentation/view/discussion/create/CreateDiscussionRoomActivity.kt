@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -82,10 +83,9 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
             val confirmed = bundle.getBoolean(CommonDialog.RESULT_KEY_COMMON_DIALOG)
             if (confirmed) {
                 viewModel.saveDraft()
-                finish()
-            } else {
-                finish()
+                return@setFragmentResultListener
             }
+            viewModel.finish()
         }
         binding.apply {
             when (mode) {
@@ -182,8 +182,7 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
             )
             if (mode is SerializationCreateDiscussionRoomMode.Create) {
                 binding.btnBack.setOnClickListener {
-                    val dialog = CommonDialog.newInstance(getString(R.string.draft_discussion_exist), getString(R.string.load))
-                    dialog.show(supportFragmentManager, CommonDialog.TAG)
+                    viewModel.checkIsPossibleToSave()
                 }
             }
         }
@@ -209,6 +208,21 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
                         .make(binding.root, getString(event.error.id), Snackbar.LENGTH_LONG)
                         .show()
                 }
+
+                is CreateDiscussionUiEvent.SaveDraft -> {
+                    if (event.possible) {
+                        val dialog = CommonDialog.newInstance(
+                            "작성중인 글을 취소하시겠습니까? 취소하기 선택시, 작성된 글은 저장되지 않습니다.",
+                            "임시저장"
+                        )
+                        dialog.show(supportFragmentManager, CommonDialog.TAG)
+                        return@observe
+                    }
+                    val dialog = CommonDialog.newInstance("이미 저장되어있는 파일이 있습니다", "덮어쓰기")
+                    dialog.show(supportFragmentManager, CommonDialog.TAG)
+                }
+
+                CreateDiscussionUiEvent.Finish -> finish()
             }
         }
     }

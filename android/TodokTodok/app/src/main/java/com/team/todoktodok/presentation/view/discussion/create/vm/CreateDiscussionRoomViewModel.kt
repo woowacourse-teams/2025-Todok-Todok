@@ -38,6 +38,17 @@ class CreateDiscussionRoomViewModel(
         decideMode()
     }
 
+    fun checkIsPossibleToSave(){
+        viewModelScope.launch {
+            val discussion = async { discussionRepository.getDiscussion() }.await()
+            if (discussion == null) {
+                _uiEvent.setValue(CreateDiscussionUiEvent.SaveDraft(true))
+                return@launch
+            }
+            _uiEvent.setValue(CreateDiscussionUiEvent.SaveDraft(false))
+        }
+
+    }
     private fun decideMode() {
         when (mode) {
             is SerializationCreateDiscussionRoomMode.Create -> {
@@ -71,8 +82,12 @@ class CreateDiscussionRoomViewModel(
         val title = _uiState.value?.title ?: return
         val opinion = _uiState.value?.opinion ?: return
         viewModelScope.launch { discussionRepository.saveDiscussionRoom(book, title, opinion) }
+        _uiEvent.setValue(CreateDiscussionUiEvent.Finish)
     }
 
+    fun finish() {
+        _uiEvent.setValue(CreateDiscussionUiEvent.Finish)
+    }
     fun updateTitle(title: String) {
         _uiState.value = _uiState.value?.copy(title = title)
         if (title.length == MAX_TITLE_LENGTH) {

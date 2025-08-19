@@ -8,4 +8,10 @@ sealed interface CreateDiscussionUiEvent {
     data class ShowToast(
         val error: ErrorCreateDiscussionType,
     ) : CreateDiscussionUiEvent
+
+    data class SaveDraft(
+        val possible: Boolean,
+    ) : CreateDiscussionUiEvent
+
+    data object Finish: CreateDiscussionUiEvent
 }
