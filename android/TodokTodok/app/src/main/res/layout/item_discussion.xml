@@ -6,11 +6,12 @@
     android:layout_height="wrap_content">
 
     <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cv_discussion"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/white"
-        android:layout_margin="@dimen/space_12"
         app:cardElevation="5dp"
+        app:cardUseCompatPadding="true"
         app:cardCornerRadius="12dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -19,9 +20,10 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:elevation="10dp"
-            android:padding="@dimen/space_18">
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/space_16"
+            android:paddingHorizontal="@dimen/space_16"
+            android:paddingBottom="@dimen/space_12">
 
             <ImageView
                 android:id="@+id/iv_book"
@@ -72,6 +74,7 @@
                 android:maxLines="1"
                 android:textColor="@color/black_18"
                 android:textSize="@dimen/font_size_large"
+                android:gravity="start"
                 android:layout_marginTop="@dimen/space_8"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/iv_book"
@@ -86,9 +89,9 @@
                 android:ellipsize="end"
                 android:fontFamily="@font/pretendard_medium"
                 android:maxLines="3"
+                android:minLines="3"
                 android:textColor="@color/gray_68"
                 android:textSize="@dimen/font_size_normal"
-                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_discussion_title"
@@ -100,10 +103,11 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:padding="1dp"
-                android:layout_marginTop="@dimen/space_12"
                 android:src="@drawable/img_mascort"
-                app:shapeAppearanceOverlay="@style/circleImageView"
+                android:layout_marginTop="@dimen/space_8"
+                android:layout_marginBottom="@dimen/space_8"
                 android:background="@drawable/bg_circle_white"
+                app:shapeAppearanceOverlay="@style/circleImageView"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_discussion_opinion"
                 app:layout_constraintBottom_toBottomOf="parent" />
@@ -120,60 +124,6 @@
                 app:layout_constraintTop_toTopOf="@id/iv_writer_profile_image"
                 tools:text="독서왕 정페토" />
 
-            <ImageView
-                android:id="@+id/iv_like_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/btn_heart_filled"
-                android:layout_marginEnd="@dimen/space_4"
-                app:layout_constraintEnd_toStartOf="@id/tv_like_count"
-                app:layout_constraintTop_toTopOf="@id/iv_comment_count"
-                app:layout_constraintBottom_toBottomOf="@id/iv_comment_count" />
-
-            <TextView
-                android:id="@+id/tv_like_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/space_8"
-                android:fontFamily="@font/pretendard_medium"
-                android:textSize="@dimen/font_size_large"
-                app:layout_constraintEnd_toStartOf="@id/iv_views_count"
-                app:layout_constraintBottom_toBottomOf="@id/iv_like_count"
-                app:layout_constraintTop_toTopOf="@id/iv_like_count"
-                tools:text="10" />
-
-
-            <ImageView
-                android:id="@+id/iv_views_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_views"
-                android:layout_marginEnd="@dimen/space_4"
-                app:layout_constraintEnd_toStartOf="@id/tv_views"
-                app:layout_constraintTop_toTopOf="@id/iv_comment_count"
-                app:layout_constraintBottom_toBottomOf="@id/iv_comment_count" />
-
-            <TextView
-                android:id="@+id/tv_views"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/space_8"
-                android:fontFamily="@font/pretendard_medium"
-                android:textSize="@dimen/font_size_large"
-                app:layout_constraintEnd_toStartOf="@id/iv_comment_count"
-                app:layout_constraintTop_toTopOf="@+id/iv_views_count"
-                app:layout_constraintBottom_toBottomOf="@id/iv_views_count"
-                tools:text="0" />
-
-
-            <ImageView
-                android:id="@+id/iv_comment_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/btn_comment"
-                app:layout_constraintEnd_toStartOf="@id/tv_comment_count"
-                app:layout_constraintBottom_toBottomOf="parent" />
-
             <TextView
                 android:id="@+id/tv_comment_count"
                 android:layout_width="wrap_content"
@@ -186,6 +136,61 @@
                 app:layout_constraintTop_toTopOf="@id/iv_comment_count"
                 tools:text="10" />
 
+            <ImageView
+                android:id="@+id/iv_comment_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/btn_comment"
+                android:layout_marginTop="@dimen/space_8"
+                android:layout_marginEnd="@dimen/space_4"
+                android:layout_marginBottom="@dimen/space_4"
+                app:layout_constraintTop_toTopOf="@id/iv_writer_profile_image"
+                app:layout_constraintEnd_toStartOf="@id/tv_comment_count"
+                app:layout_constraintBottom_toBottomOf="@id/iv_writer_profile_image"/>
+
+            <TextView
+                android:id="@+id/tv_views"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/space_8"
+                android:fontFamily="@font/pretendard_medium"
+                android:textSize="@dimen/font_size_large"
+                app:layout_constraintEnd_toStartOf="@id/iv_comment_count"
+                app:layout_constraintTop_toTopOf="@+id/iv_comment_count"
+                app:layout_constraintBottom_toBottomOf="@id/iv_comment_count"
+                tools:text="0" />
+
+            <ImageView
+                android:id="@+id/iv_views_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_views"
+                android:layout_marginEnd="@dimen/space_4"
+                app:layout_constraintEnd_toStartOf="@id/tv_views"
+                app:layout_constraintTop_toTopOf="@id/iv_comment_count"
+                app:layout_constraintBottom_toBottomOf="@id/iv_comment_count" />
+
+            <TextView
+                android:id="@+id/tv_like_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/space_8"
+                android:fontFamily="@font/pretendard_medium"
+                android:textSize="@dimen/font_size_large"
+                app:layout_constraintEnd_toStartOf="@id/iv_views_count"
+                app:layout_constraintBottom_toBottomOf="@id/iv_comment_count"
+                app:layout_constraintTop_toTopOf="@id/iv_comment_count"
+                tools:text="10" />
+
+            <ImageView
+                android:id="@+id/iv_like_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/btn_heart_filled"
+                android:layout_marginEnd="@dimen/space_4"
+                app:layout_constraintEnd_toStartOf="@id/tv_like_count"
+                app:layout_constraintTop_toTopOf="@id/iv_comment_count"
+                app:layout_constraintBottom_toBottomOf="@id/iv_comment_count" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>

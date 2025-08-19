@@ -39,8 +39,10 @@ class DiscussionsViewModelTest {
         runTest {
             // Given
             val newTab = DiscussionFilter.MINE
+            // TODO(API 완성시 수정)
+            val tmpFilters = DiscussionFilter.entries.filterNot { it == DiscussionFilter.HOT }
 
-            DiscussionFilter.entries.forEach { filter ->
+            tmpFilters.forEach { filter ->
                 coEvery {
                     mockDiscussionRepository.getDiscussions(filter, "")
                 } returns NetworkResult.Success(emptyList())
@@ -51,7 +53,7 @@ class DiscussionsViewModelTest {
 
             // Then
             assertEquals(viewModel.uiState.value?.filter, newTab)
-            DiscussionFilter.entries.forEach { filter ->
+            tmpFilters.forEach { filter ->
                 coVerify {
                     mockDiscussionRepository.getDiscussions(filter, "")
                 }
@@ -64,11 +66,14 @@ class DiscussionsViewModelTest {
             // Given
             val newKeyword = "나나짱~"
 
-            DiscussionFilter.entries.forEach { filter ->
-                coEvery {
-                    mockDiscussionRepository.getDiscussions(filter, any())
-                } returns NetworkResult.Success(emptyList())
-            }
+            val tmpFilters = DiscussionFilter.entries.filterNot { it == DiscussionFilter.HOT }
+
+            tmpFilters
+                .forEach { filter ->
+                    coEvery {
+                        mockDiscussionRepository.getDiscussions(filter, any())
+                    } returns NetworkResult.Success(emptyList())
+                }
 
             // When
             viewModel.loadSearchedDiscussions(newKeyword)
@@ -76,7 +81,7 @@ class DiscussionsViewModelTest {
             // Then
             assertEquals(newKeyword, viewModel.uiState.value?.searchKeyword)
 
-            DiscussionFilter.entries.forEach { filter ->
+            tmpFilters.forEach { filter ->
                 coVerify {
                     mockDiscussionRepository.getDiscussions(filter, newKeyword)
                 }

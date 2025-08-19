@@ -73,6 +73,11 @@
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@string/discussion_tab_title_hot" />
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="@string/discussion_tab_title_all" />
 
         <com.google.android.material.tabs.TabItem

@@ -11,7 +11,7 @@ sealed class HotDiscussionItems(
 
     data class ActivatedItem(
         val items: List<DiscussionUiState>,
-    ) : HotDiscussionItems(ViewType.POPULAR)
+    ) : HotDiscussionItems(ViewType.ACTIVATED)
 
     enum class ViewType(
         val sequence: Int,

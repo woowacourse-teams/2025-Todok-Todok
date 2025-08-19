@@ -5,11 +5,15 @@ import com.team.domain.model.Discussion
 import com.team.domain.model.DiscussionFilter
 import com.team.domain.model.member.Nickname
 import com.team.domain.model.member.User
+import com.team.todoktodok.presentation.view.discussions.hot.adapter.HotDiscussionItems
 import java.time.LocalDateTime
 
 data class DiscussionsUiState(
-    val hotDiscussions: List<DiscussionUiState> = DISCUSSION_UI_STATE_WITH_OPINION,
-    val activatedDiscussions: List<DiscussionUiState> = DISCUSSION_UI_STATE_WITHOUT_OPINION,
+    val hotDiscussionItems: List<HotDiscussionItems> =
+        listOf(
+            HotDiscussionItems.PopularItem(DISCUSSION_UI_STATE_WITH_OPINION),
+            HotDiscussionItems.ActivatedItem(DISCUSSION_UI_STATE_WITHOUT_OPINION),
+        ),
     val allDiscussions: List<Discussion> = emptyList(),
     val myDiscussions: List<Discussion> = emptyList(),
     val searchKeyword: String = "",

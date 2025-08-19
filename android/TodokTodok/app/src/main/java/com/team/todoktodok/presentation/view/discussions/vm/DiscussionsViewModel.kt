@@ -56,6 +56,8 @@ class DiscussionsViewModel(
 
         viewModelScope.launch {
             for (filter in DiscussionFilter.entries) {
+                // TODO("API 완성시 수정")
+                if (filter == DiscussionFilter.HOT) continue
                 discussionRepository
                     .getDiscussions(filter, keyword)
                     .onSuccess {
@@ -78,6 +80,7 @@ class DiscussionsViewModel(
                 when (filter) {
                     DiscussionFilter.ALL -> it.copy(allDiscussions = discussions)
                     DiscussionFilter.MINE -> it.copy(myDiscussions = discussions)
+                    DiscussionFilter.HOT -> it.copy(myDiscussions = discussions)
                 }
             }
     }

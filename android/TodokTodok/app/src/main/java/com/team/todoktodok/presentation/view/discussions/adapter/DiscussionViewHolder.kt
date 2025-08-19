@@ -30,12 +30,31 @@ class DiscussionViewHolder private constructor(
             if (item.opinionVisibility) {
                 tvDiscussionOpinion.visibility = VISIBLE
                 tvDiscussionOpinion.text = item.discussionOpinion
+            } else {
+                tvDiscussionOpinion.maxLines = 1
+                tvDiscussionOpinion.minLines = 1
             }
 
             tvLikeCount.text = item.likeCount
             tvCommentCount.text = item.commentCount
             tvViews.text = item.likeCount
         }
+        adjustItemSize(item.opinionVisibility)
+    }
+
+    private fun adjustItemSize(showOpinion: Boolean) {
+        val resource = itemView.context.resources
+        val displayMetrics = resource.displayMetrics
+        val screenWidth = displayMetrics.widthPixels
+
+        val params = itemView.layoutParams
+        params.width =
+            if (showOpinion) {
+                (screenWidth * 0.7).toInt()
+            } else {
+                ViewGroup.LayoutParams.MATCH_PARENT
+            }
+        itemView.layoutParams = params
     }
 
     companion object {

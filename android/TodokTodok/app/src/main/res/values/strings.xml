@@ -35,7 +35,10 @@
     <string name="all_relative_weeks">%d주전</string>
     <string name="all_relative_months">%d달전</string>
     <string name="all_relative_years">%d년전</string>
+
     <!--  토론 목록 페이지  -->
+    <string name="discussions_hot_discussion_rooms">인기 토론방</string>
+    <string name="discussions_activated_discussion_rooms">활성화된 토론방</string>
     <string name="content_description_add_discussion">토론방 추가 화면으로 이동합니다</string>
     <string name="content_description_book_image">도서 이미지입니다</string>
     <string name="content_description_comments_user_profile">댓글 유저 이미지 버튼</string>
@@ -64,6 +67,7 @@
 
     <!-- 토론 화면 -->
     <string name="discussion_search_bar_hint">도서 제목 또는 키워드를 입력해주세요.</string>
+    <string name="discussion_tab_title_hot">HOT</string>
     <string name="discussion_tab_title_all">전체</string>
     <string name="discussion_tab_title_my">내 토론방</string>
     <string name="discussion_no_search_result">검색결과가 없어요\n다른 검색어를 입력해 주세요 !</string>
