@@ -159,7 +159,11 @@ class SelectBookActivity : AppCompatActivity() {
         viewModel.uiEvent.observe(this) { event ->
             when (event) {
                 is SelectBookUiEvent.ShowSavedDiscussionRoom -> {
-                    val dialog = CommonDialog.newInstance(getString(R.string.draft_discussion_exist), getString(R.string.load))
+                    val dialog =
+                        CommonDialog.newInstance(
+                            getString(R.string.draft_discussion_exist),
+                            getString(R.string.load),
+                        )
                     dialog.show(supportFragmentManager, CommonDialog.TAG)
                 }
 
@@ -184,6 +188,7 @@ class SelectBookActivity : AppCompatActivity() {
                         )
                     startActivity(intent)
                     finish()
+                }
 
                 is SelectBookUiEvent.ShowSearchedBookResultIsEmpty -> {
                     if (event.keyword.isNotBlank()) {
@@ -193,7 +198,6 @@ class SelectBookActivity : AppCompatActivity() {
                         binding.tvEmptySearchResultTitle.text = strongKeyword
                         binding.tvEmptySearchResultSubTitle.setText(R.string.empty_search_result_description)
                     }
-
                 }
             }
         }
