@@ -5,7 +5,6 @@ import jakarta.persistence.PersistenceContext;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,9 +13,12 @@ public class DatabaseInitializer {
 
     @PersistenceContext
     private EntityManager em;
+    private final Clock clock;
 
-    @Autowired
-    private Clock clock;
+    public DatabaseInitializer(EntityManager em, Clock clock) {
+        this.em = em;
+        this.clock = clock;
+    }
 
     @Transactional
     public void clear() {
