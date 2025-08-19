@@ -155,9 +155,10 @@ class SelectBookActivity : AppCompatActivity() {
                     hideKeyBoard(binding.etSearchKeyword)
 
                 is SelectBookUiEvent.ShowErrorMessage -> {
-                    Snackbar
-                        .make(binding.root, getString(event.message.id), Snackbar.LENGTH_SHORT)
-                        .show()
+                    AlertSnackBar(
+                        binding.root,
+                        event.message.id,
+                    ).show()
                 }
 
                 is SelectBookUiEvent.ShowSearchedBookResultIsEmpty -> {
