@@ -14,7 +14,8 @@ import com.team.todoktodok.data.network.response.discussion.toDomain
 class DefaultDiscussionRepository(
     private val discussionRemoteDataSource: DiscussionRemoteDataSource,
 ) : DiscussionRepository {
-    override suspend fun getDiscussion(id: Long): Result<Discussion> = discussionRemoteDataSource.getDiscussion(id).map { it.toDomain() }
+    override suspend fun getDiscussion(id: Long): NetworkResult<Discussion> =
+        discussionRemoteDataSource.getDiscussion(id).map { it.toDomain() }
 
     override suspend fun getDiscussions(
         type: DiscussionFilter,
@@ -55,15 +56,12 @@ class DefaultDiscussionRepository(
         )
     }
 
-    override suspend fun deleteDiscussion(discussionId: Long) {
-        discussionRemoteDataSource.deleteDiscussion(discussionId)
-    }
+    override suspend fun deleteDiscussion(discussionId: Long) = discussionRemoteDataSource.deleteDiscussion(discussionId)
 
-    override suspend fun toggleLike(discussionId: Long): LikeStatus = discussionRemoteDataSource.toggleLike(discussionId).toStatus()
+    override suspend fun toggleLike(discussionId: Long): NetworkResult<LikeStatus> =
+        discussionRemoteDataSource.toggleLike(discussionId).map { it.toStatus() }
 
-    override suspend fun reportDiscussion(discussionId: Long) {
-        discussionRemoteDataSource.reportDiscussion(discussionId)
-    }
+    override suspend fun reportDiscussion(discussionId: Long) = discussionRemoteDataSource.reportDiscussion(discussionId)
 
     companion object {
         private const val HEADER_LOCATION: String = "location"

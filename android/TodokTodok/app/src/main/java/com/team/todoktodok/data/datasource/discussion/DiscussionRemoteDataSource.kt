@@ -7,7 +7,7 @@ import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
 import retrofit2.Response
 
 interface DiscussionRemoteDataSource {
-    suspend fun getDiscussion(id: Long): Result<DiscussionResponse>
+    suspend fun getDiscussion(id: Long): NetworkResult<DiscussionResponse>
 
     suspend fun getDiscussions(
         type: DiscussionFilter,
@@ -26,9 +26,9 @@ interface DiscussionRemoteDataSource {
         discussionOpinion: String,
     ): Response<Unit>
 
-    suspend fun deleteDiscussion(discussionId: Long)
+    suspend fun deleteDiscussion(discussionId: Long): NetworkResult<Unit>
 
-    suspend fun toggleLike(discussionId: Long): LikeAction
+    suspend fun toggleLike(discussionId: Long): NetworkResult<LikeAction>
 
-    suspend fun reportDiscussion(discussionId: Long)
+    suspend fun reportDiscussion(discussionId: Long): NetworkResult<Unit>
 }

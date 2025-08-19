@@ -69,10 +69,11 @@ class FakeDiscussionRemoteDataSource : DiscussionRemoteDataSource {
             ),
         )
 
-    override suspend fun getDiscussion(id: Long): Result<DiscussionResponse> =
-        runCatching {
-            discussionResponses.find { id == it.discussionId } ?: throw IllegalArgumentException()
-        }
+    override suspend fun getDiscussion(id: Long): NetworkResult<DiscussionResponse> =
+        NetworkResult.Success(
+            discussionResponses.find { id == it.discussionId }
+                ?: throw IllegalArgumentException(),
+        )
 
     override suspend fun getDiscussions(
         type: DiscussionFilter,
@@ -110,15 +111,15 @@ class FakeDiscussionRemoteDataSource : DiscussionRemoteDataSource {
         TODO("Not yet implemented")
     }
 
-    override suspend fun deleteDiscussion(discussionId: Long) {
+    override suspend fun deleteDiscussion(discussionId: Long): NetworkResult<Unit> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun toggleLike(discussionId: Long): LikeAction {
+    override suspend fun toggleLike(discussionId: Long): NetworkResult<LikeAction> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun reportDiscussion(discussionId: Long) {
+    override suspend fun reportDiscussion(discussionId: Long): NetworkResult<Unit> {
         TODO("Not yet implemented")
     }
 }
