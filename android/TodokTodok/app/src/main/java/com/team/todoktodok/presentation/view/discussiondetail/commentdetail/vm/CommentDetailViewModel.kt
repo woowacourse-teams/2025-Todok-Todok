@@ -18,7 +18,7 @@ import com.team.todoktodok.presentation.view.discussiondetail.model.ReplyItemUiS
 import kotlinx.coroutines.launch
 
 class CommentDetailViewModel(
-    private val savedStateHandle: SavedStateHandle,
+    savedStateHandle: SavedStateHandle,
     private val commentRepository: CommentRepository,
     private val replyRepository: ReplyRepository,
     private val tokenRepository: TokenRepository,

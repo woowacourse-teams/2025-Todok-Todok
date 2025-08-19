@@ -57,7 +57,6 @@ class ReplyCreateViewModel(
                         commentId,
                         replyContent.value ?: throw IllegalStateException(),
                     )
-                    _uiEvent.setValue(ReplyCreateUiEvent.CreateReply)
                 }
 
                 is ReplyCreateState.Update -> {
@@ -67,9 +66,9 @@ class ReplyCreateViewModel(
                         replyCreateState.replyId,
                         replyContent.value ?: throw IllegalStateException(),
                     )
-                    _uiEvent.setValue(ReplyCreateUiEvent.CreateReply)
                 }
             }
+            _uiEvent.setValue(ReplyCreateUiEvent.CreateReply)
         }
     }
 

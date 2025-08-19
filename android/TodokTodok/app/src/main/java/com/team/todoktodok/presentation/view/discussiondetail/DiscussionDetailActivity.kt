@@ -18,6 +18,9 @@ import com.team.todoktodok.databinding.ActivityDiscussionDetailBinding
 import com.team.todoktodok.databinding.MenuExternalDiscussionBinding
 import com.team.todoktodok.databinding.MenuOwnedDiscussionBinding
 import com.team.todoktodok.presentation.core.component.CommonDialog
+import com.team.todoktodok.presentation.core.ext.loadImage
+import com.team.todoktodok.presentation.core.ext.registerPositiveResultListener
+import com.team.todoktodok.presentation.core.ext.toRelativeString
 import com.team.todoktodok.presentation.view.discussion.create.CreateDiscussionRoomActivity
 import com.team.todoktodok.presentation.view.discussion.create.SerializationCreateDiscussionRoomMode.Edit
 import com.team.todoktodok.presentation.view.discussiondetail.comment.CommentBottomSheet
@@ -26,9 +29,6 @@ import com.team.todoktodok.presentation.view.discussiondetail.vm.DiscussionDetai
 import com.team.todoktodok.presentation.view.discussiondetail.vm.DiscussionDetailViewModel.Companion.KEY_DISCUSSION_ID
 import com.team.todoktodok.presentation.view.discussiondetail.vm.DiscussionDetailViewModelFactory
 import com.team.todoktodok.presentation.view.profile.ProfileActivity
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.util.Locale
 
 class DiscussionDetailActivity : AppCompatActivity() {
     private val viewModel by viewModels<DiscussionDetailViewModel> {
@@ -83,16 +83,26 @@ class DiscussionDetailActivity : AppCompatActivity() {
             ivComment.setOnClickListener {
                 viewModel.showComments()
             }
+            tvCommentCount.setOnClickListener {
+                viewModel.showComments()
+            }
+            ivUserProfile.setOnClickListener {
+                viewModel.navigateToProfile()
+            }
             tvUserNickname.setOnClickListener {
                 viewModel.navigateToProfile()
             }
-            setupLickClick()
+            setupLikeClick()
         }
     }
 
-    private fun setupLickClick() {
+    private fun setupLikeClick() {
         with(binding) {
             ivLike.setOnClickListener {
+                ivLike.isSelected = !ivLike.isSelected
+                viewModel.toggleLike()
+            }
+            tvLikeCount.setOnClickListener {
                 ivLike.isSelected = !ivLike.isSelected
                 viewModel.toggleLike()
             }
@@ -114,7 +124,9 @@ class DiscussionDetailActivity : AppCompatActivity() {
         if (isMyDiscussion) {
             val binding = MenuOwnedDiscussionBinding.inflate(layoutInflater)
             binding.tvEdit.setOnClickListener { viewModel.updateDiscussion() }
-            binding.tvDelete.setOnClickListener { viewModel.deleteDiscussion() }
+            binding.tvDelete.setOnClickListener {
+                showDeleteDialog()
+            }
             createPopUpView(binding.root)
         } else {
             val binding = MenuExternalDiscussionBinding.inflate(layoutInflater)
@@ -122,11 +134,22 @@ class DiscussionDetailActivity : AppCompatActivity() {
             createPopUpView(binding.root)
         }
 
+    private fun showDeleteDialog() {
+        val dialog =
+            CommonDialog.newInstance(
+                getString(R.string.all_discussion_delete_confirm),
+                getString(R.string.all_delete_action),
+                DISCUSSION_DELETE_DIALOG_REQUEST_KEY,
+            )
+        dialog.show(supportFragmentManager, CommonDialog.TAG)
+    }
+
     private fun showReportDialog() {
         val dialog =
             CommonDialog.newInstance(
                 getString(R.string.all_report_action),
                 getString(R.string.all_report_action),
+                DISCUSSION_REPORT_DIALOG_REQUEST_KEY,
             )
         dialog.show(supportFragmentManager, CommonDialog.TAG)
     }
@@ -145,10 +168,13 @@ class DiscussionDetailActivity : AppCompatActivity() {
                 tvBookTitle.text = value.discussion.book.title
                 tvDiscussionTitle.text = value.discussion.discussionTitle
                 tvUserNickname.text = value.discussion.writer.nickname.value
-                tvDiscussionCreateAt.text = value.discussion.createAt.formatDate()
+                ivUserProfile.loadImage("")
+                ivBookImage.loadImage(value.discussion.book.image)
+                tvDiscussionCreateAt.text =
+                    value.discussion.createAt.toRelativeString(this@DiscussionDetailActivity)
                 tvDiscussionOpinion.text = value.discussion.discussionOpinion
                 ivLike.isSelected = value.discussion.isLikedByMe
-                tvHeartCount.text = value.discussion.likeCount.toString()
+                tvLikeCount.text = value.discussion.likeCount.toString()
                 tvCommentCount.text = value.discussion.commentCount.toString()
             }
             setupPopUpDiscussionClick(value.isMyDiscussion)
@@ -199,25 +225,31 @@ class DiscussionDetailActivity : AppCompatActivity() {
     }
 
     private fun setUpDialogResultListener() {
-        supportFragmentManager.setFragmentResultListener(
-            CommonDialog.RESULT_KEY_COMMON_DIALOG,
+        supportFragmentManager.registerPositiveResultListener(
             this,
-        ) { _, bundle ->
-            val result = bundle.getBoolean(CommonDialog.RESULT_KEY_COMMON_DIALOG)
-            if (result) {
-                viewModel.reportDiscussion()
-                popupWindow?.dismiss()
-            }
+            DISCUSSION_REPORT_DIALOG_REQUEST_KEY,
+            CommonDialog.RESULT_KEY_COMMON_DIALOG,
+        ) {
+            viewModel.reportDiscussion()
+            popupWindow?.dismiss()
+        }
+
+        supportFragmentManager.registerPositiveResultListener(
+            this,
+            DISCUSSION_DELETE_DIALOG_REQUEST_KEY,
+            CommonDialog.RESULT_KEY_COMMON_DIALOG,
+        ) {
+            viewModel.deleteDiscussion()
+            popupWindow?.dismiss()
         }
     }
 
-    private fun LocalDateTime.formatDate(): String {
-        val pattern = this@DiscussionDetailActivity.getString(R.string.date_format_pattern)
-        val formatter = DateTimeFormatter.ofPattern(pattern, Locale.KOREA)
-        return format(formatter)
-    }
-
     companion object {
+        private const val DISCUSSION_DELETE_DIALOG_REQUEST_KEY =
+            "discussion_delete_dialog_request_key"
+        private const val DISCUSSION_REPORT_DIALOG_REQUEST_KEY =
+            "discussion_report_dialog_request_key"
+
         fun Intent(
             context: Context,
             discussionId: Long,

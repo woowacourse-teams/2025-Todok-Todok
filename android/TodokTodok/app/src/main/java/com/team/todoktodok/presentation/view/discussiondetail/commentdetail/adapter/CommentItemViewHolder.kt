@@ -4,9 +4,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ItemCommentDetailInformationBinding
-import com.team.todoktodok.presentation.core.ext.formatWithResource
+import com.team.todoktodok.presentation.core.ext.loadImage
+import com.team.todoktodok.presentation.core.ext.toRelativeString
 
 class CommentItemViewHolder private constructor(
     private val binding: ItemCommentDetailInformationBinding,
@@ -17,14 +17,18 @@ class CommentItemViewHolder private constructor(
         with(binding) {
             tvUserNickname.text = comment.writer.nickname.value
             tvDiscussionCreateAt.text =
-                comment.createAt.formatWithResource(
+                comment.createAt.toRelativeString(
                     root.context,
-                    R.string.date_format_pattern,
                 )
             tvCommentOpinion.text = comment.content
             ivLike.isSelected = comment.isLikedByMe
             ivLike.setOnClickListener { handler.onClickCommentLike() }
-            tvHeartCount.text = comment.likeCount.toString()
+            tvLikeCount.text = comment.likeCount.toString()
+            tvLikeCount.setOnClickListener { handler.onClickCommentLike() }
+            ivUserProfile.loadImage("")
+            ivUserProfile.setOnClickListener {
+                handler.onClickCommentUserName(comment.writer.id)
+            }
             tvUserNickname.setOnClickListener {
                 handler.onClickCommentUserName(comment.writer.id)
             }
