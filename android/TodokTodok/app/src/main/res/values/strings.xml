@@ -21,7 +21,7 @@
     <string name="all_report_comment">댓글을 신고하시겠습니까?</string>
     <string name="all_report_discussion">토론방을 신고하시겠습니까?</string>
     <string name="all_report_reply">답글을 신고하시겠습니까?</string>
-    <string name="all_already_report_discussion">이미 신고한 토론방 입니다</string>
+    <string name="all_report_discussion_success">토론방이 신고되었습니다.</string>
     <string name="all_nickname">닉네임</string>
     <string name="all_discussion_delete_confirm">토론방을 정말 삭제 하시겠습니까?</string>
     <string name="all_comment_delete_confirm">댓글을 정말 삭제 하시겠습니까?</string>
@@ -193,4 +193,9 @@
     <string name="error_create_discussion_opinion_length_over">본문은 2500자까지 입력할 수 있습니다</string>
     <string name="setting_manage_blocked_members_empty_message">차단한 사용자가 없어요</string>
 
+    <!-- 토론 관련 예외 -->
+    <string name="error_discussion_self_report_not_allowed">자기 자신의 토론방은 신고할 수 없습니다.</string>
+    <string name="error_discussion_already_reported">이미 신고한 토론방입니다.</string>
+    <string name="error_discussion_cannot_delete_with_comments">댓글이 존재하는 토론방은 삭제할 수 없습니다.</string>
+    <string name="error_discussion_only_owner_can_modify_or_delete">자기 자신의 토론방만 수정/삭제 가능합니다.</string>
 </resources>

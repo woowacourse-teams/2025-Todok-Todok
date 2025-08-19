@@ -8,7 +8,7 @@ import com.team.domain.model.exception.NetworkResult
 import com.team.domain.model.member.DiscussionRoom
 
 interface DiscussionRepository {
-    suspend fun getDiscussion(id: Long): Result<Discussion>
+    suspend fun getDiscussion(id: Long): NetworkResult<Discussion>
 
     suspend fun getDiscussions(
         type: DiscussionFilter,
@@ -26,11 +26,9 @@ interface DiscussionRepository {
         discussionRoom: DiscussionRoom,
     )
 
-    suspend fun deleteDiscussion(discussionId: Long)
+    suspend fun deleteDiscussion(discussionId: Long): NetworkResult<Unit>
 
-    suspend fun toggleLike(discussionId: Long): LikeStatus
-
-    suspend fun reportDiscussion(discussionId: Long)
+    suspend fun toggleLike(discussionId: Long): NetworkResult<LikeStatus>
 
     suspend fun saveDiscussionRoom(
         book: Book,
@@ -43,4 +41,7 @@ interface DiscussionRepository {
     suspend fun getBook(): Book
 
     suspend fun getDiscussion(): DiscussionRoom?
+
+    suspend fun reportDiscussion(discussionId: Long): NetworkResult<Unit>
+
 }

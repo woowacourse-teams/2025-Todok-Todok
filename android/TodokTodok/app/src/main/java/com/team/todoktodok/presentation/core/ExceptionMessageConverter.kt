@@ -1,5 +1,6 @@
 package com.team.todoktodok.presentation.core
 
+import com.team.domain.model.exception.DiscussionExceptions
 import com.team.domain.model.exception.TodokTodokExceptions
 import com.team.todoktodok.R
 
@@ -74,5 +75,10 @@ class ExceptionMessageConverter {
 
             TodokTodokExceptions.ReportException.AlreadyReportedException ->
                 R.string.error_already_reported
+
+            DiscussionExceptions.AlreadyReported -> R.string.error_already_reported
+            DiscussionExceptions.CannotDeleteWithComments -> R.string.error_discussion_cannot_delete_with_comments
+            DiscussionExceptions.OnlyOwnerCanModifyOrDelete -> R.string.error_discussion_only_owner_can_modify_or_delete
+            DiscussionExceptions.SelfReportNotAllowed -> R.string.error_discussion_self_report_not_allowed
         }
 }

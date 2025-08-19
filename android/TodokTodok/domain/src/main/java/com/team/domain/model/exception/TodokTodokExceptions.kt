@@ -149,6 +149,12 @@ sealed class TodokTodokExceptions : Throwable() {
                 // 차단 관련 예외
                 BlockException.AlreadyBlockedException.message -> BlockException.AlreadyBlockedException
 
+                // 토론 관련 예외
+                DiscussionExceptions.AlreadyReported.message -> DiscussionExceptions.AlreadyReported
+                DiscussionExceptions.SelfReportNotAllowed.message -> DiscussionExceptions.SelfReportNotAllowed
+                DiscussionExceptions.CannotDeleteWithComments.message -> DiscussionExceptions.CannotDeleteWithComments
+                DiscussionExceptions.OnlyOwnerCanModifyOrDelete.message -> DiscussionExceptions.OnlyOwnerCanModifyOrDelete
+
                 // 서버 메시지와 일치하지 않으면 기본 BadRequest 예외 반환
                 else -> HttpExceptions.BadRequestException
             }

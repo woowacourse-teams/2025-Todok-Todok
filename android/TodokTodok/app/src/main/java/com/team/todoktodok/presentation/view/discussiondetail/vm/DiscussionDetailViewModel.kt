@@ -1,10 +1,14 @@
 package com.team.todoktodok.presentation.view.discussiondetail.vm
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.team.domain.model.Discussion
+import com.team.domain.model.LikeStatus
+import com.team.domain.model.exception.NetworkResult
 import com.team.domain.repository.DiscussionRepository
 import com.team.domain.repository.TokenRepository
 import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
@@ -39,10 +43,12 @@ class DiscussionDetailViewModel(
 
     fun reportDiscussion() {
         viewModelScope.launch {
-            runCatching {
-                discussionRepository.reportDiscussion(discussionId)
-            }.onFailure {
-                onUiEvent(DiscussionDetailUiEvent.AlreadyReportDiscussion)
+            when (val reportDiscussion = discussionRepository.reportDiscussion(discussionId)) {
+                is NetworkResult.Failure ->
+                    onUiEvent(DiscussionDetailUiEvent.ShowErrorMessage(reportDiscussion.exception))
+
+                is NetworkResult.Success<Unit> ->
+                    onUiEvent(DiscussionDetailUiEvent.ShowReportSuccessMessage)
             }
         }
     }
@@ -59,17 +65,37 @@ class DiscussionDetailViewModel(
 
     fun deleteDiscussion() {
         viewModelScope.launch {
-            discussionRepository.deleteDiscussion(discussionId)
-            onUiEvent(DiscussionDetailUiEvent.DeleteDiscussion(discussionId))
+            when (val deleteDiscussion = discussionRepository.deleteDiscussion(discussionId)) {
+                is NetworkResult.Failure -> {
+                    Log.d("12345", deleteDiscussion.exception.toString())
+                    _uiEvent.setValue(
+                        DiscussionDetailUiEvent.ShowErrorMessage(
+                            deleteDiscussion.exception,
+                        ),
+                    )
+                }
+
+                is NetworkResult.Success<Unit> ->
+                    onUiEvent(
+                        DiscussionDetailUiEvent.DeleteDiscussion(
+                            discussionId,
+                        ),
+                    )
+            }
         }
     }
 
     fun toggleLike() {
         viewModelScope.launch {
-            discussionRepository.toggleLike(
-                discussionId,
-            )
-            loadDiscussionRoom()
+            when (
+                val likeStatus = discussionRepository.toggleLike(discussionId)
+            ) {
+                is NetworkResult.Failure -> {
+                    _uiEvent.setValue(DiscussionDetailUiEvent.ShowErrorMessage(likeStatus.exception))
+                }
+
+                is NetworkResult.Success<LikeStatus> -> loadDiscussionRoom()
+            }
         }
     }
 
@@ -83,12 +109,16 @@ class DiscussionDetailViewModel(
     }
 
     private suspend fun loadDiscussionRoom() {
-        val discussion = discussionRepository.getDiscussion(discussionId).getOrThrow()
-        _discussion.value =
-            DiscussionItemUiState(
-                discussion,
-                discussion.writer.id == tokenRepository.getMemberId(),
-            )
+        when (val discussion = discussionRepository.getDiscussion(discussionId)) {
+            is NetworkResult.Failure -> DiscussionDetailUiEvent.ShowErrorMessage(discussion.exception)
+            is NetworkResult.Success<Discussion> -> {
+                _discussion.value =
+                    DiscussionItemUiState(
+                        discussion.data,
+                        discussion.data.writer.id == tokenRepository.getMemberId(),
+                    )
+            }
+        }
     }
 
     private fun onUiEvent(uiEvent: DiscussionDetailUiEvent) {
