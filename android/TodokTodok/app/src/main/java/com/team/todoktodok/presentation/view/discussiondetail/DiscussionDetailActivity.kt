@@ -17,6 +17,8 @@ import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivityDiscussionDetailBinding
 import com.team.todoktodok.databinding.MenuExternalDiscussionBinding
 import com.team.todoktodok.databinding.MenuOwnedDiscussionBinding
+import com.team.todoktodok.presentation.core.ExceptionMessageConverter
+import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
 import com.team.todoktodok.presentation.core.component.CommonDialog
 import com.team.todoktodok.presentation.core.ext.loadImage
 import com.team.todoktodok.presentation.core.ext.registerPositiveResultListener
@@ -45,6 +47,10 @@ class DiscussionDetailActivity : AppCompatActivity() {
     }
 
     private var popupWindow: PopupWindow? = null
+
+    private val messageConverter: ExceptionMessageConverter by lazy {
+        ExceptionMessageConverter()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -99,11 +105,9 @@ class DiscussionDetailActivity : AppCompatActivity() {
     private fun setupLikeClick() {
         with(binding) {
             ivLike.setOnClickListener {
-                ivLike.isSelected = !ivLike.isSelected
                 viewModel.toggleLike()
             }
             tvLikeCount.setOnClickListener {
-                ivLike.isSelected = !ivLike.isSelected
                 viewModel.toggleLike()
             }
         }
@@ -188,7 +192,6 @@ class DiscussionDetailActivity : AppCompatActivity() {
         when (discussionDetailUiEvent) {
             is DiscussionDetailUiEvent.ShowComments -> showComments(discussionDetailUiEvent.discussionId)
             is DiscussionDetailUiEvent.DeleteDiscussion -> navigateUp()
-            is DiscussionDetailUiEvent.AlreadyReportDiscussion -> showToast(getString(R.string.all_already_report_discussion))
             is DiscussionDetailUiEvent.UpdateDiscussion -> {
                 val discussionId = discussionDetailUiEvent.discussionId
                 val intent =
@@ -203,6 +206,16 @@ class DiscussionDetailActivity : AppCompatActivity() {
             is DiscussionDetailUiEvent.NavigateToProfile -> {
                 navigateToProfile(memberId = discussionDetailUiEvent.userId)
             }
+
+            is DiscussionDetailUiEvent.ShowErrorMessage ->
+                AlertSnackBar(
+                    binding.root,
+                    messageConverter(
+                        discussionDetailUiEvent.exceptions,
+                    ),
+                ).show()
+
+            DiscussionDetailUiEvent.ShowReportSuccessMessage -> showToast(getString(R.string.all_report_discussion_success))
         }
     }
 
