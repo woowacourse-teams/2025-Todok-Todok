@@ -161,6 +161,14 @@ sealed class TodokTodokExceptions : Throwable() {
                 BooksExceptions.EmptyKeywordException.message -> BooksExceptions.EmptyKeywordException
                 BooksExceptions.EmptyISBNException.message -> BooksExceptions.EmptyISBNException
 
+                // 댓글 관련 예외
+                CommentExceptions.EmptyContent.message -> CommentExceptions.EmptyContent
+                CommentExceptions.InvalidContentLength.message -> CommentExceptions.InvalidContentLength
+                CommentExceptions.SelfReportNotAllowed.message -> CommentExceptions.SelfReportNotAllowed
+                CommentExceptions.AlreadyReported.message -> CommentExceptions.AlreadyReported
+                CommentExceptions.NotBelongToDiscussion.message -> CommentExceptions.NotBelongToDiscussion
+                CommentExceptions.CannotDeleteWithReplies.message -> CommentExceptions.CannotDeleteWithReplies
+                CommentExceptions.OnlyOwnerCanModifyOrDelete.message -> CommentExceptions.OnlyOwnerCanModifyOrDelete
                 // 서버 메시지와 일치하지 않으면 기본 BadRequest 예외 반환
                 else -> HttpExceptions.BadRequestException
             }
