@@ -446,7 +446,7 @@ public interface DiscussionApiDocs {
                     description = "페이지 커서",
                     content = @Content(
                             schema = @Schema(implementation = String.class),
-                            examples = @ExampleObject(value = "eyJsYXN0Q29tbWVudGVkQXQiOiIyMDI1LTA3LTI4VDIxOjA4OjUwWiIsImRpc2N1c3Npb25JZCI6NH0=")
+                            examples = @ExampleObject(value = "NA==")
                     )
             ) final String cursor
     );
