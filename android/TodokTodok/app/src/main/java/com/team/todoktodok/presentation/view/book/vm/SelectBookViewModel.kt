@@ -38,7 +38,7 @@ class SelectBookViewModel(
     fun getBook() {
         viewModelScope.launch {
             val book = async { discussionRepository.getBook() }
-            _uiEvent.setValue(SelectBookUiEvent.NavigateToCreateDiscussionRoom(book.await()))
+            _uiEvent.setValue(SelectBookUiEvent.NavigateToDraftDiscussionRoom(book.await()))
         }
     }
 

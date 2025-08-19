@@ -11,6 +11,11 @@ sealed class SelectBookUiEvent {
         val book: Book,
     ) : SelectBookUiEvent()
 
+    data class NavigateToDraftDiscussionRoom(
+        val book: Book,
+    ) : SelectBookUiEvent()
+
+
     data class ShowErrorMessage(
         val message: SelectBookErrorType,
     ) : SelectBookUiEvent()

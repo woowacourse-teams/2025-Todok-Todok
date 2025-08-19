@@ -172,6 +172,17 @@ class SelectBookActivity : AppCompatActivity() {
                         .make(binding.root, getString(event.message.id), Snackbar.LENGTH_SHORT)
                         .show()
                 }
+
+                is SelectBookUiEvent.NavigateToDraftDiscussionRoom -> {
+                    val serializationBook: SerializationBook = event.book.toSerialization()
+                    val intent =
+                        CreateDiscussionRoomActivity.Intent(
+                            this,
+                            SerializationCreateDiscussionRoomMode.Draft(serializationBook),
+                        )
+                    startActivity(intent)
+                    finish()
+                }
             }
         }
     }

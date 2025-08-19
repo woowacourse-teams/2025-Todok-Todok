@@ -83,7 +83,7 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
             val confirmed = bundle.getBoolean(CommonDialog.RESULT_KEY_COMMON_DIALOG)
             if (confirmed) {
                 viewModel.saveDraft()
-                   finish()
+                finish()
             } else {
                 finish()
             }
@@ -128,13 +128,14 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
                 setOnClickListener {
                     viewModel.editDiscussionRoom()
                 }
-            etDiscussionRoomTitle.setText(viewModel.uiState.value?.title)
-            etDiscussionRoomOpinion.setText(viewModel.uiState.value?.opinion)
-            btnCreate.setOnClickListener {
-                viewModel.editDiscussionRoom()
+                etDiscussionRoomTitle.setText(viewModel.uiState.value?.title)
+                etDiscussionRoomOpinion.setText(viewModel.uiState.value?.opinion)
+                btnCreate.setOnClickListener {
+                    viewModel.editDiscussionRoom()
+                }
             }
         }
-    }}
+    }
 
     private fun navigateToSelectBook() {
         val intent = SelectBookActivity.Intent(this@CreateDiscussionRoomActivity)
@@ -152,14 +153,17 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
     }
 
     private fun observeTitle(title: String, binding: ActivityCreateDiscussionRoomBinding) {
-        if ( binding.etDiscussionRoomTitle.text.toString() != title) {
-            binding.etDiscussionRoomTitle.setText(title)}
+        if (binding.etDiscussionRoomTitle.text.toString() != title) {
+            binding.etDiscussionRoomTitle.setText(title)
+        }
     }
 
     private fun observeOpinion(opinion: String, binding: ActivityCreateDiscussionRoomBinding) {
-        if ( binding.etDiscussionRoomOpinion.text.toString() != opinion) {
-        binding.etDiscussionRoomOpinion.setText(opinion)}
+        if (binding.etDiscussionRoomOpinion.text.toString() != opinion) {
+            binding.etDiscussionRoomOpinion.setText(opinion)
+        }
     }
+
     private fun observeIsCreate(isCreate: Boolean, binding: ActivityCreateDiscussionRoomBinding) {
         if (isCreate) {
             binding.btnCreate.isEnabled = true
@@ -169,9 +173,11 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
                     R.color.green_1A,
                 ),
             )
-            binding.btnBack.setOnClickListener {
-                val dialog = CommonDialog.newInstance("작성중인 내용을 임시저장하시겠습니까?", "저장")
-                dialog.show(supportFragmentManager, CommonDialog.TAG)
+            if (mode is SerializationCreateDiscussionRoomMode.Create) {
+                binding.btnBack.setOnClickListener {
+                    val dialog = CommonDialog.newInstance(getString(R.string.draft_discussion_exist), getString(R.string.load))
+                    dialog.show(supportFragmentManager, CommonDialog.TAG)
+                }
             }
         }
     }
@@ -236,8 +242,12 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
                         putExtra(EXTRA_MODE, mode)
                         putExtra(EXTRA_DISCUSSION_ROOM_ID, mode.discussionRoomId)
                     }
+
                 is SerializationCreateDiscussionRoomMode.Draft ->
-                    intent.putExtra(EXTRA_MODE, mode)
+                    intent.apply {
+                        putExtra(EXTRA_MODE, mode)
+                        putExtra(EXTRA_SELECTED_BOOK, mode.selectedBook)
+                    }
             }
             return intent
         }
