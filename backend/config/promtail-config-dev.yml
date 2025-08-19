@@ -24,6 +24,7 @@ scrape_configs:
           # 수집되는 로그에 추가될 메타데이터(레이블)를 정의합니다.
           # 예시 : job=varlogs
           job: varlogs
+          env: dev
           # 수집할 로그 파일의 경로를 지정합니다.
           __path__: /log/**/*.log
 
