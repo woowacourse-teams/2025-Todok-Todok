@@ -12,7 +12,7 @@ services:
     ports:
       - "80:8080"
     volumes:
-      - ./log:/log   # 로그 공유
+      - ../log:/log   # 로그 공유
     environment:
       - SPRING_PROFILES_ACTIVE=dev
     restart: always
