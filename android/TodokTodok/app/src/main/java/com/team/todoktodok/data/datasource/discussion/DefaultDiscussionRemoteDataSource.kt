@@ -2,7 +2,6 @@ package com.team.todoktodok.data.datasource.discussion
 
 import com.team.domain.model.DiscussionFilter
 import com.team.domain.model.exception.NetworkResult
-import com.team.domain.model.exception.TodokTodokExceptions
 import com.team.domain.model.exception.toDomain
 import com.team.todoktodok.data.core.ext.mapToggleLikeResponse
 import com.team.todoktodok.data.network.model.LikeAction
@@ -11,8 +10,6 @@ import com.team.todoktodok.data.network.request.EditDiscussionRoomRequest
 import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
 import com.team.todoktodok.data.network.service.DiscussionService
 import retrofit2.Response
-import java.net.HttpURLConnection.HTTP_CREATED
-import java.net.HttpURLConnection.HTTP_NO_CONTENT
 
 class DefaultDiscussionRemoteDataSource(
     private val discussionService: DiscussionService,
