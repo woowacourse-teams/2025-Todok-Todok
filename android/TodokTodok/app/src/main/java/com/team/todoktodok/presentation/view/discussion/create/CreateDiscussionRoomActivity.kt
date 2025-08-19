@@ -212,13 +212,13 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
                     if (event.possible) {
                         val dialog =
                             CommonDialog.newInstance(
-                                "작성중인 글을 취소하시겠습니까? 취소하기 선택시, 작성된 글은 저장되지 않습니다.",
-                                "임시저장",
+                                getString(R.string.draft_message),
+                                getString(R.string.draft),
                             )
                         dialog.show(supportFragmentManager, CommonDialog.TAG)
                         return@observe
                     }
-                    val dialog = CommonDialog.newInstance("이미 저장되어있는 파일이 있습니다", "덮어쓰기")
+                    val dialog = CommonDialog.newInstance(getString(R.string.no_exist_file), getString(R.string.overload))
                     dialog.show(supportFragmentManager, CommonDialog.TAG)
                 }
 
