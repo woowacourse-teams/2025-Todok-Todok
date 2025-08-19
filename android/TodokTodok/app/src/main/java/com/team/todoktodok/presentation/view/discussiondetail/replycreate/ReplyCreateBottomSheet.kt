@@ -15,6 +15,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentCommentCreateBottomSheetBinding
+import com.team.todoktodok.presentation.core.ExceptionMessageConverter
+import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
 import com.team.todoktodok.presentation.view.discussiondetail.BottomSheetVisibilityListener
 import com.team.todoktodok.presentation.view.discussiondetail.commentdetail.vm.CommentDetailViewModel
 import com.team.todoktodok.presentation.view.discussiondetail.replycreate.vm.ReplyCreateViewModel
@@ -34,6 +36,10 @@ class ReplyCreateBottomSheet : BottomSheetDialogFragment(R.layout.fragment_comme
 
     fun setVisibilityListener(listener: BottomSheetVisibilityListener) {
         visibilityListener = listener
+    }
+
+    private val messageConverter: ExceptionMessageConverter by lazy {
+        ExceptionMessageConverter()
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
@@ -90,14 +96,17 @@ class ReplyCreateBottomSheet : BottomSheetDialogFragment(R.layout.fragment_comme
 
     private fun setupObserve(binding: FragmentCommentCreateBottomSheetBinding) {
         viewModel.uiEvent.observe(viewLifecycleOwner) { value ->
-            handleUiEvent(value)
+            handleUiEvent(value, binding)
         }
         viewModel.replyContent.observe(viewLifecycleOwner) { value ->
             binding.ivAddComment.isEnabled = value.isNotBlank()
         }
     }
 
-    private fun handleUiEvent(uiEvent: ReplyCreateUiEvent) {
+    private fun handleUiEvent(
+        uiEvent: ReplyCreateUiEvent,
+        binding: FragmentCommentCreateBottomSheetBinding,
+    ) {
         when (uiEvent) {
             ReplyCreateUiEvent.CreateReply -> {
                 setFragmentResult(
@@ -110,6 +119,12 @@ class ReplyCreateBottomSheet : BottomSheetDialogFragment(R.layout.fragment_comme
             is ReplyCreateUiEvent.SaveContent -> {
                 commentDetailViewModel.updateContent(uiEvent.content)
             }
+
+            is ReplyCreateUiEvent.ShowErrorMessage ->
+                AlertSnackBar(
+                    binding.root,
+                    messageConverter(uiEvent.exception),
+                )
         }
     }
 

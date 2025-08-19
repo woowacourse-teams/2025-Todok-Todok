@@ -13,7 +13,6 @@ import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
 import com.team.todoktodok.presentation.core.event.SingleLiveData
 import com.team.todoktodok.presentation.view.discussiondetail.commentdetail.CommentDetailUiEvent
 import com.team.todoktodok.presentation.view.discussiondetail.commentdetail.CommentDetailUiState
-import com.team.todoktodok.presentation.view.discussiondetail.commentdetail.CommentDetailUiState.Companion.INIT_COMMENT
 import com.team.todoktodok.presentation.view.discussiondetail.model.CommentItemUiState
 import com.team.todoktodok.presentation.view.discussiondetail.model.ReplyItemUiState
 import kotlinx.coroutines.launch
@@ -30,7 +29,7 @@ class CommentDetailViewModel(
     val commentId =
         savedStateHandle.get<Long>(KEY_COMMENT_ID) ?: throw IllegalStateException()
 
-    private val _uiState = MutableLiveData<CommentDetailUiState>()
+    private val _uiState = MutableLiveData(CommentDetailUiState())
     val uiState: LiveData<CommentDetailUiState> = _uiState
 
     private val _uiEvent = MutableSingleLiveData<CommentDetailUiEvent>()
@@ -100,7 +99,8 @@ class CommentDetailViewModel(
 
     fun reportReply(replyId: Long) {
         viewModelScope.launch {
-            replyRepository.report(discussionId, commentId, replyId)
+            handleResult(replyRepository.report(discussionId, commentId, replyId)) {
+            }
         }
     }
 
@@ -114,8 +114,11 @@ class CommentDetailViewModel(
 
     fun toggleReplyLike(replyId: Long) {
         viewModelScope.launch {
-            replyRepository.toggleLike(discussionId, commentId, replyId)
-            loadReplies()
+            handleResult(
+                replyRepository.toggleLike(discussionId, commentId, replyId),
+            ) {
+                loadReplies()
+            }
         }
     }
 
@@ -143,48 +146,31 @@ class CommentDetailViewModel(
             commentRepository.getComment(discussionId, commentId),
         ) { comment ->
             val isMyComment = comment.writer.id == tokenRepository.getMemberId()
-            if (currentUiState == EMPTY_UI_STATE) {
-                _uiState.value =
-                    CommentDetailUiState(
+            _uiState.value =
+                currentUiState?.copy(
+                    comment =
                         CommentItemUiState(
                             comment,
                             isMyComment,
                         ),
-                    )
-            } else {
-                _uiState.value =
-                    currentUiState.copy(
-                        comment =
-                            CommentItemUiState(
-                                comment,
-                                isMyComment,
-                            ),
-                    )
-            }
+                )
         }
     }
 
     private suspend fun loadReplies() {
         val currentUiState = _uiState.value
         val memberId = tokenRepository.getMemberId()
-        val replies =
-            replyRepository.getReplies(discussionId, commentId).map { reply ->
-                ReplyItemUiState(
-                    reply,
-                    reply.user.id == memberId,
-                )
-            }
-        if (currentUiState == EMPTY_UI_STATE) {
-            _uiState.value =
-                CommentDetailUiState(
-                    comment = INIT_COMMENT,
-                    replies = replies,
-                )
-        } else {
-            _uiState.value =
-                currentUiState.copy(
-                    replies = replies,
-                )
+        handleResult(
+            replyRepository.getReplies(discussionId, commentId),
+        ) { replies ->
+            val replyItems =
+                replies.map { reply ->
+                    ReplyItemUiState(
+                        reply,
+                        reply.user.id == memberId,
+                    )
+                }
+            _uiState.value = currentUiState?.copy(replies = replyItems)
         }
     }
 
@@ -205,7 +191,5 @@ class CommentDetailViewModel(
     companion object {
         const val KEY_DISCUSSION_ID = "discussion_id"
         const val KEY_COMMENT_ID = "comment_id"
-
-        private val EMPTY_UI_STATE = null
     }
 }
