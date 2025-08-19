@@ -19,6 +19,8 @@ import com.team.domain.model.Book
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivityCreateDiscussionRoomBinding
+import com.team.todoktodok.presentation.core.ExceptionMessageConverter
+import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
 import com.team.todoktodok.presentation.core.ext.getParcelableCompat
 import com.team.todoktodok.presentation.core.ext.loadImage
 import com.team.todoktodok.presentation.view.book.SelectBookActivity
@@ -180,6 +182,11 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
                             event.error,
                             Toast.LENGTH_LONG,
                         ).show()
+
+                is CreateDiscussionUiEvent.ShowNetworkErrorMessage -> {
+                    val messageConverter = ExceptionMessageConverter()
+                    AlertSnackBar(binding.root, messageConverter(event.exception)).show()
+                }
             }
         }
     }
