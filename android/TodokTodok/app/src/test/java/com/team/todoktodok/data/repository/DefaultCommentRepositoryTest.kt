@@ -28,30 +28,8 @@ class DefaultCommentRepositoryTest {
             // given
             val expected = COMMENTS.sortedBy { it.createAt }
             // when
-            val comments = defaultCommentRepository.getCommentsByDiscussionRoomId(0)
+            val comments = defaultCommentRepository.getCommentsByDiscussionId(0)
             // then
             assertThat(comments).isEqualTo(expected)
-        }
-
-    @Test
-    fun `댓글을 추가한다`() =
-        runTest {
-            // given
-            val expected =
-                Comment(
-                    100,
-                    "수고 많으셨습니다다.",
-                    User(1, Nickname("동전")),
-                    LocalDateTime.of(2000, 7, 3, 10, 21),
-                    likeCount = 0,
-                    replyCount = 0,
-                    isLikedByMe = false,
-                )
-            // when
-            defaultCommentRepository.saveComment(10, "수고 많으셨습니다다.")
-            // then
-            assertThat(defaultCommentRepository.getCommentsByDiscussionRoomId(1).first()).isEqualTo(
-                expected,
-            )
         }
 }

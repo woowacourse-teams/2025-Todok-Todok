@@ -2,6 +2,7 @@ package com.team.todoktodok.fake
 
 import com.team.domain.model.Comment
 import com.team.domain.model.LikeStatus
+import com.team.domain.model.exception.NetworkResult
 import com.team.domain.model.member.Nickname
 import com.team.domain.model.member.User
 import com.team.domain.repository.CommentRepository
@@ -14,16 +15,16 @@ class FakeCommentRepository : CommentRepository {
     override suspend fun getComment(
         discussionId: Long,
         commentId: Long,
-    ): Comment {
+    ): NetworkResult<Comment> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getCommentsByDiscussionRoomId(id: Long): List<Comment> = comments
+    override suspend fun getCommentsByDiscussionId(id: Long): NetworkResult<List<Comment>> = NetworkResult.Success(comments)
 
     override suspend fun saveComment(
         discussionId: Long,
         content: String,
-    ) {
+    ): NetworkResult<Unit> {
         comments.add(
             Comment(
                 6,
@@ -35,12 +36,13 @@ class FakeCommentRepository : CommentRepository {
                 isLikedByMe = false,
             ),
         )
+        return NetworkResult.Success(Unit)
     }
 
     override suspend fun toggleLike(
         discussionId: Long,
         commentId: Long,
-    ): LikeStatus {
+    ): NetworkResult<LikeStatus> {
         TODO("Not yet implemented")
     }
 
@@ -48,21 +50,21 @@ class FakeCommentRepository : CommentRepository {
         discussionId: Long,
         commentId: Long,
         content: String,
-    ) {
+    ): NetworkResult<Unit> {
         TODO("Not yet implemented")
     }
 
     override suspend fun deleteComment(
         discussionId: Long,
         commentId: Long,
-    ) {
+    ): NetworkResult<Unit> {
         TODO("Not yet implemented")
     }
 
     override suspend fun report(
         discussionId: Long,
         commentId: Long,
-    ) {
+    ): NetworkResult<Unit> {
         TODO("Not yet implemented")
     }
 

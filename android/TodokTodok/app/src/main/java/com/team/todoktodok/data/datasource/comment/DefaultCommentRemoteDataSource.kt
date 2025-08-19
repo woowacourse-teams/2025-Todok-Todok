@@ -1,5 +1,8 @@
 package com.team.todoktodok.data.datasource.comment
 
+import com.team.domain.model.exception.NetworkResult
+import com.team.domain.model.exception.toDomain
+import com.team.todoktodok.data.core.ext.mapToggleLikeResponse
 import com.team.todoktodok.data.network.model.LikeAction
 import com.team.todoktodok.data.network.request.CommentRequest
 import com.team.todoktodok.data.network.response.comment.CommentResponse
@@ -11,46 +14,38 @@ class DefaultCommentRemoteDataSource(
     override suspend fun fetchComment(
         discussionId: Long,
         commentId: Long,
-    ): CommentResponse = commentService.fetchComment(discussionId, commentId)
+    ): NetworkResult<CommentResponse> = commentService.fetchComment(discussionId, commentId)
 
-    override suspend fun fetchCommentsByDiscussionRoomId(id: Long): List<CommentResponse> = commentService.fetchComments(id)
+    override suspend fun fetchCommentsByDiscussionId(id: Long): NetworkResult<List<CommentResponse>> = commentService.fetchComments(id)
 
     override suspend fun saveComment(
         discussionId: Long,
         comment: CommentRequest,
-    ) {
-        commentService.saveComment(discussionId, comment)
-    }
+    ) = commentService.saveComment(discussionId, comment)
 
     override suspend fun toggleLike(
         discussionId: Long,
         commentId: Long,
-    ): LikeAction =
-        when (commentService.toggleLike(discussionId, commentId).code()) {
-            201 -> LikeAction.LIKE
-            204 -> LikeAction.UNLIKE
-            else -> throw IllegalStateException()
+    ): NetworkResult<LikeAction> =
+        runCatching {
+            commentService.toggleLike(discussionId, commentId).mapToggleLikeResponse()
+        }.getOrElse {
+            NetworkResult.Failure(it.toDomain())
         }
 
     override suspend fun updateComment(
         discussionId: Long,
         commentId: Long,
         comment: String,
-    ) {
-        commentService.updateComment(discussionId, commentId, CommentRequest(comment))
-    }
+    ) = commentService.updateComment(discussionId, commentId, CommentRequest(comment))
 
     override suspend fun deleteComment(
         discussionId: Long,
         commentId: Long,
-    ) {
-        commentService.deleteComment(discussionId, commentId)
-    }
+    ) = commentService.deleteComment(discussionId, commentId)
 
     override suspend fun report(
         discussionId: Long,
         commentId: Long,
-    ) {
-        commentService.report(discussionId, commentId)
-    }
+    ) = commentService.report(discussionId, commentId)
 }

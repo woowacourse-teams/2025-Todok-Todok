@@ -97,7 +97,7 @@ class CommentsViewModel(
         _uiState.value =
             _uiState.value?.copy(
                 commentRepository
-                    .getCommentsByDiscussionRoomId(discussionId)
+                    .getCommentsByDiscussionId(discussionId)
                     .map {
                         CommentItemUiState(
                             it,
