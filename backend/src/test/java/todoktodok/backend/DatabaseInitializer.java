@@ -209,8 +209,6 @@ public class DatabaseInitializer {
             final Long discussionId,
             LocalDateTime createdAt
     ) {
-        final LocalDateTime now = LocalDateTime.now(clock);
-
         em.createNativeQuery(
                         """
                                 INSERT INTO COMMENT (content, member_id, discussion_id, created_at, modified_at)
@@ -222,7 +220,7 @@ public class DatabaseInitializer {
                 .setParameter("memberId", memberId)
                 .setParameter("discussionId", discussionId)
                 .setParameter("createdAt", createdAt)
-                .setParameter("modifiedAt", now)
+                .setParameter("modifiedAt", createdAt)
                 .executeUpdate();
     }
 
