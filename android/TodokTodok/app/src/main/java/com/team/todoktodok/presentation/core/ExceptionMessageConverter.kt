@@ -1,6 +1,5 @@
 package com.team.todoktodok.presentation.core
 
-import com.team.domain.model.exception.BooksExceptions
 import com.team.domain.model.exception.DiscussionExceptions
 import com.team.domain.model.exception.TodokTodokExceptions
 import com.team.todoktodok.R
@@ -86,5 +85,13 @@ class ExceptionMessageConverter {
 
             BooksExceptions.EmptyKeywordException -> R.string.error_empty_keyword
             BooksExceptions.EmptyISBNException -> R.string.error_empty_isbn
+
+            CommentExceptions.AlreadyReported -> R.string.error_comment_already_reported
+            CommentExceptions.CannotDeleteWithReplies -> R.string.error_comment_cannot_delete_with_replies
+            CommentExceptions.EmptyContent -> R.string.error_comment_empty_content
+            CommentExceptions.InvalidContentLength -> R.string.error_comment_invalid_content_length
+            CommentExceptions.NotBelongToDiscussion -> R.string.error_comment_not_belong_to_discussion
+            CommentExceptions.OnlyOwnerCanModifyOrDelete -> R.string.error_comment_only_owner_can_modify_or_delete
+            CommentExceptions.SelfReportNotAllowed -> R.string.error_comment_self_report_not_allowed
         }
 }
