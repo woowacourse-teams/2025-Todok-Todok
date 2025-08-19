@@ -1,5 +1,6 @@
 package todoktodok.backend.comment.domain.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -27,6 +28,23 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
         GROUP BY d.id
     """)
     List<DiscussionCommentCountDto> findCommentCountsByDiscussionIds(@Param("discussionIds") final List<Long> discussionIds);
+
+    @Query("""
+        SELECT new todoktodok.backend.discussion.application.service.query.DiscussionCommentCountDto(
+            d.id,
+            COUNT(DISTINCT c.id),
+            COUNT(DISTINCT r.id)
+        )
+        FROM Discussion d
+        LEFT JOIN Comment c ON c.discussion = d AND c.createdAt >= :sinceDate
+        LEFT JOIN Reply r ON r.comment = c AND r.createdAt >= :sinceDate
+        WHERE d.id IN :discussionIds
+        GROUP BY d.id
+    """)
+    List<DiscussionCommentCountDto> findCommentCountsByDiscussionIdsSinceDate(
+            @Param("discussionIds") final List<Long> discussionIds,
+            @Param("sinceDate") final LocalDateTime sinceDate
+    );
 
     @Query("""
         SELECT COUNT(c)
