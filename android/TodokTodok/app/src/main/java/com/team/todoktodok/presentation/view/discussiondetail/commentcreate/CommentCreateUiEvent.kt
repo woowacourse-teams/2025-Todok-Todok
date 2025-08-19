@@ -1,5 +1,7 @@
 package com.team.todoktodok.presentation.view.discussiondetail.commentcreate
 
+import com.team.domain.model.exception.TodokTodokExceptions
+
 sealed interface CommentCreateUiEvent {
     data class InitState(
         val content: String,
@@ -9,5 +11,9 @@ sealed interface CommentCreateUiEvent {
 
     data class OnCreateDismiss(
         val content: String,
+    ) : CommentCreateUiEvent
+
+    data class ShowError(
+        val exception: TodokTodokExceptions,
     ) : CommentCreateUiEvent
 }

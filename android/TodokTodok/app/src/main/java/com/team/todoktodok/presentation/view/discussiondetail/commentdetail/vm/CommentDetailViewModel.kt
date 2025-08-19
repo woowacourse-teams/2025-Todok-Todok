@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.team.domain.model.exception.NetworkResult
 import com.team.domain.repository.CommentRepository
 import com.team.domain.repository.ReplyRepository
 import com.team.domain.repository.TokenRepository
@@ -89,8 +90,11 @@ class CommentDetailViewModel(
 
     fun deleteComment() {
         viewModelScope.launch {
-            commentRepository.deleteComment(discussionId, commentId)
-            _uiEvent.setValue(CommentDetailUiEvent.DeleteComment)
+            handleResult(
+                commentRepository.deleteComment(discussionId, commentId),
+            ) {
+                _uiEvent.setValue(CommentDetailUiEvent.DeleteComment)
+            }
         }
     }
 
@@ -102,7 +106,9 @@ class CommentDetailViewModel(
 
     fun reportComment() {
         viewModelScope.launch {
-            commentRepository.report(discussionId, commentId)
+            handleResult(
+                commentRepository.report(discussionId, commentId),
+            ) {}
         }
     }
 
@@ -115,9 +121,10 @@ class CommentDetailViewModel(
 
     fun toggleCommentLike() {
         viewModelScope.launch {
-            commentRepository.toggleLike(discussionId, commentId)
-            loadComment()
-            _uiEvent.setValue(CommentDetailUiEvent.ToggleCommentLike)
+            handleResult(commentRepository.toggleLike(discussionId, commentId)) {
+                loadComment()
+                _uiEvent.setValue(CommentDetailUiEvent.ToggleCommentLike)
+            }
         }
     }
 
@@ -132,26 +139,28 @@ class CommentDetailViewModel(
 
     private suspend fun loadComment() {
         val currentUiState = _uiState.value
-        val comment = commentRepository.getComment(discussionId, commentId)
-        val isMyComment = comment.writer.id == tokenRepository.getMemberId()
-        if (currentUiState == EMPTY_UI_STATE) {
-            val comment = commentRepository.getComment(discussionId, commentId)
-            _uiState.value =
-                CommentDetailUiState(
-                    CommentItemUiState(
-                        comment,
-                        isMyComment,
-                    ),
-                )
-        } else {
-            _uiState.value =
-                currentUiState.copy(
-                    comment =
+        handleResult(
+            commentRepository.getComment(discussionId, commentId),
+        ) { comment ->
+            val isMyComment = comment.writer.id == tokenRepository.getMemberId()
+            if (currentUiState == EMPTY_UI_STATE) {
+                _uiState.value =
+                    CommentDetailUiState(
                         CommentItemUiState(
-                            commentRepository.getComment(discussionId, commentId),
+                            comment,
                             isMyComment,
                         ),
-                )
+                    )
+            } else {
+                _uiState.value =
+                    currentUiState.copy(
+                        comment =
+                            CommentItemUiState(
+                                comment,
+                                isMyComment,
+                            ),
+                    )
+            }
         }
     }
 
@@ -176,6 +185,20 @@ class CommentDetailViewModel(
                 currentUiState.copy(
                     replies = replies,
                 )
+        }
+    }
+
+    private fun onUiEvent(event: CommentDetailUiEvent) {
+        _uiEvent.setValue(event)
+    }
+
+    private inline fun <T> handleResult(
+        result: NetworkResult<T>,
+        onSuccess: (T) -> Unit,
+    ) {
+        when (result) {
+            is NetworkResult.Success -> onSuccess(result.data)
+            is NetworkResult.Failure -> onUiEvent(CommentDetailUiEvent.ShowError(result.exception))
         }
     }
 

@@ -1,5 +1,7 @@
 package com.team.todoktodok.presentation.view.discussiondetail.commentdetail
 
+import com.team.domain.model.exception.TodokTodokExceptions
+
 sealed interface CommentDetailUiEvent {
     data class ShowCommentUpdate(
         val discussionId: Long,
@@ -29,4 +31,8 @@ sealed interface CommentDetailUiEvent {
     data object ToggleCommentLike : CommentDetailUiEvent
 
     data object CommentUpdate : CommentDetailUiEvent
+
+    data class ShowError(
+        val exception: TodokTodokExceptions,
+    ) : CommentDetailUiEvent
 }

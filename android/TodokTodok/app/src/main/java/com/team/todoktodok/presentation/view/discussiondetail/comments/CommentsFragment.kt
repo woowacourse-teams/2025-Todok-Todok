@@ -19,6 +19,8 @@ import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentCommentsBinding
 import com.team.todoktodok.databinding.MenuExternalDiscussionBinding
 import com.team.todoktodok.databinding.MenuOwnedDiscussionBinding
+import com.team.todoktodok.presentation.core.ExceptionMessageConverter
+import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
 import com.team.todoktodok.presentation.core.component.CommonDialog
 import com.team.todoktodok.presentation.core.ext.registerPositiveResultListener
 import com.team.todoktodok.presentation.core.ext.registerResultListener
@@ -66,6 +68,10 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
     }
 
     private var popupWindow: PopupWindow? = null
+
+    private val messageConverter by lazy {
+        ExceptionMessageConverter()
+    }
 
     override fun onViewCreated(
         view: View,
@@ -160,6 +166,11 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
             }
 
             CommentsUiEvent.DeleteComment -> sharedViewModel.reloadDiscussion()
+            is CommentsUiEvent.ShowError ->
+                AlertSnackBar(
+                    binding.root,
+                    messageConverter(commentsUiEvent.exception),
+                ).show()
         }
     }
 

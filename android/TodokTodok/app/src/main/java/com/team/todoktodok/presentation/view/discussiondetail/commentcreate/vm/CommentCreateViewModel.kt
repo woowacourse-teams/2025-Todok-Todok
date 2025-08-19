@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.team.domain.model.exception.NetworkResult
 import com.team.domain.repository.CommentRepository
 import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
 import com.team.todoktodok.presentation.core.event.SingleLiveData
@@ -16,12 +17,13 @@ class CommentCreateViewModel(
     private val savedStateHandle: SavedStateHandle,
     private val commentRepository: CommentRepository,
 ) : ViewModel() {
-    private val discussionId =
-        savedStateHandle.get<Long>(KEY_DISCUSSION_ID) ?: throw IllegalStateException()
+    private val discussionId: Long =
+        savedStateHandle.get<Long>(KEY_DISCUSSION_ID) ?: error("discussionId missing")
 
-    val commentContent = savedStateHandle.get<String>(KEY_COMMENT_CONTENT)
+    private val commentContent: String? =
+        savedStateHandle.get<String>(KEY_COMMENT_CONTENT)
 
-    private val commentCreateState =
+    private val commentCreateState: CommentCreateState =
         CommentCreateState.create(savedStateHandle.get<Long>(KEY_COMMENT_ID))
 
     private val _uiEvent = MutableSingleLiveData<CommentCreateUiEvent>()
@@ -30,69 +32,88 @@ class CommentCreateViewModel(
     private val _commentText = MutableLiveData("")
     val commentText: LiveData<String> = _commentText
 
-    fun initUiState() {
+    fun initUiState() =
         viewModelScope.launch {
-            when (commentCreateState) {
-                CommentCreateState.Create -> {
-                    onCommentChanged(commentContent)
-                }
-
-                is CommentCreateState.Update -> {
-                    val content =
-                        commentRepository
-                            .getComment(
-                                discussionId,
-                                commentCreateState.commentId,
-                            ).content
-                    onCommentChanged(content)
-                }
+            when (val state = commentCreateState) {
+                CommentCreateState.Create -> initializeForCreate()
+                is CommentCreateState.Update -> initializeForUpdate(state.commentId)
             }
-            _uiEvent.setValue(CommentCreateUiEvent.InitState(_commentText.value ?: ""))
         }
-    }
 
     fun onCommentChanged(text: CharSequence?) {
-        _commentText.value = text?.toString() ?: ""
+        _commentText.value = text?.toString().orEmpty()
     }
 
-    fun submitComment() {
+    fun submitComment() =
         viewModelScope.launch {
-            when (commentCreateState) {
-                CommentCreateState.Create -> {
-                    commentRepository.saveComment(discussionId, commentText.value ?: "")
-                    _uiEvent.setValue(CommentCreateUiEvent.SubmitComment)
-                }
-
-                is CommentCreateState.Update -> {
-                    commentRepository.updateComment(
-                        discussionId,
-                        commentCreateState.commentId,
-                        commentText.value ?: "",
-                    )
-                    _uiEvent.setValue(CommentCreateUiEvent.SubmitComment)
-                }
+            when (val state = commentCreateState) {
+                CommentCreateState.Create -> submitCreate()
+                is CommentCreateState.Update -> submitUpdate(state.commentId)
             }
+        }
+
+    fun saveContent() {
+        if (commentCreateState is CommentCreateState.Create) {
+            onUiEvent(CommentCreateUiEvent.OnCreateDismiss(_commentText.value.orEmpty()))
         }
     }
 
-    fun saveContent() {
-        when (commentCreateState) {
-            CommentCreateState.Create -> {
-                _uiEvent.setValue(
-                    CommentCreateUiEvent.OnCreateDismiss(
-                        _commentText.value ?: "",
-                    ),
-                )
+    private fun initializeForCreate() {
+        onCommentChanged(commentContent)
+        onUiEvent(CommentCreateUiEvent.InitState(_commentText.value.orEmpty()))
+    }
+
+    private suspend fun submitCreate() {
+        handleResult(
+            commentRepository.saveComment(
+                discussionId,
+                commentText.value.orEmpty(),
+            ),
+        ) {
+            onUiEvent(CommentCreateUiEvent.SubmitComment)
+        }
+    }
+
+    private suspend fun initializeForUpdate(commentId: Long) {
+        when (val res = commentRepository.getComment(discussionId, commentId)) {
+            is NetworkResult.Success -> {
+                onCommentChanged(res.data.content)
+                onUiEvent(CommentCreateUiEvent.InitState(_commentText.value.orEmpty()))
             }
 
-            is CommentCreateState.Update -> Unit
+            is NetworkResult.Failure -> onUiEvent(CommentCreateUiEvent.ShowError(res.exception))
+        }
+    }
+
+    private suspend fun submitUpdate(commentId: Long) {
+        handleResult(
+            commentRepository.updateComment(
+                discussionId,
+                commentId,
+                commentText.value.orEmpty(),
+            ),
+        ) {
+            onUiEvent(CommentCreateUiEvent.SubmitComment)
+        }
+    }
+
+    private fun onUiEvent(event: CommentCreateUiEvent) {
+        _uiEvent.setValue(event)
+    }
+
+    private inline fun handleResult(
+        result: NetworkResult<Unit>,
+        onSuccess: () -> Unit,
+    ) {
+        when (result) {
+            is NetworkResult.Success -> onSuccess()
+            is NetworkResult.Failure -> onUiEvent(CommentCreateUiEvent.ShowError(result.exception))
         }
     }
 
     companion object {
         const val KEY_DISCUSSION_ID = "key_discussion_id"
         const val KEY_COMMENT_ID = "key_comment_id"
-
         const val KEY_COMMENT_CONTENT = "key_comment_content"
     }
 }
