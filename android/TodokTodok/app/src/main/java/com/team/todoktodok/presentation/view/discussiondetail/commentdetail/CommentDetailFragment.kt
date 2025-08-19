@@ -452,7 +452,7 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
     companion object {
         const val TAG = "TAG_COMMENT_DETAIL"
         private const val COMMENT_DELETE_DIALOG_REQUEST_KEY = "comment_delete_dialog_request_key"
-        private const val COMMENT_REPORT_DIALOG_REQUEST_KEY = "comment_delete_dialog_request_key"
+        private const val COMMENT_REPORT_DIALOG_REQUEST_KEY = "comment_report_dialog_request_key"
         private const val REPLY_CONTENT_DELETE_DIALOG_REQUEST_KEY =
             "reply_content_delete_dialog_request_key"
         private const val REPLY_REPORT_DIALOG_REQUEST_KEY = "reply_report_dialog_request_key_%d"

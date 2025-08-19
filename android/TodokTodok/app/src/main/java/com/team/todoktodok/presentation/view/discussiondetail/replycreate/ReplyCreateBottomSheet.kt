@@ -124,7 +124,7 @@ class ReplyCreateBottomSheet : BottomSheetDialogFragment(R.layout.fragment_comme
                 AlertSnackBar(
                     binding.root,
                     messageConverter(uiEvent.exception),
-                )
+                ).show()
         }
     }
 

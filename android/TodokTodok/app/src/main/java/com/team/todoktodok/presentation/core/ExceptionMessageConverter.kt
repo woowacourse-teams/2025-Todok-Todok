@@ -1,6 +1,7 @@
 package com.team.todoktodok.presentation.core
 
 import com.team.domain.model.exception.DiscussionExceptions
+import com.team.domain.model.exception.ReplyExceptions
 import com.team.domain.model.exception.TodokTodokExceptions
 import com.team.todoktodok.R
 
@@ -93,5 +94,12 @@ class ExceptionMessageConverter {
             CommentExceptions.NotBelongToDiscussion -> R.string.error_comment_not_belong_to_discussion
             CommentExceptions.OnlyOwnerCanModifyOrDelete -> R.string.error_comment_only_owner_can_modify_or_delete
             CommentExceptions.SelfReportNotAllowed -> R.string.error_comment_self_report_not_allowed
+            ReplyExceptions.EmptyContent -> R.string.error_reply_empty_content
+            ReplyExceptions.InvalidContentLength -> R.string.error_reply_invalid_length
+            ReplyExceptions.SelfReportNotAllowed -> R.string.error_reply_self_report_not_allowed
+            ReplyExceptions.AlreadyReported -> R.string.error_reply_already_reported
+            ReplyExceptions.CommentNotBelongToDiscussion -> R.string.error_reply_comment_not_in_discussion
+            ReplyExceptions.ReplyNotBelongToComment -> R.string.error_reply_not_in_comment
+            ReplyExceptions.OnlyOwnerCanModifyOrDelete -> R.string.error_reply_only_owner_can_modify_or_delete
         }
 }

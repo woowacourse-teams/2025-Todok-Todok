@@ -169,6 +169,16 @@ sealed class TodokTodokExceptions : Throwable() {
                 CommentExceptions.NotBelongToDiscussion.message -> CommentExceptions.NotBelongToDiscussion
                 CommentExceptions.CannotDeleteWithReplies.message -> CommentExceptions.CannotDeleteWithReplies
                 CommentExceptions.OnlyOwnerCanModifyOrDelete.message -> CommentExceptions.OnlyOwnerCanModifyOrDelete
+
+                // 대댓글 관련 예외
+                ReplyExceptions.EmptyContent.message -> ReplyExceptions.EmptyContent
+                ReplyExceptions.InvalidContentLength.message -> ReplyExceptions.InvalidContentLength
+                ReplyExceptions.SelfReportNotAllowed.message -> ReplyExceptions.SelfReportNotAllowed
+                ReplyExceptions.AlreadyReported.message -> ReplyExceptions.AlreadyReported
+                ReplyExceptions.CommentNotBelongToDiscussion.message -> ReplyExceptions.CommentNotBelongToDiscussion
+                ReplyExceptions.ReplyNotBelongToComment.message -> ReplyExceptions.ReplyNotBelongToComment
+                ReplyExceptions.OnlyOwnerCanModifyOrDelete.message -> ReplyExceptions.OnlyOwnerCanModifyOrDelete
+                
                 // 서버 메시지와 일치하지 않으면 기본 BadRequest 예외 반환
                 else -> HttpExceptions.BadRequestException
             }

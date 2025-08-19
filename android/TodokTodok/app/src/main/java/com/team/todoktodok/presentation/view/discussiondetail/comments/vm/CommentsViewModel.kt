@@ -89,8 +89,7 @@ class CommentsViewModel(
     }
 
     private suspend fun loadComments() {
-        val result = commentRepository.getCommentsByDiscussionId(discussionId)
-        handleResult(result) { list ->
+        handleResult(commentRepository.getCommentsByDiscussionId(discussionId)) { list ->
             val myId = tokenRepository.getMemberId()
             val items = list.map { CommentItemUiState(it, isMyComment = myId == it.writer.id) }
             _uiState.value = _uiState.value?.copy(comments = items)
