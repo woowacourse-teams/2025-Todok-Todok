@@ -85,10 +85,17 @@ class SelectBookViewModel(
             try {
                 val books: Books = bookRepository.fetchBooks(keyword)
                 _uiState.value = _uiState.value?.copy(isLoading = false, searchedBooks = books)
+                if (books.size == SEARCHED_BOOKS_IS_EMPTY) {
+                    _uiEvent.setValue(SelectBookUiEvent.ShowSearchedBookResultIsEmpty(keyword))
+                }
             } catch (e: Exception) {
                 _uiState.value = _uiState.value?.copy(isLoading = false)
                 _uiEvent.setValue(SelectBookUiEvent.ShowErrorMessage(SelectBookErrorType.ERROR_NETWORK))
             }
         }
+    }
+
+    companion object {
+        private const val SEARCHED_BOOKS_IS_EMPTY: Int = 0
     }
 }

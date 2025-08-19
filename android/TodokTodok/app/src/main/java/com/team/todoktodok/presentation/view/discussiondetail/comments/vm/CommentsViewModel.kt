@@ -70,7 +70,7 @@ class CommentsViewModel(
         _uiEvent.setValue(CommentsUiEvent.ShowCommentUpdate(discussionId, commentId, content))
     }
 
-    fun report(commentId: Long) {
+    fun reportComment(commentId: Long) {
         viewModelScope.launch {
             commentRepository.report(discussionId, commentId)
         }
