@@ -43,5 +43,4 @@ interface DiscussionRepository {
     suspend fun getDiscussion(): DiscussionRoom?
 
     suspend fun reportDiscussion(discussionId: Long): NetworkResult<Unit>
-
 }

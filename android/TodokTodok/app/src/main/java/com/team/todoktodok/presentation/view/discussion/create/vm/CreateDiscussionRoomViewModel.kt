@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.team.domain.model.Book
 import com.team.domain.model.exception.onSuccess
 import com.team.domain.model.member.DiscussionRoom.Companion.DiscussionRoom
 import com.team.domain.repository.BookRepository
@@ -151,11 +150,14 @@ class CreateDiscussionRoomViewModel(
             val myMemberId: Long = tokenRepository.getMemberId()
             discussionRepository.getDiscussion(discussionRoomId).onSuccess { result ->
                 if (result.writer.id != myMemberId) {
-                    throw IllegalStateException(NOT_MY_DISCUSSION_ROOM)
+                    updateErrorCreateDiscussion(ErrorCreateDiscussionType.NOT_MY_DISCUSSION_ROOM)
                 }
-                _book.value = result.book
-                _title.value = result.discussionTitle
-                _opinion.value = result.discussionOpinion
+                _uiState.value =
+                    _uiState.value?.copy(
+                        book = result.book,
+                        title = result.discussionTitle,
+                        opinion = result.discussionOpinion,
+                    )
             }
         }
     }
