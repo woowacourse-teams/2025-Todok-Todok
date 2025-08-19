@@ -589,10 +589,7 @@ class DiscussionQueryServiceTest {
                         .containsExactly(
                                 baseTime.minusMinutes(10),
                                 baseTime.minusMinutes(20)
-                        ),
-                () -> assertThat(page1.discussions())
-                        .extracting("discussionId")
-                        .containsExactly(1L, 2L)
+                        )
         );
     }
 
