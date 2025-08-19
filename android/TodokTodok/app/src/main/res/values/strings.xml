@@ -85,7 +85,7 @@
     <string name="content_description_search_keyword">도서 검색을 합니다</string>
     <string name="hint_search_keyword">도서 제목 또는 저자를 입력해주세요</string>
     <string name="empty_search_result">도서 \'%s\' 검색 결과가 없습니다</string>
-    <string name="empty_search_result_description">입력한 검색어의 절차 또는 띄어쓰기가 정확한지 다시 한번 확인해 주세요.</string>
+    <string name="empty_search_result_description">입력한 검색어의 철자 또는 띄어쓰기가 정확한지 다시 한번 확인해 주세요.</string>
 
     <string name="error_empty_keyword">검색어를 입력해주세요</string>
     <string name="error_no_selected_book">도서를 선택해주세요</string>
