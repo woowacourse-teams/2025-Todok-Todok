@@ -3,6 +3,8 @@ package com.team.todoktodok.presentation.view.book
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.view.MotionEvent
 import android.view.View
 import android.view.WindowInsets
@@ -154,8 +156,36 @@ class SelectBookActivity : AppCompatActivity() {
                         .make(binding.root, getString(event.message.id), Snackbar.LENGTH_SHORT)
                         .show()
                 }
+
+                is SelectBookUiEvent.ShowSearchedBookResultIsEmpty -> {
+                    if (event.keyword.isNotBlank()) {
+                        val strongKeyword = highlightKeyword(event.keyword)
+                        binding.rvSearchedBooks.visibility = View.GONE
+                        binding.nsvEmptySearchResult.visibility = View.VISIBLE
+                        binding.tvEmptySearchResultTitle.text = strongKeyword
+                        binding.tvEmptySearchResultSubTitle.setText(R.string.empty_search_result_description)
+                    }
+                }
             }
         }
+    }
+
+    private fun highlightKeyword(keyword: String): SpannableString {
+        val strongKeyword = SpannableString(
+            getString(
+                R.string.empty_search_result,
+                keyword
+            )
+        )
+        strongKeyword.setSpan(
+            ForegroundColorSpan(
+                getColor(R.color.green_1A)
+            ),
+            FIRST_HIGHLIGHT_CHAR_POSITION,
+            LAST_HIGHLIGHT_CHAR_POSITION + (keyword.length),
+            SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+        return strongKeyword
     }
 
     private fun navigateToCreateDiscussionRoom(book: Book) {
@@ -197,6 +227,8 @@ class SelectBookActivity : AppCompatActivity() {
 
     companion object {
         private const val IS_EMPTY_SEARCH_RESULT: Int = 0
+        private const val FIRST_HIGHLIGHT_CHAR_POSITION = 3
+        private const val LAST_HIGHLIGHT_CHAR_POSITION = 5
 
         fun Intent(context: Context): Intent = Intent(context, SelectBookActivity::class.java)
     }

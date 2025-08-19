@@ -12,4 +12,8 @@ sealed class SelectBookUiEvent {
     data class ShowErrorMessage(
         val message: SelectBookErrorType,
     ) : SelectBookUiEvent()
+
+    data class ShowSearchedBookResultIsEmpty(
+        val keyword: String,
+    ) : SelectBookUiEvent()
 }
