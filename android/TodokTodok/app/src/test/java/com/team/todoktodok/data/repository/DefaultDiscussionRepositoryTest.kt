@@ -4,6 +4,7 @@ import com.team.domain.model.Book
 import com.team.domain.model.Discussion
 import com.team.domain.model.DiscussionFilter
 import com.team.domain.model.exception.NetworkResult
+import com.team.domain.model.exception.onSuccess
 import com.team.domain.model.member.Nickname
 import com.team.domain.model.member.User
 import com.team.todoktodok.data.datasource.discussion.DiscussionRemoteDataSource
@@ -32,9 +33,11 @@ class DefaultDiscussionRepositoryTest {
             // given
             val expected = DISCUSSIONS.find { it.id == 2L }
             // when
-            val actual = defaultDiscussionRepository.getDiscussion(2).getOrNull()
+            val actual = defaultDiscussionRepository.getDiscussion(2)
             // then
-            assertThat(actual).isEqualTo(expected)
+            actual.onSuccess {
+                assertThat(it).isEqualTo(expected)
+            }
         }
 
     @Test

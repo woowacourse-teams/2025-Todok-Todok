@@ -11,10 +11,8 @@ import com.team.todoktodok.fixture.DISCUSSIONS
 class FakeDiscussionRepository : DiscussionRepository {
     private val discussions = DISCUSSIONS
 
-    override suspend fun getDiscussion(id: Long): Result<Discussion> =
-        runCatching {
-            discussions.find { id == it.id } ?: throw IllegalArgumentException()
-        }
+    override suspend fun getDiscussion(id: Long): NetworkResult<Discussion> =
+        NetworkResult.Success(discussions.find { id == it.id } ?: throw IllegalArgumentException())
 
     override suspend fun getDiscussions(
         type: DiscussionFilter,
@@ -36,15 +34,15 @@ class FakeDiscussionRepository : DiscussionRepository {
         TODO("Not yet implemented")
     }
 
-    override suspend fun deleteDiscussion(discussionId: Long) {
+    override suspend fun deleteDiscussion(discussionId: Long): NetworkResult<Unit> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun toggleLike(discussionId: Long): LikeStatus {
+    override suspend fun toggleLike(discussionId: Long): NetworkResult<LikeStatus> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun reportDiscussion(discussionId: Long) {
+    override suspend fun reportDiscussion(discussionId: Long): NetworkResult<Unit> {
         TODO("Not yet implemented")
     }
 }
