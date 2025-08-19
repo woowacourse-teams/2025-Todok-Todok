@@ -69,7 +69,14 @@ class UserInformationViewHolder private constructor(
             ivReport.visibility = reportButtonVisibility
             tvNickname.text = content.nickname
 
-            tvDescription.text = content.message ?: itemView.context.getString(R.string.profile_message_placeholder)
+            val message =
+                if (content.message.isNullOrEmpty()) {
+                    itemView.context.getString(R.string.profile_message_placeholder)
+                } else {
+                    content.message
+                }
+
+            tvDescription.text = message
 
 //            Glide
 //                .with(binding.root)
