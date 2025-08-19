@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import todoktodok.backend.discussion.application.dto.request.DiscussionRequest;
 import todoktodok.backend.discussion.application.dto.request.DiscussionUpdateRequest;
 import todoktodok.backend.discussion.application.dto.response.DiscussionResponse;
+import todoktodok.backend.discussion.application.dto.response.SlicedDiscussionResponse;
 import todoktodok.backend.discussion.domain.DiscussionFilterType;
 import todoktodok.backend.global.exception.ErrorResponse;
 
@@ -91,7 +92,7 @@ public interface DiscussionApiDocs {
                             mediaType = "application/json",
                             schema = @Schema(implementation = DiscussionRequest.class),
                             examples = @ExampleObject(
-                                    value = "{\"bookId\":1, \"title\":\"토론방 제목\", \"content\":\"토론방 내용입니다.\"}"
+                                    value = "{\"bookId\":1, \"discussionTitle\":\"토론방 제목\", \"discussionOpinion\":\"토론방 내용입니다.\"}"
                             )
                     )
             ) final DiscussionRequest discussionRequest
@@ -189,7 +190,7 @@ public interface DiscussionApiDocs {
                                                 "id": 1,
                                                 "nickname": "듀이",
                                                 "email": "user@example.com",
-                                                "imageUrl": "https://example.com/image.png"
+                                                "profileImage": "https://example.com/image.png"
                                               },
                                               "createdAt": "2025-08-14T10:00:00",
                                               "commentCount": 5,
@@ -294,6 +295,109 @@ public interface DiscussionApiDocs {
                                             ]
                                             """
                             )
+                    )),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "토큰 인증 오류",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "JWT 오류",
+                                    value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
+                            )
+                    )),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "존재하지 않는 리소스",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "회원 없음",
+                                    value = "{\"code\":404, \"message\":\"[ERROR] 해당 회원을 찾을 수 없습니다\"}"
+                            )
+                    )),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "서버 오류",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "서버 오류",
+                                    value = "{\"code\":500, \"message\":\"[ERROR] 서버 내부 오류가 발생했습니다\"}"
+                            )
+                    ))
+    })
+    ResponseEntity<List<DiscussionResponse>> getDiscussionsByKeywordAndType(
+            @Parameter(hidden = true) final Long memberId,
+            @Parameter(
+                    description = "도서 제목 혹은 저자",
+                    content = @Content(
+                            schema = @Schema(implementation = String.class),
+                            examples = @ExampleObject(value = "오브젝트")
+                    )
+            ) final String keyword,
+            @Parameter(
+                    description = "필터링 타입",
+                    content = @Content(
+                            schema = @Schema(implementation = DiscussionFilterType.class),
+                            examples = @ExampleObject(value = "ALL")
+                    )
+            ) final DiscussionFilterType type
+    );
+
+    @Operation(summary = "토론방 최신순 전체 조회 API")
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "토론방 최신순 조회 성공",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = SlicedDiscussionResponse.class),
+                            examples = @ExampleObject(
+                                    value = """
+                                            {
+                                              "items": [
+                                                  {
+                                                    "discussionId": 1,
+                                                    "title": "토론방 제목1",
+                                                    "content": "토론방 내용1",
+                                                    "author": {
+                                                      "id": 1,
+                                                      "nickname": "듀이",
+                                                      "email": "user1@example.com",
+                                                      "profileImage": "https://example.com/image1.png"
+                                                    },
+                                                    "createdAt": "2025-08-14T10:00:00",
+                                                    "commentCount": 5,
+                                                    "likeCount": 10,
+                                                    "isLikedByMe": true
+                                                  },
+                                                  {
+                                                    "discussionId": 2,
+                                                    "title": "토론방 제목2",
+                                                    "content": "토론방 내용2",
+                                                    "author": {
+                                                      "id": 2,
+                                                      "nickname": "모다",
+                                                      "email": "user2@example.com",
+                                                      "profileImage": "https://example.com/image2.png"
+                                                    },
+                                                    "createdAt": "2025-08-14T10:05:00",
+                                                    "commentCount": 3,
+                                                    "likeCount": 5,
+                                                    "isLikedByMe": false
+                                                  }
+                                              ],
+                                              "pageInfo": {
+                                                "hasNext": true,
+                                                "nextCursor": "eyJsYXN0Q29tbWVudGVkQXQiOiIyMDI1LTA3LTI4VDIxOjA4OjUwWiIsImRpc2N1c3Npb25JZCI6NH0="
+                                              }
+                                            }
+                                            """
+                            )
             )),
             @ApiResponse(
                     responseCode = "401",
@@ -329,22 +433,22 @@ public interface DiscussionApiDocs {
                             )
             ))
     })
-    ResponseEntity<List<DiscussionResponse>> getDiscussionsByKeywordAndType(
+    ResponseEntity<SlicedDiscussionResponse> getDiscussions(
             @Parameter(hidden = true) final Long memberId,
             @Parameter(
-                    description = "도서 제목 혹은 저자",
+                    description = "페이지 사이즈",
+                    content = @Content(
+                            schema = @Schema(implementation = Integer.class),
+                            examples = @ExampleObject(value = "20")
+                    )
+            ) final int size,
+            @Parameter(
+                    description = "페이지 커서",
                     content = @Content(
                             schema = @Schema(implementation = String.class),
-                            examples = @ExampleObject(value = "오브젝트")
+                            examples = @ExampleObject(value = "eyJsYXN0Q29tbWVudGVkQXQiOiIyMDI1LTA3LTI4VDIxOjA4OjUwWiIsImRpc2N1c3Npb25JZCI6NH0=")
                     )
-            ) final String keyword,
-            @Parameter(
-                    description = "필터링 타입",
-                    content = @Content(
-                            schema = @Schema(implementation = DiscussionFilterType.class),
-                            examples = @ExampleObject(value = "ALL")
-                    )
-            ) final DiscussionFilterType type
+            ) final String cursor
     );
 
     @Operation(summary = "토론방 수정 API")
@@ -429,7 +533,7 @@ public interface DiscussionApiDocs {
                             mediaType = "application/json",
                             schema = @Schema(implementation = DiscussionUpdateRequest.class),
                             examples = @ExampleObject(
-                                    value = "{\"title\":\"수정된 토론방 제목\", \"content\":\"수정된 토론방 내용입니다.\"}"
+                                    value = "{\"discussionTitle\":\"수정된 토론방 제목\", \"discussionOpinion\":\"수정된 토론방 내용입니다.\"}"
                             )
                     )
             ) final DiscussionUpdateRequest discussionUpdateRequest
