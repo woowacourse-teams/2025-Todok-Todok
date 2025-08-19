@@ -97,6 +97,7 @@ class DiscussionControllerTest {
         databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
 
         final String token = MemberFixture.login("user@gmail.com");
+        final String cursorMeaningThree = "Mw==";
 
         // when - then
         RestAssured.given().log().all()
@@ -107,7 +108,7 @@ class DiscussionControllerTest {
                 .statusCode(HttpStatus.OK.value())
                 .body("items.size()", is(3))
                 .body("pageInfo.hasNext", is(true))
-                .body("pageInfo.nextCursor", is("Mw=="));
+                .body("pageInfo.nextCursor", is(cursorMeaningThree));
     }
 
     @Test
@@ -123,17 +124,19 @@ class DiscussionControllerTest {
         databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
 
         final String token = MemberFixture.login("user@gmail.com");
+        final String cursorMeaningFive = "NQ==";
+        final String cursorMeaningTwo = "Mg==";
 
         // when - then
         RestAssured.given().log().all()
                 .header("Authorization", token)
                 .contentType(ContentType.JSON)
-                .when().get("/api/v1/discussions?size=3&cursor=NQ==")
+                .when().get(String.format("/api/v1/discussions?size=3&cursor=%s", cursorMeaningFive))
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body("items.size()", is(3))
                 .body("pageInfo.hasNext", is(true))
-                .body("pageInfo.nextCursor", is("Mg=="));
+                .body("pageInfo.nextCursor", is(cursorMeaningTwo));
     }
 
     @Test
@@ -149,12 +152,13 @@ class DiscussionControllerTest {
         databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
 
         final String token = MemberFixture.login("user@gmail.com");
+        final String cursorMeaningFour = "NA==";
 
         // when - then
         RestAssured.given().log().all()
                 .header("Authorization", token)
                 .contentType(ContentType.JSON)
-                .when().get("/api/v1/discussions?size=3&cursor=NA==")
+                .when().get(String.format("/api/v1/discussions?size=3&cursor=%s", cursorMeaningFour))
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body("items.size()", is(3))
