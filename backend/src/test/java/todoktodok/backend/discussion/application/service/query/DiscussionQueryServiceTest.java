@@ -595,4 +595,39 @@ class DiscussionQueryServiceTest {
                         .containsExactly(1L, 2L)
         );
     }
+
+    @Test
+    @DisplayName("활성화 된 토론방 조회 시, 페이지 크기가 1 이상이 아닐 경우 예외가 발생한다")
+    void getActiveDiscussion_invalidSize() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+
+        final Long memberId = 1L;
+        final Long bookId = 1L;
+
+        databaseInitializer.setDiscussionInfo("게시글1", "내용1", memberId, bookId);
+        databaseInitializer.setDiscussionInfo("게시글2", "내용2", memberId, bookId);
+        databaseInitializer.setDiscussionInfo("게시글3", "내용3", memberId, bookId);
+        databaseInitializer.setDiscussionInfo("게시글4", "내용4", memberId, bookId);
+
+        final LocalDateTime baseTime = LocalDateTime.now(clock);
+
+        databaseInitializer.setCommentInfo("댓글1-1", memberId, 1L, baseTime.minusMinutes(10));
+        databaseInitializer.setCommentInfo("댓글2-1", memberId, 2L, baseTime.minusMinutes(20));
+        databaseInitializer.setCommentInfo("댓글2-2", memberId, 2L, baseTime.minusMinutes(30));
+        databaseInitializer.setCommentInfo("댓글3-1", memberId, 3L, baseTime.minusMinutes(40));
+        databaseInitializer.setCommentInfo("댓글3-2", memberId, 3L, baseTime.minusMinutes(50));
+        databaseInitializer.setCommentInfo("댓글3-3", memberId, 3L, baseTime.minusMinutes(60));
+        databaseInitializer.setCommentInfo("댓글4-1", memberId, 4L, baseTime.minusMinutes(70));
+
+        final int periodDays = 2;
+        final int size = 0;
+
+        // when - then
+        assertThatThrownBy(
+                () -> discussionQueryService.getActiveDiscussions(memberId, periodDays, size, null))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("[ERROR] 페이지 사이즈는 1 이상이어야 합니다: " + size);
+    }
 }

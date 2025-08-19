@@ -29,6 +29,8 @@ import todoktodok.backend.reply.domain.repository.ReplyRepository;
 @AllArgsConstructor
 public class DiscussionQueryService {
 
+    private static final int MIN_PAGE_SIZE = 1;
+
     private final DiscussionRepository discussionRepository;
     private final DiscussionLikeRepository discussionLikeRepository;
     private final MemberRepository memberRepository;
@@ -202,6 +204,7 @@ public class DiscussionQueryService {
             final int size,
             @Nullable final String cursor
     ) {
+        validatePageSize(size);
         final Member member = findMember(memberId);
         final LocalDateTime periodStart = LocalDateTime.now(clock).minusDays(periodDays);
 
@@ -237,5 +240,11 @@ public class DiscussionQueryService {
         }
 
         return new DiscussionPageResponse(discussions, hasNext, nextCursor);
+    }
+
+    private void validatePageSize(int size) {
+        if (size < MIN_PAGE_SIZE) {
+            throw new IllegalArgumentException("[ERROR] 페이지 사이즈는 1 이상이어야 합니다: " + size);
+        }
     }
 }

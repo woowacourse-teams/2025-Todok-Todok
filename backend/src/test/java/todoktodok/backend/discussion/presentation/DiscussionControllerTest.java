@@ -357,7 +357,7 @@ class DiscussionControllerTest {
                 .queryParam("size", size)
                 .queryParam("cursor", cursor)
                 .when().get("/api/v1/discussions/active")
-                .then()
+                .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body("discussions.size()", equalTo(1))
                 .body("discussions[0].discussionId", equalTo(4))
