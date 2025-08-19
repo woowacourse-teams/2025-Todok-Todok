@@ -27,6 +27,7 @@ services:
     volumes:
       - ../config/promtail-config-prod.yml:/etc/promtail/promtail.yml
       - ../log:/log
+      - promtail_positions:/tmp/positions-prod.yaml
     command: -config.file=/etc/promtail/promtail.yml
     restart: always
     networks:
@@ -35,3 +36,6 @@ services:
 networks:
   prod_network:
     external: true
+
+volumes:
+  promtail_positions:
