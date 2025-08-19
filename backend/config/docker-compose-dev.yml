@@ -4,7 +4,7 @@ services:
   dev:
     container_name: dev
     build:
-      context: .
+      context: backend/config
       dockerfile: Dockerfile.dev
       args:
         JAR_FILE: /build/libs/*.jar  # 빌드 시에 전달할 인자 (필요 시)

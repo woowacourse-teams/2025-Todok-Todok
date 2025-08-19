@@ -93,7 +93,7 @@ jobs:
         run: |
           cd backend
           if [ -f config/docker-compose-dev.yml ]; then
-            docker compose -f config/docker-compose-dev.yml down
+            docker compose -f config/docker-compose-dev.yml down --remove-orphans
           echo "docker compose-dev down"
           else
             echo "config/docker-compose-dev.yml 없음 - down 스킵"
