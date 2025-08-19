@@ -82,7 +82,6 @@ jobs:
         run: |
           echo "dev 컨테이너 중지 중..."
           docker stop dev && echo "dev 컨테이너 중지 완료" || echo "dev 컨테이너 없음"
-          
           echo "promtail_dev 컨테이너 중지 중..."
           docker stop promtail_dev && echo "promtail_dev 컨테이너 중지 완료" || echo "promtail_dev 컨테이너 없음"
 
