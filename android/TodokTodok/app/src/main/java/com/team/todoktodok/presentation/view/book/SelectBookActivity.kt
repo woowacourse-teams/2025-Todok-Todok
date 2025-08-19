@@ -171,22 +171,19 @@ class SelectBookActivity : AppCompatActivity() {
     }
 
     private fun highlightKeyword(keyword: String): SpannableString {
-        val strongKeyword =
-            SpannableString(
-                getString(
-                    R.string.empty_search_result,
-                    keyword,
-                ),
-            )
-        strongKeyword.setSpan(
+        val title = getString(R.string.empty_search_result, keyword)
+        val spannableTitle = SpannableString(title)
+        val start = title.indexOf(keyword)
+        val end = start + keyword.length
+        spannableTitle.setSpan(
             ForegroundColorSpan(
                 getColor(R.color.green_1A),
             ),
-            FIRST_HIGHLIGHT_CHAR_POSITION,
-            LAST_HIGHLIGHT_CHAR_POSITION + (keyword.length),
+            start,
+            end,
             SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE,
         )
-        return strongKeyword
+        return spannableTitle
     }
 
     private fun navigateToCreateDiscussionRoom(book: Book) {
@@ -228,8 +225,6 @@ class SelectBookActivity : AppCompatActivity() {
 
     companion object {
         private const val IS_EMPTY_SEARCH_RESULT: Int = 0
-        private const val FIRST_HIGHLIGHT_CHAR_POSITION = 3
-        private const val LAST_HIGHLIGHT_CHAR_POSITION = 5
 
         fun Intent(context: Context): Intent = Intent(context, SelectBookActivity::class.java)
     }
