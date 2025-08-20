@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.team.domain.model.Support
@@ -17,7 +18,9 @@ import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivityProfileBinding
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
+import com.team.todoktodok.presentation.core.component.ReportDialog
 import com.team.todoktodok.presentation.core.ext.getSerializableCompat
+import com.team.todoktodok.presentation.core.ext.registerReportResultListener
 import com.team.todoktodok.presentation.view.discussions.DiscussionsActivity
 import com.team.todoktodok.presentation.view.profile.adapter.ContentPagerAdapter
 import com.team.todoktodok.presentation.view.profile.adapter.ProfileAdapter
@@ -82,6 +85,13 @@ class ProfileActivity : AppCompatActivity() {
             val result =
                 bundle.getSerializableCompat<Support>(SupportMemberDialog.RESULT_KEY_SUPPORT)
             viewModel.supportMember(result)
+        }
+        supportFragmentManager.registerReportResultListener(
+            this,
+            USER_REPORT_DIALOG_REQUEST_KEY,
+            ReportDialog.RESULT_KEY_REPORT,
+        ) { reportReason ->
+            viewModel.supportMember(Support.REPORT)
         }
     }
 
@@ -175,8 +185,8 @@ class ProfileActivity : AppCompatActivity() {
             }
 
             override fun onClickSupport(type: Support) {
-                val dialog = SupportMemberDialog.newInstance(type)
-                dialog.show(supportFragmentManager, SupportMemberDialog.TAG)
+                val dialog = ReportDialog.newInstance(USER_REPORT_DIALOG_REQUEST_KEY)
+                dialog.show(supportFragmentManager, ReportDialog.TAG)
             }
         }
 
@@ -194,5 +204,7 @@ class ProfileActivity : AppCompatActivity() {
         const val ARG_MEMBER_ID = "member_id"
         const val ARG_INITIAL_TAB = "initial_tab"
         const val MEMBER_ID_NOT_FOUND = "멤버 아이디가 존재하지 않습니다"
+
+        private const val USER_REPORT_DIALOG_REQUEST_KEY = "comment_report_dialog_request_key"
     }
 }
