@@ -95,7 +95,7 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
             )
             ORDER BY MAX(c.createdAt) DESC, d.id DESC
     """)
-    List<DiscussionCursorResponse> findDiscussionsByCursor(
+    List<DiscussionCursorResponse> findActiveDiscussionsByCursor(
             @Param("member") Member member,
             @Param("periodStart") LocalDateTime periodStart,
             @Param("lastCommentedAt") LocalDateTime lastCommentedAt,
