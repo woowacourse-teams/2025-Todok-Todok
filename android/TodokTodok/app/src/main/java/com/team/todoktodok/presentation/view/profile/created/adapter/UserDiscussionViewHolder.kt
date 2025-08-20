@@ -4,9 +4,7 @@ import android.view.LayoutInflater
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.team.domain.model.member.MemberDiscussion
 import com.team.todoktodok.databinding.ItemDiscussionBinding
-import com.team.todoktodok.databinding.ItemUserDiscussionBinding
 import com.team.todoktodok.presentation.core.ext.loadImage
 import com.team.todoktodok.presentation.view.discussions.DiscussionUiState
 
@@ -27,7 +25,10 @@ class UserDiscussionViewHolder private constructor(
             ivBook.loadImage(item.bookImage)
 
             tvDiscussionTitle.text = item.discussionTitle
-            tvDiscussionWriterNickname.text = item.writerNickname
+
+            if (item.writerNicknameVisibility) {
+                tvDiscussionWriterNickname.text = item.writerNickname
+            }
 
             if (item.opinionVisibility) {
                 tvDiscussionOpinion.visibility = VISIBLE

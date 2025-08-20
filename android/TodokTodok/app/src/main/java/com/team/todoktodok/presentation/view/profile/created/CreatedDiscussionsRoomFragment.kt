@@ -11,7 +11,7 @@ import com.team.todoktodok.databinding.FragmentCreatedDiscussionsRoomBinding
 import com.team.todoktodok.presentation.core.ext.getParcelableArrayListCompat
 import com.team.todoktodok.presentation.view.book.SelectBookActivity
 import com.team.todoktodok.presentation.view.discussiondetail.DiscussionDetailActivity
-import com.team.todoktodok.presentation.view.discussions.toUiState
+import com.team.todoktodok.presentation.view.discussions.toUiStateWithoutWriterNickname
 import com.team.todoktodok.presentation.view.profile.created.adapter.UserDiscussionAdapter
 import com.team.todoktodok.presentation.view.serialization.SerializationMemberDiscussion
 
@@ -71,7 +71,7 @@ class CreatedDiscussionsRoomFragment : Fragment(R.layout.fragment_created_discus
 
     private fun showCreatedDiscussions(discussions: List<SerializationMemberDiscussion>) {
         with(binding) {
-            val createdDiscussions = discussions.map { discussion -> discussion.toDomain().toUiState() }
+            val createdDiscussions = discussions.map { discussion -> discussion.toDomain().toUiStateWithoutWriterNickname() }
             rvDiscussions.visibility = View.VISIBLE
             rvDiscussions.adapter = discussionAdapter
             discussionAdapter.submitList(createdDiscussions)
