@@ -4,9 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.team.domain.model.Book
 import com.team.domain.model.exception.onFailure
 import com.team.domain.model.exception.onSuccess
 import com.team.domain.model.exception.onSuccessSuspend
+import com.team.domain.model.member.DiscussionRoom
 import com.team.domain.model.member.DiscussionRoom.Companion.DiscussionRoom
 import com.team.domain.repository.BookRepository
 import com.team.domain.repository.DiscussionRepository
@@ -19,6 +21,7 @@ import com.team.todoktodok.presentation.view.discussion.create.ErrorCreateDiscus
 import com.team.todoktodok.presentation.view.discussion.create.SerializationCreateDiscussionRoomMode
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 
 class CreateDiscussionRoomViewModel(
@@ -64,19 +67,20 @@ class CreateDiscussionRoomViewModel(
 
             is SerializationCreateDiscussionRoomMode.Draft -> {
                 viewModelScope.launch {
-                    val book = async { discussionRepository.getBook() }
-                    val discussion = async { discussionRepository.getDiscussion() }
+                    val (book, discussion) =
+                        awaitAll(
+                            async { discussionRepository.getBook() },
+                            async { discussionRepository.getDiscussion() },
+                        )
 
-                    val bookResult = book.await()
-                    val discussionResult = discussion.await()
-                    if (discussionResult != null) {
-                        _uiState.value =
-                            _uiState.value?.copy(
-                                book = bookResult,
-                                title = discussionResult.title,
-                                opinion = discussionResult.opinion,
-                            )
-                    }
+                    val bookResult = book as Book
+                    val discussionResult = discussion as DiscussionRoom
+                    _uiState.value =
+                        _uiState.value?.copy(
+                            book = bookResult,
+                            title = discussionResult.title,
+                            opinion = discussionResult.opinion,
+                        )
                 }
             }
         }
