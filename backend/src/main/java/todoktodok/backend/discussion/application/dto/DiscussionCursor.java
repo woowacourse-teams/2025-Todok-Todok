@@ -30,7 +30,7 @@ public record DiscussionCursor(
         final LocalDateTime lastCommentedAt,
         final Long discussionId
     ) {
-        String raw = lastCommentedAt + "_" + discussionId;
-        return Base64.getEncoder().encodeToString(raw.getBytes(StandardCharsets.UTF_8));
+        final String cursorPayload = lastCommentedAt + "_" + discussionId;
+        return Base64.getEncoder().encodeToString(cursorPayload.getBytes(StandardCharsets.UTF_8));
     }
 }
