@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  prod:
+    container_name: prod
+    image: woowajeff/todoktodok:prod
+    ports:
+      - "80:8080"
+    volumes:
+      - ../log:/log
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    restart: always
+
+  promtail:
+    container_name: promtail_prod
+    image: grafana/promtail:latest
+    volumes:
+      - ../config/promtail-config-prod.yml:/etc/promtail/promtail.yml
+      - ../log:/log
+      - promtail_positions:/tmp/positions-prod.yaml
+    command: -config.file=/etc/promtail/promtail.yml
+    restart: always
+
+volumes:
+  promtail_positions:
