@@ -43,7 +43,7 @@ class FakeDiscussionRepository : DiscussionRepository {
     override suspend fun editDiscussionRoom(
         discussionId: Long,
         discussionRoom: DiscussionRoom,
-    ) {
+    ): NetworkResult<Unit> {
         TODO("Not yet implemented")
     }
 

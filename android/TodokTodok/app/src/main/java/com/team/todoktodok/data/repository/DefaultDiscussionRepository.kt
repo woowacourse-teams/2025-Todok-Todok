@@ -56,13 +56,12 @@ class DefaultDiscussionRepository(
     override suspend fun editDiscussionRoom(
         discussionId: Long,
         discussionRoom: DiscussionRoom,
-    ) {
+    ): NetworkResult<Unit> =
         discussionRemoteDataSource.editDiscussionRoom(
             discussionId = discussionId,
             discussionTitle = discussionRoom.title,
             discussionOpinion = discussionRoom.opinion,
         )
-    }
 
     override suspend fun deleteDiscussion(discussionId: Long) = discussionRemoteDataSource.deleteDiscussion(discussionId)
 

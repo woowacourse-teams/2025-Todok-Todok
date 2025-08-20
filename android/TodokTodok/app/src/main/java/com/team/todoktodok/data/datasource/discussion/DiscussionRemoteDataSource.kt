@@ -24,7 +24,7 @@ interface DiscussionRemoteDataSource {
         discussionId: Long,
         discussionTitle: String,
         discussionOpinion: String,
-    ): Response<Unit>
+    ): NetworkResult<Unit>
 
     suspend fun deleteDiscussion(discussionId: Long): NetworkResult<Unit>
 

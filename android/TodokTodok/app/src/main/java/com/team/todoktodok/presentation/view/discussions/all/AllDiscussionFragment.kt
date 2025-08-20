@@ -9,7 +9,7 @@ import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentAllDiscussionBinding
 import com.team.todoktodok.presentation.view.discussiondetail.DiscussionDetailActivity
 import com.team.todoktodok.presentation.view.discussions.DiscussionsUiEvent
-import com.team.todoktodok.presentation.view.discussions.all.adapter.DiscussionAdapter
+import com.team.todoktodok.presentation.view.discussions.adapter.DiscussionAdapter
 import com.team.todoktodok.presentation.view.discussions.vm.DiscussionsViewModel
 import com.team.todoktodok.presentation.view.discussions.vm.DiscussionsViewModelFactory
 
@@ -80,7 +80,7 @@ class AllDiscussionFragment : Fragment(R.layout.fragment_all_discussion) {
                 startActivity(
                     DiscussionDetailActivity.Intent(
                         requireContext(),
-                        discussion.id,
+                        discussion.item.id,
                     ),
                 )
             }

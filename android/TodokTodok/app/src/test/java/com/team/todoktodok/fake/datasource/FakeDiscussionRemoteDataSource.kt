@@ -89,6 +89,7 @@ class FakeDiscussionRemoteDataSource : DiscussionRemoteDataSource {
                     when (type) {
                         DiscussionFilter.ALL -> true
                         DiscussionFilter.MINE -> discussion.memberResponse.memberId == 1L
+                        DiscussionFilter.HOT -> TODO()
                     }
 
                 matchesKeyword && matchesType
@@ -107,7 +108,7 @@ class FakeDiscussionRemoteDataSource : DiscussionRemoteDataSource {
         discussionId: Long,
         discussionTitle: String,
         discussionOpinion: String,
-    ): Response<Unit> {
+    ): NetworkResult<Unit> {
         TODO("Not yet implemented")
     }
 

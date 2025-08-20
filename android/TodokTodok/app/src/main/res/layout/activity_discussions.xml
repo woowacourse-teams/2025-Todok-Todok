@@ -73,6 +73,11 @@
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@string/discussion_tab_title_hot" />
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="@string/discussion_tab_title_all" />
 
         <com.google.android.material.tabs.TabItem
@@ -90,13 +95,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tab_layout" />
 
-    <ImageView
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/iv_discussion_navigation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/space_24"
         android:layout_marginEnd="@dimen/space_12"
-        android:background="@drawable/btn_plus_oval"
+        android:text="@string/create_discussion_room"
+        android:backgroundTint="@color/green_df"
+        android:fontFamily="@font/pretendard_bold"
+        android:textSize="@dimen/font_size_large"
+        android:textColor="@color/gray_4d"
         android:contentDescription="@string/content_description_navigate_to_book_search"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

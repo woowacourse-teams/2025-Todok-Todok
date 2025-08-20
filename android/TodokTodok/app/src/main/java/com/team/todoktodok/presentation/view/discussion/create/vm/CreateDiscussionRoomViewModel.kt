@@ -148,7 +148,11 @@ class CreateDiscussionRoomViewModel(
                                 discussionOpinion = opinion,
                             )
                         }
-                    _uiEvent.setValue(CreateDiscussionUiEvent.NavigateToDiscussionDetail(discussionId.await()))
+                    _uiEvent.setValue(
+                        CreateDiscussionUiEvent.NavigateToDiscussionDetail(
+                            discussionId.await(),
+                        ),
+                    )
                 }.onFailure { exception ->
                     _uiEvent.setValue(CreateDiscussionUiEvent.ShowNetworkErrorMessage(exception))
                 }
@@ -197,20 +201,22 @@ class CreateDiscussionRoomViewModel(
 
             val discussionRoom = DiscussionRoom(title, opinion)
             viewModelScope.launch {
-                discussionRepository.editDiscussionRoom(
-                    discussionId = discussionRoomId,
-                    discussionRoom = discussionRoom,
-                )
-                _uiEvent.setValue(
-                    CreateDiscussionUiEvent.NavigateToDiscussionDetail(
-                        discussionRoomId,
-                    ),
-                )
+                discussionRepository
+                    .editDiscussionRoom(
+                        discussionId = discussionRoomId,
+                        discussionRoom = discussionRoom,
+                    ).onSuccess {
+                        _uiEvent.setValue(
+                            CreateDiscussionUiEvent.NavigateToDiscussionDetail(
+                                discussionRoomId,
+                            ),
+                        )
+                    }.onFailure { exception ->
+                        _uiEvent.setValue(CreateDiscussionUiEvent.ShowNetworkErrorMessage(exception))
+                    }
             }
-        } catch (e: IllegalArgumentException) {
-            updateErrorCreateDiscussion(ErrorCreateDiscussionType.PLEASE_TRY_AGAIN)
-        } catch (e: IllegalStateException) {
-            updateErrorCreateDiscussion(ErrorCreateDiscussionType.PLEASE_TRY_AGAIN)
+        } catch (e: Exception) {
+            _uiEvent.setValue(CreateDiscussionUiEvent.ShowToast(e.message.toString()))
         }
     }
 

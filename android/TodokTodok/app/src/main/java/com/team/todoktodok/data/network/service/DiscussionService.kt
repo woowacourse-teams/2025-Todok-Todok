@@ -34,7 +34,7 @@ interface DiscussionService {
     suspend fun editDiscussionRoom(
         @Path("discussionId") discussionId: Long,
         @Body editDiscussionRoomRequest: EditDiscussionRoomRequest,
-    ): Response<Unit>
+    ): NetworkResult<Unit>
 
     @DELETE("v1/discussions/{discussionId}")
     suspend fun deleteDiscussion(

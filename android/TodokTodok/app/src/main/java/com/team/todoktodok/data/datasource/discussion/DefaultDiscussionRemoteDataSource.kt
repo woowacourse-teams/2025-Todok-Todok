@@ -39,7 +39,7 @@ class DefaultDiscussionRemoteDataSource(
         discussionId: Long,
         discussionTitle: String,
         discussionOpinion: String,
-    ): Response<Unit> =
+    ): NetworkResult<Unit> =
         discussionService.editDiscussionRoom(
             discussionId = discussionId,
             editDiscussionRoomRequest =
