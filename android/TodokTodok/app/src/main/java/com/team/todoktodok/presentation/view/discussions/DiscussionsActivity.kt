@@ -222,7 +222,6 @@ class DiscussionsActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        viewModel.loadDiscussions()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
