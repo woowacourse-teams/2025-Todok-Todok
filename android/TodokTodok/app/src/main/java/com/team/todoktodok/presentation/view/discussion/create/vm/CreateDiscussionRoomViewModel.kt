@@ -64,14 +64,17 @@ class CreateDiscussionRoomViewModel(
 
             is SerializationCreateDiscussionRoomMode.Draft -> {
                 viewModelScope.launch {
-                    val book = async { discussionRepository.getBook() }.await()
-                    val discussion = async { discussionRepository.getDiscussion() }.await()
-                    if (discussion != null) {
+                    val book = async { discussionRepository.getBook() }
+                    val discussion = async { discussionRepository.getDiscussion() }
+
+                    val bookResult = book.await()
+                    val discussionResult = discussion.await()
+                    if (discussionResult != null) {
                         _uiState.value =
                             _uiState.value?.copy(
-                                book = book,
-                                title = discussion.title,
-                                opinion = discussion.opinion,
+                                book = bookResult,
+                                title = discussionResult.title,
+                                opinion = discussionResult.opinion,
                             )
                     }
                 }
