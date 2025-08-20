@@ -29,26 +29,15 @@ data class DiscussionsUiState(
         createdDiscussion: List<MemberDiscussion>,
         participatedDiscussion: List<MemberDiscussion>,
     ): DiscussionsUiState {
+        val created = createdDiscussion.take(MY_DISCUSSION_SIZE).map { it.toUiState() }
+        val participated = participatedDiscussion.take(MY_DISCUSSION_SIZE).map { it.toUiState() }
+
         val updatedList =
-            myDiscussions.toMutableList().apply {
-                clear()
-                if (createdDiscussion.isNotEmpty()) {
-                    add(
-                        MyDiscussionItems.CreatedDiscussionItem(
-                            createdDiscussion.take(MY_DISCUSSION_SIZE).map { it.toUiState() },
-                        ),
-                    )
-                }
-
-                val showEveryMyDiscussion = participatedDiscussion.isNotEmpty() && createdDiscussion.isNotEmpty()
-                if (showEveryMyDiscussion) add(MyDiscussionItems.DividerItem)
-
-                if (participatedDiscussion.isNotEmpty()) {
-                    add(
-                        MyDiscussionItems.ParticipatedDiscussionItem(
-                            participatedDiscussion.take(MY_DISCUSSION_SIZE).map { it.toUiState() },
-                        ),
-                    )
+            buildList {
+                if (created.isNotEmpty()) add(MyDiscussionItems.CreatedDiscussionItem(created))
+                if (participated.isNotEmpty()) {
+                    if (created.isNotEmpty()) add(MyDiscussionItems.DividerItem)
+                    add(MyDiscussionItems.ParticipatedDiscussionItem(participated))
                 }
             }
 
