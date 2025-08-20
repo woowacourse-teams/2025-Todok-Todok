@@ -8,7 +8,6 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import java.time.Clock;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -35,8 +34,8 @@ class DiscussionControllerTest {
     @Autowired
     private DatabaseInitializer databaseInitializer;
 
-    @Autowired
-    private Clock clock;
+//    @Autowired
+//    private Clock clock;
 
     @LocalServerPort
     int port;
@@ -316,7 +315,7 @@ class DiscussionControllerTest {
         databaseInitializer.setDiscussionInfo("게시글3", "내용3", memberId, bookId); // id=3
         databaseInitializer.setDiscussionInfo("게시글4", "내용4", memberId, bookId); // id=4
 
-        final LocalDateTime base = LocalDateTime.now(clock);
+        final LocalDateTime base = LocalDateTime.now();
 
         databaseInitializer.setCommentInfo("1-1", memberId, 1L, base.minusMinutes(10));
         databaseInitializer.setCommentInfo("2-1", memberId, 2L, base.minusMinutes(20));

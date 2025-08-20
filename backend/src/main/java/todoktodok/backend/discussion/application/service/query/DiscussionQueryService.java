@@ -1,6 +1,5 @@
 package todoktodok.backend.discussion.application.service.query;
 
-import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -35,7 +34,6 @@ public class DiscussionQueryService {
     private final MemberRepository memberRepository;
     private final CommentRepository commentRepository;
     private final ReplyRepository replyRepository;
-    private final Clock clock;
 
     public DiscussionResponse getDiscussion(
             final Long memberId,
@@ -206,7 +204,7 @@ public class DiscussionQueryService {
         validatePageSize(size);
 
         final Member member = findMember(memberId);
-        final LocalDateTime periodStart = LocalDateTime.now(clock).minusDays(period);
+        final LocalDateTime periodStart = LocalDateTime.now().minusDays(period);
 
         final DiscussionCursor discussionCursor = Optional.ofNullable(cursor)
                 .map(DiscussionCursor::fromEncoded)

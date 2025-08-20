@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -35,9 +34,6 @@ class DiscussionQueryServiceTest {
 
     @Autowired
     private DiscussionQueryService discussionQueryService;
-
-    @Autowired
-    private Clock clock;
 
     @BeforeEach
     void setUp() {
@@ -561,7 +557,7 @@ class DiscussionQueryServiceTest {
         databaseInitializer.setDiscussionInfo("게시글3", "내용3", memberId, bookId);
         databaseInitializer.setDiscussionInfo("게시글4", "내용4", memberId, bookId);
 
-        final LocalDateTime baseTime = LocalDateTime.now(clock);
+        final LocalDateTime baseTime = LocalDateTime.now();
 
         // 활성화 된 토론방 순서: DAY1 > DAY2 > DAY3 > DAY4
         databaseInitializer.setCommentInfo("댓글1-1", memberId, 1L, baseTime.minusMinutes(10));
@@ -583,7 +579,13 @@ class DiscussionQueryServiceTest {
         // then
         assertAll(
                 () -> assertThat(page1.discussions()).hasSize(size),
-                () -> assertThat(page1.hasNext()).isTrue()
+                () -> assertThat(page1.hasNext()).isTrue(),
+                () -> assertThat(page1.discussions())
+                        .extracting("lastCommentedAt")
+                        .containsExactly(
+                                baseTime.minusMinutes(10),
+                                baseTime.minusMinutes(20)
+                        )
         );
     }
 
@@ -602,7 +604,7 @@ class DiscussionQueryServiceTest {
         databaseInitializer.setDiscussionInfo("게시글3", "내용3", memberId, bookId);
         databaseInitializer.setDiscussionInfo("게시글4", "내용4", memberId, bookId);
 
-        final LocalDateTime baseTime = LocalDateTime.now(clock);
+        final LocalDateTime baseTime = LocalDateTime.now();
 
         databaseInitializer.setCommentInfo("댓글1-1", memberId, 1L, baseTime.minusMinutes(10));
         databaseInitializer.setCommentInfo("댓글2-1", memberId, 2L, baseTime.minusMinutes(20));
