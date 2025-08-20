@@ -120,6 +120,11 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
 
     private fun setupObserve(binding: FragmentCommentsBinding) {
         viewModel.uiState.observe(viewLifecycleOwner) { state ->
+            if (state.isLoading) {
+                binding.progressBar.show()
+            } else {
+                binding.progressBar.hide()
+            }
             adapter.submitList(state.comments) {
                 viewModel.commentsRvState?.let { saved ->
                     binding.rvComments.layoutManager?.onRestoreInstanceState(saved)

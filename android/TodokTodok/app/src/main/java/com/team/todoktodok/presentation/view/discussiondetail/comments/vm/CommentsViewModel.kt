@@ -24,7 +24,7 @@ class CommentsViewModel(
     val discussionId: Long =
         savedStateHandle.get<Long>(KEY_DISCUSSION_ID) ?: error("discussionId missing")
 
-    private val _uiState = MutableLiveData(CommentsUiState())
+    private val _uiState = MutableLiveData(CommentsUiState().copy(isLoading = true))
     val uiState: LiveData<CommentsUiState> = _uiState
 
     private val _uiEvent = MutableSingleLiveData<CommentsUiEvent>()
@@ -92,7 +92,7 @@ class CommentsViewModel(
         handleResult(commentRepository.getCommentsByDiscussionId(discussionId)) { list ->
             val myId = tokenRepository.getMemberId()
             val items = list.map { CommentItemUiState(it, isMyComment = myId == it.writer.id) }
-            _uiState.value = _uiState.value?.copy(comments = items)
+            _uiState.value = _uiState.value?.copy(comments = items, isLoading = false)
         }
     }
 
