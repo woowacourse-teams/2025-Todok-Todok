@@ -8,6 +8,7 @@ import com.team.todoktodok.CoroutinesTestExtension
 import com.team.todoktodok.InstantTaskExecutorExtension
 import com.team.todoktodok.ext.getOrAwaitValue
 import com.team.todoktodok.fixture.DISCUSSIONS
+import com.team.todoktodok.presentation.view.discussions.DiscussionUiState
 import com.team.todoktodok.presentation.view.discussions.DiscussionsUiEvent
 import com.team.todoktodok.presentation.view.discussions.vm.DiscussionsViewModel
 import io.mockk.coEvery
@@ -27,6 +28,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 class DiscussionsViewModelTest {
     private lateinit var mockDiscussionRepository: DiscussionRepository
     private lateinit var viewModel: DiscussionsViewModel
+    private val tmpFilter = DiscussionFilter.entries.filterNot { it == DiscussionFilter.HOT }
 
     @BeforeEach
     fun setUp() {
@@ -39,10 +41,8 @@ class DiscussionsViewModelTest {
         runTest {
             // Given
             val newTab = DiscussionFilter.MINE
-            // TODO(API 완성시 수정)
-            val tmpFilters = DiscussionFilter.entries.filterNot { it == DiscussionFilter.HOT }
 
-            tmpFilters.forEach { filter ->
+            tmpFilter.forEach { filter ->
                 coEvery {
                     mockDiscussionRepository.getDiscussions(filter, "")
                 } returns NetworkResult.Success(emptyList())
@@ -53,7 +53,7 @@ class DiscussionsViewModelTest {
 
             // Then
             assertEquals(viewModel.uiState.value?.filter, newTab)
-            tmpFilters.forEach { filter ->
+            tmpFilter.forEach { filter ->
                 coVerify {
                     mockDiscussionRepository.getDiscussions(filter, "")
                 }
@@ -66,9 +66,7 @@ class DiscussionsViewModelTest {
             // Given
             val newKeyword = "나나짱~"
 
-            val tmpFilters = DiscussionFilter.entries.filterNot { it == DiscussionFilter.HOT }
-
-            tmpFilters
+            tmpFilter
                 .forEach { filter ->
                     coEvery {
                         mockDiscussionRepository.getDiscussions(filter, any())
@@ -81,7 +79,7 @@ class DiscussionsViewModelTest {
             // Then
             assertEquals(newKeyword, viewModel.uiState.value?.searchKeyword)
 
-            tmpFilters.forEach { filter ->
+            tmpFilter.forEach { filter ->
                 coVerify {
                     mockDiscussionRepository.getDiscussions(filter, newKeyword)
                 }
@@ -93,7 +91,8 @@ class DiscussionsViewModelTest {
         runTest {
             // Given
             viewModel.updateTab(DiscussionFilter.ALL, 0L)
-            DiscussionFilter.entries.forEach { filter ->
+
+            tmpFilter.forEach { filter ->
                 coEvery {
                     mockDiscussionRepository.getDiscussions(filter, any())
                 } returns NetworkResult.Success(emptyList())
@@ -114,11 +113,11 @@ class DiscussionsViewModelTest {
     fun `모든 토론 필터이고 토론 목록이 있을 때_ShowHasMyDiscussions 이벤트 발생하고 myDiscussions에 추가된다`() =
         runTest {
             // Given
-            val mockDiscussions = DISCUSSIONS
+            val mockDiscussions = DISCUSSIONS.map { DiscussionUiState(it) }
 
             viewModel.updateTab(DiscussionFilter.ALL, 0L)
 
-            DiscussionFilter.entries.forEach { filter ->
+            tmpFilter.forEach { filter ->
                 coEvery {
                     mockDiscussionRepository.getDiscussions(filter, any())
                 } returns NetworkResult.Success(DISCUSSIONS)
@@ -139,11 +138,11 @@ class DiscussionsViewModelTest {
     fun `내 토론 필터이고 토론 목록이 있을 때_ShowHasMyDiscussions 이벤트가 발생하고 myDiscussions에 추가된다`() =
         runTest {
             // Given
-            val mockDiscussions = DISCUSSIONS
+            val mockDiscussions = DISCUSSIONS.map { DiscussionUiState(it) }
 
             viewModel.updateTab(DiscussionFilter.MINE, 0L)
 
-            DiscussionFilter.entries.forEach { filter ->
+            tmpFilter.forEach { filter ->
                 coEvery {
                     mockDiscussionRepository.getDiscussions(filter, any())
                 } returns NetworkResult.Success(DISCUSSIONS)
@@ -166,7 +165,7 @@ class DiscussionsViewModelTest {
             // Given
             viewModel.updateTab(DiscussionFilter.MINE, 0L)
 
-            DiscussionFilter.entries.forEach { filter ->
+            tmpFilter.forEach { filter ->
                 coEvery {
                     mockDiscussionRepository.getDiscussions(filter, any())
                 } returns NetworkResult.Success(emptyList())
