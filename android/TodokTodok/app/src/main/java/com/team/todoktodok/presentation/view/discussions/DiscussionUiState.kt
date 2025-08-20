@@ -10,6 +10,7 @@ import com.team.todoktodok.data.core.ext.toLocalDateTime
 data class DiscussionUiState(
     val item: Discussion,
     val opinionVisibility: Boolean = false,
+    val writerNicknameVisibility: Boolean = true,
 ) {
     val bookImage: String get() = item.bookImage
     val bookTitle: String get() = item.getBookTitle()

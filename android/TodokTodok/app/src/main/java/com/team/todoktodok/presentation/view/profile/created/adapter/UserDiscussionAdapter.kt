@@ -3,11 +3,12 @@ package com.team.todoktodok.presentation.view.profile.created.adapter
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.team.domain.model.member.MemberDiscussion
+import com.team.todoktodok.presentation.view.discussions.DiscussionUiState
 import com.team.todoktodok.presentation.view.profile.created.adapter.UserDiscussionViewHolder.Companion.UserDiscussionViewHolder
 
 class UserDiscussionAdapter(
     private val handler: Handler,
-) : ListAdapter<MemberDiscussion, UserDiscussionViewHolder>(UserDiscussionDiffCallback()) {
+) : ListAdapter<DiscussionUiState, UserDiscussionViewHolder>(UserDiscussionDiffCallback()) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,

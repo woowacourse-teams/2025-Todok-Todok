@@ -10,6 +10,7 @@ import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentParticipatedDiscussionsRoomBinding
 import com.team.todoktodok.presentation.core.ext.getParcelableArrayListCompat
 import com.team.todoktodok.presentation.view.discussiondetail.DiscussionDetailActivity
+import com.team.todoktodok.presentation.view.discussions.toUiState
 import com.team.todoktodok.presentation.view.profile.created.adapter.UserDiscussionAdapter
 import com.team.todoktodok.presentation.view.serialization.SerializationMemberDiscussion
 
@@ -66,7 +67,7 @@ class ParticipatedDiscussionsRoomFragment : Fragment(R.layout.fragment_participa
 
     private fun showParticipatedDiscussions(discussions: List<SerializationMemberDiscussion>) {
         with(binding) {
-            val participatedDiscussions = discussions.map { discussion -> discussion.toDomain() }
+            val participatedDiscussions = discussions.map { discussion -> discussion.toDomain().toUiState() }
             rvDiscussions.visibility = View.VISIBLE
             rvDiscussions.adapter = discussionAdapter
             discussionAdapter.submitList(participatedDiscussions)
@@ -85,7 +86,7 @@ class ParticipatedDiscussionsRoomFragment : Fragment(R.layout.fragment_participa
         }
 
     private fun moveToDiscussionDetail(index: Int) {
-        val discussionRoomId = discussionAdapter.currentList[index].id
+        val discussionRoomId = discussionAdapter.currentList[index].item.id
         val intent =
             DiscussionDetailActivity.Intent(requireContext(), discussionRoomId)
         startActivity(intent)
