@@ -43,10 +43,9 @@ class DiscussionsActivity : AppCompatActivity() {
     }
 
     private lateinit var manager: InputMethodManager
-
-    private val hotDiscussionFragment = HotDiscussionFragment()
-    private val allDiscussionFragment = AllDiscussionFragment()
-    private val myDiscussionFragment = MyDiscussionFragment()
+    private lateinit var hotDiscussionFragment: HotDiscussionFragment
+    private lateinit var allDiscussionFragment: AllDiscussionFragment
+    private lateinit var myDiscussionFragment: MyDiscussionFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,12 +75,30 @@ class DiscussionsActivity : AppCompatActivity() {
     }
 
     private fun initFragments() {
-        supportFragmentManager.commit {
-            add(R.id.fragmentContainerView, hotDiscussionFragment, HOT_DISCUSSION_FRAGMENT_TAG)
-            add(R.id.fragmentContainerView, allDiscussionFragment, ALL_DISCUSSION_FRAGMENT_TAG)
-            add(R.id.fragmentContainerView, myDiscussionFragment, MY_DISCUSSION_FRAGMENT_TAG)
+        val fm = supportFragmentManager
+
+        hotDiscussionFragment =
+            fm.findFragmentByTag(HOT_DISCUSSION_FRAGMENT_TAG) as? HotDiscussionFragment
+                ?: HotDiscussionFragment().also {
+                    fm.commit { add(R.id.fragmentContainerView, it, HOT_DISCUSSION_FRAGMENT_TAG) }
+                }
+
+        allDiscussionFragment =
+            fm.findFragmentByTag(ALL_DISCUSSION_FRAGMENT_TAG) as? AllDiscussionFragment
+                ?: AllDiscussionFragment().also {
+                    fm.commit { add(R.id.fragmentContainerView, it, ALL_DISCUSSION_FRAGMENT_TAG) }
+                }
+
+        myDiscussionFragment =
+            fm.findFragmentByTag(MY_DISCUSSION_FRAGMENT_TAG) as? MyDiscussionFragment
+                ?: MyDiscussionFragment().also {
+                    fm.commit { add(R.id.fragmentContainerView, it, MY_DISCUSSION_FRAGMENT_TAG) }
+                }
+
+        fm.commit {
             hide(allDiscussionFragment)
             hide(myDiscussionFragment)
+            show(hotDiscussionFragment)
         }
     }
 
