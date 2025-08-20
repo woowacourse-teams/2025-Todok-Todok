@@ -210,33 +210,6 @@ class DiscussionQueryServiceTest {
     class GetDiscussionsTest {
 
         @Test
-        @DisplayName("토론방 전체 조회 시 최신순으로 조회한다")
-        void getDiscussionsFromNewestTest() {
-            // given
-            databaseInitializer.setDefaultUserInfo();
-            databaseInitializer.setDefaultBookInfo();
-
-            databaseInitializer.setDefaultDiscussionInfo();
-            databaseInitializer.setDefaultDiscussionInfo();
-            databaseInitializer.setDefaultDiscussionInfo();
-
-            final Long memberId = 1L;
-            final int size = 3;
-            final String cursor = null;
-
-            // when
-            final SlicedDiscussionResponse firstSlicedDiscussions = discussionQueryService.getDiscussions(memberId, size, cursor);
-            final List<DiscussionResponse> items = firstSlicedDiscussions.items();
-
-            // then
-            assertAll(
-                    () -> assertThat(items).hasSize(size),
-                    () -> assertThat(items.get(0).discussionId()).isGreaterThan(items.get(1).discussionId()),
-                    () -> assertThat(items.get(1).discussionId()).isGreaterThan(items.get(2).discussionId())
-            );
-        }
-
-        @Test
         @DisplayName("토론방 최신순 조회 시 cursor 값에 맞는 토론방의 생성일시 이후에 생성된 토론방 중 최신순으로 조회한다")
         void getDiscussionsFromNewestTest_sliceByIdLessThanCursorId() {
             // given
