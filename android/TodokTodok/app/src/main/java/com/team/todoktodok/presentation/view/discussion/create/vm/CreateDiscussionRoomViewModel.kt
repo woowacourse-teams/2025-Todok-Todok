@@ -177,46 +177,42 @@ class CreateDiscussionRoomViewModel(
     }
 
     fun editDiscussionRoom() {
-        try {
-            val discussionRoomId =
-                _uiState.value?.discussionRoomId ?: run {
-                    updateErrorCreateDiscussion(
-                        ErrorCreateDiscussionType.DISCUSSION_ROOM_INFO_NOT_FOUND,
-                    )
-                    return
-                }
-            val title =
-                _uiState.value?.title
-                    ?: run {
-                        updateErrorCreateDiscussion(ErrorCreateDiscussionType.TITLE_NOT_FOUND)
-                        return
-                    }
-            val opinion =
-                _uiState.value?.opinion ?: run {
-                    updateErrorCreateDiscussion(
-                        ErrorCreateDiscussionType.CONTENT_NOT_FOUND,
-                    )
-                    return
-                }
-
-            val discussionRoom = DiscussionRoom(title, opinion)
-            viewModelScope.launch {
-                discussionRepository
-                    .editDiscussionRoom(
-                        discussionId = discussionRoomId,
-                        discussionRoom = discussionRoom,
-                    ).onSuccess {
-                        _uiEvent.setValue(
-                            CreateDiscussionUiEvent.NavigateToDiscussionDetail(
-                                discussionRoomId,
-                            ),
-                        )
-                    }.onFailure { exception ->
-                        _uiEvent.setValue(CreateDiscussionUiEvent.ShowNetworkErrorMessage(exception))
-                    }
+        val discussionRoomId =
+            _uiState.value?.discussionRoomId ?: run {
+                updateErrorCreateDiscussion(
+                    ErrorCreateDiscussionType.DISCUSSION_ROOM_INFO_NOT_FOUND,
+                )
+                return
             }
-        } catch (e: Exception) {
-            _uiEvent.setValue(CreateDiscussionUiEvent.ShowToast(e.message.toString()))
+        val title =
+            _uiState.value?.title
+                ?: run {
+                    updateErrorCreateDiscussion(ErrorCreateDiscussionType.TITLE_NOT_FOUND)
+                    return
+                }
+        val opinion =
+            _uiState.value?.opinion ?: run {
+                updateErrorCreateDiscussion(
+                    ErrorCreateDiscussionType.CONTENT_NOT_FOUND,
+                )
+                return
+            }
+
+        val discussionRoom = DiscussionRoom(title, opinion)
+        viewModelScope.launch {
+            discussionRepository
+                .editDiscussionRoom(
+                    discussionId = discussionRoomId,
+                    discussionRoom = discussionRoom,
+                ).onSuccess {
+                    _uiEvent.setValue(
+                        CreateDiscussionUiEvent.NavigateToDiscussionDetail(
+                            discussionRoomId,
+                        ),
+                    )
+                }.onFailure { exception ->
+                    _uiEvent.setValue(CreateDiscussionUiEvent.ShowNetworkErrorMessage(exception))
+                }
         }
     }
 
