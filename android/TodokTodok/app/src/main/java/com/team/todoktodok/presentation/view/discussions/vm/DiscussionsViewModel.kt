@@ -52,11 +52,12 @@ class DiscussionsViewModel(
     }
 
     fun loadLatestDiscussions() {
-        val currentUiState = _uiState.value ?: return
+        val state = _uiState.value ?: return
+        if (!state.latestPageHasNext || state.isLoading) return
 
-        if (currentUiState.latestPageHasNext) {
+        val cursor = state.latestPage.nextCursor
+        if (state.latestPageHasNext) {
             withLoading {
-                val cursor = _uiState.value?.latestPage?.nextCursor
                 when (val result = fakeDiscussionRepository.getLatestDiscussions(cursor = cursor)) {
                     is NetworkResult.Success -> {
                         _uiState.value = _uiState.value?.addLatestDiscussion(result.data)
