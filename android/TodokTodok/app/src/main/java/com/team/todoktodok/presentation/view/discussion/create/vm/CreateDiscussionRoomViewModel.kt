@@ -86,7 +86,11 @@ class CreateDiscussionRoomViewModel(
                                 discussionOpinion = opinion,
                             )
                         }
-                    _uiEvent.setValue(CreateDiscussionUiEvent.NavigateToDiscussionDetail(discussionId.await()))
+                    _uiEvent.setValue(
+                        CreateDiscussionUiEvent.NavigateToDiscussionDetail(
+                            discussionId.await(),
+                        ),
+                    )
                 }.onFailure { exception ->
                     _uiEvent.setValue(CreateDiscussionUiEvent.ShowNetworkErrorMessage(exception))
                 }
@@ -115,20 +119,22 @@ class CreateDiscussionRoomViewModel(
             val opinion = opinion.value ?: throw IllegalStateException(CONTENT_NOT_FOUND)
             val discussionRoom = DiscussionRoom(title, opinion)
             viewModelScope.launch {
-                discussionRepository.editDiscussionRoom(
-                    discussionId = discussionRoomId,
-                    discussionRoom = discussionRoom,
-                )
-                _uiEvent.setValue(
-                    CreateDiscussionUiEvent.NavigateToDiscussionDetail(
-                        discussionRoomId,
-                    ),
-                )
+                discussionRepository
+                    .editDiscussionRoom(
+                        discussionId = discussionRoomId,
+                        discussionRoom = discussionRoom,
+                    ).onSuccess {
+                        _uiEvent.setValue(
+                            CreateDiscussionUiEvent.NavigateToDiscussionDetail(
+                                discussionRoomId,
+                            ),
+                        )
+                    }.onFailure { exception ->
+                        _uiEvent.setValue(CreateDiscussionUiEvent.ShowNetworkErrorMessage(exception))
+                    }
             }
-        } catch (e: IllegalArgumentException) {
-            _uiEvent.setValue(CreateDiscussionUiEvent.ShowToast(e.message ?: PLEASE_TRY_AGAIN))
-        } catch (e: IllegalStateException) {
-            _uiEvent.setValue(CreateDiscussionUiEvent.ShowToast(e.message ?: PLEASE_TRY_AGAIN))
+        } catch (e: Exception) {
+            _uiEvent.setValue(CreateDiscussionUiEvent.ShowToast(e.message.toString()))
         }
     }
 
@@ -138,6 +144,5 @@ class CreateDiscussionRoomViewModel(
         const val CONTENT_NOT_FOUND = "내용이 없습니다."
         const val NOT_MY_DISCUSSION_ROOM = "내가 작성한 토론방이 아닙니다."
         const val DISCUSSION_ROOM_INFO_NOT_FOUND = "토론방 정보가 없습니다."
-        const val PLEASE_TRY_AGAIN = "다시 시도해주세요."
     }
 }

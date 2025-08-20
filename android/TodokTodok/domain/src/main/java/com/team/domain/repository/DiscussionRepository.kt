@@ -23,7 +23,7 @@ interface DiscussionRepository {
     suspend fun editDiscussionRoom(
         discussionId: Long,
         discussionRoom: DiscussionRoom,
-    )
+    ): NetworkResult<Unit>
 
     suspend fun deleteDiscussion(discussionId: Long): NetworkResult<Unit>
 
