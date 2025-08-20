@@ -19,11 +19,11 @@ public record DiscussionCursorResponse(
 ) {
 
     public DiscussionCursorResponse(
-            Discussion discussion,
-            Long likeCount,
-            Long commentCount,
-            boolean isLikedByMe,
-            LocalDateTime lastCommentedAt
+            final Discussion discussion,
+            final Long likeCount,
+            final Long commentCount,
+            final boolean isLikedByMe,
+            final LocalDateTime lastCommentedAt
     ) {
         this(
                 discussion.getId(),
