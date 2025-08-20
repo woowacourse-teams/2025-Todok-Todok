@@ -10,6 +10,7 @@ import com.team.todoktodok.data.core.ext.toLocalDateTime
 data class DiscussionUiState(
     val item: Discussion,
     val opinionVisibility: Boolean = false,
+    val writerNicknameVisibility: Boolean = true,
 ) {
     val bookImage: String get() = item.bookImage
     val bookTitle: String get() = item.getBookTitle()
@@ -60,5 +61,31 @@ fun MemberDiscussion.toUiState(): DiscussionUiState {
                 viewCount = viewCount,
                 isLikedByMe = isLikedByMe,
             ),
+    )
+}
+
+fun MemberDiscussion.toUiStateWithoutWriterNickname(): DiscussionUiState {
+    val writer = User(1, Nickname("페토"))
+    val createAt = "2025-08-15T21:22:11".toLocalDateTime()
+    val likeCount = 0
+    val commentCount = 2
+    val viewCount = 0
+    val isLikedByMe = false
+
+    return DiscussionUiState(
+        item =
+            Discussion(
+                id = id,
+                book = book,
+                discussionTitle = discussionTitle,
+                discussionOpinion = discussionOpinion,
+                writer = writer,
+                createAt = createAt,
+                likeCount = likeCount,
+                commentCount = commentCount,
+                viewCount = viewCount,
+                isLikedByMe = isLikedByMe,
+            ),
+        writerNicknameVisibility = false,
     )
 }
