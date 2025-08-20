@@ -31,6 +31,7 @@ data class DiscussionsUiState(
     ): DiscussionsUiState {
         val updatedList =
             myDiscussions.toMutableList().apply {
+                clear()
                 if (createdDiscussion.isNotEmpty()) {
                     add(
                         MyDiscussionItems.CreatedDiscussionItem(
