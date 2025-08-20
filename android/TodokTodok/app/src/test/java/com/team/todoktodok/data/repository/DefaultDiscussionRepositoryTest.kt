@@ -7,9 +7,11 @@ import com.team.domain.model.exception.NetworkResult
 import com.team.domain.model.exception.onSuccess
 import com.team.domain.model.member.Nickname
 import com.team.domain.model.member.User
+import com.team.todoktodok.data.datasource.discussion.DiscussionLocalDataSource
 import com.team.todoktodok.data.datasource.discussion.DiscussionRemoteDataSource
 import com.team.todoktodok.fake.datasource.FakeDiscussionRemoteDataSource
 import com.team.todoktodok.fixture.DISCUSSIONS
+import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -19,12 +21,14 @@ import java.time.LocalDateTime
 
 class DefaultDiscussionRepositoryTest {
     private lateinit var discussionRemoteDataSource: DiscussionRemoteDataSource
+    private lateinit var discussionLocalDataSource: DiscussionLocalDataSource
     private lateinit var defaultDiscussionRepository: DefaultDiscussionRepository
 
     @BeforeEach
     fun setUp() {
         discussionRemoteDataSource = FakeDiscussionRemoteDataSource()
-        defaultDiscussionRepository = DefaultDiscussionRepository(discussionRemoteDataSource)
+        discussionLocalDataSource = mockk()
+        defaultDiscussionRepository = DefaultDiscussionRepository(discussionRemoteDataSource, discussionLocalDataSource)
     }
 
     @Test

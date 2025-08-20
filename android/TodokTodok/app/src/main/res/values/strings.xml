@@ -117,6 +117,8 @@
     <string name="select_book">토론방 도서 선택</string>
     <string name="content_description_search_keyword">도서 검색을 합니다</string>
     <string name="hint_search_keyword">도서 제목 또는 저자를 입력해주세요</string>
+    <string name="draft_discussion_exist">임시저장된 문서를 불러오시겠습니까?</string>
+    <string name="load">불러오기</string>
     <string name="empty_search_result">도서 \'%s\' 검색 결과가 없습니다</string>
     <string name="empty_search_result_description">입력한 검색어의 철자 또는 띄어쓰기가 정확한지 다시 한번 확인해 주세요.</string>
 
@@ -134,6 +136,10 @@
     <string name="hint_discussion_room_title">제목을 입력해주세요!</string>
     <string name="edit_discussion_room_title">토론방 수정</string>
     <string name="edit">수정</string>
+    <string name="draft">임시저장</string>
+    <string name="draft_message">작성중인 글을 취소하시겠습니까? 취소하기 선택시, 작성된 글은 저장되지 않습니다</string>
+    <string name="no_exist_file">이미 저장되어있는 파일이 있습니다</string>
+    <string name="overload">덮어쓰기</string>
     <string name="error_empty_content">토론방 내용을 입력해주세요</string>
     <string name="error_empty_title">토론방 제목을 입력해주세요</string>
 
@@ -182,6 +188,16 @@
     <!-- 차단/신고 관련 -->
     <string name="error_already_blocked">이미 차단된 회원이에요</string>
     <string name="error_already_reported">이미 신고한 회원이에요</string>
+
+    <!-- 토론방 생성 관련 에러 -->
+    <string name="error_create_discussion_book_info_not_found">책 정보가 없습니다</string>
+    <string name="error_create_discussion_title_not_found">제목이 없습니다</string>
+    <string name="error_create_discussion_content_not_found">내용이 없습니다</string>
+    <string name="error_create_discussion_not_my_discussion_room">내가 작성한 토론방이 아닙니다</string>
+    <string name="error_create_discussion_discussion_room_info_not_found">토론방 정보가 없습니다</string>
+    <string name="error_create_discussion_please_try_again">다시 시도해주세요</string>
+    <string name="error_create_discussion_title_length_over">제목은 50자까지 입력할 수 있습니다</string>
+    <string name="error_create_discussion_opinion_length_over">본문은 2500자까지 입력할 수 있습니다</string>
     <string name="setting_manage_blocked_members_empty_message">차단한 사용자가 없어요</string>
 
     <!-- 토론 관련 예외 -->

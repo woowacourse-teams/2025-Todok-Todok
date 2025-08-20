@@ -8,8 +8,14 @@ sealed interface CreateDiscussionUiEvent {
     ) : CreateDiscussionUiEvent
 
     data class ShowToast(
-        val error: String,
+        val error: ErrorCreateDiscussionType,
     ) : CreateDiscussionUiEvent
+
+    data class SaveDraft(
+        val possible: Boolean,
+    ) : CreateDiscussionUiEvent
+
+    data object Finish : CreateDiscussionUiEvent
 
     data class ShowNetworkErrorMessage(
         val exception: TodokTodokExceptions,

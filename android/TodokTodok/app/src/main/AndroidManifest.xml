@@ -19,8 +19,9 @@
         <activity
             android:name=".presentation.view.discussion.create.CreateDiscussionRoomActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
+            android:windowSoftInputMode="adjustResize" />
+      <activity
+
             android:name=".presentation.view.setting.SettingActivity"
             android:exported="false" />
         <activity

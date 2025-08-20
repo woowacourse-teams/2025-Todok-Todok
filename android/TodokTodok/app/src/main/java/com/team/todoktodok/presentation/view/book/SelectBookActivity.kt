@@ -25,6 +25,7 @@ import com.team.todoktodok.databinding.ActivitySelectBookBinding
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.component.AlertSnackBar
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
+import com.team.todoktodok.presentation.core.component.CommonDialog
 import com.team.todoktodok.presentation.view.book.adapter.SearchBooksAdapter
 import com.team.todoktodok.presentation.view.book.vm.SelectBookViewModel
 import com.team.todoktodok.presentation.view.book.vm.SelectBookViewModelFactory
@@ -36,7 +37,10 @@ import com.team.todoktodok.presentation.view.serialization.toSerialization
 class SelectBookActivity : AppCompatActivity() {
     private val viewModel by viewModels<SelectBookViewModel> {
         val repositoryModule = (application as App).container.repositoryModule
-        SelectBookViewModelFactory(repositoryModule.bookRepository)
+        SelectBookViewModelFactory(
+            repositoryModule.bookRepository,
+            repositoryModule.discussionRepository,
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,6 +82,15 @@ class SelectBookActivity : AppCompatActivity() {
         binding: ActivitySelectBookBinding,
         adapter: SearchBooksAdapter,
     ) {
+        supportFragmentManager.setFragmentResultListener(
+            CommonDialog.REQUEST_KEY_COMMON_DIALOG,
+            this,
+        ) { _, bundle ->
+            val confirmed = bundle.getBoolean(CommonDialog.RESULT_KEY_COMMON_DIALOG)
+            if (confirmed) {
+                viewModel.getBook()
+            }
+        }
         binding.apply {
             etSearchKeyword.requestFocus()
             rvSearchedBooks.adapter = adapter
@@ -147,6 +160,15 @@ class SelectBookActivity : AppCompatActivity() {
     private fun setupUiEvent(binding: ActivitySelectBookBinding) {
         viewModel.uiEvent.observe(this) { event ->
             when (event) {
+                is SelectBookUiEvent.ShowSavedDiscussionRoom -> {
+                    val dialog =
+                        CommonDialog.newInstance(
+                            getString(R.string.draft_discussion_exist),
+                            getString(R.string.load),
+                        )
+                    dialog.show(supportFragmentManager, CommonDialog.TAG)
+                }
+
                 is SelectBookUiEvent.NavigateToCreateDiscussionRoom ->
                     navigateToCreateDiscussionRoom(event.book)
 
@@ -158,6 +180,17 @@ class SelectBookActivity : AppCompatActivity() {
                         binding.root,
                         event.message.id,
                     ).show()
+                }
+
+                is SelectBookUiEvent.NavigateToDraftDiscussionRoom -> {
+                    val serializationBook: SerializationBook = event.book.toSerialization()
+                    val intent =
+                        CreateDiscussionRoomActivity.Intent(
+                            this,
+                            SerializationCreateDiscussionRoomMode.Draft(serializationBook),
+                        )
+                    startActivity(intent)
+                    finish()
                 }
 
                 is SelectBookUiEvent.ShowSearchedBookResultIsEmpty -> {

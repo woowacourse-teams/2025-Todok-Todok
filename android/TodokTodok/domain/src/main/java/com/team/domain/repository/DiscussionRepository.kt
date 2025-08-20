@@ -1,5 +1,6 @@
 package com.team.domain.repository
 
+import com.team.domain.model.Book
 import com.team.domain.model.Discussion
 import com.team.domain.model.DiscussionFilter
 import com.team.domain.model.LikeStatus
@@ -28,6 +29,18 @@ interface DiscussionRepository {
     suspend fun deleteDiscussion(discussionId: Long): NetworkResult<Unit>
 
     suspend fun toggleLike(discussionId: Long): NetworkResult<LikeStatus>
+
+    suspend fun saveDiscussionRoom(
+        book: Book,
+        discussionTitle: String,
+        discussionOpinion: String,
+    )
+
+    suspend fun hasDiscussion(): Boolean
+
+    suspend fun getBook(): Book
+
+    suspend fun getDiscussion(): DiscussionRoom?
 
     suspend fun reportDiscussion(discussionId: Long): NetworkResult<Unit>
 }

@@ -4,6 +4,7 @@ import com.team.domain.model.Book
 import com.team.domain.model.Books
 import com.team.domain.model.exception.NetworkResult
 import com.team.domain.repository.BookRepository
+import com.team.domain.repository.DiscussionRepository
 import com.team.todoktodok.CoroutinesTestExtension
 import com.team.todoktodok.InstantTaskExecutorExtension
 import com.team.todoktodok.ext.getOrAwaitValue
@@ -11,6 +12,7 @@ import com.team.todoktodok.presentation.view.book.SelectBookErrorType
 import com.team.todoktodok.presentation.view.book.SelectBookUiEvent
 import com.team.todoktodok.presentation.view.book.vm.SelectBookViewModel
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -25,12 +27,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(InstantTaskExecutorExtension::class)
 class SelectBookViewModelTest {
     private lateinit var bookRepository: BookRepository
+    private lateinit var discussionRepository: DiscussionRepository
     private lateinit var viewModel: SelectBookViewModel
 
     @BeforeEach
     fun setUp() {
         bookRepository = mockk()
-        viewModel = SelectBookViewModel(bookRepository)
+        discussionRepository = mockk<DiscussionRepository>(relaxed = true)
+        viewModel = SelectBookViewModel(bookRepository, discussionRepository)
     }
 
     @Test
@@ -38,6 +42,7 @@ class SelectBookViewModelTest {
         runTest {
             // given
             val keyword = ""
+            coVerify { discussionRepository.hasDiscussion() }
 
             // when
             viewModel.searchWithCurrentKeyword(keyword)
@@ -56,6 +61,7 @@ class SelectBookViewModelTest {
             // given
             viewModel.updateKeyword("오브젝트")
             val keyword = "오브젝트"
+            coVerify { discussionRepository.hasDiscussion() }
 
             // when
             viewModel.searchWithCurrentKeyword(keyword)
@@ -100,6 +106,7 @@ class SelectBookViewModelTest {
         runTest {
             // given
             val position = -1
+            coVerify { discussionRepository.hasDiscussion() }
 
             // when
             viewModel.updateSelectedBook(position)

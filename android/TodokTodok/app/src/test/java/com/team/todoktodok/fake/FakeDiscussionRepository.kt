@@ -1,5 +1,6 @@
 package com.team.todoktodok.fake
 
+import com.team.domain.model.Book
 import com.team.domain.model.Discussion
 import com.team.domain.model.DiscussionFilter
 import com.team.domain.model.LikeStatus
@@ -14,6 +15,10 @@ class FakeDiscussionRepository : DiscussionRepository {
     override suspend fun getDiscussion(id: Long): NetworkResult<Discussion> =
         NetworkResult.Success(discussions.find { id == it.id } ?: throw IllegalArgumentException())
 
+    override suspend fun getDiscussion(): DiscussionRoom? {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun getDiscussions(
         type: DiscussionFilter,
         keyword: String?,
@@ -24,6 +29,14 @@ class FakeDiscussionRepository : DiscussionRepository {
         discussionTitle: String,
         discussionOpinion: String,
     ): Long {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun saveDiscussionRoom(
+        book: Book,
+        discussionTitle: String,
+        discussionOpinion: String,
+    ) {
         TODO("Not yet implemented")
     }
 
@@ -43,6 +56,14 @@ class FakeDiscussionRepository : DiscussionRepository {
     }
 
     override suspend fun reportDiscussion(discussionId: Long): NetworkResult<Unit> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun hasDiscussion(): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getBook(): Book {
         TODO("Not yet implemented")
     }
 }
