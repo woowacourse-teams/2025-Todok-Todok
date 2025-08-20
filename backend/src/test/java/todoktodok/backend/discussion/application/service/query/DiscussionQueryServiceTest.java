@@ -490,7 +490,7 @@ class DiscussionQueryServiceTest {
         @Test
         @DisplayName("좋아요, 댓글, 대댓글의 합이 높은 순서대로 조회하고, 합이 같은 경우 최신순으로 조회된다")
         void hotDiscussionsTest_sortBySum() {
-            //when
+            // given - when
             final Long memberId = 1L;
             final int period = 7;
             final int count = 5;
@@ -510,7 +510,7 @@ class DiscussionQueryServiceTest {
         @Test
         @DisplayName("인기 토론방으로 조회되는 개수는 count 값 이하이다")
         void hotDiscussionsTest_sliceByCount() {
-            //when
+            // given - when
             final Long memberId = 1L;
             final int period = 7;
             final int count = 2;
@@ -528,7 +528,7 @@ class DiscussionQueryServiceTest {
         @Test
         @DisplayName("period로 주어진 기간 안에 생성된 좋아요, 댓글, 대댓를 수를 기준으로 인기 토론방을 조회한다")
         void hotDiscussionsTest_findByPeriod() {
-            //when
+            // given - when
             final Long memberId = 1L;
             final int period = 0;
             final int count = 5;
