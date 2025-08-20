@@ -2,6 +2,7 @@ package todoktodok.backend.discussion.application.service.query;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.time.LocalDateTime;
@@ -11,6 +12,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -469,7 +472,7 @@ class DiscussionQueryServiceTest {
         );
 
         // then
-        assertThat(page1.hasNext()).isFalse();
+        assertThat(page1.pageInfo().hasNext()).isFalse();
     }
 
     @Test
@@ -504,7 +507,7 @@ class DiscussionQueryServiceTest {
         );
 
         // then
-        assertThat(page1.hasNext()).isFalse();
+        assertThat(page1.pageInfo().hasNext()).isFalse();
     }
 
     @Test
@@ -539,7 +542,7 @@ class DiscussionQueryServiceTest {
         );
 
         // then
-        assertThat(page1.hasNext()).isTrue();
+        assertThat(page1.pageInfo().hasNext()).isTrue();
     }
 
     @Test
@@ -578,9 +581,9 @@ class DiscussionQueryServiceTest {
 
         // then
         assertAll(
-                () -> assertThat(page1.discussions()).hasSize(size),
-                () -> assertThat(page1.hasNext()).isTrue(),
-                () -> assertThat(page1.discussions())
+                () -> assertThat(page1.items()).hasSize(size),
+                () -> assertThat(page1.pageInfo().hasNext()).isTrue(),
+                () -> assertThat(page1.items())
                         .extracting("lastCommentedAt")
                         .containsExactly(
                                 baseTime.minusMinutes(10),
@@ -589,38 +592,34 @@ class DiscussionQueryServiceTest {
         );
     }
 
-    @Test
-    @DisplayName("활성화 된 토론방 조회 시, 페이지 크기가 1 이상이 아닐 경우 예외가 발생한다")
-    void getActiveDiscussion_invalidSize() {
-        // given
+    @ParameterizedTest(name = "size={0} 일 때 예외 없음")
+    @ValueSource(ints = {1, 50})
+    @DisplayName("페이지 크기 경계값(1, 50)에서는 예외가 발생하지 않는다")
+    void getActiveDiscussions_sizeBoundary_ok(final int size) {
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
-
         final Long memberId = 1L;
-        final Long bookId = 1L;
-
-        databaseInitializer.setDiscussionInfo("게시글1", "내용1", memberId, bookId);
-        databaseInitializer.setDiscussionInfo("게시글2", "내용2", memberId, bookId);
-        databaseInitializer.setDiscussionInfo("게시글3", "내용3", memberId, bookId);
-        databaseInitializer.setDiscussionInfo("게시글4", "내용4", memberId, bookId);
-
-        final LocalDateTime baseTime = LocalDateTime.now();
-
-        databaseInitializer.setCommentInfo("댓글1-1", memberId, 1L, baseTime.minusMinutes(10));
-        databaseInitializer.setCommentInfo("댓글2-1", memberId, 2L, baseTime.minusMinutes(20));
-        databaseInitializer.setCommentInfo("댓글2-2", memberId, 2L, baseTime.minusMinutes(30));
-        databaseInitializer.setCommentInfo("댓글3-1", memberId, 3L, baseTime.minusMinutes(40));
-        databaseInitializer.setCommentInfo("댓글3-2", memberId, 3L, baseTime.minusMinutes(50));
-        databaseInitializer.setCommentInfo("댓글3-3", memberId, 3L, baseTime.minusMinutes(60));
-        databaseInitializer.setCommentInfo("댓글4-1", memberId, 4L, baseTime.minusMinutes(70));
-
         final int periodDays = 2;
-        final int size = 0;
 
-        // when - then
-        assertThatThrownBy(
-                () -> discussionQueryService.getActiveDiscussions(memberId, periodDays, size, null))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("[ERROR] 페이지 사이즈는 1 이상이어야 합니다: " + size);
+        assertThatCode(() ->
+                discussionQueryService.getActiveDiscussions(memberId, periodDays, size, null)
+        ).doesNotThrowAnyException();
     }
+
+    @ParameterizedTest(name = "size={0} 일 때 예외 발생")
+    @ValueSource(ints = {0, 51})
+    @DisplayName("페이지 크기가 경계 밖(0, 51)이면 예외가 발생한다")
+    void getActiveDiscussions_sizeOutOfRange_fail(final int size) {
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        final Long memberId = 1L;
+        final int periodDays = 2;
+
+        assertThatThrownBy(() ->
+                discussionQueryService.getActiveDiscussions(memberId, periodDays, size, null)
+        )
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("[ERROR] 페이지 사이즈는 1 이상, 50 이하여야 합니다: " + size);
+    }
+
 }

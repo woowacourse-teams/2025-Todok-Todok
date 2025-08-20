@@ -4,8 +4,7 @@ import java.util.List;
 import todoktodok.backend.discussion.application.service.query.DiscussionCursorDto;
 
 public record DiscussionPageResponse(
-        List<DiscussionCursorDto> discussions,
-        boolean hasNext,
-        String nextCursor
+        List<DiscussionCursorDto> items,
+        PageInfo pageInfo
 ) {
 }

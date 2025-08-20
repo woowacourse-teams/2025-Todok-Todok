@@ -339,16 +339,16 @@ class DiscussionControllerTest {
                 .when().get("/api/v1/discussions/active")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
-                .body("discussions.size()", equalTo(size))
-                .body("hasNext", equalTo(true))
-                .body("nextCursor", notNullValue())
-                .body("discussions[0].discussionId", equalTo(1))
-                .body("discussions[1].discussionId", equalTo(2))
-                .body("discussions[2].discussionId", equalTo(3))
+                .body("items.size()", equalTo(size))
+                .body("pageInfo.hasNext", equalTo(true))
+                .body("pageInfo.nextCursor", notNullValue())
+                .body("items[0].discussionId", equalTo(1))
+                .body("items[1].discussionId", equalTo(2))
+                .body("items[2].discussionId", equalTo(3))
                 .extract();
 
         // 2페이지 확인
-        String cursor = response.jsonPath().getString("nextCursor");
+        String cursor = response.jsonPath().getString("pageInfo.nextCursor");
         RestAssured.given()
                 .contentType(ContentType.JSON)
                 .header("Authorization", token)
@@ -358,9 +358,9 @@ class DiscussionControllerTest {
                 .when().get("/api/v1/discussions/active")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
-                .body("discussions.size()", equalTo(1))
-                .body("discussions[0].discussionId", equalTo(4))
-                .body("hasNext", equalTo(false))
-                .body("nextCursor", nullValue());
+                .body("items.size()", equalTo(1))
+                .body("items[0].discussionId", equalTo(4))
+                .body("pageInfo.hasNext", equalTo(false))
+                .body("pageInfo.nextCursor", nullValue());
     }
 }

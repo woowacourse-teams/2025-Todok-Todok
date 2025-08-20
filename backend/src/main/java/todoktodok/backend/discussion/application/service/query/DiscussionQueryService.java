@@ -14,6 +14,7 @@ import todoktodok.backend.comment.domain.repository.CommentRepository;
 import todoktodok.backend.discussion.application.dto.DiscussionCursor;
 import todoktodok.backend.discussion.application.dto.response.DiscussionPageResponse;
 import todoktodok.backend.discussion.application.dto.response.DiscussionResponse;
+import todoktodok.backend.discussion.application.dto.response.PageInfo;
 import todoktodok.backend.discussion.domain.Discussion;
 import todoktodok.backend.discussion.domain.DiscussionFilterType;
 import todoktodok.backend.discussion.domain.repository.DiscussionLikeRepository;
@@ -222,7 +223,7 @@ public class DiscussionQueryService {
         );
 
         if (discussions.isEmpty()) {
-            return new DiscussionPageResponse(Collections.emptyList(), false, null);
+            return new DiscussionPageResponse(Collections.emptyList(), new PageInfo(false, null));
         }
 
         final boolean hasNext = discussions.size() > size;
@@ -233,7 +234,10 @@ public class DiscussionQueryService {
         final DiscussionCursorDto last = hasNext ? discussions.getLast() : null;
         final String nextCursor = getNextCursor(hasNext, last, discussionCursor);
 
-        return new DiscussionPageResponse(discussions, hasNext, nextCursor);
+        return new DiscussionPageResponse(
+                discussions,
+                new PageInfo(hasNext, nextCursor)
+        );
     }
 
     private String getNextCursor(
