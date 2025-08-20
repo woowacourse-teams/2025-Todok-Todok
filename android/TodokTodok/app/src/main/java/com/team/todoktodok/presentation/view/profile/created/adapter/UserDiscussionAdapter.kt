@@ -2,7 +2,6 @@ package com.team.todoktodok.presentation.view.profile.created.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
-import com.team.domain.model.member.MemberDiscussion
 import com.team.todoktodok.presentation.view.discussions.DiscussionUiState
 import com.team.todoktodok.presentation.view.profile.created.adapter.UserDiscussionViewHolder.Companion.UserDiscussionViewHolder
 
