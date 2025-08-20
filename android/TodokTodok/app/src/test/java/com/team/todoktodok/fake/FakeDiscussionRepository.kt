@@ -14,9 +14,14 @@ import com.team.todoktodok.fixture.DISCUSSIONS
 class FakeDiscussionRepository : DiscussionRepository {
     private val dataSource = FakeDiscussionRemoteDataSource()
     private val discussions = DISCUSSIONS
-    override suspend fun getLatestDiscussions(size: Int, cursor: String?): NetworkResult<LatestDiscussionPage> {
-        return dataSource.getLatestDiscussions(size, cursor).map { it.toDomain() }
-    }
+
+    override suspend fun getLatestDiscussions(
+        size: Int,
+        cursor: String?,
+    ): NetworkResult<LatestDiscussionPage> =
+        dataSource.getLatestDiscussions(size, cursor).map {
+            it.toDomain()
+        }
 
     override suspend fun getDiscussion(id: Long): NetworkResult<Discussion> =
         NetworkResult.Success(discussions.find { id == it.id } ?: throw IllegalArgumentException())

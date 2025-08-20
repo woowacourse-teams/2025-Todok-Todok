@@ -8,7 +8,6 @@ import com.team.todoktodok.data.network.response.latest.LatestDiscussionsRespons
 import retrofit2.Response
 
 interface DiscussionRemoteDataSource {
-
     suspend fun getLatestDiscussions(
         size: Int,
         cursor: String? = null,

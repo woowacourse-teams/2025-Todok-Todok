@@ -18,8 +18,8 @@ data class LatestDiscussionResponse(
     val likeCount: Int,
     val title: String,
 ) {
-    fun toDomain(): LatestDiscussion {
-        return LatestDiscussion(
+    fun toDomain(): LatestDiscussion =
+        LatestDiscussion(
             author.toDomain(),
             book.toDomain(),
             commentCount,
@@ -28,7 +28,6 @@ data class LatestDiscussionResponse(
             discussionId,
             isLikedByMe,
             likeCount,
-            title
+            title,
         )
-    }
 }

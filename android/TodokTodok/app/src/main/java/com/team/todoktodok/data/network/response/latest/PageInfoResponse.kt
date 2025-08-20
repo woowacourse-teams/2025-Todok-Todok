@@ -1,6 +1,5 @@
 package com.team.todoktodok.data.network.response.latest
 
-
 import com.team.domain.model.latest.PageInfo
 import kotlinx.serialization.Serializable
 

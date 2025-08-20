@@ -132,40 +132,44 @@ class DefaultDiscussionRepositoryTest {
         }
 
     @Test
-    fun `최신 토론을 페이지 단위로 가져온다`() = runTest {
-        // given
-        val pageSize = 10
-        val firstCursor: String? = null
+    fun `최신 토론을 페이지 단위로 가져온다`() =
+        runTest {
+            // given
+            val pageSize = 10
+            val firstCursor: String? = null
 
-        // 첫 페이지 요청
-        val firstPageResult = defaultDiscussionRepository.getLatestDiscussions(pageSize, firstCursor)
-        firstPageResult.onSuccess { page ->
-            assertThat(page.discussions.size).isEqualTo(pageSize)
-            assertThat(page.pageInfo.hasNext).isTrue()
-        }
+            // when
+            val firstPageResult = defaultDiscussionRepository.getLatestDiscussions(pageSize, firstCursor)
+            firstPageResult.onSuccess { page ->
+                assertThat(page.discussions.size).isEqualTo(pageSize)
+                assertThat(page.pageInfo.hasNext).isTrue()
+            }
 
-        // 두 번째 페이지 요청
-        val nextCursor = (firstPageResult as NetworkResult.Success).data.pageInfo.nextCursor
-        val secondPageResult = defaultDiscussionRepository.getLatestDiscussions(pageSize, nextCursor)
-        secondPageResult.onSuccess { page ->
-            assertThat(page.discussions.size).isEqualTo(pageSize)
+            val nextCursor = (firstPageResult as NetworkResult.Success).data.pageInfo.nextCursor
+            val secondPageResult = defaultDiscussionRepository.getLatestDiscussions(pageSize, nextCursor)
+
+            // then
+            secondPageResult.onSuccess { page ->
+                assertThat(page.discussions.size).isEqualTo(pageSize)
+            }
         }
-    }
 
     @Test
-    fun `마지막 페이지에서는 hasNext가 false이다`() = runTest {
-        // given
-        val pageSize = 50
-        val cursor: String? = null
+    fun `마지막 페이지에서는 hasNext가 false이다`() =
+        runTest {
+            // given
+            val pageSize = 50
+            val cursor: String? = null
 
-        // 2번째 페이지는 마지막 페이지
-        val firstPage = defaultDiscussionRepository.getLatestDiscussions(pageSize, cursor)
-        firstPage as NetworkResult.Success
-        val lastCursor = firstPage.data.pageInfo.nextCursor
+            // when
+            val firstPage = defaultDiscussionRepository.getLatestDiscussions(pageSize, cursor)
+            firstPage as NetworkResult.Success
+            val lastCursor = firstPage.data.pageInfo.nextCursor
+            val lastPageResult = defaultDiscussionRepository.getLatestDiscussions(pageSize, lastCursor)
 
-        val lastPageResult = defaultDiscussionRepository.getLatestDiscussions(pageSize, lastCursor)
-        lastPageResult.onSuccess { page ->
-            assertThat(page.pageInfo.hasNext).isFalse()
+            // then
+            lastPageResult.onSuccess { page ->
+                assertThat(page.pageInfo.hasNext).isFalse()
+            }
         }
-    }
 }

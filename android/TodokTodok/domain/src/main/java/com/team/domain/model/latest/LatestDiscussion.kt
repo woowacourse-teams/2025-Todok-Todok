@@ -12,5 +12,5 @@ data class LatestDiscussion(
     val discussionId: Int,
     val isLikedByMe: Boolean,
     val likeCount: Int,
-    val title: String
+    val title: String,
 )
