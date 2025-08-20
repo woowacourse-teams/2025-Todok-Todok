@@ -125,6 +125,11 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
             } else {
                 binding.progressBar.hide()
             }
+            if (state.comments.isEmpty()) {
+                binding.llNothingCommentsLayout.visibility = View.VISIBLE
+            } else {
+                binding.llNothingCommentsLayout.visibility = View.GONE
+            }
             adapter.submitList(state.comments) {
                 viewModel.commentsRvState?.let { saved ->
                     binding.rvComments.layoutManager?.onRestoreInstanceState(saved)

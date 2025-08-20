@@ -42,7 +42,7 @@
         android:id="@+id/iv_comment_option"
         android:layout_width="@dimen/space_24"
         android:layout_height="@dimen/space_24"
-        android:contentDescription="@string/content_description_comment_option"
+        android:contentDescription="@string/comment_content_description_comment_option"
         android:src="@drawable/btn_option"
         app:layout_constraintBottom_toBottomOf="@id/tv_user_nickname"
         app:layout_constraintEnd_toEndOf="parent"

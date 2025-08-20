@@ -18,7 +18,7 @@
         android:id="@+id/iv_comment_detail_back"
         android:layout_width="@dimen/space_24"
         android:layout_height="@dimen/space_24"
-        android:contentDescription="@string/content_description_comment_detail_back"
+        android:contentDescription="@string/comment_content_description_comment_detail_back"
         android:src="@drawable/btn_back"
         app:layout_constraintBottom_toBottomOf="@id/abl_comment_detail"
         app:layout_constraintStart_toStartOf="@id/abl_comment_detail"

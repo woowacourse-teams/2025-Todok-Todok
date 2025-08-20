@@ -102,14 +102,17 @@
     <string name="discussion_menu_profile">내정보</string>
 
     <!-- 댓글 상세 화면-->
-    <string name="content_description_comment_detail_back">댓글 상세 화면에서 뒤로가는 버튼</string>
-    <string name="content_description_comment_option">댓글 옵션 클릭 버튼</string>
-    <string name="content_description_reply_option">대댓글 옵션 클릭 버튼</string>
-    <string name="content_description_comment_reply">대댓글 목록 버튼</string>
-    <string name="content_description_comment_like">댓글 좋아요 클릭 버튼</string>
-    <string name="content_description_reply_like">대댓글 좋아요 클릭 버튼</string>
-    <string name="confirm_delete_message">작성중인 댓글을 삭제할까요?</string>
-    <string name="content_description_comment_detail_reply_user_profile">대댓글 유저 이미지 버튼</string>
+    <string name="comment_content_description_comment_detail_back">댓글 상세 화면에서 뒤로가는 버튼</string>
+    <string name="comment_content_description_comment_option">댓글 옵션 클릭 버튼</string>
+    <string name="comment_content_description_reply_option">대댓글 옵션 클릭 버튼</string>
+    <string name="comment_content_description_comment_reply">대댓글 목록 버튼</string>
+    <string name="comment_content_description_comment_like">댓글 좋아요 클릭 버튼</string>
+    <string name="comment_content_description_reply_like">대댓글 좋아요 클릭 버튼</string>
+    <string name="comment_confirm_delete_message">작성중인 댓글을 삭제할까요?</string>
+    <string name="comment_content_description_comment_detail_reply_user_profile">대댓글 유저 이미지 버튼</string>
+    <string name="comment_nothing_comments">첫 글의 주인공이 될 수 있는 기회\n 지금 바로 작성하세요</string>
+    <string name="comment_content_description_noting_comment">댓글이 없을 때 나오는 토독이</string>
+
     <!-- 토론방 도서 선택 화면 -->
     <string name="content_description_ut_discussion_img">토론방 도서 이미지</string>
     <string name="create_discussion_room">토론방 생성</string>

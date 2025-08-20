@@ -130,7 +130,7 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
         val confirmDialog =
             CommonDialog
                 .newInstance(
-                    getString(R.string.confirm_delete_message),
+                    getString(R.string.comment_confirm_delete_message),
                     getString(R.string.all_delete_action),
                     REPLY_CONTENT_DELETE_DIALOG_REQUEST_KEY,
                 )
