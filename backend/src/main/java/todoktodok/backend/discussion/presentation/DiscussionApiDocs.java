@@ -191,18 +191,23 @@ public interface DiscussionApiDocs {
                                     value = """
                                             {
                                               "discussionId": 1,
-                                              "title": "토론방 제목",
-                                              "content": "토론방 내용입니다.",
-                                              "author": {
-                                                "id": 1,
-                                                "nickname": "듀이",
-                                                "email": "user@example.com",
-                                                "imageUrl": "https://example.com/image.png"
+                                              "book": {
+                                                "bookId": 1,
+                                                "bookTitle": "엘레강트 오브젝트 - 새로운 관점에서 바라본 객체지향",
+                                                "bookAuthor": "Yegor Bugayenko (지은이), 조영호 (옮긴이)",
+                                                "bookImage": "https://image.aladin.co.kr/product/25837/40/coversum/k762736538_1.jpg"
                                               },
-                                              "createdAt": "2025-08-14T10:00:00",
-                                              "commentCount": 5,
-                                              "likeCount": 10,
-                                              "isLikedByMe": true
+                                              "member": {
+                                                "memberId": 2,
+                                                "nickname": "모찌",
+                                                "profileImage": "https://user.png"
+                                              },
+                                              "createdAt": "2025-08-20T10:59:48",
+                                              "discussionTitle": "토론방 제목",
+                                              "discussionOpinion": "토론방 내용입니다",
+                                              "likeCount": 0,
+                                              "commentCount": 4,
+                                              "isLikedByMe": false
                                             }
                                             """
                             )
@@ -269,36 +274,46 @@ public interface DiscussionApiDocs {
                             examples = @ExampleObject(
                                     value = """
                                             [
-                                              {
-                                                "discussionId": 1,
-                                                "title": "토론방 제목1",
-                                                "content": "토론방 내용1",
-                                                "author": {
-                                                  "id": 1,
-                                                  "nickname": "듀이",
-                                                  "email": "user1@example.com",
-                                                  "imageUrl": "https://example.com/image1.png"
+                                                {
+                                                  "discussionId": 1,
+                                                  "book": {
+                                                    "bookId": 1,
+                                                    "bookTitle": "엘레강트 오브젝트 - 새로운 관점에서 바라본 객체지향",
+                                                    "bookAuthor": "Yegor Bugayenko (지은이), 조영호 (옮긴이)",
+                                                    "bookImage": "https://image.aladin.co.kr/product/25837/40/coversum/k762736538_1.jpg"
+                                                  },
+                                                  "member": {
+                                                    "memberId": 2,
+                                                    "nickname": "모찌",
+                                                    "profileImage": "https://user.png"
+                                                  },
+                                                  "createdAt": "2025-08-20T10:59:48",
+                                                  "discussionTitle": "토론방 제목",
+                                                  "discussionOpinion": "토론방 내용입니다",
+                                                  "likeCount": 0,
+                                                  "commentCount": 4,
+                                                  "isLikedByMe": false
                                                 },
-                                                "createdAt": "2025-08-14T10:00:00",
-                                                "commentCount": 5,
-                                                "likeCount": 10,
-                                                "isLikedByMe": true
-                                              },
-                                              {
-                                                "discussionId": 2,
-                                                "title": "토론방 제목2",
-                                                "content": "토론방 내용2",
-                                                "author": {
-                                                  "id": 2,
-                                                  "nickname": "모다",
-                                                  "email": "user2@example.com",
-                                                  "imageUrl": "https://example.com/image2.png"
-                                                },
-                                                "createdAt": "2025-08-14T10:05:00",
-                                                "commentCount": 3,
-                                                "likeCount": 5,
-                                                "isLikedByMe": false
-                                              }
+                                                {
+                                                  "discussionId": 2,
+                                                  "book": {
+                                                    "bookId": 1,
+                                                    "bookTitle": "엘레강트 오브젝트 - 새로운 관점에서 바라본 객체지향",
+                                                    "bookAuthor": "Yegor Bugayenko (지은이), 조영호 (옮긴이)",
+                                                    "bookImage": "https://image.aladin.co.kr/product/25837/40/coversum/k762736538_1.jpg"
+                                                  },
+                                                  "member": {
+                                                    "memberId": 2,
+                                                    "nickname": "모찌",
+                                                    "profileImage": "https://user.png"
+                                                  },
+                                                  "createdAt": "2025-08-20T10:59:48",
+                                                  "discussionTitle": "토론방 제목 2",
+                                                  "discussionOpinion": "토론방 내용 2입니다",
+                                                  "likeCount": 0,
+                                                  "commentCount": 4,
+                                                  "isLikedByMe": false
+                                                }
                                             ]
                                             """
                             )
@@ -365,39 +380,49 @@ public interface DiscussionApiDocs {
                             schema = @Schema(implementation = DiscussionResponse.class),
                             examples = @ExampleObject(
                                     value = """
-                                            [
-                                              {
-                                                "discussionId": 1,
-                                                "title": "토론방 제목1",
-                                                "content": "토론방 내용1",
-                                                "author": {
-                                                  "id": 1,
-                                                  "nickname": "듀이",
-                                                  "email": "user1@example.com",
-                                                  "imageUrl": "https://example.com/image1.png"
+                                           [
+                                                {
+                                                  "discussionId": 1,
+                                                  "book": {
+                                                    "bookId": 1,
+                                                    "bookTitle": "엘레강트 오브젝트 - 새로운 관점에서 바라본 객체지향",
+                                                    "bookAuthor": "Yegor Bugayenko (지은이), 조영호 (옮긴이)",
+                                                    "bookImage": "https://image.aladin.co.kr/product/25837/40/coversum/k762736538_1.jpg"
+                                                  },
+                                                  "member": {
+                                                    "memberId": 2,
+                                                    "nickname": "모찌",
+                                                    "profileImage": "https://user.png"
+                                                  },
+                                                  "createdAt": "2025-08-20T10:59:48",
+                                                  "discussionTitle": "토론방 제목",
+                                                  "discussionOpinion": "토론방 내용입니다",
+                                                  "likeCount": 5,
+                                                  "commentCount": 4,
+                                                  "isLikedByMe": true
                                                 },
-                                                "createdAt": "2025-08-14T10:00:00",
-                                                "commentCount": 5,
-                                                "likeCount": 10,
-                                                "isLikedByMe": true
-                                              },
-                                              {
-                                                "discussionId": 2,
-                                                "title": "토론방 제목2",
-                                                "content": "토론방 내용2",
-                                                "author": {
-                                                  "id": 2,
-                                                  "nickname": "모다",
-                                                  "email": "user2@example.com",
-                                                  "imageUrl": "https://example.com/image2.png"
-                                                },
-                                                "createdAt": "2025-08-14T10:05:00",
-                                                "commentCount": 3,
-                                                "likeCount": 5,
-                                                "isLikedByMe": false
-                                              }
-                                            ]
-                                            """
+                                                {
+                                                  "discussionId": 3,
+                                                  "book": {
+                                                    "bookId": 1,
+                                                    "bookTitle": "엘레강트 오브젝트 - 새로운 관점에서 바라본 객체지향",
+                                                    "bookAuthor": "Yegor Bugayenko (지은이), 조영호 (옮긴이)",
+                                                    "bookImage": "https://image.aladin.co.kr/product/25837/40/coversum/k762736538_1.jpg"
+                                                  },
+                                                  "member": {
+                                                    "memberId": 2,
+                                                    "nickname": "모찌",
+                                                    "profileImage": "https://user.png"
+                                                  },
+                                                  "createdAt": "2025-08-20T10:59:48",
+                                                  "discussionTitle": "토론방 제목 3",
+                                                  "discussionOpinion": "토론방 내용 3입니다",
+                                                  "likeCount": 6,
+                                                  "commentCount": 0,
+                                                  "isLikedByMe": false
+                                                }
+                                           ]
+                                           """
                             )
                     )),
             @ApiResponse(
