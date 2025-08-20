@@ -214,7 +214,7 @@ public class DiscussionQueryService {
 
         final Pageable pageable = Pageable.ofSize(size + 1);
 
-        final List<DiscussionCursorResponse> discussions = discussionRepository.findDiscussionsByCursor(
+        final List<DiscussionCursorResponse> discussions = discussionRepository.findActiveDiscussionsByCursor(
                 member,
                 periodStart,
                 discussionCursor.lastCommentedAt(),
