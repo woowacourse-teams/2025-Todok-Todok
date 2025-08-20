@@ -5,6 +5,7 @@ import com.team.domain.model.DiscussionFilter
 import com.team.domain.model.LikeStatus
 import com.team.domain.model.exception.NetworkResult
 import com.team.domain.model.exception.map
+import com.team.domain.model.latest.LatestDiscussionPage
 import com.team.domain.model.member.DiscussionRoom
 import com.team.domain.repository.DiscussionRepository
 import com.team.todoktodok.data.datasource.discussion.DiscussionRemoteDataSource
@@ -14,6 +15,14 @@ import com.team.todoktodok.data.network.response.discussion.toDomain
 class DefaultDiscussionRepository(
     private val discussionRemoteDataSource: DiscussionRemoteDataSource,
 ) : DiscussionRepository {
+
+    override suspend fun getLatestDiscussions(
+        size: Int,
+        cursor: String?,
+    ): NetworkResult<LatestDiscussionPage> =
+        discussionRemoteDataSource.getLatestDiscussions(size, cursor)
+            .map { discussions -> discussions.toDomain()  }
+
     override suspend fun getDiscussion(id: Long): NetworkResult<Discussion> =
         discussionRemoteDataSource.getDiscussion(id).map { it.toDomain() }
 
@@ -55,12 +64,14 @@ class DefaultDiscussionRepository(
             discussionOpinion = discussionRoom.opinion,
         )
 
-    override suspend fun deleteDiscussion(discussionId: Long) = discussionRemoteDataSource.deleteDiscussion(discussionId)
+    override suspend fun deleteDiscussion(discussionId: Long) =
+        discussionRemoteDataSource.deleteDiscussion(discussionId)
 
     override suspend fun toggleLike(discussionId: Long): NetworkResult<LikeStatus> =
         discussionRemoteDataSource.toggleLike(discussionId).map { it.toStatus() }
 
-    override suspend fun reportDiscussion(discussionId: Long) = discussionRemoteDataSource.reportDiscussion(discussionId)
+    override suspend fun reportDiscussion(discussionId: Long) =
+        discussionRemoteDataSource.reportDiscussion(discussionId)
 
     companion object {
         private const val HEADER_LOCATION: String = "location"

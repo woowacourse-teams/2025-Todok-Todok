@@ -8,18 +8,28 @@ import com.team.todoktodok.data.network.model.LikeAction
 import com.team.todoktodok.data.network.request.DiscussionRoomRequest
 import com.team.todoktodok.data.network.request.EditDiscussionRoomRequest
 import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
+import com.team.todoktodok.data.network.response.latest.LatestDiscussionsResponse
 import com.team.todoktodok.data.network.service.DiscussionService
 import retrofit2.Response
 
 class DefaultDiscussionRemoteDataSource(
     private val discussionService: DiscussionService,
 ) : DiscussionRemoteDataSource {
-    override suspend fun getDiscussion(id: Long): NetworkResult<DiscussionResponse> = discussionService.fetchDiscussion(id)
+
+    override suspend fun getLatestDiscussions(
+        size: Int,
+        cursor: String?,
+    ): NetworkResult<LatestDiscussionsResponse> =
+        discussionService.fetchLatestDiscussions(size, cursor)
+
+    override suspend fun getDiscussion(id: Long): NetworkResult<DiscussionResponse> =
+        discussionService.fetchDiscussion(id)
 
     override suspend fun getDiscussions(
         type: DiscussionFilter,
         keyword: String?,
-    ): NetworkResult<List<DiscussionResponse>> = discussionService.fetchDiscussions(keyword, type.name)
+    ): NetworkResult<List<DiscussionResponse>> =
+        discussionService.fetchDiscussions(keyword, type.name)
 
     override suspend fun saveDiscussionRoom(
         bookId: Long,
@@ -49,7 +59,8 @@ class DefaultDiscussionRemoteDataSource(
                 ),
         )
 
-    override suspend fun deleteDiscussion(discussionId: Long) = discussionService.deleteDiscussion(discussionId)
+    override suspend fun deleteDiscussion(discussionId: Long) =
+        discussionService.deleteDiscussion(discussionId)
 
     override suspend fun toggleLike(discussionId: Long): NetworkResult<LikeAction> =
         runCatching {
@@ -58,7 +69,8 @@ class DefaultDiscussionRemoteDataSource(
             NetworkResult.Failure(it.toDomain())
         }
 
-    override suspend fun reportDiscussion(discussionId: Long): NetworkResult<Unit> = discussionService.reportDiscussion(discussionId)
+    override suspend fun reportDiscussion(discussionId: Long): NetworkResult<Unit> =
+        discussionService.reportDiscussion(discussionId)
 
     private fun Response<*>.extractDiscussionId(): Long {
         val locationHeader = headers()[HEADER_LOCATION]
