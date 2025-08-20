@@ -13,19 +13,19 @@ data class LatestDiscussionResponse(
     val commentCount: Int,
     val content: String,
     val createdAt: String,
-    val discussionId: Int,
+    val discussionId: Long,
     val isLikedByMe: Boolean,
     val likeCount: Int,
     val title: String,
 ) {
     fun toDomain(): LatestDiscussion =
         LatestDiscussion(
+            discussionId,
             author.toDomain(),
             book.toDomain(),
             commentCount,
             content,
             createdAt.toLocalDateTime(),
-            discussionId,
             isLikedByMe,
             likeCount,
             title,
