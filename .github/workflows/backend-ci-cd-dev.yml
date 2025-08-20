@@ -72,38 +72,23 @@ jobs:
           username: ${{ secrets.DOCKERHUB_DEPLOY_USERNAME }}
           password: ${{ secrets.DOCKERHUB_DEPLOY_TOKEN }}
 
-      - name: Pull Docker image
+      - name: Stop running Container (without removing)
         run: |
-          echo "Docker 이미지 pull 시작"
-          docker pull woowajeff/todoktodok:dev
-          echo "Docker 이미지 pull 완료"
+          echo "dev 컨테이너 중지 중..."
+          docker stop dev && echo "dev 컨테이너 중지 완료" || echo "dev 컨테이너 없음"
+          echo "promtail_dev 컨테이너 중지 중..."
+          docker stop promtail_dev && echo "promtail_dev 컨테이너 중지 완료" || echo "promtail_dev 컨테이너 없음"
 
-      - name: Stop running Container
+      - name: Ensure dev network exists
         run: |
-          echo "포트 80에서 실행 중인 컨테이너 확인 중..."
-          container_id=$(docker ps --filter "publish=80" --format "{{.ID}}")
-          if [ -n "$container_id" ]; then
-            echo "컨테이너 중지: $container_id"
-            docker stop $container_id
-          else
-            echo "중지할 컨테이너 없음 (포트 80)"
-          fi
+          docker network create dev_network && echo "docker network 생성" || echo "docker network 이미 존재"
 
-      - name: Docker Compose Down (if exists)
+      - name: Docker Compose Pull & Up
         run: |
           cd backend
-          if [ -f docker-compose.yml ]; then
-            docker compose down
-          echo "docker compose down"
-          else
-            echo "docker-compose.yml 없음 - down 스킵"
-          fi
-
-      - name: Docker Compose Up
-        run: |
-          cd backend
-          docker compose up -d
-          echo "docker compose up"
+          docker compose -f config/docker-compose-dev.yml pull
+          docker compose -f config/docker-compose-dev.yml up -d
+          echo "docker compose-dev up"
 
       - name: Docker image Prune
         run: |

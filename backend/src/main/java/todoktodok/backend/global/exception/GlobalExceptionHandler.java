@@ -12,6 +12,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import todoktodok.backend.book.infrastructure.aladin.exception.AladinApiException;
 
 @Slf4j
 @RestControllerAdvice
@@ -110,6 +111,15 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(status)
                 .body(new ErrorResponse(status.value(), PREFIX + "서버 내부 오류가 발생했습니다"));
+    }
+
+    @ExceptionHandler(AladinApiException.class)
+    public ResponseEntity<ErrorResponse> handleAladinApiException(final AladinApiException e) {
+        final HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+        log.error(PREFIX + e.getMessage());
+
+        return ResponseEntity.status(status)
+                .body(new ErrorResponse(status.value(), PREFIX + getSafeErrorMessage(e)));
     }
 
     private String toSafeLogValue(
