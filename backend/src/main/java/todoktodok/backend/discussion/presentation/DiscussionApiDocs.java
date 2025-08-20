@@ -361,7 +361,7 @@ public interface DiscussionApiDocs {
                                             {
                                               "items": [
                                                   {
-                                                    "discussionId": 1,
+                                                    "discussionId": 2,
                                                     "title": "토론방 제목1",
                                                     "content": "토론방 내용1",
                                                     "author": {
@@ -376,7 +376,7 @@ public interface DiscussionApiDocs {
                                                     "isLikedByMe": true
                                                   },
                                                   {
-                                                    "discussionId": 2,
+                                                    "discussionId": 1,
                                                     "title": "토론방 제목2",
                                                     "content": "토론방 내용2",
                                                     "author": {
