@@ -52,7 +52,11 @@ class DiscussionDetailViewModelTest {
             // given
             val expected = DISCUSSIONS.find { it.id == DISCUSSION_ID }
             // then
-            assertThat(discussionDetailViewModel.uiState.getOrAwaitValue().discussionItemUiState).isEqualTo(
+            assertThat(
+                discussionDetailViewModel.uiState
+                    .getOrAwaitValue()
+                    .discussionItemUiState.discussion,
+            ).isEqualTo(
                 expected,
             )
         }

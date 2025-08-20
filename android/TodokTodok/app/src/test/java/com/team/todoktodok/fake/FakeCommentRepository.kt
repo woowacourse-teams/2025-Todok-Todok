@@ -69,6 +69,6 @@ class FakeCommentRepository : CommentRepository {
     }
 
     companion object {
-        private val user = User(1, Nickname("동전"))
+        private val user = User(1, Nickname("동전"), "")
     }
 }
