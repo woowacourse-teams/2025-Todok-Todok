@@ -24,6 +24,7 @@ import kotlinx.coroutines.launch
 class DiscussionsViewModel(
     private val discussionRepository: DiscussionRepository,
     private val memberRepository: MemberRepository,
+    private val fakeDiscussionRepository: DiscussionRepository,
 ) : ViewModel() {
     private val _uiState = MutableLiveData(DiscussionsUiState())
     val uiState: LiveData<DiscussionsUiState> get() = _uiState
@@ -32,10 +33,6 @@ class DiscussionsViewModel(
     val uiEvent: SingleLiveData<DiscussionsUiEvent> get() = _uiEvent
 
     private var loadJob: Job? = null
-
-    init {
-        loadLatestDiscussions("")
-    }
 
     fun updateTab(
         newFilter: DiscussionFilter,
@@ -54,9 +51,10 @@ class DiscussionsViewModel(
         _uiState.value = _uiState.value?.copy(searchKeyword = keyword)
     }
 
-    fun loadLatestDiscussions(cursor: String) =
+    fun loadLatestDiscussions() =
         withLoading {
-            when (val result = discussionRepository.getLatestDiscussions(cursor = cursor)) {
+            val cursor = _uiState.value?.latestPage?.nextCursor
+            when (val result = fakeDiscussionRepository.getLatestDiscussions(cursor = cursor)) {
                 is NetworkResult.Success -> {
                     _uiState.value = _uiState.value?.addLatestDiscussion(result.data)
                 }

@@ -76,6 +76,11 @@ class AllDiscussionFragment : Fragment(R.layout.fragment_all_discussion) {
         binding.rvDiscussions.visibility = View.GONE
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadLatestDiscussions()
+    }
+
     private val adapterHandler =
         object : DiscussionAdapter.Handler {
             override fun onItemClick(index: Int) {
