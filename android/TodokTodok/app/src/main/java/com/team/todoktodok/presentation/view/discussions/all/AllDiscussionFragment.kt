@@ -7,6 +7,7 @@ import androidx.fragment.app.activityViewModels
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentAllDiscussionBinding
+import com.team.todoktodok.presentation.core.ext.addOnScrollEndListener
 import com.team.todoktodok.presentation.view.discussiondetail.DiscussionDetailActivity
 import com.team.todoktodok.presentation.view.discussions.DiscussionsUiEvent
 import com.team.todoktodok.presentation.view.discussions.adapter.DiscussionAdapter
@@ -40,6 +41,9 @@ class AllDiscussionFragment : Fragment(R.layout.fragment_all_discussion) {
         with(binding) {
             rvDiscussions.adapter = discussionAdapter
             rvDiscussions.hasFixedSize()
+            rvDiscussions.addOnScrollEndListener {
+                viewModel.loadLatestDiscussions()
+            }
         }
     }
 

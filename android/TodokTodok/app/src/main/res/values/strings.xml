@@ -35,6 +35,7 @@
     <string name="all_relative_weeks">%d주전</string>
     <string name="all_relative_months">%d달전</string>
     <string name="all_relative_years">%d년전</string>
+    <string name="all_last_page">마지막 페이지입니다</string>
 
     <!--  토론 목록 페이지  -->
     <string name="discussions_hot_discussion_rooms">인기 토론방</string>

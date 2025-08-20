@@ -5,6 +5,6 @@ data class PageInfo(
     val nextCursor: String,
 ) {
     companion object {
-        val EMPTY = PageInfo(false, "")
+        val EMPTY = PageInfo(true, "")
     }
 }

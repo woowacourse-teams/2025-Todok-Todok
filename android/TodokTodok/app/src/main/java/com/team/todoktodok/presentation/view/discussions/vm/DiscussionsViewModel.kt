@@ -51,19 +51,24 @@ class DiscussionsViewModel(
         _uiState.value = _uiState.value?.copy(searchKeyword = keyword)
     }
 
-    fun loadLatestDiscussions() =
-        withLoading {
-            val cursor = _uiState.value?.latestPage?.nextCursor
-            when (val result = fakeDiscussionRepository.getLatestDiscussions(cursor = cursor)) {
-                is NetworkResult.Success -> {
-                    _uiState.value = _uiState.value?.addLatestDiscussion(result.data)
-                }
+    fun loadLatestDiscussions() {
+        val currentUiState = _uiState.value ?: return
 
-                is NetworkResult.Failure -> {
-                    onUiEvent(DiscussionsUiEvent.ShowErrorMessage(result.exception))
+        if (currentUiState.latestPageHasNext) {
+            withLoading {
+                val cursor = _uiState.value?.latestPage?.nextCursor
+                when (val result = fakeDiscussionRepository.getLatestDiscussions(cursor = cursor)) {
+                    is NetworkResult.Success -> {
+                        _uiState.value = _uiState.value?.addLatestDiscussion(result.data)
+                    }
+
+                    is NetworkResult.Failure -> {
+                        onUiEvent(DiscussionsUiEvent.ShowErrorMessage(result.exception))
+                    }
                 }
             }
         }
+    }
 
     fun loadMyDiscussions() =
         withLoading {
@@ -84,7 +89,8 @@ class DiscussionsViewModel(
             }
 
             val created = (results[MemberDiscussionType.CREATED] as NetworkResult.Success).data
-            val participated = (results[MemberDiscussionType.PARTICIPATED] as NetworkResult.Success).data
+            val participated =
+                (results[MemberDiscussionType.PARTICIPATED] as NetworkResult.Success).data
 
             _uiState.value = _uiState.value?.addMyDiscussion(created, participated)
         }
