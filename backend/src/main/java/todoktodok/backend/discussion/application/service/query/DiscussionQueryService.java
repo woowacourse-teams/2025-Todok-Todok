@@ -28,6 +28,7 @@ import todoktodok.backend.reply.domain.repository.ReplyRepository;
 public class DiscussionQueryService {
 
     private static final int MIN_PAGE_SIZE = 1;
+    private static final int MAX_PAGE_SIZE = 50;
 
     private final DiscussionRepository discussionRepository;
     private final DiscussionLikeRepository discussionLikeRepository;
@@ -231,7 +232,7 @@ public class DiscussionQueryService {
 
         String nextCursor = null;
         if (hasNext) {
-            DiscussionCursorResponse last = discussions.getLast();
+            final DiscussionCursorResponse last = discussions.getLast();
             nextCursor = discussionCursor.toEncoded(
                     last.lastCommentedAt(),
                     last.discussionId()
@@ -241,9 +242,9 @@ public class DiscussionQueryService {
         return new DiscussionPageResponse(discussions, hasNext, nextCursor);
     }
 
-    private void validatePageSize(int size) {
-        if (size < MIN_PAGE_SIZE) {
-            throw new IllegalArgumentException("[ERROR] 페이지 사이즈는 1 이상이어야 합니다: " + size);
+    private void validatePageSize(final int size) {
+        if (size < MIN_PAGE_SIZE || size > MAX_PAGE_SIZE) {
+            throw new IllegalArgumentException("[ERROR] 페이지 사이즈는 1 이상, 50 이하여야 합니다: " + size);
         }
     }
 }
