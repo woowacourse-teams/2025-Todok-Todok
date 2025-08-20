@@ -21,7 +21,7 @@ class DefaultCommentRemoteDataSource(
     override suspend fun saveComment(
         discussionId: Long,
         comment: CommentRequest,
-    ) = commentService.saveComment(discussionId, comment)
+    ): NetworkResult<Unit> = commentService.saveComment(discussionId, comment)
 
     override suspend fun toggleLike(
         discussionId: Long,
@@ -37,15 +37,15 @@ class DefaultCommentRemoteDataSource(
         discussionId: Long,
         commentId: Long,
         comment: String,
-    ) = commentService.updateComment(discussionId, commentId, CommentRequest(comment))
+    ): NetworkResult<Unit> = commentService.updateComment(discussionId, commentId, CommentRequest(comment))
 
     override suspend fun deleteComment(
         discussionId: Long,
         commentId: Long,
-    ) = commentService.deleteComment(discussionId, commentId)
+    ): NetworkResult<Unit> = commentService.deleteComment(discussionId, commentId)
 
     override suspend fun report(
         discussionId: Long,
         commentId: Long,
-    ) = commentService.report(discussionId, commentId)
+    ): NetworkResult<Unit> = commentService.report(discussionId, commentId)
 }

@@ -24,7 +24,7 @@ class DefaultReplyRepository(
         discussionId: Long,
         commentId: Long,
         content: String,
-    ) = remoteDataSource.saveReply(discussionId, commentId, content)
+    ): NetworkResult<Unit> = remoteDataSource.saveReply(discussionId, commentId, content)
 
     override suspend fun toggleLike(
         discussionId: Long,
@@ -37,17 +37,17 @@ class DefaultReplyRepository(
         commentId: Long,
         replyId: Long,
         content: String,
-    ) = remoteDataSource.updateReply(discussionId, commentId, replyId, content)
+    ): NetworkResult<Unit> = remoteDataSource.updateReply(discussionId, commentId, replyId, content)
 
     override suspend fun deleteReply(
         discussionId: Long,
         commentId: Long,
         replyId: Long,
-    ) = remoteDataSource.deleteReply(discussionId, commentId, replyId)
+    ): NetworkResult<Unit> = remoteDataSource.deleteReply(discussionId, commentId, replyId)
 
     override suspend fun report(
         discussionId: Long,
         commentId: Long,
         replyId: Long,
-    ) = remoteDataSource.report(discussionId, commentId, replyId)
+    ): NetworkResult<Unit> = remoteDataSource.report(discussionId, commentId, replyId)
 }

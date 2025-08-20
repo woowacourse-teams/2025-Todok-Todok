@@ -16,7 +16,7 @@ class DefaultCommentRepository(
     override suspend fun getComment(
         discussionId: Long,
         commentId: Long,
-    ) = commentRemoteDataSource.fetchComment(discussionId, commentId).map { it.toDomain() }
+    ): NetworkResult<Comment> = commentRemoteDataSource.fetchComment(discussionId, commentId).map { it.toDomain() }
 
     override suspend fun getCommentsByDiscussionId(id: Long): NetworkResult<List<Comment>> =
         commentRemoteDataSource
@@ -28,7 +28,7 @@ class DefaultCommentRepository(
     override suspend fun saveComment(
         discussionId: Long,
         content: String,
-    ) = commentRemoteDataSource.saveComment(discussionId, CommentRequest(content))
+    ): NetworkResult<Unit> = commentRemoteDataSource.saveComment(discussionId, CommentRequest(content))
 
     override suspend fun toggleLike(
         discussionId: Long,
@@ -42,15 +42,15 @@ class DefaultCommentRepository(
         discussionId: Long,
         commentId: Long,
         content: String,
-    ) = commentRemoteDataSource.updateComment(discussionId, commentId, content)
+    ): NetworkResult<Unit> = commentRemoteDataSource.updateComment(discussionId, commentId, content)
 
     override suspend fun deleteComment(
         discussionId: Long,
         commentId: Long,
-    ) = commentRemoteDataSource.deleteComment(discussionId, commentId)
+    ): NetworkResult<Unit> = commentRemoteDataSource.deleteComment(discussionId, commentId)
 
     override suspend fun report(
         discussionId: Long,
         commentId: Long,
-    ) = commentRemoteDataSource.report(discussionId, commentId)
+    ): NetworkResult<Unit> = commentRemoteDataSource.report(discussionId, commentId)
 }

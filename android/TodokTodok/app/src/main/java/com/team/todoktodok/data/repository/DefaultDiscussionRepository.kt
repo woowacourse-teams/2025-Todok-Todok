@@ -55,12 +55,14 @@ class DefaultDiscussionRepository(
             discussionOpinion = discussionRoom.opinion,
         )
 
-    override suspend fun deleteDiscussion(discussionId: Long) = discussionRemoteDataSource.deleteDiscussion(discussionId)
+    override suspend fun deleteDiscussion(discussionId: Long): NetworkResult<Unit> =
+        discussionRemoteDataSource.deleteDiscussion(discussionId)
 
     override suspend fun toggleLike(discussionId: Long): NetworkResult<LikeStatus> =
         discussionRemoteDataSource.toggleLike(discussionId).map { it.toStatus() }
 
-    override suspend fun reportDiscussion(discussionId: Long) = discussionRemoteDataSource.reportDiscussion(discussionId)
+    override suspend fun reportDiscussion(discussionId: Long): NetworkResult<Unit> =
+        discussionRemoteDataSource.reportDiscussion(discussionId)
 
     companion object {
         private const val HEADER_LOCATION: String = "location"
