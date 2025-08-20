@@ -22,7 +22,9 @@ import com.team.todoktodok.databinding.MenuOwnedDiscussionBinding
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
 import com.team.todoktodok.presentation.core.component.CommonDialog
+import com.team.todoktodok.presentation.core.component.ReportDialog
 import com.team.todoktodok.presentation.core.ext.registerPositiveResultListener
+import com.team.todoktodok.presentation.core.ext.registerReportResultListener
 import com.team.todoktodok.presentation.core.ext.registerResultListener
 import com.team.todoktodok.presentation.view.discussiondetail.BottomSheetVisibilityListener
 import com.team.todoktodok.presentation.view.discussiondetail.commentcreate.CommentCreateBottomSheet
@@ -240,10 +242,10 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
         val commentId = state.comment.id
         val requestKey = COMMENT_REPORT_DIALOG_REQUEST_KEY.format(commentId)
 
-        childFragmentManager.registerPositiveResultListener(
+        childFragmentManager.registerReportResultListener(
             viewLifecycleOwner,
             requestKey,
-            CommonDialog.RESULT_KEY_COMMON_DIALOG,
+            ReportDialog.RESULT_KEY_REPORT,
         ) { viewModel.reportComment(commentId) }
 
         val binding = MenuExternalDiscussionBinding.inflate(layoutInflater)
@@ -258,12 +260,10 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
 
     private fun showReportDialog(requestKey: String) {
         val dialog =
-            CommonDialog.newInstance(
-                getString(R.string.all_report_comment),
-                getString(R.string.all_report_action),
+            ReportDialog.newInstance(
                 requestKey,
             )
-        dialog.show(childFragmentManager, CommonDialog.TAG)
+        dialog.show(childFragmentManager, ReportDialog.TAG)
     }
 
     private fun showDeleteDialog(requestKey: String) {

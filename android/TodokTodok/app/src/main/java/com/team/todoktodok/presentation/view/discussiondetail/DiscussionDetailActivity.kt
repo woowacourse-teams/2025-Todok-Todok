@@ -20,8 +20,10 @@ import com.team.todoktodok.databinding.MenuOwnedDiscussionBinding
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
 import com.team.todoktodok.presentation.core.component.CommonDialog
+import com.team.todoktodok.presentation.core.component.ReportDialog
 import com.team.todoktodok.presentation.core.ext.loadImage
 import com.team.todoktodok.presentation.core.ext.registerPositiveResultListener
+import com.team.todoktodok.presentation.core.ext.registerReportResultListener
 import com.team.todoktodok.presentation.core.ext.toRelativeString
 import com.team.todoktodok.presentation.view.discussion.create.CreateDiscussionRoomActivity
 import com.team.todoktodok.presentation.view.discussion.create.SerializationCreateDiscussionRoomMode.Edit
@@ -150,9 +152,7 @@ class DiscussionDetailActivity : AppCompatActivity() {
 
     private fun showReportDialog() {
         val dialog =
-            CommonDialog.newInstance(
-                getString(R.string.all_report_action),
-                getString(R.string.all_report_action),
+            ReportDialog.newInstance(
                 DISCUSSION_REPORT_DIALOG_REQUEST_KEY,
             )
         dialog.show(supportFragmentManager, CommonDialog.TAG)
@@ -238,10 +238,10 @@ class DiscussionDetailActivity : AppCompatActivity() {
     }
 
     private fun setUpDialogResultListener() {
-        supportFragmentManager.registerPositiveResultListener(
+        supportFragmentManager.registerReportResultListener(
             this,
             DISCUSSION_REPORT_DIALOG_REQUEST_KEY,
-            CommonDialog.RESULT_KEY_COMMON_DIALOG,
+            ReportDialog.RESULT_KEY_REPORT,
         ) {
             viewModel.reportDiscussion()
             popupWindow?.dismiss()

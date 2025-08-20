@@ -18,7 +18,9 @@ import com.team.todoktodok.databinding.MenuOwnedDiscussionBinding
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
 import com.team.todoktodok.presentation.core.component.CommonDialog
+import com.team.todoktodok.presentation.core.component.ReportDialog
 import com.team.todoktodok.presentation.core.ext.registerPositiveResultListener
+import com.team.todoktodok.presentation.core.ext.registerReportResultListener
 import com.team.todoktodok.presentation.core.ext.registerResultListener
 import com.team.todoktodok.presentation.view.discussiondetail.BottomSheetVisibilityListener
 import com.team.todoktodok.presentation.view.discussiondetail.commentcreate.CommentCreateBottomSheet
@@ -238,12 +240,10 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
 
     private fun showCommentReportDialog() {
         val dialog =
-            CommonDialog.newInstance(
-                getString(R.string.all_report_comment),
-                getString(R.string.all_report_action),
+            ReportDialog.newInstance(
                 COMMENT_REPORT_DIALOG_REQUEST_KEY,
             )
-        dialog.show(childFragmentManager, CommonDialog.TAG)
+        dialog.show(childFragmentManager, ReportDialog.TAG)
     }
 
     private fun showCommentDeleteDialog() {
@@ -258,12 +258,10 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
 
     private fun showReplyReportDialog(replyId: Long) {
         val dialog =
-            CommonDialog.newInstance(
-                getString(R.string.all_report_reply),
-                getString(R.string.all_report_action),
+            ReportDialog.newInstance(
                 REPLY_REPORT_DIALOG_REQUEST_KEY.format(replyId),
             )
-        dialog.show(childFragmentManager, CommonDialog.TAG)
+        dialog.show(childFragmentManager, ReportDialog.TAG)
     }
 
     private fun showReplyDeleteDialog(replyId: Long) {
@@ -360,10 +358,10 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
             CommonDialog.RESULT_KEY_COMMON_DIALOG,
         ) { parentFragmentManager.popBackStack() }
 
-        childFragmentManager.registerPositiveResultListener(
+        childFragmentManager.registerReportResultListener(
             viewLifecycleOwner,
             COMMENT_REPORT_DIALOG_REQUEST_KEY,
-            CommonDialog.RESULT_KEY_COMMON_DIALOG,
+            ReportDialog.RESULT_KEY_REPORT,
         ) { viewModel.reportComment() }
         childFragmentManager.registerPositiveResultListener(
             viewLifecycleOwner,
@@ -373,10 +371,10 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
     }
 
     private fun setupFragmentReplyResultListener(replyId: Long) {
-        childFragmentManager.registerPositiveResultListener(
+        childFragmentManager.registerReportResultListener(
             viewLifecycleOwner,
             REPLY_REPORT_DIALOG_REQUEST_KEY.format(replyId),
-            CommonDialog.RESULT_KEY_COMMON_DIALOG,
+            ReportDialog.RESULT_KEY_REPORT,
         ) { viewModel.reportReply(replyId) }
 
         childFragmentManager.registerPositiveResultListener(

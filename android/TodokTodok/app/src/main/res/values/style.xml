@@ -36,7 +36,7 @@
     </style>
 
     <!-- 원형 이미지 -->
-    <style name="circleImageView" >
+    <style name="circleImageView">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>
     </style>
@@ -56,4 +56,13 @@
         <item name="android:windowNoTitle">true</item>
     </style>
 
+
+    <style name="Widget.App.RadioButton.Green" parent="Widget.MaterialComponents.CompoundButton.RadioButton">
+        <item name="buttonTint">@color/green_1A</item>
+        <item name="android:fontFamily">@font/pretendard_semi_bold</item>
+        <item name="android:letterSpacing">-0.025</item>
+        <item name="android:lineSpacingMultiplier">1.29</item>
+        <item name="android:textColor">@color/black_18</item>
+        <item name="android:textSize">@dimen/font_size_normal</item>
+    </style>
 </resources>
