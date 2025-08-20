@@ -15,8 +15,6 @@ services:
   promtail:
     container_name: promtail_prod
     image: grafana/promtail:latest
-    ports:
-      - "9080:9080"
     volumes:
       - ../config/promtail-config-prod.yml:/etc/promtail/promtail.yml
       - ../log:/log
