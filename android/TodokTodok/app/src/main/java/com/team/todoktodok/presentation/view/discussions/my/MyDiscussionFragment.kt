@@ -12,6 +12,8 @@ import com.team.todoktodok.presentation.view.discussions.DiscussionsUiEvent
 import com.team.todoktodok.presentation.view.discussions.my.adapter.MyDiscussionAdapter
 import com.team.todoktodok.presentation.view.discussions.vm.DiscussionsViewModel
 import com.team.todoktodok.presentation.view.discussions.vm.DiscussionsViewModelFactory
+import com.team.todoktodok.presentation.view.profile.ProfileActivity
+import com.team.todoktodok.presentation.view.profile.UserProfileTab
 
 class MyDiscussionFragment : Fragment(R.layout.fragment_my_discussion) {
     private val discussionAdapter: MyDiscussionAdapter by lazy {
@@ -84,7 +86,12 @@ class MyDiscussionFragment : Fragment(R.layout.fragment_my_discussion) {
     private val adapterHandler =
         object : MyDiscussionAdapter.Handler {
             override fun onClickMyCreatedDiscussionHeader() {
-                TODO("Not yet implemented")
+                startActivity(
+                    ProfileActivity.Intent(
+                        requireContext(),
+                        initialTab = UserProfileTab.CREATED_DISCUSSIONS,
+                    ),
+                )
             }
 
             override fun onClickMyCreatedDiscussionItem(discussionId: Long) {
@@ -92,7 +99,12 @@ class MyDiscussionFragment : Fragment(R.layout.fragment_my_discussion) {
             }
 
             override fun onClickMyParticipatedDiscussionHeader() {
-                TODO("Not yet implemented")
+                startActivity(
+                    ProfileActivity.Intent(
+                        requireContext(),
+                        initialTab = UserProfileTab.PARTICIPATED_DISCUSSIONS,
+                    ),
+                )
             }
 
             override fun onClickMyParticipatedDiscussionItem(discussionId: Long) {

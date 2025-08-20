@@ -51,12 +51,15 @@ class ProfileActivity : AppCompatActivity() {
         setContentView(binding.root)
         val memberId: Long? = intent?.getLongExtra(ARG_MEMBER_ID, DEFAULT_MEMBER_ID)
         requireNotNull(memberId) { MEMBER_ID_NOT_FOUND }
+
+        val initialTab = intent?.getSerializableCompat<UserProfileTab>(ARG_INITIAL_TAB) ?: UserProfileTab.ACTIVATED_BOOKS
+
         messageConverter = ExceptionMessageConverter()
 
         viewModel.setMemberId(memberId)
         viewModel.initState()
 
-        setUpUiState()
+        setUpUiState(initialTab)
         setUpUiEvent()
         setUpSystemBar()
         setUpDialogResultListener()
@@ -82,7 +85,7 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
-    private fun setUpUiState() {
+    private fun setUpUiState(initialTab: UserProfileTab) {
         viewModel.uiState.observe(this) { value ->
             initView(
                 binding,
@@ -90,6 +93,7 @@ class ProfileActivity : AppCompatActivity() {
                 value.activatedBooks,
                 value.createdDiscussions,
                 value.participatedDiscussions,
+                initialTab,
             )
             setupLoading(value.isLoading)
         }
@@ -109,6 +113,7 @@ class ProfileActivity : AppCompatActivity() {
         activatedBooks: List<SerializationBook>,
         createdDiscussions: List<SerializationMemberDiscussion>,
         participatedDiscussions: List<SerializationMemberDiscussion>,
+        initialTab: UserProfileTab,
     ) {
         val viewPagerAdapter =
             ContentPagerAdapter(
@@ -118,7 +123,7 @@ class ProfileActivity : AppCompatActivity() {
                 supportFragmentManager,
                 lifecycle,
             )
-        val profileAdapter = ProfileAdapter(profileAdapterHandler, viewPagerAdapter)
+        val profileAdapter = ProfileAdapter(profileAdapterHandler, viewPagerAdapter, initialTab)
         binding.rvProfile.adapter = profileAdapter
         profileAdapter.submitList(profileItems)
     }
@@ -179,12 +184,15 @@ class ProfileActivity : AppCompatActivity() {
         fun Intent(
             context: Context,
             memberId: Long? = null,
+            initialTab: UserProfileTab? = null,
         ): Intent =
             Intent(context, ProfileActivity::class.java).apply {
                 memberId?.let { putExtra(ARG_MEMBER_ID, it) }
+                initialTab?.let { putExtra(ARG_INITIAL_TAB, it) }
             }
 
         const val ARG_MEMBER_ID = "member_id"
+        const val ARG_INITIAL_TAB = "initial_tab"
         const val MEMBER_ID_NOT_FOUND = "멤버 아이디가 존재하지 않습니다"
     }
 }
