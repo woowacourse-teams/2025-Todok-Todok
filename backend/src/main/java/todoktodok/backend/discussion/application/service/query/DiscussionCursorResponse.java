@@ -1,4 +1,4 @@
-package todoktodok.backend.discussion.application.dto.response;
+package todoktodok.backend.discussion.application.service.query;
 
 import java.time.LocalDateTime;
 import todoktodok.backend.book.application.dto.response.BookResponse;
