@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import todoktodok.backend.discussion.application.dto.response.DiscussionCursorResponse;
+import todoktodok.backend.discussion.application.service.query.DiscussionCursorResponse;
 import todoktodok.backend.discussion.domain.Discussion;
 import todoktodok.backend.member.domain.Member;
 
@@ -76,7 +76,7 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
     List<Discussion> findParticipatedDiscussionsByMember(@Param("memberId") final Long memberId);
 
     @Query("""
-            SELECT new todoktodok.backend.discussion.application.dto.response.DiscussionCursorResponse(
+            SELECT new todoktodok.backend.discussion.application.service.query.DiscussionCursorResponse(
                          d,
                          COUNT(DISTINCT c.id),
                          COUNT(DISTINCT dl.id),
@@ -89,17 +89,17 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
             LEFT JOIN DiscussionLike dlByMe ON dlByMe.discussion = d AND dlByMe.member = :member
             GROUP BY d
             HAVING (
-                :lastCommentedAt IS NULL
-                OR MAX(c.createdAt) < :lastCommentedAt
-                OR MAX(c.createdAt) = :lastCommentedAt AND d.id < :cursorId
+                :cursorLastCommentedAt IS NULL
+                OR MAX(c.createdAt) < :cursorLastCommentedAt
+                OR MAX(c.createdAt) = :cursorLastCommentedAt AND d.id < :cursorId
             )
             ORDER BY MAX(c.createdAt) DESC, d.id DESC
     """)
     List<DiscussionCursorResponse> findActiveDiscussionsByCursor(
-            @Param("member") Member member,
-            @Param("periodStart") LocalDateTime periodStart,
-            @Param("lastCommentedAt") LocalDateTime lastCommentedAt,
-            @Param("cursorId") Long cursorId,
-            Pageable pageable
+            @Param("member") final Member member,
+            @Param("periodStart") final LocalDateTime periodStart,
+            @Param("cursorLastCommentedAt") final LocalDateTime cursorLastCommentedAt,
+            @Param("cursorId") final Long cursorId,
+            final Pageable pageable
     );
 }

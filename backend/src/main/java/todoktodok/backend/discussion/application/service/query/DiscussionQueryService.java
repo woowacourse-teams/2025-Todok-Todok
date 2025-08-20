@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.comment.domain.repository.CommentRepository;
 import todoktodok.backend.discussion.application.dto.DiscussionCursor;
-import todoktodok.backend.discussion.application.dto.response.DiscussionCursorResponse;
 import todoktodok.backend.discussion.application.dto.response.DiscussionPageResponse;
 import todoktodok.backend.discussion.application.dto.response.DiscussionResponse;
 import todoktodok.backend.discussion.domain.Discussion;
@@ -200,13 +199,14 @@ public class DiscussionQueryService {
 
     public DiscussionPageResponse getActiveDiscussions(
             final Long memberId,
-            final int periodDays,
+            final int period,
             final int size,
             @Nullable final String cursor
     ) {
         validatePageSize(size);
+
         final Member member = findMember(memberId);
-        final LocalDateTime periodStart = LocalDateTime.now(clock).minusDays(periodDays);
+        final LocalDateTime periodStart = LocalDateTime.now(clock).minusDays(period);
 
         final DiscussionCursor discussionCursor = Optional.ofNullable(cursor)
                 .map(DiscussionCursor::fromEncoded)
