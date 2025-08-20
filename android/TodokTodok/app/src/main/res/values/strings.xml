@@ -110,7 +110,7 @@
     <string name="comment_content_description_reply_like">대댓글 좋아요 클릭 버튼</string>
     <string name="comment_confirm_delete_message">작성중인 댓글을 삭제할까요?</string>
     <string name="comment_content_description_comment_detail_reply_user_profile">대댓글 유저 이미지 버튼</string>
-    <string name="comment_nothing_comments">첫 글의 주인공이 될 수 있는 기회\n 지금 바로 작성하세요</string>
+    <string name="comment_nothing_comments">아직 의견이 없어요 🥲\n가장 먼저 의견을 달아주세요</string>
     <string name="comment_content_description_noting_comment">댓글이 없을 때 나오는 토독이</string>
 
     <!-- 토론방 도서 선택 화면 -->
