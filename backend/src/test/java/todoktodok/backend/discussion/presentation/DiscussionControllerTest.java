@@ -71,6 +71,7 @@ class DiscussionControllerTest {
         // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
+
         databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
 
         final String token = MemberFixture.login("user@gmail.com");
@@ -90,6 +91,7 @@ class DiscussionControllerTest {
         // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
+
         databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
         databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
         databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
@@ -117,6 +119,7 @@ class DiscussionControllerTest {
         // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
+
         databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
         databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
         databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
@@ -145,6 +148,7 @@ class DiscussionControllerTest {
         // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
+
         databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
         databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
         databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
@@ -172,6 +176,7 @@ class DiscussionControllerTest {
         // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
+
         databaseInitializer.setDiscussionInfo("오브젝트", "오브젝트 토론입니다", 1L, 1L);
 
         final String token = MemberFixture.login("user@gmail.com");
@@ -192,6 +197,7 @@ class DiscussionControllerTest {
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setUserInfo("user123@gmail.com", "user123", "https://image.png", "message");
         databaseInitializer.setDefaultBookInfo();
+
         databaseInitializer.setDiscussionInfo("토론방1", "토론방 내용", 2L, 1L);
 
         final String token = MemberFixture.login("user@gmail.com");
@@ -211,6 +217,7 @@ class DiscussionControllerTest {
         // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
+
         databaseInitializer.setDefaultDiscussionInfo();
 
         final String updatedTitle = "상속과 조합은 어떤 상황에 쓰이나요?";
@@ -239,6 +246,7 @@ class DiscussionControllerTest {
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setUserInfo("user2@gmail.com", "user2", "https://image.png", "message");
         databaseInitializer.setDefaultBookInfo();
+
         databaseInitializer.setDefaultDiscussionInfo();
 
         final String token = MemberFixture.login("user2@gmail.com");
@@ -259,6 +267,7 @@ class DiscussionControllerTest {
         // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
+
         databaseInitializer.setDefaultDiscussionInfo();
 
         final String token = MemberFixture.login("user@gmail.com");
@@ -278,6 +287,7 @@ class DiscussionControllerTest {
         // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
+
         databaseInitializer.setDefaultDiscussionInfo();
         databaseInitializer.setDefaultCommentInfo();
 
@@ -302,6 +312,7 @@ class DiscussionControllerTest {
             // given
             databaseInitializer.setDefaultUserInfo();
             databaseInitializer.setDefaultBookInfo();
+
             databaseInitializer.setDiscussionInfo("오브젝트", "오브젝트 토론입니다", 1L, 1L);
 
             final String token = MemberFixture.login("user@gmail.com");
@@ -322,6 +333,7 @@ class DiscussionControllerTest {
             // given
             databaseInitializer.setDefaultUserInfo();
             databaseInitializer.setDefaultBookInfo();
+
             databaseInitializer.setDiscussionInfo("오브젝트", "오브젝트 토론입니다", 1L, 1L);
 
             final String token = MemberFixture.login("user@gmail.com");
@@ -343,6 +355,7 @@ class DiscussionControllerTest {
         // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
+
         databaseInitializer.setDefaultDiscussionInfo();
 
         final String token = MemberFixture.login("user@gmail.com");
@@ -362,6 +375,7 @@ class DiscussionControllerTest {
         // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
+
         databaseInitializer.setDefaultDiscussionInfo();
         databaseInitializer.setDiscussionLikeInfo(1L, 1L);
 
