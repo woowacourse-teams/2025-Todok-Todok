@@ -43,7 +43,9 @@ public class BookCommandService {
 
     private void validateExistsMember(final Long memberId) {
         if (!memberRepository.existsById(memberId)) {
-            throw new NoSuchElementException("해당 회원을 찾을 수 없습니다");
+            throw new NoSuchElementException(
+                    String.format("해당 회원을 찾을 수 없습니다: %s", memberId)
+            );
         }
     }
 
