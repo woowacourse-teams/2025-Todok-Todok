@@ -17,13 +17,15 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.google.android.material.snackbar.Snackbar
 import com.team.domain.model.Book
 import com.team.domain.model.Books
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivitySelectBookBinding
 import com.team.todoktodok.presentation.core.component.CommonDialog
+import com.team.todoktodok.presentation.core.ExceptionMessageConverter
+import com.team.todoktodok.presentation.core.component.AlertSnackBar
+import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
 import com.team.todoktodok.presentation.view.book.adapter.SearchBooksAdapter
 import com.team.todoktodok.presentation.view.book.vm.SelectBookViewModel
 import com.team.todoktodok.presentation.view.book.vm.SelectBookViewModelFactory
@@ -174,9 +176,10 @@ class SelectBookActivity : AppCompatActivity() {
                     hideKeyBoard(binding.etSearchKeyword)
 
                 is SelectBookUiEvent.ShowErrorMessage -> {
-                    Snackbar
-                        .make(binding.root, getString(event.message.id), Snackbar.LENGTH_SHORT)
-                        .show()
+                    AlertSnackBar(
+                        binding.root,
+                        event.message.id,
+                    ).show()
                 }
 
                 is SelectBookUiEvent.NavigateToDraftDiscussionRoom -> {
@@ -198,6 +201,11 @@ class SelectBookActivity : AppCompatActivity() {
                         binding.tvEmptySearchResultTitle.text = strongKeyword
                         binding.tvEmptySearchResultSubTitle.setText(R.string.empty_search_result_description)
                     }
+                }
+
+                is SelectBookUiEvent.ShowNetworkErrorMessage -> {
+                    val messageConverter = ExceptionMessageConverter()
+                    AlertSnackBar(binding.root, messageConverter(event.exception)).show()
                 }
             }
         }

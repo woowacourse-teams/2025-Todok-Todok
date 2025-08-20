@@ -4,7 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.team.domain.model.Book
+import com.team.domain.model.exception.onFailure
 import com.team.domain.model.exception.onSuccess
+import com.team.domain.model.exception.onSuccessSuspend
 import com.team.domain.model.member.DiscussionRoom.Companion.DiscussionRoom
 import com.team.domain.repository.BookRepository
 import com.team.domain.repository.DiscussionRepository
@@ -15,6 +18,7 @@ import com.team.todoktodok.presentation.view.discussion.create.CreateDiscussionU
 import com.team.todoktodok.presentation.view.discussion.create.CreateDiscussionUiState
 import com.team.todoktodok.presentation.view.discussion.create.ErrorCreateDiscussionType
 import com.team.todoktodok.presentation.view.discussion.create.SerializationCreateDiscussionRoomMode
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
@@ -134,14 +138,21 @@ class CreateDiscussionRoomViewModel(
                     return
                 }
         viewModelScope.launch {
-            val bookId = bookRepository.saveBook(book)
-            val discussionId =
-                discussionRepository.saveDiscussionRoom(
-                    bookId = bookId,
-                    discussionTitle = title,
-                    discussionOpinion = opinion,
-                )
-            _uiEvent.setValue(CreateDiscussionUiEvent.NavigateToDiscussionDetail(discussionId))
+            bookRepository
+                .saveBook(book)
+                .onSuccessSuspend { bookId ->
+                    val discussionId =
+                        async(Dispatchers.IO) {
+                            discussionRepository.saveDiscussionRoom(
+                                bookId = bookId,
+                                discussionTitle = title,
+                                discussionOpinion = opinion,
+                            )
+                        }
+                    _uiEvent.setValue(CreateDiscussionUiEvent.NavigateToDiscussionDetail(discussionId.await()))
+                }.onFailure { exception ->
+                    _uiEvent.setValue(CreateDiscussionUiEvent.ShowNetworkErrorMessage(exception))
+                }
         }
     }
 

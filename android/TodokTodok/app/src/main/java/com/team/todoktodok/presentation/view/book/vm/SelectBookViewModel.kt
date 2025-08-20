@@ -5,6 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.team.domain.model.Books
+import com.team.domain.model.exception.TodokTodokExceptions
+import com.team.domain.model.exception.onFailure
+import com.team.domain.model.exception.onSuccess
 import com.team.domain.repository.BookRepository
 import com.team.domain.repository.DiscussionRepository
 import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
@@ -82,16 +85,17 @@ class SelectBookViewModel(
         val keyword = _uiState.value?.keyword ?: return
         _uiState.value = _uiState.value?.copy(isLoading = true)
         viewModelScope.launch {
-            try {
-                val books: Books = bookRepository.fetchBooks(keyword)
-                _uiState.value = _uiState.value?.copy(isLoading = false, searchedBooks = books)
-                if (books.size == SEARCHED_BOOKS_IS_EMPTY) {
-                    _uiEvent.setValue(SelectBookUiEvent.ShowSearchedBookResultIsEmpty(keyword))
+            bookRepository
+                .fetchBooks(keyword)
+                .onSuccess { books: Books ->
+                    _uiState.value = _uiState.value?.copy(isLoading = false, searchedBooks = books)
+                    if (books.size == SEARCHED_BOOKS_IS_EMPTY) {
+                        _uiEvent.setValue(SelectBookUiEvent.ShowSearchedBookResultIsEmpty(keyword))
+                    }
+                }.onFailure { exception: TodokTodokExceptions ->
+                    _uiState.value = _uiState.value?.copy(isLoading = false)
+                    _uiEvent.setValue(SelectBookUiEvent.ShowNetworkErrorMessage(exception))
                 }
-            } catch (e: Exception) {
-                _uiState.value = _uiState.value?.copy(isLoading = false)
-                _uiEvent.setValue(SelectBookUiEvent.ShowErrorMessage(SelectBookErrorType.ERROR_NETWORK))
-            }
         }
     }
 

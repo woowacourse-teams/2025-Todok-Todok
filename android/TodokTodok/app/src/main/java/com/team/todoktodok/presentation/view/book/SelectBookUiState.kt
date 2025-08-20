@@ -9,5 +9,5 @@ data class SelectBookUiState(
     val searchedBooks: Books = Books(emptyList()),
     val selectedBook: Book? = null,
 ) {
-    fun isExist(position: Int): Boolean = searchedBooks.items.getOrNull(position).let { it != null }
+    fun isExist(position: Int): Boolean = searchedBooks.isExist(position)
 }

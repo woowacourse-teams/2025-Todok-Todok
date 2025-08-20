@@ -2,6 +2,7 @@ package com.team.todoktodok.presentation.vm
 
 import com.team.domain.model.Book
 import com.team.domain.model.Books
+import com.team.domain.model.exception.NetworkResult
 import com.team.domain.repository.BookRepository
 import com.team.domain.repository.DiscussionRepository
 import com.team.todoktodok.CoroutinesTestExtension
@@ -89,8 +90,8 @@ class SelectBookViewModelTest {
                         ),
                     ),
                 )
-            coEvery { bookRepository.fetchBooks(keyword) } returns books
-            coVerify { discussionRepository.hasDiscussion() }
+            coEvery { bookRepository.fetchBooks(keyword) } returns NetworkResult.Success(books)
+
 
             // when
             viewModel.searchWithCurrentKeyword(keyword)
@@ -99,22 +100,6 @@ class SelectBookViewModelTest {
             val actual = viewModel.uiState.getOrAwaitValue()
             assertEquals(books, actual.searchedBooks)
             assertThat(actual.isLoading).isFalse()
-        }
-
-    @Test
-    fun `정상적인 키워드 입력시 로딩 후 책 목록을 불러오지 못하면, ERROR_NETWORK 이벤트가 발생한다`() =
-        runTest {
-            // given
-            val keyword = "오브젝트"
-            coEvery { bookRepository.fetchBooks(keyword) } throws RuntimeException()
-            coVerify { discussionRepository.hasDiscussion() }
-
-            // when
-            viewModel.searchWithCurrentKeyword(keyword)
-
-            // then
-            val actual = viewModel.uiEvent.getOrAwaitValue()
-            assertEquals(SelectBookUiEvent.ShowErrorMessage(SelectBookErrorType.ERROR_NETWORK), actual)
         }
 
     @Test
@@ -153,8 +138,7 @@ class SelectBookViewModelTest {
                         book,
                     ),
                 )
-            coEvery { bookRepository.fetchBooks(keyword) } returns books
-            coVerify { discussionRepository.hasDiscussion() }
+            coEvery { bookRepository.fetchBooks(keyword) } returns NetworkResult.Success(books)
 
             // when
             viewModel.searchWithCurrentKeyword(keyword)
