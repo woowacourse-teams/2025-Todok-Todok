@@ -3,9 +3,13 @@ package com.team.todoktodok.presentation.view.discussions
 import com.team.domain.model.Book
 import com.team.domain.model.Discussion
 import com.team.domain.model.DiscussionFilter
+import com.team.domain.model.latest.LatestDiscussionPage
+import com.team.domain.model.latest.PageInfo
+import com.team.domain.model.member.MemberDiscussion
 import com.team.domain.model.member.Nickname
 import com.team.domain.model.member.User
 import com.team.todoktodok.presentation.view.discussions.hot.adapter.HotDiscussionItems
+import com.team.todoktodok.presentation.view.discussions.my.adapter.MyDiscussionItems
 import java.time.LocalDateTime
 
 data class DiscussionsUiState(
@@ -14,16 +18,63 @@ data class DiscussionsUiState(
             HotDiscussionItems.PopularItem(DISCUSSION_UI_STATE_WITH_OPINION),
             HotDiscussionItems.ActivatedItem(DISCUSSION_UI_STATE_WITHOUT_OPINION),
         ),
-    val allDiscussions: List<DiscussionUiState> = emptyList(),
-    val myDiscussions: List<DiscussionUiState> = emptyList(),
+    val myDiscussions: List<MyDiscussionItems> = listOf(),
+    val latestDiscussions: List<DiscussionUiState> = emptyList(),
+    val latestPage: PageInfo = PageInfo(hasNext = false, nextCursor = ""),
     val searchKeyword: String = "",
     val filter: DiscussionFilter = DiscussionFilter.ALL,
     val isLoading: Boolean = false,
 ) {
-    val allDiscussionsSize get() = allDiscussions.size
+    fun addMyDiscussion(
+        createdDiscussion: List<MemberDiscussion>,
+        participatedDiscussion: List<MemberDiscussion>,
+    ): DiscussionsUiState {
+        val updatedList =
+            myDiscussions.toMutableList().apply {
+                if (createdDiscussion.isNotEmpty()) {
+                    add(
+                        MyDiscussionItems.CreatedDiscussionItem(
+                            createdDiscussion.take(MY_DISCUSSION_SIZE).map { it.toUiState() },
+                        ),
+                    )
+                }
+
+                val showEveryMyDiscussion = participatedDiscussion.isNotEmpty() && createdDiscussion.isNotEmpty()
+                if (showEveryMyDiscussion) add(MyDiscussionItems.DividerItem)
+
+                if (participatedDiscussion.isNotEmpty()) {
+                    add(
+                        MyDiscussionItems.ParticipatedDiscussionItem(
+                            participatedDiscussion.take(MY_DISCUSSION_SIZE).map { it.toUiState() },
+                        ),
+                    )
+                }
+            }
+
+        return copy(myDiscussions = updatedList)
+    }
+
+    fun addLatestDiscussion(page: LatestDiscussionPage): DiscussionsUiState {
+        val discussion = page.discussions.map { it.toUiState() }
+        val pageInfo = page.pageInfo
+
+        val newLatestDiscussions = latestDiscussions.toMutableList()
+        newLatestDiscussions.addAll(discussion)
+
+        val newLatestPage = latestPage.copy(pageInfo.hasNext, pageInfo.nextCursor)
+
+        return copy(latestDiscussions = newLatestDiscussions, latestPage = newLatestPage)
+    }
+
+    val latestPageHasNext get() = latestPage.hasNext
+    val latestDiscussionsSize get() = latestDiscussions.size
     val myDiscussionsSize get() = myDiscussions.size
 
     fun toggleLoading() = copy(isLoading = !isLoading)
+
+    companion object {
+        private const val MY_DISCUSSION_SIZE = 3
+    }
 }
 
 val DISCUSSIONS =

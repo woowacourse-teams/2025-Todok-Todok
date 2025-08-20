@@ -10,7 +10,7 @@ import com.team.domain.model.member.DiscussionRoom
 
 interface DiscussionRepository {
     suspend fun getLatestDiscussions(
-        size: Int,
+        size: Int = PAGING_SIZE,
         cursor: String? = null,
     ): NetworkResult<LatestDiscussionPage>
 
@@ -49,4 +49,8 @@ interface DiscussionRepository {
     suspend fun getDiscussion(): DiscussionRoom?
 
     suspend fun reportDiscussion(discussionId: Long): NetworkResult<Unit>
+
+    companion object {
+        private const val PAGING_SIZE = 15
+    }
 }

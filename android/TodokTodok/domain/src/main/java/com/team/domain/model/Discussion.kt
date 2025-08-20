@@ -5,11 +5,11 @@ import java.time.LocalDateTime
 
 data class Discussion(
     val id: Long,
-    val discussionTitle: String,
     val book: Book,
+    val discussionTitle: String,
+    val discussionOpinion: String,
     val writer: User,
     val createAt: LocalDateTime,
-    val discussionOpinion: String,
     val likeCount: Int,
     val commentCount: Int,
     val viewCount: Int = 0, // TODO("API 완성시 수정")

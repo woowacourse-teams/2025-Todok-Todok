@@ -6,7 +6,7 @@ class HotDiscussionDiffUtil : DiffUtil.ItemCallback<HotDiscussionItems>() {
     override fun areItemsTheSame(
         oldItem: HotDiscussionItems,
         newItem: HotDiscussionItems,
-    ): Boolean = oldItem.javaClass == newItem.javaClass
+    ): Boolean = oldItem.viewType == newItem.viewType
 
     override fun areContentsTheSame(
         oldItem: HotDiscussionItems,

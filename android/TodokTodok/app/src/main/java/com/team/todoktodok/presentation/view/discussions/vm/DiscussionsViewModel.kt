@@ -4,22 +4,26 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.team.domain.model.Discussion
 import com.team.domain.model.DiscussionFilter
-import com.team.domain.model.exception.onFailure
-import com.team.domain.model.exception.onSuccess
+import com.team.domain.model.exception.NetworkResult
+import com.team.domain.model.member.MemberDiscussion
+import com.team.domain.model.member.MemberDiscussionType
+import com.team.domain.model.member.MemberId
 import com.team.domain.repository.DiscussionRepository
+import com.team.domain.repository.MemberRepository
 import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
 import com.team.todoktodok.presentation.core.event.SingleLiveData
-import com.team.todoktodok.presentation.view.discussions.DiscussionUiState
 import com.team.todoktodok.presentation.view.discussions.DiscussionsUiEvent
 import com.team.todoktodok.presentation.view.discussions.DiscussionsUiState
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class DiscussionsViewModel(
     private val discussionRepository: DiscussionRepository,
+    private val memberRepository: MemberRepository,
 ) : ViewModel() {
     private val _uiState = MutableLiveData(DiscussionsUiState())
     val uiState: LiveData<DiscussionsUiState> get() = _uiState
@@ -28,6 +32,10 @@ class DiscussionsViewModel(
     val uiEvent: SingleLiveData<DiscussionsUiEvent> get() = _uiEvent
 
     private var loadJob: Job? = null
+
+    init {
+        loadLatestDiscussions("")
+    }
 
     fun updateTab(
         newFilter: DiscussionFilter,
@@ -39,52 +47,56 @@ class DiscussionsViewModel(
         loadJob =
             viewModelScope.launch {
                 delay(duration)
-                loadDiscussions()
             }
     }
 
     fun loadSearchedDiscussions(keyword: String) {
         _uiState.value = _uiState.value?.copy(searchKeyword = keyword)
-        loadDiscussions()
     }
 
-    fun loadDiscussions() {
-        val currentState = _uiState.value ?: return
-        val currentFilter = currentState.filter
-        val keyword = currentState.searchKeyword
+    fun loadLatestDiscussions(cursor: String) =
+        withLoading {
+            when (val result = discussionRepository.getLatestDiscussions(cursor = cursor)) {
+                is NetworkResult.Success -> {
+                    _uiState.value = _uiState.value?.addLatestDiscussion(result.data)
+                }
 
-        setLoading()
-
-        viewModelScope.launch {
-            for (filter in DiscussionFilter.entries) {
-                // TODO("API 완성시 수정")
-                if (filter == DiscussionFilter.HOT) continue
-                discussionRepository
-                    .getDiscussions(filter, keyword)
-                    .onSuccess { result: List<Discussion> ->
-                        val discussion = result.map { DiscussionUiState(it) }
-                        updateDiscussions(filter, discussion)
-                        if (filter == currentFilter) onUiEvent(result, filter)
-                    }.onFailure {
-                        onUiEvent(DiscussionsUiEvent.ShowErrorMessage(it))
-                    }
-            }
-            setLoading()
-        }
-    }
-
-    private fun updateDiscussions(
-        filter: DiscussionFilter,
-        discussions: List<DiscussionUiState>,
-    ) {
-        _uiState.value =
-            _uiState.value?.let {
-                when (filter) {
-                    DiscussionFilter.ALL -> it.copy(allDiscussions = discussions)
-                    DiscussionFilter.MINE -> it.copy(myDiscussions = discussions)
-                    DiscussionFilter.HOT -> it.copy(myDiscussions = discussions)
+                is NetworkResult.Failure -> {
+                    onUiEvent(DiscussionsUiEvent.ShowErrorMessage(result.exception))
                 }
             }
+        }
+
+    fun loadMyDiscussions() =
+        withLoading {
+            val tasks =
+                MemberDiscussionType.entries.map { type ->
+                    viewModelScope.async {
+                        type to memberRepository.getMemberDiscussionRooms(MemberId.Mine, type)
+                    }
+                }
+
+            val results: Map<MemberDiscussionType, NetworkResult<List<MemberDiscussion>>> =
+                tasks.awaitAll().toMap()
+
+            results.values.firstOrNull { it is NetworkResult.Failure }?.let { failure ->
+                val exception = (failure as NetworkResult.Failure).exception
+                onUiEvent(DiscussionsUiEvent.ShowErrorMessage(exception))
+                return@withLoading
+            }
+
+            val created = (results[MemberDiscussionType.CREATED] as NetworkResult.Success).data
+            val participated = (results[MemberDiscussionType.PARTICIPATED] as NetworkResult.Success).data
+
+            _uiState.value = _uiState.value?.addMyDiscussion(created, participated)
+        }
+
+    private fun withLoading(action: suspend () -> Unit) {
+        viewModelScope.launch {
+            setLoading()
+            action()
+            setLoading()
+        }
     }
 
     private fun setLoading() {
@@ -92,22 +104,6 @@ class DiscussionsViewModel(
     }
 
     private fun onUiEvent(event: DiscussionsUiEvent) {
-        _uiEvent.setValue(event)
-    }
-
-    private fun onUiEvent(
-        discussions: List<Discussion>,
-        filter: DiscussionFilter,
-    ) {
-        val event =
-            when {
-                discussions.isEmpty() && filter == DiscussionFilter.ALL -> DiscussionsUiEvent.ShowNotHasAllDiscussions
-                discussions.isEmpty() && filter == DiscussionFilter.MINE -> DiscussionsUiEvent.ShowNotHasMyDiscussions
-                filter == DiscussionFilter.ALL -> DiscussionsUiEvent.ShowHasAllDiscussions
-                filter == DiscussionFilter.MINE -> DiscussionsUiEvent.ShowHasMyDiscussions
-                else -> throw IllegalArgumentException()
-            }
-
         _uiEvent.setValue(event)
     }
 }
