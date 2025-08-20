@@ -3,10 +3,10 @@ server:
   grpc_listen_port: 0
 
 positions:
-  filename: /tmp/positions-prod.yaml
+  filename: /var/log/promtail/positions-prod.yaml
 
 clients:
-  - url: http://10.0.0.72:3100/loki/api/v1/push
+  - url: http://10.0.0.72:80/loki/api/v1/push
 
 scrape_configs:
   - job_name: spring-logs-info
