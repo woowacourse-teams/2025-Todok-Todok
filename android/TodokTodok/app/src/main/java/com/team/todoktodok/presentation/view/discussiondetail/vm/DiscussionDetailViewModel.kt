@@ -1,13 +1,10 @@
 package com.team.todoktodok.presentation.view.discussiondetail.vm
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.team.domain.model.Discussion
-import com.team.domain.model.LikeStatus
 import com.team.domain.model.exception.NetworkResult
 import com.team.domain.repository.DiscussionRepository
 import com.team.domain.repository.TokenRepository
@@ -43,12 +40,8 @@ class DiscussionDetailViewModel(
 
     fun reportDiscussion() {
         viewModelScope.launch {
-            when (val reportDiscussion = discussionRepository.reportDiscussion(discussionId)) {
-                is NetworkResult.Failure ->
-                    onUiEvent(DiscussionDetailUiEvent.ShowErrorMessage(reportDiscussion.exception))
-
-                is NetworkResult.Success<Unit> ->
-                    onUiEvent(DiscussionDetailUiEvent.ShowReportSuccessMessage)
+            handleResult(discussionRepository.reportDiscussion(discussionId)) {
+                onUiEvent(DiscussionDetailUiEvent.ShowReportSuccessMessage)
             }
         }
     }
@@ -65,36 +58,20 @@ class DiscussionDetailViewModel(
 
     fun deleteDiscussion() {
         viewModelScope.launch {
-            when (val deleteDiscussion = discussionRepository.deleteDiscussion(discussionId)) {
-                is NetworkResult.Failure -> {
-                    Log.d("12345", deleteDiscussion.exception.toString())
-                    _uiEvent.setValue(
-                        DiscussionDetailUiEvent.ShowErrorMessage(
-                            deleteDiscussion.exception,
-                        ),
-                    )
-                }
-
-                is NetworkResult.Success<Unit> ->
-                    onUiEvent(
-                        DiscussionDetailUiEvent.DeleteDiscussion(
-                            discussionId,
-                        ),
-                    )
+            handleResult(discussionRepository.deleteDiscussion(discussionId)) {
+                onUiEvent(
+                    DiscussionDetailUiEvent.DeleteDiscussion(
+                        discussionId,
+                    ),
+                )
             }
         }
     }
 
     fun toggleLike() {
         viewModelScope.launch {
-            when (
-                val likeStatus = discussionRepository.toggleLike(discussionId)
-            ) {
-                is NetworkResult.Failure -> {
-                    _uiEvent.setValue(DiscussionDetailUiEvent.ShowErrorMessage(likeStatus.exception))
-                }
-
-                is NetworkResult.Success<LikeStatus> -> loadDiscussionRoom()
+            handleResult(discussionRepository.toggleLike(discussionId)) {
+                loadDiscussionRoom()
             }
         }
     }
@@ -109,15 +86,25 @@ class DiscussionDetailViewModel(
     }
 
     private suspend fun loadDiscussionRoom() {
-        when (val discussion = discussionRepository.getDiscussion(discussionId)) {
-            is NetworkResult.Failure -> DiscussionDetailUiEvent.ShowErrorMessage(discussion.exception)
-            is NetworkResult.Success<Discussion> -> {
-                _discussion.value =
-                    DiscussionItemUiState(
-                        discussion.data,
-                        discussion.data.writer.id == tokenRepository.getMemberId(),
-                    )
-            }
+        handleResult(discussionRepository.getDiscussion(discussionId)) { discussion ->
+            _discussion.value =
+                DiscussionItemUiState(
+                    discussion,
+                    discussion.writer.id == tokenRepository.getMemberId(),
+                )
+        }
+    }
+
+    private inline fun <T> handleResult(
+        result: NetworkResult<T>,
+        onSuccess: (T) -> Unit,
+    ) {
+        when (result) {
+            is NetworkResult.Success -> onSuccess(result.data)
+            is NetworkResult.Failure ->
+                onUiEvent(
+                    DiscussionDetailUiEvent.ShowErrorMessage(result.exception),
+                )
         }
     }
 

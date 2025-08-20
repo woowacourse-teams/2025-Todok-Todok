@@ -70,7 +70,9 @@ class CommentsViewModel(
 
     fun reportComment(commentId: Long) =
         viewModelScope.launch {
-            commentRepository.report(discussionId, commentId)
+            handleResult(
+                commentRepository.report(discussionId, commentId),
+            ) {}
         }
 
     fun showCommentCreate() {
