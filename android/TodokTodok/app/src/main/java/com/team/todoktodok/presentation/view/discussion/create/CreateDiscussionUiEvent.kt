@@ -11,7 +11,6 @@ sealed interface CreateDiscussionUiEvent {
         val error: ErrorCreateDiscussionType,
     ) : CreateDiscussionUiEvent
 
-
     data class SaveDraft(
         val possible: Boolean,
     ) : CreateDiscussionUiEvent

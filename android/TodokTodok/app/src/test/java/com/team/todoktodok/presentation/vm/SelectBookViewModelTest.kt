@@ -92,7 +92,6 @@ class SelectBookViewModelTest {
                 )
             coEvery { bookRepository.fetchBooks(keyword) } returns NetworkResult.Success(books)
 
-
             // when
             viewModel.searchWithCurrentKeyword(keyword)
 
