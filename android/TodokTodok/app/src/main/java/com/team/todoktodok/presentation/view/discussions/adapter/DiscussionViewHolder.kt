@@ -37,7 +37,7 @@ class DiscussionViewHolder private constructor(
 
             tvLikeCount.text = item.likeCount
             tvCommentCount.text = item.commentCount
-            tvViews.text = item.likeCount
+            tvViews.text = item.viewCount
         }
         adjustItemSize(item.opinionVisibility)
     }

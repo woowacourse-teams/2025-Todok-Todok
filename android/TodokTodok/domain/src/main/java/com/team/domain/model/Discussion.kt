@@ -12,6 +12,7 @@ data class Discussion(
     val discussionOpinion: String,
     val likeCount: Int,
     val commentCount: Int,
+    val viewCount: Int = 0, // TODO("API 완성시 수정")
     val isLikedByMe: Boolean,
 ) {
     val bookImage get() = book.image
