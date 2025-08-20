@@ -35,7 +35,10 @@ class DiscussionsActivity : AppCompatActivity() {
 
     private val viewModel: DiscussionsViewModel by viewModels {
         val repositoryModule = (application as App).container.repositoryModule
-        DiscussionsViewModelFactory(repositoryModule.discussionRepository)
+        DiscussionsViewModelFactory(
+            repositoryModule.discussionRepository,
+            repositoryModule.memberRepository,
+        )
     }
 
     private val messageConverter: ExceptionMessageConverter by lazy {
@@ -200,7 +203,11 @@ class DiscussionsActivity : AppCompatActivity() {
 
     private fun changeFragment(showFragment: Fragment) {
         supportFragmentManager.commit {
-            listOf(hotDiscussionFragment, allDiscussionFragment, myDiscussionFragment).forEach { fragment ->
+            listOf(
+                hotDiscussionFragment,
+                allDiscussionFragment,
+                myDiscussionFragment,
+            ).forEach { fragment ->
                 if (fragment == showFragment) show(fragment) else hide(fragment)
             }
         }

@@ -7,19 +7,21 @@ import androidx.fragment.app.activityViewModels
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentMyDiscussionBinding
-import com.team.todoktodok.presentation.view.discussiondetail.DiscussionDetailActivity
 import com.team.todoktodok.presentation.view.discussions.DiscussionsUiEvent
-import com.team.todoktodok.presentation.view.discussions.adapter.DiscussionAdapter
+import com.team.todoktodok.presentation.view.discussions.my.adapter.MyDiscussionAdapter
 import com.team.todoktodok.presentation.view.discussions.vm.DiscussionsViewModel
 import com.team.todoktodok.presentation.view.discussions.vm.DiscussionsViewModelFactory
 
 class MyDiscussionFragment : Fragment(R.layout.fragment_my_discussion) {
-    private val discussionAdapter: DiscussionAdapter by lazy {
-        DiscussionAdapter(handler = adapterHandler)
+    private val discussionAdapter: MyDiscussionAdapter by lazy {
+        MyDiscussionAdapter(adapterHandler)
     }
     private val viewModel: DiscussionsViewModel by activityViewModels {
         val repositoryModule = (requireActivity().application as App).container.repositoryModule
-        DiscussionsViewModelFactory(repositoryModule.discussionRepository)
+        DiscussionsViewModelFactory(
+            repositoryModule.discussionRepository,
+            repositoryModule.memberRepository,
+        )
     }
 
     override fun onViewCreated(
@@ -74,15 +76,17 @@ class MyDiscussionFragment : Fragment(R.layout.fragment_my_discussion) {
     }
 
     private val adapterHandler =
-        object : DiscussionAdapter.Handler {
+        object : MyDiscussionAdapter.Handler {
+            override fun onClickMyCreatedDiscussionHeader() {
+                TODO("Not yet implemented")
+            }
+
             override fun onItemClick(index: Int) {
-                val discussion = discussionAdapter.currentList[index]
-                startActivity(
-                    DiscussionDetailActivity.Intent(
-                        requireContext(),
-                        discussion.item.id,
-                    ),
-                )
+                TODO("Not yet implemented")
+            }
+
+            override fun onClickMyParticipatedDiscussionHeader() {
+                TODO("Not yet implemented")
             }
         }
 }
