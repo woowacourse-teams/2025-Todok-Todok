@@ -1,5 +1,7 @@
 package todoktodok.backend;
 
+import static java.time.temporal.ChronoUnit.MICROS;
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.time.LocalDateTime;
@@ -33,7 +35,7 @@ public class DatabaseInitializer {
 
     @Transactional
     public void setDefaultUserInfo() {
-        final LocalDateTime now = LocalDateTime.now();
+        final LocalDateTime now = LocalDateTime.now().truncatedTo(MICROS);
 
         em.createNativeQuery(
                         """
@@ -54,7 +56,7 @@ public class DatabaseInitializer {
             final String profileImage,
             final String profileMessage
     ) {
-        final LocalDateTime now = LocalDateTime.now();
+        final LocalDateTime now = LocalDateTime.now().truncatedTo(MICROS);
 
         em.createNativeQuery(
                         """
@@ -74,7 +76,7 @@ public class DatabaseInitializer {
 
     @Transactional
     public void setDefaultBookInfo() {
-        final LocalDateTime now = LocalDateTime.now();
+        final LocalDateTime now = LocalDateTime.now().truncatedTo(MICROS);
 
         em.createNativeQuery(
                         """
@@ -97,7 +99,7 @@ public class DatabaseInitializer {
             final String isbn,
             final String image
     ) {
-        final LocalDateTime now = LocalDateTime.now();
+        final LocalDateTime now = LocalDateTime.now().truncatedTo(MICROS);
 
         em.createNativeQuery(
                         """
@@ -119,7 +121,7 @@ public class DatabaseInitializer {
 
     @Transactional
     public void setDefaultDiscussionInfo() {
-        final LocalDateTime now = LocalDateTime.now();
+        final LocalDateTime now = LocalDateTime.now().truncatedTo(MICROS);
 
         em.createNativeQuery(
                         """
@@ -140,7 +142,7 @@ public class DatabaseInitializer {
             final Long memberId,
             final Long bookId
     ) {
-        final LocalDateTime now = LocalDateTime.now();
+        final LocalDateTime now = LocalDateTime.now().truncatedTo(MICROS);
 
         em.createNativeQuery(
                         """
@@ -163,7 +165,7 @@ public class DatabaseInitializer {
             final Long memberId,
             final Long discussionId
     ) {
-        final LocalDateTime now = LocalDateTime.now();
+        final LocalDateTime now = LocalDateTime.now().truncatedTo(MICROS);
 
         em.createNativeQuery(
                         """
@@ -181,7 +183,7 @@ public class DatabaseInitializer {
 
     @Transactional
     public void setDefaultCommentInfo() {
-        final LocalDateTime now = LocalDateTime.now();
+        final LocalDateTime now = LocalDateTime.now().truncatedTo(MICROS);
 
         em.createNativeQuery(
                         """
@@ -223,7 +225,7 @@ public class DatabaseInitializer {
             final Long memberId,
             final Long discussionId
     ) {
-        final LocalDateTime now = LocalDateTime.now();
+        final LocalDateTime now = LocalDateTime.now().truncatedTo(MICROS);
 
         em.createNativeQuery(
                         """
@@ -245,7 +247,7 @@ public class DatabaseInitializer {
             final Long memberId,
             final Long commentId
     ) {
-        final LocalDateTime now = LocalDateTime.now();
+        final LocalDateTime now = LocalDateTime.now().truncatedTo(MICROS);
 
         em.createNativeQuery(
                         """
@@ -263,7 +265,7 @@ public class DatabaseInitializer {
 
     @Transactional
     public void setDefaultReplyInfo() {
-        final LocalDateTime now = LocalDateTime.now();
+        final LocalDateTime now = LocalDateTime.now().truncatedTo(MICROS);
 
         em.createNativeQuery(
                         """
@@ -283,7 +285,7 @@ public class DatabaseInitializer {
             final Long memberId,
             final Long commentId
     ) {
-        final LocalDateTime now = LocalDateTime.now();
+        final LocalDateTime now = LocalDateTime.now().truncatedTo(MICROS);
 
         em.createNativeQuery(
                         """
@@ -305,7 +307,7 @@ public class DatabaseInitializer {
             final Long memberId,
             final Long replyId
     ) {
-        final LocalDateTime now = LocalDateTime.now();
+        final LocalDateTime now = LocalDateTime.now().truncatedTo(MICROS);
 
         em.createNativeQuery(
                         """
@@ -326,7 +328,7 @@ public class DatabaseInitializer {
             final Long memberId,
             final Long targetId
     ) {
-        final LocalDateTime now = LocalDateTime.now();
+        final LocalDateTime now = LocalDateTime.now().truncatedTo(MICROS);
 
         em.createNativeQuery(
                         """

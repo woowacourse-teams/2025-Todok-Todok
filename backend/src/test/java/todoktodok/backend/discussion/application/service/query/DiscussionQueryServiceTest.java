@@ -1,5 +1,6 @@
 package todoktodok.backend.discussion.application.service.query;
 
+import static java.time.temporal.ChronoUnit.MICROS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
@@ -560,7 +561,7 @@ class DiscussionQueryServiceTest {
         databaseInitializer.setDiscussionInfo("게시글3", "내용3", memberId, bookId);
         databaseInitializer.setDiscussionInfo("게시글4", "내용4", memberId, bookId);
 
-        final LocalDateTime baseTime = LocalDateTime.now();
+        final LocalDateTime baseTime = LocalDateTime.now().truncatedTo(MICROS);
 
         // 활성화 된 토론방 순서: DAY1 > DAY2 > DAY3 > DAY4
         databaseInitializer.setCommentInfo("댓글1-1", memberId, 1L, baseTime.minusMinutes(10));
