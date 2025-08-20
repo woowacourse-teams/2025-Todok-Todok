@@ -167,21 +167,27 @@ class DiscussionDetailActivity : AppCompatActivity() {
         )
 
     private fun setupObserve() {
-        viewModel.discussion.observe(this) { value ->
+        viewModel.uiState.observe(this) { value ->
             with(binding) {
-                tvBookTitle.text = value.discussion.book.title
-                tvDiscussionTitle.text = value.discussion.discussionTitle
-                tvUserNickname.text = value.discussion.writer.nickname.value
-                ivUserProfile.loadImage(value.discussion.writer.profileImage)
-                ivBookImage.loadImage(value.discussion.book.image)
-                tvDiscussionCreateAt.text =
-                    value.discussion.createAt.toRelativeString(this@DiscussionDetailActivity)
-                tvDiscussionOpinion.text = value.discussion.discussionOpinion
-                ivLike.isSelected = value.discussion.isLikedByMe
-                tvLikeCount.text = value.discussion.likeCount.toString()
-                tvCommentCount.text = value.discussion.commentCount.toString()
+                if (value.isLoading) {
+                    progressBar.show()
+                } else {
+                    progressBar.hide()
+                    val discussion = value.discussionItemUiState.discussion
+                    tvBookTitle.text = discussion.book.title
+                    tvDiscussionTitle.text = discussion.discussionTitle
+                    tvUserNickname.text = discussion.writer.nickname.value
+                    ivUserProfile.loadImage(discussion.writer.profileImage)
+                    ivBookImage.loadImage(discussion.book.image)
+                    tvDiscussionCreateAt.text =
+                        discussion.createAt.toRelativeString(this@DiscussionDetailActivity)
+                    tvDiscussionOpinion.text = discussion.discussionOpinion
+                    ivLike.isSelected = discussion.isLikedByMe
+                    tvLikeCount.text = discussion.likeCount.toString()
+                    tvCommentCount.text = discussion.commentCount.toString()
+                }
             }
-            setupPopUpDiscussionClick(value.isMyDiscussion)
+            setupPopUpDiscussionClick(value.discussionItemUiState.isMyDiscussion)
         }
         viewModel.uiEvent.observe(this) { value ->
             handleEvent(value)
