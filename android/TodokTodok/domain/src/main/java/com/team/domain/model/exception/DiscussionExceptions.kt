@@ -14,4 +14,8 @@ sealed class DiscussionExceptions(
 
     data object OnlyOwnerCanModifyOrDelete :
         DiscussionExceptions("[ERROR] 자기 자신의 토론방만 수정/삭제 가능합니다")
+
+    data object EmptyTitle : DiscussionExceptions("[ERROR] 토론방 제목을 입력해주세요")
+
+    data object EmptyContent : DiscussionExceptions("[ERROR] 토론방 내용을 입력해주세요")
 }

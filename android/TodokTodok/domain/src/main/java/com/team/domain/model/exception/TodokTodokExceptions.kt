@@ -154,6 +154,8 @@ sealed class TodokTodokExceptions : Throwable() {
                 DiscussionExceptions.SelfReportNotAllowed.message -> DiscussionExceptions.SelfReportNotAllowed
                 DiscussionExceptions.CannotDeleteWithComments.message -> DiscussionExceptions.CannotDeleteWithComments
                 DiscussionExceptions.OnlyOwnerCanModifyOrDelete.message -> DiscussionExceptions.OnlyOwnerCanModifyOrDelete
+                DiscussionExceptions.EmptyTitle.message -> DiscussionExceptions.EmptyTitle
+                DiscussionExceptions.EmptyContent.message -> DiscussionExceptions.EmptyContent
 
                 // 도서 관련 예외
                 BooksExceptions.EmptyKeywordException.message -> BooksExceptions.EmptyKeywordException

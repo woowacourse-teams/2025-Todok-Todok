@@ -107,7 +107,7 @@ class FakeDiscussionRemoteDataSource : DiscussionRemoteDataSource {
         discussionId: Long,
         discussionTitle: String,
         discussionOpinion: String,
-    ): Response<Unit> {
+    ): NetworkResult<Unit> {
         TODO("Not yet implemented")
     }
 
