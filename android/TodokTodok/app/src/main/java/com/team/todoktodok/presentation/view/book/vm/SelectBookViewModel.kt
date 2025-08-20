@@ -15,7 +15,6 @@ import com.team.todoktodok.presentation.core.event.SingleLiveData
 import com.team.todoktodok.presentation.view.book.SelectBookErrorType
 import com.team.todoktodok.presentation.view.book.SelectBookUiEvent
 import com.team.todoktodok.presentation.view.book.SelectBookUiState
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 class SelectBookViewModel(
@@ -30,8 +29,8 @@ class SelectBookViewModel(
 
     init {
         viewModelScope.launch {
-            val hasDiscussion = async { discussionRepository.hasDiscussion() }
-            if (hasDiscussion.await()) {
+            val hasDiscussion = discussionRepository.hasDiscussion()
+            if (hasDiscussion) {
                 _uiEvent.setValue(SelectBookUiEvent.ShowSavedDiscussionRoom)
             }
         }
@@ -39,8 +38,8 @@ class SelectBookViewModel(
 
     fun getBook() {
         viewModelScope.launch {
-            val book = async { discussionRepository.getBook() }
-            _uiEvent.setValue(SelectBookUiEvent.NavigateToDraftDiscussionRoom(book.await()))
+            val book = discussionRepository.getBook()
+            _uiEvent.setValue(SelectBookUiEvent.NavigateToDraftDiscussionRoom(book))
         }
     }
 
