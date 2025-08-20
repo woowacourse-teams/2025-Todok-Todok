@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   prod:
-    container_name: prod
+    container_name: "prod_${ENV_ID}"
     image: woowajeff/todoktodok:prod
     ports:
       - "80:8080"
@@ -13,7 +13,7 @@ services:
     restart: always
 
   promtail:
-    container_name: promtail_prod
+    container_name: "promtail_prod_${ENV_ID}"
     image: grafana/promtail:latest
     volumes:
       - ../config/promtail-config-prod.yml:/etc/promtail/promtail.yml
