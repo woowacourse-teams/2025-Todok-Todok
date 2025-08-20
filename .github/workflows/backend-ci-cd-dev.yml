@@ -72,12 +72,16 @@ jobs:
           username: ${{ secrets.DOCKERHUB_DEPLOY_USERNAME }}
           password: ${{ secrets.DOCKERHUB_DEPLOY_TOKEN }}
 
-      - name: Stop running Container (without removing)
+      - name: Stop & Remove running Container
         run: |
           echo "dev 컨테이너 중지 중..."
           docker stop dev && echo "dev 컨테이너 중지 완료" || echo "dev 컨테이너 없음"
           echo "promtail_dev 컨테이너 중지 중..."
           docker stop promtail_dev && echo "promtail_dev 컨테이너 중지 완료" || echo "promtail_dev 컨테이너 없음"
+          echo "dev 컨테이너 삭제 중..."
+          docker rm dev && echo "dev 컨테이너 삭제 완료" || echo "dev 컨테이너 없음"
+          echo "promtail_dev 컨테이너 삭제 중..."
+          docker rm promtail_dev && echo "echo promtail_dev 컨테이너 삭제 완료" || echo "promtail_dev 컨테이너 없음"
 
       - name: Ensure dev network exists
         run: |
