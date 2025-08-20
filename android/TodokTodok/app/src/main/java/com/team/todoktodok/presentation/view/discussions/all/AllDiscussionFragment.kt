@@ -19,7 +19,10 @@ class AllDiscussionFragment : Fragment(R.layout.fragment_all_discussion) {
     }
     private val viewModel: DiscussionsViewModel by activityViewModels {
         val repositoryModule = (requireActivity().application as App).container.repositoryModule
-        DiscussionsViewModelFactory(repositoryModule.discussionRepository)
+        DiscussionsViewModelFactory(
+            repositoryModule.discussionRepository,
+            repositoryModule.memberRepository,
+        )
     }
 
     override fun onViewCreated(

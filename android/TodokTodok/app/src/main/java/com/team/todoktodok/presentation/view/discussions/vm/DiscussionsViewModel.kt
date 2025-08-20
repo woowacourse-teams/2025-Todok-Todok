@@ -6,20 +6,26 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.team.domain.model.Discussion
 import com.team.domain.model.DiscussionFilter
-import com.team.domain.model.exception.onFailure
-import com.team.domain.model.exception.onSuccess
+import com.team.domain.model.exception.NetworkResult
+import com.team.domain.model.member.MemberDiscussionType
+import com.team.domain.model.member.MemberId
 import com.team.domain.repository.DiscussionRepository
+import com.team.domain.repository.MemberRepository
 import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
 import com.team.todoktodok.presentation.core.event.SingleLiveData
 import com.team.todoktodok.presentation.view.discussions.DiscussionUiState
 import com.team.todoktodok.presentation.view.discussions.DiscussionsUiEvent
 import com.team.todoktodok.presentation.view.discussions.DiscussionsUiState
+import com.team.todoktodok.presentation.view.discussions.toUiState
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class DiscussionsViewModel(
     private val discussionRepository: DiscussionRepository,
+    private val memberRepository: MemberRepository,
 ) : ViewModel() {
     private val _uiState = MutableLiveData(DiscussionsUiState())
     val uiState: LiveData<DiscussionsUiState> get() = _uiState
@@ -55,36 +61,74 @@ class DiscussionsViewModel(
 
         setLoading()
 
-        viewModelScope.launch {
-            for (filter in DiscussionFilter.entries) {
-                // TODO("API 완성시 수정")
-                if (filter == DiscussionFilter.HOT) continue
-                discussionRepository
-                    .getDiscussions(filter, keyword)
-                    .onSuccess { result: List<Discussion> ->
-                        val discussion = result.map { DiscussionUiState(it) }
-                        updateDiscussions(filter, discussion)
-                        if (filter == currentFilter) onUiEvent(result, filter)
-                    }.onFailure {
-                        onUiEvent(DiscussionsUiEvent.ShowErrorMessage(it))
-                    }
+//        viewModelScope.launch {
+//            for (filter in DiscussionFilter.entries) {
+//                // TODO("API 완성시 수정")
+//                if (filter == DiscussionFilter.HOT) continue
+//                discussionRepository
+//                    .getDiscussions(filter, keyword)
+//                    .onSuccess { result: List<Discussion> ->
+//                        val discussion = result.map { DiscussionUiState(it) }
+//                        updateDiscussions(filter, discussion)
+//                        if (filter == currentFilter) onUiEvent(result, filter)
+//                    }.onFailure {
+//                        onUiEvent(DiscussionsUiEvent.ShowErrorMessage(it))
+//                    }
+//            }
+//            setLoading()
+//        }
+    }
+
+    fun loadLatestDiscussions(cursor: String) {
+        withLoading {
+            when (val result = discussionRepository.getLatestDiscussions(cursor = cursor)) {
+                is NetworkResult.Success -> {
+                    _uiState.value = _uiState.value?.addLatestDiscussion(result.data)
+                }
+
+                is NetworkResult.Failure -> {
+                    onUiEvent(DiscussionsUiEvent.ShowErrorMessage(result.exception))
+                }
             }
-            setLoading()
         }
     }
 
-    private fun updateDiscussions(
-        filter: DiscussionFilter,
-        discussions: List<DiscussionUiState>,
-    ) {
-        _uiState.value =
-            _uiState.value?.let {
-                when (filter) {
-                    DiscussionFilter.ALL -> it.copy(allDiscussions = discussions)
-                    DiscussionFilter.MINE -> it.copy(myDiscussions = discussions)
-                    DiscussionFilter.HOT -> it.copy(myDiscussions = discussions)
+    private fun loadMyCreatedDiscussions(): Deferred<List<DiscussionUiState>> =
+        viewModelScope.async {
+            when (
+                val result =
+                    memberRepository.getMemberDiscussionRooms(
+                        MemberId.Mine,
+                        MemberDiscussionType.CREATED,
+                    )
+            ) {
+                is NetworkResult.Success -> result.data.map { it.toUiState() }
+                is NetworkResult.Failure -> {
+                    onUiEvent(DiscussionsUiEvent.ShowErrorMessage(result.exception))
+                    emptyList()
                 }
             }
+        }
+//    private fun updateDiscussions(
+//        filter: DiscussionFilter,
+//        discussions: List<DiscussionUiState>,
+//    ) {
+//        _uiState.value =
+//            _uiState.value?.let {
+//                when (filter) {
+//                    DiscussionFilter.ALL -> it.copy(allDiscussions = discussions)
+//                    DiscussionFilter.MINE -> it.copy(myDiscussions = discussions)
+//                    DiscussionFilter.HOT -> it.copy(myDiscussions = discussions)
+//                }
+//            }
+//    }
+
+    private fun withLoading(action: suspend () -> Unit) {
+        viewModelScope.launch {
+            setLoading()
+            action()
+            setLoading()
+        }
     }
 
     private fun setLoading() {
