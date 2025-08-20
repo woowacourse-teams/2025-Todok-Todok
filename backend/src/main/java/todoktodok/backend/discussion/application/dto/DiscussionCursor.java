@@ -8,7 +8,7 @@ public record DiscussionCursor(
         LocalDateTime lastCommentedAt,
         Long cursorId
 ) {
-
+    private static final String DELIMITER = "_";
     private static final DiscussionCursor EMPTY = new DiscussionCursor(null, null);
 
     public static DiscussionCursor fromEncoded(final String cursor) {
@@ -30,7 +30,9 @@ public record DiscussionCursor(
         final LocalDateTime lastCommentedAt,
         final Long discussionId
     ) {
-        final String cursorPayload = lastCommentedAt + "_" + discussionId;
-        return Base64.getEncoder().encodeToString(cursorPayload.getBytes(StandardCharsets.UTF_8));
+        final String cursorPayload = lastCommentedAt + DELIMITER + discussionId;
+        return Base64.getUrlEncoder()
+                .withoutPadding()
+                .encodeToString(cursorPayload.getBytes(StandardCharsets.UTF_8));
     }
 }
