@@ -6,6 +6,7 @@ import com.team.domain.model.DiscussionFilter
 import com.team.domain.model.LikeStatus
 import com.team.domain.model.exception.NetworkResult
 import com.team.domain.model.exception.map
+import com.team.domain.model.latest.LatestDiscussionPage
 import com.team.domain.model.member.DiscussionRoom
 import com.team.domain.repository.DiscussionRepository
 import com.team.todoktodok.data.datasource.discussion.DiscussionLocalDataSource
@@ -20,6 +21,14 @@ class DefaultDiscussionRepository(
     private val discussionRemoteDataSource: DiscussionRemoteDataSource,
     private val discussionLocalDataSource: DiscussionLocalDataSource,
 ) : DiscussionRepository {
+    override suspend fun getLatestDiscussions(
+        size: Int,
+        cursor: String?,
+    ): NetworkResult<LatestDiscussionPage> =
+        discussionRemoteDataSource
+            .getLatestDiscussions(size, cursor)
+            .map { discussions -> discussions.toDomain() }
+
     override suspend fun getDiscussion(id: Long): NetworkResult<Discussion> =
         discussionRemoteDataSource.getDiscussion(id).map { it.toDomain() }
 

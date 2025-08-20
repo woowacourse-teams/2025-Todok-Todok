@@ -1,18 +1,13 @@
 package com.team.todoktodok.data.network.response.discussion
 
 import com.team.domain.model.Book
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class BookResponse(
-    @SerialName("bookAuthor")
     val bookAuthor: String,
-    @SerialName("bookId")
     val bookId: Long,
-    @SerialName("bookImage")
     val bookImage: String,
-    @SerialName("bookTitle")
     val bookTitle: String,
 )
 
