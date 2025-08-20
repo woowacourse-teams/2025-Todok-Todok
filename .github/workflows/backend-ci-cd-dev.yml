@@ -57,34 +57,42 @@ jobs:
     needs: ci
     runs-on: [self-hosted, dev]
     steps:
+      - name: Cleanup backend log directory before checkout
+        run: |
+          sudo rm -rf backend/log/dev || true
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.SECRETS_SUBMODULE_ACCESS_TOKEN }}
+
       - name: Login to Docker Hub
         uses: docker/login-action@v3.3.0
         with:
           username: ${{ secrets.DOCKERHUB_DEPLOY_USERNAME }}
           password: ${{ secrets.DOCKERHUB_DEPLOY_TOKEN }}
 
-      - name: Pull Docker image
+      - name: Stop & Remove running Container
         run: |
-          echo "Docker 이미지 pull 시작"
-          docker pull woowajeff/todoktodok:dev
-          echo "Docker 이미지 pull 완료"
+          echo "dev 컨테이너 중지 중..."
+          docker stop dev && echo "dev 컨테이너 중지 완료" || echo "dev 컨테이너 없음"
+          echo "promtail_dev 컨테이너 중지 중..."
+          docker stop promtail_dev && echo "promtail_dev 컨테이너 중지 완료" || echo "promtail_dev 컨테이너 없음"
+          echo "dev 컨테이너 삭제 중..."
+          docker rm dev && echo "dev 컨테이너 삭제 완료" || echo "dev 컨테이너 없음"
+          echo "promtail_dev 컨테이너 삭제 중..."
+          docker rm promtail_dev && echo "echo promtail_dev 컨테이너 삭제 완료" || echo "promtail_dev 컨테이너 없음"
 
-      - name: Stop running Container
+      - name: Ensure dev network exists
         run: |
-          echo "포트 80에서 실행 중인 컨테이너 확인 중..."
-          container_id=$(docker ps --filter "publish=80" --format "{{.ID}}")
-          if [ -n "$container_id" ]; then
-            echo "컨테이너 중지: $container_id"
-            docker stop $container_id
-          else
-            echo "중지할 컨테이너 없음 (포트 80)"
-          fi
+          docker network create dev_network && echo "docker network 생성" || echo "docker network 이미 존재"
 
-      - name: Run docker image
+      - name: Docker Compose Pull & Up
         run: |
-          echo "새 Docker 컨테이너 실행 중..."
-          docker run -d -p 80:8080 woowajeff/todoktodok:dev
-          echo "컨테이너 실행 완료"
+          cd backend
+          docker compose -f config/docker-compose-dev.yml pull
+          docker compose -f config/docker-compose-dev.yml up -d
+          echo "docker compose-dev up"
 
       - name: Docker image Prune
         run: |

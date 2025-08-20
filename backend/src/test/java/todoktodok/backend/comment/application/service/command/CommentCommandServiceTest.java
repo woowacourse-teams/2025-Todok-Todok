@@ -1,10 +1,9 @@
 package todoktodok.backend.comment.application.service.command;
 
-import java.util.NoSuchElementException;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.util.NoSuchElementException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -47,7 +46,7 @@ public class CommentCommandServiceTest {
         // when - then
         assertThatThrownBy(() -> commentCommandService.createComment(1L, 1L, commentRequest))
                 .isInstanceOf(NoSuchElementException.class)
-                .hasMessage("해당 토론방을 찾을 수 없습니다");
+                .hasMessageContaining("해당 토론방을 찾을 수 없습니다");
     }
 
     @Test
@@ -63,7 +62,7 @@ public class CommentCommandServiceTest {
         // when - then
         assertThatThrownBy(() -> commentCommandService.createComment(2L, 1L, commentRequest))
                 .isInstanceOf(NoSuchElementException.class)
-                .hasMessage("해당 회원을 찾을 수 없습니다");
+                .hasMessageContaining("해당 회원을 찾을 수 없습니다");
     }
 
     @Test
@@ -126,7 +125,7 @@ public class CommentCommandServiceTest {
         // when - then
         assertThatThrownBy(() -> commentCommandService.toggleLike(memberId, discussionId, commentId))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("해당 토론방에 있는 댓글이 아닙니다");
+                .hasMessageContaining("해당 토론방에 있는 댓글이 아닙니다");
     }
 
     @Test
@@ -145,7 +144,7 @@ public class CommentCommandServiceTest {
         // when - then
         assertThatThrownBy(() -> commentCommandService.report(memberId, discussionId, commentId))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("자기 자신이 작성한 댓글을 신고할 수 없습니다");
+                .hasMessageContaining("자기 자신이 작성한 댓글을 신고할 수 없습니다");
     }
 
     @Test
@@ -167,7 +166,7 @@ public class CommentCommandServiceTest {
         // when - then
         assertThatThrownBy(() -> commentCommandService.report(memberId, discussionId, commentId))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("이미 신고한 댓글입니다");
+                .hasMessageContaining("이미 신고한 댓글입니다");
     }
 
     @Test
@@ -191,7 +190,7 @@ public class CommentCommandServiceTest {
         // when - then
         assertThatThrownBy(() -> commentCommandService.updateComment(memberId, discussionId, commentId, commentRequest))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("자기 자신의 댓글만 수정/삭제 가능합니다");
+                .hasMessageContaining("자기 자신의 댓글만 수정/삭제 가능합니다");
     }
 
     @Test
@@ -216,7 +215,7 @@ public class CommentCommandServiceTest {
         // when - then
         assertThatThrownBy(() -> commentCommandService.updateComment(memberId, discussionId, commentId, commentRequest))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("해당 토론방에 있는 댓글이 아닙니다");
+                .hasMessageContaining("해당 토론방에 있는 댓글이 아닙니다");
     }
 
     @Test
@@ -237,7 +236,7 @@ public class CommentCommandServiceTest {
         // when - then
         assertThatThrownBy(() -> commentCommandService.deleteComment(memberId, discussionId, commentId))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("자기 자신의 댓글만 수정/삭제 가능합니다");
+                .hasMessageContaining("자기 자신의 댓글만 수정/삭제 가능합니다");
     }
 
     @Test
@@ -259,7 +258,7 @@ public class CommentCommandServiceTest {
         // when - then
         assertThatThrownBy(() -> commentCommandService.deleteComment(memberId, discussionId, commentId))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("해당 토론방에 있는 댓글이 아닙니다");
+                .hasMessageContaining("해당 토론방에 있는 댓글이 아닙니다");
     }
 
     @Test
@@ -279,6 +278,6 @@ public class CommentCommandServiceTest {
         // when - then
         assertThatThrownBy(() -> commentCommandService.deleteComment(memberId, discussionId, commentId))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("대댓글이 존재하는 댓글은 삭제할 수 없습니다");
+                .hasMessageContaining("대댓글이 존재하는 댓글은 삭제할 수 없습니다");
     }
 }

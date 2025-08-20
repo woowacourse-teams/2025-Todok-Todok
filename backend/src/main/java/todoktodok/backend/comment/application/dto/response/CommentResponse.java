@@ -10,13 +10,15 @@ public record CommentResponse(
         LocalDateTime createdAt,
         String content,
         int likeCount,
-        int replyCount
+        int replyCount,
+        boolean isLikedByMe
 ) {
 
     public CommentResponse(
             final Comment comment,
             final int likeCount,
-            final int replyCount
+            final int replyCount,
+            final boolean isLikedByMe
     ) {
         this(
                 comment.getId(),
@@ -24,7 +26,8 @@ public record CommentResponse(
                 comment.getCreatedAt(),
                 comment.getContent(),
                 likeCount,
-                replyCount
+                replyCount,
+                isLikedByMe
         );
     }
 }

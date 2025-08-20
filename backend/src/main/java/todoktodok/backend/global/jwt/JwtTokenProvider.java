@@ -19,7 +19,7 @@ import todoktodok.backend.member.domain.Member;
 @Component
 public class JwtTokenProvider {
 
-    private static final String JWT_EXCEPTION_MESSAGE = "잘못된 로그인 시도입니다. 다시 시도해 주세요.";
+    private static final String JWT_EXCEPTION_MESSAGE = "잘못된 로그인 시도입니다. 다시 시도해 주세요";
     private static final String TOKEN_PREFIX = "Bearer ";
     private static final SecretKey SECRET_KEY = SIG.HS256.key().build();
 

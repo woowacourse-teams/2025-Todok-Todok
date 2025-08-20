@@ -10,7 +10,7 @@ public record DiscussionLikeCountDto(
     ) {
         this(
                 discussionId,
-                likeCount.intValue()
+                Math.toIntExact(likeCount)
         );
     }
 }

@@ -1,5 +1,11 @@
 package todoktodok.backend.reply.application.service.query;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
+import java.util.List;
+import java.util.NoSuchElementException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,12 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.DatabaseInitializer;
 import todoktodok.backend.InitializerTimer;
 import todoktodok.backend.reply.application.dto.response.ReplyResponse;
-
-import java.util.List;
-import java.util.NoSuchElementException;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @ActiveProfiles("test")
 @Transactional
@@ -117,7 +117,7 @@ class ReplyQueryServiceTest {
         // when - then
         assertThatThrownBy(() -> replyQueryService.getReplies(memberId, discussionId, commentId))
                 .isInstanceOf(NoSuchElementException.class)
-                .hasMessage("해당 댓글을 찾을 수 없습니다");
+                .hasMessageContaining("해당 댓글을 찾을 수 없습니다");
     }
 
     @Test
@@ -136,7 +136,7 @@ class ReplyQueryServiceTest {
         // when - then
         assertThatThrownBy(() -> replyQueryService.getReplies(memberId, discussionId, commentId))
                 .isInstanceOf(NoSuchElementException.class)
-                .hasMessage("해당 토론방을 찾을 수 없습니다");
+                .hasMessageContaining("해당 토론방을 찾을 수 없습니다");
     }
 
     @Test
@@ -158,6 +158,36 @@ class ReplyQueryServiceTest {
         // when - then
         assertThatThrownBy(() -> replyQueryService.getReplies(memberId, discussionId, commentId))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("해당 토론방에 있는 댓글이 아닙니다");
+                .hasMessageContaining("해당 토론방에 있는 댓글이 아닙니다");
+    }
+
+    @Test
+    @DisplayName("대댓글을 조회할 때 좋아요 생성 여부를 반환한다")
+    void getReplies_isLikedTest() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+        databaseInitializer.setDefaultCommentInfo();
+
+        databaseInitializer.setReplyInfo("좋은데요?", 1L, 1L);
+        databaseInitializer.setReplyInfo("별론데요?", 1L, 1L);
+
+        databaseInitializer.setReplyLikeInfo(1L, 1L);
+
+        final Long memberId = 1L;
+        final Long discussionId = 1L;
+        final Long commentId = 1L;
+
+        // when
+        final List<ReplyResponse> replies = replyQueryService.getReplies(memberId, discussionId, commentId);
+        final ReplyResponse likedReply = replies.get(0);
+        final ReplyResponse notLikedReply = replies.get(1);
+
+        // then
+        assertAll(
+                () -> assertThat(likedReply.isLikedByMe()).isTrue(),
+                () -> assertThat(notLikedReply.isLikedByMe()).isFalse()
+        );
     }
 }

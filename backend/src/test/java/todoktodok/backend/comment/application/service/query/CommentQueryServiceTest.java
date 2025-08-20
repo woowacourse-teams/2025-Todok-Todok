@@ -1,12 +1,11 @@
 package todoktodok.backend.comment.application.service.query;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import java.util.List;
+import java.util.NoSuchElementException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -120,7 +119,7 @@ public class CommentQueryServiceTest {
         // when - then
         assertThatThrownBy(() -> commentQueryService.getComments(memberId, discussionId))
                 .isInstanceOf(NoSuchElementException.class)
-                .hasMessage("해당 토론방을 찾을 수 없습니다");
+                .hasMessageContaining("해당 토론방을 찾을 수 없습니다");
     }
 
     @Test
@@ -138,6 +137,75 @@ public class CommentQueryServiceTest {
         // when - then
         assertThatThrownBy(() -> commentQueryService.getComments(memberId, discussionId))
                 .isInstanceOf(NoSuchElementException.class)
-                .hasMessage("해당 회원을 찾을 수 없습니다");
+                .hasMessageContaining("해당 회원을 찾을 수 없습니다");
+    }
+
+    @Test
+    @DisplayName("단일 댓글 조회 시, 내가 좋아요를 한 댓글인지 확인한다")
+    void getComment_isLikedByMeTest_true() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+        databaseInitializer.setDefaultCommentInfo();
+
+        final Long memberId = 1L;
+        final Long discussionId = 1L;
+        final Long commentId = 1L;
+
+        databaseInitializer.setCommentLikeInfo(memberId, commentId);
+
+        // when
+        final CommentResponse comment = commentQueryService.getComment(memberId, discussionId, commentId);
+
+        // then
+        assertThat(comment.isLikedByMe()).isTrue();
+    }
+
+    @Test
+    @DisplayName("단일 댓글 조회 시, 내가 좋아요를 한 댓글이 아니라는 것을 확인한다")
+    void getComment_isLikedByMeTest_false() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+        databaseInitializer.setDefaultCommentInfo();
+
+        final Long memberId = 1L;
+        final Long discussionId = 1L;
+        final Long commentId = 1L;
+
+        // when
+        final CommentResponse comment = commentQueryService.getComment(memberId, discussionId, commentId);
+
+        // then
+        assertThat(comment.isLikedByMe()).isFalse();
+    }
+
+    @Test
+    @DisplayName("전체 댓글 조회 시, 댓글별로 내가 좋아요를 한 댓글인지 확인한다")
+    void getComments_isLikedByMeTest() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+
+        final Long memberId = 1L;
+        final Long discussionId = 1L;
+
+        databaseInitializer.setCommentInfo("댓글1", memberId, discussionId);
+        databaseInitializer.setCommentInfo("댓글2", memberId, discussionId);
+        databaseInitializer.setCommentLikeInfo(memberId, 1L);
+
+        // when
+        final List<CommentResponse> comments = commentQueryService.getComments(memberId, discussionId);
+        final CommentResponse likedComment = comments.get(0);
+        final CommentResponse notLikedComment = comments.get(1);
+
+        // then
+        assertAll(
+                () -> assertThat(likedComment.isLikedByMe()).isTrue(),
+                () -> assertThat(notLikedComment.isLikedByMe()).isFalse()
+        );
     }
 }

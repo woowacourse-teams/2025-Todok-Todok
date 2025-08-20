@@ -5,6 +5,6 @@ public record CommentReplyCountDto(
         int replyCount
 ) {
     public CommentReplyCountDto(final Long commentId, final Long replyCount) {
-        this(commentId, replyCount.intValue());
+        this(commentId, Math.toIntExact(replyCount));
     }
 }

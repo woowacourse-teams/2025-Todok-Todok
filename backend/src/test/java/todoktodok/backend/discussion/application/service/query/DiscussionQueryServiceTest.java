@@ -40,7 +40,7 @@ class DiscussionQueryServiceTest {
 
     @Test
     @DisplayName("전체 토론방을 조회한다")
-    void getDiscussions() {
+    void getAllDiscussions() {
         // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
@@ -49,7 +49,8 @@ class DiscussionQueryServiceTest {
         final Long memberId = 1L;
 
         // when
-        final List<DiscussionResponse> discussions = discussionQueryService.getDiscussions(memberId);
+        final List<DiscussionResponse> discussions = discussionQueryService.getDiscussionsByKeywordAndType(
+                memberId, "", DiscussionFilterType.ALL);
 
         // then
         assertThat(discussions).hasSize(1);
@@ -97,7 +98,7 @@ class DiscussionQueryServiceTest {
         // when - then
         assertThatThrownBy(() -> discussionQueryService.getDiscussion(memberId, discussionId))
                 .isInstanceOf(NoSuchElementException.class)
-                .hasMessage("해당 토론방을 찾을 수 없습니다");
+                .hasMessageContaining("해당 토론방을 찾을 수 없습니다");
     }
 
     @Test
@@ -128,6 +129,74 @@ class DiscussionQueryServiceTest {
                 () -> assertThat(discussion.commentCount()).isEqualTo(1),
                 () -> assertThat(discussion.likeCount()).isEqualTo(1)
         );
+    }
+
+    @Test
+    @DisplayName("특정 토론방의 전체 댓글 수는 댓글 수와 대댓글 수의 합이다")
+    void getDiscussion_TotalCommentCountTest() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+
+        final Long memberId = 1L;
+        final Long bookId = 1L;
+
+        databaseInitializer.setDiscussionInfo(
+                "클린코드에 대해 논의해볼까요",
+                "클린코드만세",
+                memberId,
+                bookId
+        );
+
+        final Long discussionId = 1L;
+
+        databaseInitializer.setCommentInfo("댓글1", memberId, discussionId);
+        databaseInitializer.setReplyInfo("대댓글1", memberId, 1L);
+
+        // when
+        final DiscussionResponse discussion = discussionQueryService.getDiscussion(memberId, discussionId);
+
+        // then
+        assertThat(discussion.commentCount()).isEqualTo(2);
+    }
+
+    @Test
+    @DisplayName("토론방 단일 조회 시 내가 좋아요를 생성한 글인지 확인한다")
+    void getDiscussion_isLikedTest_true() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+
+        databaseInitializer.setDefaultDiscussionInfo();
+        databaseInitializer.setDiscussionLikeInfo(1L, 1L);
+
+        final Long memberId = 1L;
+        final Long discussionId = 1L;
+
+        // when
+        final DiscussionResponse discussion = discussionQueryService.getDiscussion(memberId, discussionId);
+
+        // then
+        assertThat(discussion.isLikedByMe()).isTrue();
+    }
+
+    @Test
+    @DisplayName("토론방 단일 조회 시 내가 좋아요를 생성하지 않은 글인지 확인한다")
+    void getDiscussion_isLikedTest_false() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+
+        databaseInitializer.setDefaultDiscussionInfo();
+
+        final Long memberId = 1L;
+        final Long discussionId = 1L;
+
+        // when
+        final DiscussionResponse discussion = discussionQueryService.getDiscussion(memberId, discussionId);
+
+        // then
+        assertThat(discussion.isLikedByMe()).isFalse();
     }
 
     @Nested
@@ -310,6 +379,58 @@ class DiscussionQueryServiceTest {
                     () -> assertThat(discussions.get(1).commentCount()).isEqualTo(2L),
                     () -> assertThat(discussions.get(2).likeCount()).isEqualTo(3L),
                     () -> assertThat(discussions.get(2).commentCount()).isEqualTo(3L)
+            );
+        }
+
+        @Test
+        @DisplayName("전체 토론방을 조회할 때, 조회되는 댓글 수는 댓글과 대댓글 수의 합이다")
+        void getAllDiscussions_totalCommentCountTest() {
+            // given
+            databaseInitializer.setDefaultUserInfo();
+            databaseInitializer.setDefaultDiscussionInfo();
+
+            final Long memberId = 1L;
+            final Long discussionId = 1L;
+
+            databaseInitializer.setCommentInfo("댓글1", memberId, discussionId);
+
+            final Long commentId = 1L;
+
+            databaseInitializer.setReplyInfo("대댓글1", memberId, commentId);
+
+            // when
+            final List<DiscussionResponse> discussions = discussionQueryService.getDiscussionsByKeywordAndType(
+                    memberId, null, DiscussionFilterType.ALL
+            );
+
+            // then
+            assertThat(discussions.get(0).commentCount()).isEqualTo(2);
+        }
+
+        @Test
+        @DisplayName("토론방 필터링 조회 시 나의 좋아요 여부를 반환한다")
+        void getDiscussions_isLikedTest() {
+            // given
+            databaseInitializer.setDefaultUserInfo();
+            databaseInitializer.setDefaultBookInfo();
+
+            databaseInitializer.setDefaultDiscussionInfo();
+            databaseInitializer.setDiscussionInfo("토론방 2", "토론방 2입니다", 1L, 1L);
+
+            databaseInitializer.setDiscussionLikeInfo(1L, 1L);
+
+            final Long memberId = 1L;
+
+            // when
+            final List<DiscussionResponse> discussions = discussionQueryService.getDiscussionsByKeywordAndType(
+                    memberId, "", DiscussionFilterType.ALL);
+            final DiscussionResponse likedDiscussion = discussions.get(0);
+            final DiscussionResponse notLikedDiscussion = discussions.get(1);
+
+            // then
+            assertAll(
+                    () -> assertThat(likedDiscussion.isLikedByMe()).isTrue(),
+                    () -> assertThat(notLikedDiscussion.isLikedByMe()).isFalse()
             );
         }
     }

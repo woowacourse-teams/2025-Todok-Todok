@@ -60,7 +60,7 @@ public class MemberCommandService {
         final Member member = findMember(memberId);
         final Member target = findMember(targetId);
 
-        validateSelfBlock(member, target);
+        member.validateSelfBlock(target);
         validateDuplicatedBlock(member, target);
 
         final Block block = Block.builder()
@@ -77,7 +77,7 @@ public class MemberCommandService {
         final Member member = findMember(memberId);
         final Member target = findMember(targetId);
 
-        validateSelfReport(member, target);
+        member.validateSelfReport(target);
         validateDuplicatedReport(member, target);
 
         final MemberReport memberReport = MemberReport.builder()
@@ -118,13 +118,13 @@ public class MemberCommandService {
 
     private void validateDuplicatedNickname(final String nickname) {
         if (memberRepository.existsByNickname(nickname)) {
-            throw new IllegalArgumentException("이미 존재하는 닉네임입니다");
+            throw new IllegalArgumentException(String.format("이미 존재하는 닉네임입니다: nickname = %s", nickname));
         }
     }
 
     private void validateDuplicatedEmail(final SignupRequest signupRequest) {
         if (memberRepository.existsByEmail(signupRequest.email())) {
-            throw new IllegalArgumentException("이미 가입된 이메일입니다");
+            throw new IllegalArgumentException(String.format("이미 가입된 이메일입니다: email = %s", maskEmail(signupRequest.email())));
         }
     }
 
@@ -133,22 +133,13 @@ public class MemberCommandService {
             final String tokenEmail
     ) {
         if (!tokenEmail.equals(signupRequest.email())) {
-            throw new IllegalArgumentException("소셜 로그인을 하지 않은 이메일입니다");
+            throw new IllegalArgumentException(String.format("소셜 로그인을 하지 않은 이메일입니다: email = %s", maskEmail(signupRequest.email())));
         }
     }
 
     private Member findMember(final Long memberId) {
         return memberRepository.findById(memberId)
-                .orElseThrow(() -> new NoSuchElementException("해당 회원을 찾을 수 없습니다"));
-    }
-
-    private static void validateSelfBlock(
-            final Member member,
-            final Member target
-    ) {
-        if (member.equals(target)) {
-            throw new IllegalArgumentException("자기 자신을 차단할 수 없습니다");
-        }
+                .orElseThrow(() -> new NoSuchElementException(String.format("해당 회원을 찾을 수 없습니다: memberId = %s", memberId)));
     }
 
     private void validateDuplicatedBlock(
@@ -156,16 +147,7 @@ public class MemberCommandService {
             final Member target
     ) {
         if (blockRepository.existsByMemberAndTarget(member, target)) {
-            throw new IllegalArgumentException("이미 차단한 회원입니다");
-        }
-    }
-
-    private static void validateSelfReport(
-            final Member member,
-            final Member target
-    ) {
-        if (member.equals(target)) {
-            throw new IllegalArgumentException("자기 자신을 신고할 수 없습니다");
+            throw new IllegalArgumentException(String.format("이미 차단한 회원입니다: memberId = %s -> targetId = %s", member.getId(), target.getId()));
         }
     }
 
@@ -174,7 +156,7 @@ public class MemberCommandService {
             final Member target
     ) {
         if (memberReportRepository.existsByMemberAndTarget(member, target)) {
-            throw new IllegalArgumentException("이미 신고한 회원입니다");
+            throw new IllegalArgumentException(String.format("이미 신고한 회원입니다: memberId = %s -> targetId = %s", member.getId(), target.getId()));
         }
     }
 
@@ -193,7 +175,13 @@ public class MemberCommandService {
             final Member target
     ) {
         if (!blockRepository.existsByMemberAndTarget(member, target)) {
-            throw new IllegalArgumentException("차단한 회원이 아닙니다");
+            throw new IllegalArgumentException(String.format("차단한 회원이 아닙니다: memberId = %s -> targetId = %s", member.getId(), target.getId()));
         }
+    }
+
+    private String maskEmail(final String email) {
+        final String visiblePart = email.substring(0, 4);
+        final String maskedPart = "*".repeat(email.length() - 4);
+        return visiblePart + maskedPart;
     }
 }

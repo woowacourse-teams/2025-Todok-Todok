@@ -1,7 +1,5 @@
 package todoktodok.backend.discussion.presentation;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
@@ -18,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import todoktodok.backend.comment.application.dto.request.CommentRequest;
 import todoktodok.backend.discussion.application.dto.request.DiscussionRequest;
 import todoktodok.backend.discussion.application.dto.request.DiscussionUpdateRequest;
 import todoktodok.backend.discussion.application.dto.response.DiscussionResponse;
@@ -32,16 +29,15 @@ import todoktodok.backend.global.resolver.LoginMember;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/v1/discussions")
-public class DiscussionController {
+public class DiscussionController implements DiscussionApiDocs {
 
     private final DiscussionCommandService discussionCommandService;
     private final DiscussionQueryService discussionQueryService;
 
-    @Operation(summary = "토론방 생성 API")
     @Auth(value = Role.USER)
     @PostMapping
     public ResponseEntity<Void> createDiscussion(
-            @Parameter(hidden = true) @LoginMember final Long memberId,
+            @LoginMember final Long memberId,
             @RequestBody @Valid final DiscussionRequest discussionRequest
     ) {
         final Long discussionId = discussionCommandService.createDiscussion(memberId, discussionRequest);
@@ -51,11 +47,10 @@ public class DiscussionController {
                 .build();
     }
 
-    @Operation(summary = "토론방 신고 API")
     @Auth(Role.USER)
     @PostMapping("/{discussionId}/report")
     public ResponseEntity<Void> report(
-            @Parameter(hidden = true) @LoginMember final Long memberId,
+            @LoginMember final Long memberId,
             @PathVariable final Long discussionId
     ) {
         discussionCommandService.report(memberId, discussionId);
@@ -64,22 +59,20 @@ public class DiscussionController {
                 .build();
     }
 
-    @Operation(summary = "토론방 단일 조회 API")
     @Auth(Role.USER)
     @GetMapping("/{discussionId}")
     public ResponseEntity<DiscussionResponse> getDiscussion(
-            @Parameter(hidden = true) @LoginMember final Long memberId,
+            @LoginMember final Long memberId,
             @PathVariable final Long discussionId
     ) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(discussionQueryService.getDiscussion(memberId, discussionId));
     }
 
-    @Operation(summary = "토론방 필터링 조회 API")
     @Auth(value = Role.USER)
     @GetMapping
     public ResponseEntity<List<DiscussionResponse>> getDiscussionsByKeywordAndType(
-            @Parameter(hidden = true) @LoginMember final Long memberId,
+            @LoginMember final Long memberId,
             @RequestParam(required = false) final String keyword,
             @RequestParam final DiscussionFilterType type
     ) {
@@ -87,11 +80,10 @@ public class DiscussionController {
                 .body(discussionQueryService.getDiscussionsByKeywordAndType(memberId, keyword, type));
     }
 
-    @Operation(summary = "토론방 수정 API")
     @Auth(value = Role.USER)
     @PatchMapping("/{discussionId}")
     public ResponseEntity<Void> updateDiscussion(
-            @Parameter(hidden = true) @LoginMember final Long memberId,
+            @LoginMember final Long memberId,
             @PathVariable final Long discussionId,
             @RequestBody @Valid final DiscussionUpdateRequest discussionUpdateRequest
     ) {
@@ -102,11 +94,10 @@ public class DiscussionController {
                 .build();
     }
 
-    @Operation(summary = "토론방 삭제 API")
     @Auth(value = Role.USER)
     @DeleteMapping("/{discussionId}")
     public ResponseEntity<Void> deleteDiscussion(
-            @Parameter(hidden = true) @LoginMember final Long memberId,
+            @LoginMember final Long memberId,
             @PathVariable final Long discussionId
     ) {
         discussionCommandService.deleteDiscussion(memberId, discussionId);
@@ -115,11 +106,10 @@ public class DiscussionController {
                 .build();
     }
 
-    @Operation(summary = "토론방 좋아요 API")
     @Auth(value = Role.USER)
     @PostMapping("/{discussionId}/like")
     public ResponseEntity<Void> toggleLike(
-            @Parameter(hidden = true) @LoginMember final Long memberId,
+            @LoginMember final Long memberId,
             @PathVariable final Long discussionId
     ) {
         final boolean isLiked = discussionCommandService.toggleLike(memberId, discussionId);

@@ -1,9 +1,7 @@
 package todoktodok.backend.discussion.application.service.query;
 
 import java.util.List;
-import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +13,7 @@ import todoktodok.backend.discussion.domain.repository.DiscussionLikeRepository;
 import todoktodok.backend.discussion.domain.repository.DiscussionRepository;
 import todoktodok.backend.member.domain.Member;
 import todoktodok.backend.member.domain.repository.MemberRepository;
+import todoktodok.backend.reply.domain.repository.ReplyRepository;
 
 @Service
 @Transactional(readOnly = true)
@@ -25,28 +24,27 @@ public class DiscussionQueryService {
     private final DiscussionLikeRepository discussionLikeRepository;
     private final MemberRepository memberRepository;
     private final CommentRepository commentRepository;
-
-    public List<DiscussionResponse> getDiscussions(final Long memberId) {
-        validateMember(memberId);
-
-        final List<Discussion> discussions = discussionRepository.findAll();
-        return getDiscussionsResponses(discussions);
-    }
+    private final ReplyRepository replyRepository;
 
     public DiscussionResponse getDiscussion(
             final Long memberId,
             final Long discussionId
     ) {
-        validateMember(memberId);
+        final Member member = findMember(memberId);
         final Discussion discussion = findDiscussion(discussionId);
 
         final int likeCount = Math.toIntExact(discussionLikeRepository.findLikeCountsByDiscussionId(discussionId));
-        final int commentCount = Math.toIntExact(commentRepository.findCommentCountsByDiscussionId(discussionId));
+        final int commentCount = Math.toIntExact(
+                commentRepository.countCommentsByDiscussionId(discussionId)
+                        + replyRepository.countRepliesByDiscussionId(discussionId)
+        );
+        final boolean isLiked = discussionLikeRepository.existsByMemberAndDiscussion(member, discussion);
 
         return new DiscussionResponse(
                 discussion,
                 likeCount,
-                commentCount
+                commentCount,
+                isLiked
         );
     }
 
@@ -58,70 +56,55 @@ public class DiscussionQueryService {
         final Member member = findMember(memberId);
 
         if (isKeywordBlank(keyword)) {
-            return getDiscussionsByType(memberId, type, member);
+            return getDiscussionsByType(type, member);
         }
 
         if (type.isTypeMine()) {
             return getMyDiscussionsByKeyword(keyword, member);
         }
 
-        return getDiscussionsByKeyword(keyword);
-    }
-
-    private List<DiscussionResponse> getDiscussionsResponses(final List<Discussion> discussions) {
-        final List<Long> discussionIds = discussions.stream()
-                .map(Discussion::getId)
-                .toList();
-
-        final List<DiscussionLikeCountDto> likeCountsById = discussionLikeRepository.findLikeCountsByDiscussionIds(
-                discussionIds);
-        final List<DiscussionCommentCountDto> commentCountsById = commentRepository.findCommentCountsByDiscussionIds(
-                discussionIds);
-
-        return discussions.stream()
-                .map(discussion -> new DiscussionResponse(
-                        discussion,
-                        findLikeCount(discussion, likeCountsById),
-                        findCommentCount(discussion, commentCountsById)
-                ))
-                .toList();
+        return getDiscussionsByKeyword(keyword, member);
     }
 
     private boolean isKeywordBlank(final String keyword) {
         return keyword == null || keyword.isBlank();
     }
 
-    private void validateMember(final Long memberId) {
-        if (!memberRepository.existsById(memberId)) {
-            throw new NoSuchElementException("해당 회원을 찾을 수 없습니다");
-        }
-    }
-
     private Discussion findDiscussion(final Long discussionId) {
         return discussionRepository.findById(discussionId)
-                .orElseThrow(() -> new NoSuchElementException("해당 토론방을 찾을 수 없습니다"));
+                .orElseThrow(() -> new NoSuchElementException(
+                                String.format("해당 토론방을 찾을 수 없습니다: discussionId= %s", discussionId)
+                        )
+                );
     }
 
     private Member findMember(final Long memberId) {
         return memberRepository.findById(memberId)
-                .orElseThrow(() -> new NoSuchElementException("해당 회원을 찾을 수 없습니다"));
+                .orElseThrow(() -> new NoSuchElementException(
+                                String.format("해당 회원을 찾을 수 없습니다: memberId= %s", memberId)
+                        )
+                );
     }
 
     private List<DiscussionResponse> getDiscussionsByType(
-            final Long memberId,
             final DiscussionFilterType type,
             final Member member
     ) {
         if (type.isTypeMine()) {
             return getMyDiscussions(member);
         }
-        return getDiscussions(memberId);
+        return getAllDiscussions(member);
+    }
+
+    private List<DiscussionResponse> getAllDiscussions(final Member member) {
+        final List<Discussion> discussions = discussionRepository.findAll();
+        return getDiscussionsResponses(discussions, member);
     }
 
     private List<DiscussionResponse> getMyDiscussions(final Member member) {
         final List<Discussion> discussions = discussionRepository.findDiscussionsByMember(member);
 
-        return getDiscussionsResponses(discussions);
+        return getDiscussionsResponses(discussions, member);
     }
 
     private List<DiscussionResponse> getMyDiscussionsByKeyword(
@@ -132,13 +115,41 @@ public class DiscussionQueryService {
                 .filter(discussion -> discussion.isOwnedBy(member))
                 .toList();
 
-        return getDiscussionsResponses(discussions);
+        return getDiscussionsResponses(discussions, member);
     }
 
-    private List<DiscussionResponse> getDiscussionsByKeyword(final String keyword) {
+    private List<DiscussionResponse> getDiscussionsByKeyword(
+            final String keyword,
+            final Member member
+    ) {
         final List<Discussion> discussions = discussionRepository.searchByKeyword(keyword);
 
-        return getDiscussionsResponses(discussions);
+        return getDiscussionsResponses(discussions, member);
+    }
+
+    private List<DiscussionResponse> getDiscussionsResponses(
+            final List<Discussion> discussions,
+            final Member member
+    ) {
+        final List<Long> discussionIds = discussions.stream()
+                .map(Discussion::getId)
+                .toList();
+
+        final List<DiscussionLikeCountDto> likeCountsById = discussionLikeRepository.findLikeCountsByDiscussionIds(
+                discussionIds);
+        final List<DiscussionCommentCountDto> commentCountsById = commentRepository.findCommentCountsByDiscussionIds(
+                discussionIds);
+        final List<Long> likedDiscussionIds = discussionLikeRepository.findLikedDiscussionIdsByMember(member,
+                discussionIds);
+
+        return discussions.stream()
+                .map(discussion -> new DiscussionResponse(
+                        discussion,
+                        findLikeCount(discussion, likeCountsById),
+                        findCommentCount(discussion, commentCountsById),
+                        checkIsLikedByMe(discussion, likedDiscussionIds)
+                ))
+                .toList();
     }
 
     private int findCommentCount(
@@ -148,8 +159,11 @@ public class DiscussionQueryService {
         return commentCountsById.stream()
                 .filter(count -> discussion.isSameId(count.discussionId()))
                 .findFirst()
-                .map(DiscussionCommentCountDto::commentCount)
-                .orElseThrow(() -> new IllegalStateException("토론방의 댓글 수를 찾을 수 없습니다"));
+                .map(dto -> dto.commentCount() + dto.replyCount())
+                .orElseThrow(() -> new IllegalStateException(
+                                String.format("토론방의 댓글 수를 찾을 수 없습니다: discussionId= %s", discussion.getId())
+                        )
+                );
     }
 
     private int findLikeCount(
@@ -160,6 +174,15 @@ public class DiscussionQueryService {
                 .filter(count -> discussion.isSameId(count.discussionId()))
                 .findFirst()
                 .map(DiscussionLikeCountDto::likeCount)
-                .orElseThrow(() -> new IllegalStateException("토론방의 좋아요 수를 찾을 수 없습니다"));
+                .orElseThrow(() -> new IllegalStateException(
+                        String.format("토론방의 좋아요 수를 찾을 수 없습니다: discussionId= %s", discussion.getId()))
+                );
+    }
+
+    private boolean checkIsLikedByMe(
+            final Discussion discussion,
+            final List<Long> likedDiscussionIds
+    ) {
+        return likedDiscussionIds.contains(discussion.getId());
     }
 }

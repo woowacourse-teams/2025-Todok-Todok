@@ -27,7 +27,7 @@ public class BookTest {
                         .image("image")
                         .build()
         ).isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("1자 이상 입력해야 하는 정보입니다");
+                .hasMessageContaining("1자 이상 입력해야 하는 정보입니다");
     }
 
     @Test
@@ -47,7 +47,7 @@ public class BookTest {
                         .image("image")
                         .build()
         ).isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("1자 이상 입력해야 하는 정보입니다");
+                .hasMessageContaining("1자 이상 입력해야 하는 정보입니다");
     }
 
     @Test
@@ -67,7 +67,7 @@ public class BookTest {
                         .image("image")
                         .build()
         ).isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("1자 이상 입력해야 하는 정보입니다");
+                .hasMessageContaining("1자 이상 입력해야 하는 정보입니다");
     }
 
     @Test
@@ -87,7 +87,7 @@ public class BookTest {
                         .image("image")
                         .build()
         ).isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("ISBN은 13자여야 합니다");
+                .hasMessageContaining("ISBN은 13자여야 합니다");
     }
 
     @Test
