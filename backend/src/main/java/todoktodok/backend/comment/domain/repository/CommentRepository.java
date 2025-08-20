@@ -37,7 +37,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
         )
         FROM Discussion d
         LEFT JOIN Comment c ON c.discussion = d AND c.createdAt >= :sinceDate
-        LEFT JOIN Reply r ON r.comment = c AND r.createdAt >= :sinceDate
+        LEFT JOIN Reply r ON r.comment.discussion = d AND r.createdAt >= :sinceDate
         WHERE d.id IN :discussionIds
         GROUP BY d.id
     """)
