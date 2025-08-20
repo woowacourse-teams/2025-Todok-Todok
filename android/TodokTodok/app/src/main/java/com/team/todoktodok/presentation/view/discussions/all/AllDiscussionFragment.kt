@@ -40,7 +40,7 @@ class AllDiscussionFragment : Fragment(R.layout.fragment_all_discussion) {
     private fun initView(binding: FragmentAllDiscussionBinding) {
         with(binding) {
             rvDiscussions.adapter = discussionAdapter
-            rvDiscussions.hasFixedSize()
+            rvDiscussions.setHasFixedSize(true)
             rvDiscussions.addOnScrollEndListener {
                 viewModel.loadLatestDiscussions()
             }
