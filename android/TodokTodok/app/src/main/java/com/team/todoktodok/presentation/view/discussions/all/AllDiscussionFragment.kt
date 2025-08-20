@@ -45,7 +45,7 @@ class AllDiscussionFragment : Fragment(R.layout.fragment_all_discussion) {
 
     private fun setUpUiState() {
         viewModel.uiState.observe(viewLifecycleOwner) { value ->
-            discussionAdapter.submitList(value.allDiscussions)
+            discussionAdapter.submitList(value.latestDiscussions)
         }
     }
 

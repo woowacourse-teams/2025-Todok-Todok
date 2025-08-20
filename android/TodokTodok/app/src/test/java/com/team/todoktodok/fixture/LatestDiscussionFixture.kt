@@ -10,7 +10,7 @@ val LATEST_DISCUSSIONS_RESPONSE =
             author =
                 AuthorResponse(
                     email = "user$index@example.com",
-                    id = index,
+                    id = index.toLong(),
                     nickname = "User$index",
                     profileImage = "https://example.com/profiles/$index.png",
                 ),
@@ -24,7 +24,7 @@ val LATEST_DISCUSSIONS_RESPONSE =
             commentCount = (0..50).random(),
             content = "This is a sample discussion content for discussion #$index.",
             createdAt = "2025-08-20T10:59:48",
-            discussionId = index,
+            discussionId = index.toLong(),
             isLikedByMe = listOf(true, false).random(),
             likeCount = (0..100).random(),
             title = "Discussion Title $index",

@@ -107,7 +107,7 @@ class DiscussionsActivity : AppCompatActivity() {
 
     private fun setupUiState() {
         viewModel.uiState.observe(this) { state ->
-            updateTabs(state.allDiscussionsSize, state.myDiscussionsSize)
+            updateTabs(state.latestDiscussionsSize, state.myDiscussionsSize)
             updateLoadingState(state.isLoading)
         }
     }

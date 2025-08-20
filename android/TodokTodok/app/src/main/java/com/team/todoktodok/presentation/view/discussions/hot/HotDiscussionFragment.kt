@@ -15,7 +15,10 @@ import kotlin.getValue
 class HotDiscussionFragment : Fragment(R.layout.fragment_hot_discussion) {
     private val viewModel: DiscussionsViewModel by activityViewModels {
         val repositoryModule = (requireActivity().application as App).container.repositoryModule
-        DiscussionsViewModelFactory(repositoryModule.discussionRepository)
+        DiscussionsViewModelFactory(
+            repositoryModule.discussionRepository,
+            repositoryModule.memberRepository,
+        )
     }
 
     private lateinit var hotDiscussionAdapter: HotDiscussionAdapter
