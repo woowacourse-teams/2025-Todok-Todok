@@ -95,9 +95,14 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
 
     fun setupObserve(binding: FragmentCommentDetailBinding) {
         viewModel.uiState.observe(viewLifecycleOwner) { value ->
-            adapter.submitList(value.getCommentDetailItems())
-            val currentContent = value.content
-            if (currentContent.isNotBlank()) binding.tvInputComment.text = currentContent
+            if (value.isLoading) {
+                binding.progressBar.show()
+            } else {
+                binding.progressBar.hide()
+                adapter.submitList(value.getCommentDetailItems())
+                val currentContent = value.content
+                if (currentContent.isNotBlank()) binding.tvInputComment.text = currentContent
+            }
         }
         viewModel.uiEvent.observe(viewLifecycleOwner) { value ->
             handleEvent(value, binding)

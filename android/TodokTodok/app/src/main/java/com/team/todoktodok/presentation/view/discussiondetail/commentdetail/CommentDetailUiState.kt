@@ -12,6 +12,7 @@ data class CommentDetailUiState(
     val comment: CommentItemUiState = INIT_COMMENT,
     val replies: List<ReplyItemUiState> = emptyList(),
     val content: String = "",
+    val isLoading: Boolean = false,
 ) {
     fun getCommentDetailItems() =
         listOf(CommentDetailItems.CommentItem(comment)) +

@@ -29,7 +29,7 @@ class CommentDetailViewModel(
     val commentId =
         savedStateHandle.get<Long>(KEY_COMMENT_ID) ?: throw IllegalStateException()
 
-    private val _uiState = MutableLiveData(CommentDetailUiState())
+    private val _uiState = MutableLiveData(CommentDetailUiState().copy(isLoading = true))
     val uiState: LiveData<CommentDetailUiState> = _uiState
 
     private val _uiEvent = MutableSingleLiveData<CommentDetailUiEvent>()
@@ -153,6 +153,7 @@ class CommentDetailViewModel(
                             comment,
                             isMyComment,
                         ),
+                    isLoading = false,
                 )
         }
     }
