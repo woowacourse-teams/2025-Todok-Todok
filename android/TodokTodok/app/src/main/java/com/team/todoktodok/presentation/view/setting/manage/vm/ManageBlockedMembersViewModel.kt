@@ -57,8 +57,14 @@ class ManageBlockedMembersViewModel(
     }
 
     private fun withLoading(action: suspend () -> Unit) {
-        _uiState.value = _uiState.value?.toggleLoading()
-        viewModelScope.launch { action() }
+        viewModelScope.launch {
+            changeLoading()
+            action()
+            changeLoading()
+        }
+    }
+
+    private fun changeLoading() {
         _uiState.value = _uiState.value?.toggleLoading()
     }
 

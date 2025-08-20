@@ -24,6 +24,7 @@ import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.A
 import com.team.todoktodok.presentation.core.ext.clearHintOnFocus
 import com.team.todoktodok.presentation.view.book.SelectBookActivity
 import com.team.todoktodok.presentation.view.discussions.all.AllDiscussionFragment
+import com.team.todoktodok.presentation.view.discussions.hot.HotDiscussionFragment
 import com.team.todoktodok.presentation.view.discussions.my.MyDiscussionFragment
 import com.team.todoktodok.presentation.view.discussions.vm.DiscussionsViewModel
 import com.team.todoktodok.presentation.view.discussions.vm.DiscussionsViewModelFactory
@@ -42,9 +43,9 @@ class DiscussionsActivity : AppCompatActivity() {
     }
 
     private lateinit var manager: InputMethodManager
-
-    private val allDiscussionFragment = AllDiscussionFragment()
-    private val myDiscussionFragment = MyDiscussionFragment()
+    private lateinit var hotDiscussionFragment: HotDiscussionFragment
+    private lateinit var allDiscussionFragment: AllDiscussionFragment
+    private lateinit var myDiscussionFragment: MyDiscussionFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,10 +75,30 @@ class DiscussionsActivity : AppCompatActivity() {
     }
 
     private fun initFragments() {
-        supportFragmentManager.commit {
-            add(R.id.fragmentContainerView, allDiscussionFragment, ALL_DISCUSSION_FRAGMENT_TAG)
-            add(R.id.fragmentContainerView, myDiscussionFragment, MY_DISCUSSION_FRAGMENT_TAG)
+        val fm = supportFragmentManager
+
+        hotDiscussionFragment =
+            fm.findFragmentByTag(HOT_DISCUSSION_FRAGMENT_TAG) as? HotDiscussionFragment
+                ?: HotDiscussionFragment().also {
+                    fm.commit { add(R.id.fragmentContainerView, it, HOT_DISCUSSION_FRAGMENT_TAG) }
+                }
+
+        allDiscussionFragment =
+            fm.findFragmentByTag(ALL_DISCUSSION_FRAGMENT_TAG) as? AllDiscussionFragment
+                ?: AllDiscussionFragment().also {
+                    fm.commit { add(R.id.fragmentContainerView, it, ALL_DISCUSSION_FRAGMENT_TAG) }
+                }
+
+        myDiscussionFragment =
+            fm.findFragmentByTag(MY_DISCUSSION_FRAGMENT_TAG) as? MyDiscussionFragment
+                ?: MyDiscussionFragment().also {
+                    fm.commit { add(R.id.fragmentContainerView, it, MY_DISCUSSION_FRAGMENT_TAG) }
+                }
+
+        fm.commit {
+            hide(allDiscussionFragment)
             hide(myDiscussionFragment)
+            show(hotDiscussionFragment)
         }
     }
 
@@ -167,20 +188,21 @@ class DiscussionsActivity : AppCompatActivity() {
     private fun changeTab(tab: TabLayout.Tab) {
         val index = tab.position
         val selectedFilter = DiscussionFilter.entries[index]
+
         viewModel.updateTab(selectedFilter, THROTTLE_DURATION)
-        changeFragment(
-            showFragment = if (selectedFilter == DiscussionFilter.ALL) allDiscussionFragment else myDiscussionFragment,
-            hideFragment = if (selectedFilter == DiscussionFilter.ALL) myDiscussionFragment else allDiscussionFragment,
-        )
+
+        when (selectedFilter) {
+            DiscussionFilter.HOT -> changeFragment(hotDiscussionFragment)
+            DiscussionFilter.ALL -> changeFragment(allDiscussionFragment)
+            DiscussionFilter.MINE -> changeFragment(myDiscussionFragment)
+        }
     }
 
-    private fun changeFragment(
-        showFragment: Fragment,
-        hideFragment: Fragment,
-    ) {
+    private fun changeFragment(showFragment: Fragment) {
         supportFragmentManager.commit {
-            show(showFragment)
-            hide(hideFragment)
+            listOf(hotDiscussionFragment, allDiscussionFragment, myDiscussionFragment).forEach { fragment ->
+                if (fragment == showFragment) show(fragment) else hide(fragment)
+            }
         }
     }
 
@@ -212,10 +234,13 @@ class DiscussionsActivity : AppCompatActivity() {
         }
 
     companion object {
-        private const val ALL_DISCUSSION_TAB_POSITION = 0
+        private const val HOT_DISCUSSION_TAB_POSITION = 0
+        private const val HOT_DISCUSSION_FRAGMENT_TAG = "HOT"
+
+        private const val ALL_DISCUSSION_TAB_POSITION = 1
         private const val ALL_DISCUSSION_FRAGMENT_TAG = "ALL"
 
-        private const val MY_DISCUSSION_TAB_POSITION = 1
+        private const val MY_DISCUSSION_TAB_POSITION = 2
         private const val MY_DISCUSSION_FRAGMENT_TAG = "MY"
 
         private const val THROTTLE_DURATION = 500L
