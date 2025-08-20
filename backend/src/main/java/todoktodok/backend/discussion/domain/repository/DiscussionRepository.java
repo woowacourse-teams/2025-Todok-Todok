@@ -81,9 +81,8 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
             SELECT d
             FROM Discussion d
             WHERE :cursorId IS NULL OR d.id < :cursorId
-            ORDER BY d.id DESC
             """)
-    Slice<Discussion> findByIdLessThanOrderByIdDesc(
+    Slice<Discussion> findByIdLessThan(
             @Param("cursorId") final Long cursorId,
             final Pageable pageable
     );
