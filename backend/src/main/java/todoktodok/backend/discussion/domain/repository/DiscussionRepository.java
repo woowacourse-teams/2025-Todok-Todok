@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import todoktodok.backend.discussion.application.service.query.DiscussionCursorResponse;
+import todoktodok.backend.discussion.application.service.query.DiscussionCursorDto;
 import todoktodok.backend.discussion.domain.Discussion;
 import todoktodok.backend.member.domain.Member;
 
@@ -76,7 +76,7 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
     List<Discussion> findParticipatedDiscussionsByMember(@Param("memberId") final Long memberId);
 
     @Query("""
-            SELECT new todoktodok.backend.discussion.application.service.query.DiscussionCursorResponse(
+            SELECT new todoktodok.backend.discussion.application.service.query.DiscussionCursorDto(
                          d,
                          COUNT(DISTINCT c.id),
                          COUNT(DISTINCT dl.id),
@@ -95,7 +95,7 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
             )
             ORDER BY MAX(c.createdAt) DESC, d.id DESC
     """)
-    List<DiscussionCursorResponse> findActiveDiscussionsByCursor(
+    List<DiscussionCursorDto> findActiveDiscussionsByCursor(
             @Param("member") final Member member,
             @Param("periodStart") final LocalDateTime periodStart,
             @Param("cursorLastCommentedAt") final LocalDateTime cursorLastCommentedAt,

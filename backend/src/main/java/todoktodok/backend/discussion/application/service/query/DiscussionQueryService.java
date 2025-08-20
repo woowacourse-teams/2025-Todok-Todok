@@ -213,7 +213,7 @@ public class DiscussionQueryService {
 
         final Pageable pageable = Pageable.ofSize(size + 1);
 
-        final List<DiscussionCursorResponse> discussions = discussionRepository.findActiveDiscussionsByCursor(
+        final List<DiscussionCursorDto> discussions = discussionRepository.findActiveDiscussionsByCursor(
                 member,
                 periodStart,
                 discussionCursor.lastCommentedAt(),
@@ -230,16 +230,21 @@ public class DiscussionQueryService {
             discussions.removeLast();
         }
 
-        String nextCursor = null;
-        if (hasNext) {
-            final DiscussionCursorResponse last = discussions.getLast();
-            nextCursor = discussionCursor.toEncoded(
-                    last.lastCommentedAt(),
-                    last.discussionId()
-            );
-        }
+        final DiscussionCursorDto last = hasNext ? discussions.getLast() : null;
+        final String nextCursor = getNextCursor(hasNext, last, discussionCursor);
 
         return new DiscussionPageResponse(discussions, hasNext, nextCursor);
+    }
+
+    private String getNextCursor(
+            final boolean hasNext,
+            final DiscussionCursorDto last,
+            final DiscussionCursor discussionCursor
+    ) {
+        if (!hasNext || last == null) {
+            return null;
+        }
+        return discussionCursor.toEncoded(last.lastCommentedAt(), last.discussionId());
     }
 
     private void validatePageSize(final int size) {
