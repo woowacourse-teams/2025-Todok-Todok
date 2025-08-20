@@ -54,6 +54,9 @@ class DiscussionsViewModel(
         _uiState.value = _uiState.value?.copy(searchKeyword = keyword)
     }
 
+    fun findSelectedMyDiscussion() {
+    }
+
     fun loadLatestDiscussions(cursor: String) =
         withLoading {
             when (val result = discussionRepository.getLatestDiscussions(cursor = cursor)) {

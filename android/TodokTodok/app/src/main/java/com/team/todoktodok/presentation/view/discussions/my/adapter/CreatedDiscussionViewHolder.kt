@@ -10,7 +10,16 @@ class CreatedDiscussionViewHolder private constructor(
     binding: ItemMyCreatedDiscussionBinding,
     private val handler: Handler,
 ) : RecyclerView.ViewHolder(binding.root) {
-    private val discussionAdapter = DiscussionAdapter(handler)
+    private val discussionAdapterHandler: DiscussionAdapter.Handler =
+        object : DiscussionAdapter.Handler {
+            override fun onItemClick(index: Int) {
+                val discussionId = discussionAdapter.currentList[index].item.id
+                handler.onClickMyCreatedDiscussionItem(discussionId)
+            }
+        }
+
+    private val discussionAdapter: DiscussionAdapter =
+        DiscussionAdapter(discussionAdapterHandler)
 
     init {
         with(binding) {
@@ -38,7 +47,9 @@ class CreatedDiscussionViewHolder private constructor(
         }
     }
 
-    interface Handler : DiscussionAdapter.Handler {
+    interface Handler {
         fun onClickMyCreatedDiscussionHeader()
+
+        fun onClickMyCreatedDiscussionItem(discussionId: Long)
     }
 }

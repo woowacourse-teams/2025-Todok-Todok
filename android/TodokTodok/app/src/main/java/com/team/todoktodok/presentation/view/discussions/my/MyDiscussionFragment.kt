@@ -7,6 +7,7 @@ import androidx.fragment.app.activityViewModels
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentMyDiscussionBinding
+import com.team.todoktodok.presentation.view.discussiondetail.DiscussionDetailActivity
 import com.team.todoktodok.presentation.view.discussions.DiscussionsUiEvent
 import com.team.todoktodok.presentation.view.discussions.my.adapter.MyDiscussionAdapter
 import com.team.todoktodok.presentation.view.discussions.vm.DiscussionsViewModel
@@ -86,12 +87,16 @@ class MyDiscussionFragment : Fragment(R.layout.fragment_my_discussion) {
                 TODO("Not yet implemented")
             }
 
-            override fun onItemClick(index: Int) {
-                TODO("Not yet implemented")
+            override fun onClickMyCreatedDiscussionItem(discussionId: Long) {
+                startActivity(DiscussionDetailActivity.Intent(requireContext(), discussionId))
             }
 
             override fun onClickMyParticipatedDiscussionHeader() {
                 TODO("Not yet implemented")
+            }
+
+            override fun onClickMyParticipatedDiscussionItem(discussionId: Long) {
+                startActivity(DiscussionDetailActivity.Intent(requireContext(), discussionId))
             }
         }
 }
