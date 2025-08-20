@@ -12,9 +12,7 @@ public record DiscussionCursor(
     private static final DiscussionCursor EMPTY = new DiscussionCursor(null, null);
 
     public static DiscussionCursor fromEncoded(final String cursor) {
-        if (cursor == null) return empty();
-
-        final String decoded = new String(Base64.getDecoder().decode(cursor));
+        final String decoded = new String(Base64.getUrlDecoder().decode(cursor));
         final String[] parts = decoded.split(DELIMITER);
         final LocalDateTime lastCommentedAt = LocalDateTime.parse(parts[0]);
         final long cursorId = Long.parseLong(parts[1]);
