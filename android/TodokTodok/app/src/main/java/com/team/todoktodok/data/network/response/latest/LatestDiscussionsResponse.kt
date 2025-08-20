@@ -15,7 +15,7 @@ data class LatestDiscussionsResponse(
         val discussion =
             latestDiscussionResponses.map {
                 LatestDiscussion(
-                    authorResponse = it.author.toDomain(),
+                    author = it.author.toDomain(),
                     book = it.book.toDomain(),
                     commentCount = it.commentCount,
                     content = it.content,

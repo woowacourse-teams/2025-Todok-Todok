@@ -4,7 +4,7 @@ import com.team.domain.model.Book
 import java.time.LocalDateTime
 
 data class LatestDiscussion(
-    val authorResponse: Author,
+    val author: Author,
     val book: Book,
     val commentCount: Int,
     val content: String,
