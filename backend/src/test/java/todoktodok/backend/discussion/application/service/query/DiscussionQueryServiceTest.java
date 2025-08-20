@@ -484,7 +484,7 @@ class DiscussionQueryServiceTest {
             databaseInitializer.setCommentInfo("토론방 4의 댓글입니다", 1L, 4L, aWeekAgo);
             databaseInitializer.setReplyInfo("댓글 6의 대댓글입니다", 1L, 6L, aWeekAgo);
             databaseInitializer.setReplyInfo("댓글 6의 대댓글입니다", 1L, 6L, aWeekAgo);
-            databaseInitializer.setReplyInfo("댓글 6의 대댓글입니다", 1L, 6L, aWeekAgo);
+            databaseInitializer.setReplyInfo("댓글 6의 대댓글입니다", 1L, 6L, today);
         }
 
         @Test
@@ -537,6 +537,8 @@ class DiscussionQueryServiceTest {
 
             // then
             assertAll(
+                    // 3 2 4 1
+                    // 3 2 1 4
                     () -> assertThat(hotDiscussions).hasSize(4),
                     () -> assertThat(hotDiscussions.get(0).discussionId()).isEqualTo(3L),
                     () -> assertThat(hotDiscussions.get(1).discussionId()).isEqualTo(2L),
