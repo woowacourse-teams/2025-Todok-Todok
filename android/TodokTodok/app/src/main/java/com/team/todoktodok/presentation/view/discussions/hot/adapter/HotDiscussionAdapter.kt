@@ -1,6 +1,5 @@
 package com.team.todoktodok.presentation.view.discussions.hot.adapter
 
-import android.util.Log
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -28,11 +27,9 @@ class HotDiscussionAdapter(
     ) {
         when (val item = getItem(position)) {
             is HotDiscussionItems.PopularItem -> {
-                Log.d("dasdas", "PopularItem: ${item.items.size}: ")
                 (holder as HotPopularDiscussionViewHolder).bind(item)
             }
             is HotDiscussionItems.ActivatedItem -> {
-                Log.d("dasdas", "ActivatedItem: ${item.items.size}: ")
                 (holder as HotActivatedDiscussionViewHolder).bind(item)
             }
         }
