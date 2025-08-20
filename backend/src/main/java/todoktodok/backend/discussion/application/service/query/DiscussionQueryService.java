@@ -24,7 +24,7 @@ import todoktodok.backend.reply.domain.repository.ReplyRepository;
 @AllArgsConstructor
 public class DiscussionQueryService {
 
-    private static final int MIN_HOT_DISCUSSION_COUNT = 0;
+    private static final int MIN_HOT_DISCUSSION_COUNT = 1;
     private static final int MIN_HOT_DISCUSSION_PERIOD = 0;
     private static final int MAX_HOT_DISCUSSION_PERIOD = 365;
 
@@ -224,7 +224,7 @@ public class DiscussionQueryService {
     }
 
     private static void validateHotDiscussionCount(final int count) {
-        if (count <= MIN_HOT_DISCUSSION_COUNT) {
+        if (count < MIN_HOT_DISCUSSION_COUNT) {
             throw new IllegalArgumentException(String.format("유효하지 않은 개수입니다. 양수의 개수를 조회해주세요: count = %d", count));
         }
     }
