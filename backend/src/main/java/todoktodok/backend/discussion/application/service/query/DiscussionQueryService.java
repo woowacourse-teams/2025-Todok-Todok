@@ -4,6 +4,7 @@ import java.util.Base64;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import jakarta.annotation.Nullable;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -62,7 +63,7 @@ public class DiscussionQueryService {
     public SlicedDiscussionResponse getDiscussions(
             final Long memberId,
             final int size,
-            final String cursor
+            @Nullable final String cursor
     ) {
         validatePageSize(size);
         final Member member = findMember(memberId);
@@ -128,7 +129,7 @@ public class DiscussionQueryService {
         }
 
         final Long cursorId = decodeCursor(cursor);
-        return discussionRepository.findByIdLessThanOrderByIdDesc(cursorId, pageable);
+        return discussionRepository.findByIdLessThan(cursorId, pageable);
     }
 
     private String findNextCursor(
