@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.team.domain.model.exception.NetworkResult
 import com.team.domain.repository.CommentRepository
 import com.team.domain.repository.TokenRepository
 import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
@@ -20,8 +21,8 @@ class CommentsViewModel(
     private val commentRepository: CommentRepository,
     private val tokenRepository: TokenRepository,
 ) : ViewModel() {
-    val discussionId =
-        savedStateHandle.get<Long>(KEY_DISCUSSION_ID) ?: throw IllegalStateException()
+    val discussionId: Long =
+        savedStateHandle.get<Long>(KEY_DISCUSSION_ID) ?: error("discussionId missing")
 
     private val _uiState = MutableLiveData(CommentsUiState())
     val uiState: LiveData<CommentsUiState> = _uiState
@@ -32,55 +33,53 @@ class CommentsViewModel(
     var commentsRvState: Parcelable? = null
 
     init {
-        viewModelScope.launch {
-            loadComments()
-        }
+        viewModelScope.launch { loadComments() }
     }
 
     fun loadCommentsShowState(showState: Parcelable?) {
         commentsRvState = showState
     }
 
-    fun reloadComments() {
+    fun reloadComments() =
         viewModelScope.launch {
             loadComments()
-            showNewComment()
+            onUiEvent(CommentsUiEvent.ShowNewComment)
         }
-    }
 
-    fun toggleLike(commentId: Long) {
+    fun toggleLike(commentId: Long) =
         viewModelScope.launch {
-            commentRepository.toggleLike(discussionId, commentId)
-            loadComments()
+            handleResult(commentRepository.toggleLike(discussionId, commentId)) {
+                loadComments()
+            }
         }
-    }
 
-    fun deleteComment(commentId: Long) {
+    fun deleteComment(commentId: Long) =
         viewModelScope.launch {
-            commentRepository.deleteComment(discussionId, commentId)
-            loadComments()
-            _uiEvent.setValue(CommentsUiEvent.DeleteComment)
+            handleResult(commentRepository.deleteComment(discussionId, commentId)) {
+                loadComments()
+                onUiEvent(CommentsUiEvent.DeleteComment)
+            }
         }
-    }
 
     fun updateComment(
         commentId: Long,
         content: String,
     ) {
-        _uiEvent.setValue(CommentsUiEvent.ShowCommentUpdate(discussionId, commentId, content))
+        onUiEvent(CommentsUiEvent.ShowCommentUpdate(discussionId, commentId, content))
     }
 
-    fun reportComment(commentId: Long) {
+    fun reportComment(commentId: Long) =
         viewModelScope.launch {
-            commentRepository.report(discussionId, commentId)
+            handleResult(
+                commentRepository.report(discussionId, commentId),
+            ) {}
         }
-    }
 
     fun showCommentCreate() {
-        _uiEvent.setValue(
+        onUiEvent(
             CommentsUiEvent.ShowCommentCreate(
                 discussionId,
-                _uiState.value?.commentContent ?: "",
+                _uiState.value?.commentContent.orEmpty(),
             ),
         )
     }
@@ -89,22 +88,26 @@ class CommentsViewModel(
         _uiState.value = _uiState.value?.copy(commentContent = content)
     }
 
-    private fun showNewComment() {
-        _uiEvent.setValue(CommentsUiEvent.ShowNewComment)
+    private suspend fun loadComments() {
+        handleResult(commentRepository.getCommentsByDiscussionId(discussionId)) { list ->
+            val myId = tokenRepository.getMemberId()
+            val items = list.map { CommentItemUiState(it, isMyComment = myId == it.writer.id) }
+            _uiState.value = _uiState.value?.copy(comments = items)
+        }
     }
 
-    private suspend fun loadComments() {
-        _uiState.value =
-            _uiState.value?.copy(
-                commentRepository
-                    .getCommentsByDiscussionRoomId(discussionId)
-                    .map {
-                        CommentItemUiState(
-                            it,
-                            isMyComment = tokenRepository.getMemberId() == it.writer.id,
-                        )
-                    },
-            )
+    private fun onUiEvent(event: CommentsUiEvent) {
+        _uiEvent.setValue(event)
+    }
+
+    private inline fun <T> handleResult(
+        result: NetworkResult<T>,
+        onSuccess: (T) -> Unit,
+    ) {
+        when (result) {
+            is NetworkResult.Success -> onSuccess(result.data)
+            is NetworkResult.Failure -> onUiEvent(CommentsUiEvent.ShowError(result.exception))
+        }
     }
 
     companion object {

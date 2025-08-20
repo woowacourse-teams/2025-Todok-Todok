@@ -15,6 +15,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentCommentCreateBottomSheetBinding
+import com.team.todoktodok.presentation.core.ExceptionMessageConverter
+import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
 import com.team.todoktodok.presentation.view.discussiondetail.BottomSheetVisibilityListener
 import com.team.todoktodok.presentation.view.discussiondetail.commentcreate.vm.CommentCreateViewModel
 import com.team.todoktodok.presentation.view.discussiondetail.commentcreate.vm.CommentCreateViewModelFactory
@@ -33,6 +35,8 @@ class CommentCreateBottomSheet : BottomSheetDialogFragment(R.layout.fragment_com
     }
 
     private var visibilityListener: BottomSheetVisibilityListener? = null
+
+    private val messageConverter by lazy { ExceptionMessageConverter() }
 
     fun setVisibilityListener(listener: BottomSheetVisibilityListener) {
         visibilityListener = listener
@@ -104,6 +108,12 @@ class CommentCreateBottomSheet : BottomSheetDialogFragment(R.layout.fragment_com
             is CommentCreateUiEvent.OnCreateDismiss -> {
                 commentsViewModel.updateCommentContent(uiEvent.content)
             }
+
+            is CommentCreateUiEvent.ShowError ->
+                AlertSnackBar(
+                    binding.root,
+                    messageConverter(uiEvent.exception),
+                ).show()
         }
     }
 

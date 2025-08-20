@@ -1,5 +1,6 @@
 package com.team.todoktodok.fake.datasource
 
+import com.team.domain.model.exception.NetworkResult
 import com.team.todoktodok.data.datasource.comment.CommentRemoteDataSource
 import com.team.todoktodok.data.network.model.LikeAction
 import com.team.todoktodok.data.network.request.CommentRequest
@@ -81,16 +82,17 @@ class FakeCommentRemoteDataSource : CommentRemoteDataSource {
     override suspend fun fetchComment(
         discussionId: Long,
         commentId: Long,
-    ): CommentResponse {
+    ): NetworkResult<CommentResponse> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun fetchCommentsByDiscussionRoomId(id: Long): List<CommentResponse> = dummyCommentResponses.toList()
+    override suspend fun fetchCommentsByDiscussionId(id: Long): NetworkResult<List<CommentResponse>> =
+        NetworkResult.Success(dummyCommentResponses.toList())
 
     override suspend fun saveComment(
         discussionId: Long,
         comment: CommentRequest,
-    ) {
+    ): NetworkResult<Unit> {
         dummyCommentResponses.add(
             CommentResponse(
                 100,
@@ -102,22 +104,25 @@ class FakeCommentRemoteDataSource : CommentRemoteDataSource {
                 isLikedByMe = false,
             ),
         )
+        return NetworkResult.Success(Unit)
     }
 
     override suspend fun toggleLike(
         discussionId: Long,
         commentId: Long,
-    ): LikeAction =
-        when (like) {
-            LikeAction.LIKE -> LikeAction.UNLIKE
-            LikeAction.UNLIKE -> LikeAction.LIKE
-        }
+    ): NetworkResult<LikeAction> =
+        NetworkResult.Success(
+            when (like) {
+                LikeAction.LIKE -> LikeAction.UNLIKE
+                LikeAction.UNLIKE -> LikeAction.LIKE
+            },
+        )
 
     override suspend fun updateComment(
         discussionId: Long,
         commentId: Long,
         comment: String,
-    ) {
+    ): NetworkResult<Unit> {
         val index = dummyCommentResponses.indexOfFirst { it.commentId == commentId }
         if (index != -1) {
             dummyCommentResponses[index] = (
@@ -132,19 +137,22 @@ class FakeCommentRemoteDataSource : CommentRemoteDataSource {
                 )
             )
         }
+        return NetworkResult.Success(Unit)
     }
 
     override suspend fun deleteComment(
         discussionId: Long,
         commentId: Long,
-    ) {
+    ): NetworkResult<Unit> {
         dummyCommentResponses.removeIf { it.commentId == commentId }
+        return NetworkResult.Success(Unit)
     }
 
     override suspend fun report(
         discussionId: Long,
         commentId: Long,
-    ) {
+    ): NetworkResult<Unit> {
+        TODO()
     }
 
     companion object {

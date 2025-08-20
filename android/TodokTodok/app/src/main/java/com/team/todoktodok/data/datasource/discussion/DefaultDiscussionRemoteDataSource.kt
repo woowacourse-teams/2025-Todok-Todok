@@ -49,7 +49,7 @@ class DefaultDiscussionRemoteDataSource(
                 ),
         )
 
-    override suspend fun deleteDiscussion(discussionId: Long) = discussionService.deleteDiscussion(discussionId)
+    override suspend fun deleteDiscussion(discussionId: Long): NetworkResult<Unit> = discussionService.deleteDiscussion(discussionId)
 
     override suspend fun toggleLike(discussionId: Long): NetworkResult<LikeAction> =
         runCatching {
@@ -59,18 +59,4 @@ class DefaultDiscussionRemoteDataSource(
         }
 
     override suspend fun reportDiscussion(discussionId: Long): NetworkResult<Unit> = discussionService.reportDiscussion(discussionId)
-
-    private fun Response<*>.extractDiscussionId(): Long {
-        val locationHeader = headers()[HEADER_LOCATION]
-        return locationHeader
-            ?.substringAfter(HEADER_DISCUSSION_ID_PREFIX)
-            ?.takeWhile { it.isDigit() }
-            ?.toLongOrNull()
-            ?: throw IllegalStateException("Invalid or missing Location header: $locationHeader")
-    }
-
-    companion object {
-        private const val HEADER_LOCATION = "Location"
-        private const val HEADER_DISCUSSION_ID_PREFIX = "/discussions/"
-    }
 }

@@ -189,4 +189,22 @@
     <string name="error_discussion_already_reported">이미 신고한 토론방입니다.</string>
     <string name="error_discussion_cannot_delete_with_comments">댓글이 존재하는 토론방은 삭제할 수 없습니다.</string>
     <string name="error_discussion_only_owner_can_modify_or_delete">자기 자신의 토론방만 수정/삭제 가능합니다.</string>
+
+    <!-- 댓글 관련 예외 -->
+    <string name="error_comment_already_reported">이미 신고한 댓글입니다</string>
+    <string name="error_comment_cannot_delete_with_replies">대댓글이 존재하는 댓글은 삭제할 수 없습니다</string>
+    <string name="error_comment_empty_content">댓글 내용을 입력해주세요</string>
+    <string name="error_comment_invalid_content_length">댓글 내용은 1자 이상, 2000자 이하여야 합니다</string>
+    <string name="error_comment_not_belong_to_discussion">해당 토론방의 댓글이 아닙니다</string>
+    <string name="error_comment_only_owner_can_modify_or_delete">자기 자신의 댓글만 수정/삭제 가능합니다</string>
+    <string name="error_comment_self_report_not_allowed">자기 자신의 댓글은 신고할 수 없습니다</string>
+
+    <!-- 대댓글 관련 예외 -->
+    <string name="error_reply_empty_content">대댓글 내용을 입력해주세요</string>
+    <string name="error_reply_invalid_length">대댓글 내용은 1자 이상, 2000자 이하여야 합니다</string>
+    <string name="error_reply_self_report_not_allowed">자기 자신의 대댓글은 신고할 수 없습니다</string>
+    <string name="error_reply_already_reported">이미 신고한 대댓글입니다</string>
+    <string name="error_reply_comment_not_in_discussion">해당 토론방에 있는 댓글이 아닙니다</string>
+    <string name="error_reply_not_in_comment">해당 댓글에 있는 대댓글이 아닙니다</string>
+    <string name="error_reply_only_owner_can_modify_or_delete">자기 자신의 대댓글만 수정/삭제 가능합니다</string>
 </resources>

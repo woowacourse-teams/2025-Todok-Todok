@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.team.domain.model.exception.NetworkResult
 import com.team.domain.repository.ReplyRepository
 import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
 import com.team.todoktodok.presentation.core.event.SingleLiveData
@@ -52,23 +53,26 @@ class ReplyCreateViewModel(
         viewModelScope.launch {
             when (replyCreateState) {
                 ReplyCreateState.Create -> {
-                    replyRepository.saveReply(
-                        discussionId,
-                        commentId,
-                        replyContent.value ?: throw IllegalStateException(),
-                    )
+                    handleResult(
+                        replyRepository.saveReply(
+                            discussionId,
+                            commentId,
+                            replyContent.value ?: throw IllegalStateException(),
+                        ),
+                    ) { _uiEvent.setValue(ReplyCreateUiEvent.CreateReply) }
                 }
 
                 is ReplyCreateState.Update -> {
-                    replyRepository.updateReply(
-                        discussionId,
-                        commentId,
-                        replyCreateState.replyId,
-                        replyContent.value ?: throw IllegalStateException(),
-                    )
+                    handleResult(
+                        replyRepository.updateReply(
+                            discussionId,
+                            commentId,
+                            replyCreateState.replyId,
+                            replyContent.value ?: throw IllegalStateException(),
+                        ),
+                    ) { _uiEvent.setValue(ReplyCreateUiEvent.CreateReply) }
                 }
             }
-            _uiEvent.setValue(ReplyCreateUiEvent.CreateReply)
         }
     }
 
@@ -83,6 +87,20 @@ class ReplyCreateViewModel(
             }
 
             is ReplyCreateState.Update -> Unit
+        }
+    }
+
+    private fun onUiEvent(event: ReplyCreateUiEvent) {
+        _uiEvent.setValue(event)
+    }
+
+    private inline fun <T> handleResult(
+        result: NetworkResult<T>,
+        onSuccess: (T) -> Unit,
+    ) {
+        when (result) {
+            is NetworkResult.Success -> onSuccess(result.data)
+            is NetworkResult.Failure -> onUiEvent(ReplyCreateUiEvent.ShowErrorMessage(result.exception))
         }
     }
 

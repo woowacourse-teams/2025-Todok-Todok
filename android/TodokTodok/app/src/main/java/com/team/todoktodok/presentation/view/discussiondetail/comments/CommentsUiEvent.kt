@@ -1,5 +1,7 @@
 package com.team.todoktodok.presentation.view.discussiondetail.comments
 
+import com.team.domain.model.exception.TodokTodokExceptions
+
 sealed interface CommentsUiEvent {
     data class ShowCommentCreate(
         val discussionId: Long,
@@ -15,4 +17,8 @@ sealed interface CommentsUiEvent {
     data object ShowNewComment : CommentsUiEvent
 
     data object DeleteComment : CommentsUiEvent
+
+    data class ShowError(
+        val exception: TodokTodokExceptions,
+    ) : CommentsUiEvent
 }

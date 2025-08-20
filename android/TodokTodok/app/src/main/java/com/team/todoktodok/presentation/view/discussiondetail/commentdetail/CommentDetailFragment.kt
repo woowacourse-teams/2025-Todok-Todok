@@ -15,6 +15,8 @@ import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentCommentDetailBinding
 import com.team.todoktodok.databinding.MenuExternalDiscussionBinding
 import com.team.todoktodok.databinding.MenuOwnedDiscussionBinding
+import com.team.todoktodok.presentation.core.ExceptionMessageConverter
+import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
 import com.team.todoktodok.presentation.core.component.CommonDialog
 import com.team.todoktodok.presentation.core.ext.registerPositiveResultListener
 import com.team.todoktodok.presentation.core.ext.registerResultListener
@@ -48,6 +50,10 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
     }
 
     private var popupWindow: PopupWindow? = null
+
+    private val messageConverter: ExceptionMessageConverter by lazy {
+        ExceptionMessageConverter()
+    }
 
     override fun onViewCreated(
         view: View,
@@ -174,6 +180,12 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
                 popupWindow?.dismiss()
                 commentsViewModel.reloadComments()
             }
+
+            is CommentDetailUiEvent.ShowError ->
+                AlertSnackBar(
+                    binding.root,
+                    messageConverter(commentDetailUiEvent.exception),
+                ).show()
         }
     }
 
@@ -440,7 +452,7 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
     companion object {
         const val TAG = "TAG_COMMENT_DETAIL"
         private const val COMMENT_DELETE_DIALOG_REQUEST_KEY = "comment_delete_dialog_request_key"
-        private const val COMMENT_REPORT_DIALOG_REQUEST_KEY = "comment_delete_dialog_request_key"
+        private const val COMMENT_REPORT_DIALOG_REQUEST_KEY = "comment_report_dialog_request_key"
         private const val REPLY_CONTENT_DELETE_DIALOG_REQUEST_KEY =
             "reply_content_delete_dialog_request_key"
         private const val REPLY_REPORT_DIALOG_REQUEST_KEY = "reply_report_dialog_request_key_%d"
