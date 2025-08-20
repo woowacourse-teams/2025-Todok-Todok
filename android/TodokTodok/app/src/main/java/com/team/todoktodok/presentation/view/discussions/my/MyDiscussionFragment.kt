@@ -75,6 +75,11 @@ class MyDiscussionFragment : Fragment(R.layout.fragment_my_discussion) {
         binding.rvDiscussions.visibility = View.GONE
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadMyDiscussions()
+    }
+
     private val adapterHandler =
         object : MyDiscussionAdapter.Handler {
             override fun onClickMyCreatedDiscussionHeader() {

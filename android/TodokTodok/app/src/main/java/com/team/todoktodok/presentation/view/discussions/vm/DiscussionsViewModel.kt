@@ -93,22 +93,30 @@ class DiscussionsViewModel(
         }
     }
 
-    private fun loadMyCreatedDiscussions(): Deferred<List<DiscussionUiState>> =
-        viewModelScope.async {
-            when (
-                val result =
-                    memberRepository.getMemberDiscussionRooms(
-                        MemberId.Mine,
-                        MemberDiscussionType.CREATED,
-                    )
-            ) {
-                is NetworkResult.Success -> result.data.map { it.toUiState() }
-                is NetworkResult.Failure -> {
-                    onUiEvent(DiscussionsUiEvent.ShowErrorMessage(result.exception))
-                    emptyList()
+    fun loadMyDiscussions() =
+        withLoading {
+            val tasks =
+                MemberDiscussionType.entries.map { type ->
+                    viewModelScope.async {
+                        type to memberRepository.getMemberDiscussionRooms(MemberId.Mine, type)
+                    }
                 }
+
+            val results: Map<MemberDiscussionType, NetworkResult<List<MemberDiscussion>>> =
+                tasks.awaitAll().toMap()
+
+            results.values.firstOrNull { it is NetworkResult.Failure }?.let { failure ->
+                val exception = (failure as NetworkResult.Failure).exception
+                onUiEvent(DiscussionsUiEvent.ShowErrorMessage(exception))
+                return@withLoading
             }
+
+            val created = (results[MemberDiscussionType.CREATED] as NetworkResult.Success).data
+            val participated = (results[MemberDiscussionType.PARTICIPATED] as NetworkResult.Success).data
+
+            _uiState.value = _uiState.value?.addMyDiscussion(created, participated)
         }
+
 //    private fun updateDiscussions(
 //        filter: DiscussionFilter,
 //        discussions: List<DiscussionUiState>,
