@@ -82,6 +82,18 @@ public class DiscussionController implements DiscussionApiDocs {
     }
 
     @Auth(value = Role.USER)
+    @GetMapping("/active")
+    public ResponseEntity<DiscussionPageResponse> getActiveDiscussions(
+            @LoginMember final Long memberId,
+            @RequestParam final int period,
+            @RequestParam(defaultValue = "10") final int size,
+            @RequestParam(required = false) final String cursor
+    ) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(discussionQueryService.getActiveDiscussions(memberId, period, size, cursor));
+    }
+
+    @Auth(value = Role.USER)
     @PatchMapping("/{discussionId}")
     public ResponseEntity<Void> updateDiscussion(
             @LoginMember final Long memberId,
@@ -128,17 +140,5 @@ public class DiscussionController implements DiscussionApiDocs {
                 .path("/{id}")
                 .buildAndExpand(id)
                 .toUri();
-    }
-
-    @Auth(value = Role.USER)
-    @GetMapping("/active")
-    public ResponseEntity<DiscussionPageResponse> getActiveDiscussions(
-            @LoginMember final Long memberId,
-            @RequestParam final int period,
-            @RequestParam(defaultValue = "10") final int size,
-            @RequestParam(required = false) final String cursor
-    ) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(discussionQueryService.getActiveDiscussions(memberId, period, size, cursor));
     }
 }
