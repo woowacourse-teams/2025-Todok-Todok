@@ -13,6 +13,7 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import todoktodok.backend.discussion.application.dto.request.DiscussionRequest;
 import todoktodok.backend.discussion.application.dto.request.DiscussionUpdateRequest;
+import todoktodok.backend.discussion.application.dto.response.DiscussionPageResponse;
 import todoktodok.backend.discussion.application.dto.response.DiscussionResponse;
 import todoktodok.backend.discussion.domain.DiscussionFilterType;
 import todoktodok.backend.global.exception.ErrorResponse;
@@ -577,7 +578,7 @@ public interface DiscussionApiDocs {
                     description = "활성 토론방 목록 조회 성공",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = todoktodok.backend.discussion.application.dto.response.DiscussionPageResponse.class),
+                            schema = @Schema(implementation = DiscussionPageResponse.class),
                             examples = {
                                     @ExampleObject(
                                             name = "첫 페이지 예시",
@@ -591,7 +592,7 @@ public interface DiscussionApiDocs {
                                                       "commentCount": 1,
                                                       "likeCount": 0,
                                                       "likedByMe": false,
-                                                      "lastCommentedAt": "2025-08-20T14:59:00"
+                                                      "lastCommentedAt": "2025-08-20T14:49:00"
                                                     },
                                                     {
                                                       "discussionId": 3,
@@ -620,7 +621,7 @@ public interface DiscussionApiDocs {
                                                       "commentCount": 2,
                                                       "likeCount": 1,
                                                       "likedByMe": false,
-                                                      "lastCommentedAt": "2025-08-20T14:30:00"
+                                                      "lastCommentedAt": "2025-08-20T15:30:00"
                                                     }
                                                   ],
                                                   "hasNext": false,
@@ -636,7 +637,7 @@ public interface DiscussionApiDocs {
                     description = "잘못된 요청",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = todoktodok.backend.global.exception.ErrorResponse.class),
+                            schema = @Schema(implementation = ErrorResponse.class),
                             examples = {
                                     @ExampleObject(
                                             name = "유효하지 않은 size",
@@ -650,7 +651,7 @@ public interface DiscussionApiDocs {
                     description = "토큰 인증 오류",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = todoktodok.backend.global.exception.ErrorResponse.class),
+                            schema = @Schema(implementation = ErrorResponse.class),
                             examples = @ExampleObject(
                                     name = "JWT 오류",
                                     value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
@@ -662,7 +663,7 @@ public interface DiscussionApiDocs {
                     description = "서버 오류",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = todoktodok.backend.global.exception.ErrorResponse.class),
+                            schema = @Schema(implementation = ErrorResponse.class),
                             examples = @ExampleObject(
                                     name = "서버 오류",
                                     value = "{\"code\":500, \"message\":\"[ERROR] 서버 내부 오류가 발생했습니다\"}"
@@ -670,7 +671,7 @@ public interface DiscussionApiDocs {
                     )
             )
     })
-    ResponseEntity<todoktodok.backend.discussion.application.dto.response.DiscussionPageResponse> getActiveDiscussions(
+    ResponseEntity<DiscussionPageResponse> getActiveDiscussions(
             @Parameter(hidden = true) final Long memberId,
             @Parameter(
                     description = "조회 기간(일)",
