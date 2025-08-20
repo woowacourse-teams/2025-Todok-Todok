@@ -4,9 +4,15 @@ import com.team.domain.model.DiscussionFilter
 import com.team.domain.model.exception.NetworkResult
 import com.team.todoktodok.data.network.model.LikeAction
 import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
+import com.team.todoktodok.data.network.response.latest.LatestDiscussionsResponse
 import retrofit2.Response
 
 interface DiscussionRemoteDataSource {
+    suspend fun getLatestDiscussions(
+        size: Int,
+        cursor: String? = null,
+    ): NetworkResult<LatestDiscussionsResponse>
+
     suspend fun getDiscussion(id: Long): NetworkResult<DiscussionResponse>
 
     suspend fun getDiscussions(

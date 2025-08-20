@@ -5,12 +5,24 @@ import com.team.domain.model.Discussion
 import com.team.domain.model.DiscussionFilter
 import com.team.domain.model.LikeStatus
 import com.team.domain.model.exception.NetworkResult
+import com.team.domain.model.exception.map
+import com.team.domain.model.latest.LatestDiscussionPage
 import com.team.domain.model.member.DiscussionRoom
 import com.team.domain.repository.DiscussionRepository
+import com.team.todoktodok.fake.datasource.FakeDiscussionRemoteDataSource
 import com.team.todoktodok.fixture.DISCUSSIONS
 
 class FakeDiscussionRepository : DiscussionRepository {
+    private val dataSource = FakeDiscussionRemoteDataSource()
     private val discussions = DISCUSSIONS
+
+    override suspend fun getLatestDiscussions(
+        size: Int,
+        cursor: String?,
+    ): NetworkResult<LatestDiscussionPage> =
+        dataSource.getLatestDiscussions(size, cursor).map {
+            it.toDomain()
+        }
 
     override suspend fun getDiscussion(id: Long): NetworkResult<Discussion> =
         NetworkResult.Success(discussions.find { id == it.id } ?: throw IllegalArgumentException())

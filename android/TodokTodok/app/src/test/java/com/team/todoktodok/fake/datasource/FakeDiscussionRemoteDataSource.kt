@@ -7,6 +7,9 @@ import com.team.todoktodok.data.network.model.LikeAction
 import com.team.todoktodok.data.network.response.discussion.BookResponse
 import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
 import com.team.todoktodok.data.network.response.discussion.MemberResponse
+import com.team.todoktodok.data.network.response.latest.LatestDiscussionsResponse
+import com.team.todoktodok.data.network.response.latest.PageInfoResponse
+import com.team.todoktodok.fixture.LATEST_DISCUSSIONS_RESPONSE
 import retrofit2.Response
 
 class FakeDiscussionRemoteDataSource : DiscussionRemoteDataSource {
@@ -68,6 +71,23 @@ class FakeDiscussionRemoteDataSource : DiscussionRemoteDataSource {
                 isLikedByMe = false,
             ),
         )
+
+    override suspend fun getLatestDiscussions(
+        size: Int,
+        cursor: String?,
+    ): NetworkResult<LatestDiscussionsResponse> {
+        val startIndex = cursor?.toIntOrNull() ?: 0
+        val endIndex = (startIndex + size).coerceAtMost(LATEST_DISCUSSIONS_RESPONSE.size)
+        val pageDiscussions = LATEST_DISCUSSIONS_RESPONSE.subList(startIndex, endIndex)
+
+        val hasNext = endIndex < LATEST_DISCUSSIONS_RESPONSE.size
+        val nextCursor = if (hasNext) endIndex.toString() else ""
+
+        val pageInfo = PageInfoResponse(hasNext, nextCursor)
+        val page = LatestDiscussionsResponse(pageDiscussions, pageInfo)
+
+        return NetworkResult.Success(page)
+    }
 
     override suspend fun getDiscussion(id: Long): NetworkResult<DiscussionResponse> =
         NetworkResult.Success(
