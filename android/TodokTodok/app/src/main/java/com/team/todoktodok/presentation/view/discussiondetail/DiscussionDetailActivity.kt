@@ -172,7 +172,7 @@ class DiscussionDetailActivity : AppCompatActivity() {
                 tvBookTitle.text = value.discussion.book.title
                 tvDiscussionTitle.text = value.discussion.discussionTitle
                 tvUserNickname.text = value.discussion.writer.nickname.value
-                ivUserProfile.loadImage("")
+                ivUserProfile.loadImage(value.discussion.writer.profileImage)
                 ivBookImage.loadImage(value.discussion.book.image)
                 tvDiscussionCreateAt.text =
                     value.discussion.createAt.toRelativeString(this@DiscussionDetailActivity)

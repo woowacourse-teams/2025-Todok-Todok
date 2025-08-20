@@ -12,6 +12,7 @@ import com.team.domain.model.Support
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ItemUserInformationBinding
 import com.team.todoktodok.databinding.PopupMenuReportBinding
+import com.team.todoktodok.presentation.core.ext.loadImage
 import com.team.todoktodok.presentation.view.profile.adapter.ProfileItems
 
 class UserInformationViewHolder private constructor(
@@ -67,6 +68,7 @@ class UserInformationViewHolder private constructor(
             val reportButtonVisibility = if (item.isMyProfile) View.GONE else View.VISIBLE
 
             ivReport.visibility = reportButtonVisibility
+            ivProfile.loadImage(item.value.profileImage)
             tvNickname.text = content.nickname
 
             val message =

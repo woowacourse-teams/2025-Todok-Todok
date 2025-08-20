@@ -11,6 +11,8 @@ data class MemberResponse(
     val memberId: Long,
     @SerialName("nickname")
     val nickname: String,
+    @SerialName("profileImage")
+    val profileImage: String,
 )
 
-fun MemberResponse.toDomain() = User(id = memberId, nickname = Nickname(nickname))
+fun MemberResponse.toDomain() = User(id = memberId, nickname = Nickname(nickname), profileImage = profileImage)

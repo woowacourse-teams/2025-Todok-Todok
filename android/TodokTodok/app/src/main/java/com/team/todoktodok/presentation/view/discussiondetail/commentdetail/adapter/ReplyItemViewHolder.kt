@@ -15,7 +15,7 @@ class ReplyItemViewHolder private constructor(
     fun bind(replyItem: CommentDetailItems.ReplyItem) {
         val reply = replyItem.value.reply
         with(binding) {
-            tvUserNickname.text = reply.user.nickname.value
+            tvUserNickname.text = reply.writer.nickname.value
             tvReplyCreateAt.text =
                 reply.createdAt.toRelativeString(
                     root.context,
@@ -24,12 +24,12 @@ class ReplyItemViewHolder private constructor(
             ivLike.isSelected = reply.isLikedByMe
             ivLike.setOnClickListener { handler.onClickReplyLike(reply.replyId) }
             tvLikeCount.text = reply.likeCount.toString()
-            ivUserProfile.loadImage("")
+            ivUserProfile.loadImage(replyItem.value.reply.writer.profileImage)
             ivUserProfile.setOnClickListener {
-                handler.onClickReplyUser(reply.user.id)
+                handler.onClickReplyUser(reply.writer.id)
             }
             tvUserNickname.setOnClickListener {
-                handler.onClickReplyUser(reply.user.id)
+                handler.onClickReplyUser(reply.writer.id)
             }
             ivReplyOption.setOnClickListener {
                 handler.onClickReplyOption(replyItem, ivReplyOption)

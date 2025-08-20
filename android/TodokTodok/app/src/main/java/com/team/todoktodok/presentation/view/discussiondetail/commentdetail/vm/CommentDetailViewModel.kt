@@ -167,7 +167,7 @@ class CommentDetailViewModel(
                 replies.map { reply ->
                     ReplyItemUiState(
                         reply,
-                        reply.user.id == memberId,
+                        reply.writer.id == memberId,
                     )
                 }
             _uiState.value = currentUiState?.copy(replies = replyItems)

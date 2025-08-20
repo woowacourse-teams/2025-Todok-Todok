@@ -23,7 +23,7 @@ class DiscussionViewHolder private constructor(
             tvBookTitle.text = item.bookTitle
             tvBookAuthor.text = item.bookAuthor
             ivBook.loadImage(item.bookImage)
-
+            ivWriterProfileImage.loadImage(item.writerProfileImage)
             tvDiscussionTitle.text = item.discussionTitle
             tvDiscussionWriterNickname.text = item.writerNickname
 

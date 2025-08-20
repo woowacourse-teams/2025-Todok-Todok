@@ -7,7 +7,7 @@ data class Reply(
     val content: String,
     val createdAt: LocalDateTime,
     val likeCount: Int,
-    val user: User,
+    val writer: User,
     val replyId: Long,
     val isLikedByMe: Boolean,
 )

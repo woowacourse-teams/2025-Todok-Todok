@@ -18,6 +18,8 @@ data class DiscussionUiState(
     val discussionTitle: String get() = item.discussionTitle
     val discussionOpinion: String get() = item.discussionOpinion
     val writerNickname: String get() = item.writerNickname
+    val writerProfileImage: String get() = item.writer.profileImage
+
     val likeCount: String get() = item.likeCount.toString()
     val commentCount: String get() = item.commentCount.toString()
     val viewCount: String get() = item.viewCount.toString()
