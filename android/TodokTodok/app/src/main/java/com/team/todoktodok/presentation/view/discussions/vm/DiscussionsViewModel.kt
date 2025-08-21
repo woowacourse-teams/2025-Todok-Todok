@@ -110,7 +110,7 @@ class DiscussionsViewModel(
             }
         }
 
-    fun loadActivatedDiscissions() {
+    fun loadActivatedDiscussions() {
         val activatedPage = _uiState.value?.activatedPage
         val cursor = activatedPage?.nextCursor ?: return
         if (!activatedPage.hasNext) return

@@ -42,7 +42,7 @@ class HotDiscussionFragment : Fragment(R.layout.fragment_hot_discussion) {
         with(binding.rvDiscussions) {
             adapter = hotDiscussionAdapter
             setHasFixedSize(true)
-            addOnScrollEndListener { viewModel.loadActivatedDiscissions() }
+            addOnScrollEndListener { viewModel.loadActivatedDiscussions() }
         }
     }
 
