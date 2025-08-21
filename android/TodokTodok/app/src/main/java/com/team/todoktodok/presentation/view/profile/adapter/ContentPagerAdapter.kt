@@ -10,12 +10,12 @@ import com.team.todoktodok.presentation.view.profile.activated.ActivatedBooksFra
 import com.team.todoktodok.presentation.view.profile.created.CreatedDiscussionsRoomFragment
 import com.team.todoktodok.presentation.view.profile.participated.ParticipatedDiscussionsRoomFragment
 import com.team.todoktodok.presentation.view.serialization.SerializationBook
-import com.team.todoktodok.presentation.view.serialization.SerializationMemberDiscussion
+import com.team.todoktodok.presentation.view.serialization.SerializationDiscussion
 
 class ContentPagerAdapter(
     private val activatedBooks: List<SerializationBook>,
-    private val createdDiscussions: List<SerializationMemberDiscussion>,
-    private val participatedDiscussions: List<SerializationMemberDiscussion>,
+    private val createdDiscussions: List<SerializationDiscussion>,
+    private val participatedDiscussions: List<SerializationDiscussion>,
     fragmentManager: FragmentManager,
     lifecycle: Lifecycle,
 ) : FragmentStateAdapter(fragmentManager, lifecycle) {

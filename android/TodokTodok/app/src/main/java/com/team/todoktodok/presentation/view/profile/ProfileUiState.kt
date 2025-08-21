@@ -1,19 +1,20 @@
 package com.team.todoktodok.presentation.view.profile
 
 import com.team.domain.model.Book
+import com.team.domain.model.Discussion
 import com.team.domain.model.member.MemberDiscussion
 import com.team.domain.model.member.MemberId
 import com.team.domain.model.member.Profile
 import com.team.todoktodok.presentation.view.profile.adapter.ProfileItems
 import com.team.todoktodok.presentation.view.serialization.SerializationBook
-import com.team.todoktodok.presentation.view.serialization.SerializationMemberDiscussion
+import com.team.todoktodok.presentation.view.serialization.SerializationDiscussion
 import com.team.todoktodok.presentation.view.serialization.toSerialization
 
 data class ProfileUiState(
     val items: List<ProfileItems> = emptyList(),
     val activatedBooks: List<SerializationBook> = emptyList(),
-    val participatedDiscussions: List<SerializationMemberDiscussion> = emptyList(),
-    val createdDiscussions: List<SerializationMemberDiscussion> = emptyList(),
+    val participatedDiscussions: List<SerializationDiscussion> = emptyList(),
+    val createdDiscussions: List<SerializationDiscussion> = emptyList(),
     val memberId: MemberId = MemberId.Mine,
     val isMyProfilePage: Boolean = false,
     val isLoading: Boolean = false,
@@ -35,8 +36,8 @@ data class ProfileUiState(
             memberId: MemberId,
             profile: Profile,
             books: List<Book>,
-            joinedDiscussions: List<MemberDiscussion>,
-            createdDiscussions: List<MemberDiscussion>,
+            joinedDiscussions: List<Discussion>,
+            createdDiscussions: List<Discussion>,
         ): ProfileUiState {
             val isMyProfilePage = memberId is MemberId.Mine
             val initialItems =

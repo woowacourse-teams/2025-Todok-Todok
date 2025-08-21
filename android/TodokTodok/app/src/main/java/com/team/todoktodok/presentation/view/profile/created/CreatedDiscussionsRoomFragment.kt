@@ -11,9 +11,9 @@ import com.team.todoktodok.databinding.FragmentCreatedDiscussionsRoomBinding
 import com.team.todoktodok.presentation.core.ext.getParcelableArrayListCompat
 import com.team.todoktodok.presentation.view.book.SelectBookActivity
 import com.team.todoktodok.presentation.view.discussiondetail.DiscussionDetailActivity
-import com.team.todoktodok.presentation.view.discussions.toUiStateWithoutWriterNickname
+import com.team.todoktodok.presentation.view.discussions.DiscussionUiState
 import com.team.todoktodok.presentation.view.profile.created.adapter.UserDiscussionAdapter
-import com.team.todoktodok.presentation.view.serialization.SerializationMemberDiscussion
+import com.team.todoktodok.presentation.view.serialization.SerializationDiscussion
 
 class CreatedDiscussionsRoomFragment : Fragment(R.layout.fragment_created_discussions_room) {
     private var _binding: FragmentCreatedDiscussionsRoomBinding? = null
@@ -41,7 +41,7 @@ class CreatedDiscussionsRoomFragment : Fragment(R.layout.fragment_created_discus
     private fun initView() {
         discussionAdapter = UserDiscussionAdapter(userDiscussionAdapterHandler)
         val discussions =
-            arguments?.getParcelableArrayListCompat<SerializationMemberDiscussion>(
+            arguments?.getParcelableArrayListCompat<SerializationDiscussion>(
                 ARG_CREATED_MEMBER_DISCUSSIONS,
             ) ?: emptyList()
 
@@ -69,9 +69,10 @@ class CreatedDiscussionsRoomFragment : Fragment(R.layout.fragment_created_discus
         startActivity(intent)
     }
 
-    private fun showCreatedDiscussions(discussions: List<SerializationMemberDiscussion>) {
+    private fun showCreatedDiscussions(discussions: List<SerializationDiscussion>) {
         with(binding) {
-            val createdDiscussions = discussions.map { discussion -> discussion.toDomain().toUiStateWithoutWriterNickname() }
+            val createdDiscussions =
+                discussions.map { discussion -> DiscussionUiState(discussion.toDomain()) }
             rvDiscussions.visibility = View.VISIBLE
             rvDiscussions.adapter = discussionAdapter
             discussionAdapter.submitList(createdDiscussions)
@@ -103,9 +104,9 @@ class CreatedDiscussionsRoomFragment : Fragment(R.layout.fragment_created_discus
     }
 
     companion object {
-        private const val ARG_CREATED_MEMBER_DISCUSSIONS = "created_member_discussions"
+        private const val ARG_CREATED_MEMBER_DISCUSSIONS = "created_discussions"
 
-        fun newInstance(discussions: List<SerializationMemberDiscussion>): CreatedDiscussionsRoomFragment =
+        fun newInstance(discussions: List<SerializationDiscussion>): CreatedDiscussionsRoomFragment =
             CreatedDiscussionsRoomFragment().apply {
                 arguments = bundleOf(ARG_CREATED_MEMBER_DISCUSSIONS to ArrayList(discussions))
             }

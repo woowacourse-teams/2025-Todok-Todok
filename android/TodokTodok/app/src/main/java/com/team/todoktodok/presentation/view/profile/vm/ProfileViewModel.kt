@@ -56,8 +56,8 @@ class ProfileViewModel(
                     memberId,
                     profile as Profile,
                     books as List<Book>,
-                    participatedDiscussions as List<MemberDiscussion>,
-                    createdDiscussions as List<MemberDiscussion>,
+                    participatedDiscussions as List<Discussion>,
+                    createdDiscussions as List<Discussion>,
                 )
         }
     }
