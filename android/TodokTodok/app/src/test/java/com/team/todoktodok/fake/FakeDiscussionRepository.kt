@@ -3,6 +3,7 @@ package com.team.todoktodok.fake
 import com.team.domain.model.Book
 import com.team.domain.model.Discussion
 import com.team.domain.model.LikeStatus
+import com.team.domain.model.active.ActivatedDiscussionPage
 import com.team.domain.model.exception.NetworkResult
 import com.team.domain.model.exception.map
 import com.team.domain.model.latest.LatestDiscussionPage
@@ -23,7 +24,7 @@ class FakeDiscussionRepository : DiscussionRepository {
         period: Int,
         size: Int,
         cursor: String?,
-    ): NetworkResult<List<Discussion>> {
+    ): NetworkResult<ActivatedDiscussionPage> {
         TODO("Not yet implemented")
     }
 

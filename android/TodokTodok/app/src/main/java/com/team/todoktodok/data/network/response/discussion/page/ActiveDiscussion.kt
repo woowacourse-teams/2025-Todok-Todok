@@ -1,0 +1,36 @@
+package com.team.todoktodok.data.network.response.discussion.page
+
+import com.team.domain.model.active.ActivatedDiscussion
+import com.team.todoktodok.data.core.ext.toLocalDateTime
+import com.team.todoktodok.data.network.response.discussion.BookResponse
+import com.team.todoktodok.data.network.response.discussion.MemberResponse
+import com.team.todoktodok.data.network.response.discussion.toDomain
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class ActiveDiscussion(
+    val discussionId: Long,
+    val book: BookResponse,
+    val member: MemberResponse,
+    val createdAt: String,
+    val discussionTitle: String,
+    val discussionOpinion: String,
+    val likeCount: Int,
+    val commentCount: Int,
+    val isLikedByMe: Boolean,
+    val lastCommentedAt: String,
+) {
+    fun toDomain() =
+        ActivatedDiscussion(
+            discussionId = discussionId,
+            discussionTitle = discussionTitle,
+            discussionOpinion = discussionOpinion,
+            book = book.toDomain(),
+            writer = member.toDomain(),
+            likeCount = likeCount,
+            commentCount = commentCount,
+            isLikedByMe = isLikedByMe,
+            createdAt = createdAt.toLocalDateTime(),
+            lastCommentedAt = lastCommentedAt,
+        )
+}

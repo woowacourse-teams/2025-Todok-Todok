@@ -26,7 +26,6 @@ object UserSettingSerializer : Serializer<UserSetting> {
                 string = input.readBytes().decodeToString(),
             )
         } catch (e: SerializationException) {
-            e.printStackTrace()
             defaultValue
         }
 
