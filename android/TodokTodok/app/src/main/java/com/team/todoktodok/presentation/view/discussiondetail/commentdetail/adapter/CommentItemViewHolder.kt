@@ -25,7 +25,7 @@ class CommentItemViewHolder private constructor(
             ivLike.setOnClickListener { handler.onClickCommentLike() }
             tvLikeCount.text = comment.likeCount.toString()
             tvLikeCount.setOnClickListener { handler.onClickCommentLike() }
-            ivUserProfile.loadImage("")
+            ivUserProfile.loadImage(comment.writer.profileImage)
             ivUserProfile.setOnClickListener {
                 handler.onClickCommentUserName(comment.writer.id)
             }

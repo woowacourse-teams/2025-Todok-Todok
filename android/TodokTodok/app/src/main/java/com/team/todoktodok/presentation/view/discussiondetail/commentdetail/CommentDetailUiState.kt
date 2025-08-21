@@ -12,6 +12,7 @@ data class CommentDetailUiState(
     val comment: CommentItemUiState = INIT_COMMENT,
     val replies: List<ReplyItemUiState> = emptyList(),
     val content: String = "",
+    val isLoading: Boolean = false,
 ) {
     fun getCommentDetailItems() =
         listOf(CommentDetailItems.CommentItem(comment)) +
@@ -25,7 +26,7 @@ data class CommentDetailUiState(
                 Comment(
                     id = 0,
                     "",
-                    User(0, Nickname("기초값")),
+                    User(0, Nickname("기초값"), ""),
                     LocalDateTime.of(1970, 1, 1, 0, 0),
                     0,
                     0,

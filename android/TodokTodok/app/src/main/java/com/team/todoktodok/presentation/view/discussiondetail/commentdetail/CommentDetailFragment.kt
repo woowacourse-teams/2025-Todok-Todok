@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupWindow
+import android.widget.Toast
+import androidx.annotation.StringRes
 import androidx.core.os.bundleOf
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
@@ -18,7 +20,9 @@ import com.team.todoktodok.databinding.MenuOwnedDiscussionBinding
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
 import com.team.todoktodok.presentation.core.component.CommonDialog
+import com.team.todoktodok.presentation.core.component.ReportDialog
 import com.team.todoktodok.presentation.core.ext.registerPositiveResultListener
+import com.team.todoktodok.presentation.core.ext.registerReportResultListener
 import com.team.todoktodok.presentation.core.ext.registerResultListener
 import com.team.todoktodok.presentation.view.discussiondetail.BottomSheetVisibilityListener
 import com.team.todoktodok.presentation.view.discussiondetail.commentcreate.CommentCreateBottomSheet
@@ -93,9 +97,14 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
 
     fun setupObserve(binding: FragmentCommentDetailBinding) {
         viewModel.uiState.observe(viewLifecycleOwner) { value ->
-            adapter.submitList(value.getCommentDetailItems())
-            val currentContent = value.content
-            if (currentContent.isNotBlank()) binding.tvInputComment.text = currentContent
+            if (value.isLoading) {
+                binding.progressBar.show()
+            } else {
+                binding.progressBar.hide()
+                adapter.submitList(value.getCommentDetailItems())
+                val currentContent = value.content
+                if (currentContent.isNotBlank()) binding.tvInputComment.text = currentContent
+            }
         }
         viewModel.uiEvent.observe(viewLifecycleOwner) { value ->
             handleEvent(value, binding)
@@ -123,7 +132,7 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
         val confirmDialog =
             CommonDialog
                 .newInstance(
-                    getString(R.string.confirm_delete_message),
+                    getString(R.string.comment_confirm_delete_message),
                     getString(R.string.all_delete_action),
                     REPLY_CONTENT_DELETE_DIALOG_REQUEST_KEY,
                 )
@@ -154,7 +163,6 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
                     commentDetailUiEvent.comment,
                     binding,
                 )
-                popupWindow?.dismiss()
             }
 
             is CommentDetailUiEvent.ShowReplyUpdate -> {
@@ -165,20 +173,18 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
                     commentDetailUiEvent.content,
                     binding,
                 )
-                popupWindow?.dismiss()
             }
 
             CommentDetailUiEvent.DeleteComment -> {
                 sharedViewModel.reloadDiscussion()
-                commentsViewModel.reloadComments()
+                commentsViewModel.showNewComment()
                 parentFragmentManager.popBackStack()
             }
 
-            CommentDetailUiEvent.ToggleCommentLike -> commentsViewModel.reloadComments()
-            CommentDetailUiEvent.CommentUpdate -> commentsViewModel.reloadComments()
+            CommentDetailUiEvent.ToggleCommentLike -> commentsViewModel.showNewComment()
+            CommentDetailUiEvent.CommentUpdate -> commentsViewModel.showNewComment()
             CommentDetailUiEvent.DeleteReply -> {
-                popupWindow?.dismiss()
-                commentsViewModel.reloadComments()
+                commentsViewModel.showNewComment()
             }
 
             is CommentDetailUiEvent.ShowError ->
@@ -186,11 +192,17 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
                     binding.root,
                     messageConverter(commentDetailUiEvent.exception),
                 ).show()
+
+            CommentDetailUiEvent.ShowReportCommentSuccessMessage ->
+                showShortToast(R.string.all_report_comment_success)
+
+            CommentDetailUiEvent.ShowReportReplySuccessMessage ->
+                showShortToast(R.string.all_report_reply_success)
         }
     }
 
     private fun onNewReplyCommitted(binding: FragmentCommentDetailBinding) {
-        commentsViewModel.reloadComments()
+        commentsViewModel.showNewComment()
         sharedViewModel.reloadDiscussion()
         binding.rvItems.doOnPreDraw {
             binding.rvItems.smoothScrollToPosition(adapter.itemCount)
@@ -203,14 +215,22 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
                 if (commentDetailItems.value.isMyComment) {
                     optionPopupView(
                         layoutInflater,
-                        { viewModel.updateComment(commentDetailItems.value.comment.content) },
-                        { showCommentDeleteDialog() },
+                        {
+                            viewModel.updateComment(commentDetailItems.value.comment.content)
+                            popupWindow?.dismiss()
+                        },
+                        {
+                            showCommentDeleteDialog()
+                            popupWindow?.dismiss()
+                        },
                     )
                 } else {
                     reportPopupView(
                         layoutInflater,
-                        ::showCommentReportDialog,
-                    )
+                    ) {
+                        showCommentReportDialog()
+                        popupWindow?.dismiss()
+                    }
                 }
 
             is CommentDetailItems.ReplyItem -> showReplyOptions(commentDetailItems)
@@ -228,22 +248,24 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
                 },
                 {
                     showReplyDeleteDialog(commentDetailItems.value.reply.replyId)
+                    popupWindow?.dismiss()
                 },
             )
         } else {
             reportPopupView(
                 layoutInflater,
-            ) { showReplyReportDialog(commentDetailItems.value.reply.replyId) }
+            ) {
+                showReplyReportDialog(commentDetailItems.value.reply.replyId)
+                popupWindow?.dismiss()
+            }
         }
 
     private fun showCommentReportDialog() {
         val dialog =
-            CommonDialog.newInstance(
-                getString(R.string.all_report_comment),
-                getString(R.string.all_report_action),
+            ReportDialog.newInstance(
                 COMMENT_REPORT_DIALOG_REQUEST_KEY,
             )
-        dialog.show(childFragmentManager, CommonDialog.TAG)
+        dialog.show(childFragmentManager, ReportDialog.TAG)
     }
 
     private fun showCommentDeleteDialog() {
@@ -258,12 +280,10 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
 
     private fun showReplyReportDialog(replyId: Long) {
         val dialog =
-            CommonDialog.newInstance(
-                getString(R.string.all_report_reply),
-                getString(R.string.all_report_action),
+            ReportDialog.newInstance(
                 REPLY_REPORT_DIALOG_REQUEST_KEY.format(replyId),
             )
-        dialog.show(childFragmentManager, CommonDialog.TAG)
+        dialog.show(childFragmentManager, ReportDialog.TAG)
     }
 
     private fun showReplyDeleteDialog(replyId: Long) {
@@ -360,10 +380,10 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
             CommonDialog.RESULT_KEY_COMMON_DIALOG,
         ) { parentFragmentManager.popBackStack() }
 
-        childFragmentManager.registerPositiveResultListener(
+        childFragmentManager.registerReportResultListener(
             viewLifecycleOwner,
             COMMENT_REPORT_DIALOG_REQUEST_KEY,
-            CommonDialog.RESULT_KEY_COMMON_DIALOG,
+            ReportDialog.RESULT_KEY_REPORT,
         ) { viewModel.reportComment() }
         childFragmentManager.registerPositiveResultListener(
             viewLifecycleOwner,
@@ -373,10 +393,10 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
     }
 
     private fun setupFragmentReplyResultListener(replyId: Long) {
-        childFragmentManager.registerPositiveResultListener(
+        childFragmentManager.registerReportResultListener(
             viewLifecycleOwner,
             REPLY_REPORT_DIALOG_REQUEST_KEY.format(replyId),
-            CommonDialog.RESULT_KEY_COMMON_DIALOG,
+            ReportDialog.RESULT_KEY_REPORT,
         ) { viewModel.reportReply(replyId) }
 
         childFragmentManager.registerPositiveResultListener(
@@ -384,6 +404,14 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
             REPLY_DELETE_DIALOG_REQUEST_KEY.format(replyId),
             CommonDialog.RESULT_KEY_COMMON_DIALOG,
         ) { viewModel.deleteReply(replyId) }
+    }
+
+    private fun showShortToast(
+        @StringRes resId: Int,
+    ) {
+        Toast
+            .makeText(requireContext(), resId, Toast.LENGTH_SHORT)
+            .show()
     }
 
     private fun getBottomSheetVisibilityListener(binding: FragmentCommentDetailBinding) =
@@ -436,7 +464,7 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
 
             override fun onClickCommentLike() {
                 viewModel.toggleCommentLike()
-                commentsViewModel.reloadComments()
+                commentsViewModel.showNewComment()
             }
 
             override fun onClickCommentUserName(userId: Long) {

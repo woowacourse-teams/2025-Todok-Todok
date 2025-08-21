@@ -9,6 +9,7 @@ import android.widget.PopupWindow
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -20,8 +21,10 @@ import com.team.todoktodok.databinding.MenuOwnedDiscussionBinding
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
 import com.team.todoktodok.presentation.core.component.CommonDialog
+import com.team.todoktodok.presentation.core.component.ReportDialog
 import com.team.todoktodok.presentation.core.ext.loadImage
 import com.team.todoktodok.presentation.core.ext.registerPositiveResultListener
+import com.team.todoktodok.presentation.core.ext.registerReportResultListener
 import com.team.todoktodok.presentation.core.ext.toRelativeString
 import com.team.todoktodok.presentation.view.discussion.create.CreateDiscussionRoomActivity
 import com.team.todoktodok.presentation.view.discussion.create.SerializationCreateDiscussionRoomMode.Edit
@@ -127,14 +130,21 @@ class DiscussionDetailActivity : AppCompatActivity() {
     private fun getPopUpView(isMyDiscussion: Boolean): PopupWindow =
         if (isMyDiscussion) {
             val binding = MenuOwnedDiscussionBinding.inflate(layoutInflater)
-            binding.tvEdit.setOnClickListener { viewModel.updateDiscussion() }
+            binding.tvEdit.setOnClickListener {
+                viewModel.updateDiscussion()
+                popupWindow?.dismiss()
+            }
             binding.tvDelete.setOnClickListener {
                 showDeleteDialog()
+                popupWindow?.dismiss()
             }
             createPopUpView(binding.root)
         } else {
             val binding = MenuExternalDiscussionBinding.inflate(layoutInflater)
-            binding.tvReport.setOnClickListener { showReportDialog() }
+            binding.tvReport.setOnClickListener {
+                showReportDialog()
+                popupWindow?.dismiss()
+            }
             createPopUpView(binding.root)
         }
 
@@ -150,9 +160,7 @@ class DiscussionDetailActivity : AppCompatActivity() {
 
     private fun showReportDialog() {
         val dialog =
-            CommonDialog.newInstance(
-                getString(R.string.all_report_action),
-                getString(R.string.all_report_action),
+            ReportDialog.newInstance(
                 DISCUSSION_REPORT_DIALOG_REQUEST_KEY,
             )
         dialog.show(supportFragmentManager, CommonDialog.TAG)
@@ -167,21 +175,27 @@ class DiscussionDetailActivity : AppCompatActivity() {
         )
 
     private fun setupObserve() {
-        viewModel.discussion.observe(this) { value ->
+        viewModel.uiState.observe(this) { value ->
             with(binding) {
-                tvBookTitle.text = value.discussion.book.title
-                tvDiscussionTitle.text = value.discussion.discussionTitle
-                tvUserNickname.text = value.discussion.writer.nickname.value
-                ivUserProfile.loadImage("")
-                ivBookImage.loadImage(value.discussion.book.image)
-                tvDiscussionCreateAt.text =
-                    value.discussion.createAt.toRelativeString(this@DiscussionDetailActivity)
-                tvDiscussionOpinion.text = value.discussion.discussionOpinion
-                ivLike.isSelected = value.discussion.isLikedByMe
-                tvLikeCount.text = value.discussion.likeCount.toString()
-                tvCommentCount.text = value.discussion.commentCount.toString()
+                if (value.isLoading) {
+                    progressBar.show()
+                } else {
+                    progressBar.hide()
+                    val discussion = value.discussionItemUiState.discussion
+                    tvBookTitle.text = discussion.book.title
+                    tvDiscussionTitle.text = discussion.discussionTitle
+                    tvUserNickname.text = discussion.writer.nickname.value
+                    ivUserProfile.loadImage(discussion.writer.profileImage)
+                    ivBookImage.loadImage(discussion.book.image)
+                    tvDiscussionCreateAt.text =
+                        discussion.createAt.toRelativeString(this@DiscussionDetailActivity)
+                    tvDiscussionOpinion.text = discussion.discussionOpinion
+                    ivLike.isSelected = discussion.isLikedByMe
+                    tvLikeCount.text = discussion.likeCount.toString()
+                    tvCommentCount.text = discussion.commentCount.toString()
+                }
             }
-            setupPopUpDiscussionClick(value.isMyDiscussion)
+            setupPopUpDiscussionClick(value.discussionItemUiState.isMyDiscussion)
         }
         viewModel.uiEvent.observe(this) { value ->
             handleEvent(value)
@@ -215,7 +229,8 @@ class DiscussionDetailActivity : AppCompatActivity() {
                     ),
                 ).show()
 
-            DiscussionDetailUiEvent.ShowReportSuccessMessage -> showToast(getString(R.string.all_report_discussion_success))
+            DiscussionDetailUiEvent.ShowReportDiscussionSuccessMessage ->
+                showShortToast(R.string.all_report_discussion_success)
         }
     }
 
@@ -228,23 +243,18 @@ class DiscussionDetailActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun showToast(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-    }
-
     private fun showComments(discussionId: Long) {
         val bottomSheet = CommentBottomSheet.newInstance(discussionId)
         bottomSheet.show(supportFragmentManager, CommentsFragment.TAG)
     }
 
     private fun setUpDialogResultListener() {
-        supportFragmentManager.registerPositiveResultListener(
+        supportFragmentManager.registerReportResultListener(
             this,
             DISCUSSION_REPORT_DIALOG_REQUEST_KEY,
-            CommonDialog.RESULT_KEY_COMMON_DIALOG,
+            ReportDialog.RESULT_KEY_REPORT,
         ) {
             viewModel.reportDiscussion()
-            popupWindow?.dismiss()
         }
 
         supportFragmentManager.registerPositiveResultListener(
@@ -253,8 +263,15 @@ class DiscussionDetailActivity : AppCompatActivity() {
             CommonDialog.RESULT_KEY_COMMON_DIALOG,
         ) {
             viewModel.deleteDiscussion()
-            popupWindow?.dismiss()
         }
+    }
+
+    private fun showShortToast(
+        @StringRes resId: Int,
+    ) {
+        Toast
+            .makeText(this, resId, Toast.LENGTH_SHORT)
+            .show()
     }
 
     companion object {

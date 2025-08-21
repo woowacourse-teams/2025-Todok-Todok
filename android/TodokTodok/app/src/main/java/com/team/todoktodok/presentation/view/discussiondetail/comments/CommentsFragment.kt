@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupWindow
+import android.widget.Toast
+import androidx.annotation.StringRes
 import androidx.core.os.bundleOf
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.activityViewModels
@@ -22,7 +24,9 @@ import com.team.todoktodok.databinding.MenuOwnedDiscussionBinding
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
 import com.team.todoktodok.presentation.core.component.CommonDialog
+import com.team.todoktodok.presentation.core.component.ReportDialog
 import com.team.todoktodok.presentation.core.ext.registerPositiveResultListener
+import com.team.todoktodok.presentation.core.ext.registerReportResultListener
 import com.team.todoktodok.presentation.core.ext.registerResultListener
 import com.team.todoktodok.presentation.view.discussiondetail.BottomSheetVisibilityListener
 import com.team.todoktodok.presentation.view.discussiondetail.commentcreate.CommentCreateBottomSheet
@@ -79,6 +83,7 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
     ) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentCommentsBinding.bind(view)
+        viewModel.reloadComments()
         initAdapter(binding)
         setupOnClick(binding)
         setupObserve(binding)
@@ -118,6 +123,16 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
 
     private fun setupObserve(binding: FragmentCommentsBinding) {
         viewModel.uiState.observe(viewLifecycleOwner) { state ->
+            if (state.isLoading) {
+                binding.progressBar.show()
+            } else {
+                binding.progressBar.hide()
+            }
+            if (state.comments.isEmpty()) {
+                binding.llNothingCommentsLayout.visibility = View.VISIBLE
+            } else {
+                binding.llNothingCommentsLayout.visibility = View.GONE
+            }
             adapter.submitList(state.comments) {
                 viewModel.commentsRvState?.let { saved ->
                     binding.rvComments.layoutManager?.onRestoreInstanceState(saved)
@@ -171,6 +186,9 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
                     binding.root,
                     messageConverter(commentsUiEvent.exception),
                 ).show()
+
+            CommentsUiEvent.ShowReportCommentSuccessMessage ->
+                showShortToast(R.string.all_report_comment_success)
         }
     }
 
@@ -191,8 +209,7 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
             CommentCreateBottomSheet.COMMENT_REQUEST_KEY,
             CommentCreateBottomSheet.COMMENT_CREATED_RESULT_KEY,
         ) {
-            viewModel.reloadComments()
-            popupWindow?.dismiss()
+            viewModel.showNewComment()
         }
     }
 
@@ -240,10 +257,10 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
         val commentId = state.comment.id
         val requestKey = COMMENT_REPORT_DIALOG_REQUEST_KEY.format(commentId)
 
-        childFragmentManager.registerPositiveResultListener(
+        childFragmentManager.registerReportResultListener(
             viewLifecycleOwner,
             requestKey,
-            CommonDialog.RESULT_KEY_COMMON_DIALOG,
+            ReportDialog.RESULT_KEY_REPORT,
         ) { viewModel.reportComment(commentId) }
 
         val binding = MenuExternalDiscussionBinding.inflate(layoutInflater)
@@ -258,12 +275,10 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
 
     private fun showReportDialog(requestKey: String) {
         val dialog =
-            CommonDialog.newInstance(
-                getString(R.string.all_report_comment),
-                getString(R.string.all_report_action),
+            ReportDialog.newInstance(
                 requestKey,
             )
-        dialog.show(childFragmentManager, CommonDialog.TAG)
+        dialog.show(childFragmentManager, ReportDialog.TAG)
     }
 
     private fun showDeleteDialog(requestKey: String) {
@@ -274,6 +289,14 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
                 requestKey,
             )
         dialog.show(childFragmentManager, CommonDialog.TAG)
+    }
+
+    private fun showShortToast(
+        @StringRes resId: Int,
+    ) {
+        Toast
+            .makeText(requireContext(), resId, Toast.LENGTH_SHORT)
+            .show()
     }
 
     private fun getBottomSheetVisibilityListener(binding: FragmentCommentsBinding) =

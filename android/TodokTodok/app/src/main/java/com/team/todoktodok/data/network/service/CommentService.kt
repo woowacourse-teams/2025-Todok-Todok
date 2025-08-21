@@ -29,7 +29,7 @@ interface CommentService {
         @Body commentRequest: CommentRequest,
     ): NetworkResult<Unit>
 
-    @POST("v1/discussions/{discussionId}/comments/{commentId}/")
+    @POST("v1/discussions/{discussionId}/comments/{commentId}/report")
     suspend fun report(
         @Path("discussionId") discussionId: Long,
         @Path("commentId") commentId: Long,

@@ -18,7 +18,7 @@
         android:id="@+id/iv_comment_detail_back"
         android:layout_width="@dimen/space_24"
         android:layout_height="@dimen/space_24"
-        android:contentDescription="@string/content_description_comment_detail_back"
+        android:contentDescription="@string/comment_content_description_comment_detail_back"
         android:src="@drawable/btn_back"
         app:layout_constraintBottom_toBottomOf="@id/abl_comment_detail"
         app:layout_constraintStart_toStartOf="@id/abl_comment_detail"
@@ -60,4 +60,13 @@
         android:text="@string/comment_input_hint"
         android:textSize="@dimen/font_size_x_large"
         app:layout_constraintBottom_toBottomOf="parent" />
+
+    <com.team.todoktodok.presentation.core.component.CloverProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
