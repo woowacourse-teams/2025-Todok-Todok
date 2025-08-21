@@ -10,7 +10,7 @@ import com.team.todoktodok.data.network.request.SignUpRequest
 import com.team.todoktodok.data.network.response.BlockedMemberResponse
 import com.team.todoktodok.data.network.response.ProfileResponse
 import com.team.todoktodok.data.network.response.discussion.BookResponse
-import com.team.todoktodok.data.network.response.discussion.MemberDiscussionResponse
+import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
 
 interface MemberRemoteDataSource {
     suspend fun login(request: String): NetworkResult<MemberType>
@@ -22,7 +22,7 @@ interface MemberRemoteDataSource {
     suspend fun fetchMemberDiscussionRooms(
         request: MemberId,
         type: MemberDiscussionType,
-    ): NetworkResult<List<MemberDiscussionResponse>>
+    ): NetworkResult<List<DiscussionResponse>>
 
     suspend fun supportMember(
         request: MemberId.OtherUser,

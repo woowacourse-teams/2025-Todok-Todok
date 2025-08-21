@@ -16,7 +16,7 @@ import com.team.todoktodok.data.network.request.SignUpRequest
 import com.team.todoktodok.data.network.response.BlockedMemberResponse
 import com.team.todoktodok.data.network.response.ProfileResponse
 import com.team.todoktodok.data.network.response.discussion.BookResponse
-import com.team.todoktodok.data.network.response.discussion.MemberDiscussionResponse
+import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
 import com.team.todoktodok.data.network.service.MemberService
 
 class DefaultMemberRemoteDataSource(
@@ -69,7 +69,7 @@ class DefaultMemberRemoteDataSource(
     override suspend fun fetchMemberDiscussionRooms(
         request: MemberId,
         type: MemberDiscussionType,
-    ): NetworkResult<List<MemberDiscussionResponse>> {
+    ): NetworkResult<List<DiscussionResponse>> {
         val memberId = adjustMemberType(request)
         return memberService.fetchMemberDiscussionRooms(memberId, type.name)
     }

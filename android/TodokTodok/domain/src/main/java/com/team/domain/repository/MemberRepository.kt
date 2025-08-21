@@ -1,10 +1,10 @@
 package com.team.domain.repository
 
 import com.team.domain.model.Book
+import com.team.domain.model.Discussion
 import com.team.domain.model.Support
 import com.team.domain.model.exception.NetworkResult
 import com.team.domain.model.member.BlockedMember
-import com.team.domain.model.member.MemberDiscussion
 import com.team.domain.model.member.MemberDiscussionType
 import com.team.domain.model.member.MemberId
 import com.team.domain.model.member.MemberType
@@ -24,7 +24,7 @@ interface MemberRepository {
     suspend fun getMemberDiscussionRooms(
         id: MemberId,
         type: MemberDiscussionType,
-    ): NetworkResult<List<MemberDiscussion>>
+    ): NetworkResult<List<Discussion>>
 
     suspend fun supportMember(
         id: MemberId.OtherUser,
