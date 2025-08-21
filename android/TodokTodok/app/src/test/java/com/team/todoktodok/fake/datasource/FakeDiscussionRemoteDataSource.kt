@@ -7,6 +7,7 @@ import com.team.todoktodok.data.network.response.discussion.BookResponse
 import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
 import com.team.todoktodok.data.network.response.discussion.DiscussionsResponse
 import com.team.todoktodok.data.network.response.discussion.MemberResponse
+import com.team.todoktodok.data.network.response.discussion.page.ActiveDiscussionPageResponse
 import com.team.todoktodok.data.network.response.latest.LatestDiscussionsResponse
 import com.team.todoktodok.data.network.response.latest.PageInfoResponse
 import com.team.todoktodok.fixture.LATEST_DISCUSSIONS_RESPONSE
@@ -80,9 +81,10 @@ class FakeDiscussionRemoteDataSource : DiscussionRemoteDataSource {
         period: Int,
         size: Int,
         cursor: String?,
-    ): NetworkResult<DiscussionsResponse> {
+    ): NetworkResult<ActiveDiscussionPageResponse> {
         TODO("Not yet implemented")
     }
+
 
     override suspend fun getHotDiscussion(
         period: Int,
