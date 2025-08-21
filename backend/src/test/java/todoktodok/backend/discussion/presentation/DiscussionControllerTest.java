@@ -15,7 +15,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import todoktodok.backend.DatabaseInitializer;
 import todoktodok.backend.InitializerTimer;
-import todoktodok.backend.comment.application.dto.request.CommentRequest;
 import todoktodok.backend.discussion.application.dto.request.DiscussionRequest;
 import todoktodok.backend.discussion.application.dto.request.DiscussionUpdateRequest;
 import todoktodok.backend.member.presentation.fixture.MemberFixture;
@@ -71,7 +70,6 @@ class DiscussionControllerTest {
         // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
-
         databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
 
         final String token = MemberFixture.login("user@gmail.com");
@@ -347,6 +345,33 @@ class DiscussionControllerTest {
                     .then().log().all()
                     .statusCode(HttpStatus.BAD_REQUEST.value());
         }
+    }
+
+    @Test
+    @DisplayName("인기 토론방을 조회한다")
+    void getHotDiscussionsTest() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setUserInfo("user2@gmail.com", "user2", "user2.png", "");
+        databaseInitializer.setUserInfo("user3@gmail.com", "user2", "user2.png", "");
+        databaseInitializer.setUserInfo("user4@gmail.com", "user2", "user2.png", "");
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDiscussionInfo("오브젝트", "오브젝트 토론입니다", 1L, 1L);
+        databaseInitializer.setDiscussionInfo("캡슐화", "캡슐화 토론입니다", 1L, 1L);
+        databaseInitializer.setDiscussionInfo("JPA", "JPA 토론입니다", 1L, 1L);
+
+        databaseInitializer.setDiscussionLikeInfo(1L, 1L);
+
+        final String token = MemberFixture.login("user@gmail.com");
+
+        // when - then
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .header("Authorization", token)
+                .when().get("/api/v1/discussions/hot?period=0&count=1")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("[0].discussionId", is(1));
     }
 
     @Test

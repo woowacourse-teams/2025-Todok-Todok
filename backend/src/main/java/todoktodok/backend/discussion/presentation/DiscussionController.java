@@ -96,6 +96,17 @@ public class DiscussionController implements DiscussionApiDocs {
     }
 
     @Auth(value = Role.USER)
+    @GetMapping("/hot")
+    public ResponseEntity<List<DiscussionResponse>> getHotDiscussions(
+            @LoginMember final Long memberId,
+            @RequestParam final int period,
+            @RequestParam final int count
+    ) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(discussionQueryService.getHotDiscussions(memberId, period, count));
+    }
+
+    @Auth(value = Role.USER)
     @PatchMapping("/{discussionId}")
     public ResponseEntity<Void> updateDiscussion(
             @LoginMember final Long memberId,
