@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/bg_green_f0_radius_8dp"
             android:fontFamily="@font/pretendard_regular"
-            android:imeOptions="actionDone"
+            android:imeOptions="actionSearch"
             android:singleLine="true"
             android:textColor="@color/black_18"
             android:textSize="@dimen/font_size_small" />
