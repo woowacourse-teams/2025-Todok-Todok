@@ -22,6 +22,7 @@ import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
 import com.team.todoktodok.presentation.core.component.CommonDialog
 import com.team.todoktodok.presentation.core.component.ReportDialog
+import com.team.todoktodok.presentation.core.ext.extractSubtitle
 import com.team.todoktodok.presentation.core.ext.loadCircleImage
 import com.team.todoktodok.presentation.core.ext.loadImage
 import com.team.todoktodok.presentation.core.ext.registerPositiveResultListener
@@ -183,7 +184,7 @@ class DiscussionDetailActivity : AppCompatActivity() {
                 } else {
                     progressBar.hide()
                     val discussion = value.discussionItemUiState.discussion
-                    tvBookTitle.text = discussion.book.title
+                    tvBookTitle.text = discussion.book.title.extractSubtitle()
                     tvDiscussionTitle.text = discussion.discussionTitle
                     tvUserNickname.text = discussion.writer.nickname.value
                     ivUserProfile.loadCircleImage(discussion.writer.profileImage)

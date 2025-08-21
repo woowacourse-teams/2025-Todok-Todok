@@ -5,15 +5,14 @@
     android:id="@+id/scroll_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    android:paddingHorizontal="@dimen/space_24">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
-        android:paddingLeft="@dimen/space_24"
-        android:paddingRight="@dimen/space_24"
         tools:context=".presentation.view.discussiondetail.DiscussionDetailActivity">
 
         <com.google.android.material.appbar.AppBarLayout
