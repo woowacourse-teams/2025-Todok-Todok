@@ -12,7 +12,9 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsAnimationCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.widget.addTextChangedListener
 import androidx.core.widget.doAfterTextChanged
 import com.google.android.material.snackbar.Snackbar
 import com.team.domain.model.Book
@@ -53,6 +55,28 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
         initView(binding)
         setupUiState(binding)
         setupUiEvent(binding)
+        setupImeResize(binding)
+        setupAutoScrollToFocused(binding)
+    }
+
+    private fun setupAutoScrollToFocused(binding: ActivityCreateDiscussionRoomBinding) {
+        val scroll = binding.scrollContainer
+        val title = binding.etDiscussionRoomTitle
+        val opinion = binding.etDiscussionRoomOpinion
+
+        val ensureVisible: (View) -> Unit = { target ->
+            scroll.post {
+                val y = target.bottom + (target.parent as View).top
+                scroll.smoothScrollTo(0, maxOf(0, y - scroll.height + scroll.paddingBottom + target.height))
+            }
+        }
+
+        title.setOnFocusChangeListener { v, hasFocus -> if (hasFocus) ensureVisible(v) }
+        opinion.setOnFocusChangeListener { v, hasFocus -> if (hasFocus) ensureVisible(v) }
+
+        opinion.addTextChangedListener {
+            if (opinion.hasFocus()) ensureVisible(opinion)
+        }
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
@@ -60,6 +84,37 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
             hideKeyBoard(view = currentFocus ?: View(this))
         }
         return super.dispatchTouchEvent(ev)
+    }
+
+    private fun setupImeResize(binding: ActivityCreateDiscussionRoomBinding) {
+        val scroll = binding.scrollContainer
+
+        ViewCompat.setOnApplyWindowInsetsListener(scroll) { v, insets ->
+            val ime = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
+            v.setPadding(v.paddingLeft, v.paddingTop, v.paddingRight, ime)
+            insets
+        }
+
+        ViewCompat.setWindowInsetsAnimationCallback(
+            scroll,
+            object : WindowInsetsAnimationCompat.Callback(
+                WindowInsetsAnimationCompat.Callback.DISPATCH_MODE_CONTINUE_ON_SUBTREE,
+            ) {
+                override fun onProgress(
+                    insets: WindowInsetsCompat,
+                    runningAnimations: MutableList<WindowInsetsAnimationCompat>,
+                ): WindowInsetsCompat {
+                    val ime = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
+                    scroll.setPadding(
+                        scroll.paddingLeft,
+                        scroll.paddingTop,
+                        scroll.paddingRight,
+                        ime,
+                    )
+                    return insets
+                }
+            },
+        )
     }
 
     private fun initSystemBar(binding: ActivityCreateDiscussionRoomBinding) {

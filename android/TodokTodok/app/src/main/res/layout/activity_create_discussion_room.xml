@@ -52,11 +52,12 @@
         app:layout_constraintEnd_toEndOf="@id/topBar_create_discussion_room"
         app:layout_constraintTop_toTopOf="@id/topBar_create_discussion_room" />
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/scroll_container"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:fillViewport="true"
+        android:clipToPadding="false"
         android:descendantFocusability="afterDescendants"
         android:focusableInTouchMode="true"
         app:layout_constraintTop_toBottomOf="@id/topBar_create_discussion_room"
@@ -149,6 +150,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/pretendard_regular"
                     android:hint="@string/hint_discussion_room_title"
+                    android:overScrollMode="ifContentScrolls"
                     android:inputType="text|textMultiLine"
                     android:nextFocusDown="@id/et_discussion_room_opinion"
                     android:gravity="top|start"
@@ -205,6 +207,6 @@
             </com.google.android.material.textfield.TextInputLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
