@@ -9,7 +9,6 @@ import com.team.domain.model.active.ActivatedDiscussionPage
 import com.team.domain.model.exception.NetworkResult
 import com.team.domain.model.exception.onFailure
 import com.team.domain.model.exception.onSuccess
-import com.team.domain.model.member.MemberDiscussion
 import com.team.domain.model.member.MemberDiscussionType
 import com.team.domain.model.member.MemberId
 import com.team.domain.repository.DiscussionRepository
@@ -93,7 +92,7 @@ class DiscussionsViewModel(
                         }
                     }
 
-                val results: Map<MemberDiscussionType, NetworkResult<List<MemberDiscussion>>> =
+                val results: Map<MemberDiscussionType, NetworkResult<List<Discussion>>> =
                     tasks.awaitAll().toMap()
 
                 results.values.firstOrNull { it is NetworkResult.Failure }?.let { failure ->
