@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import todoktodok.backend.discussion.application.dto.request.DiscussionReportRequest;
 import todoktodok.backend.discussion.application.dto.request.DiscussionRequest;
 import todoktodok.backend.discussion.application.dto.request.DiscussionUpdateRequest;
 import todoktodok.backend.discussion.application.dto.response.ActiveDiscussionPageResponse;
@@ -173,7 +174,17 @@ public interface DiscussionApiDocs {
                             schema = @Schema(implementation = Long.class),
                             examples = @ExampleObject(value = "1")
                     )
-            ) final Long discussionId
+            ) final Long discussionId,
+            @RequestBody(
+                    description = "토론방 신고 사유",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = DiscussionReportRequest.class),
+                            examples = @ExampleObject(
+                                    value = "{\"reason\":\"부적절한 내용\"}"
+                            )
+                    )
+            ) final DiscussionReportRequest discussionReportRequest
     );
 
     @Operation(summary = "토론방 단일 조회 API")

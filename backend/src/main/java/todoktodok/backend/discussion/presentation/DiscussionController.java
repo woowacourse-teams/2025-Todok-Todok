@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import todoktodok.backend.discussion.application.dto.request.DiscussionReportRequest;
 import todoktodok.backend.discussion.application.dto.request.DiscussionRequest;
 import todoktodok.backend.discussion.application.dto.request.DiscussionUpdateRequest;
 import todoktodok.backend.discussion.application.dto.response.ActiveDiscussionPageResponse;
@@ -53,9 +54,10 @@ public class DiscussionController implements DiscussionApiDocs {
     @PostMapping("/{discussionId}/report")
     public ResponseEntity<Void> report(
             @LoginMember final Long memberId,
-            @PathVariable final Long discussionId
-    ) {
-        discussionCommandService.report(memberId, discussionId);
+            @PathVariable final Long discussionId,
+            @RequestBody final DiscussionReportRequest discussionReportRequest
+            ) {
+        discussionCommandService.report(memberId, discussionId, discussionReportRequest.reason());
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .build();

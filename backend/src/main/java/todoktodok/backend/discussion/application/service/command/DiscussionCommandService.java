@@ -51,7 +51,8 @@ public class DiscussionCommandService {
 
     public void report(
             final Long memberId,
-            final Long discussionId
+            final Long discussionId,
+            final String reason
     ) {
         final Discussion discussion = findDiscussion(discussionId);
         final Member member = findMember(memberId);
@@ -62,6 +63,7 @@ public class DiscussionCommandService {
         final DiscussionReport discussionReport = DiscussionReport.builder()
                 .discussion(discussion)
                 .member(member)
+                .reason(reason)
                 .build();
 
         discussionReportRepository.save(discussionReport);
