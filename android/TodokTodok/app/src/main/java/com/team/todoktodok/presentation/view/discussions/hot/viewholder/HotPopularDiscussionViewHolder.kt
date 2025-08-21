@@ -12,7 +12,15 @@ class HotPopularDiscussionViewHolder private constructor(
     binding: ItemHotPopularDiscussionBinding,
     handler: Handler,
 ) : RecyclerView.ViewHolder(binding.root) {
-    private val discussionAdapter = DiscussionAdapter(handler)
+    private val discussionAdapterHandler: DiscussionAdapter.Handler =
+        object : DiscussionAdapter.Handler {
+            override fun onItemClick(index: Int) {
+                val discussionId = discussionAdapter.currentList[index].item.id
+                handler.onClickHotPopularDiscussion(discussionId)
+            }
+        }
+
+    private val discussionAdapter = DiscussionAdapter(discussionAdapterHandler)
     private val manager =
         LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
 
@@ -20,6 +28,7 @@ class HotPopularDiscussionViewHolder private constructor(
         with(binding) {
             rvPopularDiscussion.adapter = discussionAdapter
             rvPopularDiscussion.layoutManager = manager
+            rvPopularDiscussion.setHasFixedSize(true)
         }
     }
 
@@ -38,5 +47,7 @@ class HotPopularDiscussionViewHolder private constructor(
         }
     }
 
-    interface Handler : DiscussionAdapter.Handler
+    interface Handler {
+        fun onClickHotPopularDiscussion(discussionId: Long)
+    }
 }
