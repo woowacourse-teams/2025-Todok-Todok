@@ -49,4 +49,9 @@ class HotDiscussionFragment : Fragment(R.layout.fragment_hot_discussion) {
             override fun onItemClick(index: Int) {
             }
         }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadHotDiscussions()
+    }
 }

@@ -13,11 +13,7 @@ import com.team.todoktodok.presentation.view.discussions.my.adapter.MyDiscussion
 import java.time.LocalDateTime
 
 data class DiscussionsUiState(
-    val hotDiscussionItems: List<HotDiscussionItems> =
-        listOf(
-            HotDiscussionItems.PopularItem(DISCUSSION_UI_STATE_WITH_OPINION),
-            HotDiscussionItems.ActivatedItem(DISCUSSION_UI_STATE_WITHOUT_OPINION),
-        ),
+    val hotDiscussionItems: List<HotDiscussionItems> = emptyList(),
     val myDiscussions: List<MyDiscussionItems> = listOf(),
     val latestDiscussions: List<DiscussionUiState> = emptyList(),
     val latestPage: PageInfo = PageInfo(hasNext = false, nextCursor = ""),
@@ -25,6 +21,16 @@ data class DiscussionsUiState(
     val filter: DiscussionFilter = DiscussionFilter.ALL,
     val isLoading: Boolean = false,
 ) {
+    fun addHotDiscussion(hotDiscussions: List<Discussion>): DiscussionsUiState {
+        val hotDiscussion =
+            buildList {
+                add(HotDiscussionItems.PopularItem(hotDiscussions.map { DiscussionUiState(it, true) }))
+                add(HotDiscussionItems.ActivatedItem(DISCUSSION_UI_STATE_WITHOUT_OPINION))
+            }
+
+        return copy(hotDiscussionItems = hotDiscussion)
+    }
+
     fun addMyDiscussion(
         createdDiscussion: List<MemberDiscussion>,
         participatedDiscussion: List<MemberDiscussion>,

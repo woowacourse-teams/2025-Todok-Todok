@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.team.domain.model.DiscussionFilter
 import com.team.domain.model.exception.NetworkResult
+import com.team.domain.model.exception.onFailure
+import com.team.domain.model.exception.onSuccess
 import com.team.domain.model.member.MemberDiscussion
 import com.team.domain.model.member.MemberDiscussionType
 import com.team.domain.model.member.MemberId
@@ -54,7 +56,13 @@ class DiscussionsViewModel(
         _uiState.value = _uiState.value?.copy(searchKeyword = keyword)
     }
 
-    fun findSelectedMyDiscussion() {
+    fun loadHotDiscussions() {
+        withLoading {
+            discussionRepository
+                .getHotDiscussion()
+                .onSuccess { _uiState.value = _uiState.value?.addHotDiscussion(it) }
+                .onFailure { onUiEvent(DiscussionsUiEvent.ShowErrorMessage(it)) }
+        }
     }
 
     fun loadLatestDiscussions(cursor: String) =

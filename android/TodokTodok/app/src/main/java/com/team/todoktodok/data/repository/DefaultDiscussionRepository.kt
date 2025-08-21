@@ -2,7 +2,6 @@ package com.team.todoktodok.data.repository
 
 import com.team.domain.model.Book
 import com.team.domain.model.Discussion
-import com.team.domain.model.DiscussionFilter
 import com.team.domain.model.LikeStatus
 import com.team.domain.model.exception.NetworkResult
 import com.team.domain.model.exception.map
@@ -21,6 +20,14 @@ class DefaultDiscussionRepository(
     private val discussionRemoteDataSource: DiscussionRemoteDataSource,
     private val discussionLocalDataSource: DiscussionLocalDataSource,
 ) : DiscussionRepository {
+    override suspend fun getHotDiscussion(
+        period: Int,
+        count: Int,
+    ): NetworkResult<List<Discussion>> =
+        discussionRemoteDataSource
+            .getHotDiscussion(period, count)
+            .map { discussions -> discussions.map { it.toDomain() } }
+
     override suspend fun getLatestDiscussions(
         size: Int,
         cursor: String?,

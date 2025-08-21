@@ -1,6 +1,5 @@
 package com.team.todoktodok.data.datasource.discussion
 
-import com.team.domain.model.DiscussionFilter
 import com.team.domain.model.exception.NetworkResult
 import com.team.domain.model.exception.toDomain
 import com.team.todoktodok.data.core.ext.mapToggleLikeResponse
@@ -15,6 +14,11 @@ import retrofit2.Response
 class DefaultDiscussionRemoteDataSource(
     private val discussionService: DiscussionService,
 ) : DiscussionRemoteDataSource {
+    override suspend fun getHotDiscussion(
+        period: Int,
+        count: Int,
+    ): NetworkResult<List<DiscussionResponse>> = discussionService.fetchHotDiscussions(period, count)
+
     override suspend fun getLatestDiscussions(
         size: Int,
         cursor: String?,

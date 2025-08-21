@@ -11,6 +11,12 @@ import com.team.todoktodok.fixture.LATEST_DISCUSSIONS_RESPONSE
 import retrofit2.Response
 
 class FakeDiscussionRemoteDataSource : DiscussionRemoteDataSource {
+    override suspend fun getHotDiscussion(
+        period: Int,
+        count: Int,
+    ): NetworkResult<List<DiscussionResponse>> {
+        TODO("Not yet implemented")
+    }
 
     override suspend fun getLatestDiscussions(
         size: Int,

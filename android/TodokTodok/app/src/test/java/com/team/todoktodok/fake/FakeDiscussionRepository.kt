@@ -2,7 +2,6 @@ package com.team.todoktodok.fake
 
 import com.team.domain.model.Book
 import com.team.domain.model.Discussion
-import com.team.domain.model.DiscussionFilter
 import com.team.domain.model.LikeStatus
 import com.team.domain.model.exception.NetworkResult
 import com.team.domain.model.exception.map
@@ -15,6 +14,13 @@ import com.team.todoktodok.fixture.DISCUSSIONS
 class FakeDiscussionRepository : DiscussionRepository {
     private val dataSource = FakeDiscussionRemoteDataSource()
     private val discussions = DISCUSSIONS
+
+    override suspend fun getHotDiscussion(
+        period: Int,
+        count: Int,
+    ): NetworkResult<List<Discussion>> {
+        TODO("Not yet implemented")
+    }
 
     override suspend fun getLatestDiscussions(
         size: Int,

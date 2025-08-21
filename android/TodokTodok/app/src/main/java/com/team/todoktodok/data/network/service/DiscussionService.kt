@@ -52,9 +52,9 @@ interface DiscussionService {
         @Path("discussionId") discussionId: Long,
     ): NetworkResult<Unit>
 
-    @GET("v1/discussions/")
+    @GET("v1/discussions/hot")
     suspend fun fetchHotDiscussions(
-        @Query("period") period: String,
+        @Query("period") period: Int,
         @Query("count") count: Int,
     ): NetworkResult<List<DiscussionResponse>>
 }
