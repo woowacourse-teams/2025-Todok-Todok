@@ -1,5 +1,7 @@
 package todoktodok.backend.reply.presentation;
 
+import static org.hamcrest.Matchers.is;
+
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,9 +17,8 @@ import org.springframework.test.context.ContextConfiguration;
 import todoktodok.backend.DatabaseInitializer;
 import todoktodok.backend.InitializerTimer;
 import todoktodok.backend.member.presentation.fixture.MemberFixture;
+import todoktodok.backend.reply.application.dto.request.ReplyReportRequest;
 import todoktodok.backend.reply.application.dto.request.ReplyRequest;
-
-import static org.hamcrest.Matchers.is;
 
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -73,11 +74,13 @@ public class ReplyControllerTest {
         databaseInitializer.setReplyInfo("저도 같은 의견입니다!", 2L, 1L);
 
         final String token = MemberFixture.login("user@gmail.com");
+        final ReplyReportRequest replyReportRequest = new ReplyReportRequest("토론 주제와 무관한 내용");
 
         // when - then
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .header("Authorization", token)
+                .body(replyReportRequest)
                 .when().post("/api/v1/discussions/1/comments/1/replies/1/report")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());

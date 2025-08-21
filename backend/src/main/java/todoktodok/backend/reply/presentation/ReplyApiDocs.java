@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import todoktodok.backend.global.exception.ErrorResponse;
+import todoktodok.backend.reply.application.dto.request.ReplyReportRequest;
 import todoktodok.backend.reply.application.dto.request.ReplyRequest;
 import todoktodok.backend.reply.application.dto.response.ReplyResponse;
 
@@ -200,7 +201,17 @@ public interface ReplyApiDocs {
                             schema = @Schema(implementation = Long.class),
                             examples = @ExampleObject(value = "1")
                     )
-            ) final Long replyId
+            ) final Long replyId,
+            @RequestBody(
+                    description = "대댓글 신고 사유",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ReplyReportRequest.class),
+                            examples = @ExampleObject(
+                                    value = "{\"reason\":\"부적절한 내용\"}"
+                            )
+                    )
+            ) final ReplyReportRequest replyReportRequest
     );
 
     @Operation(summary = "댓글별 대댓글 목록 조회 API")

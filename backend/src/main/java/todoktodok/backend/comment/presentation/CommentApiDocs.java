@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
+import todoktodok.backend.comment.application.dto.request.CommentReportRequest;
 import todoktodok.backend.comment.application.dto.request.CommentRequest;
 import todoktodok.backend.comment.application.dto.response.CommentResponse;
 import todoktodok.backend.global.exception.ErrorResponse;
@@ -269,7 +270,17 @@ public interface CommentApiDocs {
                             schema = @Schema(implementation = Long.class),
                             examples = @ExampleObject(value = "1")
                     )
-            ) final Long commentId
+            ) final Long commentId,
+            @RequestBody(
+                    description = "댓글 신고 사유",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = CommentReportRequest.class),
+                            examples = @ExampleObject(
+                                    value = "{\"reason\":\"부적절한 내용\"}"
+                            )
+                    )
+            ) final CommentReportRequest commentReportRequest
     );
 
     @Operation(summary = "토론방별 댓글 목록 조회 API")

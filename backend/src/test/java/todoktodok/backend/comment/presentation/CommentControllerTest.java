@@ -1,10 +1,9 @@
 package todoktodok.backend.comment.presentation;
 
-import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
-
 import static org.hamcrest.Matchers.is;
 
+import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,6 +16,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import todoktodok.backend.DatabaseInitializer;
 import todoktodok.backend.InitializerTimer;
+import todoktodok.backend.comment.application.dto.request.CommentReportRequest;
 import todoktodok.backend.comment.application.dto.request.CommentRequest;
 import todoktodok.backend.member.presentation.fixture.MemberFixture;
 
@@ -112,11 +112,13 @@ public class CommentControllerTest {
         databaseInitializer.setCommentInfo("상속의 핵심 목적은 타입 계층의 구축입니다!", 2L, 1L);
 
         final String token = MemberFixture.login("user@gmail.com");
+        final CommentReportRequest commentReportRequest = new CommentReportRequest("토론 주제와 무관한 내용");
 
         // when - then
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .header("Authorization", token)
+                .body(commentReportRequest)
                 .when().post("/api/v1/discussions/1/comments/1/report")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());

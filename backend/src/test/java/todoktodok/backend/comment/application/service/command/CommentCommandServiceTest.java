@@ -140,9 +140,10 @@ public class CommentCommandServiceTest {
         final Long memberId = 1L;
         final Long discussionId = 1L;
         final Long commentId = 1L;
+        final String reason = "토론 주제와 무관한 내용";
 
         // when - then
-        assertThatThrownBy(() -> commentCommandService.report(memberId, discussionId, commentId))
+        assertThatThrownBy(() -> commentCommandService.report(memberId, discussionId, commentId, reason))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("자기 자신이 작성한 댓글을 신고할 수 없습니다");
     }
@@ -160,11 +161,12 @@ public class CommentCommandServiceTest {
         final Long memberId = 1L;
         final Long discussionId = 1L;
         final Long commentId = 1L;
+        final String reason = "토론 주제와 무관한 내용";
 
-        commentCommandService.report(memberId, discussionId, commentId);
+        commentCommandService.report(memberId, discussionId, commentId, reason);
 
         // when - then
-        assertThatThrownBy(() -> commentCommandService.report(memberId, discussionId, commentId))
+        assertThatThrownBy(() -> commentCommandService.report(memberId, discussionId, commentId, reason))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("이미 신고한 댓글입니다");
     }

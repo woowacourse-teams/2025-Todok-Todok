@@ -13,6 +13,7 @@ aladin:
   item-lookup-uri: ${aladin.item-lookup-uri}
 
 jwt:
+  secret-key: ${jwt.secret-key}
   access-token:
     expire-mills: ${jwt.access-token.expire-mills}
   temp-token:

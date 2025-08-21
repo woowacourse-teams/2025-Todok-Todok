@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import todoktodok.backend.comment.application.dto.request.CommentReportRequest;
 import todoktodok.backend.comment.application.dto.request.CommentRequest;
 import todoktodok.backend.comment.application.dto.response.CommentResponse;
 import todoktodok.backend.comment.application.service.command.CommentCommandService;
@@ -67,9 +68,10 @@ public class CommentController implements CommentApiDocs {
     public ResponseEntity<Void> report(
             @LoginMember final Long memberId,
             @PathVariable final Long discussionId,
-            @PathVariable final Long commentId
-    ) {
-        commentCommandService.report(memberId, discussionId, commentId);
+            @PathVariable final Long commentId,
+            @RequestBody final CommentReportRequest commentReportRequest
+            ) {
+        commentCommandService.report(memberId, discussionId, commentId, commentReportRequest.reason());
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .build();

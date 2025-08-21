@@ -14,6 +14,7 @@ import todoktodok.backend.comment.domain.repository.CommentReportRepository;
 import todoktodok.backend.comment.domain.repository.CommentRepository;
 import todoktodok.backend.discussion.domain.Discussion;
 import todoktodok.backend.discussion.domain.repository.DiscussionRepository;
+import todoktodok.backend.global.report.ContentReportReason;
 import todoktodok.backend.member.domain.Member;
 import todoktodok.backend.member.domain.repository.MemberRepository;
 import todoktodok.backend.reply.domain.repository.ReplyRepository;
@@ -77,11 +78,13 @@ public class CommentCommandService {
     public void report(
             final Long memberId,
             final Long discussionId,
-            final Long commentId
+            final Long commentId,
+            final String reason
     ) {
         final Member member = findMember(memberId);
         final Comment comment = findComment(commentId);
         final Discussion discussion = findDiscussion(discussionId);
+        final ContentReportReason reportReason = ContentReportReason.fromDescription(reason);
 
         comment.validateMatchWithDiscussion(discussion);
         comment.validateSelfReport(member);
@@ -91,6 +94,7 @@ public class CommentCommandService {
         final CommentReport commentReport = CommentReport.builder()
                 .comment(comment)
                 .member(member)
+                .reason(reportReason)
                 .build();
 
         commentReportRepository.save(commentReport);
