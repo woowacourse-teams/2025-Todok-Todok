@@ -16,6 +16,7 @@ import todoktodok.backend.discussion.domain.DiscussionReport;
 import todoktodok.backend.discussion.domain.repository.DiscussionLikeRepository;
 import todoktodok.backend.discussion.domain.repository.DiscussionReportRepository;
 import todoktodok.backend.discussion.domain.repository.DiscussionRepository;
+import todoktodok.backend.global.report.ContentReportReason;
 import todoktodok.backend.member.domain.Member;
 import todoktodok.backend.member.domain.repository.MemberRepository;
 
@@ -51,10 +52,12 @@ public class DiscussionCommandService {
 
     public void report(
             final Long memberId,
-            final Long discussionId
+            final Long discussionId,
+            final String reason
     ) {
         final Discussion discussion = findDiscussion(discussionId);
         final Member member = findMember(memberId);
+        final ContentReportReason reportReason = ContentReportReason.fromDescription(reason);
 
         validateDuplicatedReport(discussion, member);
         validateSelfReport(discussion, member);
@@ -62,6 +65,7 @@ public class DiscussionCommandService {
         final DiscussionReport discussionReport = DiscussionReport.builder()
                 .discussion(discussion)
                 .member(member)
+                .reason(reportReason)
                 .build();
 
         discussionReportRepository.save(discussionReport);

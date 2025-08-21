@@ -1,6 +1,9 @@
 package todoktodok.backend.member.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -37,13 +40,18 @@ public class MemberReport extends TimeStamp {
     @JoinColumn(nullable = false)
     private Member target;
 
+    @Enumerated(value = EnumType.STRING)
+    @Column(nullable = false)
+    private MemberReportReason reason;
+
     @Builder
     public static MemberReport create(
             final Member member,
-            final Member target
+            final Member target,
+            final MemberReportReason reason
     ){
         return new MemberReport(
-                null, member, target
+                null, member, target, reason
         );
     }
 }

@@ -13,6 +13,7 @@ import todoktodok.backend.member.application.dto.response.ProfileUpdateResponse;
 import todoktodok.backend.member.domain.Block;
 import todoktodok.backend.member.domain.Member;
 import todoktodok.backend.member.domain.MemberReport;
+import todoktodok.backend.member.domain.MemberReportReason;
 import todoktodok.backend.member.domain.repository.BlockRepository;
 import todoktodok.backend.member.domain.repository.MemberReportRepository;
 import todoktodok.backend.member.domain.repository.MemberRepository;
@@ -72,10 +73,12 @@ public class MemberCommandService {
 
     public void report(
             final Long memberId,
-            final Long targetId
+            final Long targetId,
+            final String reason
     ) {
         final Member member = findMember(memberId);
         final Member target = findMember(targetId);
+        final MemberReportReason reportReason = MemberReportReason.fromDescription(reason);
 
         member.validateSelfReport(target);
         validateDuplicatedReport(member, target);
@@ -83,6 +86,7 @@ public class MemberCommandService {
         final MemberReport memberReport = MemberReport.builder()
                 .member(member)
                 .target(target)
+                .reason(reportReason)
                 .build();
         memberReportRepository.save(memberReport);
     }

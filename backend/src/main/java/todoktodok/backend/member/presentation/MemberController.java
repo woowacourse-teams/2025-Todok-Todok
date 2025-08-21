@@ -20,6 +20,7 @@ import todoktodok.backend.global.auth.Role;
 import todoktodok.backend.global.resolver.LoginMember;
 import todoktodok.backend.global.resolver.TempMember;
 import todoktodok.backend.member.application.dto.request.LoginRequest;
+import todoktodok.backend.member.application.dto.request.MemberReportRequest;
 import todoktodok.backend.member.application.dto.request.ProfileUpdateRequest;
 import todoktodok.backend.member.application.dto.request.SignupRequest;
 import todoktodok.backend.member.application.dto.response.BlockMemberResponse;
@@ -74,9 +75,10 @@ public class MemberController implements MemberApiDocs {
     @PostMapping("/{memberId}/report")
     public ResponseEntity<Void> report(
             @LoginMember final Long memberId,
-            @PathVariable("memberId") final Long targetId
+            @PathVariable("memberId") final Long targetId,
+            @RequestBody final MemberReportRequest memberReportRequest
     ) {
-        memberCommandService.report(memberId, targetId);
+        memberCommandService.report(memberId, targetId, memberReportRequest.reason());
         return ResponseEntity.status(HttpStatus.CREATED)
                 .build();
     }
