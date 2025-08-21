@@ -21,7 +21,6 @@ import todoktodok.backend.discussion.application.dto.request.DiscussionUpdateReq
 import todoktodok.backend.discussion.application.dto.response.DiscussionResponse;
 import todoktodok.backend.discussion.application.service.command.DiscussionCommandService;
 import todoktodok.backend.discussion.application.service.query.DiscussionQueryService;
-import todoktodok.backend.discussion.domain.DiscussionFilterType;
 import todoktodok.backend.global.auth.Auth;
 import todoktodok.backend.global.auth.Role;
 import todoktodok.backend.global.resolver.LoginMember;
@@ -70,14 +69,13 @@ public class DiscussionController implements DiscussionApiDocs {
     }
 
     @Auth(value = Role.USER)
-    @GetMapping
-    public ResponseEntity<List<DiscussionResponse>> getDiscussionsByKeywordAndType(
+    @GetMapping("/search")
+    public ResponseEntity<List<DiscussionResponse>> getDiscussionsByKeyword(
             @LoginMember final Long memberId,
-            @RequestParam(required = false) final String keyword,
-            @RequestParam final DiscussionFilterType type
+            @RequestParam(required = false) final String keyword
     ) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(discussionQueryService.getDiscussionsByKeywordAndType(memberId, keyword, type));
+                .body(discussionQueryService.getDiscussionsByKeyword(memberId, keyword));
     }
 
     @Auth(value = Role.USER)
