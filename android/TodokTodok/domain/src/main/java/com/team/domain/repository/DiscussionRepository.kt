@@ -16,11 +16,6 @@ interface DiscussionRepository {
 
     suspend fun getDiscussion(id: Long): NetworkResult<Discussion>
 
-    suspend fun getDiscussions(
-        type: DiscussionFilter,
-        keyword: String? = null,
-    ): NetworkResult<List<Discussion>>
-
     suspend fun saveDiscussionRoom(
         bookId: Long,
         discussionTitle: String,

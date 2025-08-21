@@ -34,14 +34,6 @@ class DefaultDiscussionRepository(
 
     override suspend fun getDiscussion(): DiscussionRoom? = discussionLocalDataSource.getDiscussion()?.discussionRoomEntity?.toDomain()
 
-    override suspend fun getDiscussions(
-        type: DiscussionFilter,
-        keyword: String?,
-    ): NetworkResult<List<Discussion>> =
-        discussionRemoteDataSource
-            .getDiscussions(type, keyword)
-            .map { discussions -> discussions.map { it.toDomain() } }
-
     override suspend fun saveDiscussionRoom(
         bookId: Long,
         discussionTitle: String,

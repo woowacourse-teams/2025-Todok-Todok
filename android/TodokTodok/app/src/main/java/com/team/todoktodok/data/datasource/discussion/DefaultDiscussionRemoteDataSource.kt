@@ -22,11 +22,6 @@ class DefaultDiscussionRemoteDataSource(
 
     override suspend fun getDiscussion(id: Long): NetworkResult<DiscussionResponse> = discussionService.fetchDiscussion(id)
 
-    override suspend fun getDiscussions(
-        type: DiscussionFilter,
-        keyword: String?,
-    ): NetworkResult<List<DiscussionResponse>> = discussionService.fetchDiscussions(keyword, type.name)
-
     override suspend fun saveDiscussionRoom(
         bookId: Long,
         discussionTitle: String,

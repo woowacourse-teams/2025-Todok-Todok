@@ -26,12 +26,6 @@ interface DiscussionService {
         @Path("discussionId") discussionId: Long,
     ): NetworkResult<DiscussionResponse>
 
-    @GET("v1/discussions")
-    suspend fun fetchDiscussions(
-        @Query("keyword") keyword: String?,
-        @Query("type") type: String,
-    ): NetworkResult<List<DiscussionResponse>>
-
     @POST("v1/discussions")
     suspend fun saveDiscussionRoom(
         @Body discussionRoomRequest: DiscussionRoomRequest,

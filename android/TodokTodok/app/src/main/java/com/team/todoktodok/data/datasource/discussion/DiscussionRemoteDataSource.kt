@@ -15,11 +15,6 @@ interface DiscussionRemoteDataSource {
 
     suspend fun getDiscussion(id: Long): NetworkResult<DiscussionResponse>
 
-    suspend fun getDiscussions(
-        type: DiscussionFilter,
-        keyword: String? = null,
-    ): NetworkResult<List<DiscussionResponse>>
-
     suspend fun saveDiscussionRoom(
         bookId: Long,
         discussionTitle: String,
