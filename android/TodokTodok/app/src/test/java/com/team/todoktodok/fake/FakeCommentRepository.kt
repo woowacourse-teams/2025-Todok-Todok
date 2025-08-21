@@ -64,6 +64,7 @@ class FakeCommentRepository : CommentRepository {
     override suspend fun report(
         discussionId: Long,
         commentId: Long,
+        reason: String,
     ): NetworkResult<Unit> {
         TODO("Not yet implemented")
     }

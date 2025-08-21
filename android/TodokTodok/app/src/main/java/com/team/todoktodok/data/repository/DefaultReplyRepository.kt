@@ -49,5 +49,6 @@ class DefaultReplyRepository(
         discussionId: Long,
         commentId: Long,
         replyId: Long,
-    ): NetworkResult<Unit> = remoteDataSource.report(discussionId, commentId, replyId)
+        reason: String,
+    ): NetworkResult<Unit> = remoteDataSource.report(discussionId, commentId, replyId, reason)
 }

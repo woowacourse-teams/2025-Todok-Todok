@@ -37,5 +37,6 @@ interface CommentRemoteDataSource {
     suspend fun report(
         discussionId: Long,
         commentId: Long,
+        reason: String,
     ): NetworkResult<Unit>
 }

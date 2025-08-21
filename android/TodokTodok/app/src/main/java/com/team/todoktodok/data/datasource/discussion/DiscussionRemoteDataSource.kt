@@ -36,5 +36,8 @@ interface DiscussionRemoteDataSource {
 
     suspend fun toggleLike(discussionId: Long): NetworkResult<LikeAction>
 
-    suspend fun reportDiscussion(discussionId: Long): NetworkResult<Unit>
+    suspend fun reportDiscussion(
+        discussionId: Long,
+        reason: String,
+    ): NetworkResult<Unit>
 }

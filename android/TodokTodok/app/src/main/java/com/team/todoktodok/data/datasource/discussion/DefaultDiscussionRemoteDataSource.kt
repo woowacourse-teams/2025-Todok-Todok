@@ -7,6 +7,7 @@ import com.team.todoktodok.data.core.ext.mapToggleLikeResponse
 import com.team.todoktodok.data.network.model.LikeAction
 import com.team.todoktodok.data.network.request.DiscussionRoomRequest
 import com.team.todoktodok.data.network.request.EditDiscussionRoomRequest
+import com.team.todoktodok.data.network.request.ReportRequest
 import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
 import com.team.todoktodok.data.network.response.latest.LatestDiscussionsResponse
 import com.team.todoktodok.data.network.service.DiscussionService
@@ -64,5 +65,8 @@ class DefaultDiscussionRemoteDataSource(
             NetworkResult.Failure(it.toDomain())
         }
 
-    override suspend fun reportDiscussion(discussionId: Long): NetworkResult<Unit> = discussionService.reportDiscussion(discussionId)
+    override suspend fun reportDiscussion(
+        discussionId: Long,
+        reason: String,
+    ): NetworkResult<Unit> = discussionService.reportDiscussion(discussionId, ReportRequest(reason))
 }

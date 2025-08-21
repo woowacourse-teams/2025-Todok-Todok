@@ -31,6 +31,13 @@ class FakeDiscussionRepository : DiscussionRepository {
         TODO("Not yet implemented")
     }
 
+    override suspend fun reportDiscussion(
+        discussionId: Long,
+        reason: String,
+    ): NetworkResult<Unit> {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun getDiscussions(
         type: DiscussionFilter,
         keyword: String?,
@@ -64,10 +71,6 @@ class FakeDiscussionRepository : DiscussionRepository {
     }
 
     override suspend fun toggleLike(discussionId: Long): NetworkResult<LikeStatus> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun reportDiscussion(discussionId: Long): NetworkResult<Unit> {
         TODO("Not yet implemented")
     }
 
