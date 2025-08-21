@@ -17,7 +17,7 @@ import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivityProfileBinding
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
-import com.team.todoktodok.presentation.core.component.ReportDialog
+import com.team.todoktodok.presentation.core.component.ReportUserDialog
 import com.team.todoktodok.presentation.core.ext.getSerializableCompat
 import com.team.todoktodok.presentation.core.ext.registerReportResultListener
 import com.team.todoktodok.presentation.view.discussions.DiscussionsActivity
@@ -90,7 +90,7 @@ class ProfileActivity : AppCompatActivity() {
         supportFragmentManager.registerReportResultListener(
             this,
             USER_REPORT_DIALOG_REQUEST_KEY,
-            ReportDialog.RESULT_KEY_REPORT,
+            ReportUserDialog.RESULT_KEY_REPORT_USER,
         ) { reportReason ->
             viewModel.supportMember(Support.REPORT)
         }
@@ -193,8 +193,8 @@ class ProfileActivity : AppCompatActivity() {
                     }
 
                     Support.REPORT -> {
-                        val dialog = ReportDialog.newInstance(USER_REPORT_DIALOG_REQUEST_KEY)
-                        dialog.show(supportFragmentManager, ReportDialog.TAG)
+                        val dialog = ReportUserDialog.newInstance(USER_REPORT_DIALOG_REQUEST_KEY)
+                        dialog.show(supportFragmentManager, ReportUserDialog.TAG)
                     }
                 }
             }
