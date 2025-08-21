@@ -229,6 +229,11 @@ class DiscussionsActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
 
+    override fun onResume() {
+        super.onResume()
+        binding.etSearchDiscussion.clearFocus()
+    }
+
     companion object {
         private const val HOT_DISCUSSION_TAB_POSITION = 0
         private const val HOT_DISCUSSION_FRAGMENT_TAG = "HOT"
