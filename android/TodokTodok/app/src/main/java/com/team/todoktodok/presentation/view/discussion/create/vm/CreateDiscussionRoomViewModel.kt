@@ -19,6 +19,7 @@ import com.team.todoktodok.presentation.view.discussion.create.CreateDiscussionU
 import com.team.todoktodok.presentation.view.discussion.create.CreateDiscussionUiState
 import com.team.todoktodok.presentation.view.discussion.create.ErrorCreateDiscussionType
 import com.team.todoktodok.presentation.view.discussion.create.SerializationCreateDiscussionRoomMode
+import com.team.todoktodok.presentation.view.serialization.toSerialization
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -144,6 +145,9 @@ class CreateDiscussionRoomViewModel(
                     return
                 }
         viewModelScope.launch {
+            if (mode == SerializationCreateDiscussionRoomMode.Draft(book.toSerialization())) {
+                 discussionRepository.deleteDiscussionRoom()
+            }
             bookRepository
                 .saveBook(book)
                 .onSuccessSuspend { bookId ->

@@ -53,6 +53,9 @@ interface DiscussionRepository {
         reason: String,
     ): NetworkResult<Unit>
 
+    suspend fun deleteDiscussionRoom(
+    )
+
     companion object {
         private const val PAGING_SIZE = 15
     }
