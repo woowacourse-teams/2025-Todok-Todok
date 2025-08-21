@@ -31,7 +31,11 @@ sealed class TodokTodokExceptions : Throwable() {
     /** 알 수 없는 예외 발생 */
     data class UnknownException(
         val e: Throwable?,
-    ) : TodokTodokExceptions()
+    ) : TodokTodokExceptions() {
+        init {
+            if (e != null) initCause(e)
+        }
+    }
 
     /** 헤더의 Location 필드가 누락된 경우 발생 */
     data object MissingLocationHeaderException : TodokTodokExceptions()
