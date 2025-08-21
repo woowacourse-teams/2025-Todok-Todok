@@ -24,10 +24,10 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.DatabaseInitializer;
 import todoktodok.backend.InitializerTimer;
-import todoktodok.backend.discussion.application.dto.response.DiscussionPageResponse;
+import todoktodok.backend.discussion.application.dto.response.ActiveDiscussionPageResponse;
 import todoktodok.backend.discussion.application.dto.response.DiscussionResponse;
+import todoktodok.backend.discussion.application.dto.response.LatestDiscussionPageResponse;
 import todoktodok.backend.discussion.application.dto.response.PageInfo;
-import todoktodok.backend.discussion.application.dto.response.SlicedDiscussionResponse;
 import todoktodok.backend.discussion.domain.DiscussionFilterType;
 
 @ActiveProfiles("test")
@@ -230,7 +230,7 @@ class DiscussionQueryServiceTest {
             final String cursorMeaningFour = "NA==";
 
             // when
-            final SlicedDiscussionResponse firstSlicedDiscussions = discussionQueryService.getDiscussions(memberId, size, cursorMeaningFour);
+            final LatestDiscussionPageResponse firstSlicedDiscussions = discussionQueryService.getDiscussions(memberId, size, cursorMeaningFour);
             final List<DiscussionResponse> items = firstSlicedDiscussions.items();
 
             // then
@@ -253,7 +253,7 @@ class DiscussionQueryServiceTest {
             final String cursor = null;
 
             // when
-            final SlicedDiscussionResponse firstSlicedDiscussions = discussionQueryService.getDiscussions(memberId, size, cursor);
+            final LatestDiscussionPageResponse firstSlicedDiscussions = discussionQueryService.getDiscussions(memberId, size, cursor);
             final List<DiscussionResponse> items = firstSlicedDiscussions.items();
 
             // then
@@ -278,7 +278,7 @@ class DiscussionQueryServiceTest {
             final String cursor = null;
 
             // when
-            final SlicedDiscussionResponse firstSlicedDiscussions = discussionQueryService.getDiscussions(memberId, size, cursor);
+            final LatestDiscussionPageResponse firstSlicedDiscussions = discussionQueryService.getDiscussions(memberId, size, cursor);
             final List<DiscussionResponse> items = firstSlicedDiscussions.items();
 
             // then
@@ -312,7 +312,7 @@ class DiscussionQueryServiceTest {
             final String cursor = null;
 
             // when
-            final SlicedDiscussionResponse firstSlicedDiscussions = discussionQueryService.getDiscussions(memberId, size, cursor);
+            final LatestDiscussionPageResponse firstSlicedDiscussions = discussionQueryService.getDiscussions(memberId, size, cursor);
             final List<DiscussionResponse> items = firstSlicedDiscussions.items();
             final PageInfo pageInfo = firstSlicedDiscussions.pageInfo();
             final String cursorMeaningThree = "Mw==";
@@ -345,7 +345,7 @@ class DiscussionQueryServiceTest {
             final String cursor = null;
 
             // when
-            final SlicedDiscussionResponse firstSlicedDiscussions = discussionQueryService.getDiscussions(memberId, size, cursor);
+            final LatestDiscussionPageResponse firstSlicedDiscussions = discussionQueryService.getDiscussions(memberId, size, cursor);
             final List<DiscussionResponse> items = firstSlicedDiscussions.items();
             final PageInfo pageInfo = firstSlicedDiscussions.pageInfo();
 
@@ -377,7 +377,7 @@ class DiscussionQueryServiceTest {
             final String cursorMeaningThree = "Mw==";
 
             // when
-            final SlicedDiscussionResponse firstSlicedDiscussions = discussionQueryService.getDiscussions(memberId, size, cursorMeaningThree);
+            final LatestDiscussionPageResponse firstSlicedDiscussions = discussionQueryService.getDiscussions(memberId, size, cursorMeaningThree);
             final List<DiscussionResponse> items = firstSlicedDiscussions.items();
             final PageInfo pageInfo = firstSlicedDiscussions.pageInfo();
 
@@ -806,7 +806,7 @@ class DiscussionQueryServiceTest {
         final int size = 5;
 
         // when
-        final DiscussionPageResponse page1 = discussionQueryService.getActiveDiscussions(
+        final ActiveDiscussionPageResponse page1 = discussionQueryService.getActiveDiscussions(
                 memberId, periodDays, size, null
         );
 
@@ -841,7 +841,7 @@ class DiscussionQueryServiceTest {
         final int size = 4;
 
         // when
-        final DiscussionPageResponse page1 = discussionQueryService.getActiveDiscussions(
+        final ActiveDiscussionPageResponse page1 = discussionQueryService.getActiveDiscussions(
                 memberId, periodDays, size, null
         );
 
@@ -876,7 +876,7 @@ class DiscussionQueryServiceTest {
         final int size = 3;
 
         // when
-        final DiscussionPageResponse page1 = discussionQueryService.getActiveDiscussions(
+        final ActiveDiscussionPageResponse page1 = discussionQueryService.getActiveDiscussions(
                 memberId, periodDays, size, null
         );
 
@@ -914,7 +914,7 @@ class DiscussionQueryServiceTest {
         final int size = 2;
 
         // when
-        final DiscussionPageResponse page1 = discussionQueryService.getActiveDiscussions(
+        final ActiveDiscussionPageResponse page1 = discussionQueryService.getActiveDiscussions(
                 memberId, periodDays, size, null
         );
 

@@ -1,11 +1,11 @@
-package todoktodok.backend.discussion.application.service.query;
+package todoktodok.backend.discussion.application.dto.response;
 
 import java.time.LocalDateTime;
 import todoktodok.backend.book.application.dto.response.BookResponse;
 import todoktodok.backend.discussion.domain.Discussion;
 import todoktodok.backend.member.application.dto.response.MemberResponse;
 
-public record DiscussionCursorDto(
+public record ActiveDiscussionResponse(
         Long discussionId,
         BookResponse book,
         MemberResponse member,
@@ -18,7 +18,7 @@ public record DiscussionCursorDto(
         LocalDateTime lastCommentedAt
 ) {
 
-    public DiscussionCursorDto(
+    public ActiveDiscussionResponse(
             final Discussion discussion,
             final Long likeCount,
             final Long commentCount,

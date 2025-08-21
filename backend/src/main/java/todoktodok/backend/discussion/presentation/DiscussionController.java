@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import todoktodok.backend.discussion.application.dto.request.DiscussionRequest;
 import todoktodok.backend.discussion.application.dto.request.DiscussionUpdateRequest;
-import todoktodok.backend.discussion.application.dto.response.DiscussionPageResponse;
+import todoktodok.backend.discussion.application.dto.response.ActiveDiscussionPageResponse;
 import todoktodok.backend.discussion.application.dto.response.DiscussionResponse;
-import todoktodok.backend.discussion.application.dto.response.SlicedDiscussionResponse;
+import todoktodok.backend.discussion.application.dto.response.LatestDiscussionPageResponse;
 import todoktodok.backend.discussion.application.service.command.DiscussionCommandService;
 import todoktodok.backend.discussion.application.service.query.DiscussionQueryService;
 import todoktodok.backend.discussion.domain.DiscussionFilterType;
@@ -73,7 +73,7 @@ public class DiscussionController implements DiscussionApiDocs {
 
     @Auth(value = Role.USER)
     @GetMapping
-    public ResponseEntity<SlicedDiscussionResponse> getDiscussions(
+    public ResponseEntity<LatestDiscussionPageResponse> getDiscussions(
             @LoginMember final Long memberId,
             @RequestParam final int size,
             @RequestParam(required = false) final String cursor
@@ -106,7 +106,7 @@ public class DiscussionController implements DiscussionApiDocs {
 
     @Auth(value = Role.USER)
     @GetMapping("/active")
-    public ResponseEntity<DiscussionPageResponse> getActiveDiscussions(
+    public ResponseEntity<ActiveDiscussionPageResponse> getActiveDiscussions(
             @LoginMember final Long memberId,
             @RequestParam final int period,
             @RequestParam(defaultValue = "10") final int size,

@@ -14,9 +14,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import todoktodok.backend.discussion.application.dto.request.DiscussionRequest;
 import todoktodok.backend.discussion.application.dto.request.DiscussionUpdateRequest;
-import todoktodok.backend.discussion.application.dto.response.DiscussionPageResponse;
+import todoktodok.backend.discussion.application.dto.response.ActiveDiscussionPageResponse;
 import todoktodok.backend.discussion.application.dto.response.DiscussionResponse;
-import todoktodok.backend.discussion.application.dto.response.SlicedDiscussionResponse;
+import todoktodok.backend.discussion.application.dto.response.LatestDiscussionPageResponse;
 import todoktodok.backend.discussion.domain.DiscussionFilterType;
 import todoktodok.backend.global.auth.Auth;
 import todoktodok.backend.global.auth.Role;
@@ -267,7 +267,7 @@ public interface DiscussionApiDocs {
                     description = "토론방 최신순 조회 성공",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = SlicedDiscussionResponse.class),
+                            schema = @Schema(implementation = LatestDiscussionPageResponse.class),
                             examples = @ExampleObject(
                                     value = """
                                             {
@@ -345,7 +345,7 @@ public interface DiscussionApiDocs {
                             )
                     ))
     })
-    ResponseEntity<SlicedDiscussionResponse> getDiscussions(
+    ResponseEntity<LatestDiscussionPageResponse> getDiscussions(
             @Parameter(hidden = true) final Long memberId,
             @Parameter(
                     description = "페이지 사이즈",
@@ -826,7 +826,7 @@ public interface DiscussionApiDocs {
                     description = "활성 토론방 목록 조회 성공",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = DiscussionPageResponse.class),
+                            schema = @Schema(implementation = ActiveDiscussionPageResponse.class),
                             examples = {
                                     @ExampleObject(
                                             name = "첫 페이지 예시",
@@ -919,7 +919,7 @@ public interface DiscussionApiDocs {
                     )
             )
     })
-    ResponseEntity<DiscussionPageResponse> getActiveDiscussions(
+    ResponseEntity<ActiveDiscussionPageResponse> getActiveDiscussions(
             @Parameter(hidden = true) final Long memberId,
             @Parameter(
                     description = "조회 기간(일)",

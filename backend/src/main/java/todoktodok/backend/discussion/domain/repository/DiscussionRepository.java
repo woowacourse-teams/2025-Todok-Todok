@@ -7,7 +7,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import todoktodok.backend.discussion.application.service.query.DiscussionCursorDto;
+import todoktodok.backend.discussion.application.dto.response.ActiveDiscussionResponse;
 import todoktodok.backend.discussion.domain.Discussion;
 import todoktodok.backend.member.domain.Member;
 
@@ -89,7 +89,7 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
     );
 
     @Query("""
-            SELECT new todoktodok.backend.discussion.application.service.query.DiscussionCursorDto(
+            SELECT new todoktodok.backend.discussion.application.dto.response.ActiveDiscussionResponse(
                          d,
                          COUNT(DISTINCT c.id),
                          COUNT(DISTINCT dl.id),
@@ -108,7 +108,7 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
             )
             ORDER BY MAX(c.createdAt) DESC, d.id DESC
     """)
-    List<DiscussionCursorDto> findActiveDiscussionsByCursor(
+    List<ActiveDiscussionResponse> findActiveDiscussionsByCursor(
             @Param("member") final Member member,
             @Param("periodStart") final LocalDateTime periodStart,
             @Param("cursorLastCommentedAt") final LocalDateTime cursorLastCommentedAt,
