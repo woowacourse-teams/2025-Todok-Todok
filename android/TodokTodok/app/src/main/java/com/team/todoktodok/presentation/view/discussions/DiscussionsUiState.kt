@@ -45,7 +45,10 @@ data class DiscussionsUiState(
                 add(HotDiscussionItems.ActivatedItem(activatedItems))
             }
 
-        return copy(hotDiscussionItems = hotDiscussion, activatedPage = activatedDiscussion.pageInfo)
+        return copy(
+            hotDiscussionItems = hotDiscussion,
+            activatedPage = activatedDiscussion.pageInfo,
+        )
     }
 
     fun addMyDiscussion(
@@ -87,13 +90,16 @@ data class DiscussionsUiState(
 
     fun addActivatedDiscussion(page: ActivatedDiscussionPage): DiscussionsUiState {
         val tempDiscussion = hotDiscussionItems.toMutableList()
-        val currentActivatedDiscussion =
-            (tempDiscussion[HotDiscussionItems.ViewType.ACTIVATED.sequence] as HotDiscussionItems.ActivatedItem)
-                .items
-                .toMutableList()
+        val activatedIndex = HotDiscussionItems.ViewType.ACTIVATED.sequence
+        if (activatedIndex >= tempDiscussion.size) return this
+        val activatedItem =
+            tempDiscussion.getOrNull(activatedIndex) as? HotDiscussionItems.ActivatedItem
+                ?: return this
+        val currentActivatedDiscussion = activatedItem.items.toMutableList()
+
         currentActivatedDiscussion.addAll(page.data.map { it.toUiState() })
 
-        tempDiscussion[HotDiscussionItems.ViewType.ACTIVATED.sequence] =
+        tempDiscussion[activatedIndex] =
             HotDiscussionItems.ActivatedItem(currentActivatedDiscussion)
         return copy(
             hotDiscussionItems = tempDiscussion,
