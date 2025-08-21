@@ -11,10 +11,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import todoktodok.backend.discussion.application.dto.request.DiscussionRequest;
 import todoktodok.backend.discussion.application.dto.request.DiscussionUpdateRequest;
+import todoktodok.backend.discussion.application.dto.response.ActiveDiscussionPageResponse;
 import todoktodok.backend.discussion.application.dto.response.DiscussionResponse;
-import todoktodok.backend.discussion.application.dto.response.SlicedDiscussionResponse;
+import todoktodok.backend.discussion.application.dto.response.LatestDiscussionPageResponse;
+import todoktodok.backend.global.auth.Auth;
+import todoktodok.backend.global.auth.Role;
 import todoktodok.backend.global.exception.ErrorResponse;
 
 @Tag(name = "토론방 API")
@@ -42,7 +46,7 @@ public interface DiscussionApiDocs {
                                             value = "{\"code\":400, \"message\":\"[ERROR] 토론방 내용은 1자 이상, 1500자 이하여야 합니다\"}"
                                     )
                             }
-            )),
+                    )),
             @ApiResponse(
                     responseCode = "401",
                     description = "토큰 인증 오류",
@@ -53,7 +57,7 @@ public interface DiscussionApiDocs {
                                     name = "JWT 오류",
                                     value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
                             )
-            )),
+                    )),
             @ApiResponse(
                     responseCode = "404",
                     description = "존재하지 않는 리소스",
@@ -70,7 +74,7 @@ public interface DiscussionApiDocs {
                                             value = "{\"code\":404, \"message\":\"[ERROR] 해당 책을 찾을 수 없습니다\"}"
                                     )
                             }
-            )),
+                    )),
             @ApiResponse(
                     responseCode = "500",
                     description = "서버 오류",
@@ -119,7 +123,7 @@ public interface DiscussionApiDocs {
                                             value = "{\"code\":400, \"message\":\"[ERROR] 이미 신고한 토론방입니다\"}"
                                     )
                             }
-            )),
+                    )),
             @ApiResponse(
                     responseCode = "401",
                     description = "토큰 인증 오류",
@@ -130,7 +134,7 @@ public interface DiscussionApiDocs {
                                     name = "JWT 오류",
                                     value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
                             )
-            )),
+                    )),
             @ApiResponse(
                     responseCode = "404",
                     description = "존재하지 않는 리소스",
@@ -147,7 +151,7 @@ public interface DiscussionApiDocs {
                                             value = "{\"code\":404, \"message\":\"[ERROR] 해당 토론방을 찾을 수 없습니다\"}"
                                     )
                             }
-            )),
+                    )),
             @ApiResponse(
                     responseCode = "500",
                     description = "서버 오류",
@@ -158,7 +162,7 @@ public interface DiscussionApiDocs {
                                     name = "서버 오류",
                                     value = "{\"code\":500, \"message\":\"[ERROR] 서버 내부 오류가 발생했습니다\"}"
                             )
-            ))
+                    ))
     })
     ResponseEntity<Void> report(
             @Parameter(hidden = true) final Long memberId,
@@ -183,22 +187,27 @@ public interface DiscussionApiDocs {
                                     value = """
                                             {
                                               "discussionId": 1,
-                                              "title": "토론방 제목",
-                                              "content": "토론방 내용입니다.",
-                                              "author": {
-                                                "id": 1,
-                                                "nickname": "듀이",
-                                                "email": "user@example.com",
-                                                "profileImage": "https://example.com/image.png"
+                                              "book": {
+                                                "bookId": 1,
+                                                "bookTitle": "엘레강트 오브젝트 - 새로운 관점에서 바라본 객체지향",
+                                                "bookAuthor": "Yegor Bugayenko (지은이), 조영호 (옮긴이)",
+                                                "bookImage": "https://image.aladin.co.kr/product/25837/40/coversum/k762736538_1.jpg"
                                               },
-                                              "createdAt": "2025-08-14T10:00:00",
-                                              "commentCount": 5,
-                                              "likeCount": 10,
-                                              "isLikedByMe": true
+                                              "member": {
+                                                "memberId": 2,
+                                                "nickname": "모찌",
+                                                "profileImage": "https://user.png"
+                                              },
+                                              "createdAt": "2025-08-20T10:59:48",
+                                              "discussionTitle": "토론방 제목",
+                                              "discussionOpinion": "토론방 내용입니다",
+                                              "likeCount": 0,
+                                              "commentCount": 4,
+                                              "isLikedByMe": false
                                             }
                                             """
                             )
-            )),
+                    )),
             @ApiResponse(
                     responseCode = "401",
                     description = "토큰 인증 오류",
@@ -209,7 +218,7 @@ public interface DiscussionApiDocs {
                                     name = "JWT 오류",
                                     value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
                             )
-            )),
+                    )),
             @ApiResponse(
                     responseCode = "404",
                     description = "존재하지 않는 리소스",
@@ -226,7 +235,7 @@ public interface DiscussionApiDocs {
                                             value = "{\"code\":404, \"message\":\"[ERROR] 해당 토론방을 찾을 수 없습니다\"}"
                                     )
                             }
-            )),
+                    )),
             @ApiResponse(
                     responseCode = "500",
                     description = "서버 오류",
@@ -237,7 +246,7 @@ public interface DiscussionApiDocs {
                                     name = "서버 오류",
                                     value = "{\"code\":500, \"message\":\"[ERROR] 서버 내부 오류가 발생했습니다\"}"
                             )
-            ))
+                    ))
     })
     ResponseEntity<DiscussionResponse> getDiscussion(
             @Parameter(hidden = true) final Long memberId,
@@ -248,6 +257,109 @@ public interface DiscussionApiDocs {
                             examples = @ExampleObject(value = "1")
                     )
             ) final Long discussionId
+    );
+
+    @Operation(summary = "토론방 최신순 전체 조회 API")
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "토론방 최신순 조회 성공",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = LatestDiscussionPageResponse.class),
+                            examples = @ExampleObject(
+                                    value = """
+                                            {
+                                              "items": [
+                                                  {
+                                                    "discussionId": 2,
+                                                    "title": "토론방 제목1",
+                                                    "content": "토론방 내용1",
+                                                    "author": {
+                                                      "id": 1,
+                                                      "nickname": "듀이",
+                                                      "email": "user1@example.com",
+                                                      "profileImage": "https://example.com/image1.png"
+                                                    },
+                                                    "createdAt": "2025-08-14T10:00:00",
+                                                    "commentCount": 5,
+                                                    "likeCount": 10,
+                                                    "isLikedByMe": true
+                                                  },
+                                                  {
+                                                    "discussionId": 1,
+                                                    "title": "토론방 제목2",
+                                                    "content": "토론방 내용2",
+                                                    "author": {
+                                                      "id": 2,
+                                                      "nickname": "모다",
+                                                      "email": "user2@example.com",
+                                                      "profileImage": "https://example.com/image2.png"
+                                                    },
+                                                    "createdAt": "2025-08-14T10:05:00",
+                                                    "commentCount": 3,
+                                                    "likeCount": 5,
+                                                    "isLikedByMe": false
+                                                  }
+                                              ],
+                                              "pageInfo": {
+                                                "hasNext": true,
+                                                "nextCursor": "NA=="
+                                              }
+                                            }
+                                            """
+                            )
+                    )),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "토큰 인증 오류",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "JWT 오류",
+                                    value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
+                            )
+                    )),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "존재하지 않는 리소스",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "회원 없음",
+                                    value = "{\"code\":404, \"message\":\"[ERROR] 해당 회원을 찾을 수 없습니다\"}"
+                            )
+                    )),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "서버 오류",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "서버 오류",
+                                    value = "{\"code\":500, \"message\":\"[ERROR] 서버 내부 오류가 발생했습니다\"}"
+                            )
+                    ))
+    })
+    ResponseEntity<LatestDiscussionPageResponse> getDiscussions(
+            @Parameter(hidden = true) final Long memberId,
+            @Parameter(
+                    description = "페이지 사이즈",
+                    content = @Content(
+                            schema = @Schema(implementation = Integer.class),
+                            examples = @ExampleObject(value = "20")
+                    )
+            ) final int size,
+            @Parameter(
+                    description = "페이지 커서",
+                    content = @Content(
+                            schema = @Schema(implementation = String.class),
+                            examples = @ExampleObject(value = "NA==")
+                    )
+            ) final String cursor
     );
 
     @Operation(summary = "토론방 필터링 조회 API")
@@ -261,36 +373,46 @@ public interface DiscussionApiDocs {
                             examples = @ExampleObject(
                                     value = """
                                             [
-                                              {
-                                                "discussionId": 1,
-                                                "title": "토론방 제목1",
-                                                "content": "토론방 내용1",
-                                                "author": {
-                                                  "id": 1,
-                                                  "nickname": "듀이",
-                                                  "email": "user1@example.com",
-                                                  "imageUrl": "https://example.com/image1.png"
+                                                {
+                                                  "discussionId": 1,
+                                                  "book": {
+                                                    "bookId": 1,
+                                                    "bookTitle": "엘레강트 오브젝트 - 새로운 관점에서 바라본 객체지향",
+                                                    "bookAuthor": "Yegor Bugayenko (지은이), 조영호 (옮긴이)",
+                                                    "bookImage": "https://image.aladin.co.kr/product/25837/40/coversum/k762736538_1.jpg"
+                                                  },
+                                                  "member": {
+                                                    "memberId": 2,
+                                                    "nickname": "모찌",
+                                                    "profileImage": "https://user.png"
+                                                  },
+                                                  "createdAt": "2025-08-20T10:59:48",
+                                                  "discussionTitle": "토론방 제목",
+                                                  "discussionOpinion": "토론방 내용입니다",
+                                                  "likeCount": 0,
+                                                  "commentCount": 4,
+                                                  "isLikedByMe": false
                                                 },
-                                                "createdAt": "2025-08-14T10:00:00",
-                                                "commentCount": 5,
-                                                "likeCount": 10,
-                                                "isLikedByMe": true
-                                              },
-                                              {
-                                                "discussionId": 2,
-                                                "title": "토론방 제목2",
-                                                "content": "토론방 내용2",
-                                                "author": {
-                                                  "id": 2,
-                                                  "nickname": "모다",
-                                                  "email": "user2@example.com",
-                                                  "imageUrl": "https://example.com/image2.png"
-                                                },
-                                                "createdAt": "2025-08-14T10:05:00",
-                                                "commentCount": 3,
-                                                "likeCount": 5,
-                                                "isLikedByMe": false
-                                              }
+                                                {
+                                                  "discussionId": 2,
+                                                  "book": {
+                                                    "bookId": 1,
+                                                    "bookTitle": "엘레강트 오브젝트 - 새로운 관점에서 바라본 객체지향",
+                                                    "bookAuthor": "Yegor Bugayenko (지은이), 조영호 (옮긴이)",
+                                                    "bookImage": "https://image.aladin.co.kr/product/25837/40/coversum/k762736538_1.jpg"
+                                                  },
+                                                  "member": {
+                                                    "memberId": 2,
+                                                    "nickname": "모찌",
+                                                    "profileImage": "https://user.png"
+                                                  },
+                                                  "createdAt": "2025-08-20T10:59:48",
+                                                  "discussionTitle": "토론방 제목 2",
+                                                  "discussionOpinion": "토론방 내용 2입니다",
+                                                  "likeCount": 0,
+                                                  "commentCount": 4,
+                                                  "isLikedByMe": false
+                                                }
                                             ]
                                             """
                             )
@@ -340,57 +462,78 @@ public interface DiscussionApiDocs {
             ) final String keyword
     );
 
-    @Operation(summary = "토론방 최신순 전체 조회 API")
+    @Operation(summary = "인기 토론방 조회 API")
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
-                    description = "토론방 최신순 조회 성공",
+                    description = "인기 토론방 목록 조회 성공",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = SlicedDiscussionResponse.class),
+                            schema = @Schema(implementation = DiscussionResponse.class),
                             examples = @ExampleObject(
                                     value = """
-                                            {
-                                              "items": [
-                                                  {
-                                                    "discussionId": 2,
-                                                    "title": "토론방 제목1",
-                                                    "content": "토론방 내용1",
-                                                    "author": {
-                                                      "id": 1,
-                                                      "nickname": "듀이",
-                                                      "email": "user1@example.com",
-                                                      "profileImage": "https://example.com/image1.png"
-                                                    },
-                                                    "createdAt": "2025-08-14T10:00:00",
-                                                    "commentCount": 5,
-                                                    "likeCount": 10,
-                                                    "isLikedByMe": true
-                                                  },
-                                                  {
-                                                    "discussionId": 1,
-                                                    "title": "토론방 제목2",
-                                                    "content": "토론방 내용2",
-                                                    "author": {
-                                                      "id": 2,
-                                                      "nickname": "모다",
-                                                      "email": "user2@example.com",
-                                                      "profileImage": "https://example.com/image2.png"
-                                                    },
-                                                    "createdAt": "2025-08-14T10:05:00",
-                                                    "commentCount": 3,
-                                                    "likeCount": 5,
-                                                    "isLikedByMe": false
-                                                  }
-                                              ],
-                                              "pageInfo": {
-                                                "hasNext": true,
-                                                "nextCursor": "NA=="
-                                              }
-                                            }
+                                            [
+                                                 {
+                                                   "discussionId": 1,
+                                                   "book": {
+                                                     "bookId": 1,
+                                                     "bookTitle": "엘레강트 오브젝트 - 새로운 관점에서 바라본 객체지향",
+                                                     "bookAuthor": "Yegor Bugayenko (지은이), 조영호 (옮긴이)",
+                                                     "bookImage": "https://image.aladin.co.kr/product/25837/40/coversum/k762736538_1.jpg"
+                                                   },
+                                                   "member": {
+                                                     "memberId": 2,
+                                                     "nickname": "모찌",
+                                                     "profileImage": "https://user.png"
+                                                   },
+                                                   "createdAt": "2025-08-20T10:59:48",
+                                                   "discussionTitle": "토론방 제목",
+                                                   "discussionOpinion": "토론방 내용입니다",
+                                                   "likeCount": 5,
+                                                   "commentCount": 4,
+                                                   "isLikedByMe": true
+                                                 },
+                                                 {
+                                                   "discussionId": 3,
+                                                   "book": {
+                                                     "bookId": 1,
+                                                     "bookTitle": "엘레강트 오브젝트 - 새로운 관점에서 바라본 객체지향",
+                                                     "bookAuthor": "Yegor Bugayenko (지은이), 조영호 (옮긴이)",
+                                                     "bookImage": "https://image.aladin.co.kr/product/25837/40/coversum/k762736538_1.jpg"
+                                                   },
+                                                   "member": {
+                                                     "memberId": 2,
+                                                     "nickname": "모찌",
+                                                     "profileImage": "https://user.png"
+                                                   },
+                                                   "createdAt": "2025-08-20T10:59:48",
+                                                   "discussionTitle": "토론방 제목 3",
+                                                   "discussionOpinion": "토론방 내용 3입니다",
+                                                   "likeCount": 6,
+                                                   "commentCount": 0,
+                                                   "isLikedByMe": false
+                                                 }
+                                            ]
                                             """
                             )
-            )),
+                    )),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "잘못된 요청",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = {
+                                    @ExampleObject(
+                                            name = "잘못된 개수 값",
+                                            value = "{\"code\":400, \"message\":\"[ERROR] 유효하지 않은 개수입니다. 양수의 개수를 조회해주세요\"}"
+                                    ),
+                                    @ExampleObject(
+                                            name = "잘못된 기간 값",
+                                            value = "{\"code\":400, \"message\":\"[ERROR] 유효하지 않은 기간 값입니다. 0일 ~ 365일 이내로 조회해주세요\"}"
+                                    )
+                            }
+                    )),
             @ApiResponse(
                     responseCode = "401",
                     description = "토큰 인증 오류",
@@ -412,7 +555,7 @@ public interface DiscussionApiDocs {
                                     name = "회원 없음",
                                     value = "{\"code\":404, \"message\":\"[ERROR] 해당 회원을 찾을 수 없습니다\"}"
                             )
-            )),
+                    )),
             @ApiResponse(
                     responseCode = "500",
                     description = "서버 오류",
@@ -423,24 +566,26 @@ public interface DiscussionApiDocs {
                                     name = "서버 오류",
                                     value = "{\"code\":500, \"message\":\"[ERROR] 서버 내부 오류가 발생했습니다\"}"
                             )
-            ))
+                    ))
     })
-    ResponseEntity<SlicedDiscussionResponse> getDiscussions(
+    @Auth(value = Role.USER)
+    @GetMapping("/hot")
+    ResponseEntity<List<DiscussionResponse>> getHotDiscussions(
             @Parameter(hidden = true) final Long memberId,
             @Parameter(
-                    description = "페이지 사이즈",
+                    description = "조회 기간 (일)",
                     content = @Content(
                             schema = @Schema(implementation = Integer.class),
-                            examples = @ExampleObject(value = "20")
+                            examples = @ExampleObject(value = "7")
                     )
-            ) final int size,
+            ) final int period,
             @Parameter(
-                    description = "페이지 커서",
+                    description = "조회 개수",
                     content = @Content(
-                            schema = @Schema(implementation = String.class),
-                            examples = @ExampleObject(value = "NA==")
+                            schema = @Schema(implementation = Integer.class),
+                            examples = @ExampleObject(value = "10")
                     )
-            ) final String cursor
+            ) final int count
     );
 
     @Operation(summary = "토론방 수정 API")
@@ -469,7 +614,7 @@ public interface DiscussionApiDocs {
                                             value = "{\"code\":400, \"message\":\"[ERROR] 자기 자신의 토론방만 수정/삭제 가능합니다\"}"
                                     )
                             }
-            )),
+                    )),
             @ApiResponse(
                     responseCode = "401",
                     description = "토큰 인증 오류",
@@ -480,7 +625,7 @@ public interface DiscussionApiDocs {
                                     name = "JWT 오류",
                                     value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
                             )
-            )),
+                    )),
             @ApiResponse(
                     responseCode = "404",
                     description = "존재하지 않는 리소스",
@@ -497,7 +642,7 @@ public interface DiscussionApiDocs {
                                             value = "{\"code\":404, \"message\":\"[ERROR] 해당 토론방을 찾을 수 없습니다\"}"
                                     )
                             }
-            )),
+                    )),
             @ApiResponse(
                     responseCode = "500",
                     description = "서버 오류",
@@ -508,7 +653,7 @@ public interface DiscussionApiDocs {
                                     name = "서버 오류",
                                     value = "{\"code\":500, \"message\":\"[ERROR] 서버 내부 오류가 발생했습니다\"}"
                             )
-            ))
+                    ))
     })
     ResponseEntity<Void> updateDiscussion(
             @Parameter(hidden = true) final Long memberId,
@@ -553,7 +698,7 @@ public interface DiscussionApiDocs {
                                             value = "{\"code\":400, \"message\":\"[ERROR] 자기 자신의 토론방만 수정/삭제 가능합니다\"}"
                                     )
                             }
-            )),
+                    )),
             @ApiResponse(
                     responseCode = "401",
                     description = "토큰 인증 오류",
@@ -564,7 +709,7 @@ public interface DiscussionApiDocs {
                                     name = "JWT 오류",
                                     value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
                             )
-            )),
+                    )),
             @ApiResponse(
                     responseCode = "404",
                     description = "존재하지 않는 리소스",
@@ -581,7 +726,7 @@ public interface DiscussionApiDocs {
                                             value = "{\"code\":404, \"message\":\"[ERROR] 해당 토론방을 찾을 수 없습니다\"}"
                                     )
                             }
-            )),
+                    )),
             @ApiResponse(
                     responseCode = "500",
                     description = "서버 오류",
@@ -592,7 +737,7 @@ public interface DiscussionApiDocs {
                                     name = "서버 오류",
                                     value = "{\"code\":500, \"message\":\"[ERROR] 서버 내부 오류가 발생했습니다\"}"
                             )
-            ))
+                    ))
     })
     ResponseEntity<Void> deleteDiscussion(
             @Parameter(hidden = true) final Long memberId,
@@ -625,7 +770,7 @@ public interface DiscussionApiDocs {
                                     name = "JWT 오류",
                                     value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
                             )
-            )),
+                    )),
             @ApiResponse(
                     responseCode = "404",
                     description = "존재하지 않는 리소스",
@@ -642,7 +787,7 @@ public interface DiscussionApiDocs {
                                             value = "{\"code\":404, \"message\":\"[ERROR] 해당 토론방을 찾을 수 없습니다\"}"
                                     )
                             }
-            )),
+                    )),
             @ApiResponse(
                     responseCode = "500",
                     description = "서버 오류",
@@ -653,7 +798,7 @@ public interface DiscussionApiDocs {
                                     name = "서버 오류",
                                     value = "{\"code\":500, \"message\":\"[ERROR] 서버 내부 오류가 발생했습니다\"}"
                             )
-            ))
+                    ))
     })
     ResponseEntity<Void> toggleLike(
             @Parameter(hidden = true) final Long memberId,
@@ -664,5 +809,121 @@ public interface DiscussionApiDocs {
                             examples = @ExampleObject(value = "1")
                     )
             ) final Long discussionId
+    );
+
+    @Operation(summary = "활성화된 토론방 조회 API(커서 기반)")
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "활성 토론방 목록 조회 성공",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ActiveDiscussionPageResponse.class),
+                            examples = {
+                                    @ExampleObject(
+                                            name = "첫 페이지 예시",
+                                            value = """
+                                                {
+                                                  "discussions": [
+                                                    {
+                                                      "discussionId": 4,
+                                                      "discussionTitle": "토론방4",
+                                                      "discussionOpinion": "내용4",
+                                                      "commentCount": 1,
+                                                      "likeCount": 0,
+                                                      "likedByMe": false,
+                                                      "lastCommentedAt": "2025-08-20T14:49:00"
+                                                    },
+                                                    {
+                                                      "discussionId": 3,
+                                                      "discussionTitle": "토론방3",
+                                                      "discussionOpinion": "내용3",
+                                                      "commentCount": 3,
+                                                      "likeCount": 2,
+                                                      "likedByMe": true,
+                                                      "lastCommentedAt": "2025-08-20T14:50:00"
+                                                    }
+                                                  ],
+                                                  "hasNext": true,
+                                                  "nextCursor": "MjAyNS0wOC0yMFQxNDo1MDowMF8z"
+                                                }
+                                                """
+                                    ),
+                                    @ExampleObject(
+                                            name = "마지막 페이지 예시",
+                                            value = """
+                                                {
+                                                  "discussions": [
+                                                    {
+                                                      "discussionId": 2,
+                                                      "discussionTitle": "토론방2",
+                                                      "discussionOpinion": "내용2",
+                                                      "commentCount": 2,
+                                                      "likeCount": 1,
+                                                      "likedByMe": false,
+                                                      "lastCommentedAt": "2025-08-20T15:30:00"
+                                                    }
+                                                  ],
+                                                  "hasNext": false,
+                                                  "nextCursor": null
+                                                }
+                                                """
+                                    )
+                            }
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "잘못된 요청",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = {
+                                    @ExampleObject(
+                                            name = "유효하지 않은 size",
+                                            value = "{\"code\":400, \"message\":\"[ERROR] size는 1 이상이어야 합니다\"}"
+                                    )
+                            }
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "토큰 인증 오류",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "JWT 오류",
+                                    value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
+                            )
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "서버 오류",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "서버 오류",
+                                    value = "{\"code\":500, \"message\":\"[ERROR] 서버 내부 오류가 발생했습니다\"}"
+                            )
+                    )
+            )
+    })
+    ResponseEntity<ActiveDiscussionPageResponse> getActiveDiscussions(
+            @Parameter(hidden = true) final Long memberId,
+            @Parameter(
+                    description = "조회 기간(일)",
+                    schema = @Schema(implementation = Integer.class, example = "7")
+            ) final int period,
+            @Parameter(
+                    description = "페이지 크기(요청 개수)",
+                    schema = @Schema(implementation = Integer.class, example = "10")
+            ) final int size,
+            @Parameter(
+                    description = "직전 응답의 nextCursor (첫 페이지면 null)",
+                    schema = @Schema(implementation = String.class, example = "MjAyNS0wOC0yMFQxNDo1MDowMF8z")
+            ) final String cursor
     );
 }
