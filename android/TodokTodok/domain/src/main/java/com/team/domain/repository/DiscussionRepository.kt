@@ -52,6 +52,6 @@ interface DiscussionRepository {
     companion object {
         private const val PAGING_SIZE = 15
         private const val DEFAULT_HOT_DISCUSSION_PERIOD = 7
-        private const val DEFAULT_HOT_DISCUSSION_COUNT = 10
+        private const val DEFAULT_HOT_DISCUSSION_COUNT = 5
     }
 }
