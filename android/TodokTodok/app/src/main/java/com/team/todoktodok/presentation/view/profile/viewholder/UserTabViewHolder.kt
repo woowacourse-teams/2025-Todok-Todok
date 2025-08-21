@@ -8,19 +8,21 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.team.todoktodok.databinding.ItemUserTabBinding
+import com.team.todoktodok.presentation.view.profile.UserProfileTab
 import com.team.todoktodok.presentation.view.profile.UserProfileTab.Companion.UserProfileTab
 
 class UserTabViewHolder private constructor(
     private val viewPagerAdapter: FragmentStateAdapter,
-    binding: ItemUserTabBinding,
+    private val binding: ItemUserTabBinding,
 ) : RecyclerView.ViewHolder(binding.root) {
     private val context = binding.root.context
 
     private val tabLayout: TabLayout = binding.tab
     private val viewPager: ViewPager2 = binding.viewPager
 
-    fun bind() {
+    fun bind(initialTab: UserProfileTab) {
         viewPager.adapter = viewPagerAdapter
+        binding.viewPager.currentItem = initialTab.ordinal
 
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             val tabTitle = context.getString(UserProfileTab(position).titleResourceId)
