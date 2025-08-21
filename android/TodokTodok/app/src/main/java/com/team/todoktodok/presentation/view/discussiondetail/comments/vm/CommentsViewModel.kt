@@ -53,7 +53,7 @@ class CommentsViewModel(
     fun toggleLike(commentId: Long) =
         viewModelScope.launch {
             handleResult(commentRepository.toggleLike(discussionId, commentId)) {
-                loadComments()
+                loadComment(commentId)
             }
         }
 
@@ -92,6 +92,21 @@ class CommentsViewModel(
 
     fun updateCommentContent(content: String) {
         _uiState.value = _uiState.value?.copy(commentContent = content)
+    }
+
+    private suspend fun loadComment(commentId: Long) {
+        handleResult(commentRepository.getComment(discussionId, commentId)) { comment ->
+            val state = _uiState.value ?: return@handleResult
+            val comments = state.comments
+
+            val idx = comments.indexOfFirst { it.comment.id == comment.id }
+            if (idx == -1) return@handleResult
+
+            val updatedItem = comments[idx].copy(comment = comment)
+            val updatedList = comments.toMutableList().apply { this[idx] = updatedItem }
+
+            _uiState.value = state.copy(comments = updatedList)
+        }
     }
 
     private suspend fun loadComments() {
