@@ -1,5 +1,6 @@
 package todoktodok.backend.discussion.domain.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +17,13 @@ public interface DiscussionLikeRepository extends JpaRepository<DiscussionLike, 
     Optional<DiscussionLike> findByMemberAndDiscussion(final Member member, final Discussion discussion);
 
     @Query("""
+                SELECT COUNT(dl)
+                FROM DiscussionLike dl
+                WHERE dl.discussion.id = :discussionId
+            """)
+    Long findLikeCountsByDiscussionId(@Param("discussionId") final Long discussionId);
+
+    @Query("""
                 SELECT new todoktodok.backend.discussion.application.service.query.DiscussionLikeCountDto(d.id, COUNT(dl))
                 FROM Discussion d
                 LEFT JOIN DiscussionLike dl ON dl.discussion = d
@@ -25,11 +33,16 @@ public interface DiscussionLikeRepository extends JpaRepository<DiscussionLike, 
     List<DiscussionLikeCountDto> findLikeCountsByDiscussionIds(@Param("discussionIds") final List<Long> discussionIds);
 
     @Query("""
-                SELECT COUNT(dl)
-                FROM DiscussionLike dl
-                WHERE dl.discussion.id = :discussionId
+                SELECT new todoktodok.backend.discussion.application.service.query.DiscussionLikeCountDto(d.id, COUNT(dl))
+                FROM Discussion d
+                LEFT JOIN DiscussionLike dl ON dl.discussion = d AND dl.createdAt >= :sinceDate
+                WHERE d.id IN :discussionIds
+                GROUP BY d.id
             """)
-    Long findLikeCountsByDiscussionId(@Param("discussionId") final Long discussionId);
+    List<DiscussionLikeCountDto> findLikeCountsByDiscussionIdsSinceDate(
+            @Param("discussionIds") final List<Long> discussionIds,
+            @Param("sinceDate") final LocalDateTime sinceDate
+    );
 
     @Query("""
                 SELECT dl.discussion.id
