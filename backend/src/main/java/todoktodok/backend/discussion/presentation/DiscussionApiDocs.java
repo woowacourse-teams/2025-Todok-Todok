@@ -15,7 +15,6 @@ import todoktodok.backend.discussion.application.dto.request.DiscussionRequest;
 import todoktodok.backend.discussion.application.dto.request.DiscussionUpdateRequest;
 import todoktodok.backend.discussion.application.dto.response.DiscussionResponse;
 import todoktodok.backend.discussion.application.dto.response.SlicedDiscussionResponse;
-import todoktodok.backend.discussion.domain.DiscussionFilterType;
 import todoktodok.backend.global.exception.ErrorResponse;
 
 @Tag(name = "토론방 API")
@@ -330,7 +329,7 @@ public interface DiscussionApiDocs {
                             )
                     ))
     })
-    ResponseEntity<List<DiscussionResponse>> getDiscussionsByKeywordAndType(
+    ResponseEntity<List<DiscussionResponse>> getDiscussionsByKeyword(
             @Parameter(hidden = true) final Long memberId,
             @Parameter(
                     description = "도서 제목 혹은 저자",
@@ -338,14 +337,7 @@ public interface DiscussionApiDocs {
                             schema = @Schema(implementation = String.class),
                             examples = @ExampleObject(value = "오브젝트")
                     )
-            ) final String keyword,
-            @Parameter(
-                    description = "필터링 타입",
-                    content = @Content(
-                            schema = @Schema(implementation = DiscussionFilterType.class),
-                            examples = @ExampleObject(value = "ALL")
-                    )
-            ) final DiscussionFilterType type
+            ) final String keyword
     );
 
     @Operation(summary = "토론방 최신순 전체 조회 API")

@@ -23,7 +23,6 @@ import todoktodok.backend.InitializerTimer;
 import todoktodok.backend.discussion.application.dto.response.DiscussionResponse;
 import todoktodok.backend.discussion.application.dto.response.PageInfo;
 import todoktodok.backend.discussion.application.dto.response.SlicedDiscussionResponse;
-import todoktodok.backend.discussion.domain.DiscussionFilterType;
 
 @ActiveProfiles("test")
 @Transactional
@@ -40,24 +39,6 @@ class DiscussionQueryServiceTest {
     @BeforeEach
     void setUp() {
         databaseInitializer.clear();
-    }
-
-    @Test
-    @DisplayName("전체 토론방을 조회한다")
-    void getAllDiscussions() {
-        // given
-        databaseInitializer.setDefaultUserInfo();
-        databaseInitializer.setDefaultBookInfo();
-        databaseInitializer.setDefaultDiscussionInfo();
-
-        final Long memberId = 1L;
-
-        // when
-        final List<DiscussionResponse> discussions = discussionQueryService.getDiscussionsByKeywordAndType(
-                memberId, "", DiscussionFilterType.ALL);
-
-        // then
-        assertThat(discussions).hasSize(1);
     }
 
     @Test
@@ -225,7 +206,8 @@ class DiscussionQueryServiceTest {
             final String cursorMeaningFour = "NA==";
 
             // when
-            final SlicedDiscussionResponse firstSlicedDiscussions = discussionQueryService.getDiscussions(memberId, size, cursorMeaningFour);
+            final SlicedDiscussionResponse firstSlicedDiscussions = discussionQueryService.getDiscussions(memberId,
+                    size, cursorMeaningFour);
             final List<DiscussionResponse> items = firstSlicedDiscussions.items();
 
             // then
@@ -248,7 +230,8 @@ class DiscussionQueryServiceTest {
             final String cursor = null;
 
             // when
-            final SlicedDiscussionResponse firstSlicedDiscussions = discussionQueryService.getDiscussions(memberId, size, cursor);
+            final SlicedDiscussionResponse firstSlicedDiscussions = discussionQueryService.getDiscussions(memberId,
+                    size, cursor);
             final List<DiscussionResponse> items = firstSlicedDiscussions.items();
 
             // then
@@ -273,7 +256,8 @@ class DiscussionQueryServiceTest {
             final String cursor = null;
 
             // when
-            final SlicedDiscussionResponse firstSlicedDiscussions = discussionQueryService.getDiscussions(memberId, size, cursor);
+            final SlicedDiscussionResponse firstSlicedDiscussions = discussionQueryService.getDiscussions(memberId,
+                    size, cursor);
             final List<DiscussionResponse> items = firstSlicedDiscussions.items();
 
             // then
@@ -307,7 +291,8 @@ class DiscussionQueryServiceTest {
             final String cursor = null;
 
             // when
-            final SlicedDiscussionResponse firstSlicedDiscussions = discussionQueryService.getDiscussions(memberId, size, cursor);
+            final SlicedDiscussionResponse firstSlicedDiscussions = discussionQueryService.getDiscussions(memberId,
+                    size, cursor);
             final List<DiscussionResponse> items = firstSlicedDiscussions.items();
             final PageInfo pageInfo = firstSlicedDiscussions.pageInfo();
             final String cursorMeaningThree = "Mw==";
@@ -340,7 +325,8 @@ class DiscussionQueryServiceTest {
             final String cursor = null;
 
             // when
-            final SlicedDiscussionResponse firstSlicedDiscussions = discussionQueryService.getDiscussions(memberId, size, cursor);
+            final SlicedDiscussionResponse firstSlicedDiscussions = discussionQueryService.getDiscussions(memberId,
+                    size, cursor);
             final List<DiscussionResponse> items = firstSlicedDiscussions.items();
             final PageInfo pageInfo = firstSlicedDiscussions.pageInfo();
 
@@ -372,7 +358,8 @@ class DiscussionQueryServiceTest {
             final String cursorMeaningThree = "Mw==";
 
             // when
-            final SlicedDiscussionResponse firstSlicedDiscussions = discussionQueryService.getDiscussions(memberId, size, cursorMeaningThree);
+            final SlicedDiscussionResponse firstSlicedDiscussions = discussionQueryService.getDiscussions(memberId,
+                    size, cursorMeaningThree);
             final List<DiscussionResponse> items = firstSlicedDiscussions.items();
             final PageInfo pageInfo = firstSlicedDiscussions.pageInfo();
 
@@ -457,66 +444,14 @@ class DiscussionQueryServiceTest {
         }
 
         @Test
-        @DisplayName("전체 토론방을 조회할 수 있다")
-        void getAllDiscussionsTest() {
-            // given - when
-            final List<DiscussionResponse> discussions = discussionQueryService.getDiscussionsByKeywordAndType(
-                    1L, null, DiscussionFilterType.ALL
-            );
-
-            // then
-            assertThat(discussions).hasSize(3);
-        }
-
-        @Test
         @DisplayName("전체 토론방을 대상으로 키워드로 조회할 수 있다")
         void getAllDiscussionsByKeywordTest() {
             // given
             final String keyword = "객체 지향";
 
             // when
-            final List<DiscussionResponse> discussions = discussionQueryService.getDiscussionsByKeywordAndType(
-                    1L, keyword, DiscussionFilterType.ALL
-            );
-
-            // then
-            assertAll(
-                    () -> assertThat(discussions).hasSize(1),
-                    () -> assertThat(discussions.get(0).discussionId()).isEqualTo(1L),
-                    () -> assertThat(discussions.get(0).discussionTitle()).contains(keyword)
-            );
-        }
-
-        @Test
-        @DisplayName("나의 토론방을 조회할 수 있다")
-        void getMyDiscussionsTest() {
-            // given
-            final Long memberId = 1L;
-
-            //when
-            final List<DiscussionResponse> discussions = discussionQueryService.getDiscussionsByKeywordAndType(
-                    memberId, null, DiscussionFilterType.MINE
-            );
-
-            // then
-            assertAll(
-                    () -> assertThat(discussions).hasSize(2),
-                    () -> assertThat(discussions.get(0).discussionId()).isEqualTo(1L),
-                    () -> assertThat(discussions.get(1).discussionId()).isEqualTo(2L),
-                    () -> assertThat(discussions.get(0).member().memberId()).isEqualTo(memberId),
-                    () -> assertThat(discussions.get(1).member().memberId()).isEqualTo(memberId)
-            );
-        }
-
-        @Test
-        @DisplayName("나의 토론방을 대상으로 키워드로 조회할 수 있다")
-        void getMyDiscussionsByKeywordTest() {
-            // given
-            final String keyword = "객체 지향";
-
-            // when
-            final List<DiscussionResponse> discussions = discussionQueryService.getDiscussionsByKeywordAndType(
-                    1L, keyword, DiscussionFilterType.MINE
+            final List<DiscussionResponse> discussions = discussionQueryService.getDiscussionsByKeyword(
+                    1L, keyword
             );
 
             // then
@@ -534,8 +469,8 @@ class DiscussionQueryServiceTest {
             final String keyword = "오브젝트";
 
             // when
-            final List<DiscussionResponse> discussions = discussionQueryService.getDiscussionsByKeywordAndType(
-                    1L, keyword, DiscussionFilterType.ALL
+            final List<DiscussionResponse> discussions = discussionQueryService.getDiscussionsByKeyword(
+                    1L, keyword
             );
 
             // then
@@ -553,8 +488,8 @@ class DiscussionQueryServiceTest {
             final String keyword = "메서드";
 
             // when
-            final List<DiscussionResponse> discussions = discussionQueryService.getDiscussionsByKeywordAndType(
-                    1L, keyword, DiscussionFilterType.ALL
+            final List<DiscussionResponse> discussions = discussionQueryService.getDiscussionsByKeyword(
+                    1L, keyword
             );
 
             // then
@@ -566,101 +501,5 @@ class DiscussionQueryServiceTest {
                     () -> assertThat(discussions.get(1).discussionTitle()).contains(keyword)
             );
         }
-
-        @Test
-        @DisplayName("전체 토론방을 조회할 시 토론방의 좋아요수와 댓글수를 반환한다")
-        void getAllDiscussions_LikeCountAndCommentCountTest() {
-            // given
-            // 사용자 3명
-            databaseInitializer.setUserInfo(
-                    "user3@gmail.com", "user3", "", ""
-            );
-
-            // 토론방 1: 좋아요 1개, 댓글 1개
-            databaseInitializer.setDiscussionLikeInfo(1L, 1L);
-            databaseInitializer.setCommentInfo("첫 번째 댓글", 1L, 1L);
-
-            // 토론방 2: 좋아요 2개 (서로 다른 사용자), 댓글 2개
-            databaseInitializer.setDiscussionLikeInfo(1L, 2L);
-            databaseInitializer.setDiscussionLikeInfo(2L, 2L); // 다른 사용자
-            databaseInitializer.setCommentInfo("두 번째 토론 첫 댓글", 1L, 2L);
-            databaseInitializer.setCommentInfo("두 번째 토론 둘째 댓글", 2L, 2L);
-
-            // 토론방 3: 좋아요 3개, 댓글 3개 (모두 서로 다른 사용자/내용)
-            databaseInitializer.setDiscussionLikeInfo(1L, 3L);
-            databaseInitializer.setDiscussionLikeInfo(2L, 3L);
-            databaseInitializer.setDiscussionLikeInfo(3L, 3L); // 세 번째 사용자 필요
-            databaseInitializer.setCommentInfo("세 번째 토론 첫 댓글", 1L, 3L);
-            databaseInitializer.setCommentInfo("세 번째 토론 둘째 댓글", 2L, 3L);
-            databaseInitializer.setCommentInfo("세 번째 토론 셋째 댓글", 3L, 3L);
-
-            // when
-            final List<DiscussionResponse> discussions = discussionQueryService.getDiscussionsByKeywordAndType(
-                    1L, null, DiscussionFilterType.ALL
-            );
-
-            // then
-            assertAll(
-                    () -> assertThat(discussions.get(0).likeCount()).isEqualTo(1L),
-                    () -> assertThat(discussions.get(0).commentCount()).isEqualTo(1L),
-                    () -> assertThat(discussions.get(1).likeCount()).isEqualTo(2L),
-                    () -> assertThat(discussions.get(1).commentCount()).isEqualTo(2L),
-                    () -> assertThat(discussions.get(2).likeCount()).isEqualTo(3L),
-                    () -> assertThat(discussions.get(2).commentCount()).isEqualTo(3L)
-            );
-        }
-
-        @Test
-        @DisplayName("전체 토론방을 조회할 때, 조회되는 댓글 수는 댓글과 대댓글 수의 합이다")
-        void getAllDiscussions_totalCommentCountTest() {
-            // given
-            databaseInitializer.setDefaultUserInfo();
-            databaseInitializer.setDefaultDiscussionInfo();
-
-            final Long memberId = 1L;
-            final Long discussionId = 1L;
-
-            databaseInitializer.setCommentInfo("댓글1", memberId, discussionId);
-
-            final Long commentId = 1L;
-
-            databaseInitializer.setReplyInfo("대댓글1", memberId, commentId);
-
-            // when
-            final List<DiscussionResponse> discussions = discussionQueryService.getDiscussionsByKeywordAndType(
-                    memberId, null, DiscussionFilterType.ALL
-            );
-
-            // then
-            assertThat(discussions.get(0).commentCount()).isEqualTo(2);
-        }
-
-        @Test
-        @DisplayName("토론방 필터링 조회 시 나의 좋아요 여부를 반환한다")
-        void getDiscussions_isLikedTest() {
-            // given
-            databaseInitializer.setDefaultUserInfo();
-            databaseInitializer.setDefaultBookInfo();
-
-            databaseInitializer.setDefaultDiscussionInfo();
-            databaseInitializer.setDiscussionInfo("토론방 2", "토론방 2입니다", 1L, 1L);
-
-            databaseInitializer.setDiscussionLikeInfo(1L, 1L);
-
-            final Long memberId = 1L;
-
-            // when
-            final List<DiscussionResponse> discussions = discussionQueryService.getDiscussionsByKeywordAndType(
-                    memberId, "", DiscussionFilterType.ALL);
-            final DiscussionResponse likedDiscussion = discussions.get(0);
-            final DiscussionResponse notLikedDiscussion = discussions.get(1);
-
-            // then
-            assertAll(
-                    () -> assertThat(likedDiscussion.isLikedByMe()).isTrue(),
-                    () -> assertThat(notLikedDiscussion.isLikedByMe()).isFalse()
-            );
-        }
-
     }
 }

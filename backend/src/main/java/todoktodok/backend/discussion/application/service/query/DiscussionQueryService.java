@@ -82,17 +82,10 @@ public class DiscussionQueryService {
             final Long memberId,
             final String keyword
     ) {
+        validateKeywordNotBlank(keyword);
+
         final Member member = findMember(memberId);
-
-        if (isKeywordBlank(keyword)) {
-            return getAllDiscussions(member);
-        }
-
         return getDiscussionsByKeyword(keyword, member);
-    }
-
-    private boolean isKeywordBlank(final String keyword) {
-        return keyword == null || keyword.isBlank();
     }
 
     private Discussion findDiscussion(final Long discussionId) {
@@ -223,6 +216,14 @@ public class DiscussionQueryService {
             final List<Long> likedDiscussionIds
     ) {
         return likedDiscussionIds.contains(discussion.getId());
+    }
+
+    private void validateKeywordNotBlank(final String keyword) {
+        if (keyword == null || keyword.isBlank()) {
+            throw new IllegalArgumentException(
+                    String.format("검색 키워드를 입력해야 합니다: keyword= %s", keyword)
+            );
+        }
     }
 
     private void validatePageSize(final int size) {
