@@ -18,6 +18,7 @@ import com.team.todoktodok.presentation.view.discussions.DiscussionsUiEvent
 import com.team.todoktodok.presentation.view.discussions.DiscussionsUiState
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 class DiscussionsViewModel(
@@ -39,24 +40,24 @@ class DiscussionsViewModel(
         }
     }
 
-    fun loadHotDiscussions() {
+    fun loadHotDiscussions() =
         withLoading {
-            val hotDiscussionJob = viewModelScope.async { discussionRepository.getHotDiscussion() }
-            val activatedDiscussionJob =
-                viewModelScope.async { discussionRepository.getActivatedDiscussion() }
+            coroutineScope {
+                val hotDeferred = async { discussionRepository.getHotDiscussion() }
+                val activatedDeferred = async { discussionRepository.getActivatedDiscussion() }
+                val result = awaitAll(hotDeferred, activatedDeferred)
 
-            val result = awaitAll(hotDiscussionJob, activatedDiscussionJob)
+                (result.firstOrNull { it is NetworkResult.Failure } as? NetworkResult.Failure)?.let {
+                    onUiEvent(DiscussionsUiEvent.ShowErrorMessage(it.exception))
+                } ?: run {
+                    val hotDiscussions = (result[0] as NetworkResult.Success).data
+                    val activatedDiscussion = (result[1] as NetworkResult.Success).data
 
-            (result.firstOrNull { it is NetworkResult.Failure } as? NetworkResult.Failure)?.let {
-                onUiEvent(DiscussionsUiEvent.ShowErrorMessage(it.exception))
-            } ?: run {
-                val hotDiscussions = (result[0] as NetworkResult.Success).data
-                val activatedDiscussion = (result[1] as NetworkResult.Success).data
-
-                _uiState.value = _uiState.value?.addHotDiscussion(hotDiscussions, activatedDiscussion)
+                    _uiState.value =
+                        _uiState.value?.addHotDiscussion(hotDiscussions, activatedDiscussion)
+                }
             }
         }
-    }
 
     fun loadLatestDiscussions() {
         val state = _uiState.value ?: return
@@ -80,27 +81,29 @@ class DiscussionsViewModel(
 
     fun loadMyDiscussions() =
         withLoading {
-            val tasks =
-                MemberDiscussionType.entries.map { type ->
-                    viewModelScope.async {
-                        type to memberRepository.getMemberDiscussionRooms(MemberId.Mine, type)
+            coroutineScope {
+                val tasks =
+                    MemberDiscussionType.entries.map { type ->
+                        viewModelScope.async {
+                            type to memberRepository.getMemberDiscussionRooms(MemberId.Mine, type)
+                        }
                     }
+
+                val results: Map<MemberDiscussionType, NetworkResult<List<MemberDiscussion>>> =
+                    tasks.awaitAll().toMap()
+
+                results.values.firstOrNull { it is NetworkResult.Failure }?.let { failure ->
+                    val exception = (failure as NetworkResult.Failure).exception
+                    onUiEvent(DiscussionsUiEvent.ShowErrorMessage(exception))
+                    return@coroutineScope
                 }
 
-            val results: Map<MemberDiscussionType, NetworkResult<List<MemberDiscussion>>> =
-                tasks.awaitAll().toMap()
+                val created = (results[MemberDiscussionType.CREATED] as NetworkResult.Success).data
+                val participated =
+                    (results[MemberDiscussionType.PARTICIPATED] as NetworkResult.Success).data
 
-            results.values.firstOrNull { it is NetworkResult.Failure }?.let { failure ->
-                val exception = (failure as NetworkResult.Failure).exception
-                onUiEvent(DiscussionsUiEvent.ShowErrorMessage(exception))
-                return@withLoading
+                _uiState.value = _uiState.value?.addMyDiscussion(created, participated)
             }
-
-            val created = (results[MemberDiscussionType.CREATED] as NetworkResult.Success).data
-            val participated =
-                (results[MemberDiscussionType.PARTICIPATED] as NetworkResult.Success).data
-
-            _uiState.value = _uiState.value?.addMyDiscussion(created, participated)
         }
 
     fun clearKeyword() {
