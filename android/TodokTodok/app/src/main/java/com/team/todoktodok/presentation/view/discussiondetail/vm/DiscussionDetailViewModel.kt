@@ -108,10 +108,12 @@ class DiscussionDetailViewModel(
     ) {
         when (result) {
             is NetworkResult.Success -> onSuccess(result.data)
-            is NetworkResult.Failure ->
+            is NetworkResult.Failure -> {
                 onUiEvent(
                     DiscussionDetailUiEvent.ShowErrorMessage(result.exception),
                 )
+                _uiState.value = _uiState.value?.copy(isLoading = false)
+            }
         }
     }
 

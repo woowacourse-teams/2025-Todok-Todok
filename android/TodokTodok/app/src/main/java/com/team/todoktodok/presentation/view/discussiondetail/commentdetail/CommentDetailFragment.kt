@@ -177,15 +177,15 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
 
             CommentDetailUiEvent.DeleteComment -> {
                 sharedViewModel.reloadDiscussion()
-                commentsViewModel.reloadComments()
+                commentsViewModel.showNewComment()
                 parentFragmentManager.popBackStack()
             }
 
-            CommentDetailUiEvent.ToggleCommentLike -> commentsViewModel.reloadComments()
-            CommentDetailUiEvent.CommentUpdate -> commentsViewModel.reloadComments()
+            CommentDetailUiEvent.ToggleCommentLike -> commentsViewModel.showNewComment()
+            CommentDetailUiEvent.CommentUpdate -> commentsViewModel.showNewComment()
             CommentDetailUiEvent.DeleteReply -> {
                 popupWindow?.dismiss()
-                commentsViewModel.reloadComments()
+                commentsViewModel.showNewComment()
             }
 
             is CommentDetailUiEvent.ShowError ->
@@ -197,7 +197,7 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
     }
 
     private fun onNewReplyCommitted(binding: FragmentCommentDetailBinding) {
-        commentsViewModel.reloadComments()
+        commentsViewModel.showNewComment()
         sharedViewModel.reloadDiscussion()
         binding.rvItems.doOnPreDraw {
             binding.rvItems.smoothScrollToPosition(adapter.itemCount)
@@ -439,7 +439,7 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
 
             override fun onClickCommentLike() {
                 viewModel.toggleCommentLike()
-                commentsViewModel.reloadComments()
+                commentsViewModel.showNewComment()
             }
 
             override fun onClickCommentUserName(userId: Long) {

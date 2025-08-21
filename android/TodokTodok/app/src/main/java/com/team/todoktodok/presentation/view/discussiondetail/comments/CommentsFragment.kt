@@ -81,6 +81,7 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
     ) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentCommentsBinding.bind(view)
+        viewModel.reloadComments()
         initAdapter(binding)
         setupOnClick(binding)
         setupObserve(binding)
@@ -203,7 +204,7 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
             CommentCreateBottomSheet.COMMENT_REQUEST_KEY,
             CommentCreateBottomSheet.COMMENT_CREATED_RESULT_KEY,
         ) {
-            viewModel.reloadComments()
+            viewModel.showNewComment()
             popupWindow?.dismiss()
         }
     }

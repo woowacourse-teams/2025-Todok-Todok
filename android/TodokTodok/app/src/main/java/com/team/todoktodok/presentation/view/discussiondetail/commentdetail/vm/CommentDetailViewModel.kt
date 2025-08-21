@@ -171,7 +171,7 @@ class CommentDetailViewModel(
                         reply.writer.id == memberId,
                     )
                 }
-            _uiState.value = currentUiState?.copy(replies = replyItems)
+            _uiState.value = currentUiState?.copy(replies = replyItems, isLoading = false)
         }
     }
 
@@ -185,7 +185,10 @@ class CommentDetailViewModel(
     ) {
         when (result) {
             is NetworkResult.Success -> onSuccess(result.data)
-            is NetworkResult.Failure -> onUiEvent(CommentDetailUiEvent.ShowError(result.exception))
+            is NetworkResult.Failure -> {
+                onUiEvent(CommentDetailUiEvent.ShowError(result.exception))
+                _uiState.value = _uiState.value?.copy(isLoading = false)
+            }
         }
     }
 

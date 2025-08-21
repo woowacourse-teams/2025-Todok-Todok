@@ -33,14 +33,18 @@ class CommentsViewModel(
     var commentsRvState: Parcelable? = null
 
     init {
-        viewModelScope.launch { loadComments() }
+        reloadComments()
     }
 
     fun loadCommentsShowState(showState: Parcelable?) {
         commentsRvState = showState
     }
 
-    fun reloadComments() =
+    fun reloadComments() {
+        viewModelScope.launch { loadComments() }
+    }
+
+    fun showNewComment() =
         viewModelScope.launch {
             loadComments()
             onUiEvent(CommentsUiEvent.ShowNewComment)
@@ -106,7 +110,10 @@ class CommentsViewModel(
     ) {
         when (result) {
             is NetworkResult.Success -> onSuccess(result.data)
-            is NetworkResult.Failure -> onUiEvent(CommentsUiEvent.ShowError(result.exception))
+            is NetworkResult.Failure -> {
+                onUiEvent(CommentsUiEvent.ShowError(result.exception))
+                _uiState.value = _uiState.value?.copy(isLoading = false)
+            }
         }
     }
 
