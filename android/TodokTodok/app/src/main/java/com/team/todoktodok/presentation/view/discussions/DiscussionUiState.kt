@@ -32,7 +32,7 @@ fun LatestDiscussion.toUiState(): DiscussionUiState {
             book = book,
             discussionTitle = title,
             discussionOpinion = content,
-            writer = User(author.memberId, Nickname(author.nickname),""),
+            writer = User(author.memberId, Nickname(author.nickname), author.profileImage),
             createAt = createdAt,
             likeCount = likeCount,
             commentCount = commentCount,
