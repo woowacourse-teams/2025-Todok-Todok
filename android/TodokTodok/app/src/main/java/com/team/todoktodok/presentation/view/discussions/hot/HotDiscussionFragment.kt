@@ -31,6 +31,8 @@ class HotDiscussionFragment : Fragment(R.layout.fragment_hot_discussion) {
     ) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentHotDiscussionBinding.bind(view)
+
+        viewModel.loadHotDiscussions()
         initView(binding)
         setupUiState()
     }
@@ -60,9 +62,4 @@ class HotDiscussionFragment : Fragment(R.layout.fragment_hot_discussion) {
                 startActivity(DiscussionDetailActivity.Intent(requireContext(), discussionId))
             }
         }
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.loadHotDiscussions()
-    }
 }
