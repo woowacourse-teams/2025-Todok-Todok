@@ -28,7 +28,8 @@ class DefaultDiscussionRepositoryTest {
     fun setUp() {
         discussionRemoteDataSource = FakeDiscussionRemoteDataSource()
         discussionLocalDataSource = mockk()
-        defaultDiscussionRepository = DefaultDiscussionRepository(discussionRemoteDataSource, discussionLocalDataSource)
+        defaultDiscussionRepository =
+            DefaultDiscussionRepository(discussionRemoteDataSource, discussionLocalDataSource)
     }
 
     @Test
@@ -75,7 +76,7 @@ class DefaultDiscussionRepositoryTest {
                                     author = "김영한",
                                     image = "",
                                 ),
-                            writer = User(id = 1, nickname = Nickname(value = "홍길동")),
+                            writer = User(id = 1, nickname = Nickname(value = "홍길동"), ""),
                             createAt = LocalDateTime.of(2025, 7, 12, 12, 0),
                             discussionOpinion = "fetch join을 남발하면 안됩니다.",
                             likeCount = 0,
@@ -118,7 +119,7 @@ class DefaultDiscussionRepositoryTest {
                             id = 1L,
                             discussionTitle = "JPA 성능 최적화",
                             book = Book(1L, "자바 ORM 표준 JPA 프로그래밍", "김영한", ""),
-                            writer = User(1L, Nickname("홍길동")),
+                            writer = User(1L, Nickname("홍길동"), ""),
                             createAt = LocalDateTime.of(2025, 7, 12, 12, 0),
                             discussionOpinion = "fetch join을 남발하면 안됩니다.",
                             likeCount = 0,
@@ -143,14 +144,16 @@ class DefaultDiscussionRepositoryTest {
             val firstCursor: String? = null
 
             // when
-            val firstPageResult = defaultDiscussionRepository.getLatestDiscussions(pageSize, firstCursor)
+            val firstPageResult =
+                defaultDiscussionRepository.getLatestDiscussions(pageSize, firstCursor)
             firstPageResult.onSuccess { page ->
                 assertThat(page.discussions.size).isEqualTo(pageSize)
                 assertThat(page.pageInfo.hasNext).isTrue()
             }
 
             val nextCursor = (firstPageResult as NetworkResult.Success).data.pageInfo.nextCursor
-            val secondPageResult = defaultDiscussionRepository.getLatestDiscussions(pageSize, nextCursor)
+            val secondPageResult =
+                defaultDiscussionRepository.getLatestDiscussions(pageSize, nextCursor)
 
             // then
             secondPageResult.onSuccess { page ->
@@ -169,7 +172,8 @@ class DefaultDiscussionRepositoryTest {
             val firstPage = defaultDiscussionRepository.getLatestDiscussions(pageSize, cursor)
             firstPage as NetworkResult.Success
             val lastCursor = firstPage.data.pageInfo.nextCursor
-            val lastPageResult = defaultDiscussionRepository.getLatestDiscussions(pageSize, lastCursor)
+            val lastPageResult =
+                defaultDiscussionRepository.getLatestDiscussions(pageSize, lastCursor)
 
             // then
             lastPageResult.onSuccess { page ->

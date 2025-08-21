@@ -27,7 +27,7 @@ class CommentViewHolder private constructor(
             ivCommentOption.setOnClickListener {
                 handler.onOptionClick(commentItemUiState, ivCommentOption)
             }
-            ivUserProfile.loadImage("")
+            ivUserProfile.loadImage(commentItemUiState.comment.writer.profileImage)
             ivUserProfile.setOnClickListener {
                 handler.onClickUser(commentItemUiState.comment.writer.id)
             }

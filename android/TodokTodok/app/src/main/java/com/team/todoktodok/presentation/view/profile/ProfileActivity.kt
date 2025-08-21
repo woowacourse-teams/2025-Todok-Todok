@@ -17,7 +17,9 @@ import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivityProfileBinding
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
+import com.team.todoktodok.presentation.core.component.ReportUserDialog
 import com.team.todoktodok.presentation.core.ext.getSerializableCompat
+import com.team.todoktodok.presentation.core.ext.registerReportResultListener
 import com.team.todoktodok.presentation.view.discussions.DiscussionsActivity
 import com.team.todoktodok.presentation.view.profile.adapter.ContentPagerAdapter
 import com.team.todoktodok.presentation.view.profile.adapter.ProfileAdapter
@@ -52,7 +54,9 @@ class ProfileActivity : AppCompatActivity() {
         val memberId: Long? = intent?.getLongExtra(ARG_MEMBER_ID, DEFAULT_MEMBER_ID)
         requireNotNull(memberId) { MEMBER_ID_NOT_FOUND }
 
-        val initialTab = intent?.getSerializableCompat<UserProfileTab>(ARG_INITIAL_TAB) ?: UserProfileTab.ACTIVATED_BOOKS
+        val initialTab =
+            intent?.getSerializableCompat<UserProfileTab>(ARG_INITIAL_TAB)
+                ?: UserProfileTab.ACTIVATED_BOOKS
 
         messageConverter = ExceptionMessageConverter()
 
@@ -82,6 +86,13 @@ class ProfileActivity : AppCompatActivity() {
             val result =
                 bundle.getSerializableCompat<Support>(SupportMemberDialog.RESULT_KEY_SUPPORT)
             viewModel.supportMember(result)
+        }
+        supportFragmentManager.registerReportResultListener(
+            this,
+            USER_REPORT_DIALOG_REQUEST_KEY,
+            ReportUserDialog.RESULT_KEY_REPORT_USER,
+        ) { reportReason ->
+            viewModel.supportMember(Support.REPORT)
         }
     }
 
@@ -175,8 +186,17 @@ class ProfileActivity : AppCompatActivity() {
             }
 
             override fun onClickSupport(type: Support) {
-                val dialog = SupportMemberDialog.newInstance(type)
-                dialog.show(supportFragmentManager, SupportMemberDialog.TAG)
+                when (type) {
+                    Support.BLOCK -> {
+                        val dialog = SupportMemberDialog.newInstance(type)
+                        dialog.show(supportFragmentManager, SupportMemberDialog.TAG)
+                    }
+
+                    Support.REPORT -> {
+                        val dialog = ReportUserDialog.newInstance(USER_REPORT_DIALOG_REQUEST_KEY)
+                        dialog.show(supportFragmentManager, ReportUserDialog.TAG)
+                    }
+                }
             }
         }
 
@@ -184,15 +204,17 @@ class ProfileActivity : AppCompatActivity() {
         fun Intent(
             context: Context,
             memberId: Long? = null,
-            initialTab: UserProfileTab? = null,
+            initialTab: UserProfileTab = UserProfileTab.ACTIVATED_BOOKS,
         ): Intent =
             Intent(context, ProfileActivity::class.java).apply {
                 memberId?.let { putExtra(ARG_MEMBER_ID, it) }
-                initialTab?.let { putExtra(ARG_INITIAL_TAB, it) }
+                putExtra(ARG_INITIAL_TAB, initialTab)
             }
 
         const val ARG_MEMBER_ID = "member_id"
         const val ARG_INITIAL_TAB = "initial_tab"
         const val MEMBER_ID_NOT_FOUND = "멤버 아이디가 존재하지 않습니다"
+
+        private const val USER_REPORT_DIALOG_REQUEST_KEY = "comment_report_dialog_request_key"
     }
 }

@@ -178,4 +178,13 @@
         app:layout_constraintStart_toEndOf="@id/iv_comment"
         app:layout_constraintTop_toTopOf="@id/iv_comment"
         tools:text="23333" />
+
+    <com.team.todoktodok.presentation.core.component.CloverProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

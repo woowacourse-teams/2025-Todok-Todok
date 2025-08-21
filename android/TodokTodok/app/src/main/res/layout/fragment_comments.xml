@@ -41,4 +41,37 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/ll_nothing_comments_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="200dp"
+            android:contentDescription="@string/comment_content_description_noting_comment"
+            android:src="@drawable/img_mascort_outline" />
+
+        <TextView
+            style="@style/BaseTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:gravity="center"
+            android:text="@string/comment_nothing_comments"
+            android:textSize="@dimen/font_size_2x_large" />
+    </LinearLayout>
+
+    <com.team.todoktodok.presentation.core.component.CloverProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

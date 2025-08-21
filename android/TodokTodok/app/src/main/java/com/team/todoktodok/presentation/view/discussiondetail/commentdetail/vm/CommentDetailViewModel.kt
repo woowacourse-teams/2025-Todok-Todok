@@ -29,7 +29,7 @@ class CommentDetailViewModel(
     val commentId =
         savedStateHandle.get<Long>(KEY_COMMENT_ID) ?: throw IllegalStateException()
 
-    private val _uiState = MutableLiveData(CommentDetailUiState())
+    private val _uiState = MutableLiveData(CommentDetailUiState().copy(isLoading = true))
     val uiState: LiveData<CommentDetailUiState> = _uiState
 
     private val _uiEvent = MutableSingleLiveData<CommentDetailUiEvent>()
@@ -153,6 +153,7 @@ class CommentDetailViewModel(
                             comment,
                             isMyComment,
                         ),
+                    isLoading = false,
                 )
         }
     }
@@ -167,10 +168,10 @@ class CommentDetailViewModel(
                 replies.map { reply ->
                     ReplyItemUiState(
                         reply,
-                        reply.user.id == memberId,
+                        reply.writer.id == memberId,
                     )
                 }
-            _uiState.value = currentUiState?.copy(replies = replyItems)
+            _uiState.value = currentUiState?.copy(replies = replyItems, isLoading = false)
         }
     }
 
@@ -184,7 +185,10 @@ class CommentDetailViewModel(
     ) {
         when (result) {
             is NetworkResult.Success -> onSuccess(result.data)
-            is NetworkResult.Failure -> onUiEvent(CommentDetailUiEvent.ShowError(result.exception))
+            is NetworkResult.Failure -> {
+                onUiEvent(CommentDetailUiEvent.ShowError(result.exception))
+                _uiState.value = _uiState.value?.copy(isLoading = false)
+            }
         }
     }
 

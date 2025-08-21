@@ -24,7 +24,7 @@ class CommentsViewModel(
     val discussionId: Long =
         savedStateHandle.get<Long>(KEY_DISCUSSION_ID) ?: error("discussionId missing")
 
-    private val _uiState = MutableLiveData(CommentsUiState())
+    private val _uiState = MutableLiveData(CommentsUiState().copy(isLoading = true))
     val uiState: LiveData<CommentsUiState> = _uiState
 
     private val _uiEvent = MutableSingleLiveData<CommentsUiEvent>()
@@ -33,14 +33,18 @@ class CommentsViewModel(
     var commentsRvState: Parcelable? = null
 
     init {
-        viewModelScope.launch { loadComments() }
+        reloadComments()
     }
 
     fun loadCommentsShowState(showState: Parcelable?) {
         commentsRvState = showState
     }
 
-    fun reloadComments() =
+    fun reloadComments() {
+        viewModelScope.launch { loadComments() }
+    }
+
+    fun showNewComment() =
         viewModelScope.launch {
             loadComments()
             onUiEvent(CommentsUiEvent.ShowNewComment)
@@ -72,7 +76,7 @@ class CommentsViewModel(
         viewModelScope.launch {
             handleResult(
                 commentRepository.report(discussionId, commentId),
-            ) {}
+            ) { onUiEvent(CommentsUiEvent.ShowReportCommentSuccessMessage) }
         }
 
     fun showCommentCreate() {
@@ -92,7 +96,7 @@ class CommentsViewModel(
         handleResult(commentRepository.getCommentsByDiscussionId(discussionId)) { list ->
             val myId = tokenRepository.getMemberId()
             val items = list.map { CommentItemUiState(it, isMyComment = myId == it.writer.id) }
-            _uiState.value = _uiState.value?.copy(comments = items)
+            _uiState.value = _uiState.value?.copy(comments = items, isLoading = false)
         }
     }
 
@@ -106,7 +110,10 @@ class CommentsViewModel(
     ) {
         when (result) {
             is NetworkResult.Success -> onSuccess(result.data)
-            is NetworkResult.Failure -> onUiEvent(CommentsUiEvent.ShowError(result.exception))
+            is NetworkResult.Failure -> {
+                onUiEvent(CommentsUiEvent.ShowError(result.exception))
+                _uiState.value = _uiState.value?.copy(isLoading = false)
+            }
         }
     }
 

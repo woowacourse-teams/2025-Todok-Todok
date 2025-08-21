@@ -18,6 +18,8 @@ data class DiscussionUiState(
     val discussionTitle: String get() = item.discussionTitle
     val discussionOpinion: String get() = item.discussionOpinion
     val writerNickname: String get() = item.writerNickname
+    val writerProfileImage: String get() = item.writer.profileImage
+
     val likeCount: String get() = item.likeCount.toString()
     val commentCount: String get() = item.commentCount.toString()
     val viewCount: String get() = item.viewCount.toString()
@@ -30,7 +32,7 @@ fun LatestDiscussion.toUiState(): DiscussionUiState {
             book = book,
             discussionTitle = title,
             discussionOpinion = content,
-            writer = User(author.memberId, Nickname(author.nickname)),
+            writer = User(author.memberId, Nickname(author.nickname), author.profileImage),
             createAt = createdAt,
             likeCount = likeCount,
             commentCount = commentCount,
@@ -40,7 +42,7 @@ fun LatestDiscussion.toUiState(): DiscussionUiState {
 }
 
 fun MemberDiscussion.toUiState(): DiscussionUiState {
-    val writer = User(1, Nickname("페토"))
+    val writer = User(1, Nickname("페토"), "")
     val createAt = "2025-08-15T21:22:11".toLocalDateTime()
     val likeCount = 0
     val commentCount = 2
@@ -65,7 +67,7 @@ fun MemberDiscussion.toUiState(): DiscussionUiState {
 }
 
 fun MemberDiscussion.toUiStateWithoutWriterNickname(): DiscussionUiState {
-    val writer = User(1, Nickname("페토"))
+    val writer = User(1, Nickname("페토"), "")
     val createAt = "2025-08-15T21:22:11".toLocalDateTime()
     val likeCount = 0
     val commentCount = 2

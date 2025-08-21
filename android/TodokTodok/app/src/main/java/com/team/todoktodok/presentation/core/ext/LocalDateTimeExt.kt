@@ -2,7 +2,6 @@ package com.team.todoktodok.presentation.core.ext
 
 import android.content.Context
 import com.team.todoktodok.R
-import java.time.Duration
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZoneOffset
@@ -22,7 +21,6 @@ fun LocalDateTime.toRelativeString(
 private fun RelativeTime.format(context: Context): String =
     when (this) {
         RelativeTime.JustNow -> context.getString(R.string.all_relative_just_now)
-        RelativeTime.Soon -> context.getString(R.string.all_relative_soon)
         is RelativeTime.Years -> context.getString(R.string.all_relative_years, value)
         is RelativeTime.Months -> context.getString(R.string.all_relative_months, value)
         is RelativeTime.Weeks -> context.getString(R.string.all_relative_weeks, value)
@@ -41,8 +39,7 @@ private fun LocalDateTime.toRelative(
     val then: ZonedDateTime = this.atZone(sourceZone).withZoneSameInstant(targetZone)
 
     if (then.isAfter(now)) {
-        val aheadSec = Duration.between(now, then).seconds
-        return if (aheadSec <= justNowThresholdSeconds) RelativeTime.JustNow else RelativeTime.Soon
+        return RelativeTime.JustNow
     }
 
     ChronoUnit.YEARS
@@ -81,9 +78,7 @@ private fun LocalDateTime.toRelative(
 }
 
 sealed interface RelativeTime {
-    data object JustNow : RelativeTime // "방금 전"
-
-    data object Soon : RelativeTime // "곧"
+    data object JustNow : RelativeTime
 
     @JvmInline
     value class Years(
