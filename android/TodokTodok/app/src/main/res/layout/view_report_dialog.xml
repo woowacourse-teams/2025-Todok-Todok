@@ -23,6 +23,7 @@
         android:layout_height="wrap_content"
         android:checkedButton="@id/rb_off_topic"
         android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@id/btn_submit"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_title">
 
@@ -59,42 +60,36 @@
             app:useMaterialThemeColors="true" />
     </RadioGroup>
 
-    <LinearLayout
-        android:id="@+id/button_container"
+    <Button
+        android:id="@+id/btn_cancel"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:orientation="horizontal"
+        android:layout_height="48dp"
+        android:layout_marginEnd="@dimen/space_12"
+        android:layout_weight="1"
+        android:background="@drawable/bg_radius_5dp"
+        android:fontFamily="@font/pretendard_medium"
+        android:text="@string/all_cancel"
+        android:textColor="@color/black_18"
+        android:textSize="@dimen/font_size_large"
+        app:backgroundTint="@color/gray_e0"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/btn_submit"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/btn_submit"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_weight="1"
+        android:background="@drawable/bg_radius_5dp"
+        android:fontFamily="@font/pretendard_medium"
+        android:text="@string/all_report_action"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font_size_large"
+        app:backgroundTint="@color/green_1A"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/rg_reasons">
-
-        <Button
-            android:id="@+id/btn_cancel"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_marginEnd="@dimen/space_12"
-            android:layout_weight="1"
-            android:background="@drawable/bg_radius_5dp"
-            android:fontFamily="@font/pretendard_medium"
-            android:text="@string/all_cancel"
-            android:textColor="@color/black_18"
-            android:textSize="@dimen/font_size_large"
-            app:backgroundTint="@color/gray_e0" />
-
-        <Button
-            android:id="@+id/btn_submit"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:background="@drawable/bg_radius_5dp"
-            android:fontFamily="@font/pretendard_medium"
-            android:text="@string/all_report_action"
-            android:textColor="@color/white"
-            android:textSize="@dimen/font_size_large"
-            app:backgroundTint="@color/green_1A" />
-    </LinearLayout>
+        app:layout_constraintStart_toEndOf="@id/btn_cancel" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
