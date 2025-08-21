@@ -1,5 +1,8 @@
 package todoktodok.backend.discussion.presentation;
 
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
+
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,7 +18,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import todoktodok.backend.DatabaseInitializer;
 import todoktodok.backend.InitializerTimer;
-import todoktodok.backend.comment.application.dto.request.CommentRequest;
 import todoktodok.backend.discussion.application.dto.request.DiscussionRequest;
 import todoktodok.backend.discussion.application.dto.request.DiscussionUpdateRequest;
 import todoktodok.backend.member.presentation.fixture.MemberFixture;
@@ -68,6 +70,7 @@ class DiscussionControllerTest {
         // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
+
         databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
 
         final String token = MemberFixture.login("user@gmail.com");
@@ -82,12 +85,118 @@ class DiscussionControllerTest {
     }
 
     @Test
+    @DisplayName("토론방을 최신순 조회한다 - 첫 페이지 조회")
+    void getSlicedDiscussions_firstPage() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+
+        databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
+        databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
+        databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
+        databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
+        databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
+
+        final String token = MemberFixture.login("user@gmail.com");
+        final String cursorMeaningThree = "Mw==";
+
+        // when - then
+        RestAssured.given().log().all()
+                .header("Authorization", token)
+                .contentType(ContentType.JSON)
+                .when().get("/api/v1/discussions?size=3")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("items.size()", is(3))
+                .body("pageInfo.hasNext", is(true))
+                .body("pageInfo.nextCursor", is(cursorMeaningThree));
+    }
+
+    @Test
+    @DisplayName("토론방을 최신순 조회한다 - 중간 페이지 조회")
+    void getSlicedDiscussions_middlePage() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+
+        databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
+        databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
+        databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
+        databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
+        databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
+
+        final String token = MemberFixture.login("user@gmail.com");
+        final String cursorMeaningFive = "NQ==";
+        final String cursorMeaningTwo = "Mg==";
+
+        // when - then
+        RestAssured.given().log().all()
+                .header("Authorization", token)
+                .contentType(ContentType.JSON)
+                .when().get(String.format("/api/v1/discussions?size=3&cursor=%s", cursorMeaningFive))
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("items.size()", is(3))
+                .body("pageInfo.hasNext", is(true))
+                .body("pageInfo.nextCursor", is(cursorMeaningTwo));
+    }
+
+    @Test
+    @DisplayName("토론방을 최신순 조회한다 - 마지막 페이지 조회")
+    void getSlicedDiscussions_lastPage() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+
+        databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
+        databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
+        databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
+        databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
+        databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
+
+        final String token = MemberFixture.login("user@gmail.com");
+        final String cursorMeaningFour = "NA==";
+
+        // when - then
+        RestAssured.given().log().all()
+                .header("Authorization", token)
+                .contentType(ContentType.JSON)
+                .when().get(String.format("/api/v1/discussions?size=3&cursor=%s", cursorMeaningFour))
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("items.size()", is(3))
+                .body("pageInfo.hasNext", is(false))
+                .body("pageInfo.nextCursor", nullValue());
+    }
+
+    @Test
+    @DisplayName("토론방을 필터링한다")
+    void filterDiscussions() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+
+        databaseInitializer.setDiscussionInfo("오브젝트", "오브젝트 토론입니다", 1L, 1L);
+
+        final String token = MemberFixture.login("user@gmail.com");
+
+        // when - then
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .header("Authorization", token)
+                .when().get("/api/v1/discussions/search?keyword=오브젝트&type=ALL")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
+    }
+
+    @Test
     @DisplayName("토론방을 신고한다")
     void report() {
         // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setUserInfo("user123@gmail.com", "user123", "https://image.png", "message");
         databaseInitializer.setDefaultBookInfo();
+
         databaseInitializer.setDiscussionInfo("토론방1", "토론방 내용", 2L, 1L);
 
         final String token = MemberFixture.login("user@gmail.com");
@@ -107,6 +216,7 @@ class DiscussionControllerTest {
         // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
+
         databaseInitializer.setDefaultDiscussionInfo();
 
         final String updatedTitle = "상속과 조합은 어떤 상황에 쓰이나요?";
@@ -135,6 +245,7 @@ class DiscussionControllerTest {
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setUserInfo("user2@gmail.com", "user2", "https://image.png", "message");
         databaseInitializer.setDefaultBookInfo();
+
         databaseInitializer.setDefaultDiscussionInfo();
 
         final String token = MemberFixture.login("user2@gmail.com");
@@ -155,6 +266,7 @@ class DiscussionControllerTest {
         // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
+
         databaseInitializer.setDefaultDiscussionInfo();
 
         final String token = MemberFixture.login("user@gmail.com");
@@ -174,6 +286,7 @@ class DiscussionControllerTest {
         // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
+
         databaseInitializer.setDefaultDiscussionInfo();
         databaseInitializer.setDefaultCommentInfo();
 
@@ -188,25 +301,6 @@ class DiscussionControllerTest {
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
-    @Test
-    @DisplayName("토론방을 필터링한다")
-    void filterDiscussions() {
-        // given
-        databaseInitializer.setDefaultUserInfo();
-        databaseInitializer.setDefaultBookInfo();
-        databaseInitializer.setDiscussionInfo("오브젝트", "오브젝트 토론입니다", 1L, 1L);
-
-        final String token = MemberFixture.login("user@gmail.com");
-
-        // when - then
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .header("Authorization", token)
-                .when().get("/api/v1/discussions?keyword=오브젝트&type=ALL")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value());
-    }
-
     @Nested
     @DisplayName("토론방 필터링 실패 테스트")
     class FilterDiscussionsFailTest {
@@ -217,10 +311,11 @@ class DiscussionControllerTest {
             // given
             databaseInitializer.setDefaultUserInfo();
             databaseInitializer.setDefaultBookInfo();
+
             databaseInitializer.setDiscussionInfo("오브젝트", "오브젝트 토론입니다", 1L, 1L);
 
             final String token = MemberFixture.login("user@gmail.com");
-            final String uri = "/api/v1/discussions?keyword=오브젝트";
+            final String uri = "/api/v1/discussions/search?keyword=오브젝트";
 
             // when - then
             RestAssured.given().log().all()
@@ -237,10 +332,11 @@ class DiscussionControllerTest {
             // given
             databaseInitializer.setDefaultUserInfo();
             databaseInitializer.setDefaultBookInfo();
+
             databaseInitializer.setDiscussionInfo("오브젝트", "오브젝트 토론입니다", 1L, 1L);
 
             final String token = MemberFixture.login("user@gmail.com");
-            final String uri = "/api/v1/discussions?keyword=오브젝트&type=HELLO";
+            final String uri = "/api/v1/discussions/search?keyword=오브젝트&type=HELLO";
 
             // when - then
             RestAssured.given().log().all()
@@ -258,6 +354,7 @@ class DiscussionControllerTest {
         // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
+
         databaseInitializer.setDefaultDiscussionInfo();
 
         final String token = MemberFixture.login("user@gmail.com");
@@ -277,6 +374,7 @@ class DiscussionControllerTest {
         // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
+
         databaseInitializer.setDefaultDiscussionInfo();
         databaseInitializer.setDiscussionLikeInfo(1L, 1L);
 

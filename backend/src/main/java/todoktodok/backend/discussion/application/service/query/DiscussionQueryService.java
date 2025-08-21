@@ -1,12 +1,20 @@
 package todoktodok.backend.discussion.application.service.query;
 
+import jakarta.annotation.Nullable;
+import java.util.Base64;
 import java.util.List;
 import java.util.NoSuchElementException;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.comment.domain.repository.CommentRepository;
 import todoktodok.backend.discussion.application.dto.response.DiscussionResponse;
+import todoktodok.backend.discussion.application.dto.response.PageInfo;
+import todoktodok.backend.discussion.application.dto.response.SlicedDiscussionResponse;
 import todoktodok.backend.discussion.domain.Discussion;
 import todoktodok.backend.discussion.domain.repository.DiscussionLikeRepository;
 import todoktodok.backend.discussion.domain.repository.DiscussionRepository;
@@ -18,6 +26,9 @@ import todoktodok.backend.reply.domain.repository.ReplyRepository;
 @Transactional(readOnly = true)
 @AllArgsConstructor
 public class DiscussionQueryService {
+
+    private static final int MAX_PAGE_SIZE = 50;
+    private static final int MIN_PAGE_SIZE = 1;
 
     private final DiscussionRepository discussionRepository;
     private final DiscussionLikeRepository discussionLikeRepository;
@@ -37,13 +48,33 @@ public class DiscussionQueryService {
                 commentRepository.countCommentsByDiscussionId(discussionId)
                         + replyRepository.countRepliesByDiscussionId(discussionId)
         );
-        final boolean isLiked = discussionLikeRepository.existsByMemberAndDiscussion(member, discussion);
+        final boolean isLikedByMe = discussionLikeRepository.existsByMemberAndDiscussion(member, discussion);
 
         return new DiscussionResponse(
                 discussion,
                 likeCount,
                 commentCount,
-                isLiked
+                isLikedByMe
+        );
+    }
+
+    public SlicedDiscussionResponse getDiscussions(
+            final Long memberId,
+            final int size,
+            @Nullable final String cursor
+    ) {
+        validatePageSize(size);
+        final Member member = findMember(memberId);
+
+        final Slice<Discussion> slicedDiscussions = sliceDiscussionsBy(cursor, size);
+
+        final List<Discussion> discussions = slicedDiscussions.getContent();
+        final boolean hasNextPage = slicedDiscussions.hasNext();
+        final String nextCursor = findNextCursor(hasNextPage, discussions);
+
+        return new SlicedDiscussionResponse(
+                getDiscussionsResponses(discussions, member),
+                new PageInfo(hasNextPage, nextCursor)
         );
     }
 
@@ -78,6 +109,47 @@ public class DiscussionQueryService {
                                 String.format("해당 회원을 찾을 수 없습니다: memberId= %s", memberId)
                         )
                 );
+    }
+
+    private Slice<Discussion> sliceDiscussionsBy(
+            final String cursor,
+            final int size
+    ) {
+        final Pageable pageable = PageRequest.of(0, size, Sort.Direction.DESC, "id");
+
+        if (cursor == null || cursor.isBlank()) {
+            return discussionRepository.findAllBy(pageable);
+        }
+
+        final Long cursorId = decodeCursor(cursor);
+        return discussionRepository.findByIdLessThan(cursorId, pageable);
+    }
+
+    private String findNextCursor(
+            final boolean hasNextPage,
+            final List<Discussion> discussions
+    ) {
+        if (!hasNextPage || discussions.isEmpty()) {
+            return null;
+        }
+        return encodeCursorId(discussions.getLast().getId());
+    }
+
+    private Long decodeCursor(final String cursor) {
+        try {
+            if (cursor == null || cursor.isBlank()) {
+                return null;
+            }
+
+            final String decoded = new String(Base64.getUrlDecoder().decode(cursor));
+            return Long.valueOf(decoded);
+        } catch (final Exception e) {
+            throw new IllegalArgumentException(String.format("Base64로 디코드할 수 없는 cursor 값입니다: cursor = %s", cursor));
+        }
+    }
+
+    public String encodeCursorId(final Long id) {
+        return Base64.getUrlEncoder().encodeToString(id.toString().getBytes());
     }
 
     private List<DiscussionResponse> getAllDiscussions(final Member member) {
@@ -151,5 +223,11 @@ public class DiscussionQueryService {
             final List<Long> likedDiscussionIds
     ) {
         return likedDiscussionIds.contains(discussion.getId());
+    }
+
+    private void validatePageSize(final int size) {
+        if (size < MIN_PAGE_SIZE || size > MAX_PAGE_SIZE) {
+            throw new IllegalArgumentException(String.format("유효하지 않은 페이지 사이즈입니다. 1 이상 50 이하의 페이징을 시도해주세요: size = %d", size));
+        }
     }
 }

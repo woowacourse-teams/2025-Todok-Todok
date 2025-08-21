@@ -19,6 +19,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import todoktodok.backend.discussion.application.dto.request.DiscussionRequest;
 import todoktodok.backend.discussion.application.dto.request.DiscussionUpdateRequest;
 import todoktodok.backend.discussion.application.dto.response.DiscussionResponse;
+import todoktodok.backend.discussion.application.dto.response.SlicedDiscussionResponse;
 import todoktodok.backend.discussion.application.service.command.DiscussionCommandService;
 import todoktodok.backend.discussion.application.service.query.DiscussionQueryService;
 import todoktodok.backend.global.auth.Auth;
@@ -66,6 +67,17 @@ public class DiscussionController implements DiscussionApiDocs {
     ) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(discussionQueryService.getDiscussion(memberId, discussionId));
+    }
+
+    @Auth(value = Role.USER)
+    @GetMapping
+    public ResponseEntity<SlicedDiscussionResponse> getDiscussions(
+            @LoginMember final Long memberId,
+            @RequestParam final int size,
+            @RequestParam(required = false) final String cursor
+    ) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(discussionQueryService.getDiscussions(memberId, size, cursor));
     }
 
     @Auth(value = Role.USER)

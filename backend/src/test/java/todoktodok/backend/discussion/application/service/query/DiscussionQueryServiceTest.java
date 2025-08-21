@@ -10,6 +10,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -19,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.DatabaseInitializer;
 import todoktodok.backend.InitializerTimer;
 import todoktodok.backend.discussion.application.dto.response.DiscussionResponse;
+import todoktodok.backend.discussion.application.dto.response.PageInfo;
+import todoktodok.backend.discussion.application.dto.response.SlicedDiscussionResponse;
 import todoktodok.backend.discussion.domain.DiscussionFilterType;
 
 @ActiveProfiles("test")
@@ -197,6 +201,230 @@ class DiscussionQueryServiceTest {
 
         // then
         assertThat(discussion.isLikedByMe()).isFalse();
+    }
+
+    @Nested
+    @DisplayName("토론방 최신순 조회 테스트")
+    class GetDiscussionsTest {
+
+        @Test
+        @DisplayName("토론방 최신순 조회 시 cursor 값에 맞는 토론방의 생성일시 이후에 생성된 토론방 중 최신순으로 조회한다")
+        void getDiscussionsFromNewestTest_sliceByIdLessThanCursorId() {
+            // given
+            databaseInitializer.setDefaultUserInfo();
+            databaseInitializer.setDefaultBookInfo();
+
+            databaseInitializer.setDefaultDiscussionInfo();
+            databaseInitializer.setDefaultDiscussionInfo();
+            databaseInitializer.setDefaultDiscussionInfo();
+            databaseInitializer.setDefaultDiscussionInfo();
+            databaseInitializer.setDefaultDiscussionInfo();
+
+            final Long memberId = 1L;
+            final int size = 3;
+            final String cursorMeaningFour = "NA==";
+
+            // when
+            final SlicedDiscussionResponse firstSlicedDiscussions = discussionQueryService.getDiscussions(memberId, size, cursorMeaningFour);
+            final List<DiscussionResponse> items = firstSlicedDiscussions.items();
+
+            // then
+            assertAll(
+                    () -> assertThat(items).hasSize(size),
+                    () -> assertThat(items.get(0).discussionId()).isEqualTo(3L),
+                    () -> assertThat(items.get(1).discussionId()).isEqualTo(2L),
+                    () -> assertThat(items.get(2).discussionId()).isEqualTo(1L)
+            );
+        }
+
+        @Test
+        @DisplayName("토론방이 없을 때 토론방 최신순을 조회하면 빈 리스트를 반환한다")
+        void getDiscussionsFromNewestTest_emptyDiscussion() {
+            // given
+            databaseInitializer.setDefaultUserInfo();
+
+            final Long memberId = 1L;
+            final int size = 3;
+            final String cursor = null;
+
+            // when
+            final SlicedDiscussionResponse firstSlicedDiscussions = discussionQueryService.getDiscussions(memberId, size, cursor);
+            final List<DiscussionResponse> items = firstSlicedDiscussions.items();
+
+            // then
+            assertThat(items).isEmpty();
+        }
+
+        @Test
+        @DisplayName("토론방 최신순 조회 시 cursor가 null이면 가장 id가 큰 토론방부터 조회한다")
+        void getDiscussionsFromNewestTest_cursorNull() {
+            // given
+            databaseInitializer.setDefaultUserInfo();
+            databaseInitializer.setDefaultBookInfo();
+
+            databaseInitializer.setDefaultDiscussionInfo();
+            databaseInitializer.setDefaultDiscussionInfo();
+            databaseInitializer.setDefaultDiscussionInfo();
+            databaseInitializer.setDefaultDiscussionInfo();
+            databaseInitializer.setDefaultDiscussionInfo();
+
+            final Long memberId = 1L;
+            final int size = 3;
+            final String cursor = null;
+
+            // when
+            final SlicedDiscussionResponse firstSlicedDiscussions = discussionQueryService.getDiscussions(memberId, size, cursor);
+            final List<DiscussionResponse> items = firstSlicedDiscussions.items();
+
+            // then
+            assertAll(
+                    () -> assertThat(items).hasSize(size),
+                    () -> assertThat(items.get(0).discussionId()).isEqualTo(5L),
+                    () -> assertThat(items.get(1).discussionId()).isEqualTo(4L),
+                    () -> assertThat(items.get(2).discussionId()).isEqualTo(3L)
+            );
+        }
+
+        @Test
+        @DisplayName("""
+                토론방 최신순 조회 시 추가로 조회할 토론방이 남아있다면 아래의 값을 반환한다
+                1. hasNext 값을 true로 반환한다
+                2. nextCursor 값을 조회된 토론방 중 마지막 토론방의 id로 반환한다
+                """)
+        void getDiscussionsFromNewestTest_hasDiscussionLeft() {
+            // given
+            databaseInitializer.setDefaultUserInfo();
+            databaseInitializer.setDefaultBookInfo();
+
+            databaseInitializer.setDefaultDiscussionInfo();
+            databaseInitializer.setDefaultDiscussionInfo();
+            databaseInitializer.setDefaultDiscussionInfo();
+            databaseInitializer.setDefaultDiscussionInfo();
+            databaseInitializer.setDefaultDiscussionInfo();
+
+            final Long memberId = 1L;
+            final int size = 3;
+            final String cursor = null;
+
+            // when
+            final SlicedDiscussionResponse firstSlicedDiscussions = discussionQueryService.getDiscussions(memberId, size, cursor);
+            final List<DiscussionResponse> items = firstSlicedDiscussions.items();
+            final PageInfo pageInfo = firstSlicedDiscussions.pageInfo();
+            final String cursorMeaningThree = "Mw==";
+
+            // then
+            assertAll(
+                    () -> assertThat(items).hasSize(size),
+                    () -> assertThat(pageInfo.hasNext()).isTrue(),
+                    () -> assertThat(pageInfo.nextCursor()).isEqualTo(cursorMeaningThree)
+            );
+        }
+
+        @Test
+        @DisplayName("""
+                토론방 최신순 조회 시 추가로 조회할 토론방이 없다면 아래의 값을 반환한다
+                1. hasNext 값을 false로 반환한다
+                2. nextCursor 값을 null로 반환한다
+                """)
+        void getDiscussionsFromNewestTest_NoDiscussionLeft() {
+            // given
+            databaseInitializer.setDefaultUserInfo();
+            databaseInitializer.setDefaultBookInfo();
+
+            databaseInitializer.setDefaultDiscussionInfo();
+            databaseInitializer.setDefaultDiscussionInfo();
+            databaseInitializer.setDefaultDiscussionInfo();
+
+            final Long memberId = 1L;
+            final int size = 3;
+            final String cursor = null;
+
+            // when
+            final SlicedDiscussionResponse firstSlicedDiscussions = discussionQueryService.getDiscussions(memberId, size, cursor);
+            final List<DiscussionResponse> items = firstSlicedDiscussions.items();
+            final PageInfo pageInfo = firstSlicedDiscussions.pageInfo();
+
+            // then
+            assertAll(
+                    () -> assertThat(items).hasSize(size),
+                    () -> assertThat(pageInfo.hasNext()).isFalse(),
+                    () -> assertThat(pageInfo.nextCursor()).isEqualTo(null)
+            );
+        }
+
+        @Test
+        @DisplayName("""
+                마지막 토론방 최신순 조회 시 남은 토론방 개수는 size 이하이다
+                """)
+        void getDiscussionsFromNewestTest_lastDiscussions() {
+            // given
+            databaseInitializer.setDefaultUserInfo();
+            databaseInitializer.setDefaultBookInfo();
+
+            databaseInitializer.setDefaultDiscussionInfo();
+            databaseInitializer.setDefaultDiscussionInfo();
+            databaseInitializer.setDefaultDiscussionInfo();
+            databaseInitializer.setDefaultDiscussionInfo();
+            databaseInitializer.setDefaultDiscussionInfo();
+
+            final Long memberId = 1L;
+            final int size = 3;
+            final String cursorMeaningThree = "Mw==";
+
+            // when
+            final SlicedDiscussionResponse firstSlicedDiscussions = discussionQueryService.getDiscussions(memberId, size, cursorMeaningThree);
+            final List<DiscussionResponse> items = firstSlicedDiscussions.items();
+            final PageInfo pageInfo = firstSlicedDiscussions.pageInfo();
+
+            // then
+            assertThat(items).hasSize(2);
+        }
+
+        @ParameterizedTest
+        @DisplayName("토론방 최신순 조회 시 사이즈 값이 범위를 초과할 경우 예외가 발생한다")
+        @ValueSource(ints = {-1, 0, 51, 100})
+        void getDiscussionsFromNewestTest_wrongSize(final int size) {
+            // given
+            databaseInitializer.setDefaultUserInfo();
+            databaseInitializer.setDefaultBookInfo();
+
+            databaseInitializer.setDefaultDiscussionInfo();
+            databaseInitializer.setDefaultDiscussionInfo();
+            databaseInitializer.setDefaultDiscussionInfo();
+            databaseInitializer.setDefaultDiscussionInfo();
+            databaseInitializer.setDefaultDiscussionInfo();
+
+            final Long memberId = 1L;
+            final String cursor = null;
+
+            // when - then
+            assertThatThrownBy(() -> discussionQueryService.getDiscussions(memberId, size, cursor))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessageContaining("유효하지 않은 페이지 사이즈입니다. 1 이상 50 이하의 페이징을 시도해주세요");
+        }
+
+        @Test
+        @DisplayName("토론방 최신순 조회 시 커서 값이 유효하지 않을 경우 예외가 발생한다")
+        void getDiscussionsFromNewestTest_wrongCursor() {
+            // given
+            databaseInitializer.setDefaultUserInfo();
+            databaseInitializer.setDefaultBookInfo();
+
+            databaseInitializer.setDefaultDiscussionInfo();
+            databaseInitializer.setDefaultDiscussionInfo();
+            databaseInitializer.setDefaultDiscussionInfo();
+            databaseInitializer.setDefaultDiscussionInfo();
+            databaseInitializer.setDefaultDiscussionInfo();
+
+            final Long memberId = 1L;
+            final int size = 3;
+            final String cursor = "woowa";
+
+            // when - then
+            assertThatThrownBy(() -> discussionQueryService.getDiscussions(memberId, size, cursor))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessageContaining("Base64로 디코드할 수 없는 cursor 값입니다");
+        }
     }
 
     @Nested
@@ -433,5 +661,6 @@ class DiscussionQueryServiceTest {
                     () -> assertThat(notLikedDiscussion.isLikedByMe()).isFalse()
             );
         }
+
     }
 }
