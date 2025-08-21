@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
+    android:layout_marginTop="@dimen/space_0"
     android:paddingHorizontal="@dimen/space_24">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -95,8 +96,8 @@
 
         <ImageView
             android:id="@+id/iv_userProfile"
-            android:layout_width="@dimen/space_16"
-            android:layout_height="0dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:contentDescription="@string/content_description_discussion_detail_user_profile"
             android:paddingEnd="@dimen/space_8"
             app:layout_constraintBottom_toBottomOf="@id/tv_user_nickname"
