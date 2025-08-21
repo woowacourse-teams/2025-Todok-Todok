@@ -52,6 +52,9 @@ class ExceptionMessageConverter {
             is TodokTodokExceptions.MissingLocationHeaderException ->
                 R.string.error_missing_location
 
+            TodokTodokExceptions.MissingFieldException ->
+                R.string.error_missing_missing_field
+
             is TodokTodokExceptions.CancellationException ->
                 R.string.error_request_cancelled
 

@@ -8,26 +8,26 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class LatestDiscussionResponse(
-    val author: AuthorResponse,
+    val member: MemberResponse,
     val book: BookResponse,
     val commentCount: Int,
-    val content: String,
+    val discussionOpinion: String,
+    val discussionTitle: String,
     val createdAt: String,
     val discussionId: Long,
     val isLikedByMe: Boolean,
     val likeCount: Int,
-    val title: String,
 ) {
     fun toDomain(): LatestDiscussion =
         LatestDiscussion(
             discussionId,
-            author.toDomain(),
+            member.toDomain(),
             book.toDomain(),
             commentCount,
-            content,
+            discussionOpinion,
             createdAt.toLocalDateTime(),
             isLikedByMe,
             likeCount,
-            title,
+            discussionTitle,
         )
 }

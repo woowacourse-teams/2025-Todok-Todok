@@ -16,8 +16,8 @@ data class DiscussionsUiState(
     val hotDiscussionItems: List<HotDiscussionItems> = emptyList(),
     val myDiscussions: List<MyDiscussionItems> = listOf(),
     val latestDiscussions: List<DiscussionUiState> = emptyList(),
-    val latestPage: PageInfo = PageInfo(hasNext = false, nextCursor = ""),
-    val searchKeyword: String = "",
+    val latestPage: PageInfo = PageInfo.EMPTY,
+    val searchKeyword: String = EMPTY_SEARCH_KEYWORD,
     val filter: DiscussionFilter = DiscussionFilter.ALL,
     val isLoading: Boolean = false,
 ) {
@@ -72,6 +72,7 @@ data class DiscussionsUiState(
 
     companion object {
         private const val MY_DISCUSSION_SIZE = 3
+        private const val EMPTY_SEARCH_KEYWORD = ""
     }
 }
 
