@@ -85,7 +85,7 @@ public class DiscussionController implements DiscussionApiDocs {
     @GetMapping("/search")
     public ResponseEntity<List<DiscussionResponse>> getDiscussionsByKeyword(
             @LoginMember final Long memberId,
-            @RequestParam(required = false) final String keyword
+            @RequestParam final String keyword
     ) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(discussionQueryService.getDiscussionsByKeyword(memberId, keyword));

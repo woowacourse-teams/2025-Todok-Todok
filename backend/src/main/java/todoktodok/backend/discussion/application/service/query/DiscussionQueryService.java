@@ -1,7 +1,6 @@
 package todoktodok.backend.discussion.application.service.query;
 
 import jakarta.annotation.Nullable;
-import jakarta.annotation.Nullable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Base64;
