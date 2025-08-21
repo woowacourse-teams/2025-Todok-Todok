@@ -32,7 +32,7 @@
             style="@style/Widget.App.RadioButton.Green"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/report_reason_user_inappropriate_profile"
+            android:text="@string/report_reason_user_abusive"
             app:useMaterialThemeColors="true" />
 
         <com.google.android.material.radiobutton.MaterialRadioButton
@@ -56,7 +56,7 @@
             style="@style/Widget.App.RadioButton.Green"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/report_reason_user_misconduct"
+            android:text="@string/report_reason_user_hate_speech"
             app:useMaterialThemeColors="true" />
     </RadioGroup>
 

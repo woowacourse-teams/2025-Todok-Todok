@@ -261,7 +261,7 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
             viewLifecycleOwner,
             requestKey,
             ReportDialog.RESULT_KEY_REPORT,
-        ) { viewModel.reportComment(commentId) }
+        ) { reason -> viewModel.reportComment(commentId, reason) }
 
         val binding = MenuExternalDiscussionBinding.inflate(layoutInflater)
 

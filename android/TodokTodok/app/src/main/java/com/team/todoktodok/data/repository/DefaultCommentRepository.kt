@@ -52,5 +52,6 @@ class DefaultCommentRepository(
     override suspend fun report(
         discussionId: Long,
         commentId: Long,
-    ): NetworkResult<Unit> = commentRemoteDataSource.report(discussionId, commentId)
+        reason: String,
+    ): NetworkResult<Unit> = commentRemoteDataSource.report(discussionId, commentId, reason)
 }

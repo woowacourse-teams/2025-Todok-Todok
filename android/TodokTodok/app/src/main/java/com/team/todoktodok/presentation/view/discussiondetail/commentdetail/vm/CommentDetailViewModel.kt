@@ -97,18 +97,22 @@ class CommentDetailViewModel(
         }
     }
 
-    fun reportReply(replyId: Long) {
+    fun reportReply(
+        replyId: Long,
+        reason: String,
+    ) {
         viewModelScope.launch {
-            handleResult(replyRepository.report(discussionId, commentId, replyId)) {
+            handleResult(replyRepository.report(discussionId, commentId, replyId, reason)) {
+                onUiEvent(CommentDetailUiEvent.ShowReportReplySuccessMessage)
             }
         }
     }
 
-    fun reportComment() {
+    fun reportComment(reason: String) {
         viewModelScope.launch {
             handleResult(
-                commentRepository.report(discussionId, commentId),
-            ) {}
+                commentRepository.report(discussionId, commentId, reason),
+            ) { onUiEvent(CommentDetailUiEvent.ShowReportCommentSuccessMessage) }
         }
     }
 

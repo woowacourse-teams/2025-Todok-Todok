@@ -48,7 +48,7 @@
             style="@style/Widget.App.RadioButton.Green"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/report_reason_hate_speech"
+            android:text="@string/report_reason_illegal"
             app:useMaterialThemeColors="true" />
 
         <com.google.android.material.radiobutton.MaterialRadioButton

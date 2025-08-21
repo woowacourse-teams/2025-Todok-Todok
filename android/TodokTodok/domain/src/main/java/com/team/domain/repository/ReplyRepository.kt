@@ -39,5 +39,6 @@ interface ReplyRepository {
         discussionId: Long,
         commentId: Long,
         replyId: Long,
+        reason: String,
     ): NetworkResult<Unit>
 }

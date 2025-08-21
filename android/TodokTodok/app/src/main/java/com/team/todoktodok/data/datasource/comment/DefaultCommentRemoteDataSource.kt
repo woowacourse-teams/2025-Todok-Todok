@@ -5,6 +5,7 @@ import com.team.domain.model.exception.toDomain
 import com.team.todoktodok.data.core.ext.mapToggleLikeResponse
 import com.team.todoktodok.data.network.model.LikeAction
 import com.team.todoktodok.data.network.request.CommentRequest
+import com.team.todoktodok.data.network.request.ReportRequest
 import com.team.todoktodok.data.network.response.comment.CommentResponse
 import com.team.todoktodok.data.network.service.CommentService
 
@@ -47,5 +48,6 @@ class DefaultCommentRemoteDataSource(
     override suspend fun report(
         discussionId: Long,
         commentId: Long,
-    ): NetworkResult<Unit> = commentService.report(discussionId, commentId)
+        reason: String,
+    ): NetworkResult<Unit> = commentService.report(discussionId, commentId, ReportRequest(reason))
 }
