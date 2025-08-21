@@ -5,8 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.team.domain.model.exception.NetworkResult
-import com.team.domain.model.exception.onFailure
-import com.team.domain.model.exception.onSuccess
 import com.team.domain.model.member.MemberDiscussion
 import com.team.domain.model.member.MemberDiscussionType
 import com.team.domain.model.member.MemberId
@@ -36,16 +34,26 @@ class DiscussionsViewModel(
 
     fun loadHotDiscussions() {
         withLoading {
-            discussionRepository
-                .getHotDiscussion()
-                .onSuccess { _uiState.value = _uiState.value?.addHotDiscussion(it) }
-                .onFailure { onUiEvent(DiscussionsUiEvent.ShowErrorMessage(it)) }
+            val hotDiscussionJob = viewModelScope.async { discussionRepository.getHotDiscussion() }
+            val activatedDiscussionJob =
+                viewModelScope.async { discussionRepository.getActivatedDiscussion() }
+
+            val result = awaitAll(hotDiscussionJob, activatedDiscussionJob)
+
+            (result.firstOrNull { it is NetworkResult.Failure } as? NetworkResult.Failure)?.let {
+                onUiEvent(DiscussionsUiEvent.ShowErrorMessage(it.exception))
+            } ?: run {
+                val hotDiscussions = (result[0] as NetworkResult.Success).data
+                val activatedDiscussion = (result[1] as NetworkResult.Success).data
+
+                _uiState.value = _uiState.value?.addHotDiscussion(hotDiscussions, activatedDiscussion)
+            }
         }
     }
 
     fun loadLatestDiscussions() {
         val state = _uiState.value ?: return
-        if (!state.latestPageHasNext || state.isLoading) return
+        if (!state.latestPageHasNext) return
 
         val cursor = state.latestPage.nextCursor
         if (state.latestPageHasNext) {

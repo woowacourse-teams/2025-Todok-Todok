@@ -130,7 +130,6 @@
                 android:fontFamily="@font/pretendard_regular"
                 android:textSize="@dimen/font_size_normal"
                 android:layout_marginEnd="@dimen/space_4"
-                android:layout_marginBottom="@dimen/space_4"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="@id/iv_comment_count"
                 app:layout_constraintTop_toTopOf="@id/iv_comment_count"

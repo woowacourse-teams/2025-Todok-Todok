@@ -4,6 +4,7 @@ import com.team.domain.model.exception.NetworkResult
 import com.team.todoktodok.data.network.request.DiscussionRoomRequest
 import com.team.todoktodok.data.network.request.EditDiscussionRoomRequest
 import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
+import com.team.todoktodok.data.network.response.discussion.DiscussionsResponse
 import com.team.todoktodok.data.network.response.latest.LatestDiscussionsResponse
 import retrofit2.Response
 import retrofit2.http.Body
@@ -15,6 +16,19 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface DiscussionService {
+    @GET("v1/discussions/active")
+    suspend fun fetchActivatedDiscussions(
+        @Query("period") period: Int,
+        @Query("size") size: Int,
+        @Query("cursor") cursor: String?,
+    ): NetworkResult<DiscussionsResponse>
+
+    @GET("v1/discussions/hot")
+    suspend fun fetchHotDiscussions(
+        @Query("period") period: Int,
+        @Query("count") count: Int,
+    ): NetworkResult<List<DiscussionResponse>>
+
     @GET("v1/discussions")
     suspend fun fetchLatestDiscussions(
         @Query("size") size: Int,
@@ -51,10 +65,4 @@ interface DiscussionService {
     suspend fun reportDiscussion(
         @Path("discussionId") discussionId: Long,
     ): NetworkResult<Unit>
-
-    @GET("v1/discussions/hot")
-    suspend fun fetchHotDiscussions(
-        @Query("period") period: Int,
-        @Query("count") count: Int,
-    ): NetworkResult<List<DiscussionResponse>>
 }

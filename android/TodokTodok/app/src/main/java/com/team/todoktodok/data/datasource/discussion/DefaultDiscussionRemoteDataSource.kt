@@ -7,6 +7,7 @@ import com.team.todoktodok.data.network.model.LikeAction
 import com.team.todoktodok.data.network.request.DiscussionRoomRequest
 import com.team.todoktodok.data.network.request.EditDiscussionRoomRequest
 import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
+import com.team.todoktodok.data.network.response.discussion.DiscussionsResponse
 import com.team.todoktodok.data.network.response.latest.LatestDiscussionsResponse
 import com.team.todoktodok.data.network.service.DiscussionService
 import retrofit2.Response
@@ -14,6 +15,12 @@ import retrofit2.Response
 class DefaultDiscussionRemoteDataSource(
     private val discussionService: DiscussionService,
 ) : DiscussionRemoteDataSource {
+    override suspend fun getActivatedDiscussion(
+        period: Int,
+        size: Int,
+        cursor: String?,
+    ): NetworkResult<DiscussionsResponse> = discussionService.fetchActivatedDiscussions(period, size, cursor)
+
     override suspend fun getHotDiscussion(
         period: Int,
         count: Int,

@@ -21,13 +21,18 @@ data class DiscussionsUiState(
     val filter: DiscussionFilter = DiscussionFilter.ALL,
     val isLoading: Boolean = false,
 ) {
-    fun addHotDiscussion(hotDiscussions: List<Discussion>): DiscussionsUiState {
+    fun addHotDiscussion(
+        hotDiscussions: List<Discussion>,
+        activatedDiscussion: List<Discussion>,
+    ): DiscussionsUiState {
         val hotDiscussion =
             buildList {
                 val popularItems = hotDiscussions.map { DiscussionUiState(it, true) }
+                val activatedItems = activatedDiscussion.map { DiscussionUiState(it, false) }
+
                 add(HotDiscussionItems.PopularItem(popularItems))
                 add(HotDiscussionItems.ActivatedHeaderItem)
-                add(HotDiscussionItems.ActivatedItem(DISCUSSION_UI_STATE_WITHOUT_OPINION))
+                add(HotDiscussionItems.ActivatedItem(activatedItems))
             }
 
         return copy(hotDiscussionItems = hotDiscussion)
