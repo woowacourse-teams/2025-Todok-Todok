@@ -21,8 +21,8 @@
         style="@style/BaseTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="34dp"
-        android:layout_marginStart="@dimen/space_8"
         android:gravity="center_vertical"
+        android:paddingStart="@dimen/space_8"
         app:layout_constraintStart_toEndOf="@id/iv_user_profile"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="코드마스터" />
@@ -80,7 +80,7 @@
         style="@style/BaseTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/space_24"
-        android:layout_marginStart="@dimen/space_8"
+        android:paddingStart="@dimen/space_8"
         app:layout_constraintBottom_toBottomOf="@id/iv_like"
         app:layout_constraintStart_toEndOf="@id/iv_like"
         app:layout_constraintTop_toTopOf="@id/iv_like"

@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.team.todoktodok.databinding.ItemCommentBinding
-import com.team.todoktodok.presentation.core.ext.loadImage
+import com.team.todoktodok.presentation.core.ext.loadCircleImage
 import com.team.todoktodok.presentation.core.ext.toRelativeString
 import com.team.todoktodok.presentation.view.discussiondetail.model.CommentItemUiState
 
@@ -27,7 +27,7 @@ class CommentViewHolder private constructor(
             ivCommentOption.setOnClickListener {
                 handler.onOptionClick(commentItemUiState, ivCommentOption)
             }
-            ivUserProfile.loadImage(commentItemUiState.comment.writer.profileImage)
+            ivUserProfile.loadCircleImage(commentItemUiState.comment.writer.profileImage)
             ivUserProfile.setOnClickListener {
                 handler.onClickUser(commentItemUiState.comment.writer.id)
             }
