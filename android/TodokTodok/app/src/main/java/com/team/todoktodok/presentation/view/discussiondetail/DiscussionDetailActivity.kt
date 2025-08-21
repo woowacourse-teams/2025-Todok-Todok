@@ -130,14 +130,21 @@ class DiscussionDetailActivity : AppCompatActivity() {
     private fun getPopUpView(isMyDiscussion: Boolean): PopupWindow =
         if (isMyDiscussion) {
             val binding = MenuOwnedDiscussionBinding.inflate(layoutInflater)
-            binding.tvEdit.setOnClickListener { viewModel.updateDiscussion() }
+            binding.tvEdit.setOnClickListener {
+                viewModel.updateDiscussion()
+                popupWindow?.dismiss()
+            }
             binding.tvDelete.setOnClickListener {
                 showDeleteDialog()
+                popupWindow?.dismiss()
             }
             createPopUpView(binding.root)
         } else {
             val binding = MenuExternalDiscussionBinding.inflate(layoutInflater)
-            binding.tvReport.setOnClickListener { showReportDialog() }
+            binding.tvReport.setOnClickListener {
+                showReportDialog()
+                popupWindow?.dismiss()
+            }
             createPopUpView(binding.root)
         }
 
@@ -248,7 +255,6 @@ class DiscussionDetailActivity : AppCompatActivity() {
             ReportDialog.RESULT_KEY_REPORT,
         ) {
             viewModel.reportDiscussion()
-            popupWindow?.dismiss()
         }
 
         supportFragmentManager.registerPositiveResultListener(
@@ -257,7 +263,6 @@ class DiscussionDetailActivity : AppCompatActivity() {
             CommonDialog.RESULT_KEY_COMMON_DIALOG,
         ) {
             viewModel.deleteDiscussion()
-            popupWindow?.dismiss()
         }
     }
 

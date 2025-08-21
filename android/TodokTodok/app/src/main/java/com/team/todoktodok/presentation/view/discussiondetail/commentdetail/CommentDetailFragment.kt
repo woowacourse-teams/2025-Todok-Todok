@@ -163,7 +163,6 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
                     commentDetailUiEvent.comment,
                     binding,
                 )
-                popupWindow?.dismiss()
             }
 
             is CommentDetailUiEvent.ShowReplyUpdate -> {
@@ -174,7 +173,6 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
                     commentDetailUiEvent.content,
                     binding,
                 )
-                popupWindow?.dismiss()
             }
 
             CommentDetailUiEvent.DeleteComment -> {
@@ -186,7 +184,6 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
             CommentDetailUiEvent.ToggleCommentLike -> commentsViewModel.showNewComment()
             CommentDetailUiEvent.CommentUpdate -> commentsViewModel.showNewComment()
             CommentDetailUiEvent.DeleteReply -> {
-                popupWindow?.dismiss()
                 commentsViewModel.showNewComment()
             }
 
@@ -218,14 +215,22 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
                 if (commentDetailItems.value.isMyComment) {
                     optionPopupView(
                         layoutInflater,
-                        { viewModel.updateComment(commentDetailItems.value.comment.content) },
-                        { showCommentDeleteDialog() },
+                        {
+                            viewModel.updateComment(commentDetailItems.value.comment.content)
+                            popupWindow?.dismiss()
+                        },
+                        {
+                            showCommentDeleteDialog()
+                            popupWindow?.dismiss()
+                        },
                     )
                 } else {
                     reportPopupView(
                         layoutInflater,
-                        ::showCommentReportDialog,
-                    )
+                    ) {
+                        showCommentReportDialog()
+                        popupWindow?.dismiss()
+                    }
                 }
 
             is CommentDetailItems.ReplyItem -> showReplyOptions(commentDetailItems)
@@ -243,12 +248,16 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
                 },
                 {
                     showReplyDeleteDialog(commentDetailItems.value.reply.replyId)
+                    popupWindow?.dismiss()
                 },
             )
         } else {
             reportPopupView(
                 layoutInflater,
-            ) { showReplyReportDialog(commentDetailItems.value.reply.replyId) }
+            ) {
+                showReplyReportDialog(commentDetailItems.value.reply.replyId)
+                popupWindow?.dismiss()
+            }
         }
 
     private fun showCommentReportDialog() {

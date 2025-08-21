@@ -210,7 +210,6 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
             CommentCreateBottomSheet.COMMENT_CREATED_RESULT_KEY,
         ) {
             viewModel.showNewComment()
-            popupWindow?.dismiss()
         }
     }
 
