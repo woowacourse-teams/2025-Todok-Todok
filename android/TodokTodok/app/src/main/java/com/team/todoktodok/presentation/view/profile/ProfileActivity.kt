@@ -85,14 +85,14 @@ class ProfileActivity : AppCompatActivity() {
         ) { _, bundle ->
             val result =
                 bundle.getSerializableCompat<Support>(SupportMemberDialog.RESULT_KEY_SUPPORT)
-            viewModel.supportMember(result)
+            viewModel.supportMember(result, "")
         }
         supportFragmentManager.registerReportResultListener(
             this,
             USER_REPORT_DIALOG_REQUEST_KEY,
             ReportUserDialog.RESULT_KEY_REPORT_USER,
-        ) { reportReason ->
-            viewModel.supportMember(Support.REPORT)
+        ) { reason ->
+            viewModel.supportMember(Support.REPORT, reason)
         }
     }
 

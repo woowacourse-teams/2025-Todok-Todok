@@ -22,6 +22,7 @@ import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
 import com.team.todoktodok.presentation.core.component.CommonDialog
 import com.team.todoktodok.presentation.core.component.ReportDialog
+import com.team.todoktodok.presentation.core.ext.loadCircleImage
 import com.team.todoktodok.presentation.core.ext.loadImage
 import com.team.todoktodok.presentation.core.ext.registerPositiveResultListener
 import com.team.todoktodok.presentation.core.ext.registerReportResultListener
@@ -185,7 +186,7 @@ class DiscussionDetailActivity : AppCompatActivity() {
                     tvBookTitle.text = discussion.book.title
                     tvDiscussionTitle.text = discussion.discussionTitle
                     tvUserNickname.text = discussion.writer.nickname.value
-                    ivUserProfile.loadImage(discussion.writer.profileImage)
+                    ivUserProfile.loadCircleImage(discussion.writer.profileImage)
                     ivBookImage.loadImage(discussion.book.image)
                     tvDiscussionCreateAt.text =
                         discussion.createAt.toRelativeString(this@DiscussionDetailActivity)
@@ -253,8 +254,8 @@ class DiscussionDetailActivity : AppCompatActivity() {
             this,
             DISCUSSION_REPORT_DIALOG_REQUEST_KEY,
             ReportDialog.RESULT_KEY_REPORT,
-        ) {
-            viewModel.reportDiscussion()
+        ) { reason ->
+            viewModel.reportDiscussion(reason)
         }
 
         supportFragmentManager.registerPositiveResultListener(

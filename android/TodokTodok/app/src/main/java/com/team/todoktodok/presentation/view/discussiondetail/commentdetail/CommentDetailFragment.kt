@@ -384,7 +384,7 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
             viewLifecycleOwner,
             COMMENT_REPORT_DIALOG_REQUEST_KEY,
             ReportDialog.RESULT_KEY_REPORT,
-        ) { viewModel.reportComment() }
+        ) { reason -> viewModel.reportComment(reason) }
         childFragmentManager.registerPositiveResultListener(
             viewLifecycleOwner,
             COMMENT_DELETE_DIALOG_REQUEST_KEY,
@@ -397,7 +397,7 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
             viewLifecycleOwner,
             REPLY_REPORT_DIALOG_REQUEST_KEY.format(replyId),
             ReportDialog.RESULT_KEY_REPORT,
-        ) { viewModel.reportReply(replyId) }
+        ) { reason -> viewModel.reportReply(replyId, reason) }
 
         childFragmentManager.registerPositiveResultListener(
             viewLifecycleOwner,

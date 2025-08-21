@@ -11,6 +11,7 @@ import com.team.todoktodok.data.core.ext.extractAccessToken
 import com.team.todoktodok.data.datasource.token.TokenDataSource
 import com.team.todoktodok.data.network.request.LoginRequest
 import com.team.todoktodok.data.network.request.ModifyProfileRequest
+import com.team.todoktodok.data.network.request.ReportRequest
 import com.team.todoktodok.data.network.request.SignUpRequest
 import com.team.todoktodok.data.network.response.BlockedMemberResponse
 import com.team.todoktodok.data.network.response.ProfileResponse
@@ -76,10 +77,11 @@ class DefaultMemberRemoteDataSource(
     override suspend fun supportMember(
         request: MemberId.OtherUser,
         type: Support,
+        reason: String,
     ): NetworkResult<Unit> =
         when (type) {
             Support.BLOCK -> memberService.block(request.id)
-            Support.REPORT -> memberService.report(request.id)
+            Support.REPORT -> memberService.report(request.id, ReportRequest(reason))
         }
 
     override suspend fun fetchMemberBooks(request: MemberId): NetworkResult<List<BookResponse>> {

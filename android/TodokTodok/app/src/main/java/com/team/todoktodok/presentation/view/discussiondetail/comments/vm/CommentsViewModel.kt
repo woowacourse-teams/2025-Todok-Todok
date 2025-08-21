@@ -72,12 +72,14 @@ class CommentsViewModel(
         onUiEvent(CommentsUiEvent.ShowCommentUpdate(discussionId, commentId, content))
     }
 
-    fun reportComment(commentId: Long) =
-        viewModelScope.launch {
-            handleResult(
-                commentRepository.report(discussionId, commentId),
-            ) { onUiEvent(CommentsUiEvent.ShowReportCommentSuccessMessage) }
-        }
+    fun reportComment(
+        commentId: Long,
+        reason: String,
+    ) = viewModelScope.launch {
+        handleResult(
+            commentRepository.report(discussionId, commentId, reason),
+        ) { onUiEvent(CommentsUiEvent.ShowReportCommentSuccessMessage) }
+    }
 
     fun showCommentCreate() {
         onUiEvent(

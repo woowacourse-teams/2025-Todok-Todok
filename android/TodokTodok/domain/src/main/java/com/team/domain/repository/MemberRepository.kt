@@ -29,6 +29,7 @@ interface MemberRepository {
     suspend fun supportMember(
         id: MemberId.OtherUser,
         type: Support,
+        reason: String,
     ): NetworkResult<Unit>
 
     suspend fun getMemberBooks(id: MemberId): NetworkResult<List<Book>>

@@ -3,6 +3,7 @@ package com.team.todoktodok.data.network.service
 import com.team.domain.model.exception.NetworkResult
 import com.team.todoktodok.data.network.request.DiscussionRoomRequest
 import com.team.todoktodok.data.network.request.EditDiscussionRoomRequest
+import com.team.todoktodok.data.network.request.ReportRequest
 import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
 import com.team.todoktodok.data.network.response.discussion.DiscussionsResponse
 import com.team.todoktodok.data.network.response.latest.LatestDiscussionsResponse
@@ -69,5 +70,6 @@ interface DiscussionService {
     @POST("v1/discussions/{discussionId}/report")
     suspend fun reportDiscussion(
         @Path("discussionId") discussionId: Long,
+        @Body report: ReportRequest,
     ): NetworkResult<Unit>
 }

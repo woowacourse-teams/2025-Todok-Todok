@@ -53,7 +53,8 @@ class DefaultMemberRepository(
     override suspend fun supportMember(
         id: MemberId.OtherUser,
         type: Support,
-    ): NetworkResult<Unit> = remoteMemberRemoteDataSource.supportMember(id, type)
+        reason: String,
+    ): NetworkResult<Unit> = remoteMemberRemoteDataSource.supportMember(id, type, reason)
 
     override suspend fun getMemberBooks(id: MemberId): NetworkResult<List<Book>> =
         remoteMemberRemoteDataSource

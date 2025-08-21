@@ -2,6 +2,7 @@ package com.team.todoktodok.data.network.service
 
 import com.team.domain.model.exception.NetworkResult
 import com.team.todoktodok.data.network.request.ReplyRequest
+import com.team.todoktodok.data.network.request.ReportRequest
 import com.team.todoktodok.data.network.response.comment.ReplyResponse
 import retrofit2.Response
 import retrofit2.http.Body
@@ -30,6 +31,7 @@ interface ReplyService {
         @Path("discussionId") discussionId: Long,
         @Path("commentId") commentId: Long,
         @Path("replyId") replyId: Long,
+        @Body report: ReportRequest,
     ): NetworkResult<Unit>
 
     @POST("v1/discussions/{discussionId}/comments/{commentId}/replies/{replyId}/like")
