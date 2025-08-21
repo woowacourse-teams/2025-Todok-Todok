@@ -16,6 +16,11 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface DiscussionService {
+    @GET("v1/discussions/search")
+    suspend fun fetchSearchDiscussions(
+        @Query("keyword") query: String,
+    ): NetworkResult<List<DiscussionResponse>>
+
     @GET("v1/discussions/active")
     suspend fun fetchActivatedDiscussions(
         @Query("period") period: Int,

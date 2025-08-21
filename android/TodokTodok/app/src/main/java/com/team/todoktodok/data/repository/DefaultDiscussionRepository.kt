@@ -20,6 +20,11 @@ class DefaultDiscussionRepository(
     private val discussionRemoteDataSource: DiscussionRemoteDataSource,
     private val discussionLocalDataSource: DiscussionLocalDataSource,
 ) : DiscussionRepository {
+    override suspend fun getSearchDiscussion(keyword: String): NetworkResult<List<Discussion>> =
+        discussionRemoteDataSource.getSearchDiscussion(keyword).map { discussions ->
+            discussions.map { it.toDomain() }
+        }
+
     override suspend fun getActivatedDiscussion(
         period: Int,
         size: Int,

@@ -8,6 +8,8 @@ import com.team.domain.model.latest.LatestDiscussionPage
 import com.team.domain.model.member.DiscussionRoom
 
 interface DiscussionRepository {
+    suspend fun getSearchDiscussion(keyword: String): NetworkResult<List<Discussion>>
+
     suspend fun getActivatedDiscussion(
         period: Int = DEFAULT_HOT_DISCUSSION_PERIOD,
         size: Int = PAGING_SIZE,

@@ -15,6 +15,9 @@ import retrofit2.Response
 class DefaultDiscussionRemoteDataSource(
     private val discussionService: DiscussionService,
 ) : DiscussionRemoteDataSource {
+    override suspend fun getSearchDiscussion(keyword: String): NetworkResult<List<DiscussionResponse>> =
+        discussionService.fetchSearchDiscussions(keyword)
+
     override suspend fun getActivatedDiscussion(
         period: Int,
         size: Int,
