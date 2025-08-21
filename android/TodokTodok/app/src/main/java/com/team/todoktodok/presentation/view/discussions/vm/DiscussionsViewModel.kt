@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.team.domain.model.DiscussionFilter
 import com.team.domain.model.exception.NetworkResult
 import com.team.domain.model.member.MemberDiscussion
 import com.team.domain.model.member.MemberDiscussionType
@@ -15,37 +14,19 @@ import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
 import com.team.todoktodok.presentation.core.event.SingleLiveData
 import com.team.todoktodok.presentation.view.discussions.DiscussionsUiEvent
 import com.team.todoktodok.presentation.view.discussions.DiscussionsUiState
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class DiscussionsViewModel(
     private val discussionRepository: DiscussionRepository,
     private val memberRepository: MemberRepository,
-    private val fakeDiscussionRepository: DiscussionRepository,
 ) : ViewModel() {
     private val _uiState = MutableLiveData(DiscussionsUiState())
     val uiState: LiveData<DiscussionsUiState> get() = _uiState
 
     private val _uiEvent = MutableSingleLiveData<DiscussionsUiEvent>()
     val uiEvent: SingleLiveData<DiscussionsUiEvent> get() = _uiEvent
-
-    private var loadJob: Job? = null
-
-    fun updateTab(
-        newFilter: DiscussionFilter,
-        duration: Long,
-    ) {
-        _uiState.value = _uiState.value?.copy(filter = newFilter)
-
-        loadJob?.cancel()
-        loadJob =
-            viewModelScope.launch {
-                delay(duration)
-            }
-    }
 
     fun loadSearchedDiscussions(keyword: String) {
         _uiState.value = _uiState.value?.copy(searchKeyword = keyword)
@@ -58,7 +39,7 @@ class DiscussionsViewModel(
         val cursor = state.latestPage.nextCursor
         if (state.latestPageHasNext) {
             withLoading {
-                when (val result = fakeDiscussionRepository.getLatestDiscussions(cursor = cursor)) {
+                when (val result = discussionRepository.getLatestDiscussions(cursor = cursor)) {
                     is NetworkResult.Success -> {
                         _uiState.value = _uiState.value?.addLatestDiscussion(result.data)
                     }
