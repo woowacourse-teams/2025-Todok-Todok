@@ -177,6 +177,7 @@
     <!-- 일반 예외 -->
     <string name="error_unknown">알 수 없는 오류가 발생했습니다.</string>
     <string name="error_missing_location">사용자 인증 정보가 없습니다.</string>
+    <string name="error_missing_missing_field">Json 직렬화 객체 필드가 일치하지 않습니다.</string>
 
     <!-- 네트워크 관련 -->
     <string name="error_timeout">서버 응답이 지연되고 있습니다. 잠시 후 다시 시도해주세요.</string>
