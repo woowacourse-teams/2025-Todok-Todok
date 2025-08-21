@@ -58,7 +58,7 @@ class DiscussionsActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         setupSystemBars()
         initFragments()
-        setupUiState()
+        setUpLoadingState()
         setupUiEvent()
         initView()
     }
@@ -105,10 +105,13 @@ class DiscussionsActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupUiState() {
-        viewModel.uiState.observe(this) { state ->
-            updateTabs(state.latestDiscussionsSize, state.myDiscussionsSize)
-            updateLoadingState(state.isLoading)
+    private fun setUpLoadingState() {
+        viewModel.uiState.observe(this) {
+            if (it.isLoading) {
+                binding.progressBar.show()
+            } else {
+                binding.progressBar.hide()
+            }
         }
     }
 
@@ -124,24 +127,6 @@ class DiscussionsActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateTabs(
-        allDiscussionSize: Int,
-        myDiscussionSize: Int,
-    ) = with(binding.tabLayout) {
-        getTabAt(ALL_DISCUSSION_TAB_POSITION)?.text =
-            getString(R.string.discussion_tab_title_all).format(allDiscussionSize)
-
-        getTabAt(MY_DISCUSSION_TAB_POSITION)?.text =
-            getString(R.string.discussion_tab_title_my).format(myDiscussionSize)
-    }
-
-    private fun updateLoadingState(isLoading: Boolean) {
-        when (isLoading) {
-            true -> binding.progressBar.show()
-            false -> binding.progressBar.hide()
-        }
-    }
-
     private fun initView() {
         with(binding) {
             val hint = getString(R.string.discussion_search_bar_hint)
@@ -154,8 +139,8 @@ class DiscussionsActivity : AppCompatActivity() {
 
             etSearchDiscussion.doAfterTextChanged {
                 if (it.isNullOrEmpty()) {
-                    viewModel.loadSearchedDiscussions(it.toString())
-                    hideSoftKeyboard()
+                    viewModel.clearKeyword()
+                    viewModel.loadLatestDiscussions()
                 }
             }
 
@@ -181,10 +166,21 @@ class DiscussionsActivity : AppCompatActivity() {
     private fun triggerSearch() {
         val editableText = binding.etSearchDiscussion.text
         val keyword = editableText?.toString()?.trim()
-        val isKeywordNotEmpty = !keyword.isNullOrEmpty()
-        if (isKeywordNotEmpty) {
+        if (!keyword.isNullOrEmpty()) {
+            moveToLatestDiscussionTab()
             viewModel.loadSearchedDiscussions(keyword)
             hideSoftKeyboard()
+        } else {
+            AlertSnackBar(
+                binding.root,
+                R.string.discussion_search_bar_hint,
+            ).show()
+        }
+    }
+
+    private fun moveToLatestDiscussionTab() {
+        if (binding.tabLayout.selectedTabPosition != ALL_DISCUSSION_TAB_POSITION) {
+            binding.tabLayout.getTabAt(ALL_DISCUSSION_TAB_POSITION)?.select()
         }
     }
 
@@ -242,8 +238,6 @@ class DiscussionsActivity : AppCompatActivity() {
 
         private const val MY_DISCUSSION_TAB_POSITION = 2
         private const val MY_DISCUSSION_FRAGMENT_TAG = "MY"
-
-        private const val THROTTLE_DURATION = 500L
 
         fun Intent(context: Context) = Intent(context, DiscussionsActivity::class.java)
     }

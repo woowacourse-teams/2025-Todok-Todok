@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.team.domain.model.exception.NetworkResult
+import com.team.domain.model.exception.onFailure
+import com.team.domain.model.exception.onSuccess
 import com.team.domain.model.member.MemberDiscussion
 import com.team.domain.model.member.MemberDiscussionType
 import com.team.domain.model.member.MemberId
@@ -29,7 +31,12 @@ class DiscussionsViewModel(
     val uiEvent: SingleLiveData<DiscussionsUiEvent> get() = _uiEvent
 
     fun loadSearchedDiscussions(keyword: String) {
-        _uiState.value = _uiState.value?.copy(searchKeyword = keyword)
+        withLoading {
+            discussionRepository
+                .getSearchDiscussion(keyword)
+                .onSuccess { _uiState.value = _uiState.value?.addSearchDiscussion(keyword, it) }
+                .onFailure { onUiEvent(DiscussionsUiEvent.ShowErrorMessage(it)) }
+        }
     }
 
     fun loadHotDiscussions() {
@@ -95,6 +102,10 @@ class DiscussionsViewModel(
 
             _uiState.value = _uiState.value?.addMyDiscussion(created, participated)
         }
+
+    fun clearKeyword() {
+        _uiState.value = _uiState.value?.copy(searchKeyword = "")
+    }
 
     private fun withLoading(action: suspend () -> Unit) {
         viewModelScope.launch {
