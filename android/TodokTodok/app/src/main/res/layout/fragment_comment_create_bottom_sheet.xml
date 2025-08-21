@@ -12,8 +12,8 @@
         android:layout_width="@dimen/space_0"
         android:layout_height="wrap_content"
         android:layout_marginVertical="@dimen/space_16"
-        android:padding="@dimen/space_8"
         android:background="@drawable/bg_green_f0_radius_8dp"
+        android:padding="@dimen/space_4"
         app:boxBackgroundMode="none"
         app:cursorColor="@color/black_18"
         app:hintEnabled="false"
@@ -27,6 +27,7 @@
             style="@style/BaseTextStyle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:fontFamily="@font/pretendard_regular"
             android:gravity="start|center"
             android:hint="@string/comment_input_hint"
             android:includeFontPadding="false"
@@ -38,7 +39,7 @@
             android:paddingBottom="2dp"
             android:scrollbars="vertical"
             android:textColor="@color/black_18"
-            android:textSize="@dimen/font_size_x_large" />
+            android:textSize="@dimen/font_size_large" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <ImageView
