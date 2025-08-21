@@ -96,9 +96,10 @@ public class ReplyCommandServiceTest {
         final Long discussionId = 1L;
         final Long commentId = 1L;
         final Long replyId = 1L;
+        final String reason = "토론 주제와 무관한 내용";
 
         // when - then
-        assertThatThrownBy(() -> replyCommandService.report(memberId, discussionId, commentId, replyId))
+        assertThatThrownBy(() -> replyCommandService.report(memberId, discussionId, commentId, replyId, reason))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("자기 자신이 작성한 대댓글을 신고할 수 없습니다");
     }
@@ -117,9 +118,10 @@ public class ReplyCommandServiceTest {
         final Long discussionId = 1L;
         final Long commentId = 1L;
         final Long replyId = 2L;
+        final String reason = "욕설/혐오 표현";
 
         // when - then
-        assertThatThrownBy(() -> replyCommandService.report(memberId, discussionId, commentId, replyId))
+        assertThatThrownBy(() -> replyCommandService.report(memberId, discussionId, commentId, replyId, reason))
                 .isInstanceOf(NoSuchElementException.class)
                 .hasMessageContaining("해당 대댓글을 찾을 수 없습니다");
     }
@@ -141,11 +143,12 @@ public class ReplyCommandServiceTest {
         final Long discussionId = 1L;
         final Long commentId = 1L;
         final Long replyId = 1L;
+        final String reason = "토론 주제와 무관한 내용";
 
-        replyCommandService.report(memberId, discussionId, commentId, replyId);
+        replyCommandService.report(memberId, discussionId, commentId, replyId, reason);
 
         // when - then
-        assertThatThrownBy(() -> replyCommandService.report(memberId, discussionId, commentId, replyId))
+        assertThatThrownBy(() -> replyCommandService.report(memberId, discussionId, commentId, replyId, reason))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("이미 신고한 대댓글입니다");
     }

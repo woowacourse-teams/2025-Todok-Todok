@@ -1,10 +1,18 @@
 package todoktodok.backend.discussion.presentation;
 
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
+
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.notNullValue;
+
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,12 +23,10 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import todoktodok.backend.DatabaseInitializer;
 import todoktodok.backend.InitializerTimer;
+import todoktodok.backend.discussion.application.dto.request.DiscussionReportRequest;
 import todoktodok.backend.discussion.application.dto.request.DiscussionRequest;
 import todoktodok.backend.discussion.application.dto.request.DiscussionUpdateRequest;
 import todoktodok.backend.member.presentation.fixture.MemberFixture;
-
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
 
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -70,6 +76,7 @@ class DiscussionControllerTest {
         // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
+
         databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
 
         final String token = MemberFixture.login("user@gmail.com");
@@ -199,11 +206,13 @@ class DiscussionControllerTest {
         databaseInitializer.setDiscussionInfo("토론방1", "토론방 내용", 2L, 1L);
 
         final String token = MemberFixture.login("user@gmail.com");
+        final DiscussionReportRequest discussionReportRequest = new DiscussionReportRequest("토론 주제와 무관한 내용");
 
         // when - then
         RestAssured.given().log().all()
                 .header("Authorization", token)
                 .contentType(ContentType.JSON)
+                .body(discussionReportRequest)
                 .when().post("/api/v1/discussions/1/report")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
@@ -219,7 +228,7 @@ class DiscussionControllerTest {
         databaseInitializer.setDefaultDiscussionInfo();
 
         final String updatedTitle = "상속과 조합은 어떤 상황에 쓰이나요?";
-        final String updatedContent= "상속과 조합의 차이점이 궁금합니다.";
+        final String updatedContent = "상속과 조합의 차이점이 궁금합니다.";
         final DiscussionUpdateRequest discussionUpdateRequest = new DiscussionUpdateRequest(
                 updatedTitle,
                 updatedContent
@@ -300,80 +309,6 @@ class DiscussionControllerTest {
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
-    @Nested
-    @DisplayName("토론방 필터링 실패 테스트")
-    class FilterDiscussionsFailTest {
-
-        @Test
-        @DisplayName("토론방을 필터링할 때 type을 명시하지 않으면 예외가 발생한다")
-        void fail_filterDiscussions_noType() {
-            // given
-            databaseInitializer.setDefaultUserInfo();
-            databaseInitializer.setDefaultBookInfo();
-
-            databaseInitializer.setDiscussionInfo("오브젝트", "오브젝트 토론입니다", 1L, 1L);
-
-            final String token = MemberFixture.login("user@gmail.com");
-            final String uri = "/api/v1/discussions/search?keyword=오브젝트";
-
-            // when - then
-            RestAssured.given().log().all()
-                    .contentType(ContentType.JSON)
-                    .header("Authorization", token)
-                    .when().get(uri)
-                    .then().log().all()
-                    .statusCode(HttpStatus.BAD_REQUEST.value());
-        }
-
-        @Test
-        @DisplayName("토론방을 필터링할 때 type에 정해지지 않는 값을 추가하면 예외가 발생한다")
-        void fail_filterDiscussions_invalidType() {
-            // given
-            databaseInitializer.setDefaultUserInfo();
-            databaseInitializer.setDefaultBookInfo();
-
-            databaseInitializer.setDiscussionInfo("오브젝트", "오브젝트 토론입니다", 1L, 1L);
-
-            final String token = MemberFixture.login("user@gmail.com");
-            final String uri = "/api/v1/discussions/search?keyword=오브젝트&type=HELLO";
-
-            // when - then
-            RestAssured.given().log().all()
-                    .contentType(ContentType.JSON)
-                    .header("Authorization", token)
-                    .when().get(uri)
-                    .then().log().all()
-                    .statusCode(HttpStatus.BAD_REQUEST.value());
-        }
-    }
-
-    @Test
-    @DisplayName("인기 토론방을 조회한다")
-    void getHotDiscussionsTest() {
-        // given
-        databaseInitializer.setDefaultUserInfo();
-        databaseInitializer.setUserInfo("user2@gmail.com", "user2", "user2.png", "");
-        databaseInitializer.setUserInfo("user3@gmail.com", "user2", "user2.png", "");
-        databaseInitializer.setUserInfo("user4@gmail.com", "user2", "user2.png", "");
-        databaseInitializer.setDefaultBookInfo();
-        databaseInitializer.setDiscussionInfo("오브젝트", "오브젝트 토론입니다", 1L, 1L);
-        databaseInitializer.setDiscussionInfo("캡슐화", "캡슐화 토론입니다", 1L, 1L);
-        databaseInitializer.setDiscussionInfo("JPA", "JPA 토론입니다", 1L, 1L);
-
-        databaseInitializer.setDiscussionLikeInfo(1L, 1L);
-
-        final String token = MemberFixture.login("user@gmail.com");
-
-        // when - then
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .header("Authorization", token)
-                .when().get("/api/v1/discussions/hot?period=0&count=1")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .body("[0].discussionId", is(1));
-    }
-
     @Test
     @DisplayName("토론방 좋아요를 생성한다")
     void createDiscussionToggleLikeTest() {
@@ -413,5 +348,69 @@ class DiscussionControllerTest {
                 .when().post("/api/v1/discussions/1/like")
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    @Test
+    @DisplayName("활성화된 토론방을 조회한다")
+    void getActiveDiscussions() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+
+        final Long memberId = 1L;
+        final Long bookId = 1L;
+
+        databaseInitializer.setDiscussionInfo("게시글1", "내용1", memberId, bookId); // id=1
+        databaseInitializer.setDiscussionInfo("게시글2", "내용2", memberId, bookId); // id=2
+        databaseInitializer.setDiscussionInfo("게시글3", "내용3", memberId, bookId); // id=3
+        databaseInitializer.setDiscussionInfo("게시글4", "내용4", memberId, bookId); // id=4
+
+        final LocalDateTime base = LocalDateTime.now();
+
+        databaseInitializer.setCommentInfo("1-1", memberId, 1L, base.minusMinutes(10));
+        databaseInitializer.setCommentInfo("2-1", memberId, 2L, base.minusMinutes(20));
+        databaseInitializer.setCommentInfo("2-2", memberId, 2L, base.minusMinutes(30));
+        databaseInitializer.setCommentInfo("3-1", memberId, 3L, base.minusMinutes(40));
+        databaseInitializer.setCommentInfo("3-2", memberId, 3L, base.minusMinutes(50));
+        databaseInitializer.setCommentInfo("3-3", memberId, 3L, base.minusMinutes(60));
+        databaseInitializer.setCommentInfo("4-1", memberId, 4L, base.minusMinutes(70));
+
+        final String token = MemberFixture.login("user@gmail.com");
+        final int size = 3;
+
+        // when - then
+
+        // 1페이지 확인
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .header("Authorization", token)
+                .queryParam("period", 7)
+                .queryParam("size", size)
+                .when().get("/api/v1/discussions/active")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("items.size()", equalTo(size))
+                .body("pageInfo.hasNext", equalTo(true))
+                .body("pageInfo.nextCursor", notNullValue())
+                .body("items[0].discussionId", equalTo(1))
+                .body("items[1].discussionId", equalTo(2))
+                .body("items[2].discussionId", equalTo(3))
+                .extract();
+
+        // 2페이지 확인
+        String cursor = response.jsonPath().getString("pageInfo.nextCursor");
+        RestAssured.given()
+                .contentType(ContentType.JSON)
+                .header("Authorization", token)
+                .queryParam("period", 7)
+                .queryParam("size", size)
+                .queryParam("cursor", cursor)
+                .when().get("/api/v1/discussions/active")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("items.size()", equalTo(1))
+                .body("items[0].discussionId", equalTo(4))
+                .body("pageInfo.hasNext", equalTo(false))
+                .body("pageInfo.nextCursor", nullValue());
     }
 }

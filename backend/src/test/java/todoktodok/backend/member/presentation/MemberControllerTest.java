@@ -21,6 +21,7 @@ import todoktodok.backend.DatabaseInitializer;
 import todoktodok.backend.InitializerTimer;
 import todoktodok.backend.global.jwt.JwtTokenProvider;
 import todoktodok.backend.member.application.dto.request.LoginRequest;
+import todoktodok.backend.member.application.dto.request.MemberReportRequest;
 import todoktodok.backend.member.application.dto.request.ProfileUpdateRequest;
 import todoktodok.backend.member.application.dto.request.SignupRequest;
 import todoktodok.backend.member.presentation.fixture.MemberFixture;
@@ -107,11 +108,13 @@ class MemberControllerTest {
         databaseInitializer.setUserInfo("user2@gmail.com", "user2", "https://user2.png", "user");
 
         final String token = MemberFixture.login("user@gmail.com");
+        final MemberReportRequest memberReportRequest = new MemberReportRequest("욕설/인신공격");
 
         // when - then
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .header("Authorization", token)
+                .body(memberReportRequest)
                 .when().post("/api/v1/members/2/report")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());

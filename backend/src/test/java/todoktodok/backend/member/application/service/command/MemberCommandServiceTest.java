@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.context.annotation.Profile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
@@ -153,9 +152,10 @@ class MemberCommandServiceTest {
         databaseInitializer.setDefaultUserInfo();
 
         final Long memberId = 1L;
+        final String reason = "욕설/인신공격";
 
         // when - then
-        assertThatThrownBy(() -> memberCommandService.report(memberId, memberId))
+        assertThatThrownBy(() -> memberCommandService.report(memberId, memberId, reason))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("자기 자신을 신고할 수 없습니다");
     }
@@ -187,11 +187,12 @@ class MemberCommandServiceTest {
 
         final Long memberId = 1L;
         final Long targetId = 2L;
+        final String reason = "욕설/인신공격";
 
-        memberCommandService.report(memberId, targetId);
+        memberCommandService.report(memberId, targetId, reason);
 
         // when - then
-        assertThatThrownBy(() -> memberCommandService.report(memberId, targetId))
+        assertThatThrownBy(() -> memberCommandService.report(memberId, targetId, reason))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("이미 신고한 회원입니다");
     }
