@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class PageInfoResponse(
     val hasNext: Boolean,
-    val nextCursor: String,
+    val nextCursor: String?,
 ) {
     fun toDomain(): PageInfo = PageInfo(hasNext, nextCursor)
 }
