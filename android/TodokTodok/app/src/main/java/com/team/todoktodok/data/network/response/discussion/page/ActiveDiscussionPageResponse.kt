@@ -7,11 +7,11 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ActiveDiscussionPageResponse(
-    val activeDiscussions: List<ActiveDiscussion>,
+    val items: List<ActiveDiscussion>,
     val pageInfo: PageInfoResponse,
 ) {
     fun toDomain(): ActivatedDiscussionPage {
-        val activatedDiscussions: List<ActivatedDiscussion> = activeDiscussions.map { it.toDomain() }
+        val activatedDiscussions: List<ActivatedDiscussion> = items.map { it.toDomain() }
 
         return ActivatedDiscussionPage(
             activatedDiscussions,
