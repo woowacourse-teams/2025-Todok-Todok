@@ -56,11 +56,6 @@ class FakeDiscussionRepository : DiscussionRepository {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getDiscussions(
-        type: DiscussionFilter,
-        keyword: String?,
-    ): NetworkResult<List<Discussion>> = NetworkResult.Success(discussions)
-
     override suspend fun saveDiscussionRoom(
         bookId: Long,
         discussionTitle: String,
