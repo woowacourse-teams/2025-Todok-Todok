@@ -57,7 +57,8 @@ public class ReplyCommandService {
             final Long memberId,
             final Long discussionId,
             final Long commentId,
-            final Long replyId
+            final Long replyId,
+            final String reason
     ) {
         final Member member = findMember(memberId);
         final Discussion discussion = findDiscussion(discussionId);
@@ -73,6 +74,7 @@ public class ReplyCommandService {
         final ReplyReport replyReport = ReplyReport.builder()
                 .reply(reply)
                 .member(member)
+                .reason(reason)
                 .build();
 
         replyReportRepository.save(replyReport);

@@ -1,5 +1,6 @@
 package todoktodok.backend.reply.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -38,14 +39,18 @@ public class ReplyReport extends TimeStamp {
     @JoinColumn(nullable = false)
     private Member member;
 
+    @Column(nullable = false)
+    private String reason;
+
     @Builder
     public static ReplyReport create(
             final Reply reply,
-            final Member member
+            final Member member,
+            final String reason
     ) {
 
         return new ReplyReport(
-                null, reply, member
+                null, reply, member, reason
         );
     }
 }
