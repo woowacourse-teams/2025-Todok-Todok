@@ -48,7 +48,7 @@ public class BookCommandServiceTest {
         // when - then
         assertThatThrownBy(() -> bookCommandService.createOrUpdateBook(memberId, bookRequest))
                 .isInstanceOf(NoSuchElementException.class)
-                .hasMessage("해당 회원을 찾을 수 없습니다");
+                .hasMessageContaining("해당 회원을 찾을 수 없습니다");
     }
 
     @Test

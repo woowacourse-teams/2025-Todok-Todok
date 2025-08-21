@@ -20,6 +20,7 @@ import todoktodok.backend.discussion.application.dto.request.DiscussionRequest;
 import todoktodok.backend.discussion.application.dto.request.DiscussionUpdateRequest;
 import todoktodok.backend.discussion.application.dto.response.DiscussionPageResponse;
 import todoktodok.backend.discussion.application.dto.response.DiscussionResponse;
+import todoktodok.backend.discussion.application.dto.response.SlicedDiscussionResponse;
 import todoktodok.backend.discussion.application.service.command.DiscussionCommandService;
 import todoktodok.backend.discussion.application.service.query.DiscussionQueryService;
 import todoktodok.backend.discussion.domain.DiscussionFilterType;
@@ -72,6 +73,17 @@ public class DiscussionController implements DiscussionApiDocs {
 
     @Auth(value = Role.USER)
     @GetMapping
+    public ResponseEntity<SlicedDiscussionResponse> getDiscussions(
+            @LoginMember final Long memberId,
+            @RequestParam final int size,
+            @RequestParam(required = false) final String cursor
+    ) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(discussionQueryService.getDiscussions(memberId, size, cursor));
+    }
+
+    @Auth(value = Role.USER)
+    @GetMapping("/search")
     public ResponseEntity<List<DiscussionResponse>> getDiscussionsByKeywordAndType(
             @LoginMember final Long memberId,
             @RequestParam(required = false) final String keyword,
@@ -79,6 +91,17 @@ public class DiscussionController implements DiscussionApiDocs {
     ) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(discussionQueryService.getDiscussionsByKeywordAndType(memberId, keyword, type));
+    }
+
+    @Auth(value = Role.USER)
+    @GetMapping("/hot")
+    public ResponseEntity<List<DiscussionResponse>> getHotDiscussions(
+            @LoginMember final Long memberId,
+            @RequestParam final int period,
+            @RequestParam final int count
+    ) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(discussionQueryService.getHotDiscussions(memberId, period, count));
     }
 
     @Auth(value = Role.USER)

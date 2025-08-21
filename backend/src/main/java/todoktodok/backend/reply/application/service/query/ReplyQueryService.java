@@ -1,5 +1,7 @@
 package todoktodok.backend.reply.application.service.query;
 
+import java.util.List;
+import java.util.NoSuchElementException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,9 +15,6 @@ import todoktodok.backend.reply.application.dto.response.ReplyResponse;
 import todoktodok.backend.reply.domain.Reply;
 import todoktodok.backend.reply.domain.repository.ReplyLikeRepository;
 import todoktodok.backend.reply.domain.repository.ReplyRepository;
-
-import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 @Transactional(readOnly = true)

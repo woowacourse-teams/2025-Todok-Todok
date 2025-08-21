@@ -161,6 +161,32 @@ public class DatabaseInitializer {
     }
 
     @Transactional
+    public void setDiscussionInfo(
+            final String title,
+            final String content,
+            final Long memberId,
+            final Long bookId,
+            final LocalDateTime createdAt
+    ) {
+        final LocalDateTime now = LocalDateTime.now().truncatedTo(MICROS);
+
+        em.createNativeQuery(
+                        """
+                                INSERT INTO DISCUSSION (title, content, member_id, book_id, created_at, modified_at)
+                                VALUES 
+                                (:title, :content, :memberId, :bookId, :createdAt, :modifiedAt)
+                                """
+                )
+                .setParameter("title", title)
+                .setParameter("content", content)
+                .setParameter("memberId", memberId)
+                .setParameter("bookId", bookId)
+                .setParameter("createdAt", createdAt)
+                .setParameter("modifiedAt", now)
+                .executeUpdate();
+    }
+
+    @Transactional
     public void setDiscussionLikeInfo(
             final Long memberId,
             final Long discussionId
@@ -177,6 +203,28 @@ public class DatabaseInitializer {
                 .setParameter("memberId", memberId)
                 .setParameter("discussionId", discussionId)
                 .setParameter("createdAt", now)
+                .setParameter("modifiedAt", now)
+                .executeUpdate();
+    }
+
+    @Transactional
+    public void setDiscussionLikeInfo(
+            final Long memberId,
+            final Long discussionId,
+            final LocalDateTime createdAt
+    ) {
+        final LocalDateTime now = LocalDateTime.now().truncatedTo(MICROS);
+
+        em.createNativeQuery(
+                        """
+                                INSERT INTO DISCUSSION_LIKE (member_id, discussion_id, created_at, modified_at)
+                                VALUES 
+                                (:memberId, :discussionId, :createdAt, :modifiedAt)
+                                """
+                )
+                .setParameter("memberId", memberId)
+                .setParameter("discussionId", discussionId)
+                .setParameter("createdAt", createdAt)
                 .setParameter("modifiedAt", now)
                 .executeUpdate();
     }
@@ -298,6 +346,30 @@ public class DatabaseInitializer {
                 .setParameter("memberId", memberId)
                 .setParameter("commentId", commentId)
                 .setParameter("createdAt", now)
+                .setParameter("modifiedAt", now)
+                .executeUpdate();
+    }
+
+    @Transactional
+    public void setReplyInfo(
+            final String content,
+            final Long memberId,
+            final Long commentId,
+            final LocalDateTime createdAt
+    ) {
+        final LocalDateTime now = LocalDateTime.now().truncatedTo(MICROS);
+
+        em.createNativeQuery(
+                        """
+                                INSERT INTO REPLY (content, member_id, comment_id, created_at, modified_at)
+                                VALUES 
+                                (:content, :memberId, :commentId, :createdAt, :modifiedAt)
+                                """
+                )
+                .setParameter("content", content)
+                .setParameter("memberId", memberId)
+                .setParameter("commentId", commentId)
+                .setParameter("createdAt", createdAt)
                 .setParameter("modifiedAt", now)
                 .executeUpdate();
     }
