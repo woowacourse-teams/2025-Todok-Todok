@@ -15,7 +15,7 @@ import com.team.todoktodok.data.network.request.ModifyProfileRequest
 import com.team.todoktodok.data.network.request.ReportRequest
 import com.team.todoktodok.data.network.response.BlockedMemberResponse
 import com.team.todoktodok.data.network.response.ProfileResponse
-import com.team.todoktodok.data.network.response.discussion.MemberDiscussionResponse
+import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
 import com.team.todoktodok.data.network.service.MemberService
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -149,7 +149,7 @@ class DefaultMemberRemoteDataSourceTest {
             // given
             val memberId = MemberId.OtherUser(1L)
             val type = MemberDiscussionType.CREATED.name
-            val response = NetworkResult.Success(mockk<List<MemberDiscussionResponse>>())
+            val response = NetworkResult.Success(mockk<List<DiscussionResponse>>())
 
             coEvery { memberService.fetchMemberDiscussionRooms(memberId.id, type) } returns response
 
@@ -167,7 +167,7 @@ class DefaultMemberRemoteDataSourceTest {
             // given
             val memberId = 1L
             val type = MemberDiscussionType.PARTICIPATED
-            val response = NetworkResult.Success(mockk<List<MemberDiscussionResponse>>())
+            val response = NetworkResult.Success(mockk<List<DiscussionResponse>>())
 
             coEvery { tokenDataSource.getMemberId() } returns memberId
             coEvery {
