@@ -7,6 +7,7 @@ import androidx.fragment.app.activityViewModels
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentHotDiscussionBinding
+import com.team.todoktodok.presentation.core.ext.addOnScrollEndListener
 import com.team.todoktodok.presentation.view.discussiondetail.DiscussionDetailActivity
 import com.team.todoktodok.presentation.view.discussions.hot.adapter.HotDiscussionAdapter
 import com.team.todoktodok.presentation.view.discussions.vm.DiscussionsViewModel
@@ -36,7 +37,11 @@ class HotDiscussionFragment : Fragment(R.layout.fragment_hot_discussion) {
 
     private fun initView(binding: FragmentHotDiscussionBinding) {
         hotDiscussionAdapter = HotDiscussionAdapter(discussionAdapterHandler)
-        binding.rvDiscussions.adapter = hotDiscussionAdapter
+        with(binding.rvDiscussions) {
+            adapter = hotDiscussionAdapter
+            setHasFixedSize(true)
+            addOnScrollEndListener { viewModel.loadActivatedDiscissions() }
+        }
     }
 
     private fun setupUiState() {

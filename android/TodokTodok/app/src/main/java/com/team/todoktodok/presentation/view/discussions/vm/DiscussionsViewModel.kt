@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.team.domain.model.Discussion
+import com.team.domain.model.active.ActivatedDiscussionPage
 import com.team.domain.model.exception.NetworkResult
 import com.team.domain.model.exception.onFailure
 import com.team.domain.model.exception.onSuccess
@@ -50,8 +52,10 @@ class DiscussionsViewModel(
                 (result.firstOrNull { it is NetworkResult.Failure } as? NetworkResult.Failure)?.let {
                     onUiEvent(DiscussionsUiEvent.ShowErrorMessage(it.exception))
                 } ?: run {
-                    val hotDiscussions = (result[0] as NetworkResult.Success).data
-                    val activatedDiscussion = (result[1] as NetworkResult.Success).data
+                    val hotDiscussions =
+                        (result[0] as NetworkResult.Success).data as List<Discussion>
+                    val activatedDiscussion =
+                        (result[1] as NetworkResult.Success).data as ActivatedDiscussionPage
 
                     _uiState.value =
                         _uiState.value?.addHotDiscussion(hotDiscussions, activatedDiscussion)
@@ -105,6 +109,22 @@ class DiscussionsViewModel(
                 _uiState.value = _uiState.value?.addMyDiscussion(created, participated)
             }
         }
+
+    fun loadActivatedDiscissions() {
+        val activatedPage = _uiState.value?.activatedPage
+        val cursor = activatedPage?.nextCursor ?: return
+        if (!activatedPage.hasNext) return
+
+        withLoading {
+            discussionRepository
+                .getActivatedDiscussion(cursor = cursor)
+                .onSuccess {
+                    _uiState.value = _uiState.value?.addActivatedDiscussion(it)
+                }.onFailure {
+                    onUiEvent(DiscussionsUiEvent.ShowErrorMessage(it))
+                }
+        }
+    }
 
     fun clearKeyword() {
         _uiState.value = _uiState.value?.copy(searchKeyword = "")
