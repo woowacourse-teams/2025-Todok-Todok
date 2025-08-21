@@ -3,6 +3,7 @@ package todoktodok.backend;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
@@ -133,6 +134,29 @@ public class DatabaseInitializer {
     }
 
     @Transactional
+    public void setDiscussionInfo(
+            final String title,
+            final String content,
+            final Long memberId,
+            final Long bookId,
+            final LocalDateTime createdAt
+    ) {
+        em.createNativeQuery(
+                        """
+                                INSERT INTO DISCUSSION (title, content, member_id, book_id, created_at, modified_at)
+                                VALUES 
+                                (:title, :content, :memberId, :bookId, :createdAt, CURRENT_TIME)
+                                """
+                )
+                .setParameter("title", title)
+                .setParameter("content", content)
+                .setParameter("memberId", memberId)
+                .setParameter("bookId", bookId)
+                .setParameter("createdAt", createdAt)
+                .executeUpdate();
+    }
+
+    @Transactional
     public void setDiscussionLikeInfo(
             final Long memberId,
             final Long discussionId
@@ -146,6 +170,25 @@ public class DatabaseInitializer {
                 )
                 .setParameter("memberId", memberId)
                 .setParameter("discussionId", discussionId)
+                .executeUpdate();
+    }
+
+    @Transactional
+    public void setDiscussionLikeInfo(
+            final Long memberId,
+            final Long discussionId,
+            final LocalDateTime createdAt
+    ) {
+        em.createNativeQuery(
+                        """
+                                INSERT INTO DISCUSSION_LIKE (member_id, discussion_id, created_at, modified_at)
+                                VALUES 
+                                (:memberId, :discussionId, :createdAt, CURRENT_TIME)
+                                """
+                )
+                .setParameter("memberId", memberId)
+                .setParameter("discussionId", discussionId)
+                .setParameter("createdAt", createdAt)
                 .executeUpdate();
     }
 
@@ -176,6 +219,27 @@ public class DatabaseInitializer {
                 .setParameter("content", content)
                 .setParameter("memberId", memberId)
                 .setParameter("discussionId", discussionId)
+                .executeUpdate();
+    }
+
+    @Transactional
+    public void setCommentInfo(
+            final String content,
+            final Long memberId,
+            final Long discussionId,
+            final LocalDateTime createdAt
+    ) {
+        em.createNativeQuery(
+                        """
+                                INSERT INTO COMMENT (content, member_id, discussion_id, created_at, modified_at)
+                                VALUES 
+                                (:content, :memberId, :discussionId, :createdAt, CURRENT_TIME)
+                                """
+                )
+                .setParameter("content", content)
+                .setParameter("memberId", memberId)
+                .setParameter("discussionId", discussionId)
+                .setParameter("createdAt", createdAt)
                 .executeUpdate();
     }
 
@@ -227,6 +291,27 @@ public class DatabaseInitializer {
     }
 
     @Transactional
+    public void setReplyInfo(
+            final String content,
+            final Long memberId,
+            final Long commentId,
+            final LocalDateTime createdAt
+    ) {
+        em.createNativeQuery(
+                        """
+                                INSERT INTO REPLY (content, member_id, comment_id, created_at, modified_at)
+                                VALUES 
+                                (:content, :memberId, :commentId, :createdAt, CURRENT_TIME)
+                                """
+                )
+                .setParameter("content", content)
+                .setParameter("memberId", memberId)
+                .setParameter("commentId", commentId)
+                .setParameter("createdAt", createdAt)
+                .executeUpdate();
+    }
+
+    @Transactional
     public void setReplyLikeInfo(
             final Long memberId,
             final Long replyId
@@ -250,11 +335,11 @@ public class DatabaseInitializer {
     ) {
         em.createNativeQuery(
                         """
-                        INSERT INTO BLOCK (member_id, target_id, created_at, modified_at)
-                        VALUES 
-                        (:memberId, :targetId, CURRENT_TIME, CURRENT_TIME)
-                        """
-                 )
+                                INSERT INTO BLOCK (member_id, target_id, created_at, modified_at)
+                                VALUES 
+                                (:memberId, :targetId, CURRENT_TIME, CURRENT_TIME)
+                                """
+                )
                 .setParameter("memberId", memberId)
                 .setParameter("targetId", targetId)
                 .executeUpdate();
