@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.team.todoktodok.databinding.ItemCommentDetailInformationBinding
-import com.team.todoktodok.presentation.core.ext.loadImage
+import com.team.todoktodok.presentation.core.ext.loadCircleImage
 import com.team.todoktodok.presentation.core.ext.toRelativeString
 
 class CommentItemViewHolder private constructor(
@@ -25,7 +25,7 @@ class CommentItemViewHolder private constructor(
             ivLike.setOnClickListener { handler.onClickCommentLike() }
             tvLikeCount.text = comment.likeCount.toString()
             tvLikeCount.setOnClickListener { handler.onClickCommentLike() }
-            ivUserProfile.loadImage(comment.writer.profileImage)
+            ivUserProfile.loadCircleImage(comment.writer.profileImage)
             ivUserProfile.setOnClickListener {
                 handler.onClickCommentUserName(comment.writer.id)
             }

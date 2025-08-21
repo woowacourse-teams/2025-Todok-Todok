@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.team.todoktodok.databinding.ItemReplyBinding
-import com.team.todoktodok.presentation.core.ext.loadImage
+import com.team.todoktodok.presentation.core.ext.loadCircleImage
 import com.team.todoktodok.presentation.core.ext.toRelativeString
 
 class ReplyItemViewHolder private constructor(
@@ -24,7 +24,7 @@ class ReplyItemViewHolder private constructor(
             ivLike.isSelected = reply.isLikedByMe
             ivLike.setOnClickListener { handler.onClickReplyLike(reply.replyId) }
             tvLikeCount.text = reply.likeCount.toString()
-            ivUserProfile.loadImage(replyItem.value.reply.writer.profileImage)
+            ivUserProfile.loadCircleImage(replyItem.value.reply.writer.profileImage)
             ivUserProfile.setOnClickListener {
                 handler.onClickReplyUser(reply.writer.id)
             }
