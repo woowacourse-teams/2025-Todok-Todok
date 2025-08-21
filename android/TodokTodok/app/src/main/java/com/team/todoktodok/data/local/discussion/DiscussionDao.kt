@@ -1,7 +1,6 @@
 package com.team.todoktodok.data.local.discussion
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -16,14 +15,16 @@ interface DiscussionDao {
     @Upsert
     suspend fun upsertDiscussion(discussionEntity: DiscussionRoomEntity): Long
 
-    @Query("""
+    @Query(
+        """
         DELETE FROM discussion
         WHERE id IN (
             SELECT id FROM discussion
             ORDER BY id DESC
             LIMIT 1
         )
-    """)
+    """,
+    )
     suspend fun deleteDiscussion()
 
     @Transaction

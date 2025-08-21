@@ -38,6 +38,10 @@ class FakeDiscussionRepository : DiscussionRepository {
         TODO("Not yet implemented")
     }
 
+    override suspend fun deleteDiscussionRoom() {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun getDiscussions(
         type: DiscussionFilter,
         keyword: String?,

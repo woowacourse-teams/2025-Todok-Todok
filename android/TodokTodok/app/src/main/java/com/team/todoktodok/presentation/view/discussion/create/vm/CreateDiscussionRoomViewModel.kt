@@ -146,7 +146,7 @@ class CreateDiscussionRoomViewModel(
                 }
         viewModelScope.launch {
             if (mode == SerializationCreateDiscussionRoomMode.Draft(book.toSerialization())) {
-                 discussionRepository.deleteDiscussionRoom()
+                discussionRepository.deleteDiscussionRoom()
             }
             bookRepository
                 .saveBook(book)

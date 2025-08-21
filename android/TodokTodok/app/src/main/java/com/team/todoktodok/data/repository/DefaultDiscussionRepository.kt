@@ -32,8 +32,7 @@ class DefaultDiscussionRepository(
     override suspend fun getDiscussion(id: Long): NetworkResult<Discussion> =
         discussionRemoteDataSource.getDiscussion(id).map { it.toDomain() }
 
-    override suspend fun getDiscussion(): DiscussionRoom? =
-        discussionLocalDataSource.getDiscussion()?.discussionRoomEntity?.toDomain()
+    override suspend fun getDiscussion(): DiscussionRoom? = discussionLocalDataSource.getDiscussion()?.discussionRoomEntity?.toDomain()
 
     override suspend fun getDiscussions(
         type: DiscussionFilter,
@@ -84,9 +83,7 @@ class DefaultDiscussionRepository(
         reason: String,
     ): NetworkResult<Unit> = discussionRemoteDataSource.reportDiscussion(discussionId, reason)
 
-    override suspend fun deleteDiscussionRoom(
-    ) = discussionLocalDataSource.deleteDiscussion()
-
+    override suspend fun deleteDiscussionRoom() = discussionLocalDataSource.deleteDiscussion()
 
     override suspend fun hasDiscussion(): Boolean = discussionLocalDataSource.hasDiscussion()
 
