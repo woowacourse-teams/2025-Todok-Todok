@@ -54,8 +54,8 @@ data class DiscussionsUiState(
         createdDiscussion: List<Discussion>,
         participatedDiscussion: List<Discussion>,
     ): DiscussionsUiState {
-        val created = createdDiscussion.take(MY_DISCUSSION_SIZE).map { DiscussionUiState(it) }
-        val participated = participatedDiscussion.take(MY_DISCUSSION_SIZE).map { DiscussionUiState(it) }
+        val created = createdDiscussion.takeLast(MY_DISCUSSION_SIZE).map { DiscussionUiState(it) }
+        val participated = participatedDiscussion.takeLast(MY_DISCUSSION_SIZE).map { DiscussionUiState(it) }
 
         val updatedList =
             buildList {
