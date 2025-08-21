@@ -103,6 +103,10 @@ public class MemberQueryService {
                 .map(Discussion::getId)
                 .toList();
 
+        if (discussionIds.isEmpty()) {
+            return List.of();
+        }
+
         final List<DiscussionLikeCountDto> likeCounts = discussionLikeRepository.findLikeCountsByDiscussionIds(
                 discussionIds);
         final List<DiscussionCommentCountDto> commentCounts = commentRepository.findCommentCountsByDiscussionIds(
