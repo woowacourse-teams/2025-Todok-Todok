@@ -15,6 +15,18 @@ class FakeDiscussionRepository : DiscussionRepository {
     private val dataSource = FakeDiscussionRemoteDataSource()
     private val discussions = DISCUSSIONS
 
+    override suspend fun getSearchDiscussion(keyword: String): NetworkResult<List<Discussion>> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getActivatedDiscussion(
+        period: Int,
+        size: Int,
+        cursor: String?,
+    ): NetworkResult<List<Discussion>> {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun getHotDiscussion(
         period: Int,
         count: Int,
