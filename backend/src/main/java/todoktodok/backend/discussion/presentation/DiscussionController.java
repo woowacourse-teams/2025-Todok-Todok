@@ -56,7 +56,7 @@ public class DiscussionController implements DiscussionApiDocs {
             @LoginMember final Long memberId,
             @PathVariable final Long discussionId,
             @RequestBody final DiscussionReportRequest discussionReportRequest
-            ) {
+    ) {
         discussionCommandService.report(memberId, discussionId, discussionReportRequest.reason());
 
         return ResponseEntity.status(HttpStatus.CREATED)

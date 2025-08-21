@@ -2,6 +2,8 @@ package todoktodok.backend.comment.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,6 +18,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 import todoktodok.backend.global.common.TimeStamp;
+import todoktodok.backend.global.report.ContentReportReason;
 import todoktodok.backend.member.domain.Member;
 
 @Getter
@@ -39,14 +42,15 @@ public class CommentReport extends TimeStamp {
     @JoinColumn(nullable = false)
     private Member member;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String reason;
+    private ContentReportReason reason;
 
     @Builder
     public static CommentReport create(
             final Comment comment,
             final Member member,
-            final String reason
+            final ContentReportReason reason
     ) {
 
         return new CommentReport(

@@ -1,22 +1,23 @@
-package todoktodok.backend.discussion.domain;
+package todoktodok.backend.global.report;
 
 import java.util.Arrays;
 import lombok.Getter;
 
 @Getter
-public enum DiscussionReportReason {
-    OFF_TOPIC("토론과 무관함"),
-    INAPPROPRIATE("부적절한 내용"),
-    ABUSIVE("욕설/혐오 표현"),
-    SPAM_AD("스팸/광고");
+public enum ContentReportReason {
+
+    OFF_TOPIC("토론 주제와 무관한 내용"),
+    INAPPROPRIATE("부적절하거나 불쾌감을 주는 내용"),
+    SPAM("도배/광고성 게시글"),
+    ILLEGAL("불법 정보 또는 정책 위반");
 
     private final String description;
 
-    DiscussionReportReason(String description) {
+    ContentReportReason(final String description) {
         this.description = description;
     }
 
-    public static DiscussionReportReason fromDescription(String description) {
+    public static ContentReportReason fromDescription(final String description) {
         return Arrays.stream(values())
                 .filter(reason -> reason.getDescription().equals(description))
                 .findFirst()

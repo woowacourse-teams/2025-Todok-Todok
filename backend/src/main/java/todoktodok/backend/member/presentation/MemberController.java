@@ -77,7 +77,7 @@ public class MemberController implements MemberApiDocs {
             @LoginMember final Long memberId,
             @PathVariable("memberId") final Long targetId,
             @RequestBody final MemberReportRequest memberReportRequest
-            ) {
+    ) {
         memberCommandService.report(memberId, targetId, memberReportRequest.reason());
         return ResponseEntity.status(HttpStatus.CREATED)
                 .build();

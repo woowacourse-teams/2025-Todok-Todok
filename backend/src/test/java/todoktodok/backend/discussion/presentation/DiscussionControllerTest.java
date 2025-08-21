@@ -208,7 +208,7 @@ class DiscussionControllerTest {
         databaseInitializer.setDiscussionInfo("토론방1", "토론방 내용", 2L, 1L);
 
         final String token = MemberFixture.login("user@gmail.com");
-        final DiscussionReportRequest discussionReportRequest = new DiscussionReportRequest("욕설/혐오 표현");
+        final DiscussionReportRequest discussionReportRequest = new DiscussionReportRequest("토론 주제와 무관한 내용");
 
         // when - then
         RestAssured.given().log().all()

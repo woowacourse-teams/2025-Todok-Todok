@@ -9,6 +9,7 @@ import todoktodok.backend.comment.domain.Comment;
 import todoktodok.backend.comment.domain.repository.CommentRepository;
 import todoktodok.backend.discussion.domain.Discussion;
 import todoktodok.backend.discussion.domain.repository.DiscussionRepository;
+import todoktodok.backend.global.report.ContentReportReason;
 import todoktodok.backend.member.domain.Member;
 import todoktodok.backend.member.domain.repository.MemberRepository;
 import todoktodok.backend.reply.application.dto.request.ReplyRequest;
@@ -64,6 +65,7 @@ public class ReplyCommandService {
         final Discussion discussion = findDiscussion(discussionId);
         final Comment comment = findComment(commentId);
         final Reply reply = findReply(replyId);
+        final ContentReportReason reportReason = ContentReportReason.fromDescription(reason);
 
         reply.validateMatchWithComment(comment);
         reply.validateSelfReport(member);
@@ -74,7 +76,7 @@ public class ReplyCommandService {
         final ReplyReport replyReport = ReplyReport.builder()
                 .reply(reply)
                 .member(member)
-                .reason(reason)
+                .reason(reportReason)
                 .build();
 
         replyReportRepository.save(replyReport);

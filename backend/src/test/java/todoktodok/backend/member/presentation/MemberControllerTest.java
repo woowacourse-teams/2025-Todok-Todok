@@ -108,7 +108,7 @@ class MemberControllerTest {
         databaseInitializer.setUserInfo("user2@gmail.com", "user2", "https://user2.png", "user");
 
         final String token = MemberFixture.login("user@gmail.com");
-        final MemberReportRequest memberReportRequest = new MemberReportRequest("욕설/혐오 표현");
+        final MemberReportRequest memberReportRequest = new MemberReportRequest("욕설/인신공격");
 
         // when - then
         RestAssured.given().log().all()

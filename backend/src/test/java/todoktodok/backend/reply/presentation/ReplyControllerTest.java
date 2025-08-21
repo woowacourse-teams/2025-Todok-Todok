@@ -74,7 +74,7 @@ public class ReplyControllerTest {
         databaseInitializer.setReplyInfo("저도 같은 의견입니다!", 2L, 1L);
 
         final String token = MemberFixture.login("user@gmail.com");
-        final ReplyReportRequest replyReportRequest = new ReplyReportRequest("욕설/혐오 표현");
+        final ReplyReportRequest replyReportRequest = new ReplyReportRequest("토론 주제와 무관한 내용");
 
         // when - then
         RestAssured.given().log().all()

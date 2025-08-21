@@ -140,7 +140,7 @@ public class CommentCommandServiceTest {
         final Long memberId = 1L;
         final Long discussionId = 1L;
         final Long commentId = 1L;
-        final String reason = "욕설/혐오 표현";
+        final String reason = "토론 주제와 무관한 내용";
 
         // when - then
         assertThatThrownBy(() -> commentCommandService.report(memberId, discussionId, commentId, reason))
@@ -161,7 +161,7 @@ public class CommentCommandServiceTest {
         final Long memberId = 1L;
         final Long discussionId = 1L;
         final Long commentId = 1L;
-        final String reason = "욕설/혐오 표현";
+        final String reason = "토론 주제와 무관한 내용";
 
         commentCommandService.report(memberId, discussionId, commentId, reason);
 

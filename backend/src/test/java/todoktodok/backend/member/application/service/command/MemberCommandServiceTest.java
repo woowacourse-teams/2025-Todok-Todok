@@ -152,7 +152,7 @@ class MemberCommandServiceTest {
         databaseInitializer.setDefaultUserInfo();
 
         final Long memberId = 1L;
-        final String reason = "욕설/혐오 표현";
+        final String reason = "욕설/인신공격";
 
         // when - then
         assertThatThrownBy(() -> memberCommandService.report(memberId, memberId, reason))
@@ -187,7 +187,7 @@ class MemberCommandServiceTest {
 
         final Long memberId = 1L;
         final Long targetId = 2L;
-        final String reason = "욕설/혐오 표현";
+        final String reason = "욕설/인신공격";
 
         memberCommandService.report(memberId, targetId, reason);
 

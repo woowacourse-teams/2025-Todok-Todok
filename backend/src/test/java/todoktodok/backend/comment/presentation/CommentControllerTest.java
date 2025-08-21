@@ -112,7 +112,7 @@ public class CommentControllerTest {
         databaseInitializer.setCommentInfo("상속의 핵심 목적은 타입 계층의 구축입니다!", 2L, 1L);
 
         final String token = MemberFixture.login("user@gmail.com");
-        final CommentReportRequest commentReportRequest = new CommentReportRequest("욕설/혐오 표현");
+        final CommentReportRequest commentReportRequest = new CommentReportRequest("토론 주제와 무관한 내용");
 
         // when - then
         RestAssured.given().log().all()
