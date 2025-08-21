@@ -220,10 +220,6 @@ class DiscussionsActivity : AppCompatActivity() {
         )
     }
 
-    override fun onResume() {
-        super.onResume()
-    }
-
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.discussion_list_menu, menu)
         return true

@@ -10,7 +10,14 @@ class ParticipatedDiscussionViewHolder private constructor(
     binding: ItemMyParticipatedDiscussionBinding,
     private val handler: Handler,
 ) : RecyclerView.ViewHolder(binding.root) {
-    private val discussionAdapter = DiscussionAdapter(handler)
+    private val discussionAdapterHandler =
+        object : DiscussionAdapter.Handler {
+            override fun onItemClick(index: Int) {
+                val discussionId = discussionAdapter.currentList[index].item.id
+                handler.onClickMyParticipatedDiscussionItem(discussionId)
+            }
+        }
+    private val discussionAdapter: DiscussionAdapter = DiscussionAdapter(discussionAdapterHandler)
 
     init {
         with(binding) {
@@ -38,7 +45,9 @@ class ParticipatedDiscussionViewHolder private constructor(
         }
     }
 
-    interface Handler : DiscussionAdapter.Handler {
+    interface Handler {
         fun onClickMyParticipatedDiscussionHeader()
+
+        fun onClickMyParticipatedDiscussionItem(discussionId: Long)
     }
 }
