@@ -60,6 +60,8 @@ interface DiscussionRepository {
         reason: String,
     ): NetworkResult<Unit>
 
+    suspend fun deleteDiscussionRoom()
+
     companion object {
         private const val PAGING_SIZE = 15
         private const val DEFAULT_HOT_DISCUSSION_PERIOD = 7

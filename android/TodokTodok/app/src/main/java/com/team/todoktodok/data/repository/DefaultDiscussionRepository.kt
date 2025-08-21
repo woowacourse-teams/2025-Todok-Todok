@@ -96,6 +96,8 @@ class DefaultDiscussionRepository(
         reason: String,
     ): NetworkResult<Unit> = discussionRemoteDataSource.reportDiscussion(discussionId, reason)
 
+    override suspend fun deleteDiscussionRoom() = discussionLocalDataSource.deleteDiscussion()
+
     override suspend fun hasDiscussion(): Boolean = discussionLocalDataSource.hasDiscussion()
 
     override suspend fun getBook(): Book = discussionLocalDataSource.getBook().toDomain()

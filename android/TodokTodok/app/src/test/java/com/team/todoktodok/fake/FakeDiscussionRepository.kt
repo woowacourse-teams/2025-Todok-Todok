@@ -56,6 +56,10 @@ class FakeDiscussionRepository : DiscussionRepository {
         TODO("Not yet implemented")
     }
 
+    override suspend fun deleteDiscussionRoom() {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun saveDiscussionRoom(
         bookId: Long,
         discussionTitle: String,

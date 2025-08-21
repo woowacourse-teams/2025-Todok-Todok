@@ -15,6 +15,18 @@ interface DiscussionDao {
     @Upsert
     suspend fun upsertDiscussion(discussionEntity: DiscussionRoomEntity): Long
 
+    @Query(
+        """
+        DELETE FROM discussion
+        WHERE id IN (
+            SELECT id FROM discussion
+            ORDER BY id DESC
+            LIMIT 1
+        )
+    """,
+    )
+    suspend fun deleteDiscussion()
+
     @Transaction
     suspend fun saveDiscussionWithBook(
         discussion: DiscussionRoomEntity,
