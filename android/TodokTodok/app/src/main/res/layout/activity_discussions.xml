@@ -13,7 +13,6 @@
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:menu="@menu/discussion_list_menu">
@@ -45,7 +44,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/bg_green_f0_radius_8dp"
             android:fontFamily="@font/pretendard_regular"
-            android:imeOptions="actionDone"
+            android:imeOptions="actionSearch"
             android:singleLine="true"
             android:textColor="@color/black_18"
             android:textSize="@dimen/font_size_small" />

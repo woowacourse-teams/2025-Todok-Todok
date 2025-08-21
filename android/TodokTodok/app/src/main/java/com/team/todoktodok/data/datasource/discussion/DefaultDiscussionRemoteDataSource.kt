@@ -1,6 +1,5 @@
 package com.team.todoktodok.data.datasource.discussion
 
-import com.team.domain.model.DiscussionFilter
 import com.team.domain.model.exception.NetworkResult
 import com.team.domain.model.exception.toDomain
 import com.team.todoktodok.data.core.ext.mapToggleLikeResponse
@@ -9,6 +8,7 @@ import com.team.todoktodok.data.network.request.DiscussionRoomRequest
 import com.team.todoktodok.data.network.request.EditDiscussionRoomRequest
 import com.team.todoktodok.data.network.request.ReportRequest
 import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
+import com.team.todoktodok.data.network.response.discussion.DiscussionsResponse
 import com.team.todoktodok.data.network.response.latest.LatestDiscussionsResponse
 import com.team.todoktodok.data.network.service.DiscussionService
 import retrofit2.Response
@@ -16,17 +16,26 @@ import retrofit2.Response
 class DefaultDiscussionRemoteDataSource(
     private val discussionService: DiscussionService,
 ) : DiscussionRemoteDataSource {
+    override suspend fun getSearchDiscussion(keyword: String): NetworkResult<List<DiscussionResponse>> =
+        discussionService.fetchSearchDiscussions(keyword)
+
+    override suspend fun getActivatedDiscussion(
+        period: Int,
+        size: Int,
+        cursor: String?,
+    ): NetworkResult<DiscussionsResponse> = discussionService.fetchActivatedDiscussions(period, size, cursor)
+
+    override suspend fun getHotDiscussion(
+        period: Int,
+        count: Int,
+    ): NetworkResult<List<DiscussionResponse>> = discussionService.fetchHotDiscussions(period, count)
+
     override suspend fun getLatestDiscussions(
         size: Int,
         cursor: String?,
     ): NetworkResult<LatestDiscussionsResponse> = discussionService.fetchLatestDiscussions(size, cursor)
 
     override suspend fun getDiscussion(id: Long): NetworkResult<DiscussionResponse> = discussionService.fetchDiscussion(id)
-
-    override suspend fun getDiscussions(
-        type: DiscussionFilter,
-        keyword: String?,
-    ): NetworkResult<List<DiscussionResponse>> = discussionService.fetchDiscussions(keyword, type.name)
 
     override suspend fun saveDiscussionRoom(
         bookId: Long,

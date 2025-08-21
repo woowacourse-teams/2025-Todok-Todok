@@ -7,6 +7,7 @@ import androidx.fragment.app.activityViewModels
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentHotDiscussionBinding
+import com.team.todoktodok.presentation.view.discussiondetail.DiscussionDetailActivity
 import com.team.todoktodok.presentation.view.discussions.hot.adapter.HotDiscussionAdapter
 import com.team.todoktodok.presentation.view.discussions.vm.DiscussionsViewModel
 import com.team.todoktodok.presentation.view.discussions.vm.DiscussionsViewModelFactory
@@ -46,7 +47,17 @@ class HotDiscussionFragment : Fragment(R.layout.fragment_hot_discussion) {
 
     private val discussionAdapterHandler =
         object : HotDiscussionAdapter.Handler {
-            override fun onItemClick(index: Int) {
+            override fun onClickHotPopularDiscussion(discussionId: Long) {
+                startActivity(DiscussionDetailActivity.Intent(requireContext(), discussionId))
+            }
+
+            override fun onClickHotActivatedDiscussion(discussionId: Long) {
+                startActivity(DiscussionDetailActivity.Intent(requireContext(), discussionId))
             }
         }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadHotDiscussions()
+    }
 }

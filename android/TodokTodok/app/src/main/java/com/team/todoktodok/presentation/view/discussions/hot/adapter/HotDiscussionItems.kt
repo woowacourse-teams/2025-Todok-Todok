@@ -9,6 +9,8 @@ sealed class HotDiscussionItems(
         val items: List<DiscussionUiState>,
     ) : HotDiscussionItems(ViewType.POPULAR)
 
+    data object ActivatedHeaderItem : HotDiscussionItems(ViewType.ACTIVATED_HEADER)
+
     data class ActivatedItem(
         val items: List<DiscussionUiState>,
     ) : HotDiscussionItems(ViewType.ACTIVATED)
@@ -17,7 +19,8 @@ sealed class HotDiscussionItems(
         val sequence: Int,
     ) {
         POPULAR(0),
-        ACTIVATED(1),
+        ACTIVATED_HEADER(1),
+        ACTIVATED(2),
         ;
 
         companion object {

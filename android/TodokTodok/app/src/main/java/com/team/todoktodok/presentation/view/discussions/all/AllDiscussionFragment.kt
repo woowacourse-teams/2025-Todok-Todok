@@ -8,6 +8,7 @@ import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentAllDiscussionBinding
 import com.team.todoktodok.presentation.core.ext.addOnScrollEndListener
+import com.team.todoktodok.presentation.core.ext.clearOnScrollEndListener
 import com.team.todoktodok.presentation.view.discussiondetail.DiscussionDetailActivity
 import com.team.todoktodok.presentation.view.discussions.DiscussionsUiEvent
 import com.team.todoktodok.presentation.view.discussions.adapter.DiscussionAdapter
@@ -32,8 +33,9 @@ class AllDiscussionFragment : Fragment(R.layout.fragment_all_discussion) {
     ) {
         val binding = FragmentAllDiscussionBinding.bind(view)
 
+        viewModel.loadLatestDiscussions()
         initView(binding)
-        setUpUiState()
+        setUpUiState(binding)
         setUpUiEvent(binding)
     }
 
@@ -41,15 +43,20 @@ class AllDiscussionFragment : Fragment(R.layout.fragment_all_discussion) {
         with(binding) {
             rvDiscussions.adapter = discussionAdapter
             rvDiscussions.setHasFixedSize(true)
-            rvDiscussions.addOnScrollEndListener {
-                viewModel.loadLatestDiscussions()
-            }
         }
     }
 
-    private fun setUpUiState() {
+    private fun setUpUiState(binding: FragmentAllDiscussionBinding) {
         viewModel.uiState.observe(viewLifecycleOwner) { value ->
             discussionAdapter.submitList(value.latestDiscussions)
+
+            if (value.loadBySearch) {
+                binding.rvDiscussions.clearOnScrollEndListener()
+            } else {
+                binding.rvDiscussions.addOnScrollEndListener {
+                    viewModel.loadLatestDiscussions()
+                }
+            }
         }
     }
 
@@ -78,11 +85,6 @@ class AllDiscussionFragment : Fragment(R.layout.fragment_all_discussion) {
     private fun displayNoResultsView(binding: FragmentAllDiscussionBinding) {
         binding.tvNoResult.visibility = View.VISIBLE
         binding.rvDiscussions.visibility = View.GONE
-    }
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.loadLatestDiscussions()
     }
 
     private val adapterHandler =
