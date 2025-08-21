@@ -95,7 +95,7 @@ class DiscussionDetailViewModel(
                     discussionItemUiState =
                         DiscussionItemUiState(
                             discussion,
-                            discussionId == tokenRepository.getMemberId(),
+                            discussion.writer.id == tokenRepository.getMemberId(),
                         ),
                     isLoading = false,
                 )
