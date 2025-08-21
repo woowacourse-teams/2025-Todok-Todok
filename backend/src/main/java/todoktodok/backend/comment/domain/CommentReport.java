@@ -1,5 +1,6 @@
 package todoktodok.backend.comment.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -38,14 +39,18 @@ public class CommentReport extends TimeStamp {
     @JoinColumn(nullable = false)
     private Member member;
 
+    @Column(nullable = false)
+    private String reason;
+
     @Builder
     public static CommentReport create(
             final Comment comment,
-            final Member member
+            final Member member,
+            final String reason
     ) {
 
         return new CommentReport(
-                null, comment, member
+                null, comment, member, reason
         );
     }
 }

@@ -77,7 +77,8 @@ public class CommentCommandService {
     public void report(
             final Long memberId,
             final Long discussionId,
-            final Long commentId
+            final Long commentId,
+            final String reason
     ) {
         final Member member = findMember(memberId);
         final Comment comment = findComment(commentId);
@@ -91,6 +92,7 @@ public class CommentCommandService {
         final CommentReport commentReport = CommentReport.builder()
                 .comment(comment)
                 .member(member)
+                .reason(reason)
                 .build();
 
         commentReportRepository.save(commentReport);
