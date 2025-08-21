@@ -12,18 +12,16 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.util.List;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import todoktodok.backend.discussion.application.dto.request.DiscussionRequest;
 import todoktodok.backend.discussion.application.dto.request.DiscussionUpdateRequest;
 import todoktodok.backend.discussion.application.dto.response.DiscussionResponse;
+import todoktodok.backend.discussion.application.dto.response.SlicedDiscussionResponse;
 import todoktodok.backend.discussion.domain.DiscussionFilterType;
 import todoktodok.backend.global.auth.Auth;
 import todoktodok.backend.global.auth.Role;
 import todoktodok.backend.global.exception.ErrorResponse;
-import todoktodok.backend.global.resolver.LoginMember;
 
 @Tag(name = "토론방 API")
 public interface DiscussionApiDocs {
@@ -99,7 +97,7 @@ public interface DiscussionApiDocs {
                             mediaType = "application/json",
                             schema = @Schema(implementation = DiscussionRequest.class),
                             examples = @ExampleObject(
-                                    value = "{\"bookId\":1, \"title\":\"토론방 제목\", \"content\":\"토론방 내용입니다.\"}"
+                                    value = "{\"bookId\":1, \"discussionTitle\":\"토론방 제목\", \"discussionOpinion\":\"토론방 내용입니다.\"}"
                             )
                     )
             ) final DiscussionRequest discussionRequest
@@ -263,6 +261,109 @@ public interface DiscussionApiDocs {
             ) final Long discussionId
     );
 
+    @Operation(summary = "토론방 최신순 전체 조회 API")
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "토론방 최신순 조회 성공",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = SlicedDiscussionResponse.class),
+                            examples = @ExampleObject(
+                                    value = """
+                                            {
+                                              "items": [
+                                                  {
+                                                    "discussionId": 2,
+                                                    "title": "토론방 제목1",
+                                                    "content": "토론방 내용1",
+                                                    "author": {
+                                                      "id": 1,
+                                                      "nickname": "듀이",
+                                                      "email": "user1@example.com",
+                                                      "profileImage": "https://example.com/image1.png"
+                                                    },
+                                                    "createdAt": "2025-08-14T10:00:00",
+                                                    "commentCount": 5,
+                                                    "likeCount": 10,
+                                                    "isLikedByMe": true
+                                                  },
+                                                  {
+                                                    "discussionId": 1,
+                                                    "title": "토론방 제목2",
+                                                    "content": "토론방 내용2",
+                                                    "author": {
+                                                      "id": 2,
+                                                      "nickname": "모다",
+                                                      "email": "user2@example.com",
+                                                      "profileImage": "https://example.com/image2.png"
+                                                    },
+                                                    "createdAt": "2025-08-14T10:05:00",
+                                                    "commentCount": 3,
+                                                    "likeCount": 5,
+                                                    "isLikedByMe": false
+                                                  }
+                                              ],
+                                              "pageInfo": {
+                                                "hasNext": true,
+                                                "nextCursor": "NA=="
+                                              }
+                                            }
+                                            """
+                            )
+                    )),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "토큰 인증 오류",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "JWT 오류",
+                                    value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
+                            )
+                    )),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "존재하지 않는 리소스",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "회원 없음",
+                                    value = "{\"code\":404, \"message\":\"[ERROR] 해당 회원을 찾을 수 없습니다\"}"
+                            )
+                    )),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "서버 오류",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "서버 오류",
+                                    value = "{\"code\":500, \"message\":\"[ERROR] 서버 내부 오류가 발생했습니다\"}"
+                            )
+                    ))
+    })
+    ResponseEntity<SlicedDiscussionResponse> getDiscussions(
+            @Parameter(hidden = true) final Long memberId,
+            @Parameter(
+                    description = "페이지 사이즈",
+                    content = @Content(
+                            schema = @Schema(implementation = Integer.class),
+                            examples = @ExampleObject(value = "20")
+                    )
+            ) final int size,
+            @Parameter(
+                    description = "페이지 커서",
+                    content = @Content(
+                            schema = @Schema(implementation = String.class),
+                            examples = @ExampleObject(value = "NA==")
+                    )
+            ) final String cursor
+    );
+
     @Operation(summary = "토론방 필터링 조회 API")
     @ApiResponses({
             @ApiResponse(
@@ -380,49 +481,49 @@ public interface DiscussionApiDocs {
                             schema = @Schema(implementation = DiscussionResponse.class),
                             examples = @ExampleObject(
                                     value = """
-                                           [
-                                                {
-                                                  "discussionId": 1,
-                                                  "book": {
-                                                    "bookId": 1,
-                                                    "bookTitle": "엘레강트 오브젝트 - 새로운 관점에서 바라본 객체지향",
-                                                    "bookAuthor": "Yegor Bugayenko (지은이), 조영호 (옮긴이)",
-                                                    "bookImage": "https://image.aladin.co.kr/product/25837/40/coversum/k762736538_1.jpg"
-                                                  },
-                                                  "member": {
-                                                    "memberId": 2,
-                                                    "nickname": "모찌",
-                                                    "profileImage": "https://user.png"
-                                                  },
-                                                  "createdAt": "2025-08-20T10:59:48",
-                                                  "discussionTitle": "토론방 제목",
-                                                  "discussionOpinion": "토론방 내용입니다",
-                                                  "likeCount": 5,
-                                                  "commentCount": 4,
-                                                  "isLikedByMe": true
-                                                },
-                                                {
-                                                  "discussionId": 3,
-                                                  "book": {
-                                                    "bookId": 1,
-                                                    "bookTitle": "엘레강트 오브젝트 - 새로운 관점에서 바라본 객체지향",
-                                                    "bookAuthor": "Yegor Bugayenko (지은이), 조영호 (옮긴이)",
-                                                    "bookImage": "https://image.aladin.co.kr/product/25837/40/coversum/k762736538_1.jpg"
-                                                  },
-                                                  "member": {
-                                                    "memberId": 2,
-                                                    "nickname": "모찌",
-                                                    "profileImage": "https://user.png"
-                                                  },
-                                                  "createdAt": "2025-08-20T10:59:48",
-                                                  "discussionTitle": "토론방 제목 3",
-                                                  "discussionOpinion": "토론방 내용 3입니다",
-                                                  "likeCount": 6,
-                                                  "commentCount": 0,
-                                                  "isLikedByMe": false
-                                                }
-                                           ]
-                                           """
+                                            [
+                                                 {
+                                                   "discussionId": 1,
+                                                   "book": {
+                                                     "bookId": 1,
+                                                     "bookTitle": "엘레강트 오브젝트 - 새로운 관점에서 바라본 객체지향",
+                                                     "bookAuthor": "Yegor Bugayenko (지은이), 조영호 (옮긴이)",
+                                                     "bookImage": "https://image.aladin.co.kr/product/25837/40/coversum/k762736538_1.jpg"
+                                                   },
+                                                   "member": {
+                                                     "memberId": 2,
+                                                     "nickname": "모찌",
+                                                     "profileImage": "https://user.png"
+                                                   },
+                                                   "createdAt": "2025-08-20T10:59:48",
+                                                   "discussionTitle": "토론방 제목",
+                                                   "discussionOpinion": "토론방 내용입니다",
+                                                   "likeCount": 5,
+                                                   "commentCount": 4,
+                                                   "isLikedByMe": true
+                                                 },
+                                                 {
+                                                   "discussionId": 3,
+                                                   "book": {
+                                                     "bookId": 1,
+                                                     "bookTitle": "엘레강트 오브젝트 - 새로운 관점에서 바라본 객체지향",
+                                                     "bookAuthor": "Yegor Bugayenko (지은이), 조영호 (옮긴이)",
+                                                     "bookImage": "https://image.aladin.co.kr/product/25837/40/coversum/k762736538_1.jpg"
+                                                   },
+                                                   "member": {
+                                                     "memberId": 2,
+                                                     "nickname": "모찌",
+                                                     "profileImage": "https://user.png"
+                                                   },
+                                                   "createdAt": "2025-08-20T10:59:48",
+                                                   "discussionTitle": "토론방 제목 3",
+                                                   "discussionOpinion": "토론방 내용 3입니다",
+                                                   "likeCount": 6,
+                                                   "commentCount": 0,
+                                                   "isLikedByMe": false
+                                                 }
+                                            ]
+                                            """
                             )
                     )),
             @ApiResponse(
@@ -578,7 +679,7 @@ public interface DiscussionApiDocs {
                             mediaType = "application/json",
                             schema = @Schema(implementation = DiscussionUpdateRequest.class),
                             examples = @ExampleObject(
-                                    value = "{\"title\":\"수정된 토론방 제목\", \"content\":\"수정된 토론방 내용입니다.\"}"
+                                    value = "{\"discussionTitle\":\"수정된 토론방 제목\", \"discussionOpinion\":\"수정된 토론방 내용입니다.\"}"
                             )
                     )
             ) final DiscussionUpdateRequest discussionUpdateRequest
