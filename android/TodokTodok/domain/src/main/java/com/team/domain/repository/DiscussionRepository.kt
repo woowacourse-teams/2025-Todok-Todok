@@ -3,6 +3,7 @@ package com.team.domain.repository
 import com.team.domain.model.Book
 import com.team.domain.model.Discussion
 import com.team.domain.model.LikeStatus
+import com.team.domain.model.active.ActivatedDiscussionPage
 import com.team.domain.model.exception.NetworkResult
 import com.team.domain.model.latest.LatestDiscussionPage
 import com.team.domain.model.member.DiscussionRoom
@@ -14,7 +15,7 @@ interface DiscussionRepository {
         period: Int = DEFAULT_HOT_DISCUSSION_PERIOD,
         size: Int = PAGING_SIZE,
         cursor: String? = null,
-    ): NetworkResult<List<Discussion>>
+    ): NetworkResult<ActivatedDiscussionPage>
 
     suspend fun getHotDiscussion(
         period: Int = DEFAULT_HOT_DISCUSSION_PERIOD,
