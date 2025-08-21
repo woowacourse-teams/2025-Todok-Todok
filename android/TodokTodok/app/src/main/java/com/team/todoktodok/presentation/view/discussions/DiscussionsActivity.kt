@@ -192,8 +192,6 @@ class DiscussionsActivity : AppCompatActivity() {
         val index = tab.position
         val selectedFilter = DiscussionFilter.entries[index]
 
-        viewModel.updateTab(selectedFilter, THROTTLE_DURATION)
-
         when (selectedFilter) {
             DiscussionFilter.HOT -> changeFragment(hotDiscussionFragment)
             DiscussionFilter.ALL -> changeFragment(allDiscussionFragment)

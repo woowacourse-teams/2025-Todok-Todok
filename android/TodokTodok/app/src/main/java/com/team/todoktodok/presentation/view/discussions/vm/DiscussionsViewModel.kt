@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.team.domain.model.DiscussionFilter
 import com.team.domain.model.exception.NetworkResult
 import com.team.domain.model.member.MemberDiscussion
 import com.team.domain.model.member.MemberDiscussionType
@@ -15,10 +14,8 @@ import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
 import com.team.todoktodok.presentation.core.event.SingleLiveData
 import com.team.todoktodok.presentation.view.discussions.DiscussionsUiEvent
 import com.team.todoktodok.presentation.view.discussions.DiscussionsUiState
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class DiscussionsViewModel(
@@ -31,44 +28,29 @@ class DiscussionsViewModel(
     private val _uiEvent = MutableSingleLiveData<DiscussionsUiEvent>()
     val uiEvent: SingleLiveData<DiscussionsUiEvent> get() = _uiEvent
 
-    private var loadJob: Job? = null
-
-    init {
-        loadLatestDiscussions("")
-    }
-
-    fun updateTab(
-        newFilter: DiscussionFilter,
-        duration: Long,
-    ) {
-        _uiState.value = _uiState.value?.copy(filter = newFilter)
-
-        loadJob?.cancel()
-        loadJob =
-            viewModelScope.launch {
-                delay(duration)
-            }
-    }
-
     fun loadSearchedDiscussions(keyword: String) {
         _uiState.value = _uiState.value?.copy(searchKeyword = keyword)
     }
 
-    fun findSelectedMyDiscussion() {
-    }
+    fun loadLatestDiscussions() {
+        val state = _uiState.value ?: return
+        if (!state.latestPageHasNext || state.isLoading) return
 
-    fun loadLatestDiscussions(cursor: String) =
-        withLoading {
-            when (val result = discussionRepository.getLatestDiscussions(cursor = cursor)) {
-                is NetworkResult.Success -> {
-                    _uiState.value = _uiState.value?.addLatestDiscussion(result.data)
-                }
+        val cursor = state.latestPage.nextCursor
+        if (state.latestPageHasNext) {
+            withLoading {
+                when (val result = discussionRepository.getLatestDiscussions(cursor = cursor)) {
+                    is NetworkResult.Success -> {
+                        _uiState.value = _uiState.value?.addLatestDiscussion(result.data)
+                    }
 
-                is NetworkResult.Failure -> {
-                    onUiEvent(DiscussionsUiEvent.ShowErrorMessage(result.exception))
+                    is NetworkResult.Failure -> {
+                        onUiEvent(DiscussionsUiEvent.ShowErrorMessage(result.exception))
+                    }
                 }
             }
         }
+    }
 
     fun loadMyDiscussions() =
         withLoading {
@@ -89,7 +71,8 @@ class DiscussionsViewModel(
             }
 
             val created = (results[MemberDiscussionType.CREATED] as NetworkResult.Success).data
-            val participated = (results[MemberDiscussionType.PARTICIPATED] as NetworkResult.Success).data
+            val participated =
+                (results[MemberDiscussionType.PARTICIPATED] as NetworkResult.Success).data
 
             _uiState.value = _uiState.value?.addMyDiscussion(created, participated)
         }
