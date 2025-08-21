@@ -28,7 +28,6 @@ class FakeDiscussionRepository : DiscussionRepository {
         TODO("Not yet implemented")
     }
 
-
     override suspend fun getHotDiscussion(
         period: Int,
         count: Int,
