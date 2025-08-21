@@ -83,7 +83,7 @@ class ResponseCall<T>(
             val exception =
                 exceptionResponse?.let {
                     TodokTodokExceptions.from(it.code, it.message)
-                } ?: TodokTodokExceptions.UnknownException
+                } ?: TodokTodokExceptions.UnknownException(null)
             return NetworkResult.Failure(exception)
         }
 

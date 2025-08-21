@@ -1,3 +1,5 @@
+import org.gradle.kotlin.dsl.libs
+
 plugins {
     id("java-library")
     alias(libs.plugins.jetbrains.kotlin.jvm)
@@ -25,5 +27,7 @@ tasks {
 }
 
 dependencies {
+    implementation(libs.bundles.kotlin)
+
     testImplementation(libs.bundles.test)
 }

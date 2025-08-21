@@ -7,6 +7,7 @@ import com.team.domain.model.exception.TodokTodokExceptions.SignUpException.Dupl
 import com.team.domain.model.exception.TodokTodokExceptions.SignUpException.InvalidFormatEmailException
 import com.team.domain.model.exception.TodokTodokExceptions.SignUpException.InvalidTokenException
 import com.team.domain.model.exception.TodokTodokExceptions.SignUpException.ProfileImageNotExistException
+import kotlinx.serialization.ExperimentalSerializationApi
 
 /**
  * 애플리케이션에서 발생할 수 있는 네트워크/도메인 예외를 정의한 sealed class.
@@ -28,13 +29,18 @@ sealed class TodokTodokExceptions : Throwable() {
     data object CancellationException : TodokTodokExceptions()
 
     /** 알 수 없는 예외 발생 */
-    data object UnknownException : TodokTodokExceptions()
+    data class UnknownException(
+        val e: Throwable?,
+    ) : TodokTodokExceptions()
 
     /** 헤더의 Location 필드가 누락된 경우 발생 */
     data object MissingLocationHeaderException : TodokTodokExceptions()
 
     /** 바디가 비어있는 경우 발생 */
     data object EmptyBodyException : TodokTodokExceptions()
+
+    /** Json 직렬화 객체 프로퍼티가 일치하지 않을 경우 발생 */
+    data object MissingFieldException : TodokTodokExceptions()
 
     /**
      * HTTP 상태 코드 기반 예외
@@ -191,6 +197,7 @@ sealed class TodokTodokExceptions : Throwable() {
  * 네트워크 오류, IO 예외, 취소 예외 등 클라이언트 측에서 발생할 수 있는 예외를
  * 대응되는 도메인 예외로 매핑합니다.
  */
+@OptIn(ExperimentalSerializationApi::class)
 fun Throwable.toDomain(): TodokTodokExceptions =
     when (this) {
         is java.net.ConnectException -> TodokTodokExceptions.ConnectException // 서버 연결 실패
@@ -199,5 +206,6 @@ fun Throwable.toDomain(): TodokTodokExceptions =
         is java.net.SocketException -> TodokTodokExceptions.SocketException // 소켓 오류
         is java.io.IOException -> TodokTodokExceptions.IOException // 일반 IO 예외
         is kotlin.coroutines.cancellation.CancellationException -> TodokTodokExceptions.CancellationException // 코루틴/작업 취소
-        else -> TodokTodokExceptions.UnknownException // 그 외 알 수 없는 예외
+        is kotlinx.serialization.MissingFieldException -> TodokTodokExceptions.MissingFieldException
+        else -> TodokTodokExceptions.UnknownException(this) // 그 외 알 수 없는 예외
     }
