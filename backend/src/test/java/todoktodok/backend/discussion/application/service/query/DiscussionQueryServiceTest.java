@@ -780,7 +780,7 @@ class DiscussionQueryServiceTest {
     }
 
     @Test
-    @DisplayName("활성화된 토론방 조회 시, 조회된 토론방 수가 size보다 적으면 다음 페이지 없음")
+    @DisplayName("최초 활성화된 토론방 조회 시, 정해진 기간동안 조회된 전체 활성 토론방 수가 size보다 적으면 다음 페이지 없음")
     void getActiveDiscussions_whenResultLessThanSize_hasNextFalse() {
         // given
         databaseInitializer.setDefaultUserInfo();
@@ -815,7 +815,7 @@ class DiscussionQueryServiceTest {
     }
 
     @Test
-    @DisplayName("활성화된 토론방 조회 시, 조회된 토론방 수가 size와 같으면 다음 페이지 없음")
+    @DisplayName("최초 활성화된 토론방 조회 시, 정해진 기간동안 조회된 전체 활성 토론방 수가 size와 같으면 다음 페이지 없음")
     void getActiveDiscussions_whenResultEqualSize_hasNextFalse() {
         // given
         databaseInitializer.setDefaultUserInfo();
@@ -850,7 +850,7 @@ class DiscussionQueryServiceTest {
     }
 
     @Test
-    @DisplayName("활성화된 토론방 조회 시, 조회된 토론방 수가 size보다 많으면 다음 페이지 있음")
+    @DisplayName("최초 활성화된 토론방 조회 시, 정해진 기간동안 조회된 전체 활성 토론방 수가 size보다 많으면 다음 페이지 있음")
     void getActiveDiscussions_whenResultGreaterThanSize_hasNextFalse1() {
         // given
         databaseInitializer.setDefaultUserInfo();
@@ -869,7 +869,7 @@ class DiscussionQueryServiceTest {
         databaseInitializer.setCommentInfo("댓글2-2", memberId, 2L);
         databaseInitializer.setCommentInfo("댓글3-1", memberId, 3L);
         databaseInitializer.setCommentInfo("댓글3-2", memberId, 3L);
-        databaseInitializer.setCommentInfo("댓글3-3", memberId, 3L);
+        databaseInitializer.setCommentInfo("댓글3-3", memberId,3L);
         databaseInitializer.setCommentInfo("댓글4-1", memberId, 4L);
 
         final int periodDays = 2;
@@ -937,6 +937,7 @@ class DiscussionQueryServiceTest {
     void getActiveDiscussions_sizeBoundary_ok(final int size) {
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
+
         final Long memberId = 1L;
         final int periodDays = 2;
 
@@ -951,6 +952,7 @@ class DiscussionQueryServiceTest {
     void getActiveDiscussions_sizeOutOfRange_fail(final int size) {
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
+
         final Long memberId = 1L;
         final int periodDays = 2;
 
@@ -960,5 +962,4 @@ class DiscussionQueryServiceTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("유효하지 않은 페이지 사이즈입니다. 1 이상 50 이하의 페이징을 시도해주세요");
     }
-
 }
