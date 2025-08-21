@@ -18,8 +18,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.DatabaseInitializer;
 import todoktodok.backend.InitializerTimer;
+import todoktodok.backend.discussion.application.dto.response.DiscussionResponse;
 import todoktodok.backend.member.application.dto.response.BlockMemberResponse;
-import todoktodok.backend.member.application.dto.response.MemberDiscussionResponse;
 import todoktodok.backend.member.domain.MemberDiscussionFilterType;
 
 @ActiveProfiles("test")
@@ -72,7 +72,7 @@ public class MemberQueryServiceTest {
         databaseInitializer.setDefaultDiscussionInfo();
 
         // when
-        final List<MemberDiscussionResponse> createdDiscussions = memberQueryService.getMemberDiscussionsByType(
+        final List<DiscussionResponse> createdDiscussions = memberQueryService.getMemberDiscussionsByType(
                 1L, MemberDiscussionFilterType.CREATED
         );
 
@@ -104,7 +104,7 @@ public class MemberQueryServiceTest {
         databaseInitializer.setReplyInfo("저도 자바좋아해요", 1L, 2L);
 
         // when
-        final List<MemberDiscussionResponse> participatedDiscussions = memberQueryService.getMemberDiscussionsByType(
+        final List<DiscussionResponse> participatedDiscussions = memberQueryService.getMemberDiscussionsByType(
                 1L, MemberDiscussionFilterType.PARTICIPATED
         );
 
