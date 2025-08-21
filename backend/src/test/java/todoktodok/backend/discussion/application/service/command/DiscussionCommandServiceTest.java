@@ -155,12 +155,13 @@ class DiscussionCommandServiceTest {
 
         final Long memberId = 2L;
         final Long discussionId = 1L;
+        final String reason = "욕설/혐오 표현";
 
         // when
-        discussionCommandService.report(memberId, discussionId);
+        discussionCommandService.report(memberId, discussionId, reason);
 
         // then
-        assertThatThrownBy(() -> discussionCommandService.report(memberId, discussionId))
+        assertThatThrownBy(() -> discussionCommandService.report(memberId, discussionId, reason))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("이미 신고한 토론방입니다");
     }
@@ -175,9 +176,10 @@ class DiscussionCommandServiceTest {
 
         final Long memberId = 1L;
         final Long discussionId = 1L;
+        final String reason = "욕설/혐오 표현";
 
         // when - then
-        assertThatThrownBy(() -> discussionCommandService.report(memberId, discussionId))
+        assertThatThrownBy(() -> discussionCommandService.report(memberId, discussionId, reason))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("자기 자신의 토론방을 신고할 수 없습니다");
     }
