@@ -138,7 +138,10 @@ class FakeDiscussionRemoteDataSource : DiscussionRemoteDataSource {
         TODO("Not yet implemented")
     }
 
-    override suspend fun reportDiscussion(discussionId: Long): NetworkResult<Unit> {
+    override suspend fun reportDiscussion(
+        discussionId: Long,
+        reason: String,
+    ): NetworkResult<Unit> {
         TODO("Not yet implemented")
     }
 }

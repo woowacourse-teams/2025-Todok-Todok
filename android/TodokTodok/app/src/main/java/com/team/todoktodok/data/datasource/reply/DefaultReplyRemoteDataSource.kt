@@ -5,6 +5,7 @@ import com.team.domain.model.exception.toDomain
 import com.team.todoktodok.data.core.ext.mapToggleLikeResponse
 import com.team.todoktodok.data.network.model.LikeAction
 import com.team.todoktodok.data.network.request.ReplyRequest
+import com.team.todoktodok.data.network.request.ReportRequest
 import com.team.todoktodok.data.network.response.comment.ReplyResponse
 import com.team.todoktodok.data.network.service.ReplyService
 
@@ -48,5 +49,6 @@ class DefaultReplyRemoteDataSource(
         discussionId: Long,
         commentId: Long,
         replyId: Long,
-    ): NetworkResult<Unit> = replyService.report(discussionId, commentId, replyId)
+        reason: String,
+    ): NetworkResult<Unit> = replyService.report(discussionId, commentId, replyId, ReportRequest(reason))
 }

@@ -12,6 +12,7 @@ import com.team.todoktodok.data.datasource.token.TokenDataSource
 import com.team.todoktodok.data.network.auth.AuthInterceptor.Companion.AUTHORIZATION_NAME
 import com.team.todoktodok.data.network.request.LoginRequest
 import com.team.todoktodok.data.network.request.ModifyProfileRequest
+import com.team.todoktodok.data.network.request.ReportRequest
 import com.team.todoktodok.data.network.response.BlockedMemberResponse
 import com.team.todoktodok.data.network.response.ProfileResponse
 import com.team.todoktodok.data.network.response.discussion.MemberDiscussionResponse
@@ -191,13 +192,18 @@ class DefaultMemberRemoteDataSourceTest {
             val request = MemberId.OtherUser(memberId)
             val type = Support.REPORT
 
-            coEvery { memberService.report(memberId) } returns NetworkResult.Success(Unit)
+            coEvery {
+                memberService.report(
+                    memberId,
+                    ReportRequest(""),
+                )
+            } returns NetworkResult.Success(Unit)
 
             // when
-            dataSource.supportMember(request, type)
+            dataSource.supportMember(request, type, "")
 
             // then
-            coVerify(exactly = 1) { memberService.report(memberId) }
+            coVerify(exactly = 1) { memberService.report(memberId, ReportRequest("")) }
             coVerify(exactly = 0) { memberService.block(any()) }
         }
 
@@ -211,10 +217,15 @@ class DefaultMemberRemoteDataSourceTest {
 
             val exception = TodokTodokExceptions.ReportException.AlreadyReportedException
 
-            coEvery { memberService.report(memberId) } returns NetworkResult.Failure(exception)
+            coEvery {
+                memberService.report(
+                    memberId,
+                    ReportRequest(""),
+                )
+            } returns NetworkResult.Failure(exception)
 
             // when
-            val result = dataSource.supportMember(request, type)
+            val result = dataSource.supportMember(request, type, "")
 
             // then
             assertTrue(result is NetworkResult.Failure)
@@ -233,10 +244,10 @@ class DefaultMemberRemoteDataSourceTest {
             coEvery { memberService.block(memberId) } returns NetworkResult.Success(Unit)
 
             // when
-            dataSource.supportMember(request, type)
+            dataSource.supportMember(request, type, "")
 
             // then
-            coVerify(exactly = 0) { memberService.report(any()) }
+            coVerify(exactly = 0) { memberService.report(any(), ReportRequest("")) }
             coVerify(exactly = 1) { memberService.block(memberId) }
         }
 
@@ -253,7 +264,7 @@ class DefaultMemberRemoteDataSourceTest {
             coEvery { memberService.block(memberId) } returns NetworkResult.Failure(exception)
 
             // when
-            val result = dataSource.supportMember(request, type)
+            val result = dataSource.supportMember(request, type, "")
 
             // then
             assertTrue(result is NetworkResult.Failure)

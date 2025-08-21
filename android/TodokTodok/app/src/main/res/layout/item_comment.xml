@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/space_16"
-    android:paddingHorizontal="@dimen/space_24">
+    android:paddingHorizontal="@dimen/space_8">
 
     <ImageView
         android:id="@+id/iv_user_profile"
@@ -21,7 +21,9 @@
         style="@style/BaseTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="34dp"
+        android:layout_marginStart="@dimen/space_8"
         android:gravity="center_vertical"
+        android:textSize="@dimen/font_size_large"
         app:layout_constraintStart_toEndOf="@id/iv_user_profile"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="코드마스터" />
@@ -56,6 +58,7 @@
         style="@style/BaseTextStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_8"
         android:textSize="@dimen/font_size_large"
         app:layout_constraintTop_toBottomOf="@id/tv_user_nickname"
         tools:text="캡슐화를 하면 데이터를 보호할 수 있다는 것에는 동의하는데, 실제로 완벽히 캡슐화가 되는 지는 의문입니다.getter/setter 메서드를 통해 객체 내부의 데이터가 외부로 드러나는 것은 캡슐화가 잘 된 것이 맞을까요?" />
@@ -64,8 +67,8 @@
         android:id="@+id/iv_like"
         android:layout_width="@dimen/space_24"
         android:layout_height="@dimen/space_24"
-        android:layout_marginTop="@dimen/space_8"
-        android:layout_marginBottom="36dp"
+        android:layout_marginTop="@dimen/space_12"
+        android:layout_marginBottom="@dimen/space_24"
         android:background="@drawable/btn_heart_background"
         android:contentDescription="@string/comment_content_description_comment_like"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -88,7 +91,8 @@
         android:layout_width="@dimen/space_24"
         android:layout_height="@dimen/space_24"
         android:layout_marginStart="@dimen/space_20"
-        android:layout_marginBottom="36dp"
+        android:layout_marginTop="@dimen/space_12"
+        android:layout_marginBottom="@dimen/space_24"
         android:contentDescription="@string/comment_content_description_comment_reply"
         android:src="@drawable/btn_comment"
         app:layout_constraintBottom_toBottomOf="parent"

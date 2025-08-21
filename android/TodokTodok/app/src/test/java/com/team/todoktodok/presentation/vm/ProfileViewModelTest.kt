@@ -33,7 +33,10 @@ class ProfileViewModelTest {
         coEvery { repository.getProfile(any()) } returns
             NetworkResult.Success(Profile(1, "페토", "안녕하세요", ""))
         coEvery { repository.getMemberBooks(any()) } returns NetworkResult.Success(emptyList())
-        coEvery { repository.getMemberDiscussionRooms(any(), any()) } returns NetworkResult.Success(emptyList())
+        coEvery { repository.getMemberDiscussionRooms(any(), any()) } returns
+            NetworkResult.Success(
+                emptyList(),
+            )
     }
 
     @BeforeEach
@@ -82,7 +85,12 @@ class ProfileViewModelTest {
             val profileResponse = Profile(1, "페토", "나나를 좋아하는", "")
             coEvery { repository.getProfile(any()) } returns NetworkResult.Success(profileResponse)
             coEvery { repository.getMemberBooks(any()) } returns NetworkResult.Success(emptyList())
-            coEvery { repository.getMemberDiscussionRooms(any(), any()) } returns NetworkResult.Success(emptyList())
+            coEvery {
+                repository.getMemberDiscussionRooms(
+                    any(),
+                    any(),
+                )
+            } returns NetworkResult.Success(emptyList())
 
             viewModel.setMemberId(1)
 
@@ -105,10 +113,10 @@ class ProfileViewModelTest {
             viewModel.initState()
 
             // when
-            viewModel.supportMember(Support.BLOCK)
+            viewModel.supportMember(Support.BLOCK, "")
 
             // then
-            coVerify { repository.supportMember(MemberId.OtherUser(memberId), Support.BLOCK) }
+            coVerify { repository.supportMember(MemberId.OtherUser(memberId), Support.BLOCK, "") }
         }
 
     @Test
@@ -121,10 +129,10 @@ class ProfileViewModelTest {
             viewModel.initState()
 
             // when
-            viewModel.supportMember(Support.REPORT)
+            viewModel.supportMember(Support.REPORT, "")
 
             // then
-            coVerify { repository.supportMember(MemberId.OtherUser(memberId), Support.REPORT) }
+            coVerify { repository.supportMember(MemberId.OtherUser(memberId), Support.REPORT, "") }
         }
 
     @Test
@@ -136,7 +144,12 @@ class ProfileViewModelTest {
 
             coEvery { repository.getProfile(any()) } returns NetworkResult.Success(initialProfile)
             coEvery { repository.getMemberBooks(any()) } returns NetworkResult.Success(emptyList())
-            coEvery { repository.getMemberDiscussionRooms(any(), any()) } returns NetworkResult.Success(emptyList())
+            coEvery {
+                repository.getMemberDiscussionRooms(
+                    any(),
+                    any(),
+                )
+            } returns NetworkResult.Success(emptyList())
 
             viewModel.setMemberId(1)
             viewModel.initState()

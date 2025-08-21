@@ -40,9 +40,9 @@ class DiscussionDetailViewModel(
         onUiEvent(DiscussionDetailUiEvent.ShowComments(discussionId))
     }
 
-    fun reportDiscussion() {
+    fun reportDiscussion(reason: String) {
         viewModelScope.launch {
-            handleResult(discussionRepository.reportDiscussion(discussionId)) {
+            handleResult(discussionRepository.reportDiscussion(discussionId, reason)) {
                 onUiEvent(DiscussionDetailUiEvent.ShowReportDiscussionSuccessMessage)
             }
         }
@@ -95,7 +95,7 @@ class DiscussionDetailViewModel(
                     discussionItemUiState =
                         DiscussionItemUiState(
                             discussion,
-                            discussionId == tokenRepository.getMemberId(),
+                            discussion.writer.id == tokenRepository.getMemberId(),
                         ),
                     isLoading = false,
                 )

@@ -2,6 +2,7 @@ package com.team.todoktodok.data.network.service
 
 import com.team.domain.model.exception.NetworkResult
 import com.team.todoktodok.data.network.request.CommentRequest
+import com.team.todoktodok.data.network.request.ReportRequest
 import com.team.todoktodok.data.network.response.comment.CommentResponse
 import retrofit2.Response
 import retrofit2.http.Body
@@ -33,6 +34,7 @@ interface CommentService {
     suspend fun report(
         @Path("discussionId") discussionId: Long,
         @Path("commentId") commentId: Long,
+        @Body report: ReportRequest,
     ): NetworkResult<Unit>
 
     @POST("v1/discussions/{discussionId}/comments/{commentId}/like")

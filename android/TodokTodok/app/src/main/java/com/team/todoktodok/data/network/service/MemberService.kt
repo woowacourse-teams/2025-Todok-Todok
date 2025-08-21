@@ -3,6 +3,7 @@ package com.team.todoktodok.data.network.service
 import com.team.domain.model.exception.NetworkResult
 import com.team.todoktodok.data.network.request.LoginRequest
 import com.team.todoktodok.data.network.request.ModifyProfileRequest
+import com.team.todoktodok.data.network.request.ReportRequest
 import com.team.todoktodok.data.network.request.SignUpRequest
 import com.team.todoktodok.data.network.response.BlockedMemberResponse
 import com.team.todoktodok.data.network.response.ProfileResponse
@@ -43,6 +44,7 @@ interface MemberService {
     @POST("v1/members/{memberId}/report")
     suspend fun report(
         @Path("memberId") memberId: Long,
+        @Body reportRequest: ReportRequest,
     ): NetworkResult<Unit>
 
     @POST("v1/members/{memberId}/block")

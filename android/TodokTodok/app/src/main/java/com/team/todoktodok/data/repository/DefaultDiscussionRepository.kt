@@ -91,8 +91,10 @@ class DefaultDiscussionRepository(
     override suspend fun toggleLike(discussionId: Long): NetworkResult<LikeStatus> =
         discussionRemoteDataSource.toggleLike(discussionId).map { it.toStatus() }
 
-    override suspend fun reportDiscussion(discussionId: Long): NetworkResult<Unit> =
-        discussionRemoteDataSource.reportDiscussion(discussionId)
+    override suspend fun reportDiscussion(
+        discussionId: Long,
+        reason: String,
+    ): NetworkResult<Unit> = discussionRemoteDataSource.reportDiscussion(discussionId, reason)
 
     override suspend fun hasDiscussion(): Boolean = discussionLocalDataSource.hasDiscussion()
 

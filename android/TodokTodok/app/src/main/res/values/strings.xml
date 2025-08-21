@@ -209,16 +209,16 @@
 
     <string name="report_reason_title">신고 사유를 선택해주세요</string>
     <!-- 신고 이유 선택지 -->
-    <string name="report_reason_spam_ad">스팸/광고</string>
-    <string name="report_reason_inappropriate">부적절한 내용</string>
-    <string name="report_reason_off_topic">토론과 무관함</string>
-    <string name="report_reason_hate_speech">욕설/혐오 표현</string>
+    <string name="report_reason_spam_ad">도배/광고성 게시글</string>
+    <string name="report_reason_inappropriate">부적절하거나 불쾌감을 주는 내용</string>
+    <string name="report_reason_off_topic">토론 주제와 무관한 내용</string>
+    <string name="report_reason_illegal">불법 정보 또는 정책 위반</string>
 
     <!-- 사용자 신고 이유 선택지 -->
-    <string name="report_reason_user_inappropriate_profile">부적절한 프로필 정보</string>
-    <string name="report_reason_user_spam_activity">사기/스팸 행위</string>
-    <string name="report_reason_user_harassment">괴롭힘/혐오 발언</string>
-    <string name="report_reason_user_misconduct">부적절한 활동</string>
+    <string name="report_reason_user_abusive">욕설/인신공격</string>
+    <string name="report_reason_user_spam_activity">스팸/홍보 계정</string>
+    <string name="report_reason_user_harassment">괴롭힘/스토킹</string>
+    <string name="report_reason_user_hate_speech">혐오/차별 발언</string>
 
     <!-- 토론 관련 예외 -->
     <string name="error_discussion_self_report_not_allowed">자기 자신의 토론방은 신고할 수 없습니다.</string>

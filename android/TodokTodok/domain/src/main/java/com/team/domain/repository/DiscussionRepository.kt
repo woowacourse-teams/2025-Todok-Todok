@@ -55,7 +55,10 @@ interface DiscussionRepository {
 
     suspend fun getDiscussion(): DiscussionRoom?
 
-    suspend fun reportDiscussion(discussionId: Long): NetworkResult<Unit>
+    suspend fun reportDiscussion(
+        discussionId: Long,
+        reason: String,
+    ): NetworkResult<Unit>
 
     companion object {
         private const val PAGING_SIZE = 15
