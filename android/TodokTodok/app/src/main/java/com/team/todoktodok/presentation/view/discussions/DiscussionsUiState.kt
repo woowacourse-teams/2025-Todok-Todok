@@ -4,7 +4,6 @@ import com.team.domain.model.Discussion
 import com.team.domain.model.active.ActivatedDiscussionPage
 import com.team.domain.model.latest.LatestDiscussionPage
 import com.team.domain.model.latest.PageInfo
-import com.team.domain.model.member.MemberDiscussion
 import com.team.todoktodok.presentation.view.discussions.hot.adapter.HotDiscussionItems
 import com.team.todoktodok.presentation.view.discussions.my.adapter.MyDiscussionItems
 
@@ -52,11 +51,11 @@ data class DiscussionsUiState(
     }
 
     fun addMyDiscussion(
-        createdDiscussion: List<MemberDiscussion>,
-        participatedDiscussion: List<MemberDiscussion>,
+        createdDiscussion: List<Discussion>,
+        participatedDiscussion: List<Discussion>,
     ): DiscussionsUiState {
-        val created = createdDiscussion.take(MY_DISCUSSION_SIZE).map { it.toUiState() }
-        val participated = participatedDiscussion.take(MY_DISCUSSION_SIZE).map { it.toUiState() }
+        val created = createdDiscussion.take(MY_DISCUSSION_SIZE).map { DiscussionUiState(it) }
+        val participated = participatedDiscussion.take(MY_DISCUSSION_SIZE).map { DiscussionUiState(it) }
 
         val updatedList =
             buildList {

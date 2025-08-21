@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.team.domain.model.Book
+import com.team.domain.model.Discussion
 import com.team.domain.model.Support
 import com.team.domain.model.exception.NetworkResult
 import com.team.domain.model.exception.onFailure
@@ -83,7 +84,7 @@ class ProfileViewModel(
             }
         }
 
-    private fun loadParticipatedDiscussions(id: MemberId): Deferred<List<MemberDiscussion>> =
+    private fun loadParticipatedDiscussions(id: MemberId): Deferred<List<Discussion>> =
         viewModelScope.async {
             when (
                 val result =
@@ -97,7 +98,7 @@ class ProfileViewModel(
             }
         }
 
-    private fun loadCreatedDiscussions(id: MemberId): Deferred<List<MemberDiscussion>> =
+    private fun loadCreatedDiscussions(id: MemberId): Deferred<List<Discussion>> =
         viewModelScope.async {
             when (
                 val result =

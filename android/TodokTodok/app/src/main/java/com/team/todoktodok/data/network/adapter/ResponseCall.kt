@@ -64,7 +64,6 @@ class ResponseCall<T>(
     ) = if (call.isCanceled) {
         TodokTodokExceptions.CancellationException
     } else {
-        t.printStackTrace()
         t.toDomain()
     }
 
