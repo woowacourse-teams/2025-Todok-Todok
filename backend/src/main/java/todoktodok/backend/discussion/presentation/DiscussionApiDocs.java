@@ -17,7 +17,6 @@ import todoktodok.backend.discussion.application.dto.request.DiscussionUpdateReq
 import todoktodok.backend.discussion.application.dto.response.ActiveDiscussionPageResponse;
 import todoktodok.backend.discussion.application.dto.response.DiscussionResponse;
 import todoktodok.backend.discussion.application.dto.response.LatestDiscussionPageResponse;
-import todoktodok.backend.discussion.domain.DiscussionFilterType;
 import todoktodok.backend.global.auth.Auth;
 import todoktodok.backend.global.auth.Role;
 import todoktodok.backend.global.exception.ErrorResponse;
@@ -86,7 +85,7 @@ public interface DiscussionApiDocs {
                                     name = "서버 오류",
                                     value = "{\"code\":500, \"message\":\"[ERROR] 서버 내부 오류가 발생했습니다\"}"
                             )
-                    ))
+            ))
     })
     ResponseEntity<Void> createDiscussion(
             @Parameter(hidden = true) final Long memberId,
@@ -452,7 +451,7 @@ public interface DiscussionApiDocs {
                             )
                     ))
     })
-    ResponseEntity<List<DiscussionResponse>> getDiscussionsByKeywordAndType(
+    ResponseEntity<List<DiscussionResponse>> getDiscussionsByKeyword(
             @Parameter(hidden = true) final Long memberId,
             @Parameter(
                     description = "도서 제목 혹은 저자",
@@ -460,21 +459,14 @@ public interface DiscussionApiDocs {
                             schema = @Schema(implementation = String.class),
                             examples = @ExampleObject(value = "오브젝트")
                     )
-            ) final String keyword,
-            @Parameter(
-                    description = "필터링 타입",
-                    content = @Content(
-                            schema = @Schema(implementation = DiscussionFilterType.class),
-                            examples = @ExampleObject(value = "ALL")
-                    )
-            ) final DiscussionFilterType type
+            ) final String keyword
     );
 
     @Operation(summary = "인기 토론방 조회 API")
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
-                    description = "토론방 목록 조회 성공",
+                    description = "인기 토론방 목록 조회 성공",
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = DiscussionResponse.class),

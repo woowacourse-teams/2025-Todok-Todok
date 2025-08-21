@@ -27,7 +27,6 @@ import todoktodok.backend.discussion.application.dto.response.DiscussionResponse
 import todoktodok.backend.discussion.application.dto.response.LatestDiscussionPageResponse;
 import todoktodok.backend.discussion.application.dto.response.PageInfo;
 import todoktodok.backend.discussion.domain.Discussion;
-import todoktodok.backend.discussion.domain.DiscussionFilterType;
 import todoktodok.backend.discussion.domain.repository.DiscussionLikeRepository;
 import todoktodok.backend.discussion.domain.repository.DiscussionRepository;
 import todoktodok.backend.member.domain.Member;
@@ -93,21 +92,13 @@ public class DiscussionQueryService {
         );
     }
 
-    public List<DiscussionResponse> getDiscussionsByKeywordAndType(
+    public List<DiscussionResponse> getDiscussionsByKeyword(
             final Long memberId,
-            final String keyword,
-            final DiscussionFilterType type
+            final String keyword
     ) {
+        validateKeywordNotBlank(keyword);
+
         final Member member = findMember(memberId);
-
-        if (isKeywordBlank(keyword)) {
-            return getDiscussionsByType(type, member);
-        }
-
-        if (type.isTypeMine()) {
-            return getMyDiscussionsByKeyword(keyword, member);
-        }
-
         return getDiscussionsByKeyword(keyword, member);
     }
 
@@ -189,10 +180,6 @@ public class DiscussionQueryService {
         );
     }
 
-    private boolean isKeywordBlank(final String keyword) {
-        return keyword == null || keyword.isBlank();
-    }
-
     private Discussion findDiscussion(final Long discussionId) {
         return discussionRepository.findById(discussionId)
                 .orElseThrow(() -> new NoSuchElementException(
@@ -248,38 +235,6 @@ public class DiscussionQueryService {
 
     private String encodeCursorId(final Long id) {
         return Base64.getUrlEncoder().encodeToString(id.toString().getBytes());
-    }
-
-    private List<DiscussionResponse> getDiscussionsByType(
-            final DiscussionFilterType type,
-            final Member member
-    ) {
-        if (type.isTypeMine()) {
-            return getMyDiscussions(member);
-        }
-        return getAllDiscussions(member);
-    }
-
-    private List<DiscussionResponse> getAllDiscussions(final Member member) {
-        final List<Discussion> discussions = discussionRepository.findAll();
-        return getDiscussionsResponses(discussions, member);
-    }
-
-    private List<DiscussionResponse> getMyDiscussions(final Member member) {
-        final List<Discussion> discussions = discussionRepository.findDiscussionsByMember(member);
-
-        return getDiscussionsResponses(discussions, member);
-    }
-
-    private List<DiscussionResponse> getMyDiscussionsByKeyword(
-            final String keyword,
-            final Member member
-    ) {
-        final List<Discussion> discussions = discussionRepository.searchByKeywordAndMember(keyword, member).stream()
-                .filter(discussion -> discussion.isOwnedBy(member))
-                .toList();
-
-        return getDiscussionsResponses(discussions, member);
     }
 
     private List<DiscussionResponse> getDiscussionsByKeyword(
@@ -394,6 +349,14 @@ public class DiscussionQueryService {
             return null;
         }
         return discussionCursor.toEncoded(last.lastCommentedAt(), last.discussionId());
+    }
+
+    private void validateKeywordNotBlank(final String keyword) {
+        if (keyword == null || keyword.isBlank()) {
+            throw new IllegalArgumentException(
+                    String.format("검색 키워드를 입력해야 합니다: keyword= %s", keyword)
+            );
+        }
     }
 
     private void validatePageSize(final int size) {

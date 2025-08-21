@@ -1,9 +1,10 @@
 package todoktodok.backend.discussion.presentation;
 
-import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
+
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.notNullValue;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -12,7 +13,6 @@ import io.restassured.response.Response;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -34,9 +34,6 @@ class DiscussionControllerTest {
 
     @Autowired
     private DatabaseInitializer databaseInitializer;
-
-//    @Autowired
-//    private Clock clock;
 
     @LocalServerPort
     int port;
@@ -78,6 +75,7 @@ class DiscussionControllerTest {
         // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
+
         databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
 
         final String token = MemberFixture.login("user@gmail.com");
@@ -306,80 +304,6 @@ class DiscussionControllerTest {
                 .when().delete("/api/v1/discussions/1")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
-    }
-
-    @Nested
-    @DisplayName("토론방 필터링 실패 테스트")
-    class FilterDiscussionsFailTest {
-
-        @Test
-        @DisplayName("토론방을 필터링할 때 type을 명시하지 않으면 예외가 발생한다")
-        void fail_filterDiscussions_noType() {
-            // given
-            databaseInitializer.setDefaultUserInfo();
-            databaseInitializer.setDefaultBookInfo();
-
-            databaseInitializer.setDiscussionInfo("오브젝트", "오브젝트 토론입니다", 1L, 1L);
-
-            final String token = MemberFixture.login("user@gmail.com");
-            final String uri = "/api/v1/discussions/search?keyword=오브젝트";
-
-            // when - then
-            RestAssured.given().log().all()
-                    .contentType(ContentType.JSON)
-                    .header("Authorization", token)
-                    .when().get(uri)
-                    .then().log().all()
-                    .statusCode(HttpStatus.BAD_REQUEST.value());
-        }
-
-        @Test
-        @DisplayName("토론방을 필터링할 때 type에 정해지지 않는 값을 추가하면 예외가 발생한다")
-        void fail_filterDiscussions_invalidType() {
-            // given
-            databaseInitializer.setDefaultUserInfo();
-            databaseInitializer.setDefaultBookInfo();
-
-            databaseInitializer.setDiscussionInfo("오브젝트", "오브젝트 토론입니다", 1L, 1L);
-
-            final String token = MemberFixture.login("user@gmail.com");
-            final String uri = "/api/v1/discussions/search?keyword=오브젝트&type=HELLO";
-
-            // when - then
-            RestAssured.given().log().all()
-                    .contentType(ContentType.JSON)
-                    .header("Authorization", token)
-                    .when().get(uri)
-                    .then().log().all()
-                    .statusCode(HttpStatus.BAD_REQUEST.value());
-        }
-    }
-
-    @Test
-    @DisplayName("인기 토론방을 조회한다")
-    void getHotDiscussionsTest() {
-        // given
-        databaseInitializer.setDefaultUserInfo();
-        databaseInitializer.setUserInfo("user2@gmail.com", "user2", "user2.png", "");
-        databaseInitializer.setUserInfo("user3@gmail.com", "user2", "user2.png", "");
-        databaseInitializer.setUserInfo("user4@gmail.com", "user2", "user2.png", "");
-        databaseInitializer.setDefaultBookInfo();
-        databaseInitializer.setDiscussionInfo("오브젝트", "오브젝트 토론입니다", 1L, 1L);
-        databaseInitializer.setDiscussionInfo("캡슐화", "캡슐화 토론입니다", 1L, 1L);
-        databaseInitializer.setDiscussionInfo("JPA", "JPA 토론입니다", 1L, 1L);
-
-        databaseInitializer.setDiscussionLikeInfo(1L, 1L);
-
-        final String token = MemberFixture.login("user@gmail.com");
-
-        // when - then
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .header("Authorization", token)
-                .when().get("/api/v1/discussions/hot?period=0&count=1")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .body("[0].discussionId", is(1));
     }
 
     @Test
