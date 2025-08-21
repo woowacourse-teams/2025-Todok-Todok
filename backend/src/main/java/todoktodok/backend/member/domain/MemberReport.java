@@ -1,5 +1,6 @@
 package todoktodok.backend.member.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -37,13 +38,17 @@ public class MemberReport extends TimeStamp {
     @JoinColumn(nullable = false)
     private Member target;
 
+    @Column(nullable = false)
+    private String reason;
+
     @Builder
     public static MemberReport create(
             final Member member,
-            final Member target
+            final Member target,
+            final String reason
     ){
         return new MemberReport(
-                null, member, target
+                null, member, target, reason
         );
     }
 }

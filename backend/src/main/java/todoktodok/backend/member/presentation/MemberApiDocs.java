@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import todoktodok.backend.book.application.dto.response.BookResponse;
 import todoktodok.backend.global.exception.ErrorResponse;
 import todoktodok.backend.member.application.dto.request.LoginRequest;
+import todoktodok.backend.member.application.dto.request.MemberReportRequest;
 import todoktodok.backend.member.application.dto.request.ProfileUpdateRequest;
 import todoktodok.backend.member.application.dto.request.SignupRequest;
 import todoktodok.backend.member.application.dto.response.BlockMemberResponse;
@@ -284,7 +285,17 @@ public interface MemberApiDocs {
                             schema = @Schema(implementation = Long.class),
                             examples = @ExampleObject(value = "1")
                     )
-            ) final Long targetId
+            ) final Long targetId,
+            @RequestBody(
+                    description = "회원 신고 사유",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = MemberReportRequest.class),
+                            examples = @ExampleObject(
+                                    value = "{\"reason\":\"부적절한 내용\"}"
+                            )
+                    )
+            ) final MemberReportRequest memberReportRequest
     );
 
     @Operation(summary = "회원별 프로필 정보 조회 API")

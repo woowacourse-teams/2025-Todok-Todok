@@ -72,7 +72,8 @@ public class MemberCommandService {
 
     public void report(
             final Long memberId,
-            final Long targetId
+            final Long targetId,
+            final String reason
     ) {
         final Member member = findMember(memberId);
         final Member target = findMember(targetId);
@@ -83,6 +84,7 @@ public class MemberCommandService {
         final MemberReport memberReport = MemberReport.builder()
                 .member(member)
                 .target(target)
+                .reason(reason)
                 .build();
         memberReportRepository.save(memberReport);
     }
