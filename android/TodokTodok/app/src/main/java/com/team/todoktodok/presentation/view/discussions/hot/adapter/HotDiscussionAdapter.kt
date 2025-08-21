@@ -3,9 +3,11 @@ package com.team.todoktodok.presentation.view.discussions.hot.adapter
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.team.todoktodok.presentation.view.discussions.hot.adapter.HotActivatedDiscussionViewHolder.Companion.HotActivatedDiscussionViewHolder
 import com.team.todoktodok.presentation.view.discussions.hot.adapter.HotDiscussionItems.ViewType.Companion.ViewType
-import com.team.todoktodok.presentation.view.discussions.hot.adapter.HotPopularDiscussionViewHolder.Companion.HotPopularDiscussionViewHolder
+import com.team.todoktodok.presentation.view.discussions.hot.viewholder.HotActivatedDiscussionViewHolder
+import com.team.todoktodok.presentation.view.discussions.hot.viewholder.HotActivatedDiscussionViewHolder.Companion.HotActivatedDiscussionViewHolder
+import com.team.todoktodok.presentation.view.discussions.hot.viewholder.HotPopularDiscussionViewHolder
+import com.team.todoktodok.presentation.view.discussions.hot.viewholder.HotPopularDiscussionViewHolder.Companion.HotPopularDiscussionViewHolder
 
 class HotDiscussionAdapter(
     private val handler: Handler,

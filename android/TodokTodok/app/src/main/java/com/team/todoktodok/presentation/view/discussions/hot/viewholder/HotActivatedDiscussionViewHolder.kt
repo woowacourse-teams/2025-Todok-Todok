@@ -1,10 +1,11 @@
-package com.team.todoktodok.presentation.view.discussions.hot.adapter
+package com.team.todoktodok.presentation.view.discussions.hot.viewholder
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.team.todoktodok.databinding.ItemHotActivatedDiscussionBinding
 import com.team.todoktodok.presentation.view.discussions.adapter.DiscussionAdapter
+import com.team.todoktodok.presentation.view.discussions.hot.adapter.HotDiscussionItems
 
 class HotActivatedDiscussionViewHolder private constructor(
     binding: ItemHotActivatedDiscussionBinding,
