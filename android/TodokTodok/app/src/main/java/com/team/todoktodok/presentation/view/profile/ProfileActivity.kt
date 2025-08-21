@@ -54,7 +54,9 @@ class ProfileActivity : AppCompatActivity() {
         val memberId: Long? = intent?.getLongExtra(ARG_MEMBER_ID, DEFAULT_MEMBER_ID)
         requireNotNull(memberId) { MEMBER_ID_NOT_FOUND }
 
-        val initialTab = intent?.getSerializableCompat<UserProfileTab>(ARG_INITIAL_TAB) ?: UserProfileTab.ACTIVATED_BOOKS
+        val initialTab =
+            intent?.getSerializableCompat<UserProfileTab>(ARG_INITIAL_TAB)
+                ?: UserProfileTab.ACTIVATED_BOOKS
 
         messageConverter = ExceptionMessageConverter()
 
@@ -202,11 +204,11 @@ class ProfileActivity : AppCompatActivity() {
         fun Intent(
             context: Context,
             memberId: Long? = null,
-            initialTab: UserProfileTab? = null,
+            initialTab: UserProfileTab = UserProfileTab.ACTIVATED_BOOKS,
         ): Intent =
             Intent(context, ProfileActivity::class.java).apply {
                 memberId?.let { putExtra(ARG_MEMBER_ID, it) }
-                initialTab?.let { putExtra(ARG_INITIAL_TAB, it) }
+                putExtra(ARG_INITIAL_TAB, initialTab)
             }
 
         const val ARG_MEMBER_ID = "member_id"
