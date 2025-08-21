@@ -15,12 +15,6 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface DiscussionService {
-    @GET("v1/discussions/")
-    suspend fun fetchHotDiscussions(
-        @Query("period") period: String,
-        @Query("count") count: Int,
-    )
-
     @GET("v1/discussions")
     suspend fun fetchLatestDiscussions(
         @Query("size") size: Int,
@@ -63,4 +57,10 @@ interface DiscussionService {
     suspend fun reportDiscussion(
         @Path("discussionId") discussionId: Long,
     ): NetworkResult<Unit>
+
+    @GET("v1/discussions/")
+    suspend fun fetchHotDiscussions(
+        @Query("period") period: String,
+        @Query("count") count: Int,
+    ): NetworkResult<List<DiscussionResponse>>
 }
