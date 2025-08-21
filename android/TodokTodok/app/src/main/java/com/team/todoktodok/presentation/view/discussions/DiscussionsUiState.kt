@@ -24,7 +24,9 @@ data class DiscussionsUiState(
     fun addHotDiscussion(hotDiscussions: List<Discussion>): DiscussionsUiState {
         val hotDiscussion =
             buildList {
-                add(HotDiscussionItems.PopularItem(hotDiscussions.map { DiscussionUiState(it, true) }))
+                val popularItems = hotDiscussions.map { DiscussionUiState(it, true) }
+                add(HotDiscussionItems.PopularItem(popularItems))
+                add(HotDiscussionItems.ActivatedHeaderItem)
                 add(HotDiscussionItems.ActivatedItem(DISCUSSION_UI_STATE_WITHOUT_OPINION))
             }
 

@@ -4,6 +4,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.team.todoktodok.presentation.view.discussions.hot.adapter.HotDiscussionItems.ViewType.Companion.ViewType
+import com.team.todoktodok.presentation.view.discussions.hot.viewholder.HotActivatedDiscussionHeaderViewHolder
+import com.team.todoktodok.presentation.view.discussions.hot.viewholder.HotActivatedDiscussionHeaderViewHolder.Companion.HotActivatedDiscussionHeaderViewHolder
 import com.team.todoktodok.presentation.view.discussions.hot.viewholder.HotActivatedDiscussionViewHolder
 import com.team.todoktodok.presentation.view.discussions.hot.viewholder.HotActivatedDiscussionViewHolder.Companion.HotActivatedDiscussionViewHolder
 import com.team.todoktodok.presentation.view.discussions.hot.viewholder.HotPopularDiscussionViewHolder
@@ -18,6 +20,7 @@ class HotDiscussionAdapter(
     ): RecyclerView.ViewHolder =
         when (ViewType(index = viewType)) {
             HotDiscussionItems.ViewType.POPULAR -> HotPopularDiscussionViewHolder(parent, handler)
+            HotDiscussionItems.ViewType.ACTIVATED_HEADER -> HotActivatedDiscussionHeaderViewHolder(parent)
             HotDiscussionItems.ViewType.ACTIVATED -> HotActivatedDiscussionViewHolder(parent, handler)
         }
 
@@ -31,6 +34,9 @@ class HotDiscussionAdapter(
             is HotDiscussionItems.PopularItem -> {
                 (holder as HotPopularDiscussionViewHolder).bind(item)
             }
+
+            HotDiscussionItems.ActivatedHeaderItem -> Unit
+
             is HotDiscussionItems.ActivatedItem -> {
                 (holder as HotActivatedDiscussionViewHolder).bind(item)
             }
