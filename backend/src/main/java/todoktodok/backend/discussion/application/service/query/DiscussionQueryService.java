@@ -1,16 +1,17 @@
 package todoktodok.backend.discussion.application.service.query;
 
+import jakarta.annotation.Nullable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Base64;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
-
-import java.util.Base64;
-import java.util.List;
-import java.util.NoSuchElementException;
-
-import jakarta.annotation.Nullable;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,9 +20,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.comment.domain.repository.CommentRepository;
+import todoktodok.backend.discussion.application.dto.DiscussionCursor;
+import todoktodok.backend.discussion.application.dto.response.ActiveDiscussionPageResponse;
+import todoktodok.backend.discussion.application.dto.response.ActiveDiscussionResponse;
 import todoktodok.backend.discussion.application.dto.response.DiscussionResponse;
+import todoktodok.backend.discussion.application.dto.response.LatestDiscussionPageResponse;
 import todoktodok.backend.discussion.application.dto.response.PageInfo;
-import todoktodok.backend.discussion.application.dto.response.SlicedDiscussionResponse;
 import todoktodok.backend.discussion.domain.Discussion;
 import todoktodok.backend.discussion.domain.DiscussionFilterType;
 import todoktodok.backend.discussion.domain.repository.DiscussionLikeRepository;
@@ -69,7 +73,7 @@ public class DiscussionQueryService {
         );
     }
 
-    public SlicedDiscussionResponse getDiscussions(
+    public LatestDiscussionPageResponse getDiscussions(
             final Long memberId,
             final int size,
             @Nullable final String cursor
@@ -83,7 +87,7 @@ public class DiscussionQueryService {
         final boolean hasNextPage = slicedDiscussions.hasNext();
         final String nextCursor = findNextCursor(hasNextPage, discussions);
 
-        return new SlicedDiscussionResponse(
+        return new LatestDiscussionPageResponse(
                 getDiscussionsResponses(discussions, member),
                 new PageInfo(hasNextPage, nextCursor)
         );
@@ -140,6 +144,49 @@ public class DiscussionQueryService {
         final List<Long> likedDiscussionIds = getLikedDiscussionIdsFromHot(hotDiscussions, member);
 
         return makeResponsesFrom(hotDiscussions, likesByDiscussionId, commentsByDiscussionId, likedDiscussionIds);
+    }
+
+    public ActiveDiscussionPageResponse getActiveDiscussions(
+            final Long memberId,
+            final int period,
+            final int size,
+            @Nullable final String cursor
+    ) {
+        validatePageSize(size);
+
+        final Member member = findMember(memberId);
+        final LocalDateTime periodStart = LocalDateTime.now().minusDays(period);
+
+        final DiscussionCursor discussionCursor = Optional.ofNullable(cursor)
+                .map(DiscussionCursor::fromEncoded)
+                .orElse(DiscussionCursor.empty());
+
+        final Pageable pageable = Pageable.ofSize(size + 1);
+
+        final List<ActiveDiscussionResponse> discussions = discussionRepository.findActiveDiscussionsByCursor(
+                member,
+                periodStart,
+                discussionCursor.lastCommentedAt(),
+                discussionCursor.cursorId(),
+                pageable
+        );
+
+        if (discussions.isEmpty()) {
+            return new ActiveDiscussionPageResponse(Collections.emptyList(), new PageInfo(false, null));
+        }
+
+        final boolean hasNext = discussions.size() > size;
+        if (hasNext) {
+            discussions.removeLast();
+        }
+
+        final ActiveDiscussionResponse last = hasNext ? discussions.getLast() : null;
+        final String nextCursor = getNextCursor(hasNext, last, discussionCursor);
+
+        return new ActiveDiscussionPageResponse(
+                discussions,
+                new PageInfo(hasNext, nextCursor)
+        );
     }
 
     private boolean isKeywordBlank(final String keyword) {
@@ -199,7 +246,7 @@ public class DiscussionQueryService {
         }
     }
 
-    public String encodeCursorId(final Long id) {
+    private String encodeCursorId(final Long id) {
         return Base64.getUrlEncoder().encodeToString(id.toString().getBytes());
     }
 
@@ -338,9 +385,21 @@ public class DiscussionQueryService {
         return discussionLikeRepository.findLikedDiscussionIdsByMember(member, hotDiscussionIds);
     }
 
+    private String getNextCursor(
+            final boolean hasNext,
+            final ActiveDiscussionResponse last,
+            final DiscussionCursor discussionCursor
+    ) {
+        if (!hasNext || last == null) {
+            return null;
+        }
+        return discussionCursor.toEncoded(last.lastCommentedAt(), last.discussionId());
+    }
+
     private void validatePageSize(final int size) {
         if (size < MIN_PAGE_SIZE || size > MAX_PAGE_SIZE) {
-            throw new IllegalArgumentException(String.format("유효하지 않은 페이지 사이즈입니다. 1 이상 50 이하의 페이징을 시도해주세요: size = %d", size));
+            throw new IllegalArgumentException(
+                    String.format("유효하지 않은 페이지 사이즈입니다. 1 이상 50 이하의 페이징을 시도해주세요: size = %d", size));
         }
     }
 }

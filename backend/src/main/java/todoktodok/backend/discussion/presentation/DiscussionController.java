@@ -1,12 +1,9 @@
 package todoktodok.backend.discussion.presentation;
 
 import jakarta.validation.Valid;
-
 import java.net.URI;
 import java.util.List;
-
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,8 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import todoktodok.backend.discussion.application.dto.request.DiscussionRequest;
 import todoktodok.backend.discussion.application.dto.request.DiscussionUpdateRequest;
+import todoktodok.backend.discussion.application.dto.response.ActiveDiscussionPageResponse;
 import todoktodok.backend.discussion.application.dto.response.DiscussionResponse;
-import todoktodok.backend.discussion.application.dto.response.SlicedDiscussionResponse;
+import todoktodok.backend.discussion.application.dto.response.LatestDiscussionPageResponse;
 import todoktodok.backend.discussion.application.service.command.DiscussionCommandService;
 import todoktodok.backend.discussion.application.service.query.DiscussionQueryService;
 import todoktodok.backend.discussion.domain.DiscussionFilterType;
@@ -75,7 +73,7 @@ public class DiscussionController implements DiscussionApiDocs {
 
     @Auth(value = Role.USER)
     @GetMapping
-    public ResponseEntity<SlicedDiscussionResponse> getDiscussions(
+    public ResponseEntity<LatestDiscussionPageResponse> getDiscussions(
             @LoginMember final Long memberId,
             @RequestParam final int size,
             @RequestParam(required = false) final String cursor
@@ -104,6 +102,18 @@ public class DiscussionController implements DiscussionApiDocs {
     ) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(discussionQueryService.getHotDiscussions(memberId, period, count));
+    }
+
+    @Auth(value = Role.USER)
+    @GetMapping("/active")
+    public ResponseEntity<ActiveDiscussionPageResponse> getActiveDiscussions(
+            @LoginMember final Long memberId,
+            @RequestParam final int period,
+            @RequestParam(defaultValue = "10") final int size,
+            @RequestParam(required = false) final String cursor
+    ) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(discussionQueryService.getActiveDiscussions(memberId, period, size, cursor));
     }
 
     @Auth(value = Role.USER)

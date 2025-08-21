@@ -9,15 +9,14 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-
 import java.util.List;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import todoktodok.backend.discussion.application.dto.request.DiscussionRequest;
 import todoktodok.backend.discussion.application.dto.request.DiscussionUpdateRequest;
+import todoktodok.backend.discussion.application.dto.response.ActiveDiscussionPageResponse;
 import todoktodok.backend.discussion.application.dto.response.DiscussionResponse;
-import todoktodok.backend.discussion.application.dto.response.SlicedDiscussionResponse;
+import todoktodok.backend.discussion.application.dto.response.LatestDiscussionPageResponse;
 import todoktodok.backend.discussion.domain.DiscussionFilterType;
 import todoktodok.backend.global.auth.Auth;
 import todoktodok.backend.global.auth.Role;
@@ -268,7 +267,7 @@ public interface DiscussionApiDocs {
                     description = "토론방 최신순 조회 성공",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = SlicedDiscussionResponse.class),
+                            schema = @Schema(implementation = LatestDiscussionPageResponse.class),
                             examples = @ExampleObject(
                                     value = """
                                             {
@@ -346,7 +345,7 @@ public interface DiscussionApiDocs {
                             )
                     ))
     })
-    ResponseEntity<SlicedDiscussionResponse> getDiscussions(
+    ResponseEntity<LatestDiscussionPageResponse> getDiscussions(
             @Parameter(hidden = true) final Long memberId,
             @Parameter(
                     description = "페이지 사이즈",
@@ -818,5 +817,121 @@ public interface DiscussionApiDocs {
                             examples = @ExampleObject(value = "1")
                     )
             ) final Long discussionId
+    );
+
+    @Operation(summary = "활성화된 토론방 조회 API(커서 기반)")
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "활성 토론방 목록 조회 성공",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ActiveDiscussionPageResponse.class),
+                            examples = {
+                                    @ExampleObject(
+                                            name = "첫 페이지 예시",
+                                            value = """
+                                                {
+                                                  "discussions": [
+                                                    {
+                                                      "discussionId": 4,
+                                                      "discussionTitle": "토론방4",
+                                                      "discussionOpinion": "내용4",
+                                                      "commentCount": 1,
+                                                      "likeCount": 0,
+                                                      "likedByMe": false,
+                                                      "lastCommentedAt": "2025-08-20T14:49:00"
+                                                    },
+                                                    {
+                                                      "discussionId": 3,
+                                                      "discussionTitle": "토론방3",
+                                                      "discussionOpinion": "내용3",
+                                                      "commentCount": 3,
+                                                      "likeCount": 2,
+                                                      "likedByMe": true,
+                                                      "lastCommentedAt": "2025-08-20T14:50:00"
+                                                    }
+                                                  ],
+                                                  "hasNext": true,
+                                                  "nextCursor": "MjAyNS0wOC0yMFQxNDo1MDowMF8z"
+                                                }
+                                                """
+                                    ),
+                                    @ExampleObject(
+                                            name = "마지막 페이지 예시",
+                                            value = """
+                                                {
+                                                  "discussions": [
+                                                    {
+                                                      "discussionId": 2,
+                                                      "discussionTitle": "토론방2",
+                                                      "discussionOpinion": "내용2",
+                                                      "commentCount": 2,
+                                                      "likeCount": 1,
+                                                      "likedByMe": false,
+                                                      "lastCommentedAt": "2025-08-20T15:30:00"
+                                                    }
+                                                  ],
+                                                  "hasNext": false,
+                                                  "nextCursor": null
+                                                }
+                                                """
+                                    )
+                            }
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "잘못된 요청",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = {
+                                    @ExampleObject(
+                                            name = "유효하지 않은 size",
+                                            value = "{\"code\":400, \"message\":\"[ERROR] size는 1 이상이어야 합니다\"}"
+                                    )
+                            }
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "토큰 인증 오류",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "JWT 오류",
+                                    value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
+                            )
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "서버 오류",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "서버 오류",
+                                    value = "{\"code\":500, \"message\":\"[ERROR] 서버 내부 오류가 발생했습니다\"}"
+                            )
+                    )
+            )
+    })
+    ResponseEntity<ActiveDiscussionPageResponse> getActiveDiscussions(
+            @Parameter(hidden = true) final Long memberId,
+            @Parameter(
+                    description = "조회 기간(일)",
+                    schema = @Schema(implementation = Integer.class, example = "7")
+            ) final int period,
+            @Parameter(
+                    description = "페이지 크기(요청 개수)",
+                    schema = @Schema(implementation = Integer.class, example = "10")
+            ) final int size,
+            @Parameter(
+                    description = "직전 응답의 nextCursor (첫 페이지면 null)",
+                    schema = @Schema(implementation = String.class, example = "MjAyNS0wOC0yMFQxNDo1MDowMF8z")
+            ) final String cursor
     );
 }

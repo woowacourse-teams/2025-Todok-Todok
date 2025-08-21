@@ -1,7 +1,15 @@
 package todoktodok.backend.discussion.presentation;
 
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
+
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -19,9 +27,6 @@ import todoktodok.backend.discussion.application.dto.request.DiscussionRequest;
 import todoktodok.backend.discussion.application.dto.request.DiscussionUpdateRequest;
 import todoktodok.backend.member.presentation.fixture.MemberFixture;
 
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
-
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(initializers = InitializerTimer.class)
@@ -29,6 +34,9 @@ class DiscussionControllerTest {
 
     @Autowired
     private DatabaseInitializer databaseInitializer;
+
+//    @Autowired
+//    private Clock clock;
 
     @LocalServerPort
     int port;
@@ -219,7 +227,7 @@ class DiscussionControllerTest {
         databaseInitializer.setDefaultDiscussionInfo();
 
         final String updatedTitle = "상속과 조합은 어떤 상황에 쓰이나요?";
-        final String updatedContent= "상속과 조합의 차이점이 궁금합니다.";
+        final String updatedContent = "상속과 조합의 차이점이 궁금합니다.";
         final DiscussionUpdateRequest discussionUpdateRequest = new DiscussionUpdateRequest(
                 updatedTitle,
                 updatedContent
@@ -413,5 +421,69 @@ class DiscussionControllerTest {
                 .when().post("/api/v1/discussions/1/like")
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    @Test
+    @DisplayName("활성화된 토론방을 조회한다")
+    void getActiveDiscussions() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+
+        final Long memberId = 1L;
+        final Long bookId = 1L;
+
+        databaseInitializer.setDiscussionInfo("게시글1", "내용1", memberId, bookId); // id=1
+        databaseInitializer.setDiscussionInfo("게시글2", "내용2", memberId, bookId); // id=2
+        databaseInitializer.setDiscussionInfo("게시글3", "내용3", memberId, bookId); // id=3
+        databaseInitializer.setDiscussionInfo("게시글4", "내용4", memberId, bookId); // id=4
+
+        final LocalDateTime base = LocalDateTime.now();
+
+        databaseInitializer.setCommentInfo("1-1", memberId, 1L, base.minusMinutes(10));
+        databaseInitializer.setCommentInfo("2-1", memberId, 2L, base.minusMinutes(20));
+        databaseInitializer.setCommentInfo("2-2", memberId, 2L, base.minusMinutes(30));
+        databaseInitializer.setCommentInfo("3-1", memberId, 3L, base.minusMinutes(40));
+        databaseInitializer.setCommentInfo("3-2", memberId, 3L, base.minusMinutes(50));
+        databaseInitializer.setCommentInfo("3-3", memberId, 3L, base.minusMinutes(60));
+        databaseInitializer.setCommentInfo("4-1", memberId, 4L, base.minusMinutes(70));
+
+        final String token = MemberFixture.login("user@gmail.com");
+        final int size = 3;
+
+        // when - then
+
+        // 1페이지 확인
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .header("Authorization", token)
+                .queryParam("period", 7)
+                .queryParam("size", size)
+                .when().get("/api/v1/discussions/active")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("items.size()", equalTo(size))
+                .body("pageInfo.hasNext", equalTo(true))
+                .body("pageInfo.nextCursor", notNullValue())
+                .body("items[0].discussionId", equalTo(1))
+                .body("items[1].discussionId", equalTo(2))
+                .body("items[2].discussionId", equalTo(3))
+                .extract();
+
+        // 2페이지 확인
+        String cursor = response.jsonPath().getString("pageInfo.nextCursor");
+        RestAssured.given()
+                .contentType(ContentType.JSON)
+                .header("Authorization", token)
+                .queryParam("period", 7)
+                .queryParam("size", size)
+                .queryParam("cursor", cursor)
+                .when().get("/api/v1/discussions/active")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("items.size()", equalTo(1))
+                .body("items[0].discussionId", equalTo(4))
+                .body("pageInfo.hasNext", equalTo(false))
+                .body("pageInfo.nextCursor", nullValue());
     }
 }
