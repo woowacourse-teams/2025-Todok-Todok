@@ -20,7 +20,7 @@ suspend fun <R, T> Response<T>.extractAccessToken(onTokenReceived: suspend (toke
     return runCatching {
         NetworkResult.Success(onTokenReceived(accessToken))
     }.getOrElse {
-        NetworkResult.Failure(TodokTodokExceptions.UnknownException)
+        NetworkResult.Failure(TodokTodokExceptions.UnknownException(it))
     }
 }
 
@@ -29,7 +29,7 @@ fun <T> Response<T>.mapToggleLikeResponse(): NetworkResult<LikeAction> =
         when (code()) {
             HTTP_CREATED -> NetworkResult.Success(LikeAction.LIKE)
             HTTP_NO_CONTENT -> NetworkResult.Success(LikeAction.UNLIKE)
-            else -> NetworkResult.Failure(TodokTodokExceptions.UnknownException)
+            else -> NetworkResult.Failure(TodokTodokExceptions.UnknownException(null))
         }
     } else {
         val msg = errorBody()?.string()

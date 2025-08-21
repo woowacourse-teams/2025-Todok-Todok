@@ -112,7 +112,7 @@ class DefaultMemberRemoteDataSourceTest {
         runTest {
             // given
             val memberId = 2L
-            val exception = TodokTodokExceptions.UnknownException
+            val exception = TodokTodokExceptions.UnknownException(null)
             coEvery { tokenDataSource.getMemberId() } returns memberId
             coEvery { memberService.fetchProfile(memberId) } returns NetworkResult.Failure(exception)
 
