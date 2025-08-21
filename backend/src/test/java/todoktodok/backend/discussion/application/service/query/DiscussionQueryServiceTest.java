@@ -11,6 +11,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -500,6 +501,25 @@ class DiscussionQueryServiceTest {
                     () -> assertThat(discussions.get(0).discussionTitle()).contains(keyword),
                     () -> assertThat(discussions.get(1).discussionTitle()).contains(keyword)
             );
+        }
+
+        @ParameterizedTest
+        @NullAndEmptySource
+        @ValueSource(strings = {" ", "   ", "\t", "\n"})
+        @DisplayName("키워드가 null 또는 공백이면 IllegalArgumentException이 발생한다")
+        void getDiscussionsByKeyword_whenKeywordBlank_thenThrows(final String keyword) {
+            // when & then
+            assertThatThrownBy(() -> discussionQueryService.getDiscussionsByKeyword(1L, keyword))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessageStartingWith("검색 키워드를 입력해야 합니다");
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = {"hello", "오브젝트", "키워드"})
+        @DisplayName("키워드가 정상 문자열이면 예외가 발생하지 않는다")
+        void getDiscussionsByKeyword_whenKeywordValid_thenNoThrow(final String keyword) {
+            // when & then
+            discussionQueryService.getDiscussionsByKeyword(1L, keyword);
         }
     }
 }

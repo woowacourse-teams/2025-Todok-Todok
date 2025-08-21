@@ -145,11 +145,6 @@ public class DiscussionQueryService {
         return Base64.getUrlEncoder().encodeToString(id.toString().getBytes());
     }
 
-    private List<DiscussionResponse> getAllDiscussions(final Member member) {
-        final List<Discussion> discussions = discussionRepository.findAll();
-        return getDiscussionsResponses(discussions, member);
-    }
-
     private List<DiscussionResponse> getDiscussionsByKeyword(
             final String keyword,
             final Member member
