@@ -1,10 +1,11 @@
-package com.team.todoktodok.presentation.view.discussions.my.adapter
+package com.team.todoktodok.presentation.view.discussions.my.viewholder
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.team.todoktodok.databinding.ItemMyCreatedDiscussionBinding
 import com.team.todoktodok.presentation.view.discussions.adapter.DiscussionAdapter
+import com.team.todoktodok.presentation.view.discussions.my.adapter.MyDiscussionItems
 
 class CreatedDiscussionViewHolder private constructor(
     binding: ItemMyCreatedDiscussionBinding,

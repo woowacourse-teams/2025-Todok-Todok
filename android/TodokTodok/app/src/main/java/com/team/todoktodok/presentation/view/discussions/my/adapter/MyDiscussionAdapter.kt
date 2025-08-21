@@ -3,11 +3,13 @@ package com.team.todoktodok.presentation.view.discussions.my.adapter
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.team.todoktodok.presentation.view.discussions.my.adapter.CreatedDiscussionViewHolder.Companion.CreatedDiscussionViewHolder
 import com.team.todoktodok.presentation.view.discussions.my.adapter.DividerViewHolder.Companion.DividerViewHolder
 import com.team.todoktodok.presentation.view.discussions.my.adapter.MyDiscussionItems.ViewType
 import com.team.todoktodok.presentation.view.discussions.my.adapter.MyDiscussionItems.ViewType.Companion.ViewType
-import com.team.todoktodok.presentation.view.discussions.my.adapter.ParticipatedDiscussionViewHolder.Companion.ParticipatedDiscussionViewHolder
+import com.team.todoktodok.presentation.view.discussions.my.viewholder.CreatedDiscussionViewHolder
+import com.team.todoktodok.presentation.view.discussions.my.viewholder.CreatedDiscussionViewHolder.Companion.CreatedDiscussionViewHolder
+import com.team.todoktodok.presentation.view.discussions.my.viewholder.ParticipatedDiscussionViewHolder
+import com.team.todoktodok.presentation.view.discussions.my.viewholder.ParticipatedDiscussionViewHolder.Companion.ParticipatedDiscussionViewHolder
 
 class MyDiscussionAdapter(
     private val handler: Handler,

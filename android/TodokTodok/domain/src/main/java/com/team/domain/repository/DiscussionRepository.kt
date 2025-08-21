@@ -2,24 +2,31 @@ package com.team.domain.repository
 
 import com.team.domain.model.Book
 import com.team.domain.model.Discussion
-import com.team.domain.model.DiscussionFilter
 import com.team.domain.model.LikeStatus
 import com.team.domain.model.exception.NetworkResult
 import com.team.domain.model.latest.LatestDiscussionPage
 import com.team.domain.model.member.DiscussionRoom
 
 interface DiscussionRepository {
+    suspend fun getSearchDiscussion(keyword: String): NetworkResult<List<Discussion>>
+
+    suspend fun getActivatedDiscussion(
+        period: Int = DEFAULT_HOT_DISCUSSION_PERIOD,
+        size: Int = PAGING_SIZE,
+        cursor: String? = null,
+    ): NetworkResult<List<Discussion>>
+
+    suspend fun getHotDiscussion(
+        period: Int = DEFAULT_HOT_DISCUSSION_PERIOD,
+        count: Int = DEFAULT_HOT_DISCUSSION_COUNT,
+    ): NetworkResult<List<Discussion>>
+
     suspend fun getLatestDiscussions(
         size: Int = PAGING_SIZE,
         cursor: String? = null,
     ): NetworkResult<LatestDiscussionPage>
 
     suspend fun getDiscussion(id: Long): NetworkResult<Discussion>
-
-    suspend fun getDiscussions(
-        type: DiscussionFilter,
-        keyword: String? = null,
-    ): NetworkResult<List<Discussion>>
 
     suspend fun saveDiscussionRoom(
         bookId: Long,
@@ -57,5 +64,7 @@ interface DiscussionRepository {
 
     companion object {
         private const val PAGING_SIZE = 15
+        private const val DEFAULT_HOT_DISCUSSION_PERIOD = 7
+        private const val DEFAULT_HOT_DISCUSSION_COUNT = 5
     }
 }

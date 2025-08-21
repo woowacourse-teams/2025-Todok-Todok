@@ -5,6 +5,7 @@ import com.team.todoktodok.data.network.request.DiscussionRoomRequest
 import com.team.todoktodok.data.network.request.EditDiscussionRoomRequest
 import com.team.todoktodok.data.network.request.ReportRequest
 import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
+import com.team.todoktodok.data.network.response.discussion.DiscussionsResponse
 import com.team.todoktodok.data.network.response.latest.LatestDiscussionsResponse
 import retrofit2.Response
 import retrofit2.http.Body
@@ -16,11 +17,23 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface DiscussionService {
-    @GET("v1/discussions/")
+    @GET("v1/discussions/search")
+    suspend fun fetchSearchDiscussions(
+        @Query("keyword") query: String,
+    ): NetworkResult<List<DiscussionResponse>>
+
+    @GET("v1/discussions/active")
+    suspend fun fetchActivatedDiscussions(
+        @Query("period") period: Int,
+        @Query("size") size: Int,
+        @Query("cursor") cursor: String?,
+    ): NetworkResult<DiscussionsResponse>
+
+    @GET("v1/discussions/hot")
     suspend fun fetchHotDiscussions(
-        @Query("period") period: String,
+        @Query("period") period: Int,
         @Query("count") count: Int,
-    )
+    ): NetworkResult<List<DiscussionResponse>>
 
     @GET("v1/discussions")
     suspend fun fetchLatestDiscussions(
@@ -32,12 +45,6 @@ interface DiscussionService {
     suspend fun fetchDiscussion(
         @Path("discussionId") discussionId: Long,
     ): NetworkResult<DiscussionResponse>
-
-    @GET("v1/discussions")
-    suspend fun fetchDiscussions(
-        @Query("keyword") keyword: String?,
-        @Query("type") type: String,
-    ): NetworkResult<List<DiscussionResponse>>
 
     @POST("v1/discussions")
     suspend fun saveDiscussionRoom(
