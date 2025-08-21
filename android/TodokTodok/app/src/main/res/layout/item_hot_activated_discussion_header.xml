@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/space_8"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <ImageView
         android:id="@+id/iv_hot"
         android:layout_width="20dp"
@@ -11,7 +12,8 @@
         app:layout_constraintTop_toTopOf="@id/rv_hot_discussion_title"
         app:layout_constraintBottom_toBottomOf="@id/rv_hot_discussion_title"
         app:layout_constraintStart_toStartOf="parent"
-        android:src="@drawable/img_fire"/>
+        android:src="@drawable/img_fire"
+        android:importantForAccessibility="no"/>
 
     <TextView
         android:id="@+id/rv_hot_discussion_title"
