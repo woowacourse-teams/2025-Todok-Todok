@@ -111,12 +111,15 @@ class ProfileViewModel(
             }
         }
 
-    fun supportMember(type: Support) {
+    fun supportMember(
+        type: Support,
+        reason: String,
+    ) {
         withLoading {
             val memberId = _uiState.value?.memberId
             if (memberId is MemberId.OtherUser) {
                 memberRepository
-                    .supportMember(memberId, type)
+                    .supportMember(memberId, type, reason)
                     .onSuccess { onUiEvent(ProfileUiEvent.OnCompleteSupport(type)) }
                     .onFailure { onUiEvent(ProfileUiEvent.ShowErrorMessage(it)) }
             }
