@@ -206,6 +206,6 @@ fun Throwable.toDomain(): TodokTodokExceptions =
         is java.net.SocketException -> TodokTodokExceptions.SocketException // 소켓 오류
         is java.io.IOException -> TodokTodokExceptions.IOException // 일반 IO 예외
         is kotlin.coroutines.cancellation.CancellationException -> TodokTodokExceptions.CancellationException // 코루틴/작업 취소
-        is kotlinx.serialization.MissingFieldException -> TodokTodokExceptions.MissingFieldException
+        is kotlinx.serialization.MissingFieldException -> TodokTodokExceptions.MissingFieldException // Json 직렬화 오류
         else -> TodokTodokExceptions.UnknownException(this) // 그 외 알 수 없는 예외
     }
