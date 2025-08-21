@@ -184,8 +184,17 @@ class ProfileActivity : AppCompatActivity() {
             }
 
             override fun onClickSupport(type: Support) {
-                val dialog = ReportDialog.newInstance(USER_REPORT_DIALOG_REQUEST_KEY)
-                dialog.show(supportFragmentManager, ReportDialog.TAG)
+                when (type) {
+                    Support.BLOCK -> {
+                        val dialog = SupportMemberDialog.newInstance(type)
+                        dialog.show(supportFragmentManager, SupportMemberDialog.TAG)
+                    }
+
+                    Support.REPORT -> {
+                        val dialog = ReportDialog.newInstance(USER_REPORT_DIALOG_REQUEST_KEY)
+                        dialog.show(supportFragmentManager, ReportDialog.TAG)
+                    }
+                }
             }
         }
 
