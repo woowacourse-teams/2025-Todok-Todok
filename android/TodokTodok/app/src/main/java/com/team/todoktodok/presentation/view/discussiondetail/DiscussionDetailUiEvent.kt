@@ -19,7 +19,7 @@ sealed interface DiscussionDetailUiEvent {
         val userId: Long,
     ) : DiscussionDetailUiEvent
 
-    data object ShowReportSuccessMessage : DiscussionDetailUiEvent
+    data object ShowReportDiscussionSuccessMessage : DiscussionDetailUiEvent
 
     data class ShowErrorMessage(
         val exceptions: TodokTodokExceptions,

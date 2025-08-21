@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupWindow
+import android.widget.Toast
+import androidx.annotation.StringRes
 import androidx.core.os.bundleOf
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.activityViewModels
@@ -184,6 +186,9 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
                     binding.root,
                     messageConverter(commentsUiEvent.exception),
                 ).show()
+
+            CommentsUiEvent.ShowReportCommentSuccessMessage ->
+                showShortToast(R.string.all_report_comment_success)
         }
     }
 
@@ -285,6 +290,14 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
                 requestKey,
             )
         dialog.show(childFragmentManager, CommonDialog.TAG)
+    }
+
+    private fun showShortToast(
+        @StringRes resId: Int,
+    ) {
+        Toast
+            .makeText(requireContext(), resId, Toast.LENGTH_SHORT)
+            .show()
     }
 
     private fun getBottomSheetVisibilityListener(binding: FragmentCommentsBinding) =

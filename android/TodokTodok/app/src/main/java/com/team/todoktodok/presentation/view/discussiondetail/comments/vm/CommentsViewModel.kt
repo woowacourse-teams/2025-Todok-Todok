@@ -76,7 +76,7 @@ class CommentsViewModel(
         viewModelScope.launch {
             handleResult(
                 commentRepository.report(discussionId, commentId),
-            ) {}
+            ) { onUiEvent(CommentsUiEvent.ShowReportCommentSuccessMessage) }
         }
 
     fun showCommentCreate() {

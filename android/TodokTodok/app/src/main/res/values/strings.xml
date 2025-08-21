@@ -22,6 +22,8 @@
     <string name="all_report_discussion">토론방을 신고하시겠습니까?</string>
     <string name="all_report_reply">답글을 신고하시겠습니까?</string>
     <string name="all_report_discussion_success">토론방이 신고되었습니다.</string>
+    <string name="all_report_comment_success">댓글이 신고되었습니다.</string>
+    <string name="all_report_reply_success">대댓글이 신고되었습니다.</string>
     <string name="all_nickname">닉네임</string>
     <string name="all_discussion_delete_confirm">토론방을 정말 삭제 하시겠습니까?</string>
     <string name="all_comment_delete_confirm">댓글을 정말 삭제 하시겠습니까?</string>

@@ -9,6 +9,7 @@ import android.widget.PopupWindow
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -26,6 +27,7 @@ import com.team.todoktodok.presentation.core.ext.registerPositiveResultListener
 import com.team.todoktodok.presentation.core.ext.registerReportResultListener
 import com.team.todoktodok.presentation.core.ext.toRelativeString
 import com.team.todoktodok.presentation.view.discussion.create.CreateDiscussionRoomActivity
+import com.team.todoktodok.presentation.view.discussion.create.CreateDiscussionUiEvent
 import com.team.todoktodok.presentation.view.discussion.create.SerializationCreateDiscussionRoomMode.Edit
 import com.team.todoktodok.presentation.view.discussiondetail.comment.CommentBottomSheet
 import com.team.todoktodok.presentation.view.discussiondetail.comments.CommentsFragment
@@ -221,7 +223,8 @@ class DiscussionDetailActivity : AppCompatActivity() {
                     ),
                 ).show()
 
-            DiscussionDetailUiEvent.ShowReportSuccessMessage -> showToast(getString(R.string.all_report_discussion_success))
+            DiscussionDetailUiEvent.ShowReportDiscussionSuccessMessage ->
+                showShortToast(R.string.all_report_discussion_success)
         }
     }
 
@@ -232,10 +235,6 @@ class DiscussionDetailActivity : AppCompatActivity() {
     private fun navigateToProfile(memberId: Long) {
         val intent = ProfileActivity.Intent(this, memberId)
         startActivity(intent)
-    }
-
-    private fun showToast(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
     private fun showComments(discussionId: Long) {
@@ -261,6 +260,14 @@ class DiscussionDetailActivity : AppCompatActivity() {
             viewModel.deleteDiscussion()
             popupWindow?.dismiss()
         }
+    }
+
+    private fun showShortToast(
+        @StringRes resId: Int,
+    ) {
+        Toast
+            .makeText(this, resId, Toast.LENGTH_SHORT)
+            .show()
     }
 
     companion object {

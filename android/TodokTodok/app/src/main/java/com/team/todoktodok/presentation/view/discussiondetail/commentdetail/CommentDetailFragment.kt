@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupWindow
+import android.widget.Toast
+import androidx.annotation.StringRes
 import androidx.core.os.bundleOf
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
@@ -193,6 +195,12 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
                     binding.root,
                     messageConverter(commentDetailUiEvent.exception),
                 ).show()
+
+            CommentDetailUiEvent.ShowReportCommentSuccessMessage ->
+                showShortToast(R.string.all_report_comment_success)
+
+            CommentDetailUiEvent.ShowReportReplySuccessMessage ->
+                showShortToast(R.string.all_report_reply_success)
         }
     }
 
@@ -387,6 +395,14 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
             REPLY_DELETE_DIALOG_REQUEST_KEY.format(replyId),
             CommonDialog.RESULT_KEY_COMMON_DIALOG,
         ) { viewModel.deleteReply(replyId) }
+    }
+
+    private fun showShortToast(
+        @StringRes resId: Int,
+    ) {
+        Toast
+            .makeText(requireContext(), resId, Toast.LENGTH_SHORT)
+            .show()
     }
 
     private fun getBottomSheetVisibilityListener(binding: FragmentCommentDetailBinding) =

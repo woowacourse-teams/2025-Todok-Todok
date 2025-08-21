@@ -21,4 +21,6 @@ sealed interface CommentsUiEvent {
     data class ShowError(
         val exception: TodokTodokExceptions,
     ) : CommentsUiEvent
+
+    data object ShowReportCommentSuccessMessage : CommentsUiEvent
 }

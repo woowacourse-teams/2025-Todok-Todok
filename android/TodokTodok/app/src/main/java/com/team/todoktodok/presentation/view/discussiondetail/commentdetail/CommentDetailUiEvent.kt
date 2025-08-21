@@ -1,6 +1,7 @@
 package com.team.todoktodok.presentation.view.discussiondetail.commentdetail
 
 import com.team.domain.model.exception.TodokTodokExceptions
+import com.team.todoktodok.presentation.view.discussiondetail.comments.CommentsUiEvent
 
 sealed interface CommentDetailUiEvent {
     data class ShowCommentUpdate(
@@ -35,4 +36,8 @@ sealed interface CommentDetailUiEvent {
     data class ShowError(
         val exception: TodokTodokExceptions,
     ) : CommentDetailUiEvent
+
+    data object ShowReportCommentSuccessMessage : CommentDetailUiEvent
+
+    data object ShowReportReplySuccessMessage : CommentDetailUiEvent
 }

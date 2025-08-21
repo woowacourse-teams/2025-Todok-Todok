@@ -43,7 +43,7 @@ class DiscussionDetailViewModel(
     fun reportDiscussion() {
         viewModelScope.launch {
             handleResult(discussionRepository.reportDiscussion(discussionId)) {
-                onUiEvent(DiscussionDetailUiEvent.ShowReportSuccessMessage)
+                onUiEvent(DiscussionDetailUiEvent.ShowReportDiscussionSuccessMessage)
             }
         }
     }
