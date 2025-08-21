@@ -9,15 +9,17 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+
 import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import todoktodok.backend.book.application.dto.response.BookResponse;
+import todoktodok.backend.discussion.application.dto.response.DiscussionResponse;
 import todoktodok.backend.global.exception.ErrorResponse;
 import todoktodok.backend.member.application.dto.request.LoginRequest;
 import todoktodok.backend.member.application.dto.request.ProfileUpdateRequest;
 import todoktodok.backend.member.application.dto.request.SignupRequest;
 import todoktodok.backend.member.application.dto.response.BlockMemberResponse;
-import todoktodok.backend.member.application.dto.response.MemberDiscussionResponse;
 import todoktodok.backend.member.application.dto.response.ProfileResponse;
 import todoktodok.backend.member.application.dto.response.ProfileUpdateResponse;
 import todoktodok.backend.member.domain.MemberDiscussionFilterType;
@@ -41,7 +43,7 @@ public interface MemberApiDocs {
                                     name = "이메일 형식 오류",
                                     value = "{\"code\":400, \"message\":\"[ERROR] 올바른 이메일 형식을 입력해주세요\"}"
                             )
-            )),
+                    )),
             @ApiResponse(
                     responseCode = "500",
                     description = "서버 오류",
@@ -52,7 +54,7 @@ public interface MemberApiDocs {
                                     name = "서버 오류",
                                     value = "{\"code\":500, \"message\":\"[ERROR] 서버 내부 오류가 발생했습니다\"}"
                             )
-            ))
+                    ))
     })
     ResponseEntity<Void> login(
             @RequestBody(
@@ -107,7 +109,7 @@ public interface MemberApiDocs {
                                             value = "{\"code\":400, \"message\":\"[ERROR] 소셜 로그인을 하지 않은 이메일입니다\"}"
                                     ),
                             }
-            )),
+                    )),
             @ApiResponse(
                     responseCode = "401",
                     description = "토큰 인증 오류",
@@ -118,7 +120,7 @@ public interface MemberApiDocs {
                                     name = "JWT 오류",
                                     value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
                             )
-            )),
+                    )),
             @ApiResponse(
                     responseCode = "500",
                     description = "서버 오류",
@@ -129,7 +131,7 @@ public interface MemberApiDocs {
                                     name = "서버 오류",
                                     value = "{\"code\":500, \"message\":\"[ERROR] 서버 내부 오류가 발생했습니다\"}"
                             )
-            ))
+                    ))
     })
     ResponseEntity<Void> signup(
             @Parameter(hidden = true) final String memberEmail,
@@ -173,7 +175,7 @@ public interface MemberApiDocs {
                                             value = "{\"code\":400, \"message\":\"[ERROR] 이미 차단한 회원입니다\"}"
                                     )
                             }
-            )),
+                    )),
             @ApiResponse(
                     responseCode = "401",
                     description = "토큰 인증 오류",
@@ -184,7 +186,7 @@ public interface MemberApiDocs {
                                     name = "JWT 오류",
                                     value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
                             )
-            )),
+                    )),
             @ApiResponse(
                     responseCode = "404",
                     description = "존재하지 않는 리소스",
@@ -195,7 +197,7 @@ public interface MemberApiDocs {
                                     name = "회원 없음",
                                     value = "{\"code\":404, \"message\":\"[ERROR] 해당 회원을 찾을 수 없습니다\"}"
                             )
-            )),
+                    )),
             @ApiResponse(
                     responseCode = "500",
                     description = "서버 오류",
@@ -206,7 +208,7 @@ public interface MemberApiDocs {
                                     name = "서버 오류",
                                     value = "{\"code\":500, \"message\":\"[ERROR] 서버 내부 오류가 발생했습니다\"}"
                             )
-            ))
+                    ))
     })
     ResponseEntity<Void> block(
             @Parameter(hidden = true) final Long memberId,
@@ -241,7 +243,7 @@ public interface MemberApiDocs {
                                             value = "{\"code\":400, \"message\":\"[ERROR] 이미 신고한 회원입니다\"}"
                                     )
                             }
-            )),
+                    )),
             @ApiResponse(
                     responseCode = "401",
                     description = "토큰 인증 오류",
@@ -252,7 +254,7 @@ public interface MemberApiDocs {
                                     name = "JWT 오류",
                                     value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
                             )
-            )),
+                    )),
             @ApiResponse(
                     responseCode = "404",
                     description = "존재하지 않는 리소스",
@@ -263,7 +265,7 @@ public interface MemberApiDocs {
                                     name = "회원 없음",
                                     value = "{\"code\":404, \"message\":\"[ERROR] 해당 회원을 찾을 수 없습니다\"}"
                             )
-            )),
+                    )),
             @ApiResponse(
                     responseCode = "500",
                     description = "서버 오류",
@@ -274,7 +276,7 @@ public interface MemberApiDocs {
                                     name = "서버 오류",
                                     value = "{\"code\":500, \"message\":\"[ERROR] 서버 내부 오류가 발생했습니다\"}"
                             )
-            ))
+                    ))
     })
     ResponseEntity<Void> report(
             @Parameter(hidden = true) final Long memberId,
@@ -305,7 +307,7 @@ public interface MemberApiDocs {
                                             }
                                             """
                             )
-            )),
+                    )),
             @ApiResponse(
                     responseCode = "404",
                     description = "존재하지 않는 리소스",
@@ -316,7 +318,7 @@ public interface MemberApiDocs {
                                     name = "회원 없음",
                                     value = "{\"code\":404, \"message\":\"[ERROR] 해당 회원을 찾을 수 없습니다\"}"
                             )
-            )),
+                    )),
             @ApiResponse(
                     responseCode = "500",
                     description = "서버 오류",
@@ -327,7 +329,7 @@ public interface MemberApiDocs {
                                     name = "서버 오류",
                                     value = "{\"code\":500, \"message\":\"[ERROR] 서버 내부 오류가 발생했습니다\"}"
                             )
-            ))
+                    ))
     })
     ResponseEntity<ProfileResponse> getProfile(
             @Parameter(
@@ -365,7 +367,7 @@ public interface MemberApiDocs {
                                             ]
                                             """
                             )
-            )),
+                    )),
             @ApiResponse(
                     responseCode = "404",
                     description = "존재하지 않는 리소스",
@@ -376,7 +378,7 @@ public interface MemberApiDocs {
                                     name = "회원 없음",
                                     value = "{\"code\":404, \"message\":\"[ERROR] 해당 회원을 찾을 수 없습니다\"}"
                             )
-            )),
+                    )),
             @ApiResponse(
                     responseCode = "500",
                     description = "서버 오류",
@@ -387,7 +389,7 @@ public interface MemberApiDocs {
                                     name = "서버 오류",
                                     value = "{\"code\":500, \"message\":\"[ERROR] 서버 내부 오류가 발생했습니다\"}"
                             )
-            ))
+                    ))
     })
     ResponseEntity<List<BookResponse>> getActiveBooks(
             @Parameter(
@@ -406,25 +408,54 @@ public interface MemberApiDocs {
                     description = "토론방 필터 조회 성공",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = MemberDiscussionResponse.class),
+                            schema = @Schema(implementation = DiscussionResponse.class),
                             examples = @ExampleObject(
                                     value = """
                                             [
-                                              {
-                                                "discussionId": 1,
-                                                "book": {
-                                                  "bookId": 1,
-                                                  "bookTitle": "오브젝트",
-                                                  "bookAuthor": "조영호",
-                                                  "bookImage": "https://image.png"
+                                                {
+                                                  "discussionId": 1,
+                                                  "book": {
+                                                    "bookId": 1,
+                                                    "bookTitle": "엘레강트 오브젝트 - 새로운 관점에서 바라본 객체지향",
+                                                    "bookAuthor": "Yegor Bugayenko (지은이), 조영호 (옮긴이)",
+                                                    "bookImage": "https://image.aladin.co.kr/product/25837/40/coversum/k762736538_1.jpg"
+                                                  },
+                                                  "member": {
+                                                    "memberId": 2,
+                                                    "nickname": "모찌",
+                                                    "profileImage": "https://user.png"
+                                                  },
+                                                  "createdAt": "2025-08-20T10:59:48",
+                                                  "discussionTitle": "토론방 제목",
+                                                  "discussionOpinion": "토론방 내용입니다",
+                                                  "likeCount": 0,
+                                                  "commentCount": 4,
+                                                  "isLikedByMe": false
                                                 },
-                                                "discussionTitle": "토론방 제목",
-                                                "discussionOpinion": "토론방 의견"
-                                              }
+                                                {
+                                                  "discussionId": 2,
+                                                  "book": {
+                                                    "bookId": 1,
+                                                    "bookTitle": "엘레강트 오브젝트 - 새로운 관점에서 바라본 객체지향",
+                                                    "bookAuthor": "Yegor Bugayenko (지은이), 조영호 (옮긴이)",
+                                                    "bookImage": "https://image.aladin.co.kr/product/25837/40/coversum/k762736538_1.jpg"
+                                                  },
+                                                  "member": {
+                                                    "memberId": 2,
+                                                    "nickname": "모찌",
+                                                    "profileImage": "https://user.png"
+                                                  },
+                                                  "createdAt": "2025-08-20T10:59:48",
+                                                  "discussionTitle": "토론방 제목 2",
+                                                  "discussionOpinion": "토론방 내용 2입니다",
+                                                  "likeCount": 0,
+                                                  "commentCount": 4,
+                                                  "isLikedByMe": false
+                                                }
                                             ]
                                             """
                             )
-            )),
+                    )),
             @ApiResponse(
                     responseCode = "404",
                     description = "존재하지 않는 리소스",
@@ -435,7 +466,7 @@ public interface MemberApiDocs {
                                     name = "회원 없음",
                                     value = "{\"code\":404, \"message\":\"[ERROR] 해당 회원을 찾을 수 없습니다\"}"
                             )
-            )),
+                    )),
             @ApiResponse(
                     responseCode = "500",
                     description = "서버 오류",
@@ -446,9 +477,9 @@ public interface MemberApiDocs {
                                     name = "서버 오류",
                                     value = "{\"code\":500, \"message\":\"[ERROR] 서버 내부 오류가 발생했습니다\"}"
                             )
-            ))
+                    ))
     })
-    ResponseEntity<List<MemberDiscussionResponse>> getMemberDiscussionsByType(
+    ResponseEntity<List<DiscussionResponse>> getMemberDiscussionsByType(
             @Parameter(
                     description = "조회할 회원 ID",
                     content = @Content(
@@ -484,7 +515,7 @@ public interface MemberApiDocs {
                                             ]
                                             """
                             )
-            )),
+                    )),
             @ApiResponse(
                     responseCode = "401",
                     description = "토큰 인증 오류",
@@ -495,7 +526,7 @@ public interface MemberApiDocs {
                                     name = "JWT 오류",
                                     value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
                             )
-            )),
+                    )),
             @ApiResponse(
                     responseCode = "500",
                     description = "서버 오류",
@@ -506,7 +537,7 @@ public interface MemberApiDocs {
                                     name = "서버 오류",
                                     value = "{\"code\":500, \"message\":\"[ERROR] 서버 내부 오류가 발생했습니다\"}"
                             )
-            ))
+                    ))
     })
     ResponseEntity<List<BlockMemberResponse>> getBlockMembers(
             @Parameter(hidden = true) final Long memberId
@@ -523,7 +554,7 @@ public interface MemberApiDocs {
                             examples = @ExampleObject(
                                     value = "{\"nickname\":\"수정된닉네임\", \"profileMessage\":\"수정된상태메시지\"}"
                             )
-            )),
+                    )),
             @ApiResponse(
                     responseCode = "400",
                     description = "요청 값 입력 오류",
@@ -548,7 +579,7 @@ public interface MemberApiDocs {
                                             value = "{\"code\":400, \"message\":\"[ERROR] 이미 존재하는 닉네임입니다\"}"
                                     ),
                             }
-            )),
+                    )),
             @ApiResponse(
                     responseCode = "401",
                     description = "토큰 인증 오류",
@@ -559,7 +590,7 @@ public interface MemberApiDocs {
                                     name = "JWT 오류",
                                     value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
                             )
-            )),
+                    )),
             @ApiResponse(
                     responseCode = "500",
                     description = "서버 오류",
@@ -570,7 +601,7 @@ public interface MemberApiDocs {
                                     name = "서버 오류",
                                     value = "{\"code\":500, \"message\":\"[ERROR] 서버 내부 오류가 발생했습니다\"}"
                             )
-            ))
+                    ))
     })
     ResponseEntity<ProfileUpdateResponse> updateProfile(
             @Parameter(hidden = true) final Long memberId,
@@ -600,7 +631,7 @@ public interface MemberApiDocs {
                                     name = "차단자 불일치",
                                     value = "{\"code\":400, \"message\":\"[ERROR] 차단한 회원이 아닙니다\"}"
                             )
-            )),
+                    )),
             @ApiResponse(
                     responseCode = "401",
                     description = "토큰 인증 오류",
@@ -611,7 +642,7 @@ public interface MemberApiDocs {
                                     name = "JWT 오류",
                                     value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
                             )
-            )),
+                    )),
             @ApiResponse(
                     responseCode = "404",
                     description = "존재하지 않는 리소스",
@@ -622,7 +653,7 @@ public interface MemberApiDocs {
                                     name = "회원 없음",
                                     value = "{\"code\":404, \"message\":\"[ERROR] 해당 회원을 찾을 수 없습니다\"}"
                             )
-            )),
+                    )),
             @ApiResponse(
                     responseCode = "500",
                     description = "서버 오류",
@@ -633,7 +664,7 @@ public interface MemberApiDocs {
                                     name = "서버 오류",
                                     value = "{\"code\":500, \"message\":\"[ERROR] 서버 내부 오류가 발생했습니다\"}"
                             )
-            ))
+                    ))
     })
     ResponseEntity<Void> deleteBlock(
             @Parameter(hidden = true) final Long memberId,

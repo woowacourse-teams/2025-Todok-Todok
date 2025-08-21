@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import todoktodok.backend.book.application.dto.response.BookResponse;
+import todoktodok.backend.discussion.application.dto.response.DiscussionResponse;
 import todoktodok.backend.global.auth.Auth;
 import todoktodok.backend.global.auth.Role;
 import todoktodok.backend.global.resolver.LoginMember;
@@ -23,7 +24,6 @@ import todoktodok.backend.member.application.dto.request.LoginRequest;
 import todoktodok.backend.member.application.dto.request.ProfileUpdateRequest;
 import todoktodok.backend.member.application.dto.request.SignupRequest;
 import todoktodok.backend.member.application.dto.response.BlockMemberResponse;
-import todoktodok.backend.member.application.dto.response.MemberDiscussionResponse;
 import todoktodok.backend.member.application.dto.response.ProfileResponse;
 import todoktodok.backend.member.application.dto.response.ProfileUpdateResponse;
 import todoktodok.backend.member.application.service.command.MemberCommandService;
@@ -101,7 +101,7 @@ public class MemberController implements MemberApiDocs {
 
     @Auth(value = Role.USER)
     @GetMapping("/{memberId}/discussions")
-    public ResponseEntity<List<MemberDiscussionResponse>> getMemberDiscussionsByType(
+    public ResponseEntity<List<DiscussionResponse>> getMemberDiscussionsByType(
             @PathVariable final Long memberId,
             @RequestParam final MemberDiscussionFilterType type
     ) {
