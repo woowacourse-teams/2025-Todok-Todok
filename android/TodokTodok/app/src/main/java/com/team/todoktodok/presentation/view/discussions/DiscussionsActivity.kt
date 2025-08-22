@@ -140,7 +140,7 @@ class DiscussionsActivity : AppCompatActivity() {
             etSearchDiscussion.doAfterTextChanged {
                 if (it.isNullOrEmpty()) {
                     viewModel.clearKeyword()
-                    viewModel.loadLatestDiscussions()
+                    viewModel.loadLatestDiscussions(false)
                 }
             }
 
@@ -189,9 +189,18 @@ class DiscussionsActivity : AppCompatActivity() {
         val selectedFilter = DiscussionFilter.entries[index]
 
         when (selectedFilter) {
-            DiscussionFilter.HOT -> changeFragment(hotDiscussionFragment)
-            DiscussionFilter.ALL -> changeFragment(allDiscussionFragment)
-            DiscussionFilter.MINE -> changeFragment(myDiscussionFragment)
+            DiscussionFilter.HOT -> {
+                changeFragment(hotDiscussionFragment)
+                viewModel.loadHotDiscussions()
+            }
+            DiscussionFilter.ALL -> {
+                changeFragment(allDiscussionFragment)
+                viewModel.loadLatestDiscussions(true)
+            }
+            DiscussionFilter.MINE -> {
+                changeFragment(myDiscussionFragment)
+                viewModel.loadMyDiscussions()
+            }
         }
     }
 

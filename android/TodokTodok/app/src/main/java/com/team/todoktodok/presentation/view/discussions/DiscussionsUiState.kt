@@ -10,7 +10,7 @@ import com.team.todoktodok.presentation.view.discussions.my.adapter.MyDiscussion
 data class DiscussionsUiState(
     val hotDiscussionItems: List<HotDiscussionItems> = emptyList(),
     val myDiscussions: List<MyDiscussionItems> = listOf(),
-    val latestDiscussions: List<DiscussionUiState> = emptyList(),
+    val latestDiscussions: Set<DiscussionUiState> = emptySet(),
     val latestPage: PageInfo = PageInfo.EMPTY,
     val activatedPage: PageInfo = PageInfo.EMPTY,
     val searchKeyword: String = EMPTY_SEARCH_KEYWORD,
@@ -24,7 +24,7 @@ data class DiscussionsUiState(
         val discussion = newDiscussions.map { DiscussionUiState(it) }
         return copy(
             searchKeyword = keyword,
-            latestDiscussions = discussion,
+            latestDiscussions = discussion.toSet(),
             latestPage = PageInfo.EMPTY,
             loadBySearch = true,
         )
@@ -54,12 +54,13 @@ data class DiscussionsUiState(
         createdDiscussion: List<Discussion>,
         participatedDiscussion: List<Discussion>,
     ): DiscussionsUiState {
-        val created = createdDiscussion.take(MY_DISCUSSION_SIZE).map { DiscussionUiState(it) }
-        val participated = participatedDiscussion.take(MY_DISCUSSION_SIZE).map { DiscussionUiState(it) }
+        val created = handleMyDiscussionForVisible(createdDiscussion)
+        val participated = handleMyDiscussionForVisible(participatedDiscussion)
 
         val updatedList =
             buildList {
                 if (created.isNotEmpty()) add(MyDiscussionItems.CreatedDiscussionItem(created))
+
                 if (participated.isNotEmpty()) {
                     if (created.isNotEmpty()) add(MyDiscussionItems.DividerItem)
                     add(MyDiscussionItems.ParticipatedDiscussionItem(participated))
@@ -69,9 +70,19 @@ data class DiscussionsUiState(
         return copy(myDiscussions = updatedList)
     }
 
-    fun addLatestDiscussion(page: LatestDiscussionPage): DiscussionsUiState {
+    private fun handleMyDiscussionForVisible(discussion: List<Discussion>): List<DiscussionUiState> =
+        discussion
+            .takeLast(MY_DISCUSSION_SIZE)
+            .map { DiscussionUiState(it) }
+            .reversed()
+
+    fun addLatestDiscussion(
+        page: LatestDiscussionPage,
+        reload: Boolean,
+    ): DiscussionsUiState {
         val newDiscussion = latestDiscussions.toMutableList()
         if (loadBySearch) newDiscussion.clear()
+        if (!reload) newDiscussion.clear()
 
         val discussion = page.discussions.map { it.toUiState() }
         val pageInfo = page.pageInfo
@@ -81,7 +92,7 @@ data class DiscussionsUiState(
         val newLatestPage = latestPage.copy(pageInfo.hasNext, pageInfo.nextCursor)
 
         return copy(
-            latestDiscussions = newDiscussion,
+            latestDiscussions = newDiscussion.toSet(),
             latestPage = newLatestPage,
             loadBySearch = false,
         )
@@ -91,8 +102,9 @@ data class DiscussionsUiState(
         val tempDiscussion = hotDiscussionItems.toMutableList()
         val activatedIndex = HotDiscussionItems.ViewType.ACTIVATED.sequence
         if (activatedIndex >= tempDiscussion.size) return this
+
         val activatedItem =
-            tempDiscussion.getOrNull(activatedIndex) as? HotDiscussionItems.ActivatedItem
+            tempDiscussion.get(activatedIndex) as? HotDiscussionItems.ActivatedItem
                 ?: return this
         val currentActivatedDiscussion = activatedItem.items.toMutableList()
 

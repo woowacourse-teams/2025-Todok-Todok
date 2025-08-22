@@ -10,9 +10,9 @@ import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentParticipatedDiscussionsRoomBinding
 import com.team.todoktodok.presentation.core.ext.getParcelableArrayListCompat
 import com.team.todoktodok.presentation.view.discussiondetail.DiscussionDetailActivity
-import com.team.todoktodok.presentation.view.discussions.toUiState
+import com.team.todoktodok.presentation.view.discussions.DiscussionUiState
 import com.team.todoktodok.presentation.view.profile.created.adapter.UserDiscussionAdapter
-import com.team.todoktodok.presentation.view.serialization.SerializationMemberDiscussion
+import com.team.todoktodok.presentation.view.serialization.SerializationDiscussion
 
 class ParticipatedDiscussionsRoomFragment : Fragment(R.layout.fragment_participated_discussions_room) {
     private var _binding: FragmentParticipatedDiscussionsRoomBinding? = null
@@ -41,7 +41,7 @@ class ParticipatedDiscussionsRoomFragment : Fragment(R.layout.fragment_participa
         discussionAdapter = UserDiscussionAdapter(userDiscussionAdapterHandler)
 
         val discussions =
-            arguments?.getParcelableArrayListCompat<SerializationMemberDiscussion>(
+            arguments?.getParcelableArrayListCompat<SerializationDiscussion>(
                 ARG_PARTICIPATED_MEMBER_DISCUSSIONS,
             ) ?: emptyList()
 
@@ -65,9 +65,9 @@ class ParticipatedDiscussionsRoomFragment : Fragment(R.layout.fragment_participa
         }
     }
 
-    private fun showParticipatedDiscussions(discussions: List<SerializationMemberDiscussion>) {
+    private fun showParticipatedDiscussions(discussions: List<SerializationDiscussion>) {
         with(binding) {
-            val participatedDiscussions = discussions.map { discussion -> discussion.toDomain().toUiState() }
+            val participatedDiscussions = discussions.map { discussion -> DiscussionUiState(discussion.toDomain()) }
             rvDiscussions.visibility = View.VISIBLE
             rvDiscussions.adapter = discussionAdapter
             discussionAdapter.submitList(participatedDiscussions)
@@ -105,7 +105,7 @@ class ParticipatedDiscussionsRoomFragment : Fragment(R.layout.fragment_participa
     companion object {
         private const val ARG_PARTICIPATED_MEMBER_DISCUSSIONS = "participated_member_discussions"
 
-        fun newInstance(discussions: List<SerializationMemberDiscussion>): ParticipatedDiscussionsRoomFragment =
+        fun newInstance(discussions: List<SerializationDiscussion>): ParticipatedDiscussionsRoomFragment =
             ParticipatedDiscussionsRoomFragment().apply {
                 arguments = bundleOf(ARG_PARTICIPATED_MEMBER_DISCUSSIONS to ArrayList(discussions))
             }

@@ -27,7 +27,7 @@ import com.team.todoktodok.presentation.view.profile.adapter.ProfileItems
 import com.team.todoktodok.presentation.view.profile.vm.ProfileViewModel
 import com.team.todoktodok.presentation.view.profile.vm.ProfileViewModelFactory
 import com.team.todoktodok.presentation.view.serialization.SerializationBook
-import com.team.todoktodok.presentation.view.serialization.SerializationMemberDiscussion
+import com.team.todoktodok.presentation.view.serialization.SerializationDiscussion
 import com.team.todoktodok.presentation.view.setting.SettingActivity
 
 class ProfileActivity : AppCompatActivity() {
@@ -122,8 +122,8 @@ class ProfileActivity : AppCompatActivity() {
         binding: ActivityProfileBinding,
         profileItems: List<ProfileItems>,
         activatedBooks: List<SerializationBook>,
-        createdDiscussions: List<SerializationMemberDiscussion>,
-        participatedDiscussions: List<SerializationMemberDiscussion>,
+        createdDiscussions: List<SerializationDiscussion>,
+        participatedDiscussions: List<SerializationDiscussion>,
         initialTab: UserProfileTab,
     ) {
         val viewPagerAdapter =
