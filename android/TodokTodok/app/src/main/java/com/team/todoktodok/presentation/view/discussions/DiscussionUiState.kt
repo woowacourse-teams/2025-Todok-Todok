@@ -3,10 +3,8 @@ package com.team.todoktodok.presentation.view.discussions
 import com.team.domain.model.Discussion
 import com.team.domain.model.active.ActivatedDiscussion
 import com.team.domain.model.latest.LatestDiscussion
-import com.team.domain.model.member.MemberDiscussion
 import com.team.domain.model.member.Nickname
 import com.team.domain.model.member.User
-import com.team.todoktodok.data.core.ext.toLocalDateTime
 
 data class DiscussionUiState(
     val item: Discussion,

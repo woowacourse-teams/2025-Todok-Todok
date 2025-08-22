@@ -2,7 +2,6 @@ package com.team.todoktodok.presentation.view.profile
 
 import com.team.domain.model.Book
 import com.team.domain.model.Discussion
-import com.team.domain.model.member.MemberDiscussion
 import com.team.domain.model.member.MemberId
 import com.team.domain.model.member.Profile
 import com.team.todoktodok.presentation.view.profile.adapter.ProfileItems

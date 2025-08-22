@@ -11,7 +11,6 @@ import com.team.todoktodok.databinding.FragmentParticipatedDiscussionsRoomBindin
 import com.team.todoktodok.presentation.core.ext.getParcelableArrayListCompat
 import com.team.todoktodok.presentation.view.discussiondetail.DiscussionDetailActivity
 import com.team.todoktodok.presentation.view.discussions.DiscussionUiState
-import com.team.todoktodok.presentation.view.discussions.toUiState
 import com.team.todoktodok.presentation.view.profile.created.adapter.UserDiscussionAdapter
 import com.team.todoktodok.presentation.view.serialization.SerializationDiscussion
 

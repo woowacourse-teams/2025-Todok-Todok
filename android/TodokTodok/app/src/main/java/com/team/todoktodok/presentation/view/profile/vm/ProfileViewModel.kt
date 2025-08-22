@@ -10,7 +10,6 @@ import com.team.domain.model.Support
 import com.team.domain.model.exception.NetworkResult
 import com.team.domain.model.exception.onFailure
 import com.team.domain.model.exception.onSuccess
-import com.team.domain.model.member.MemberDiscussion
 import com.team.domain.model.member.MemberDiscussionType
 import com.team.domain.model.member.MemberId
 import com.team.domain.model.member.MemberId.Companion.MemberId

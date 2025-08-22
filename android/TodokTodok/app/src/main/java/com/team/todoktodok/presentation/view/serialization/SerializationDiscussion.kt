@@ -2,7 +2,6 @@ package com.team.todoktodok.presentation.view.serialization
 
 import android.os.Parcelable
 import com.team.domain.model.Discussion
-import com.team.domain.model.member.MemberDiscussion
 import kotlinx.parcelize.Parcelize
 import java.time.LocalDateTime
 

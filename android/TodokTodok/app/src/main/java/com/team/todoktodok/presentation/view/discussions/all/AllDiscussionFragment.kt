@@ -1,7 +1,9 @@
 package com.team.todoktodok.presentation.view.discussions.all
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.team.todoktodok.App
@@ -16,6 +18,8 @@ import com.team.todoktodok.presentation.view.discussions.vm.DiscussionsViewModel
 import com.team.todoktodok.presentation.view.discussions.vm.DiscussionsViewModelFactory
 
 class AllDiscussionFragment : Fragment(R.layout.fragment_all_discussion) {
+    private var _binding: FragmentAllDiscussionBinding? = null
+    val binding get() = _binding!!
     private val discussionAdapter: DiscussionAdapter by lazy {
         DiscussionAdapter(handler = adapterHandler)
     }
@@ -27,13 +31,19 @@ class AllDiscussionFragment : Fragment(R.layout.fragment_all_discussion) {
         )
     }
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View? {
+        _binding = FragmentAllDiscussionBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
     ) {
-        val binding = FragmentAllDiscussionBinding.bind(view)
-
-        viewModel.loadLatestDiscussions()
         initView(binding)
         setUpUiState(binding)
         setUpUiEvent(binding)
@@ -48,13 +58,13 @@ class AllDiscussionFragment : Fragment(R.layout.fragment_all_discussion) {
 
     private fun setUpUiState(binding: FragmentAllDiscussionBinding) {
         viewModel.uiState.observe(viewLifecycleOwner) { value ->
-            discussionAdapter.submitList(value.latestDiscussions)
+            discussionAdapter.submitList(value.latestDiscussions.toList())
 
             if (value.loadBySearch) {
                 binding.rvDiscussions.clearOnScrollEndListener()
             } else {
                 binding.rvDiscussions.addOnScrollEndListener {
-                    viewModel.loadLatestDiscussions()
+                    viewModel.loadLatestDiscussions(false)
                 }
             }
         }
@@ -80,6 +90,12 @@ class AllDiscussionFragment : Fragment(R.layout.fragment_all_discussion) {
     private fun displayResultsView(binding: FragmentAllDiscussionBinding) {
         binding.tvNoResult.visibility = View.GONE
         binding.rvDiscussions.visibility = View.VISIBLE
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadLatestDiscussions(true)
+        binding.rvDiscussions.scrollToPosition(0)
     }
 
     private fun displayNoResultsView(binding: FragmentAllDiscussionBinding) {

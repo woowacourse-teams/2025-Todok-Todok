@@ -62,16 +62,16 @@ class DiscussionsViewModel(
             }
         }
 
-    fun loadLatestDiscussions() {
+    fun loadLatestDiscussions(callByTab: Boolean) {
         val state = _uiState.value ?: return
         if (!state.latestPageHasNext) return
 
-        val cursor = state.latestPage.nextCursor
+        val cursor = if (callByTab) null else state.latestPage.nextCursor
         if (state.latestPageHasNext) {
             withLoading {
                 when (val result = discussionRepository.getLatestDiscussions(cursor = cursor)) {
                     is NetworkResult.Success -> {
-                        _uiState.value = _uiState.value?.addLatestDiscussion(result.data)
+                        _uiState.value = _uiState.value?.addLatestDiscussion(result.data, !callByTab)
                     }
 
                     is NetworkResult.Failure -> {
