@@ -72,7 +72,7 @@ class UserInformationViewHolder private constructor(
             tvNickname.text = content.nickname
 
             val message =
-                if (content.message.isNullOrEmpty()) {
+                if (content.message.isNullOrEmpty() && item.isMyProfile) {
                     itemView.context.getString(R.string.profile_message_placeholder)
                 } else {
                     content.message
