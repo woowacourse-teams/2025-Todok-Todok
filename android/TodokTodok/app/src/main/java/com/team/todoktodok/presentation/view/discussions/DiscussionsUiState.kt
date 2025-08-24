@@ -5,11 +5,11 @@ import com.team.domain.model.active.ActivatedDiscussionPage
 import com.team.domain.model.latest.LatestDiscussionPage
 import com.team.domain.model.latest.PageInfo
 import com.team.todoktodok.presentation.view.discussions.hot.HotDiscussionUiState
-import com.team.todoktodok.presentation.view.discussions.my.adapter.MyDiscussionItems
+import com.team.todoktodok.presentation.view.discussions.my.MyDiscussionUiState
 
 data class DiscussionsUiState(
     val hotDiscussion: HotDiscussionUiState = HotDiscussionUiState(),
-    val myDiscussions: List<MyDiscussionItems> = listOf(),
+    val myDiscussion: MyDiscussionUiState = MyDiscussionUiState(),
     val latestDiscussions: Set<DiscussionUiState> = emptySet(),
     val latestPage: PageInfo = PageInfo.EMPTY,
     val searchKeyword: String = EMPTY_SEARCH_KEYWORD,
@@ -40,28 +40,10 @@ data class DiscussionsUiState(
     fun addMyDiscussion(
         createdDiscussion: List<Discussion>,
         participatedDiscussion: List<Discussion>,
-    ): DiscussionsUiState {
-        val created = handleMyDiscussionForVisible(createdDiscussion)
-        val participated = handleMyDiscussionForVisible(participatedDiscussion)
-
-        val updatedList =
-            buildList {
-                if (created.isNotEmpty()) add(MyDiscussionItems.CreatedDiscussionItem(created))
-
-                if (participated.isNotEmpty()) {
-                    if (created.isNotEmpty()) add(MyDiscussionItems.DividerItem)
-                    add(MyDiscussionItems.ParticipatedDiscussionItem(participated))
-                }
-            }
-
-        return copy(myDiscussions = updatedList)
-    }
-
-    private fun handleMyDiscussionForVisible(discussion: List<Discussion>): List<DiscussionUiState> =
-        discussion
-            .takeLast(MY_DISCUSSION_SIZE)
-            .map { DiscussionUiState(it) }
-            .reversed()
+    ): DiscussionsUiState =
+        copy(
+            myDiscussion = myDiscussion.add(createdDiscussion, participatedDiscussion),
+        )
 
     fun addLatestDiscussion(
         page: LatestDiscussionPage,
@@ -90,7 +72,6 @@ data class DiscussionsUiState(
     fun toggleLoading() = copy(isLoading = !isLoading)
 
     companion object {
-        private const val MY_DISCUSSION_SIZE = 3
         private const val EMPTY_SEARCH_KEYWORD = ""
     }
 }

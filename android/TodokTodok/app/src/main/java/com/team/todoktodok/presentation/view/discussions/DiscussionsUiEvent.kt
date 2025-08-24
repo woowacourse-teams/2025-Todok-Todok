@@ -3,11 +3,7 @@ package com.team.todoktodok.presentation.view.discussions
 import com.team.domain.model.exception.TodokTodokExceptions
 
 sealed interface DiscussionsUiEvent {
-    data object ShowNotHasMyDiscussions : DiscussionsUiEvent
-
     data object ShowNotHasAllDiscussions : DiscussionsUiEvent
-
-    data object ShowHasMyDiscussions : DiscussionsUiEvent
 
     data object ShowHasAllDiscussions : DiscussionsUiEvent
 
