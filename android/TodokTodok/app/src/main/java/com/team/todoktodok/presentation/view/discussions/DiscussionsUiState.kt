@@ -4,15 +4,14 @@ import com.team.domain.model.Discussion
 import com.team.domain.model.active.ActivatedDiscussionPage
 import com.team.domain.model.latest.LatestDiscussionPage
 import com.team.domain.model.latest.PageInfo
-import com.team.todoktodok.presentation.view.discussions.hot.adapter.HotDiscussionItems
+import com.team.todoktodok.presentation.view.discussions.hot.HotDiscussionUiState
 import com.team.todoktodok.presentation.view.discussions.my.adapter.MyDiscussionItems
 
 data class DiscussionsUiState(
-    val hotDiscussionItems: List<HotDiscussionItems> = emptyList(),
+    val hotDiscussion: HotDiscussionUiState = HotDiscussionUiState(),
     val myDiscussions: List<MyDiscussionItems> = listOf(),
     val latestDiscussions: Set<DiscussionUiState> = emptySet(),
     val latestPage: PageInfo = PageInfo.EMPTY,
-    val activatedPage: PageInfo = PageInfo.EMPTY,
     val searchKeyword: String = EMPTY_SEARCH_KEYWORD,
     val loadBySearch: Boolean = false,
     val isLoading: Boolean = false,
@@ -31,24 +30,12 @@ data class DiscussionsUiState(
     }
 
     fun addHotDiscussion(
-        hotDiscussions: List<Discussion>,
+        newItems: List<Discussion>,
         activatedDiscussion: ActivatedDiscussionPage,
-    ): DiscussionsUiState {
-        val hotDiscussion =
-            buildList {
-                val popularItems = hotDiscussions.map { DiscussionUiState(it, true) }
-                val activatedItems = activatedDiscussion.data.map { it.toUiState() }
+    ): DiscussionsUiState = copy(hotDiscussion = hotDiscussion.add(newItems, activatedDiscussion))
 
-                add(HotDiscussionItems.PopularItem(popularItems))
-                add(HotDiscussionItems.ActivatedHeaderItem)
-                add(HotDiscussionItems.ActivatedItem(activatedItems))
-            }
-
-        return copy(
-            hotDiscussionItems = hotDiscussion,
-            activatedPage = activatedDiscussion.pageInfo,
-        )
-    }
+    fun appendActivatedDiscussion(page: ActivatedDiscussionPage): DiscussionsUiState =
+        copy(hotDiscussion = hotDiscussion.appendActivatedDiscussion(page))
 
     fun addMyDiscussion(
         createdDiscussion: List<Discussion>,
@@ -95,26 +82,6 @@ data class DiscussionsUiState(
             latestDiscussions = newDiscussion.toSet(),
             latestPage = newLatestPage,
             loadBySearch = false,
-        )
-    }
-
-    fun addActivatedDiscussion(page: ActivatedDiscussionPage): DiscussionsUiState {
-        val tempDiscussion = hotDiscussionItems.toMutableList()
-        val activatedIndex = HotDiscussionItems.ViewType.ACTIVATED.sequence
-        if (activatedIndex >= tempDiscussion.size) return this
-
-        val activatedItem =
-            tempDiscussion.get(activatedIndex) as? HotDiscussionItems.ActivatedItem
-                ?: return this
-        val currentActivatedDiscussion = activatedItem.items.toMutableList()
-
-        currentActivatedDiscussion.addAll(page.data.map { it.toUiState() })
-
-        tempDiscussion[activatedIndex] =
-            HotDiscussionItems.ActivatedItem(currentActivatedDiscussion)
-        return copy(
-            hotDiscussionItems = tempDiscussion,
-            activatedPage = page.pageInfo,
         )
     }
 

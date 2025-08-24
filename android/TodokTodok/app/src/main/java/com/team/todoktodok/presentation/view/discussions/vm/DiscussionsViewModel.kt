@@ -110,7 +110,7 @@ class DiscussionsViewModel(
         }
 
     fun loadActivatedDiscussions() {
-        val activatedPage = _uiState.value?.activatedPage
+        val activatedPage = _uiState.value?.hotDiscussion?.activatedPage
         val cursor = activatedPage?.nextCursor ?: return
         if (!activatedPage.hasNext) return
 
@@ -118,7 +118,7 @@ class DiscussionsViewModel(
             discussionRepository
                 .getActivatedDiscussion(cursor = cursor)
                 .onSuccess {
-                    _uiState.value = _uiState.value?.addActivatedDiscussion(it)
+                    _uiState.value = _uiState.value?.appendActivatedDiscussion(it)
                 }.onFailure {
                     onUiEvent(DiscussionsUiEvent.ShowErrorMessage(it))
                 }

@@ -48,7 +48,7 @@ class HotDiscussionFragment : Fragment(R.layout.fragment_hot_discussion) {
 
     private fun setupUiState() {
         viewModel.uiState.observe(viewLifecycleOwner) { value ->
-            hotDiscussionAdapter.submitList(value.hotDiscussionItems)
+            hotDiscussionAdapter.submitList(value.hotDiscussion.items)
         }
     }
 
