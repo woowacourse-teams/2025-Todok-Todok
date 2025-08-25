@@ -184,19 +184,9 @@ class DiscussionsActivity : AppCompatActivity() {
         val selectedFilter = DiscussionFilter.entries[index]
 
         when (selectedFilter) {
-            DiscussionFilter.HOT -> {
-                changeFragment(hotDiscussionFragment)
-                viewModel.loadHotDiscussions()
-            }
-
-            DiscussionFilter.ALL -> {
-                changeFragment(allDiscussionFragment)
-            }
-
-            DiscussionFilter.MINE -> {
-                changeFragment(myDiscussionFragment)
-                viewModel.loadMyDiscussions()
-            }
+            DiscussionFilter.HOT -> changeFragment(hotDiscussionFragment)
+            DiscussionFilter.ALL -> changeFragment(allDiscussionFragment)
+            DiscussionFilter.MINE -> changeFragment(myDiscussionFragment)
         }
     }
 
