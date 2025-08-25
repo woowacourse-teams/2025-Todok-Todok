@@ -1,12 +1,13 @@
 package com.team.todoktodok.presentation.view.discussiondetail
 
+import android.app.ComponentCaller
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupWindow
-import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.annotation.StringRes
@@ -24,20 +25,25 @@ import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.A
 import com.team.todoktodok.presentation.core.component.CommonDialog
 import com.team.todoktodok.presentation.core.component.ReportDialog
 import com.team.todoktodok.presentation.core.ext.extractSubtitle
+import com.team.todoktodok.presentation.core.ext.getParcelableCompat
 import com.team.todoktodok.presentation.core.ext.loadCircleImage
 import com.team.todoktodok.presentation.core.ext.loadImage
 import com.team.todoktodok.presentation.core.ext.registerPositiveResultListener
 import com.team.todoktodok.presentation.core.ext.registerReportResultListener
 import com.team.todoktodok.presentation.core.ext.toRelativeString
 import com.team.todoktodok.presentation.view.discussion.create.CreateDiscussionRoomActivity
-import com.team.todoktodok.presentation.view.discussion.create.SerializationCreateDiscussionRoomMode.Edit
+import com.team.todoktodok.presentation.view.discussion.create.SerializationCreateDiscussionRoomMode
 import com.team.todoktodok.presentation.view.discussiondetail.comment.CommentBottomSheet
 import com.team.todoktodok.presentation.view.discussiondetail.comments.CommentsFragment
 import com.team.todoktodok.presentation.view.discussiondetail.vm.DiscussionDetailViewModel
 import com.team.todoktodok.presentation.view.discussiondetail.vm.DiscussionDetailViewModel.Companion.KEY_DISCUSSION_ID
+import com.team.todoktodok.presentation.view.discussiondetail.vm.DiscussionDetailViewModel.Companion.KEY_MODE
 import com.team.todoktodok.presentation.view.discussiondetail.vm.DiscussionDetailViewModelFactory
-import com.team.todoktodok.presentation.view.discussions.BaseDiscussionsFragment.Companion.DELETE_DISCUSSION_ID
+import com.team.todoktodok.presentation.view.discussions.BaseDiscussionsFragment.Companion.EXTRA_DELETE_DISCUSSION_ID
+import com.team.todoktodok.presentation.view.discussions.BaseDiscussionsFragment.Companion.EXTRA_MODIFIED_DISCUSSION
+import com.team.todoktodok.presentation.view.discussions.DiscussionsActivity
 import com.team.todoktodok.presentation.view.profile.ProfileActivity
+import com.team.todoktodok.presentation.view.serialization.SerializationDiscussion
 
 class DiscussionDetailActivity : AppCompatActivity() {
     private val viewModel by viewModels<DiscussionDetailViewModel> {
@@ -86,12 +92,19 @@ class DiscussionDetailActivity : AppCompatActivity() {
             )
             insets
         }
+        val callback =
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    viewModel.onFinishEvent()
+                }
+            }
+        onBackPressedDispatcher.addCallback(this, callback)
     }
 
     private fun setupOnClick() {
         with(binding) {
             ivDiscussionDetailBack.setOnClickListener {
-                navigateUp()
+                viewModel.onFinishEvent()
             }
             ivComment.setOnClickListener {
                 viewModel.showComments()
@@ -206,51 +219,78 @@ class DiscussionDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun handleEvent(discussionDetailUiEvent: DiscussionDetailUiEvent) {
-        when (discussionDetailUiEvent) {
-            is DiscussionDetailUiEvent.ShowComments -> showComments(discussionDetailUiEvent.discussionId)
-            is DiscussionDetailUiEvent.DeleteDiscussion -> moveToDiscussions(discussionDetailUiEvent.discussionId)
-            is DiscussionDetailUiEvent.UpdateDiscussion -> {
-                val discussionId = discussionDetailUiEvent.discussionId
-                val intent =
-                    CreateDiscussionRoomActivity.Intent(
-                        this@DiscussionDetailActivity,
-                        Edit(discussionId),
-                    )
+    private fun handleEvent(event: DiscussionDetailUiEvent) {
+        when (event) {
+            is DiscussionDetailUiEvent.ShowComments ->
+                showComments(event.discussionId)
+
+            is DiscussionDetailUiEvent.DeleteDiscussion ->
+                moveToDiscussionsWithDeletedDiscussionId(event.discussionId)
+
+            is DiscussionDetailUiEvent.UpdateDiscussion ->
+                moveToCreateDiscussion(event.discussionId)
+
+            is DiscussionDetailUiEvent.NavigateToProfile ->
+                moveToProfile(memberId = event.userId)
+
+            is DiscussionDetailUiEvent.ShowErrorMessage ->
+                showSnackBar(messageConverter(event.exceptions))
+
+            DiscussionDetailUiEvent.ShowReportDiscussionSuccessMessage ->
+                showSnackBar(R.string.all_report_discussion_success)
+
+            is DiscussionDetailUiEvent.NavigateToDiscussionsWithResult -> {
+                moveToDiscussionsWithResult(event.mode, event.discussion)
+            }
+        }
+    }
+
+    private fun moveToDiscussionsWithDeletedDiscussionId(discussionId: Long) {
+        val resultIntent = Intent().putExtra(EXTRA_DELETE_DISCUSSION_ID, discussionId)
+        setResult(RESULT_OK, resultIntent)
+        finish()
+    }
+
+    private fun moveToDiscussionsWithResult(
+        mode: SerializationCreateDiscussionRoomMode?,
+        discussion: SerializationDiscussion,
+    ) {
+        when (mode) {
+            is SerializationCreateDiscussionRoomMode.Create -> {
+                val intent = DiscussionsActivity.Intent(this)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 startActivity(intent)
                 finish()
             }
 
-            is DiscussionDetailUiEvent.NavigateToProfile -> {
-                navigateToProfile(memberId = discussionDetailUiEvent.userId)
+            is SerializationCreateDiscussionRoomMode.Edit -> {
+                val resultIntent = Intent().putExtra(EXTRA_MODIFIED_DISCUSSION, discussion)
+                setResult(RESULT_OK, resultIntent)
+                finish()
             }
 
-            is DiscussionDetailUiEvent.ShowErrorMessage ->
-                AlertSnackBar(
-                    binding.root,
-                    messageConverter(
-                        discussionDetailUiEvent.exceptions,
-                    ),
-                ).show()
-
-            DiscussionDetailUiEvent.ShowReportDiscussionSuccessMessage ->
-                showShortToast(R.string.all_report_discussion_success)
+            else -> finish()
         }
     }
 
-    private fun moveToDiscussions(discussionId: Long) {
-        val extra = Intent().putExtra(DELETE_DISCUSSION_ID, discussionId)
-        setResult(RESULT_OK, extra)
-        finish()
+    private fun moveToCreateDiscussion(discussionId: Long) {
+        val intent =
+            CreateDiscussionRoomActivity.Intent(
+                this@DiscussionDetailActivity,
+                SerializationCreateDiscussionRoomMode.Edit(discussionId),
+            )
+        startActivity(intent)
     }
 
-    private fun navigateUp() {
-        onBackPressedDispatcher.onBackPressed()
-    }
-
-    private fun navigateToProfile(memberId: Long) {
+    private fun moveToProfile(memberId: Long) {
         val intent = ProfileActivity.Intent(this, memberId)
         startActivity(intent)
+    }
+
+    private fun showSnackBar(
+        @StringRes message: Int,
+    ) {
+        AlertSnackBar(binding.root, message).show()
     }
 
     private fun showComments(discussionId: Long) {
@@ -276,12 +316,24 @@ class DiscussionDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun showShortToast(
-        @StringRes resId: Int,
+    private fun handleNewIntent(intent: Intent) {
+        intent
+            .getParcelableCompat<SerializationCreateDiscussionRoomMode>(KEY_MODE)
+            ?.let { viewModel.fetchMode(it) }
+        viewModel.reloadDiscussion()
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        handleNewIntent(intent)
+    }
+
+    override fun onNewIntent(
+        intent: Intent,
+        caller: ComponentCaller,
     ) {
-        Toast
-            .makeText(this, resId, Toast.LENGTH_SHORT)
-            .show()
+        super.onNewIntent(intent, caller)
+        handleNewIntent(intent)
     }
 
     companion object {
@@ -293,10 +345,11 @@ class DiscussionDetailActivity : AppCompatActivity() {
         fun Intent(
             context: Context,
             discussionId: Long,
+            mode: SerializationCreateDiscussionRoomMode? = null,
         ): Intent =
-            Intent(context, DiscussionDetailActivity::class.java).putExtra(
-                KEY_DISCUSSION_ID,
-                discussionId,
-            )
+            Intent(context, DiscussionDetailActivity::class.java).apply {
+                putExtra(KEY_DISCUSSION_ID, discussionId)
+                mode?.let { putExtra(KEY_MODE, mode) }
+            }
     }
 }

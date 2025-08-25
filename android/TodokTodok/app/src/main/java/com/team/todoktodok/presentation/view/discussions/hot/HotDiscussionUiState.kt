@@ -75,4 +75,44 @@ data class HotDiscussionUiState(
 
         return copy(updatedList, page.pageInfo)
     }
+
+    fun modifyDiscussion(discussion: Discussion): HotDiscussionUiState {
+        val newPopularItems = modifyPopularDiscussion(discussion)
+        val newActivatedItems = modifyActivatedDiscussion(discussion)
+        val hotDiscussion =
+            listOf(newPopularItems, HotDiscussionItems.ActivatedHeaderItem, newActivatedItems)
+        return copy(items = hotDiscussion)
+    }
+
+    private fun modifyActivatedDiscussion(discussion: Discussion): HotDiscussionItems.ActivatedItem {
+        val newItems =
+            items
+                .filterIsInstance<HotDiscussionItems.ActivatedItem>()
+                .firstOrNull()
+                ?.items
+                ?.map {
+                    if (it.discussionId == discussion.id) {
+                        DiscussionUiState(discussion)
+                    } else {
+                        it
+                    }
+                } ?: emptyList()
+        return HotDiscussionItems.ActivatedItem(newItems)
+    }
+
+    private fun modifyPopularDiscussion(discussion: Discussion): HotDiscussionItems.PopularItem {
+        val newItems =
+            items
+                .filterIsInstance<HotDiscussionItems.PopularItem>()
+                .firstOrNull()
+                ?.items
+                ?.map {
+                    if (it.discussionId == discussion.id) {
+                        DiscussionUiState(discussion)
+                    } else {
+                        it
+                    }
+                } ?: emptyList()
+        return HotDiscussionItems.PopularItem(newItems)
+    }
 }

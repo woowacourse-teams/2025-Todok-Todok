@@ -1,10 +1,13 @@
 package com.team.todoktodok.presentation.view.discussions.search
 
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.view.View
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentSearchDiscussionsBinding
 import com.team.todoktodok.presentation.view.discussions.BaseDiscussionsFragment
+import com.team.todoktodok.presentation.view.discussions.DiscussionUiState
 import com.team.todoktodok.presentation.view.discussions.adapter.DiscussionAdapter
 
 class SearchDiscussionsFragment : BaseDiscussionsFragment(R.layout.fragment_search_discussions) {
@@ -19,7 +22,7 @@ class SearchDiscussionsFragment : BaseDiscussionsFragment(R.layout.fragment_sear
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentSearchDiscussionsBinding.bind(view)
         initView(binding)
-        setUpUiState()
+        setUpUiState(binding)
     }
 
     private fun initView(binding: FragmentSearchDiscussionsBinding) {
@@ -29,10 +32,54 @@ class SearchDiscussionsFragment : BaseDiscussionsFragment(R.layout.fragment_sear
         }
     }
 
-    private fun setUpUiState() {
-        viewModel.uiState.observe(viewLifecycleOwner) { value ->
-            discussionAdapter.submitList(value.searchDiscussion.items)
+    private fun setUpUiState(binding: FragmentSearchDiscussionsBinding) =
+        with(binding) {
+            viewModel.uiState.observe(viewLifecycleOwner) { value ->
+                val keyword = value.searchDiscussion.searchKeyword
+
+                if (value.searchDiscussion.items.isEmpty()) {
+                    displayNotHasSearchResultView(binding, keyword)
+                } else {
+                    displaySearchResult(binding, value.searchDiscussion.items)
+                }
+            }
         }
+
+    private fun displayNotHasSearchResultView(
+        binding: FragmentSearchDiscussionsBinding,
+        keyword: String,
+    ) = with(binding) {
+        val highlightKeyword = highlightKeyword(keyword)
+        viewResourceNotFound.show(
+            highlightKeyword,
+            getString(R.string.discussion_no_search_subtitle),
+        )
+        rvDiscussions.visibility = View.GONE
+    }
+
+    private fun displaySearchResult(
+        binding: FragmentSearchDiscussionsBinding,
+        discussions: List<DiscussionUiState>,
+    ) = with(binding) {
+        viewResourceNotFound.hide()
+        rvDiscussions.visibility = View.VISIBLE
+        discussionAdapter.submitList(discussions)
+    }
+
+    private fun highlightKeyword(keyword: String): SpannableString {
+        val title = getString(R.string.discussion_no_search_title, keyword)
+        val spannableTitle = SpannableString(title)
+        val start = title.indexOf(keyword)
+        val end = start + keyword.length
+        spannableTitle.setSpan(
+            ForegroundColorSpan(
+                requireContext().getColor(R.color.green_1A),
+            ),
+            start,
+            end,
+            SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE,
+        )
+        return spannableTitle
     }
 
     private val adapterHandler =

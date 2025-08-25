@@ -35,7 +35,7 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
     private val mode by lazy {
         intent.getParcelableCompat<SerializationCreateDiscussionRoomMode>(
             EXTRA_MODE,
-        )
+        ) ?: throw IllegalStateException(MODE_NOT_EXIST)
     }
     private val viewModel by viewModels<CreateDiscussionRoomViewModel> {
         val repositoryModule = (application as App).container.repositoryModule
@@ -67,7 +67,10 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
         val ensureVisible: (View) -> Unit = { target ->
             scroll.post {
                 val y = target.bottom + (target.parent as View).top
-                scroll.smoothScrollTo(0, maxOf(0, y - scroll.height + scroll.paddingBottom + target.height))
+                scroll.smoothScrollTo(
+                    0,
+                    maxOf(0, y - scroll.height + scroll.paddingBottom + target.height),
+                )
             }
         }
 
@@ -98,7 +101,7 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
         ViewCompat.setWindowInsetsAnimationCallback(
             scroll,
             object : WindowInsetsAnimationCompat.Callback(
-                WindowInsetsAnimationCompat.Callback.DISPATCH_MODE_CONTINUE_ON_SUBTREE,
+                DISPATCH_MODE_CONTINUE_ON_SUBTREE,
             ) {
                 override fun onProgress(
                     insets: WindowInsetsCompat,
@@ -151,7 +154,7 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
             }
             btnCreate.isEnabled = false
             btnBack.setOnClickListener { finish() }
-            btnEdit.setOnClickListener { navigateToSelectBook() }
+            btnEdit.setOnClickListener { moveToSelectBook() }
             etDiscussionRoomTitle.doAfterTextChanged { text: Editable? ->
                 viewModel.updateTitle(text.toString())
             }
@@ -191,7 +194,7 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
         }
     }
 
-    private fun navigateToSelectBook() {
+    private fun moveToSelectBook() {
         val intent = SelectBookActivity.Intent(this@CreateDiscussionRoomActivity)
         startActivity(intent)
         finish()
@@ -257,7 +260,10 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
         viewModel.uiEvent.observe(this@CreateDiscussionRoomActivity) { event ->
             when (event) {
                 is CreateDiscussionUiEvent.NavigateToDiscussionDetail ->
-                    navigateToDiscussionDetail(event.discussionRoomId)
+                    navigateToDiscussionDetail(
+                        event.discussionRoomId,
+                        event.mode,
+                    )
 
                 is CreateDiscussionUiEvent.ShowToast -> {
                     Snackbar
@@ -275,7 +281,11 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
                         dialog.show(supportFragmentManager, CommonDialog.TAG)
                         return@observe
                     }
-                    val dialog = CommonDialog.newInstance(getString(R.string.no_exist_file), getString(R.string.overload))
+                    val dialog =
+                        CommonDialog.newInstance(
+                            getString(R.string.no_exist_file),
+                            getString(R.string.overload),
+                        )
                     dialog.show(supportFragmentManager, CommonDialog.TAG)
                 }
 
@@ -289,19 +299,29 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
         }
     }
 
-    private fun navigateToDiscussionDetail(discussionRoomId: Long) {
+    private fun navigateToDiscussionDetail(
+        discussionRoomId: Long,
+        mode: SerializationCreateDiscussionRoomMode,
+    ) {
         val intent =
-            DiscussionDetailActivity.Intent(
-                this@CreateDiscussionRoomActivity,
-                discussionRoomId,
-            )
+            DiscussionDetailActivity
+                .Intent(
+                    this@CreateDiscussionRoomActivity,
+                    discussionRoomId,
+                    mode,
+                ).apply {
+                    if (mode is SerializationCreateDiscussionRoomMode.Edit) {
+                        flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                    }
+                }
+
         startActivity(intent)
         finish()
     }
 
     private fun hideKeyBoard(view: View) {
         val inputMethodManager: InputMethodManager =
-            this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            this.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
@@ -309,6 +329,7 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
         private const val EXTRA_SELECTED_BOOK = "discussionBook"
         private const val EXTRA_DISCUSSION_ROOM_ID = "discussionRoomId"
         private const val EXTRA_MODE = "mode"
+        private const val MODE_NOT_EXIST = "mode가 존재하지 않습니다."
 
         fun Intent(
             context: Context,
