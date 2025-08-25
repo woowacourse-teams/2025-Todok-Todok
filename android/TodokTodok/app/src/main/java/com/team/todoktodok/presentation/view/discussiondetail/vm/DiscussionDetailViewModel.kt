@@ -19,7 +19,7 @@ import com.team.todoktodok.presentation.view.serialization.toSerialization
 import kotlinx.coroutines.launch
 
 class DiscussionDetailViewModel(
-    savedStateHandle: SavedStateHandle,
+    private val savedStateHandle: SavedStateHandle,
     private val discussionRepository: DiscussionRepository,
     private val tokenRepository: TokenRepository,
 ) : ViewModel() {
@@ -53,6 +53,7 @@ class DiscussionDetailViewModel(
 
     fun fetchMode(mode: SerializationCreateDiscussionRoomMode) {
         this.mode = mode
+        savedStateHandle[KEY_MODE] = mode
     }
 
     fun showComments() {
