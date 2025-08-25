@@ -22,12 +22,11 @@ class AllDiscussionFragment : Fragment(R.layout.fragment_all_discussion) {
     }
 
     fun showLatestDiscussions() {
-        val existing = childFragmentManager.findFragmentByTag(LatestDiscussionsFragment.TAG)
-        if (existing != null) {
-            return
-        }
+        val current = childFragmentManager.findFragmentById(R.id.fcv_all_discussion)
+        if (current is LatestDiscussionsFragment) return
 
         childFragmentManager.commit {
+            setReorderingAllowed(true)
             replace(
                 R.id.fcv_all_discussion,
                 LatestDiscussionsFragment(),
@@ -37,11 +36,11 @@ class AllDiscussionFragment : Fragment(R.layout.fragment_all_discussion) {
     }
 
     fun showSearchResults() {
-        val existing = childFragmentManager.findFragmentByTag(SearchDiscussionsFragment.TAG)
-        if (existing != null) {
-            return
-        }
+        val current = childFragmentManager.findFragmentById(R.id.fcv_all_discussion)
+        if (current is SearchDiscussionsFragment) return
+
         childFragmentManager.commit {
+            setReorderingAllowed(true)
             replace(
                 R.id.fcv_all_discussion,
                 SearchDiscussionsFragment(),
