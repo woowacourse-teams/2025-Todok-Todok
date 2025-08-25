@@ -19,7 +19,7 @@ class LatestDiscussionsFragment : BaseDiscussionsFragment(R.layout.fragment_late
     ) {
         val binding = FragmentLatestDiscussionsBinding.bind(view)
         initView(binding)
-        setUpUiState(binding)
+        setUpUiState()
         viewModel.loadLatestDiscussions()
     }
 
@@ -27,15 +27,15 @@ class LatestDiscussionsFragment : BaseDiscussionsFragment(R.layout.fragment_late
         with(binding) {
             rvDiscussions.adapter = discussionAdapter
             rvDiscussions.setHasFixedSize(true)
+            rvDiscussions.addOnScrollEndListener {
+                viewModel.loadLatestDiscussions()
+            }
         }
     }
 
-    private fun setUpUiState(binding: FragmentLatestDiscussionsBinding) {
+    private fun setUpUiState() {
         viewModel.uiState.observe(viewLifecycleOwner) { value ->
             discussionAdapter.submitList(value.latestDiscussion.items)
-            binding.rvDiscussions.addOnScrollEndListener {
-                viewModel.loadLatestDiscussions()
-            }
         }
     }
 
