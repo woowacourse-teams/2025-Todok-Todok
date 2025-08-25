@@ -51,11 +51,11 @@ class SearchDiscussionsFragment : Fragment(R.layout.fragment_search_discussions)
     private val adapterHandler =
         object : DiscussionAdapter.Handler {
             override fun onItemClick(index: Int) {
-                val discussion = discussionAdapter.currentList[index]
+                val discussionId = discussionAdapter.currentList[index].discussionId
                 startActivity(
                     DiscussionDetailActivity.Intent(
                         requireContext(),
-                        discussion.item.id,
+                        discussionId,
                     ),
                 )
             }

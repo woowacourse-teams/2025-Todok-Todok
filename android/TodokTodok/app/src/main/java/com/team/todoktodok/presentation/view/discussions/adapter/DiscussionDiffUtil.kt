@@ -7,7 +7,7 @@ class DiscussionDiffUtil : DiffUtil.ItemCallback<DiscussionUiState>() {
     override fun areItemsTheSame(
         oldItem: DiscussionUiState,
         newItem: DiscussionUiState,
-    ): Boolean = oldItem.item.id == newItem.item.id
+    ): Boolean = oldItem.discussionId == newItem.discussionId
 
     override fun areContentsTheSame(
         oldItem: DiscussionUiState,

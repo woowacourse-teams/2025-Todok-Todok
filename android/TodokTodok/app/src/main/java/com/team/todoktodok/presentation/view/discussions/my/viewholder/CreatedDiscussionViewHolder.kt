@@ -14,7 +14,7 @@ class CreatedDiscussionViewHolder private constructor(
     private val discussionAdapterHandler: DiscussionAdapter.Handler =
         object : DiscussionAdapter.Handler {
             override fun onItemClick(index: Int) {
-                val discussionId = discussionAdapter.currentList[index].item.id
+                val discussionId = discussionAdapter.currentList[index].discussionId
                 handler.onClickMyCreatedDiscussionItem(discussionId)
             }
         }

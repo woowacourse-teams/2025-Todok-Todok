@@ -7,13 +7,14 @@ import com.team.domain.model.member.Nickname
 import com.team.domain.model.member.User
 
 data class DiscussionUiState(
-    val item: Discussion,
+    private val item: Discussion,
     val opinionVisibility: Boolean = false,
     val writerNicknameVisibility: Boolean = true,
 ) {
     val bookImage: String get() = item.bookImage
     val bookTitle: String get() = item.getBookTitle()
     val bookAuthor: String get() = item.getBookAuthor()
+    val discussionId: Long get() = item.id
     val discussionTitle: String get() = item.discussionTitle
     val discussionOpinion: String get() = item.discussionOpinion
     val writerNickname: String get() = item.writerNickname
