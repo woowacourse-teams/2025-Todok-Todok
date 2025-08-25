@@ -1,8 +1,8 @@
 package com.team.todoktodok.presentation.core.ext
 
-import android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE
 
 fun RecyclerView.addOnScrollEndListener(
     threshold: Int = 3,
