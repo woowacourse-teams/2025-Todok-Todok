@@ -46,7 +46,7 @@ data class HotDiscussionUiState(
                 .filterIsInstance<HotDiscussionItems.PopularItem>()
                 .firstOrNull()
                 ?.items
-                ?.filter { it.discussionId == discussionId } ?: emptyList()
+                ?.filter { it.discussionId != discussionId } ?: emptyList()
         return HotDiscussionItems.PopularItem(newItems)
     }
 
@@ -56,7 +56,7 @@ data class HotDiscussionUiState(
                 .filterIsInstance<HotDiscussionItems.ActivatedItem>()
                 .firstOrNull()
                 ?.items
-                ?.filter { it.discussionId == discussionId } ?: emptyList()
+                ?.filter { it.discussionId != discussionId } ?: emptyList()
         return HotDiscussionItems.ActivatedItem(newItems)
     }
 
