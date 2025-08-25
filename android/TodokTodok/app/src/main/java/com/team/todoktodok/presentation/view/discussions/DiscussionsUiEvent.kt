@@ -8,4 +8,6 @@ sealed interface DiscussionsUiEvent {
     ) : DiscussionsUiEvent
 
     data object ShowSearchResult : DiscussionsUiEvent
+
+    data object ClearSearchResult : DiscussionsUiEvent
 }

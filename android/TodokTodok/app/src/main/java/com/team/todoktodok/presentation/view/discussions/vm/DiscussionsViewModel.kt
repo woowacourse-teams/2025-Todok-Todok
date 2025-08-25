@@ -162,6 +162,8 @@ class DiscussionsViewModel(
     }
 
     fun modifyDiscussion(discussion: SerializationDiscussion) {
+        onUiEvent(DiscussionsUiEvent.ClearSearchResult)
+        clearSearchResult()
         _uiState.value = _uiState.value?.modifyDiscussion(discussion.toDomain())
     }
 

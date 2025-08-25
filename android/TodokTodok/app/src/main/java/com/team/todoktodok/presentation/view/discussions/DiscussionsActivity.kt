@@ -126,6 +126,10 @@ class DiscussionsActivity : AppCompatActivity() {
                     moveToLatestDiscussionTab()
                     allDiscussionFragment.showSearchResults()
                 }
+
+                DiscussionsUiEvent.ClearSearchResult -> {
+                    binding.etSearchDiscussion.text = null
+                }
             }
         }
     }
