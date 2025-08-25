@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupWindow
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.annotation.StringRes
@@ -91,6 +92,13 @@ class DiscussionDetailActivity : AppCompatActivity() {
             )
             insets
         }
+        val callback =
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    viewModel.onFinishEvent()
+                }
+            }
+        onBackPressedDispatcher.addCallback(this, callback)
     }
 
     private fun setupOnClick() {
@@ -260,6 +268,7 @@ class DiscussionDetailActivity : AppCompatActivity() {
                 setResult(RESULT_OK, resultIntent)
                 finish()
             }
+
             else -> finish()
         }
     }
