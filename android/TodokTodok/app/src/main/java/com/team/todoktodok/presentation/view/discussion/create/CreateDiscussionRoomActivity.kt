@@ -257,7 +257,10 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
         viewModel.uiEvent.observe(this@CreateDiscussionRoomActivity) { event ->
             when (event) {
                 is CreateDiscussionUiEvent.NavigateToDiscussionDetail ->
-                    navigateToDiscussionDetail(event.discussionRoomId)
+                    navigateToDiscussionDetail(
+                        event.discussionRoomId,
+                        event.mode,
+                    )
 
                 is CreateDiscussionUiEvent.ShowToast -> {
                     Snackbar
@@ -289,11 +292,15 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
         }
     }
 
-    private fun navigateToDiscussionDetail(discussionRoomId: Long) {
+    private fun navigateToDiscussionDetail(
+        discussionRoomId: Long,
+        mode: SerializationCreateDiscussionRoomMode,
+    ) {
         val intent =
             DiscussionDetailActivity.Intent(
                 this@CreateDiscussionRoomActivity,
                 discussionRoomId,
+                mode,
             )
         startActivity(intent)
         finish()

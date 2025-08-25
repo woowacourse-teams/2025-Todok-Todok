@@ -276,14 +276,6 @@ class DiscussionDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun showShortToast(
-        @StringRes resId: Int,
-    ) {
-        Toast
-            .makeText(this, resId, Toast.LENGTH_SHORT)
-            .show()
-    }
-
     companion object {
         private const val DISCUSSION_DELETE_DIALOG_REQUEST_KEY =
             "discussion_delete_dialog_request_key"
@@ -293,10 +285,11 @@ class DiscussionDetailActivity : AppCompatActivity() {
         fun Intent(
             context: Context,
             discussionId: Long,
+            mode: SerializationCreateDiscussionRoomMode? = null,
         ): Intent =
-            Intent(context, DiscussionDetailActivity::class.java).putExtra(
-                KEY_DISCUSSION_ID,
-                discussionId,
-            )
+            Intent(context, DiscussionDetailActivity::class.java).apply {
+                putExtra(KEY_DISCUSSION_ID, discussionId)
+                mode?.let { putExtra(KEY_MODE, mode) }
+            }
     }
 }

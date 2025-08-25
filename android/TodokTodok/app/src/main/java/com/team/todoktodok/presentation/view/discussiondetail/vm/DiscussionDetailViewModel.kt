@@ -10,6 +10,7 @@ import com.team.domain.repository.DiscussionRepository
 import com.team.domain.repository.TokenRepository
 import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
 import com.team.todoktodok.presentation.core.event.SingleLiveData
+import com.team.todoktodok.presentation.view.discussion.create.SerializationCreateDiscussionRoomMode
 import com.team.todoktodok.presentation.view.discussiondetail.DiscussionDetailUiEvent
 import com.team.todoktodok.presentation.view.discussiondetail.DiscussionDetailUiState
 import com.team.todoktodok.presentation.view.discussiondetail.DiscussionDetailUiState.Companion.INIT_DISCUSSION_DETAIL_UI_STATE
@@ -23,6 +24,9 @@ class DiscussionDetailViewModel(
 ) : ViewModel() {
     private val discussionId =
         savedStateHandle.get<Long>(KEY_DISCUSSION_ID) ?: throw IllegalStateException()
+
+    val mode =
+        savedStateHandle.get<SerializationCreateDiscussionRoomMode>(KEY_MODE)
 
     private val _uiState = MutableLiveData(INIT_DISCUSSION_DETAIL_UI_STATE.copy(isLoading = true))
     val uiState: LiveData<DiscussionDetailUiState> = _uiState
@@ -123,5 +127,6 @@ class DiscussionDetailViewModel(
 
     companion object {
         const val KEY_DISCUSSION_ID = "discussionId"
+        const val KEY_MODE = "mode"
     }
 }
