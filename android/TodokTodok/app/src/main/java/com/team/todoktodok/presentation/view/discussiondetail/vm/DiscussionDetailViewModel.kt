@@ -15,6 +15,7 @@ import com.team.todoktodok.presentation.view.discussiondetail.DiscussionDetailUi
 import com.team.todoktodok.presentation.view.discussiondetail.DiscussionDetailUiState
 import com.team.todoktodok.presentation.view.discussiondetail.DiscussionDetailUiState.Companion.INIT_DISCUSSION_DETAIL_UI_STATE
 import com.team.todoktodok.presentation.view.discussiondetail.model.DiscussionItemUiState
+import com.team.todoktodok.presentation.view.serialization.toSerialization
 import kotlinx.coroutines.launch
 
 class DiscussionDetailViewModel(
@@ -25,8 +26,8 @@ class DiscussionDetailViewModel(
     private val discussionId =
         savedStateHandle.get<Long>(KEY_DISCUSSION_ID) ?: throw IllegalStateException()
 
-    val mode =
-        savedStateHandle.get<SerializationCreateDiscussionRoomMode>(KEY_MODE)
+    var mode = savedStateHandle.get<SerializationCreateDiscussionRoomMode>(KEY_MODE)
+        private set
 
     private val _uiState = MutableLiveData(INIT_DISCUSSION_DETAIL_UI_STATE.copy(isLoading = true))
     val uiState: LiveData<DiscussionDetailUiState> = _uiState
@@ -38,6 +39,20 @@ class DiscussionDetailViewModel(
         viewModelScope.launch {
             loadDiscussionRoom()
         }
+    }
+
+    fun onFinishEvent() {
+        val currentState = _uiState.value ?: return
+        onUiEvent(
+            DiscussionDetailUiEvent.NavigateToDiscussionsWithResult(
+                mode,
+                currentState.discussionItemUiState.discussion.toSerialization(),
+            ),
+        )
+    }
+
+    fun fetchMode(mode: SerializationCreateDiscussionRoomMode) {
+        this.mode = mode
     }
 
     fun showComments() {
