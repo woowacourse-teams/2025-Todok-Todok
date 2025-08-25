@@ -8,7 +8,6 @@ import com.team.todoktodok.App
 import com.team.todoktodok.presentation.view.discussiondetail.DiscussionDetailActivity
 import com.team.todoktodok.presentation.view.discussions.vm.DiscussionsViewModel
 import com.team.todoktodok.presentation.view.discussions.vm.DiscussionsViewModelFactory
-import kotlin.getValue
 
 abstract class BaseDiscussionsFragment(
     @LayoutRes layoutId: Int,
@@ -25,7 +24,7 @@ abstract class BaseDiscussionsFragment(
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             result.data
                 ?.getLongExtra(
-                    DELETE_DISCUSSION_ID,
+                    EXTRA_DELETE_DISCUSSION_ID,
                     DEFAULT_DELETE_DISCUSSION_ID,
                 )?.let {
                     viewModel.removeDiscussion(it)
@@ -33,11 +32,16 @@ abstract class BaseDiscussionsFragment(
         }
 
     protected fun moveToDiscussionDetail(discussionId: Long) {
-        discussionDetailLauncher.launch(DiscussionDetailActivity.Intent(requireContext(), discussionId))
+        discussionDetailLauncher.launch(
+            DiscussionDetailActivity.Intent(
+                requireContext(),
+                discussionId,
+            ),
+        )
     }
 
     companion object {
-        const val DELETE_DISCUSSION_ID = "delete_discussion_id"
+        const val EXTRA_DELETE_DISCUSSION_ID = "delete_discussion_id"
         private const val DEFAULT_DELETE_DISCUSSION_ID = -1L
     }
 }
