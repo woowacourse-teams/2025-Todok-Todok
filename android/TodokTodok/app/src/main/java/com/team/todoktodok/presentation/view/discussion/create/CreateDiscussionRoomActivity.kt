@@ -67,7 +67,10 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
         val ensureVisible: (View) -> Unit = { target ->
             scroll.post {
                 val y = target.bottom + (target.parent as View).top
-                scroll.smoothScrollTo(0, maxOf(0, y - scroll.height + scroll.paddingBottom + target.height))
+                scroll.smoothScrollTo(
+                    0,
+                    maxOf(0, y - scroll.height + scroll.paddingBottom + target.height),
+                )
             }
         }
 
@@ -98,7 +101,7 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
         ViewCompat.setWindowInsetsAnimationCallback(
             scroll,
             object : WindowInsetsAnimationCompat.Callback(
-                WindowInsetsAnimationCompat.Callback.DISPATCH_MODE_CONTINUE_ON_SUBTREE,
+                DISPATCH_MODE_CONTINUE_ON_SUBTREE,
             ) {
                 override fun onProgress(
                     insets: WindowInsetsCompat,
@@ -151,7 +154,7 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
             }
             btnCreate.isEnabled = false
             btnBack.setOnClickListener { finish() }
-            btnEdit.setOnClickListener { navigateToSelectBook() }
+            btnEdit.setOnClickListener { moveToSelectBook() }
             etDiscussionRoomTitle.doAfterTextChanged { text: Editable? ->
                 viewModel.updateTitle(text.toString())
             }
@@ -191,7 +194,7 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
         }
     }
 
-    private fun navigateToSelectBook() {
+    private fun moveToSelectBook() {
         val intent = SelectBookActivity.Intent(this@CreateDiscussionRoomActivity)
         startActivity(intent)
         finish()
@@ -278,7 +281,11 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
                         dialog.show(supportFragmentManager, CommonDialog.TAG)
                         return@observe
                     }
-                    val dialog = CommonDialog.newInstance(getString(R.string.no_exist_file), getString(R.string.overload))
+                    val dialog =
+                        CommonDialog.newInstance(
+                            getString(R.string.no_exist_file),
+                            getString(R.string.overload),
+                        )
                     dialog.show(supportFragmentManager, CommonDialog.TAG)
                 }
 
@@ -308,7 +315,7 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
 
     private fun hideKeyBoard(view: View) {
         val inputMethodManager: InputMethodManager =
-            this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            this.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
