@@ -304,11 +304,17 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
         mode: SerializationCreateDiscussionRoomMode,
     ) {
         val intent =
-            DiscussionDetailActivity.Intent(
-                this@CreateDiscussionRoomActivity,
-                discussionRoomId,
-                mode,
-            )
+            DiscussionDetailActivity
+                .Intent(
+                    this@CreateDiscussionRoomActivity,
+                    discussionRoomId,
+                    mode,
+                ).apply {
+                    if (mode is SerializationCreateDiscussionRoomMode.Edit) {
+                        flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                    }
+                }
+
         startActivity(intent)
         finish()
     }

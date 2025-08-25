@@ -1,5 +1,6 @@
 package com.team.todoktodok.presentation.view.discussiondetail
 
+import android.app.ComponentCaller
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -288,6 +289,14 @@ class DiscussionDetailActivity : AppCompatActivity() {
         ) {
             viewModel.deleteDiscussion()
         }
+    }
+
+    override fun onNewIntent(
+        intent: Intent,
+        caller: ComponentCaller,
+    ) {
+        super.onNewIntent(intent, caller)
+        viewModel.reloadDiscussion()
     }
 
     companion object {
