@@ -62,16 +62,17 @@ class DiscussionsViewModel(
             }
         }
 
-    fun loadLatestDiscussions(callByTab: Boolean) {
+    fun loadLatestDiscussions() {
         val state = _uiState.value ?: return
         if (!state.latestPageHasNext) return
 
-        val cursor = if (callByTab) null else state.latestPage.nextCursor
+        val cursor = state.latestPageNextCursor
+
         if (state.latestPageHasNext) {
             withLoading {
                 when (val result = discussionRepository.getLatestDiscussions(cursor = cursor)) {
                     is NetworkResult.Success -> {
-                        _uiState.value = _uiState.value?.addLatestDiscussion(result.data, !callByTab)
+                        _uiState.value = _uiState.value?.addLatestDiscussion(result.data)
                     }
 
                     is NetworkResult.Failure -> {
@@ -126,7 +127,7 @@ class DiscussionsViewModel(
     }
 
     fun clearKeyword() {
-        _uiState.value = _uiState.value?.copy(searchKeyword = "")
+        _uiState.value = _uiState.value?.clearSearchDiscussion()
     }
 
     private fun withLoading(action: suspend () -> Unit) {
