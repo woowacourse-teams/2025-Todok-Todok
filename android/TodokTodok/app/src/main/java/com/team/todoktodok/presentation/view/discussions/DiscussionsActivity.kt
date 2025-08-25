@@ -122,6 +122,10 @@ class DiscussionsActivity : AppCompatActivity() {
                 is DiscussionsUiEvent.ShowErrorMessage -> {
                     AlertSnackBar(binding.root, messageConverter(event.exception)).show()
                 }
+                DiscussionsUiEvent.ShowSearchResult -> {
+                    moveToLatestDiscussionTab()
+                    allDiscussionFragment.showSearchResults()
+                }
             }
         }
     }
@@ -153,7 +157,7 @@ class DiscussionsActivity : AppCompatActivity() {
 
             etSearchDiscussion.doAfterTextChanged { text ->
                 if (text.isNullOrEmpty()) {
-                    viewModel.clearKeyword()
+                    viewModel.clearSearchResult()
                     allDiscussionFragment.showLatestDiscussions()
                 }
             }
@@ -161,11 +165,16 @@ class DiscussionsActivity : AppCompatActivity() {
 
     private fun triggerSearch() =
         with(binding) {
-            val keyword = etSearchDiscussion.text?.toString()?.trim()
-            if (!keyword.isNullOrEmpty()) {
-                moveToLatestDiscussionTab()
-                allDiscussionFragment.showSearchResults()
-                viewModel.loadSearchedDiscussions(keyword)
+            val newKeyword = etSearchDiscussion.text?.toString()?.trim()
+            val latestKeyword =
+                viewModel.uiState.value
+                    ?.searchDiscussion
+                    ?.searchKeyword
+            val isSameKeyword = newKeyword == latestKeyword
+
+            if (!newKeyword.isNullOrEmpty()) {
+                if (isSameKeyword) return@with
+                viewModel.loadSearchedDiscussions(newKeyword)
                 hideSoftKeyboard()
             } else {
                 AlertSnackBar(
