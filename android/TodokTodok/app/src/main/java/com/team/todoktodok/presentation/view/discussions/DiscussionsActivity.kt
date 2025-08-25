@@ -3,8 +3,10 @@ package com.team.todoktodok.presentation.view.discussions
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -124,11 +126,29 @@ class DiscussionsActivity : AppCompatActivity() {
         }
     }
 
-    private fun initView() =
+    private fun initView() {
+        setupSearchBar()
+        setupTabLayout()
+        setupNavigationButton()
+    }
+
+    private fun setupSearchBar() =
         with(binding) {
-            etSearchDiscussion.setOnEditorActionListener { v, actionId, event ->
-                triggerSearch()
-                true
+            var lastSearchTime = 0L
+
+            etSearchDiscussion.setOnEditorActionListener { _, actionId, event ->
+                if (actionId == EditorInfo.IME_ACTION_SEARCH ||
+                    (actionId == EditorInfo.IME_NULL && event?.keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_DOWN)
+                ) {
+                    val now = System.currentTimeMillis()
+                    if (now - lastSearchTime > SEARCH_DURATION) {
+                        lastSearchTime = now
+                        triggerSearch()
+                    }
+                    true
+                } else {
+                    false
+                }
             }
 
             etSearchDiscussion.doAfterTextChanged { text ->
@@ -136,23 +156,6 @@ class DiscussionsActivity : AppCompatActivity() {
                     viewModel.clearKeyword()
                     allDiscussionFragment.showLatestDiscussions()
                 }
-            }
-
-            tabLayout.addOnTabSelectedListener(
-                object : TabLayout.OnTabSelectedListener {
-                    override fun onTabSelected(tab: TabLayout.Tab?) {
-                        changeTab(tab ?: return)
-                    }
-
-                    override fun onTabUnselected(tab: TabLayout.Tab?) {}
-
-                    override fun onTabReselected(tab: TabLayout.Tab?) {}
-                },
-            )
-
-            ivDiscussionNavigation.setOnClickListener {
-                val intent = SelectBookActivity.Intent(this@DiscussionsActivity)
-                startActivity(intent)
             }
         }
 
@@ -170,6 +173,29 @@ class DiscussionsActivity : AppCompatActivity() {
                     R.string.discussion_search_bar_hint,
                 ).show()
             }
+        }
+
+    private fun setupNavigationButton() =
+        with(binding) {
+            ivDiscussionNavigation.setOnClickListener {
+                val intent = SelectBookActivity.Intent(this@DiscussionsActivity)
+                startActivity(intent)
+            }
+        }
+
+    private fun setupTabLayout() =
+        with(binding) {
+            tabLayout.addOnTabSelectedListener(
+                object : TabLayout.OnTabSelectedListener {
+                    override fun onTabSelected(tab: TabLayout.Tab?) {
+                        changeTab(tab ?: return)
+                    }
+
+                    override fun onTabUnselected(tab: TabLayout.Tab?) {}
+
+                    override fun onTabReselected(tab: TabLayout.Tab?) {}
+                },
+            )
         }
 
     private fun moveToLatestDiscussionTab() =
@@ -236,6 +262,7 @@ class DiscussionsActivity : AppCompatActivity() {
         private const val ALL_DISCUSSION_FRAGMENT_TAG = "ALL"
 
         private const val MY_DISCUSSION_FRAGMENT_TAG = "MY"
+        private const val SEARCH_DURATION = 300
 
         fun Intent(context: Context) = Intent(context, DiscussionsActivity::class.java)
     }
