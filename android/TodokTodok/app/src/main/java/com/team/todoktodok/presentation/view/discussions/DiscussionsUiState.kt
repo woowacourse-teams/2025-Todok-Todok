@@ -35,6 +35,17 @@ data class DiscussionsUiState(
 
     fun addLatestDiscussion(page: LatestDiscussionPage): DiscussionsUiState = copy(latestDiscussion = latestDiscussion.append(page))
 
+    fun modifyDiscussion(discussion: Discussion): DiscussionsUiState {
+        val newHotDiscussion = hotDiscussion.modifyDiscussion(discussion)
+        val newLatestDiscussion = latestDiscussion.modifyDiscussion(discussion)
+        val newSearchDiscussion = searchDiscussion.modifyDiscussion(discussion)
+        return copy(
+            hotDiscussion = newHotDiscussion,
+            latestDiscussion = newLatestDiscussion,
+            searchDiscussion = newSearchDiscussion,
+        )
+    }
+
     fun clearSearchDiscussion() = copy(searchDiscussion = searchDiscussion.clear())
 
     fun removeDiscussion(discussionId: Long): DiscussionsUiState {

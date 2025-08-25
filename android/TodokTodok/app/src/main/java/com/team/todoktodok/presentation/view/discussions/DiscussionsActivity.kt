@@ -3,8 +3,10 @@ package com.team.todoktodok.presentation.view.discussions
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -120,24 +122,82 @@ class DiscussionsActivity : AppCompatActivity() {
                 is DiscussionsUiEvent.ShowErrorMessage -> {
                     AlertSnackBar(binding.root, messageConverter(event.exception)).show()
                 }
+                DiscussionsUiEvent.ShowSearchResult -> {
+                    moveToLatestDiscussionTab()
+                    allDiscussionFragment.showSearchResults()
+                }
+
+                DiscussionsUiEvent.ClearSearchResult -> {
+                    binding.etSearchDiscussion.text = null
+                }
             }
         }
     }
 
-    private fun initView() =
+    private fun initView() {
+        setupSearchBar()
+        setupTabLayout()
+        setupNavigationButton()
+    }
+
+    private fun setupSearchBar() =
         with(binding) {
-            etSearchDiscussion.setOnEditorActionListener { v, actionId, event ->
-                triggerSearch()
-                true
+            var lastSearchTime = 0L
+
+            etSearchDiscussion.setOnEditorActionListener { _, actionId, event ->
+                if (actionId == EditorInfo.IME_ACTION_SEARCH ||
+                    (actionId == EditorInfo.IME_NULL && event?.keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_DOWN)
+                ) {
+                    val now = System.currentTimeMillis()
+                    if (now - lastSearchTime > SEARCH_DURATION) {
+                        lastSearchTime = now
+                        triggerSearch()
+                    }
+                    true
+                } else {
+                    false
+                }
             }
 
             etSearchDiscussion.doAfterTextChanged { text ->
                 if (text.isNullOrEmpty()) {
-                    viewModel.clearKeyword()
+                    viewModel.clearSearchResult()
                     allDiscussionFragment.showLatestDiscussions()
                 }
             }
+        }
 
+    private fun triggerSearch() =
+        with(binding) {
+            val newKeyword = etSearchDiscussion.text?.toString()?.trim()
+            val latestKeyword =
+                viewModel.uiState.value
+                    ?.searchDiscussion
+                    ?.searchKeyword
+            val isSameKeyword = newKeyword == latestKeyword
+
+            if (!newKeyword.isNullOrEmpty()) {
+                if (isSameKeyword) return@with
+                viewModel.loadSearchedDiscussions(newKeyword)
+                hideSoftKeyboard()
+            } else {
+                AlertSnackBar(
+                    root,
+                    R.string.discussion_search_bar_hint,
+                ).show()
+            }
+        }
+
+    private fun setupNavigationButton() =
+        with(binding) {
+            ivDiscussionNavigation.setOnClickListener {
+                val intent = SelectBookActivity.Intent(this@DiscussionsActivity)
+                startActivity(intent)
+            }
+        }
+
+    private fun setupTabLayout() =
+        with(binding) {
             tabLayout.addOnTabSelectedListener(
                 object : TabLayout.OnTabSelectedListener {
                     override fun onTabSelected(tab: TabLayout.Tab?) {
@@ -149,27 +209,6 @@ class DiscussionsActivity : AppCompatActivity() {
                     override fun onTabReselected(tab: TabLayout.Tab?) {}
                 },
             )
-
-            ivDiscussionNavigation.setOnClickListener {
-                val intent = SelectBookActivity.Intent(this@DiscussionsActivity)
-                startActivity(intent)
-            }
-        }
-
-    private fun triggerSearch() =
-        with(binding) {
-            val keyword = etSearchDiscussion.text?.toString()?.trim()
-            if (!keyword.isNullOrEmpty()) {
-                moveToLatestDiscussionTab()
-                allDiscussionFragment.showSearchResults()
-                viewModel.loadSearchedDiscussions(keyword)
-                hideSoftKeyboard()
-            } else {
-                AlertSnackBar(
-                    root,
-                    R.string.discussion_search_bar_hint,
-                ).show()
-            }
         }
 
     private fun moveToLatestDiscussionTab() =
@@ -184,19 +223,9 @@ class DiscussionsActivity : AppCompatActivity() {
         val selectedFilter = DiscussionFilter.entries[index]
 
         when (selectedFilter) {
-            DiscussionFilter.HOT -> {
-                changeFragment(hotDiscussionFragment)
-                viewModel.loadHotDiscussions()
-            }
-
-            DiscussionFilter.ALL -> {
-                changeFragment(allDiscussionFragment)
-            }
-
-            DiscussionFilter.MINE -> {
-                changeFragment(myDiscussionFragment)
-                viewModel.loadMyDiscussions()
-            }
+            DiscussionFilter.HOT -> changeFragment(hotDiscussionFragment)
+            DiscussionFilter.ALL -> changeFragment(allDiscussionFragment)
+            DiscussionFilter.MINE -> changeFragment(myDiscussionFragment)
         }
     }
 
@@ -246,6 +275,7 @@ class DiscussionsActivity : AppCompatActivity() {
         private const val ALL_DISCUSSION_FRAGMENT_TAG = "ALL"
 
         private const val MY_DISCUSSION_FRAGMENT_TAG = "MY"
+        private const val SEARCH_DURATION = 300
 
         fun Intent(context: Context) = Intent(context, DiscussionsActivity::class.java)
     }

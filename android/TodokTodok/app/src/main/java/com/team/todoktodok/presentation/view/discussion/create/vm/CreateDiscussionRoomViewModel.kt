@@ -19,8 +19,6 @@ import com.team.todoktodok.presentation.view.discussion.create.CreateDiscussionU
 import com.team.todoktodok.presentation.view.discussion.create.CreateDiscussionUiState
 import com.team.todoktodok.presentation.view.discussion.create.ErrorCreateDiscussionType
 import com.team.todoktodok.presentation.view.discussion.create.SerializationCreateDiscussionRoomMode
-import com.team.todoktodok.presentation.view.serialization.toSerialization
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
@@ -145,14 +143,14 @@ class CreateDiscussionRoomViewModel(
                     return
                 }
         viewModelScope.launch {
-            if (mode == SerializationCreateDiscussionRoomMode.Draft(book.toSerialization())) {
+            if (mode is SerializationCreateDiscussionRoomMode.Draft) {
                 discussionRepository.deleteDiscussionRoom()
             }
             bookRepository
                 .saveBook(book)
                 .onSuccessSuspend { bookId ->
                     val discussionId =
-                        async(Dispatchers.IO) {
+                        async {
                             discussionRepository.saveDiscussionRoom(
                                 bookId = bookId,
                                 discussionTitle = title,
@@ -162,6 +160,7 @@ class CreateDiscussionRoomViewModel(
                     _uiEvent.setValue(
                         CreateDiscussionUiEvent.NavigateToDiscussionDetail(
                             discussionId.await(),
+                            mode,
                         ),
                     )
                 }.onFailure { exception ->
@@ -219,6 +218,7 @@ class CreateDiscussionRoomViewModel(
                     _uiEvent.setValue(
                         CreateDiscussionUiEvent.NavigateToDiscussionDetail(
                             discussionRoomId,
+                            mode,
                         ),
                     )
                 }.onFailure { exception ->
