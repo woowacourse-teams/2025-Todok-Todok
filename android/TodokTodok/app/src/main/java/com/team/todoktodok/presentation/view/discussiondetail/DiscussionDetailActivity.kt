@@ -36,6 +36,7 @@ import com.team.todoktodok.presentation.view.discussiondetail.comments.CommentsF
 import com.team.todoktodok.presentation.view.discussiondetail.vm.DiscussionDetailViewModel
 import com.team.todoktodok.presentation.view.discussiondetail.vm.DiscussionDetailViewModel.Companion.KEY_DISCUSSION_ID
 import com.team.todoktodok.presentation.view.discussiondetail.vm.DiscussionDetailViewModelFactory
+import com.team.todoktodok.presentation.view.discussions.BaseDiscussionsFragment.Companion.DELETE_DISCUSSION_ID
 import com.team.todoktodok.presentation.view.profile.ProfileActivity
 
 class DiscussionDetailActivity : AppCompatActivity() {
@@ -208,7 +209,7 @@ class DiscussionDetailActivity : AppCompatActivity() {
     private fun handleEvent(discussionDetailUiEvent: DiscussionDetailUiEvent) {
         when (discussionDetailUiEvent) {
             is DiscussionDetailUiEvent.ShowComments -> showComments(discussionDetailUiEvent.discussionId)
-            is DiscussionDetailUiEvent.DeleteDiscussion -> navigateUp()
+            is DiscussionDetailUiEvent.DeleteDiscussion -> moveToDiscussions(discussionDetailUiEvent.discussionId)
             is DiscussionDetailUiEvent.UpdateDiscussion -> {
                 val discussionId = discussionDetailUiEvent.discussionId
                 val intent =
@@ -235,6 +236,12 @@ class DiscussionDetailActivity : AppCompatActivity() {
             DiscussionDetailUiEvent.ShowReportDiscussionSuccessMessage ->
                 showShortToast(R.string.all_report_discussion_success)
         }
+    }
+
+    private fun moveToDiscussions(discussionId: Long) {
+        val extra = Intent().putExtra(DELETE_DISCUSSION_ID, discussionId)
+        setResult(RESULT_OK, extra)
+        finish()
     }
 
     private fun navigateUp() {

@@ -2,28 +2,16 @@ package com.team.todoktodok.presentation.view.discussions.my
 
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
-import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentMyDiscussionBinding
-import com.team.todoktodok.presentation.view.discussiondetail.DiscussionDetailActivity
+import com.team.todoktodok.presentation.view.discussions.BaseDiscussionsFragment
 import com.team.todoktodok.presentation.view.discussions.my.adapter.MyDiscussionAdapter
-import com.team.todoktodok.presentation.view.discussions.vm.DiscussionsViewModel
-import com.team.todoktodok.presentation.view.discussions.vm.DiscussionsViewModelFactory
 import com.team.todoktodok.presentation.view.profile.ProfileActivity
 import com.team.todoktodok.presentation.view.profile.UserProfileTab
 
-class MyDiscussionFragment : Fragment(R.layout.fragment_my_discussion) {
+class MyDiscussionFragment : BaseDiscussionsFragment(R.layout.fragment_my_discussion) {
     private val discussionAdapter: MyDiscussionAdapter by lazy {
         MyDiscussionAdapter(adapterHandler)
-    }
-    private val viewModel: DiscussionsViewModel by activityViewModels {
-        val repositoryModule = (requireActivity().application as App).container.repositoryModule
-        DiscussionsViewModelFactory(
-            repositoryModule.discussionRepository,
-            repositoryModule.memberRepository,
-        )
     }
 
     override fun onViewCreated(
@@ -85,10 +73,6 @@ class MyDiscussionFragment : Fragment(R.layout.fragment_my_discussion) {
                 )
             }
 
-            override fun onClickMyCreatedDiscussionItem(discussionId: Long) {
-                startActivity(DiscussionDetailActivity.Intent(requireContext(), discussionId))
-            }
-
             override fun onClickMyParticipatedDiscussionHeader() {
                 startActivity(
                     ProfileActivity.Intent(
@@ -98,8 +82,12 @@ class MyDiscussionFragment : Fragment(R.layout.fragment_my_discussion) {
                 )
             }
 
+            override fun onClickMyCreatedDiscussionItem(discussionId: Long) {
+                moveToDiscussionDetail(discussionId)
+            }
+
             override fun onClickMyParticipatedDiscussionItem(discussionId: Long) {
-                startActivity(DiscussionDetailActivity.Intent(requireContext(), discussionId))
+                moveToDiscussionDetail(discussionId)
             }
         }
 }

@@ -2,27 +2,14 @@ package com.team.todoktodok.presentation.view.discussions.hot
 
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
-import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentHotDiscussionBinding
 import com.team.todoktodok.presentation.core.ext.addOnScrollEndListener
-import com.team.todoktodok.presentation.view.discussiondetail.DiscussionDetailActivity
+import com.team.todoktodok.presentation.view.discussions.BaseDiscussionsFragment
 import com.team.todoktodok.presentation.view.discussions.hot.adapter.HotDiscussionAdapter
-import com.team.todoktodok.presentation.view.discussions.vm.DiscussionsViewModel
-import com.team.todoktodok.presentation.view.discussions.vm.DiscussionsViewModelFactory
 import kotlin.getValue
 
-class HotDiscussionFragment : Fragment(R.layout.fragment_hot_discussion) {
-    private val viewModel: DiscussionsViewModel by activityViewModels {
-        val repositoryModule = (requireActivity().application as App).container.repositoryModule
-        DiscussionsViewModelFactory(
-            repositoryModule.discussionRepository,
-            repositoryModule.memberRepository,
-        )
-    }
-
+class HotDiscussionFragment : BaseDiscussionsFragment(R.layout.fragment_hot_discussion) {
     private lateinit var hotDiscussionAdapter: HotDiscussionAdapter
 
     override fun onViewCreated(
@@ -55,11 +42,11 @@ class HotDiscussionFragment : Fragment(R.layout.fragment_hot_discussion) {
     private val discussionAdapterHandler =
         object : HotDiscussionAdapter.Handler {
             override fun onClickHotPopularDiscussion(discussionId: Long) {
-                startActivity(DiscussionDetailActivity.Intent(requireContext(), discussionId))
+                moveToDiscussionDetail(discussionId)
             }
 
             override fun onClickHotActivatedDiscussion(discussionId: Long) {
-                startActivity(DiscussionDetailActivity.Intent(requireContext(), discussionId))
+                moveToDiscussionDetail(discussionId)
             }
         }
 }

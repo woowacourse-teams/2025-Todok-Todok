@@ -1,38 +1,17 @@
 package com.team.todoktodok.presentation.view.discussions.latest
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
-import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentLatestDiscussionsBinding
 import com.team.todoktodok.presentation.core.ext.addOnScrollEndListener
-import com.team.todoktodok.presentation.view.discussiondetail.DiscussionDetailActivity
+import com.team.todoktodok.presentation.view.discussions.BaseDiscussionsFragment
 import com.team.todoktodok.presentation.view.discussions.adapter.DiscussionAdapter
-import com.team.todoktodok.presentation.view.discussions.vm.DiscussionsViewModel
-import com.team.todoktodok.presentation.view.discussions.vm.DiscussionsViewModelFactory
 
-class LatestDiscussionsFragment : Fragment(R.layout.fragment_latest_discussions) {
-    private val viewModel: DiscussionsViewModel by activityViewModels {
-        val repositoryModule = (requireActivity().application as App).container.repositoryModule
-        DiscussionsViewModelFactory(
-            repositoryModule.discussionRepository,
-            repositoryModule.memberRepository,
-        )
-    }
-
+class LatestDiscussionsFragment : BaseDiscussionsFragment(R.layout.fragment_latest_discussions) {
     private val discussionAdapter: DiscussionAdapter by lazy {
         DiscussionAdapter(handler = adapterHandler)
     }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View? = super.onCreateView(inflater, container, savedInstanceState)
 
     override fun onViewCreated(
         view: View,
@@ -63,13 +42,8 @@ class LatestDiscussionsFragment : Fragment(R.layout.fragment_latest_discussions)
     private val adapterHandler =
         object : DiscussionAdapter.Handler {
             override fun onItemClick(index: Int) {
-                val discussion = discussionAdapter.currentList[index]
-                startActivity(
-                    DiscussionDetailActivity.Intent(
-                        requireContext(),
-                        discussion.item.id,
-                    ),
-                )
+                val discussionId = discussionAdapter.currentList[index].discussionId
+                moveToDiscussionDetail(discussionId)
             }
         }
 

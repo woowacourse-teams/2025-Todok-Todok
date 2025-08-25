@@ -2,25 +2,12 @@ package com.team.todoktodok.presentation.view.discussions.search
 
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
-import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentSearchDiscussionsBinding
-import com.team.todoktodok.presentation.view.discussiondetail.DiscussionDetailActivity
+import com.team.todoktodok.presentation.view.discussions.BaseDiscussionsFragment
 import com.team.todoktodok.presentation.view.discussions.adapter.DiscussionAdapter
-import com.team.todoktodok.presentation.view.discussions.vm.DiscussionsViewModel
-import com.team.todoktodok.presentation.view.discussions.vm.DiscussionsViewModelFactory
 
-class SearchDiscussionsFragment : Fragment(R.layout.fragment_search_discussions) {
-    private val viewModel: DiscussionsViewModel by activityViewModels {
-        val repositoryModule = (requireActivity().application as App).container.repositoryModule
-        DiscussionsViewModelFactory(
-            repositoryModule.discussionRepository,
-            repositoryModule.memberRepository,
-        )
-    }
-
+class SearchDiscussionsFragment : BaseDiscussionsFragment(R.layout.fragment_search_discussions) {
     private val discussionAdapter: DiscussionAdapter by lazy {
         DiscussionAdapter(handler = adapterHandler)
     }
@@ -52,12 +39,7 @@ class SearchDiscussionsFragment : Fragment(R.layout.fragment_search_discussions)
         object : DiscussionAdapter.Handler {
             override fun onItemClick(index: Int) {
                 val discussionId = discussionAdapter.currentList[index].discussionId
-                startActivity(
-                    DiscussionDetailActivity.Intent(
-                        requireContext(),
-                        discussionId,
-                    ),
-                )
+                moveToDiscussionDetail(discussionId)
             }
         }
 
