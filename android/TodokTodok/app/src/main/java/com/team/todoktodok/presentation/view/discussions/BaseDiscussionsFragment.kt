@@ -33,11 +33,9 @@ abstract class BaseDiscussionsFragment(
                         viewModel.removeDiscussion(deletedId)
                     }
 
-                    runCatching {
-                        val modifiedDiscussion =
-                            data.getParcelableCompat<SerializationDiscussion>(EXTRA_MODIFIED_DISCUSSION)
-                        viewModel.modifyDiscussion(modifiedDiscussion)
-                    }
+                    data
+                        .getParcelableCompat<SerializationDiscussion>(EXTRA_MODIFIED_DISCUSSION)
+                        ?.let { viewModel.modifyDiscussion(it) }
                 }
             }
         }

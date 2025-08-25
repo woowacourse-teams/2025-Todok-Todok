@@ -316,14 +316,24 @@ class DiscussionDetailActivity : AppCompatActivity() {
         }
     }
 
+    private fun handleNewIntent(intent: Intent) {
+        intent
+            .getParcelableCompat<SerializationCreateDiscussionRoomMode>(KEY_MODE)
+            ?.let { viewModel.fetchMode(it) }
+        viewModel.reloadDiscussion()
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        handleNewIntent(intent)
+    }
+
     override fun onNewIntent(
         intent: Intent,
         caller: ComponentCaller,
     ) {
         super.onNewIntent(intent, caller)
-        val mode = intent.getParcelableCompat<SerializationCreateDiscussionRoomMode>(KEY_MODE)
-        viewModel.fetchMode(mode)
-        viewModel.reloadDiscussion()
+        handleNewIntent(intent)
     }
 
     companion object {
