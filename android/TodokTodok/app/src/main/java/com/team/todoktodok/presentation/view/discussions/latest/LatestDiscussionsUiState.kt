@@ -1,5 +1,6 @@
 package com.team.todoktodok.presentation.view.discussions.latest
 
+import com.team.domain.model.Discussion
 import com.team.domain.model.latest.LatestDiscussionPage
 import com.team.domain.model.latest.PageInfo
 import com.team.todoktodok.presentation.view.discussions.DiscussionUiState
@@ -21,6 +22,14 @@ data class LatestDiscussionsUiState(
 
         return copy(newDiscussion, newLatestPage)
     }
+
+    fun modifyDiscussion(newDiscussion: Discussion): LatestDiscussionsUiState =
+        copy(
+            items =
+                items.map {
+                    if (it.discussionId == newDiscussion.id) DiscussionUiState(newDiscussion) else it
+                },
+        )
 
     fun removeDiscussion(discussionId: Long): LatestDiscussionsUiState {
         val newItems = items.filter { it.discussionId != discussionId }

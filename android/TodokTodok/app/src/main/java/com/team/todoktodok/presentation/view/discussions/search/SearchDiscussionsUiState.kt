@@ -20,6 +20,18 @@ data class SearchDiscussionsUiState(
 
     fun clear() = copy(items = emptyList(), searchKeyword = EMPTY_SEARCH_KEYWORD)
 
+    fun modifyDiscussion(newDiscussion: Discussion): SearchDiscussionsUiState =
+        copy(
+            items =
+                items.map {
+                    if (it.discussionId == newDiscussion.id) {
+                        DiscussionUiState(newDiscussion)
+                    } else {
+                        it
+                    }
+                },
+        )
+
     fun removeDiscussion(discussionId: Long): SearchDiscussionsUiState {
         val newItems = items.filter { it.discussionId != discussionId }
         return copy(items = newItems)
