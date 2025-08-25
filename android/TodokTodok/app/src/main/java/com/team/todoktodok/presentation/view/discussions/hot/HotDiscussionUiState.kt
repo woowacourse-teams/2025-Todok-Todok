@@ -31,6 +31,35 @@ data class HotDiscussionUiState(
         )
     }
 
+    fun removeDiscussion(discussionId: Long): HotDiscussionUiState {
+        val newPopularItems = removePopularDiscussion(discussionId)
+        val newActivatedItems = removeActivatedDiscussion(discussionId)
+        val hotDiscussion =
+            listOf(newPopularItems, HotDiscussionItems.ActivatedHeaderItem, newActivatedItems)
+
+        return copy(items = hotDiscussion)
+    }
+
+    private fun removePopularDiscussion(discussionId: Long): HotDiscussionItems.PopularItem {
+        val newItems =
+            items
+                .filterIsInstance<HotDiscussionItems.PopularItem>()
+                .firstOrNull()
+                ?.items
+                ?.filter { it.discussionId == discussionId } ?: emptyList()
+        return HotDiscussionItems.PopularItem(newItems)
+    }
+
+    private fun removeActivatedDiscussion(discussionId: Long): HotDiscussionItems.ActivatedItem {
+        val newItems =
+            items
+                .filterIsInstance<HotDiscussionItems.ActivatedItem>()
+                .firstOrNull()
+                ?.items
+                ?.filter { it.discussionId == discussionId } ?: emptyList()
+        return HotDiscussionItems.ActivatedItem(newItems)
+    }
+
     fun appendActivatedDiscussion(page: ActivatedDiscussionPage): HotDiscussionUiState {
         val activatedIndex = HotDiscussionItems.ViewType.ACTIVATED.sequence
         val activatedItem =

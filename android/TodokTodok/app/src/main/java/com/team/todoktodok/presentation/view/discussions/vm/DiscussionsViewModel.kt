@@ -130,6 +130,10 @@ class DiscussionsViewModel(
         _uiState.value = _uiState.value?.clearSearchDiscussion()
     }
 
+    fun removeDiscussion(discussionId: Long) {
+        _uiState.value = _uiState.value?.removeDiscussion(discussionId)
+    }
+
     private fun withLoading(action: suspend () -> Unit) {
         viewModelScope.launch {
             setLoading()

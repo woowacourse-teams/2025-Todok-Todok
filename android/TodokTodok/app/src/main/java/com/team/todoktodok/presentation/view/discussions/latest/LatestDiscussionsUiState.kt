@@ -22,6 +22,11 @@ data class LatestDiscussionsUiState(
         return copy(newDiscussion, newLatestPage)
     }
 
+    fun removeDiscussion(discussionId: Long): LatestDiscussionsUiState {
+        val newItems = items.filter { it.discussionId != discussionId }
+        return copy(items = newItems)
+    }
+
     val hasNext get() = latestPage.hasNext
     val nextCursor get() = latestPage.nextCursor
 }

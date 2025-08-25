@@ -37,6 +37,14 @@ data class DiscussionsUiState(
 
     fun clearSearchDiscussion() = copy(searchDiscussion = searchDiscussion.clear())
 
+    fun removeDiscussion(discussionId: Long): DiscussionsUiState {
+        val newHotDiscussion = hotDiscussion.removeDiscussion(discussionId)
+        val newMyDiscussion = myDiscussion.removeDiscussion(discussionId)
+        val newLatestDiscussion = latestDiscussion.removeDiscussion(discussionId)
+        val newSearchDiscussion = searchDiscussion.removeDiscussion(discussionId)
+        return copy(newHotDiscussion, newMyDiscussion, newLatestDiscussion, newSearchDiscussion)
+    }
+
     val latestPageHasNext get() = latestDiscussion.hasNext
     val latestPageNextCursor get() = latestDiscussion.nextCursor
 

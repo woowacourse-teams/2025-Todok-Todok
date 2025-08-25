@@ -23,6 +23,8 @@ data class DiscussionUiState(
     val likeCount: String get() = item.likeCount.toString()
     val commentCount: String get() = item.commentCount.toString()
     val viewCount: String get() = item.viewCount.toString()
+
+    val isLikedByMe: Boolean get() = item.isLikedByMe
 }
 
 fun LatestDiscussion.toUiState(): DiscussionUiState {
