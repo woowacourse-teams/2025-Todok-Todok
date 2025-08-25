@@ -86,9 +86,9 @@ class ParticipatedDiscussionsRoomFragment : Fragment(R.layout.fragment_participa
         }
 
     private fun moveToDiscussionDetail(index: Int) {
-        val discussionRoomId = discussionAdapter.currentList[index].item.id
+        val discussionId = discussionAdapter.currentList[index].discussionId
         val intent =
-            DiscussionDetailActivity.Intent(requireContext(), discussionRoomId)
+            DiscussionDetailActivity.Intent(requireContext(), discussionId)
         startActivity(intent)
     }
 

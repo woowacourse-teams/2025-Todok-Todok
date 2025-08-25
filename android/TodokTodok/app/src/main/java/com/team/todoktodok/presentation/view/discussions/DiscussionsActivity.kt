@@ -21,7 +21,6 @@ import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivityDiscussionsBinding
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
-import com.team.todoktodok.presentation.core.ext.clearHintOnFocus
 import com.team.todoktodok.presentation.view.book.SelectBookActivity
 import com.team.todoktodok.presentation.view.discussions.all.AllDiscussionFragment
 import com.team.todoktodok.presentation.view.discussions.hot.HotDiscussionFragment
@@ -121,26 +120,21 @@ class DiscussionsActivity : AppCompatActivity() {
                 is DiscussionsUiEvent.ShowErrorMessage -> {
                     AlertSnackBar(binding.root, messageConverter(event.exception)).show()
                 }
-
-                else -> Unit
             }
         }
     }
 
-    private fun initView() {
+    private fun initView() =
         with(binding) {
-            val hint = getString(R.string.discussion_search_bar_hint)
-            etSearchDiscussion.clearHintOnFocus(binding.etSearchDiscussionLayout, hint)
-
             etSearchDiscussion.setOnEditorActionListener { v, actionId, event ->
                 triggerSearch()
                 true
             }
 
-            etSearchDiscussion.doAfterTextChanged {
-                if (it.isNullOrEmpty()) {
+            etSearchDiscussion.doAfterTextChanged { text ->
+                if (text.isNullOrEmpty()) {
                     viewModel.clearKeyword()
-                    viewModel.loadLatestDiscussions(false)
+                    allDiscussionFragment.showLatestDiscussions()
                 }
             }
 
@@ -161,28 +155,29 @@ class DiscussionsActivity : AppCompatActivity() {
                 startActivity(intent)
             }
         }
-    }
 
-    private fun triggerSearch() {
-        val editableText = binding.etSearchDiscussion.text
-        val keyword = editableText?.toString()?.trim()
-        if (!keyword.isNullOrEmpty()) {
-            moveToLatestDiscussionTab()
-            viewModel.loadSearchedDiscussions(keyword)
-            hideSoftKeyboard()
-        } else {
-            AlertSnackBar(
-                binding.root,
-                R.string.discussion_search_bar_hint,
-            ).show()
+    private fun triggerSearch() =
+        with(binding) {
+            val keyword = etSearchDiscussion.text?.toString()?.trim()
+            if (!keyword.isNullOrEmpty()) {
+                moveToLatestDiscussionTab()
+                allDiscussionFragment.showSearchResults()
+                viewModel.loadSearchedDiscussions(keyword)
+                hideSoftKeyboard()
+            } else {
+                AlertSnackBar(
+                    root,
+                    R.string.discussion_search_bar_hint,
+                ).show()
+            }
         }
-    }
 
-    private fun moveToLatestDiscussionTab() {
-        if (binding.tabLayout.selectedTabPosition != ALL_DISCUSSION_TAB_POSITION) {
-            binding.tabLayout.getTabAt(ALL_DISCUSSION_TAB_POSITION)?.select()
+    private fun moveToLatestDiscussionTab() =
+        with(binding) {
+            if (tabLayout.selectedTabPosition != ALL_DISCUSSION_TAB_POSITION) {
+                tabLayout.getTabAt(ALL_DISCUSSION_TAB_POSITION)?.select()
+            }
         }
-    }
 
     private fun changeTab(tab: TabLayout.Tab) {
         val index = tab.position
@@ -193,10 +188,11 @@ class DiscussionsActivity : AppCompatActivity() {
                 changeFragment(hotDiscussionFragment)
                 viewModel.loadHotDiscussions()
             }
+
             DiscussionFilter.ALL -> {
                 changeFragment(allDiscussionFragment)
-                viewModel.loadLatestDiscussions(true)
             }
+
             DiscussionFilter.MINE -> {
                 changeFragment(myDiscussionFragment)
                 viewModel.loadMyDiscussions()
@@ -244,13 +240,11 @@ class DiscussionsActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val HOT_DISCUSSION_TAB_POSITION = 0
         private const val HOT_DISCUSSION_FRAGMENT_TAG = "HOT"
 
         private const val ALL_DISCUSSION_TAB_POSITION = 1
         private const val ALL_DISCUSSION_FRAGMENT_TAG = "ALL"
 
-        private const val MY_DISCUSSION_TAB_POSITION = 2
         private const val MY_DISCUSSION_FRAGMENT_TAG = "MY"
 
         fun Intent(context: Context) = Intent(context, DiscussionsActivity::class.java)

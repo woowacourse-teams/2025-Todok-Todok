@@ -4,8 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.team.domain.model.Discussion
-import com.team.domain.model.active.ActivatedDiscussionPage
 import com.team.domain.model.exception.NetworkResult
 import com.team.domain.model.exception.onFailure
 import com.team.domain.model.exception.onSuccess
@@ -18,7 +16,6 @@ import com.team.todoktodok.presentation.core.event.SingleLiveData
 import com.team.todoktodok.presentation.view.discussions.DiscussionsUiEvent
 import com.team.todoktodok.presentation.view.discussions.DiscussionsUiState
 import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
@@ -46,32 +43,41 @@ class DiscussionsViewModel(
             coroutineScope {
                 val hotDeferred = async { discussionRepository.getHotDiscussion() }
                 val activatedDeferred = async { discussionRepository.getActivatedDiscussion() }
-                val result = awaitAll(hotDeferred, activatedDeferred)
 
-                (result.firstOrNull { it is NetworkResult.Failure } as? NetworkResult.Failure)?.let {
-                    onUiEvent(DiscussionsUiEvent.ShowErrorMessage(it.exception))
-                } ?: run {
-                    val hotDiscussions =
-                        (result[0] as NetworkResult.Success).data as List<Discussion>
-                    val activatedDiscussion =
-                        (result[1] as NetworkResult.Success).data as ActivatedDiscussionPage
+                val hotDiscussionResult = hotDeferred.await()
+                val activatedDiscussionResult = activatedDeferred.await()
 
-                    _uiState.value =
-                        _uiState.value?.addHotDiscussion(hotDiscussions, activatedDiscussion)
+                when {
+                    hotDiscussionResult is NetworkResult.Failure -> {
+                        onUiEvent(DiscussionsUiEvent.ShowErrorMessage(hotDiscussionResult.exception))
+                    }
+
+                    activatedDiscussionResult is NetworkResult.Failure -> {
+                        onUiEvent(DiscussionsUiEvent.ShowErrorMessage(activatedDiscussionResult.exception))
+                    }
+
+                    else -> {
+                        val hotDiscussions = (hotDiscussionResult as NetworkResult.Success).data
+                        val activatedDiscussion =
+                            (activatedDiscussionResult as NetworkResult.Success).data
+                        _uiState.value =
+                            _uiState.value?.addHotDiscussion(hotDiscussions, activatedDiscussion)
+                    }
                 }
             }
         }
 
-    fun loadLatestDiscussions(callByTab: Boolean) {
+    fun loadLatestDiscussions() {
         val state = _uiState.value ?: return
         if (!state.latestPageHasNext) return
 
-        val cursor = if (callByTab) null else state.latestPage.nextCursor
+        val cursor = state.latestPageNextCursor
+
         if (state.latestPageHasNext) {
             withLoading {
                 when (val result = discussionRepository.getLatestDiscussions(cursor = cursor)) {
                     is NetworkResult.Success -> {
-                        _uiState.value = _uiState.value?.addLatestDiscussion(result.data, !callByTab)
+                        _uiState.value = _uiState.value?.addLatestDiscussion(result.data)
                     }
 
                     is NetworkResult.Failure -> {
@@ -85,32 +91,48 @@ class DiscussionsViewModel(
     fun loadMyDiscussions() =
         withLoading {
             coroutineScope {
-                val tasks =
-                    MemberDiscussionType.entries.map { type ->
-                        viewModelScope.async {
-                            type to memberRepository.getMemberDiscussionRooms(MemberId.Mine, type)
-                        }
+                val createdDeferred = loadCreatedDiscussions()
+                val participatedDeferred = loadParticipatedDiscussions()
+
+                val createdResult = createdDeferred.await()
+                val participatedResult = participatedDeferred.await()
+
+                when {
+                    createdResult is NetworkResult.Failure -> {
+                        onUiEvent(DiscussionsUiEvent.ShowErrorMessage(createdResult.exception))
                     }
 
-                val results: Map<MemberDiscussionType, NetworkResult<List<Discussion>>> =
-                    tasks.awaitAll().toMap()
+                    participatedResult is NetworkResult.Failure -> {
+                        onUiEvent(DiscussionsUiEvent.ShowErrorMessage(participatedResult.exception))
+                    }
 
-                results.values.firstOrNull { it is NetworkResult.Failure }?.let { failure ->
-                    val exception = (failure as NetworkResult.Failure).exception
-                    onUiEvent(DiscussionsUiEvent.ShowErrorMessage(exception))
-                    return@coroutineScope
+                    else -> {
+                        val created = (createdResult as NetworkResult.Success).data
+                        val participated = (participatedResult as NetworkResult.Success).data
+                        _uiState.value = _uiState.value?.addMyDiscussion(created, participated)
+                    }
                 }
-
-                val created = (results[MemberDiscussionType.CREATED] as NetworkResult.Success).data
-                val participated =
-                    (results[MemberDiscussionType.PARTICIPATED] as NetworkResult.Success).data
-
-                _uiState.value = _uiState.value?.addMyDiscussion(created, participated)
             }
         }
 
+    private fun loadCreatedDiscussions() =
+        viewModelScope.async {
+            memberRepository.getMemberDiscussionRooms(
+                MemberId.Mine,
+                MemberDiscussionType.CREATED,
+            )
+        }
+
+    private fun loadParticipatedDiscussions() =
+        viewModelScope.async {
+            memberRepository.getMemberDiscussionRooms(
+                MemberId.Mine,
+                MemberDiscussionType.PARTICIPATED,
+            )
+        }
+
     fun loadActivatedDiscussions() {
-        val activatedPage = _uiState.value?.activatedPage
+        val activatedPage = _uiState.value?.hotDiscussion?.activatedPage
         val cursor = activatedPage?.nextCursor ?: return
         if (!activatedPage.hasNext) return
 
@@ -118,7 +140,7 @@ class DiscussionsViewModel(
             discussionRepository
                 .getActivatedDiscussion(cursor = cursor)
                 .onSuccess {
-                    _uiState.value = _uiState.value?.addActivatedDiscussion(it)
+                    _uiState.value = _uiState.value?.appendActivatedDiscussion(it)
                 }.onFailure {
                     onUiEvent(DiscussionsUiEvent.ShowErrorMessage(it))
                 }
@@ -126,7 +148,11 @@ class DiscussionsViewModel(
     }
 
     fun clearKeyword() {
-        _uiState.value = _uiState.value?.copy(searchKeyword = "")
+        _uiState.value = _uiState.value?.clearSearchDiscussion()
+    }
+
+    fun removeDiscussion(discussionId: Long) {
+        _uiState.value = _uiState.value?.removeDiscussion(discussionId)
     }
 
     private fun withLoading(action: suspend () -> Unit) {

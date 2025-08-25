@@ -32,6 +32,6 @@ class TokenDataSource(
 
     companion object {
         private const val TEMPORARY_TOKEN = ""
-        private const val TEMPORARY_MEMBER_ID = -1L
+        private const val TEMPORARY_MEMBER_ID = 0L
     }
 }

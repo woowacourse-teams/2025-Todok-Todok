@@ -2,29 +2,16 @@ package com.team.todoktodok.presentation.view.discussions.my
 
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
-import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentMyDiscussionBinding
-import com.team.todoktodok.presentation.view.discussiondetail.DiscussionDetailActivity
-import com.team.todoktodok.presentation.view.discussions.DiscussionsUiEvent
+import com.team.todoktodok.presentation.view.discussions.BaseDiscussionsFragment
 import com.team.todoktodok.presentation.view.discussions.my.adapter.MyDiscussionAdapter
-import com.team.todoktodok.presentation.view.discussions.vm.DiscussionsViewModel
-import com.team.todoktodok.presentation.view.discussions.vm.DiscussionsViewModelFactory
 import com.team.todoktodok.presentation.view.profile.ProfileActivity
 import com.team.todoktodok.presentation.view.profile.UserProfileTab
 
-class MyDiscussionFragment : Fragment(R.layout.fragment_my_discussion) {
+class MyDiscussionFragment : BaseDiscussionsFragment(R.layout.fragment_my_discussion) {
     private val discussionAdapter: MyDiscussionAdapter by lazy {
         MyDiscussionAdapter(adapterHandler)
-    }
-    private val viewModel: DiscussionsViewModel by activityViewModels {
-        val repositoryModule = (requireActivity().application as App).container.repositoryModule
-        DiscussionsViewModelFactory(
-            repositoryModule.discussionRepository,
-            repositoryModule.memberRepository,
-        )
     }
 
     override fun onViewCreated(
@@ -34,8 +21,7 @@ class MyDiscussionFragment : Fragment(R.layout.fragment_my_discussion) {
         val binding = FragmentMyDiscussionBinding.bind(view)
 
         initView(binding)
-        setUpUiEvent(binding)
-        setUpUiState()
+        setUpUiState(binding)
     }
 
     private fun initView(binding: FragmentMyDiscussionBinding) {
@@ -45,38 +31,31 @@ class MyDiscussionFragment : Fragment(R.layout.fragment_my_discussion) {
         }
     }
 
-    private fun setUpUiState() {
+    private fun setUpUiState(binding: FragmentMyDiscussionBinding) {
         viewModel.uiState.observe(viewLifecycleOwner) { value ->
-            discussionAdapter.submitList(value.myDiscussions)
-        }
-    }
-
-    private fun setUpUiEvent(binding: FragmentMyDiscussionBinding) =
-        with(binding) {
-            viewModel.uiEvent.observe(viewLifecycleOwner) { event ->
-                when (event) {
-                    DiscussionsUiEvent.ShowNotHasMyDiscussions -> {
-                        displayNoResultsView(binding)
-                    }
-
-                    DiscussionsUiEvent.ShowHasMyDiscussions -> {
-                        displayResultsView(binding)
-                    }
-
-                    else -> Unit
-                }
+            if (value.myDiscussion.isEmpty()) {
+                displayNoResultsView(binding)
+            } else {
+                displayResultsView(binding)
+                discussionAdapter.submitList(value.myDiscussion.items)
             }
         }
-
-    private fun displayResultsView(binding: FragmentMyDiscussionBinding) {
-        binding.tvNoResult.visibility = View.GONE
-        binding.rvDiscussions.visibility = View.VISIBLE
     }
 
-    private fun displayNoResultsView(binding: FragmentMyDiscussionBinding) {
-        binding.tvNoResult.visibility = View.VISIBLE
-        binding.rvDiscussions.visibility = View.GONE
-    }
+    private fun displayResultsView(binding: FragmentMyDiscussionBinding) =
+        with(binding) {
+            viewResourceNotFound.hide()
+            rvDiscussions.visibility = View.VISIBLE
+        }
+
+    private fun displayNoResultsView(binding: FragmentMyDiscussionBinding) =
+        with(binding) {
+            viewResourceNotFound.show(
+                getString(R.string.profile_not_has_created_discussion_title),
+                getString(R.string.profile_not_has_created_discussion_subtitle),
+            )
+            rvDiscussions.visibility = View.GONE
+        }
 
     override fun onResume() {
         super.onResume()
@@ -94,10 +73,6 @@ class MyDiscussionFragment : Fragment(R.layout.fragment_my_discussion) {
                 )
             }
 
-            override fun onClickMyCreatedDiscussionItem(discussionId: Long) {
-                startActivity(DiscussionDetailActivity.Intent(requireContext(), discussionId))
-            }
-
             override fun onClickMyParticipatedDiscussionHeader() {
                 startActivity(
                     ProfileActivity.Intent(
@@ -107,8 +82,12 @@ class MyDiscussionFragment : Fragment(R.layout.fragment_my_discussion) {
                 )
             }
 
+            override fun onClickMyCreatedDiscussionItem(discussionId: Long) {
+                moveToDiscussionDetail(discussionId)
+            }
+
             override fun onClickMyParticipatedDiscussionItem(discussionId: Long) {
-                startActivity(DiscussionDetailActivity.Intent(requireContext(), discussionId))
+                moveToDiscussionDetail(discussionId)
             }
         }
 }
