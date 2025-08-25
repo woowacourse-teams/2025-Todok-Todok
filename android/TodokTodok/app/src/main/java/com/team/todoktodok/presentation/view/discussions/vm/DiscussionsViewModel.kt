@@ -33,8 +33,13 @@ class DiscussionsViewModel(
         withLoading {
             discussionRepository
                 .getSearchDiscussion(keyword)
-                .onSuccess { _uiState.value = _uiState.value?.addSearchDiscussion(keyword, it) }
-                .onFailure { onUiEvent(DiscussionsUiEvent.ShowErrorMessage(it)) }
+                .onSuccess {
+                    clearSearchResult()
+                    _uiState.value = _uiState.value?.addSearchDiscussion(keyword, it)
+                    onUiEvent(DiscussionsUiEvent.ShowSearchResult)
+                }.onFailure {
+                    onUiEvent(DiscussionsUiEvent.ShowErrorMessage(it))
+                }
         }
     }
 
@@ -147,7 +152,7 @@ class DiscussionsViewModel(
         }
     }
 
-    fun clearKeyword() {
+    fun clearSearchResult() {
         _uiState.value = _uiState.value?.clearSearchDiscussion()
     }
 
