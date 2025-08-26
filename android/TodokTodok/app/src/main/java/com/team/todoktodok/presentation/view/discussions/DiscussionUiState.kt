@@ -8,8 +8,9 @@ import com.team.domain.model.member.User
 
 data class DiscussionUiState(
     private val item: Discussion,
-    val opinionVisibility: Boolean = false,
-    val writerNicknameVisibility: Boolean = true,
+    val opinionVisibility: Boolean = DEFAULT_OPINION_VISIBILITY,
+    val writerVisibility: Boolean = DEFAULT_WRITER_VISIBILITY,
+    val searchKeyword: String = DEFAULT_SEARCH_KEYWORD,
 ) {
     val bookImage: String get() = item.bookImage
     val bookTitle: String get() = item.getBookTitle()
@@ -25,6 +26,12 @@ data class DiscussionUiState(
     val viewCount: String get() = item.viewCount.toString()
 
     val isLikedByMe: Boolean get() = item.isLikedByMe
+
+    companion object {
+        const val DEFAULT_OPINION_VISIBILITY = false
+        const val DEFAULT_WRITER_VISIBILITY = true
+        const val DEFAULT_SEARCH_KEYWORD = ""
+    }
 }
 
 fun LatestDiscussion.toUiState(): DiscussionUiState {

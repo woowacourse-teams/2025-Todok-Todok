@@ -6,13 +6,14 @@ import android.text.style.ForegroundColorSpan
 import android.view.View
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentSearchDiscussionsBinding
+import com.team.todoktodok.presentation.core.component.adapter.BaseDiscussionViewHolder
+import com.team.todoktodok.presentation.core.component.adapter.DiscussionAdapter
 import com.team.todoktodok.presentation.view.discussions.BaseDiscussionsFragment
 import com.team.todoktodok.presentation.view.discussions.DiscussionUiState
-import com.team.todoktodok.presentation.view.discussions.adapter.DiscussionAdapter
 
 class SearchDiscussionsFragment : BaseDiscussionsFragment(R.layout.fragment_search_discussions) {
     private val discussionAdapter: DiscussionAdapter by lazy {
-        DiscussionAdapter(handler = adapterHandler)
+        DiscussionAdapter(adapterHandler, BaseDiscussionViewHolder.ViewHolderType.QUERY_HIGHLIGHTING)
     }
 
     override fun onViewCreated(
@@ -35,21 +36,24 @@ class SearchDiscussionsFragment : BaseDiscussionsFragment(R.layout.fragment_sear
     private fun setUpUiState(binding: FragmentSearchDiscussionsBinding) =
         with(binding) {
             viewModel.uiState.observe(viewLifecycleOwner) { value ->
-                val keyword = value.searchDiscussion.searchKeyword
+                val searchKeyword = value.searchDiscussion.searchKeyword
 
                 if (value.searchDiscussion.items.isEmpty()) {
-                    displayNotHasSearchResultView(binding, keyword)
+                    displayNotHasSearchResultView(binding, searchKeyword)
                 } else {
-                    displaySearchResult(binding, value.searchDiscussion.items)
+                    displaySearchResult(
+                        binding,
+                        value.searchDiscussion.items,
+                    )
                 }
             }
         }
 
     private fun displayNotHasSearchResultView(
         binding: FragmentSearchDiscussionsBinding,
-        keyword: String,
+        searchKeyword: String,
     ) = with(binding) {
-        val highlightKeyword = highlightKeyword(keyword)
+        val highlightKeyword = highlightKeyword(searchKeyword)
         viewResourceNotFound.show(
             highlightKeyword,
             getString(R.string.discussion_no_search_subtitle),

@@ -1,4 +1,4 @@
-package com.team.todoktodok.presentation.view.discussions.adapter
+package com.team.todoktodok.presentation.core.component.adapter
 
 import androidx.recyclerview.widget.DiffUtil
 import com.team.todoktodok.presentation.view.discussions.DiscussionUiState

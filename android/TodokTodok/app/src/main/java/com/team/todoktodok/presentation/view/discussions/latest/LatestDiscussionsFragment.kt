@@ -4,13 +4,14 @@ import android.os.Bundle
 import android.view.View
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentLatestDiscussionsBinding
+import com.team.todoktodok.presentation.core.component.adapter.BaseDiscussionViewHolder
+import com.team.todoktodok.presentation.core.component.adapter.DiscussionAdapter
 import com.team.todoktodok.presentation.core.ext.addOnScrollEndListener
 import com.team.todoktodok.presentation.view.discussions.BaseDiscussionsFragment
-import com.team.todoktodok.presentation.view.discussions.adapter.DiscussionAdapter
 
 class LatestDiscussionsFragment : BaseDiscussionsFragment(R.layout.fragment_latest_discussions) {
     private val discussionAdapter: DiscussionAdapter by lazy {
-        DiscussionAdapter(handler = adapterHandler)
+        DiscussionAdapter(adapterHandler, BaseDiscussionViewHolder.ViewHolderType.DEFAULT)
     }
 
     override fun onViewCreated(

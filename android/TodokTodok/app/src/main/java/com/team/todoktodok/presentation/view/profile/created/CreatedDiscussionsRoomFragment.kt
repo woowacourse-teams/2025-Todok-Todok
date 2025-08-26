@@ -8,11 +8,12 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentCreatedDiscussionsRoomBinding
+import com.team.todoktodok.presentation.core.component.adapter.BaseDiscussionViewHolder
+import com.team.todoktodok.presentation.core.component.adapter.DiscussionAdapter
 import com.team.todoktodok.presentation.core.ext.getParcelableArrayListCompat
 import com.team.todoktodok.presentation.view.book.SelectBookActivity
 import com.team.todoktodok.presentation.view.discussiondetail.DiscussionDetailActivity
 import com.team.todoktodok.presentation.view.discussions.DiscussionUiState
-import com.team.todoktodok.presentation.view.profile.created.adapter.UserDiscussionAdapter
 import com.team.todoktodok.presentation.view.serialization.SerializationDiscussion
 
 class CreatedDiscussionsRoomFragment : Fragment(R.layout.fragment_created_discussions_room) {
@@ -28,7 +29,7 @@ class CreatedDiscussionsRoomFragment : Fragment(R.layout.fragment_created_discus
         return binding.root
     }
 
-    private lateinit var discussionAdapter: UserDiscussionAdapter
+    private lateinit var discussionAdapter: DiscussionAdapter
 
     override fun onViewCreated(
         view: View,
@@ -39,7 +40,7 @@ class CreatedDiscussionsRoomFragment : Fragment(R.layout.fragment_created_discus
     }
 
     private fun initView() {
-        discussionAdapter = UserDiscussionAdapter(userDiscussionAdapterHandler)
+        discussionAdapter = DiscussionAdapter(userDiscussionAdapterHandler, BaseDiscussionViewHolder.ViewHolderType.WRITER_HIDDEN)
         val discussions =
             arguments?.getParcelableArrayListCompat<SerializationDiscussion>(
                 ARG_CREATED_MEMBER_DISCUSSIONS,
@@ -80,8 +81,8 @@ class CreatedDiscussionsRoomFragment : Fragment(R.layout.fragment_created_discus
     }
 
     private val userDiscussionAdapterHandler =
-        object : UserDiscussionAdapter.Handler {
-            override fun onSelectDiscussion(index: Int) {
+        object : DiscussionAdapter.Handler {
+            override fun onItemClick(index: Int) {
                 moveToDiscussionDetail(index)
             }
         }
