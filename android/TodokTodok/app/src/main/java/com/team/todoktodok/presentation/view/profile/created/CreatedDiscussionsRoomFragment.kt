@@ -89,7 +89,7 @@ class CreatedDiscussionsRoomFragment : BaseProfileFragment(R.layout.fragment_cre
         }
 
     private fun moveToDiscussionDetail(index: Int) {
-        val discussionId = discussionAdapter.currentList[index].discussionId
+        val discussionId = discussionAdapter.currentList.getOrNull(index)?.discussionId ?: return
         val intent = DiscussionDetailActivity.Intent(requireContext(), discussionId)
         discussionDetailLauncher.launch(intent)
     }
