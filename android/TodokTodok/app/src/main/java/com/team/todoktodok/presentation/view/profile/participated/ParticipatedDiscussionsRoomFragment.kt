@@ -8,17 +8,18 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentParticipatedDiscussionsRoomBinding
+import com.team.todoktodok.presentation.core.component.adapter.BaseDiscussionViewHolder
+import com.team.todoktodok.presentation.core.component.adapter.DiscussionAdapter
 import com.team.todoktodok.presentation.core.ext.getParcelableArrayListCompat
 import com.team.todoktodok.presentation.view.discussiondetail.DiscussionDetailActivity
 import com.team.todoktodok.presentation.view.discussions.DiscussionUiState
-import com.team.todoktodok.presentation.view.profile.created.adapter.UserDiscussionAdapter
 import com.team.todoktodok.presentation.view.serialization.SerializationDiscussion
 
 class ParticipatedDiscussionsRoomFragment : Fragment(R.layout.fragment_participated_discussions_room) {
     private var _binding: FragmentParticipatedDiscussionsRoomBinding? = null
     val binding get() = _binding!!
 
-    private lateinit var discussionAdapter: UserDiscussionAdapter
+    private lateinit var discussionAdapter: DiscussionAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,7 +39,11 @@ class ParticipatedDiscussionsRoomFragment : Fragment(R.layout.fragment_participa
     }
 
     private fun initView() {
-        discussionAdapter = UserDiscussionAdapter(userDiscussionAdapterHandler)
+        discussionAdapter =
+            DiscussionAdapter(
+                discussionAdapterHandler,
+                BaseDiscussionViewHolder.ViewHolderType.DEFAULT,
+            )
 
         val discussions =
             arguments?.getParcelableArrayListCompat<SerializationDiscussion>(
@@ -67,7 +72,8 @@ class ParticipatedDiscussionsRoomFragment : Fragment(R.layout.fragment_participa
 
     private fun showParticipatedDiscussions(discussions: List<SerializationDiscussion>) {
         with(binding) {
-            val participatedDiscussions = discussions.map { discussion -> DiscussionUiState(discussion.toDomain()) }
+            val participatedDiscussions =
+                discussions.map { discussion -> DiscussionUiState(discussion.toDomain()) }
             rvDiscussions.visibility = View.VISIBLE
             rvDiscussions.adapter = discussionAdapter
             discussionAdapter.submitList(participatedDiscussions)
@@ -78,9 +84,9 @@ class ParticipatedDiscussionsRoomFragment : Fragment(R.layout.fragment_participa
         requireActivity().finish()
     }
 
-    private val userDiscussionAdapterHandler =
-        object : UserDiscussionAdapter.Handler {
-            override fun onSelectDiscussion(index: Int) {
+    private val discussionAdapterHandler =
+        object : DiscussionAdapter.Handler {
+            override fun onItemClick(index: Int) {
                 moveToDiscussionDetail(index)
             }
         }

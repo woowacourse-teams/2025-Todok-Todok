@@ -9,7 +9,7 @@ import com.team.domain.model.member.User
 data class DiscussionUiState(
     private val item: Discussion,
     val opinionVisibility: Boolean = false,
-    val writerNicknameVisibility: Boolean = true,
+    val writerVisibility: Boolean = true,
 ) {
     val bookImage: String get() = item.bookImage
     val bookTitle: String get() = item.getBookTitle()

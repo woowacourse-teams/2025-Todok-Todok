@@ -5,7 +5,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.team.todoktodok.databinding.ItemHotPopularDiscussionBinding
-import com.team.todoktodok.presentation.view.discussions.adapter.DiscussionAdapter
+import com.team.todoktodok.presentation.core.component.adapter.BaseDiscussionViewHolder
+import com.team.todoktodok.presentation.core.component.adapter.DiscussionAdapter
 import com.team.todoktodok.presentation.view.discussions.hot.adapter.HotDiscussionItems
 
 class HotPopularDiscussionViewHolder private constructor(
@@ -20,7 +21,7 @@ class HotPopularDiscussionViewHolder private constructor(
             }
         }
 
-    private val discussionAdapter = DiscussionAdapter(discussionAdapterHandler)
+    private val discussionAdapter = DiscussionAdapter(discussionAdapterHandler, BaseDiscussionViewHolder.ViewHolderType.RESIZING)
     private val manager =
         LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
 

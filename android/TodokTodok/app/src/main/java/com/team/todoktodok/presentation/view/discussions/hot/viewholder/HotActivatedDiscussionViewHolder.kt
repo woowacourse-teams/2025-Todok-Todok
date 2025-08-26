@@ -4,7 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.team.todoktodok.databinding.ItemHotActivatedDiscussionBinding
-import com.team.todoktodok.presentation.view.discussions.adapter.DiscussionAdapter
+import com.team.todoktodok.presentation.core.component.adapter.BaseDiscussionViewHolder
+import com.team.todoktodok.presentation.core.component.adapter.DiscussionAdapter
 import com.team.todoktodok.presentation.view.discussions.hot.adapter.HotDiscussionItems
 
 class HotActivatedDiscussionViewHolder private constructor(
@@ -19,7 +20,8 @@ class HotActivatedDiscussionViewHolder private constructor(
             }
         }
 
-    private val discussionAdapter = DiscussionAdapter(discussionAdapterHandler)
+    private val discussionAdapter =
+        DiscussionAdapter(discussionAdapterHandler, BaseDiscussionViewHolder.ViewHolderType.DEFAULT)
 
     init {
         with(binding) {
