@@ -92,7 +92,7 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
             SELECT new todoktodok.backend.discussion.application.dto.response.ActiveDiscussionResponse(
                          d,
                          COUNT(DISTINCT dl.id),
-                         (COUNT(DISTINCT c.id) + COUNT( r.id)),
+                         (COUNT(DISTINCT c.id) + COUNT(DISTINCT r.id)),
                          CASE WHEN COUNT(DISTINCT dlByMe.id) > 0 THEN true ELSE false END,
                          MAX(c.createdAt)
              )
