@@ -91,13 +91,14 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
     @Query("""
             SELECT new todoktodok.backend.discussion.application.dto.response.ActiveDiscussionResponse(
                          d,
-                         COUNT(DISTINCT c.id),
                          COUNT(DISTINCT dl.id),
+                         (COUNT(DISTINCT c.id) + COUNT( r.id)),
                          CASE WHEN COUNT(DISTINCT dlByMe.id) > 0 THEN true ELSE false END,
                          MAX(c.createdAt)
              )
             FROM Discussion d
             JOIN Comment c ON c.discussion = d AND c.createdAt >= :periodStart
+            LEFT JOIN Reply r ON r.comment = c
             LEFT JOIN DiscussionLike dl ON dl.discussion = d
             LEFT JOIN DiscussionLike dlByMe ON dlByMe.discussion = d AND dlByMe.member = :member
             GROUP BY d
