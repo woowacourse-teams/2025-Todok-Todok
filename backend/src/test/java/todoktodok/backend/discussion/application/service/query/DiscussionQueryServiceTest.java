@@ -660,12 +660,12 @@ class DiscussionQueryServiceTest {
         final int size = 5;
 
         // when
-        final ActiveDiscussionPageResponse page1 = discussionQueryService.getActiveDiscussions(
+        final ActiveDiscussionPageResponse firstPage = discussionQueryService.getActiveDiscussions(
                 memberId, periodDays, size, null
         );
 
         // then
-        assertThat(page1.pageInfo().hasNext()).isFalse();
+        assertThat(firstPage.pageInfo().hasNext()).isFalse();
     }
 
     @Test
@@ -695,12 +695,12 @@ class DiscussionQueryServiceTest {
         final int size = 4;
 
         // when
-        final ActiveDiscussionPageResponse page1 = discussionQueryService.getActiveDiscussions(
+        final ActiveDiscussionPageResponse firstPage = discussionQueryService.getActiveDiscussions(
                 memberId, periodDays, size, null
         );
 
         // then
-        assertThat(page1.pageInfo().hasNext()).isFalse();
+        assertThat(firstPage.pageInfo().hasNext()).isFalse();
     }
 
     @Test
@@ -730,12 +730,12 @@ class DiscussionQueryServiceTest {
         final int size = 3;
 
         // when
-        final ActiveDiscussionPageResponse page1 = discussionQueryService.getActiveDiscussions(
+        final ActiveDiscussionPageResponse firstPage = discussionQueryService.getActiveDiscussions(
                 memberId, periodDays, size, null
         );
 
         // then
-        assertThat(page1.pageInfo().hasNext()).isTrue();
+        assertThat(firstPage.pageInfo().hasNext()).isTrue();
     }
 
     @Test
@@ -768,15 +768,15 @@ class DiscussionQueryServiceTest {
         final int size = 2;
 
         // when
-        final ActiveDiscussionPageResponse page1 = discussionQueryService.getActiveDiscussions(
+        final ActiveDiscussionPageResponse firstPage = discussionQueryService.getActiveDiscussions(
                 memberId, periodDays, size, null
         );
 
         // then
         assertAll(
-                () -> assertThat(page1.items()).hasSize(size),
-                () -> assertThat(page1.pageInfo().hasNext()).isTrue(),
-                () -> assertThat(page1.items())
+                () -> assertThat(firstPage.items()).hasSize(size),
+                () -> assertThat(firstPage.pageInfo().hasNext()).isTrue(),
+                () -> assertThat(firstPage.items())
                         .extracting("lastCommentedAt")
                         .containsExactly(
                                 baseTime.minusMinutes(10),
@@ -808,12 +808,12 @@ class DiscussionQueryServiceTest {
         final int size = 1;
 
         // when
-        final ActiveDiscussionPageResponse page1 = discussionQueryService.getActiveDiscussions(
+        final ActiveDiscussionPageResponse firstPage = discussionQueryService.getActiveDiscussions(
                 memberId, periodDays, size, null
         );
 
         // then
-        assertThat(page1.items().get(0).commentCount()).isEqualTo(4);
+        assertThat(firstPage.items().get(0).commentCount()).isEqualTo(4);
     }
 
     @ParameterizedTest(name = "size={0} 일 때 예외 없음")
