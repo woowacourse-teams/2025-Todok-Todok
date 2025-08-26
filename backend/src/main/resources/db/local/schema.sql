@@ -118,8 +118,9 @@ CREATE TABLE member_report
     created_at  DATETIME(6) NOT NULL,
     modified_at DATETIME(6) NOT NULL,
     deleted_at  DATETIME(6),
-    member_id   BIGINT NOT NULL,
-    target_id   BIGINT NOT NULL,
+    member_id   BIGINT      NOT NULL,
+    target_id   BIGINT      NOT NULL,
+    reason      VARCHAR(50) NOT NULL,
     FOREIGN KEY (member_id) REFERENCES member (id),
     FOREIGN KEY (target_id) REFERENCES member (id)
 );
@@ -130,8 +131,9 @@ CREATE TABLE discussion_report
     created_at    DATETIME(6) NOT NULL,
     modified_at   DATETIME(6) NOT NULL,
     deleted_at    DATETIME(6),
-    discussion_id BIGINT NOT NULL,
-    member_id     BIGINT NOT NULL,
+    discussion_id BIGINT      NOT NULL,
+    member_id     BIGINT      NOT NULL,
+    reason        VARCHAR(50) NOT NULL,
     FOREIGN KEY (discussion_id) REFERENCES discussion (id),
     FOREIGN KEY (member_id) REFERENCES member (id)
 );
@@ -142,8 +144,9 @@ CREATE TABLE comment_report
     created_at  DATETIME(6) NOT NULL,
     modified_at DATETIME(6) NOT NULL,
     deleted_at  DATETIME(6),
-    comment_id  BIGINT NOT NULL,
-    member_id   BIGINT NOT NULL,
+    comment_id  BIGINT      NOT NULL,
+    member_id   BIGINT      NOT NULL,
+    reason      VARCHAR(50) NOT NULL,
     FOREIGN KEY (comment_id) REFERENCES comment (id),
     FOREIGN KEY (member_id) REFERENCES member (id)
 );
@@ -154,8 +157,9 @@ CREATE TABLE reply_report
     created_at  DATETIME(6) NOT NULL,
     modified_at DATETIME(6) NOT NULL,
     deleted_at  DATETIME(6),
-    reply_id    BIGINT NOT NULL,
-    member_id   BIGINT NOT NULL,
+    reply_id    BIGINT      NOT NULL,
+    member_id   BIGINT      NOT NULL,
+    reason      VARCHAR(50) NOT NULL,
     FOREIGN KEY (reply_id) REFERENCES reply (id),
     FOREIGN KEY (member_id) REFERENCES member (id)
 );
