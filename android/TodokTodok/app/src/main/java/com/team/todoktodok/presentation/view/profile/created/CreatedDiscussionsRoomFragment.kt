@@ -4,19 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
-import androidx.fragment.app.Fragment
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentCreatedDiscussionsRoomBinding
 import com.team.todoktodok.presentation.core.component.adapter.BaseDiscussionViewHolder
 import com.team.todoktodok.presentation.core.component.adapter.DiscussionAdapter
-import com.team.todoktodok.presentation.core.ext.getParcelableArrayListCompat
 import com.team.todoktodok.presentation.view.book.SelectBookActivity
 import com.team.todoktodok.presentation.view.discussiondetail.DiscussionDetailActivity
 import com.team.todoktodok.presentation.view.discussions.DiscussionUiState
-import com.team.todoktodok.presentation.view.serialization.SerializationDiscussion
+import com.team.todoktodok.presentation.view.profile.BaseProfileFragment
 
-class CreatedDiscussionsRoomFragment : Fragment(R.layout.fragment_created_discussions_room) {
+class CreatedDiscussionsRoomFragment : BaseProfileFragment(R.layout.fragment_created_discussions_room) {
     private var _binding: FragmentCreatedDiscussionsRoomBinding? = null
     val binding get() = _binding!!
 
@@ -37,19 +34,28 @@ class CreatedDiscussionsRoomFragment : Fragment(R.layout.fragment_created_discus
     ) {
         super.onViewCreated(view, savedInstanceState)
         initView()
+        setupUiState()
     }
 
     private fun initView() {
-        discussionAdapter = DiscussionAdapter(userDiscussionAdapterHandler, BaseDiscussionViewHolder.ViewHolderType.WRITER_HIDDEN)
-        val discussions =
-            arguments?.getParcelableArrayListCompat<SerializationDiscussion>(
-                ARG_CREATED_MEMBER_DISCUSSIONS,
-            ) ?: emptyList()
+        discussionAdapter =
+            DiscussionAdapter(
+                userDiscussionAdapterHandler,
+                BaseDiscussionViewHolder.ViewHolderType.WRITER_HIDDEN,
+            )
+        binding.rvDiscussions.visibility = View.VISIBLE
+        binding.rvDiscussions.adapter = discussionAdapter
+    }
 
-        if (discussions.isEmpty()) {
-            showEmptyResourceView()
-        } else {
-            showCreatedDiscussions(discussions)
+    private fun setupUiState() {
+        viewModel.uiState.observe(viewLifecycleOwner) { value ->
+            val discussions = value.createdDiscussions
+
+            if (discussions.isEmpty()) {
+                showEmptyResourceView()
+            } else {
+                showDiscussion(discussions)
+            }
         }
     }
 
@@ -60,24 +66,19 @@ class CreatedDiscussionsRoomFragment : Fragment(R.layout.fragment_created_discus
                 getString(R.string.profile_not_has_created_discussion_title),
                 getString(R.string.profile_not_has_created_discussion_subtitle),
                 getString(R.string.profile_action_created_discussion),
-                { moveToCreateDiscussion() },
-            )
+            ) { moveToCreateDiscussion() }
         }
+    }
+
+    private fun showDiscussion(discussions: List<DiscussionUiState>) {
+        binding.viewResourceNotFound.hide()
+        binding.rvDiscussions.visibility = View.VISIBLE
+        discussionAdapter.submitList(discussions)
     }
 
     private fun moveToCreateDiscussion() {
         val intent = SelectBookActivity.Intent(requireContext())
         startActivity(intent)
-    }
-
-    private fun showCreatedDiscussions(discussions: List<SerializationDiscussion>) {
-        with(binding) {
-            val createdDiscussions =
-                discussions.map { discussion -> DiscussionUiState(discussion.toDomain()) }
-            rvDiscussions.visibility = View.VISIBLE
-            rvDiscussions.adapter = discussionAdapter
-            discussionAdapter.submitList(createdDiscussions)
-        }
     }
 
     private val userDiscussionAdapterHandler =
@@ -88,10 +89,9 @@ class CreatedDiscussionsRoomFragment : Fragment(R.layout.fragment_created_discus
         }
 
     private fun moveToDiscussionDetail(index: Int) {
-        val discussionId = discussionAdapter.currentList[index].discussionId
-        val intent =
-            DiscussionDetailActivity.Intent(requireContext(), discussionId)
-        startActivity(intent)
+        val discussionId = discussionAdapter.currentList.getOrNull(index)?.discussionId ?: return
+        val intent = DiscussionDetailActivity.Intent(requireContext(), discussionId)
+        discussionDetailLauncher.launch(intent)
     }
 
     override fun onResume() {
@@ -102,14 +102,5 @@ class CreatedDiscussionsRoomFragment : Fragment(R.layout.fragment_created_discus
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    companion object {
-        private const val ARG_CREATED_MEMBER_DISCUSSIONS = "created_discussions"
-
-        fun newInstance(discussions: List<SerializationDiscussion>): CreatedDiscussionsRoomFragment =
-            CreatedDiscussionsRoomFragment().apply {
-                arguments = bundleOf(ARG_CREATED_MEMBER_DISCUSSIONS to ArrayList(discussions))
-            }
     }
 }

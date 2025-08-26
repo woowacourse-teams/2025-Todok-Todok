@@ -55,7 +55,7 @@ class DiscussionDetailViewModelTest {
             assertThat(
                 discussionDetailViewModel.uiState
                     .getOrAwaitValue()
-                    .discussionItemUiState.discussion,
+                    .discussion,
             ).isEqualTo(
                 expected,
             )

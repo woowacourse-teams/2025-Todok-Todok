@@ -23,11 +23,8 @@ import com.team.todoktodok.presentation.core.ext.registerReportResultListener
 import com.team.todoktodok.presentation.view.discussions.DiscussionsActivity
 import com.team.todoktodok.presentation.view.profile.adapter.ContentPagerAdapter
 import com.team.todoktodok.presentation.view.profile.adapter.ProfileAdapter
-import com.team.todoktodok.presentation.view.profile.adapter.ProfileItems
 import com.team.todoktodok.presentation.view.profile.vm.ProfileViewModel
 import com.team.todoktodok.presentation.view.profile.vm.ProfileViewModelFactory
-import com.team.todoktodok.presentation.view.serialization.SerializationBook
-import com.team.todoktodok.presentation.view.serialization.SerializationDiscussion
 import com.team.todoktodok.presentation.view.setting.SettingActivity
 
 class ProfileActivity : AppCompatActivity() {
@@ -37,7 +34,7 @@ class ProfileActivity : AppCompatActivity() {
         ProfileViewModelFactory(repositoryModule.memberRepository)
     }
     private lateinit var messageConverter: ExceptionMessageConverter
-
+    private lateinit var profileAdapter: ProfileAdapter
     private val launcher =
         registerForActivityResult(
             ActivityResultContracts.StartActivityForResult(),
@@ -51,19 +48,9 @@ class ProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val memberId: Long? = intent?.getLongExtra(ARG_MEMBER_ID, DEFAULT_MEMBER_ID)
-        requireNotNull(memberId) { MEMBER_ID_NOT_FOUND }
 
-        val initialTab =
-            intent?.getSerializableCompat<UserProfileTab>(ARG_INITIAL_TAB)
-                ?: UserProfileTab.ACTIVATED_BOOKS
-
-        messageConverter = ExceptionMessageConverter()
-
-        viewModel.setMemberId(memberId)
-        viewModel.initState()
-
-        setUpUiState(initialTab)
+        initView(binding)
+        setUpUiState()
         setUpUiEvent()
         setUpSystemBar()
         setUpDialogResultListener()
@@ -96,16 +83,10 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
-    private fun setUpUiState(initialTab: UserProfileTab) {
+    private fun setUpUiState() {
         viewModel.uiState.observe(this) { value ->
-            initView(
-                binding,
-                value.items,
-                value.activatedBooks,
-                value.createdDiscussions,
-                value.participatedDiscussions,
-                initialTab,
-            )
+            val profileItems = value.items
+            profileAdapter.submitList(profileItems)
             setupLoading(value.isLoading)
         }
     }
@@ -118,25 +99,22 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
-    private fun initView(
-        binding: ActivityProfileBinding,
-        profileItems: List<ProfileItems>,
-        activatedBooks: List<SerializationBook>,
-        createdDiscussions: List<SerializationDiscussion>,
-        participatedDiscussions: List<SerializationDiscussion>,
-        initialTab: UserProfileTab,
-    ) {
-        val viewPagerAdapter =
-            ContentPagerAdapter(
-                activatedBooks,
-                createdDiscussions,
-                participatedDiscussions,
-                supportFragmentManager,
-                lifecycle,
-            )
-        val profileAdapter = ProfileAdapter(profileAdapterHandler, viewPagerAdapter, initialTab)
+    private fun initView(binding: ActivityProfileBinding) {
+        val initialTab =
+            intent?.getSerializableCompat<UserProfileTab>(ARG_INITIAL_TAB)
+                ?: UserProfileTab.ACTIVATED_BOOKS
+
+        val memberId: Long? = intent?.getLongExtra(ARG_MEMBER_ID, DEFAULT_MEMBER_ID)
+        requireNotNull(memberId) { MEMBER_ID_NOT_FOUND }
+
+        val viewPagerAdapter = ContentPagerAdapter(supportFragmentManager, lifecycle)
+        profileAdapter = ProfileAdapter(profileAdapterHandler, viewPagerAdapter, initialTab)
         binding.rvProfile.adapter = profileAdapter
-        profileAdapter.submitList(profileItems)
+
+        messageConverter = ExceptionMessageConverter()
+
+        viewModel.setMemberId(memberId)
+        viewModel.loadProfile()
     }
 
     private fun setUpUiEvent() {
@@ -174,9 +152,12 @@ class ProfileActivity : AppCompatActivity() {
 
             override fun onClickBack() {
                 if (viewModel.uiState.value?.isMyProfilePage == true) {
-                    finish()
+                    val intent =
+                        DiscussionsActivity.Intent(this@ProfileActivity).apply {
+                            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                        }
+                    startActivity(intent)
                 } else {
-                    startActivity(DiscussionsActivity.Intent(this@ProfileActivity))
                     finish()
                 }
             }
