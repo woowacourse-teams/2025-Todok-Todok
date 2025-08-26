@@ -1,15 +1,11 @@
 package com.team.todoktodok.presentation.view.discussiondetail
 
-import com.team.domain.model.Book
 import com.team.domain.model.Discussion
-import com.team.domain.model.member.Nickname
-import com.team.domain.model.member.User
-import com.team.todoktodok.presentation.view.discussiondetail.model.DiscussionItemUiState
-import java.time.LocalDateTime
 
 data class DiscussionDetailUiState(
-    val discussionItemUiState: DiscussionItemUiState,
-    val isLoading: Boolean,
+    val discussion: Discussion,
+    val isMyDiscussion: Boolean,
+    val isLoading: Boolean = false,
 ) {
     companion object {
         private val INIT_DISCUSSION =

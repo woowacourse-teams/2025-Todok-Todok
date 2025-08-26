@@ -198,7 +198,7 @@ class DiscussionDetailActivity : AppCompatActivity() {
                     progressBar.show()
                 } else {
                     progressBar.hide()
-                    val discussion = value.discussionItemUiState.discussion
+                    val discussion = value.discussion
                     tvBookTitle.text = discussion.book.title.extractSubtitle()
                     tvDiscussionTitle.text = discussion.discussionTitle
                     tvUserNickname.text = discussion.writer.nickname.value
@@ -211,8 +211,8 @@ class DiscussionDetailActivity : AppCompatActivity() {
                     tvLikeCount.text = discussion.likeCount.toString()
                     tvCommentCount.text = discussion.commentCount.toString()
                 }
+                setupPopUpDiscussionClick(value.isMyDiscussion)
             }
-            setupPopUpDiscussionClick(value.discussionItemUiState.isMyDiscussion)
         }
         viewModel.uiEvent.observe(this) { value ->
             handleEvent(value)
@@ -240,7 +240,7 @@ class DiscussionDetailActivity : AppCompatActivity() {
                 showSnackBar(R.string.all_report_discussion_success)
 
             is DiscussionDetailUiEvent.NavigateToDiscussionsWithResult -> {
-                moveToDiscussionsWithResult(event.mode, event.discussion)
+                moveToDiscussionsWithResult(event.isLiked, event.mode, event.discussion)
             }
         }
     }
@@ -252,6 +252,7 @@ class DiscussionDetailActivity : AppCompatActivity() {
     }
 
     private fun moveToDiscussionsWithResult(
+        isLiked: Boolean,
         mode: SerializationCreateDiscussionRoomMode?,
         discussion: SerializationDiscussion,
     ) {
