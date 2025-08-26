@@ -9,6 +9,8 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.team.domain.model.Book
+import com.team.domain.model.Discussion
 import com.team.domain.model.Support
 import com.team.domain.model.exception.TodokTodokExceptions
 import com.team.domain.model.member.MemberId.Companion.DEFAULT_MEMBER_ID
@@ -26,8 +28,6 @@ import com.team.todoktodok.presentation.view.profile.adapter.ProfileAdapter
 import com.team.todoktodok.presentation.view.profile.adapter.ProfileItems
 import com.team.todoktodok.presentation.view.profile.vm.ProfileViewModel
 import com.team.todoktodok.presentation.view.profile.vm.ProfileViewModelFactory
-import com.team.todoktodok.presentation.view.serialization.SerializationBook
-import com.team.todoktodok.presentation.view.serialization.SerializationDiscussion
 import com.team.todoktodok.presentation.view.setting.SettingActivity
 
 class ProfileActivity : AppCompatActivity() {
@@ -121,9 +121,9 @@ class ProfileActivity : AppCompatActivity() {
     private fun initView(
         binding: ActivityProfileBinding,
         profileItems: List<ProfileItems>,
-        activatedBooks: List<SerializationBook>,
-        createdDiscussions: List<SerializationDiscussion>,
-        participatedDiscussions: List<SerializationDiscussion>,
+        activatedBooks: List<Book>,
+        createdDiscussions: List<Discussion>,
+        participatedDiscussions: List<Discussion>,
         initialTab: UserProfileTab,
     ) {
         val viewPagerAdapter =
@@ -174,9 +174,12 @@ class ProfileActivity : AppCompatActivity() {
 
             override fun onClickBack() {
                 if (viewModel.uiState.value?.isMyProfilePage == true) {
-                    finish()
+                    val intent =
+                        DiscussionsActivity.Intent(this@ProfileActivity).apply {
+                            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                        }
+                    startActivity(intent)
                 } else {
-                    startActivity(DiscussionsActivity.Intent(this@ProfileActivity))
                     finish()
                 }
             }
