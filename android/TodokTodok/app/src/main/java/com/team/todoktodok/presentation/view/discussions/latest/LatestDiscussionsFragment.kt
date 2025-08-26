@@ -43,7 +43,7 @@ class LatestDiscussionsFragment : BaseDiscussionsFragment(R.layout.fragment_late
     private val adapterHandler =
         object : DiscussionAdapter.Handler {
             override fun onItemClick(index: Int) {
-                val discussionId = discussionAdapter.currentList[index].discussionId
+                val discussionId = discussionAdapter.currentList.getOrNull(index)?.discussionId ?: return
                 moveToDiscussionDetail(discussionId)
             }
         }
