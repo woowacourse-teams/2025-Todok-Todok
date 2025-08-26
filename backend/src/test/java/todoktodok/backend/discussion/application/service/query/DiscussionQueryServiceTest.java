@@ -785,6 +785,37 @@ class DiscussionQueryServiceTest {
         );
     }
 
+    @Test
+    @DisplayName("활성화 된 토론방 조회 시, 전체 댓글 수는 댓글 수와 대댓글 수의 합이다")
+    void getActiveDiscussions_totalCommentCount() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+
+        final Long memberId = 1L;
+        final Long bookId = 1L;
+
+        databaseInitializer.setDiscussionInfo("게시글1", "내용1", memberId, bookId);
+
+        final LocalDateTime baseTime = LocalDateTime.now().truncatedTo(MICROS);
+
+        databaseInitializer.setCommentInfo("댓글1-1", memberId, 1L, baseTime.minusMinutes(10));
+        databaseInitializer.setCommentInfo("댓글1-2", memberId, 1L, baseTime.minusMinutes(20));
+        databaseInitializer.setReplyInfo("대댓글1-1-1", memberId, 1L);
+        databaseInitializer.setReplyInfo("대댓글1-2-1", memberId, 2L);
+
+        final int periodDays = 2;
+        final int size = 1;
+
+        // when
+        final ActiveDiscussionPageResponse page1 = discussionQueryService.getActiveDiscussions(
+                memberId, periodDays, size, null
+        );
+
+        // then
+        assertThat(page1.items().get(0).commentCount()).isEqualTo(4);
+    }
+
     @ParameterizedTest(name = "size={0} 일 때 예외 없음")
     @ValueSource(ints = {1, 50})
     @DisplayName("페이지 크기 경계값(1, 50)에서는 예외가 발생하지 않는다")
