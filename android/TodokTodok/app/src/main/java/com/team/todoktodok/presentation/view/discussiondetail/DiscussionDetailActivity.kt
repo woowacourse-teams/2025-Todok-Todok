@@ -39,11 +39,10 @@ import com.team.todoktodok.presentation.view.discussiondetail.vm.DiscussionDetai
 import com.team.todoktodok.presentation.view.discussiondetail.vm.DiscussionDetailViewModel.Companion.KEY_DISCUSSION_ID
 import com.team.todoktodok.presentation.view.discussiondetail.vm.DiscussionDetailViewModel.Companion.KEY_MODE
 import com.team.todoktodok.presentation.view.discussiondetail.vm.DiscussionDetailViewModelFactory
-import com.team.todoktodok.presentation.view.discussions.BaseDiscussionsFragment.Companion.EXTRA_DELETE_DISCUSSION_ID
-import com.team.todoktodok.presentation.view.discussions.BaseDiscussionsFragment.Companion.EXTRA_MODIFIED_DISCUSSION
+import com.team.todoktodok.presentation.view.discussions.BaseDiscussionsFragment.Companion.EXTRA_DELETE_DISCUSSION
+import com.team.todoktodok.presentation.view.discussions.BaseDiscussionsFragment.Companion.EXTRA_WATCHED_DISCUSSION_ID
 import com.team.todoktodok.presentation.view.discussions.DiscussionsActivity
 import com.team.todoktodok.presentation.view.profile.ProfileActivity
-import com.team.todoktodok.presentation.view.serialization.SerializationDiscussion
 
 class DiscussionDetailActivity : AppCompatActivity() {
     private val viewModel by viewModels<DiscussionDetailViewModel> {
@@ -240,37 +239,39 @@ class DiscussionDetailActivity : AppCompatActivity() {
                 showSnackBar(R.string.all_report_discussion_success)
 
             is DiscussionDetailUiEvent.NavigateToDiscussionsWithResult -> {
-                moveToDiscussionsWithResult(event.isLiked, event.mode, event.discussion)
+                moveToDiscussionsWithResult(event.mode, event.discussionId)
             }
         }
     }
 
     private fun moveToDiscussionsWithDeletedDiscussionId(discussionId: Long) {
-        val resultIntent = Intent().putExtra(EXTRA_DELETE_DISCUSSION_ID, discussionId)
+        val resultIntent = Intent().putExtra(EXTRA_DELETE_DISCUSSION, discussionId)
         setResult(RESULT_OK, resultIntent)
         finish()
     }
 
     private fun moveToDiscussionsWithResult(
-        isLiked: Boolean,
         mode: SerializationCreateDiscussionRoomMode?,
-        discussion: SerializationDiscussion,
+        discussionId: Long,
     ) {
         when (mode) {
             is SerializationCreateDiscussionRoomMode.Create -> {
-                val intent = DiscussionsActivity.Intent(this)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                val intent =
+                    DiscussionsActivity.Intent(this).apply {
+                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    }
                 startActivity(intent)
                 finish()
             }
 
-            is SerializationCreateDiscussionRoomMode.Edit -> {
-                val resultIntent = Intent().putExtra(EXTRA_MODIFIED_DISCUSSION, discussion)
+            else -> {
+                val resultIntent =
+                    Intent().apply {
+                        putExtra(EXTRA_WATCHED_DISCUSSION_ID, discussionId)
+                    }
                 setResult(RESULT_OK, resultIntent)
                 finish()
             }
-
-            else -> finish()
         }
     }
 

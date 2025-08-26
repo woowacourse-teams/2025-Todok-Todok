@@ -6,11 +6,9 @@ import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.team.todoktodok.App
-import com.team.todoktodok.presentation.core.ext.getParcelableCompat
 import com.team.todoktodok.presentation.view.discussiondetail.DiscussionDetailActivity
 import com.team.todoktodok.presentation.view.discussions.vm.DiscussionsViewModel
 import com.team.todoktodok.presentation.view.discussions.vm.DiscussionsViewModelFactory
-import com.team.todoktodok.presentation.view.serialization.SerializationDiscussion
 
 abstract class BaseDiscussionsFragment(
     @LayoutRes layoutId: Int,
@@ -27,15 +25,29 @@ abstract class BaseDiscussionsFragment(
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 result.data?.let { data ->
-                    val deletedId =
-                        data.getLongExtra(EXTRA_DELETE_DISCUSSION_ID, DEFAULT_DELETE_DISCUSSION_ID)
-                    if (deletedId != DEFAULT_DELETE_DISCUSSION_ID) {
-                        viewModel.removeDiscussion(deletedId)
-                    }
+                    when {
+                        data.hasExtra(EXTRA_DELETE_DISCUSSION) -> {
+                            val deletedId =
+                                data.getLongExtra(
+                                    EXTRA_DELETE_DISCUSSION,
+                                    DEFAULT_DISCUSSION_ID,
+                                )
+                            if (deletedId != DEFAULT_DISCUSSION_ID) {
+                                viewModel.removeDiscussion(deletedId)
+                            }
+                        }
 
-                    data
-                        .getParcelableCompat<SerializationDiscussion>(EXTRA_MODIFIED_DISCUSSION)
-                        ?.let { viewModel.modifyDiscussion(it) }
+                        data.hasExtra(EXTRA_WATCHED_DISCUSSION_ID) -> {
+                            val discussionId =
+                                data.getLongExtra(
+                                    EXTRA_WATCHED_DISCUSSION_ID,
+                                    DEFAULT_DISCUSSION_ID,
+                                )
+                            if (discussionId != DEFAULT_DISCUSSION_ID) {
+                                viewModel.modifyDiscussion(discussionId)
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -50,8 +62,8 @@ abstract class BaseDiscussionsFragment(
     }
 
     companion object {
-        const val EXTRA_DELETE_DISCUSSION_ID = "delete_discussion_id"
-        const val EXTRA_MODIFIED_DISCUSSION = "modified_discussion"
-        private const val DEFAULT_DELETE_DISCUSSION_ID = -1L
+        const val EXTRA_DELETE_DISCUSSION = "delete_discussion"
+        const val EXTRA_WATCHED_DISCUSSION_ID = "watched_discussion_id"
+        private const val DEFAULT_DISCUSSION_ID = -1L
     }
 }

@@ -13,7 +13,6 @@ import com.team.todoktodok.presentation.core.event.SingleLiveData
 import com.team.todoktodok.presentation.view.discussion.create.SerializationCreateDiscussionRoomMode
 import com.team.todoktodok.presentation.view.discussiondetail.DiscussionDetailUiEvent
 import com.team.todoktodok.presentation.view.discussiondetail.DiscussionDetailUiState
-import com.team.todoktodok.presentation.view.serialization.toSerialization
 import kotlinx.coroutines.launch
 
 class DiscussionDetailViewModel(
@@ -41,12 +40,10 @@ class DiscussionDetailViewModel(
 
     fun onFinishEvent() {
         val currentState = _uiState.value ?: return
-        val isLiked = currentState.discussion.isLikedByMe
         onUiEvent(
             DiscussionDetailUiEvent.NavigateToDiscussionsWithResult(
                 mode,
-                isLiked,
-                currentState.discussion.toSerialization(),
+                currentState.discussion.id,
             ),
         )
     }
