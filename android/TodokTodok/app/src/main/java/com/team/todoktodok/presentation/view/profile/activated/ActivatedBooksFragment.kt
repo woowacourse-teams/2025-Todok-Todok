@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.team.domain.model.Book
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentActivatedBooksBinding
 import com.team.todoktodok.presentation.view.profile.BaseProfileFragment
@@ -49,7 +50,7 @@ class ActivatedBooksFragment : BaseProfileFragment(R.layout.fragment_activated_b
             if (activatedBooks.isEmpty()) {
                 showEmptyResourceView()
             } else {
-                booksAdapter.submitList(activatedBooks)
+                showActivatedBooks(activatedBooks)
             }
         }
     }
@@ -64,6 +65,12 @@ class ActivatedBooksFragment : BaseProfileFragment(R.layout.fragment_activated_b
                 { moveToDiscussions() },
             )
         }
+    }
+
+    private fun showActivatedBooks(activatedBooks: List<Book>) {
+        binding.viewResourceNotFound.hide()
+        binding.rvBooks.visibility = View.VISIBLE
+        booksAdapter.submitList(activatedBooks)
     }
 
     private fun moveToDiscussions() {
