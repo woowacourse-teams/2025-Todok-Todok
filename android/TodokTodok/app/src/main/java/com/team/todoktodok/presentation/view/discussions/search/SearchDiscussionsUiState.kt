@@ -12,7 +12,7 @@ data class SearchDiscussionsUiState(
         newDiscussions: List<Discussion>,
     ): SearchDiscussionsUiState {
         val updatedList = items.toMutableList()
-        val discussion = newDiscussions.map { DiscussionUiState(it) }
+        val discussion = newDiscussions.map { DiscussionUiState(it, searchKeyword = keyword) }
         updatedList.addAll(discussion)
 
         return copy(updatedList, keyword)

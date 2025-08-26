@@ -13,7 +13,7 @@ import com.team.todoktodok.presentation.view.discussions.DiscussionUiState
 
 class SearchDiscussionsFragment : BaseDiscussionsFragment(R.layout.fragment_search_discussions) {
     private val discussionAdapter: DiscussionAdapter by lazy {
-        DiscussionAdapter(adapterHandler, BaseDiscussionViewHolder.ViewHolderType.DEFAULT)
+        DiscussionAdapter(adapterHandler, BaseDiscussionViewHolder.ViewHolderType.QUERY_HIGHLIGHTING)
     }
 
     override fun onViewCreated(
@@ -44,7 +44,6 @@ class SearchDiscussionsFragment : BaseDiscussionsFragment(R.layout.fragment_sear
                     displaySearchResult(
                         binding,
                         value.searchDiscussion.items,
-                        searchKeyword,
                     )
                 }
             }
@@ -65,7 +64,6 @@ class SearchDiscussionsFragment : BaseDiscussionsFragment(R.layout.fragment_sear
     private fun displaySearchResult(
         binding: FragmentSearchDiscussionsBinding,
         discussions: List<DiscussionUiState>,
-        searchKeyword: String,
     ) = with(binding) {
         viewResourceNotFound.hide()
         rvDiscussions.visibility = View.VISIBLE
