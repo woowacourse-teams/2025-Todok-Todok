@@ -4,6 +4,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ItemDiscussionBinding
+import com.team.todoktodok.presentation.core.ext.loadCircleImage
 import com.team.todoktodok.presentation.core.ext.loadImage
 import com.team.todoktodok.presentation.view.discussions.DiscussionUiState
 
@@ -31,6 +32,8 @@ abstract class BaseDiscussionViewHolder(
             tvLikeCount.text = item.likeCount
             tvCommentCount.text = item.commentCount
             tvViews.text = item.viewCount
+            ivWriterProfileImage.loadCircleImage(item.writerProfileImage)
+            tvDiscussionWriterNickname.text = item.writerNickname
 
             drawLikeButton(item.isLikedByMe)
         }
