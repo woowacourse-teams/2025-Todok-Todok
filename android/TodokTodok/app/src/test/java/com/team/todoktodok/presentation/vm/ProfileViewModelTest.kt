@@ -54,7 +54,7 @@ class ProfileViewModelTest {
             setMockProfileData()
 
             // when
-            viewModel.initState()
+            viewModel.loadProfile()
 
             // then
             val state = viewModel.uiState.getOrAwaitValue()
@@ -70,7 +70,7 @@ class ProfileViewModelTest {
             setMockProfileData()
 
             // when
-            viewModel.initState()
+            viewModel.loadProfile()
 
             // then
             val state = viewModel.uiState.getOrAwaitValue()
@@ -95,7 +95,7 @@ class ProfileViewModelTest {
             viewModel.setMemberId(1)
 
             // when
-            viewModel.initState()
+            viewModel.loadProfile()
 
             // then
             val expected =
@@ -110,7 +110,7 @@ class ProfileViewModelTest {
             val memberId = 2L
             viewModel.setMemberId(memberId)
             setMockProfileData()
-            viewModel.initState()
+            viewModel.loadProfile()
 
             // when
             viewModel.supportMember(Support.BLOCK, "")
@@ -126,7 +126,7 @@ class ProfileViewModelTest {
             val memberId = 2L
             viewModel.setMemberId(memberId)
             setMockProfileData()
-            viewModel.initState()
+            viewModel.loadProfile()
 
             // when
             viewModel.supportMember(Support.REPORT, "")
@@ -152,7 +152,7 @@ class ProfileViewModelTest {
             } returns NetworkResult.Success(emptyList())
 
             viewModel.setMemberId(1)
-            viewModel.initState()
+            viewModel.loadProfile()
 
             coEvery { repository.getProfile(any()) } returns NetworkResult.Success(updatedProfile)
 
@@ -175,7 +175,7 @@ class ProfileViewModelTest {
             setMockProfileData()
 
             // when
-            viewModel.initState()
+            viewModel.loadProfile()
 
             // then
             coVerify(exactly = 1) { repository.getProfile(any()) }

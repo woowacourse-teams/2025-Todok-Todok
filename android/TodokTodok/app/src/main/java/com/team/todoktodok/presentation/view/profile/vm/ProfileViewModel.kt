@@ -39,7 +39,7 @@ class ProfileViewModel(
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun initState() {
+    fun loadProfile() {
         val memberId = _uiState.value?.memberId ?: return
         withLoading {
             val (profile, books, participatedDiscussions, createdDiscussions) =
@@ -131,6 +131,26 @@ class ProfileViewModel(
         withLoading {
             val profile = loadProfile(memberId)
             _uiState.value = _uiState.value?.modifyProfile(profile.await())
+        }
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    fun refreshUserActivities() {
+        val memberId = _uiState.value?.memberId ?: return
+        withLoading {
+            val (books, participatedDiscussions, createdDiscussions) =
+                listOf(
+                    loadActivatedBooks(memberId),
+                    loadParticipatedDiscussions(memberId),
+                    loadCreatedDiscussions(memberId),
+                ).awaitAll()
+
+            _uiState.value =
+                _uiState.value?.modifyActivities(
+                    books as List<Book>,
+                    participatedDiscussions as List<Discussion>,
+                    createdDiscussions as List<Discussion>,
+                )
         }
     }
 

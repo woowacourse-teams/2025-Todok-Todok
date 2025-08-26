@@ -4,13 +4,14 @@ import com.team.domain.model.Book
 import com.team.domain.model.Discussion
 import com.team.domain.model.member.MemberId
 import com.team.domain.model.member.Profile
+import com.team.todoktodok.presentation.view.discussions.DiscussionUiState
 import com.team.todoktodok.presentation.view.profile.adapter.ProfileItems
 
 data class ProfileUiState(
     val items: List<ProfileItems> = emptyList(),
     val activatedBooks: List<Book> = emptyList(),
-    val participatedDiscussions: List<Discussion> = emptyList(),
-    val createdDiscussions: List<Discussion> = emptyList(),
+    val participatedDiscussions: List<DiscussionUiState> = emptyList(),
+    val createdDiscussions: List<DiscussionUiState> = emptyList(),
     val memberId: MemberId = MemberId.Mine,
     val isMyProfilePage: Boolean = false,
     val isLoading: Boolean = false,
@@ -26,6 +27,17 @@ data class ProfileUiState(
 
         return copy(items = currentItems)
     }
+
+    fun modifyActivities(
+        books: List<Book>,
+        joinedDiscussions: List<Discussion>,
+        createdDiscussions: List<Discussion>,
+    ): ProfileUiState =
+        copy(
+            activatedBooks = books,
+            participatedDiscussions = joinedDiscussions.map { DiscussionUiState(it) },
+            createdDiscussions = createdDiscussions.map { DiscussionUiState(it) },
+        )
 
     companion object {
         fun initial(
@@ -46,8 +58,8 @@ data class ProfileUiState(
             return ProfileUiState(
                 initialItems,
                 books,
-                joinedDiscussions,
-                createdDiscussions,
+                joinedDiscussions.map { DiscussionUiState(it) },
+                createdDiscussions.map { DiscussionUiState(it) },
                 memberId,
                 isMyProfilePage,
             )

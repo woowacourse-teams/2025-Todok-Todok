@@ -4,18 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
-import androidx.fragment.app.Fragment
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentParticipatedDiscussionsRoomBinding
 import com.team.todoktodok.presentation.core.component.adapter.BaseDiscussionViewHolder
 import com.team.todoktodok.presentation.core.component.adapter.DiscussionAdapter
-import com.team.todoktodok.presentation.core.ext.getParcelableArrayListCompat
 import com.team.todoktodok.presentation.view.discussiondetail.DiscussionDetailActivity
 import com.team.todoktodok.presentation.view.discussions.DiscussionUiState
-import com.team.todoktodok.presentation.view.serialization.SerializationDiscussion
+import com.team.todoktodok.presentation.view.profile.BaseProfileFragment
 
-class ParticipatedDiscussionsRoomFragment : Fragment(R.layout.fragment_participated_discussions_room) {
+class ParticipatedDiscussionsRoomFragment : BaseProfileFragment(R.layout.fragment_participated_discussions_room) {
     private var _binding: FragmentParticipatedDiscussionsRoomBinding? = null
     val binding get() = _binding!!
 
@@ -36,6 +33,7 @@ class ParticipatedDiscussionsRoomFragment : Fragment(R.layout.fragment_participa
     ) {
         super.onViewCreated(view, savedInstanceState)
         initView()
+        setupUiState()
     }
 
     private fun initView() {
@@ -44,17 +42,17 @@ class ParticipatedDiscussionsRoomFragment : Fragment(R.layout.fragment_participa
                 discussionAdapterHandler,
                 BaseDiscussionViewHolder.ViewHolderType.DEFAULT,
             )
+        binding.rvDiscussions.adapter = discussionAdapter
+    }
 
-        val discussions =
-            arguments?.getParcelableArrayListCompat<SerializationDiscussion>(
-                ARG_PARTICIPATED_MEMBER_DISCUSSIONS,
-            ) ?: emptyList()
-
-        if (discussions.isEmpty()) {
-            showEmptyResourceView()
-        } else {
-            binding.viewResourceNotFound.hide()
-            showParticipatedDiscussions(discussions)
+    private fun setupUiState() {
+        viewModel.uiState.observe(viewLifecycleOwner) { value ->
+            val discussions = value.participatedDiscussions
+            if (discussions.isEmpty()) {
+                showEmptyResourceView()
+            } else {
+                showDiscussion(discussions)
+            }
         }
     }
 
@@ -65,19 +63,14 @@ class ParticipatedDiscussionsRoomFragment : Fragment(R.layout.fragment_participa
                 getString(R.string.profile_not_has_participated_discussions_title),
                 getString(R.string.profile_not_has_participated_discussions_subtitle),
                 getString(R.string.profile_action_participated_discussion),
-                { moveToDiscussions() },
-            )
+            ) { moveToDiscussions() }
         }
     }
 
-    private fun showParticipatedDiscussions(discussions: List<SerializationDiscussion>) {
-        with(binding) {
-            val participatedDiscussions =
-                discussions.map { discussion -> DiscussionUiState(discussion.toDomain()) }
-            rvDiscussions.visibility = View.VISIBLE
-            rvDiscussions.adapter = discussionAdapter
-            discussionAdapter.submitList(participatedDiscussions)
-        }
+    private fun showDiscussion(discussions: List<DiscussionUiState>) {
+        binding.viewResourceNotFound.hide()
+        binding.rvDiscussions.visibility = View.VISIBLE
+        discussionAdapter.submitList(discussions)
     }
 
     private fun moveToDiscussions() {
@@ -93,9 +86,8 @@ class ParticipatedDiscussionsRoomFragment : Fragment(R.layout.fragment_participa
 
     private fun moveToDiscussionDetail(index: Int) {
         val discussionId = discussionAdapter.currentList[index].discussionId
-        val intent =
-            DiscussionDetailActivity.Intent(requireContext(), discussionId)
-        startActivity(intent)
+        val intent = DiscussionDetailActivity.Intent(requireContext(), discussionId)
+        discussionDetailLauncher.launch(intent)
     }
 
     override fun onResume() {
@@ -106,14 +98,5 @@ class ParticipatedDiscussionsRoomFragment : Fragment(R.layout.fragment_participa
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    companion object {
-        private const val ARG_PARTICIPATED_MEMBER_DISCUSSIONS = "participated_member_discussions"
-
-        fun newInstance(discussions: List<SerializationDiscussion>): ParticipatedDiscussionsRoomFragment =
-            ParticipatedDiscussionsRoomFragment().apply {
-                arguments = bundleOf(ARG_PARTICIPATED_MEMBER_DISCUSSIONS to ArrayList(discussions))
-            }
     }
 }
