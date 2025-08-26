@@ -15,7 +15,6 @@ import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
 import com.team.todoktodok.presentation.core.event.SingleLiveData
 import com.team.todoktodok.presentation.view.discussions.DiscussionsUiEvent
 import com.team.todoktodok.presentation.view.discussions.DiscussionsUiState
-import com.team.todoktodok.presentation.view.serialization.SerializationDiscussion
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
@@ -161,10 +160,18 @@ class DiscussionsViewModel(
         _uiState.value = _uiState.value?.removeDiscussion(discussionId)
     }
 
-    fun modifyDiscussion(discussion: SerializationDiscussion) {
+    fun modifyDiscussion(discussionId: Long) {
+        viewModelScope.launch {
+            discussionRepository
+                .getDiscussion(discussionId)
+                .onSuccess {
+                    _uiState.value = _uiState.value?.modifyDiscussion(it)
+                }.onFailure {
+                    onUiEvent(DiscussionsUiEvent.ShowErrorMessage(it))
+                }
+        }
         onUiEvent(DiscussionsUiEvent.ClearSearchResult)
         clearSearchResult()
-        _uiState.value = _uiState.value?.modifyDiscussion(discussion.toDomain())
     }
 
     private fun withLoading(action: suspend () -> Unit) {

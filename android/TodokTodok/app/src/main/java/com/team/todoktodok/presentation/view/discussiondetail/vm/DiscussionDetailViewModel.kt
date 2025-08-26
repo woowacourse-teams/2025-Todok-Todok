@@ -13,9 +13,6 @@ import com.team.todoktodok.presentation.core.event.SingleLiveData
 import com.team.todoktodok.presentation.view.discussion.create.SerializationCreateDiscussionRoomMode
 import com.team.todoktodok.presentation.view.discussiondetail.DiscussionDetailUiEvent
 import com.team.todoktodok.presentation.view.discussiondetail.DiscussionDetailUiState
-import com.team.todoktodok.presentation.view.discussiondetail.DiscussionDetailUiState.Companion.INIT_DISCUSSION_DETAIL_UI_STATE
-import com.team.todoktodok.presentation.view.discussiondetail.model.DiscussionItemUiState
-import com.team.todoktodok.presentation.view.serialization.toSerialization
 import kotlinx.coroutines.launch
 
 class DiscussionDetailViewModel(
@@ -29,7 +26,7 @@ class DiscussionDetailViewModel(
     var mode = savedStateHandle.get<SerializationCreateDiscussionRoomMode>(KEY_MODE)
         private set
 
-    private val _uiState = MutableLiveData(INIT_DISCUSSION_DETAIL_UI_STATE.copy(isLoading = true))
+    private val _uiState = MutableLiveData<DiscussionDetailUiState>()
     val uiState: LiveData<DiscussionDetailUiState> = _uiState
 
     private val _uiEvent = MutableSingleLiveData<DiscussionDetailUiEvent>()
@@ -46,7 +43,7 @@ class DiscussionDetailViewModel(
         onUiEvent(
             DiscussionDetailUiEvent.NavigateToDiscussionsWithResult(
                 mode,
-                currentState.discussionItemUiState.discussion.toSerialization(),
+                currentState.discussion.id,
             ),
         )
     }
@@ -101,7 +98,6 @@ class DiscussionDetailViewModel(
     fun navigateToProfile() {
         val memberId =
             _uiState.value
-                ?.discussionItemUiState
                 ?.discussion
                 ?.writer
                 ?.id ?: return
@@ -111,12 +107,9 @@ class DiscussionDetailViewModel(
     private suspend fun loadDiscussionRoom() {
         handleResult(discussionRepository.getDiscussion(discussionId)) { discussion ->
             _uiState.value =
-                _uiState.value?.copy(
-                    discussionItemUiState =
-                        DiscussionItemUiState(
-                            discussion,
-                            discussion.writer.id == tokenRepository.getMemberId(),
-                        ),
+                DiscussionDetailUiState(
+                    discussion = discussion,
+                    isMyDiscussion = discussion.writer.id == tokenRepository.getMemberId(),
                     isLoading = false,
                 )
         }
