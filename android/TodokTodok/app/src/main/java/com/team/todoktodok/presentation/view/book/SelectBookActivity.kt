@@ -149,50 +149,17 @@ class SelectBookActivity : AppCompatActivity() {
     private fun setupUiEvent(binding: ActivitySelectBookBinding) {
         viewModel.uiEvent.observe(this) { event ->
             when (event) {
-                is SelectBookUiEvent.ShowSavedDiscussionRoom -> {
-                    val dialog =
-                        CommonDialog.newInstance(
-                            getString(R.string.draft_discussion_exist),
-                            getString(R.string.load),
-                        )
-                    dialog.show(supportFragmentManager, CommonDialog.TAG)
-                }
-
                 is SelectBookUiEvent.NavigateToCreateDiscussionRoom ->
                     navigateToCreateDiscussionRoom(event.book)
 
-                is SelectBookUiEvent.HideKeyboard ->
-                    hideKeyBoard(binding.etSearchKeyword)
-
-                is SelectBookUiEvent.ShowErrorMessage -> {
+                is SelectBookUiEvent.ShowError -> {
                     AlertSnackBar(
                         binding.root,
                         event.message.id,
                     ).show()
                 }
 
-                is SelectBookUiEvent.NavigateToDraftDiscussionRoom -> {
-                    val serializationBook: SerializationBook = event.book.toSerialization()
-                    val intent =
-                        CreateDiscussionRoomActivity.Intent(
-                            this,
-                            SerializationCreateDiscussionRoomMode.Draft(serializationBook),
-                        )
-                    startActivity(intent)
-                    finish()
-                }
-
-                is SelectBookUiEvent.ShowSearchedBookResultIsEmpty -> {
-                    if (event.keyword.isNotBlank()) {
-                        val strongKeyword = highlightKeyword(event.keyword)
-                        binding.rvSearchedBooks.visibility = View.GONE
-                        binding.nsvEmptySearchResult.visibility = View.VISIBLE
-                        binding.tvEmptySearchResultTitle.text = strongKeyword
-                        binding.tvEmptySearchResultSubTitle.setText(R.string.empty_search_result_description)
-                    }
-                }
-
-                is SelectBookUiEvent.ShowNetworkErrorMessage -> {
+                is SelectBookUiEvent.ShowTodokTodokException -> {
                     val messageConverter = ExceptionMessageConverter()
                     AlertSnackBar(binding.root, messageConverter(event.exception)).show()
                 }
@@ -259,3 +226,9 @@ class SelectBookActivity : AppCompatActivity() {
         fun Intent(context: Context): Intent = Intent(context, SelectBookActivity::class.java)
     }
 }
+
+
+//binding.rvSearchedBooks.visibility = View.GONE
+//binding.nsvEmptySearchResult.visibility = View.VISIBLE
+//binding.tvEmptySearchResultTitle.text = strongKeyword
+//binding.tvEmptySearchResultSubTitle.setText(R.string.empty_search_result_description)

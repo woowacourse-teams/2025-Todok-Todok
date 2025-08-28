@@ -4,27 +4,15 @@ import com.team.domain.model.Book
 import com.team.domain.model.exception.TodokTodokExceptions
 
 sealed class SelectBookUiEvent {
-    data object ShowSavedDiscussionRoom : SelectBookUiEvent()
-
-    data object HideKeyboard : SelectBookUiEvent()
-
     data class NavigateToCreateDiscussionRoom(
         val book: Book,
     ) : SelectBookUiEvent()
 
-    data class NavigateToDraftDiscussionRoom(
-        val book: Book,
-    ) : SelectBookUiEvent()
-
-    data class ShowErrorMessage(
+    data class ShowError(
         val message: SelectBookErrorType,
     ) : SelectBookUiEvent()
 
-    data class ShowNetworkErrorMessage(
+    data class ShowTodokTodokException(
         val exception: TodokTodokExceptions,
-    ) : SelectBookUiEvent()
-
-    data class ShowSearchedBookResultIsEmpty(
-        val keyword: String,
     ) : SelectBookUiEvent()
 }

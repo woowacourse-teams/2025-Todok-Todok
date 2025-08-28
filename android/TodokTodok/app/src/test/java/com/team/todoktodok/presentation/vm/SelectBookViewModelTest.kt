@@ -50,7 +50,7 @@ class SelectBookViewModelTest {
             // then
             val actual = viewModel.uiEvent.getOrAwaitValue()
             assertEquals(
-                SelectBookUiEvent.ShowErrorMessage(SelectBookErrorType.ERROR_EMPTY_KEYWORD),
+                SelectBookUiEvent.ShowError(SelectBookErrorType.ERROR_EMPTY_KEYWORD),
                 actual,
             )
         }
@@ -69,7 +69,7 @@ class SelectBookViewModelTest {
             // then
             val actual = viewModel.uiEvent.getOrAwaitValue()
             assertEquals(
-                SelectBookUiEvent.ShowErrorMessage(SelectBookErrorType.ERROR_SAME_KEYWORD),
+                SelectBookUiEvent.ShowError(SelectBookErrorType.ERROR_SAME_KEYWORD),
                 actual,
             )
         }
@@ -114,7 +114,7 @@ class SelectBookViewModelTest {
             // then
             val event = viewModel.uiEvent.getOrAwaitValue()
             assertEquals(
-                SelectBookUiEvent.ShowErrorMessage(SelectBookErrorType.ERROR_NO_SELECTED_BOOK),
+                SelectBookUiEvent.ShowError(SelectBookErrorType.ERROR_NO_SELECTED_BOOK),
                 event,
             )
         }

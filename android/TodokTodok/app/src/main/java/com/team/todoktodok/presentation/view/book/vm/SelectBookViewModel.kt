@@ -27,7 +27,6 @@ class SelectBookViewModel(
     val uiEvent: SingleLiveData<SelectBookUiEvent> get() = _uiEvent
 
     fun searchWithCurrentKeyword(keyword: String) {
-        _uiEvent.setValue(SelectBookUiEvent.HideKeyboard)
         val isPossibleSearchKeyword = checkKeyword(keyword)
         updateKeyword(keyword)
         if (isPossibleSearchKeyword) updateSearchedBooks()
@@ -35,12 +34,12 @@ class SelectBookViewModel(
 
     fun updateSelectedBook(position: Int) {
         if (_uiState.value?.isExist(position) == false) {
-            _uiEvent.setValue(SelectBookUiEvent.ShowErrorMessage(SelectBookErrorType.ERROR_NO_SELECTED_BOOK))
+            _uiEvent.setValue(SelectBookUiEvent.ShowError(SelectBookErrorType.ERROR_NO_SELECTED_BOOK))
             return
         }
         val selectedBook =
             _uiState.value?.searchedBooks?.get(position) ?: run {
-                _uiEvent.setValue(SelectBookUiEvent.ShowErrorMessage(SelectBookErrorType.ERROR_NO_SELECTED_BOOK))
+                _uiEvent.setValue(SelectBookUiEvent.ShowError(SelectBookErrorType.ERROR_NO_SELECTED_BOOK))
                 return
             }
         _uiState.value = _uiState.value?.copy(selectedBook = selectedBook)
@@ -53,11 +52,11 @@ class SelectBookViewModel(
 
     private fun checkKeyword(keyword: String): Boolean {
         if (keyword.isBlank()) {
-            _uiEvent.setValue(SelectBookUiEvent.ShowErrorMessage(SelectBookErrorType.ERROR_EMPTY_KEYWORD))
+            // api 호출이 안됨
             return false
         }
         if (keyword == _uiState.value?.keyword) {
-            _uiEvent.setValue(SelectBookUiEvent.ShowErrorMessage(SelectBookErrorType.ERROR_SAME_KEYWORD))
+            // api 호출이 안됨
             return false
         }
         return true
@@ -72,11 +71,11 @@ class SelectBookViewModel(
                 .onSuccess { books: Books ->
                     _uiState.value = _uiState.value?.copy(isLoading = false, searchedBooks = books)
                     if (books.size == SEARCHED_BOOKS_IS_EMPTY) {
-                        _uiEvent.setValue(SelectBookUiEvent.ShowSearchedBookResultIsEmpty(keyword))
+
                     }
                 }.onFailure { exception: TodokTodokExceptions ->
                     _uiState.value = _uiState.value?.copy(isLoading = false)
-                    _uiEvent.setValue(SelectBookUiEvent.ShowNetworkErrorMessage(exception))
+                    _uiEvent.setValue(SelectBookUiEvent.ShowTodokTodokException(exception))
                 }
         }
     }
