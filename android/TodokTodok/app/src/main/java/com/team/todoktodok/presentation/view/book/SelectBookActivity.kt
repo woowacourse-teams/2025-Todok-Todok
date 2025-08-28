@@ -38,7 +38,6 @@ class SelectBookActivity : AppCompatActivity() {
         val repositoryModule = (application as App).container.repositoryModule
         SelectBookViewModelFactory(
             repositoryModule.bookRepository,
-            repositoryModule.discussionRepository,
         )
     }
 
@@ -81,15 +80,6 @@ class SelectBookActivity : AppCompatActivity() {
         binding: ActivitySelectBookBinding,
         adapter: SearchBooksAdapter,
     ) {
-        supportFragmentManager.setFragmentResultListener(
-            CommonDialog.REQUEST_KEY_COMMON_DIALOG,
-            this,
-        ) { _, bundle ->
-            val confirmed = bundle.getBoolean(CommonDialog.RESULT_KEY_COMMON_DIALOG)
-            if (confirmed) {
-                viewModel.getBook()
-            }
-        }
         binding.apply {
             etSearchKeyword.requestFocus()
             rvSearchedBooks.adapter = adapter
@@ -159,15 +149,6 @@ class SelectBookActivity : AppCompatActivity() {
     private fun setupUiEvent(binding: ActivitySelectBookBinding) {
         viewModel.uiEvent.observe(this) { event ->
             when (event) {
-                is SelectBookUiEvent.ShowSavedDiscussionRoom -> {
-                    val dialog =
-                        CommonDialog.newInstance(
-                            getString(R.string.draft_discussion_exist),
-                            getString(R.string.load),
-                        )
-                    dialog.show(supportFragmentManager, CommonDialog.TAG)
-                }
-
                 is SelectBookUiEvent.NavigateToCreateDiscussionRoom ->
                     navigateToCreateDiscussionRoom(event.book)
 
