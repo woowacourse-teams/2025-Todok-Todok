@@ -126,8 +126,8 @@
     <string name="hint_search_keyword">도서 제목 또는 저자를 입력해주세요</string>
     <string name="draft_discussion_exist">임시저장된 문서를 불러오시겠습니까?</string>
     <string name="load">불러오기</string>
-    <string name="empty_search_result">도서 \'%s\' 검색 결과가 없습니다</string>
-    <string name="empty_search_result_description">입력한 검색어의 철자 또는 띄어쓰기가 정확한지 다시 한번 확인해 주세요.</string>
+    <string name="empty_search_result">도서 \'%s\'\n검색 결과가 없습니다</string>
+    <string name="empty_search_result_description">입력한 검색어의 철자 또는 띄어쓰기가\n정확한지 다시 한번 확인해 주세요.</string>
 
     <string name="error_empty_keyword">검색어는 1자 이상이어야 합니다</string>
     <string name="error_empty_isbn">도서 ISBN을 입력해주세요</string>
