@@ -38,7 +38,6 @@ class SelectBookActivity : AppCompatActivity() {
         val repositoryModule = (application as App).container.repositoryModule
         SelectBookViewModelFactory(
             repositoryModule.bookRepository,
-            repositoryModule.discussionRepository,
         )
     }
 
@@ -81,15 +80,6 @@ class SelectBookActivity : AppCompatActivity() {
         binding: ActivitySelectBookBinding,
         adapter: SearchBooksAdapter,
     ) {
-        supportFragmentManager.setFragmentResultListener(
-            CommonDialog.REQUEST_KEY_COMMON_DIALOG,
-            this,
-        ) { _, bundle ->
-            val confirmed = bundle.getBoolean(CommonDialog.RESULT_KEY_COMMON_DIALOG)
-            if (confirmed) {
-                viewModel.getBook()
-            }
-        }
         binding.apply {
             etSearchKeyword.requestFocus()
             rvSearchedBooks.adapter = adapter
