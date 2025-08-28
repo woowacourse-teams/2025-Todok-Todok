@@ -19,12 +19,29 @@ import kotlinx.coroutines.launch
 
 class SelectBookViewModel(
     private val bookRepository: BookRepository,
+    private val discussionRepository: DiscussionRepository,
 ) : ViewModel() {
     private val _uiState: MutableLiveData<SelectBookUiState> = MutableLiveData(SelectBookUiState())
     val uiState: LiveData<SelectBookUiState> get() = _uiState
 
     private val _uiEvent: MutableSingleLiveData<SelectBookUiEvent> = MutableSingleLiveData()
     val uiEvent: SingleLiveData<SelectBookUiEvent> get() = _uiEvent
+
+    init {
+        viewModelScope.launch {
+            val hasDiscussion = discussionRepository.hasDiscussion()
+            if (hasDiscussion) {
+                _uiEvent.setValue(SelectBookUiEvent.ShowSavedDiscussionRoom)
+            }
+        }
+    }
+
+    fun getBook() {
+        viewModelScope.launch {
+            val book = discussionRepository.getBook()
+            _uiEvent.setValue(SelectBookUiEvent.NavigateToDraftDiscussionRoom(book))
+        }
+    }
 
     fun searchWithCurrentKeyword(keyword: String) {
         _uiEvent.setValue(SelectBookUiEvent.HideKeyboard)

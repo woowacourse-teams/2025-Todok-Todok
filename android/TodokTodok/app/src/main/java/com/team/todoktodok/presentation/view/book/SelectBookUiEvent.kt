@@ -4,6 +4,8 @@ import com.team.domain.model.Book
 import com.team.domain.model.exception.TodokTodokExceptions
 
 sealed class SelectBookUiEvent {
+    data object ShowSavedDiscussionRoom : SelectBookUiEvent()
+
     data object HideKeyboard : SelectBookUiEvent()
 
     data class NavigateToCreateDiscussionRoom(
