@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.DatabaseInitializer;
 import todoktodok.backend.InitializerTimer;
 import todoktodok.backend.discussion.application.dto.response.ActiveDiscussionPageResponse;
+import todoktodok.backend.discussion.application.dto.response.ActiveDiscussionResponse;
 import todoktodok.backend.discussion.application.dto.response.DiscussionResponse;
 import todoktodok.backend.discussion.application.dto.response.LatestDiscussionPageResponse;
 import todoktodok.backend.discussion.application.dto.response.PageInfo;
@@ -212,7 +214,8 @@ class DiscussionQueryServiceTest {
             final String cursorMeaningFour = "NA==";
 
             // when
-            final LatestDiscussionPageResponse firstSlicedDiscussions = discussionQueryService.getDiscussions(memberId, size, cursorMeaningFour);
+            final LatestDiscussionPageResponse firstSlicedDiscussions = discussionQueryService.getDiscussions(memberId,
+                    size, cursorMeaningFour);
             final List<DiscussionResponse> items = firstSlicedDiscussions.items();
 
             // then
@@ -235,7 +238,8 @@ class DiscussionQueryServiceTest {
             final String cursor = null;
 
             // when
-            final LatestDiscussionPageResponse firstSlicedDiscussions = discussionQueryService.getDiscussions(memberId, size, cursor);
+            final LatestDiscussionPageResponse firstSlicedDiscussions = discussionQueryService.getDiscussions(memberId,
+                    size, cursor);
             final List<DiscussionResponse> items = firstSlicedDiscussions.items();
 
             // then
@@ -260,7 +264,8 @@ class DiscussionQueryServiceTest {
             final String cursor = null;
 
             // when
-            final LatestDiscussionPageResponse firstSlicedDiscussions = discussionQueryService.getDiscussions(memberId, size, cursor);
+            final LatestDiscussionPageResponse firstSlicedDiscussions = discussionQueryService.getDiscussions(memberId,
+                    size, cursor);
             final List<DiscussionResponse> items = firstSlicedDiscussions.items();
 
             // then
@@ -294,7 +299,8 @@ class DiscussionQueryServiceTest {
             final String cursor = null;
 
             // when
-            final LatestDiscussionPageResponse firstSlicedDiscussions = discussionQueryService.getDiscussions(memberId, size, cursor);
+            final LatestDiscussionPageResponse firstSlicedDiscussions = discussionQueryService.getDiscussions(memberId,
+                    size, cursor);
             final List<DiscussionResponse> items = firstSlicedDiscussions.items();
             final PageInfo pageInfo = firstSlicedDiscussions.pageInfo();
             final String cursorMeaningThree = "Mw==";
@@ -327,7 +333,8 @@ class DiscussionQueryServiceTest {
             final String cursor = null;
 
             // when
-            final LatestDiscussionPageResponse firstSlicedDiscussions = discussionQueryService.getDiscussions(memberId, size, cursor);
+            final LatestDiscussionPageResponse firstSlicedDiscussions = discussionQueryService.getDiscussions(memberId,
+                    size, cursor);
             final List<DiscussionResponse> items = firstSlicedDiscussions.items();
             final PageInfo pageInfo = firstSlicedDiscussions.pageInfo();
 
@@ -359,7 +366,8 @@ class DiscussionQueryServiceTest {
             final String cursorMeaningThree = "Mw==";
 
             // when
-            final LatestDiscussionPageResponse firstSlicedDiscussions = discussionQueryService.getDiscussions(memberId, size, cursorMeaningThree);
+            final LatestDiscussionPageResponse firstSlicedDiscussions = discussionQueryService.getDiscussions(memberId,
+                    size, cursorMeaningThree);
             final List<DiscussionResponse> items = firstSlicedDiscussions.items();
             final PageInfo pageInfo = firstSlicedDiscussions.pageInfo();
 
@@ -579,7 +587,8 @@ class DiscussionQueryServiceTest {
             final int period = 7;
             final int count = 5;
 
-            final List<DiscussionResponse> hotDiscussions = discussionQueryService.getHotDiscussions(memberId, period, count);
+            final List<DiscussionResponse> hotDiscussions = discussionQueryService.getHotDiscussions(memberId, period,
+                    count);
 
             // then
             assertAll(
@@ -599,7 +608,8 @@ class DiscussionQueryServiceTest {
             final int period = 7;
             final int count = 2;
 
-            final List<DiscussionResponse> hotDiscussions = discussionQueryService.getHotDiscussions(memberId, period, count);
+            final List<DiscussionResponse> hotDiscussions = discussionQueryService.getHotDiscussions(memberId, period,
+                    count);
 
             // then
             assertAll(
@@ -617,7 +627,8 @@ class DiscussionQueryServiceTest {
             final int period = 0;
             final int count = 5;
 
-            final List<DiscussionResponse> hotDiscussions = discussionQueryService.getHotDiscussions(memberId, period, count);
+            final List<DiscussionResponse> hotDiscussions = discussionQueryService.getHotDiscussions(memberId, period,
+                    count);
 
             // then
             assertAll(
@@ -633,187 +644,266 @@ class DiscussionQueryServiceTest {
 
     }
 
-    @Test
-    @DisplayName("최초 활성화된 토론방 조회 시, 정해진 기간동안 조회된 전체 활성 토론방 수가 size보다 적으면 다음 페이지 없음")
-    void getActiveDiscussions_whenResultLessThanSize_hasNextFalse() {
-        // given
-        databaseInitializer.setDefaultUserInfo();
-        databaseInitializer.setDefaultBookInfo();
+    @Nested
+    @DisplayName("활성화 된 토론방 무한 스크롤 조회")
+    class getActiveDiscussions {
 
-        final Long memberId = 1L;
-        final Long bookId = 1L;
+        private LocalDateTime baseTime;
 
-        databaseInitializer.setDiscussionInfo("게시글1", "내용1", memberId, bookId);
-        databaseInitializer.setDiscussionInfo("게시글2", "내용2", memberId, bookId);
-        databaseInitializer.setDiscussionInfo("게시글3", "내용3", memberId, bookId);
-        databaseInitializer.setDiscussionInfo("게시글4", "내용4", memberId, bookId);
+        @BeforeEach
+        void setUp() {
+            databaseInitializer.setDefaultUserInfo();
+            databaseInitializer.setDefaultBookInfo();
 
-        databaseInitializer.setCommentInfo("댓글1-1", memberId, 1L);
-        databaseInitializer.setCommentInfo("댓글2-1", memberId, 2L);
-        databaseInitializer.setCommentInfo("댓글2-2", memberId, 2L);
-        databaseInitializer.setCommentInfo("댓글3-1", memberId, 3L);
-        databaseInitializer.setCommentInfo("댓글3-2", memberId, 3L);
-        databaseInitializer.setCommentInfo("댓글3-3", memberId, 3L);
-        databaseInitializer.setCommentInfo("댓글4-1", memberId, 4L);
+            databaseInitializer.setDiscussionInfo("게시글1", "내용1", 1L, 1L);
+            databaseInitializer.setDiscussionInfo("게시글2", "내용2", 1L, 1L);
+            databaseInitializer.setDiscussionInfo("게시글3", "내용3", 1L, 1L);
+            databaseInitializer.setDiscussionInfo("게시글4", "내용4", 1L, 1L);
+            databaseInitializer.setDiscussionInfo("게시글5", "내용4", 1L, 1L);
+            databaseInitializer.setDiscussionInfo("게시글6", "내용4", 1L, 1L);
+            databaseInitializer.setDiscussionInfo("게시글7", "내용4", 1L, 1L);
+            databaseInitializer.setDiscussionInfo("게시글8", "내용4", 1L, 1L);
+            databaseInitializer.setDiscussionInfo("게시글9", "내용4", 1L, 1L);
 
-        final int periodDays = 2;
-        final int size = 5;
+            baseTime = LocalDateTime.now().truncatedTo(MICROS);
 
-        // when
-        final ActiveDiscussionPageResponse page1 = discussionQueryService.getActiveDiscussions(
-                memberId, periodDays, size, null
-        );
+            // 활성화 된 토론방 순서: 게시글 1 ~ 9 순
+            databaseInitializer.setCommentInfo("댓글1-1", 1L, 1L, baseTime.minusMinutes(10));
+            databaseInitializer.setCommentInfo("댓글2-1", 1L, 2L, baseTime.minusMinutes(20));
+            databaseInitializer.setCommentInfo("댓글2-2", 1L, 2L, baseTime.minusMinutes(30));
+            databaseInitializer.setCommentInfo("댓글3-1", 1L, 3L, baseTime.minusMinutes(40));
+            databaseInitializer.setCommentInfo("댓글3-2", 1L, 3L, baseTime.minusMinutes(50));
+            databaseInitializer.setCommentInfo("댓글3-3", 1L, 3L, baseTime.minusMinutes(60));
+            databaseInitializer.setCommentInfo("댓글4-1", 1L, 4L, baseTime.minusMinutes(70));
+            databaseInitializer.setCommentInfo("댓글5-1", 1L, 5L, baseTime.minusMinutes(80));
+            databaseInitializer.setCommentInfo("댓글6-1", 1L, 6L, baseTime.minusMinutes(80));
+            databaseInitializer.setCommentInfo("댓글7-1", 1L, 7L, baseTime.minusMinutes(100));
+            databaseInitializer.setCommentInfo("댓글8-1", 1L, 8L, baseTime.minusMinutes(110));
+            databaseInitializer.setCommentInfo("댓글9-1", 1L, 9L, baseTime.minusMinutes(110));
 
-        // then
-        assertThat(page1.pageInfo().hasNext()).isFalse();
-    }
+            databaseInitializer.setReplyInfo("대댓글1-1-1", 1L, 1L);
+            databaseInitializer.setReplyInfo("대댓글1-2-1", 1L, 1L);
+        }
 
-    @Test
-    @DisplayName("최초 활성화된 토론방 조회 시, 정해진 기간동안 조회된 전체 활성 토론방 수가 size와 같으면 다음 페이지 없음")
-    void getActiveDiscussions_whenResultEqualSize_hasNextFalse() {
-        // given
-        databaseInitializer.setDefaultUserInfo();
-        databaseInitializer.setDefaultBookInfo();
+        @Test
+        @DisplayName("첫 페이지 조회 시, 정해진 기간동안 조회된 전체 활성 토론방 수가 size보다 적으면 다음 페이지 없음")
+        void getActiveDiscussions_firstPage_whenResultLessThanSize_hasNextFalse() {
+            // given
+            final Long memberId = 1L;
+            final int periodDays = 2;
+            final int size = 11;
 
-        final Long memberId = 1L;
-        final Long bookId = 1L;
+            // when
+            final ActiveDiscussionPageResponse firstPage = discussionQueryService.getActiveDiscussions(
+                    memberId, periodDays, size, null
+            );
 
-        databaseInitializer.setDiscussionInfo("게시글1", "내용1", memberId, bookId);
-        databaseInitializer.setDiscussionInfo("게시글2", "내용2", memberId, bookId);
-        databaseInitializer.setDiscussionInfo("게시글3", "내용3", memberId, bookId);
-        databaseInitializer.setDiscussionInfo("게시글4", "내용4", memberId, bookId);
+            // then
+            assertThat(firstPage.pageInfo().hasNext()).isFalse();
+        }
 
-        databaseInitializer.setCommentInfo("댓글1-1", memberId, 1L);
-        databaseInitializer.setCommentInfo("댓글2-1", memberId, 2L);
-        databaseInitializer.setCommentInfo("댓글2-2", memberId, 2L);
-        databaseInitializer.setCommentInfo("댓글3-1", memberId, 3L);
-        databaseInitializer.setCommentInfo("댓글3-2", memberId, 3L);
-        databaseInitializer.setCommentInfo("댓글3-3", memberId, 3L);
-        databaseInitializer.setCommentInfo("댓글4-1", memberId, 4L);
+        @Test
+        @DisplayName("첫 페이지 조회 시, 정해진 기간동안 조회된 전체 활성 토론방 수가 size와 같으면 다음 페이지 없음")
+        void getActiveDiscussions_firstPage_whenResultEqualSize_hasNextFalse() {
+            // given
+            final Long memberId = 1L;
+            final int periodDays = 2;
+            final int size = 10;
 
-        final int periodDays = 2;
-        final int size = 4;
+            // when
+            final ActiveDiscussionPageResponse firstPage = discussionQueryService.getActiveDiscussions(
+                    memberId, periodDays, size, null
+            );
 
-        // when
-        final ActiveDiscussionPageResponse page1 = discussionQueryService.getActiveDiscussions(
-                memberId, periodDays, size, null
-        );
+            // then
+            assertThat(firstPage.pageInfo().hasNext()).isFalse();
+        }
 
-        // then
-        assertThat(page1.pageInfo().hasNext()).isFalse();
-    }
+        @Test
+        @DisplayName("첫 페이지 조회 시, 정해진 기간동안 조회된 전체 활성 토론방 수가 size보다 많으면 다음 페이지 있음")
+        void getActiveDiscussions_firstPage_whenResultGreaterThanSize_hasNextTrue() {
+            // given
+            final Long memberId = 1L;
+            final int periodDays = 2;
+            final int size = 3;
 
-    @Test
-    @DisplayName("최초 활성화된 토론방 조회 시, 정해진 기간동안 조회된 전체 활성 토론방 수가 size보다 많으면 다음 페이지 있음")
-    void getActiveDiscussions_whenResultGreaterThanSize_hasNextFalse1() {
-        // given
-        databaseInitializer.setDefaultUserInfo();
-        databaseInitializer.setDefaultBookInfo();
+            // when
+            final ActiveDiscussionPageResponse firstPage = discussionQueryService.getActiveDiscussions(
+                    memberId, periodDays, size, null
+            );
 
-        final Long memberId = 1L;
-        final Long bookId = 1L;
+            // then
+            assertThat(firstPage.pageInfo().hasNext()).isTrue();
+        }
 
-        databaseInitializer.setDiscussionInfo("게시글1", "내용1", memberId, bookId);
-        databaseInitializer.setDiscussionInfo("게시글2", "내용2", memberId, bookId);
-        databaseInitializer.setDiscussionInfo("게시글3", "내용3", memberId, bookId);
-        databaseInitializer.setDiscussionInfo("게시글4", "내용4", memberId, bookId);
+        @Test
+        @DisplayName("중간 페이지 조회 시, cursor 이후 데이터가 반환되고 다음 페이지 있음")
+        void getActiveDiscussions_middlePage_hasNextTrue() {
+            // given
+            final Long memberId = 1L;
+            final int periodDays = 2;
+            final int size = 3;
 
-        databaseInitializer.setCommentInfo("댓글1-1", memberId, 1L);
-        databaseInitializer.setCommentInfo("댓글2-1", memberId, 2L);
-        databaseInitializer.setCommentInfo("댓글2-2", memberId, 2L);
-        databaseInitializer.setCommentInfo("댓글3-1", memberId, 3L);
-        databaseInitializer.setCommentInfo("댓글3-2", memberId, 3L);
-        databaseInitializer.setCommentInfo("댓글3-3", memberId,3L);
-        databaseInitializer.setCommentInfo("댓글4-1", memberId, 4L);
+            // when
+            final ActiveDiscussionPageResponse firstPage = discussionQueryService.getActiveDiscussions(
+                    memberId, periodDays, size, null
+            );
 
-        final int periodDays = 2;
-        final int size = 3;
+            final ActiveDiscussionPageResponse middlePage = discussionQueryService.getActiveDiscussions(
+                    memberId, periodDays, size, firstPage.pageInfo().nextCursor()
+            );
 
-        // when
-        final ActiveDiscussionPageResponse page1 = discussionQueryService.getActiveDiscussions(
-                memberId, periodDays, size, null
-        );
+            // then
+            assertAll(
+                    () -> assertThat(middlePage.items()).hasSize(3),
+                    () -> assertThat(middlePage.pageInfo().hasNext()).isTrue(),
+                    () -> assertThat(middlePage.items())
+                            .isSortedAccordingTo(
+                                    Comparator.comparing(ActiveDiscussionResponse::lastCommentedAt)
+                                            .reversed()
+                                            .thenComparing(ActiveDiscussionResponse::discussionId,
+                                                    Comparator.reverseOrder())
+                            )
+            );
+        }
 
-        // then
-        assertThat(page1.pageInfo().hasNext()).isTrue();
-    }
+        @Test
+        @DisplayName("마지막 페이지 조회 시, 남은 데이터만 반환되고 다음 페이지 없음")
+        void getActiveDiscussions_lastPage_hasNextTrue() {
+            // given
+            final Long memberId = 1L;
+            final int periodDays = 2;
+            final int size = 3;
 
-    @Test
-    @DisplayName("댓글을 기준으로 활성화된 토론방을 조회한다")
-    void getActiveDiscussions() {
-        // given
-        databaseInitializer.setDefaultUserInfo();
-        databaseInitializer.setDefaultBookInfo();
+            // when
+            final ActiveDiscussionPageResponse firstPage = discussionQueryService.getActiveDiscussions(
+                    memberId, periodDays, size, null
+            );
 
-        final Long memberId = 1L;
-        final Long bookId = 1L;
+            final ActiveDiscussionPageResponse middlePage = discussionQueryService.getActiveDiscussions(
+                    memberId, periodDays, size, firstPage.pageInfo().nextCursor()
+            );
 
-        databaseInitializer.setDiscussionInfo("게시글1", "내용1", memberId, bookId);
-        databaseInitializer.setDiscussionInfo("게시글2", "내용2", memberId, bookId);
-        databaseInitializer.setDiscussionInfo("게시글3", "내용3", memberId, bookId);
-        databaseInitializer.setDiscussionInfo("게시글4", "내용4", memberId, bookId);
+            final ActiveDiscussionPageResponse lastPage = discussionQueryService.getActiveDiscussions(
+                    memberId, periodDays, size, middlePage.pageInfo().nextCursor()
+            );
 
-        final LocalDateTime baseTime = LocalDateTime.now().truncatedTo(MICROS);
+            // then
+            assertAll(
+                    () -> assertThat(lastPage.items()).hasSize(3),
+                    () -> assertThat(lastPage.pageInfo().hasNext()).isFalse(),
+                    () -> assertThat(lastPage.items())
+                            .isSortedAccordingTo(
+                                    Comparator.comparing(ActiveDiscussionResponse::lastCommentedAt)
+                                            .reversed()
+                                            .thenComparing(ActiveDiscussionResponse::discussionId,
+                                                    Comparator.reverseOrder())
+                            )
+            );
+        }
 
-        // 활성화 된 토론방 순서: DAY1 > DAY2 > DAY3 > DAY4
-        databaseInitializer.setCommentInfo("댓글1-1", memberId, 1L, baseTime.minusMinutes(10));
-        databaseInitializer.setCommentInfo("댓글2-1", memberId, 2L, baseTime.minusMinutes(20));
-        databaseInitializer.setCommentInfo("댓글2-2", memberId, 2L, baseTime.minusMinutes(30));
-        databaseInitializer.setCommentInfo("댓글3-1", memberId, 3L, baseTime.minusMinutes(40));
-        databaseInitializer.setCommentInfo("댓글3-2", memberId, 3L, baseTime.minusMinutes(50));
-        databaseInitializer.setCommentInfo("댓글3-3", memberId, 3L, baseTime.minusMinutes(60));
-        databaseInitializer.setCommentInfo("댓글4-1", memberId, 4L, baseTime.minusMinutes(70));
+        @Test
+        @DisplayName("커서 기반 조회 시, 이전 페이지의 토론방이 다음 페이지에 포함되지 않는다")
+        void getActiveDiscussions_noDuplicateItemsBetweenPages() {
+            // given
+            final Long memberId = 1L;
+            final int periodDays = 2;
+            final int size = 3;
 
-        final int periodDays = 2;
-        final int size = 2;
+            // when
+            final ActiveDiscussionPageResponse firstPage = discussionQueryService.getActiveDiscussions(
+                    memberId, periodDays, size, null
+            );
 
-        // when
-        final ActiveDiscussionPageResponse page1 = discussionQueryService.getActiveDiscussions(
-                memberId, periodDays, size, null
-        );
+            final ActiveDiscussionPageResponse middlePage = discussionQueryService.getActiveDiscussions(
+                    memberId, periodDays, size, firstPage.pageInfo().nextCursor()
+            );
 
-        // then
-        assertAll(
-                () -> assertThat(page1.items()).hasSize(size),
-                () -> assertThat(page1.pageInfo().hasNext()).isTrue(),
-                () -> assertThat(page1.items())
-                        .extracting("lastCommentedAt")
-                        .containsExactly(
-                                baseTime.minusMinutes(10),
-                                baseTime.minusMinutes(20)
-                        )
-        );
-    }
+            final ActiveDiscussionPageResponse lastPage = discussionQueryService.getActiveDiscussions(
+                    memberId, periodDays, size, middlePage.pageInfo().nextCursor()
+            );
 
-    @ParameterizedTest(name = "size={0} 일 때 예외 없음")
-    @ValueSource(ints = {1, 50})
-    @DisplayName("페이지 크기 경계값(1, 50)에서는 예외가 발생하지 않는다")
-    void getActiveDiscussions_sizeBoundary_ok(final int size) {
-        databaseInitializer.setDefaultUserInfo();
-        databaseInitializer.setDefaultBookInfo();
+            // then
+            assertAll(
+                    () -> assertThat(firstPage.items()).doesNotContainAnyElementsOf(middlePage.items()),
+                    () -> assertThat(middlePage.items()).doesNotContainAnyElementsOf(lastPage.items())
+            );
+        }
 
-        final Long memberId = 1L;
-        final int periodDays = 2;
+        @Test
+        @DisplayName("댓글을 기준으로 활성화된 토론방을 조회한다")
+        void getActiveDiscussions() {
+            // given
+            final Long memberId = 1L;
 
-        assertThatCode(() ->
-                discussionQueryService.getActiveDiscussions(memberId, periodDays, size, null)
-        ).doesNotThrowAnyException();
-    }
+            final int periodDays = 2;
+            final int size = 2;
 
-    @ParameterizedTest(name = "size={0} 일 때 예외 발생")
-    @ValueSource(ints = {0, 51})
-    @DisplayName("페이지 크기가 경계 밖(0, 51)이면 예외가 발생한다")
-    void getActiveDiscussions_sizeOutOfRange_fail(final int size) {
-        databaseInitializer.setDefaultUserInfo();
-        databaseInitializer.setDefaultBookInfo();
+            // when
+            final ActiveDiscussionPageResponse firstPage = discussionQueryService.getActiveDiscussions(
+                    memberId, periodDays, size, null
+            );
 
-        final Long memberId = 1L;
-        final int periodDays = 2;
+            // then
+            assertAll(
+                    () -> assertThat(firstPage.items()).hasSize(size),
+                    () -> assertThat(firstPage.pageInfo().hasNext()).isTrue(),
+                    () -> assertThat(firstPage.items())
+                            .extracting("lastCommentedAt")
+                            .containsExactly(
+                                    baseTime.minusMinutes(10),
+                                    baseTime.minusMinutes(20)
+                            )
+            );
+        }
 
-        assertThatThrownBy(() ->
-                discussionQueryService.getActiveDiscussions(memberId, periodDays, size, null)
-        )
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("유효하지 않은 페이지 사이즈입니다. 1 이상 50 이하의 페이징을 시도해주세요");
+        @Test
+        @DisplayName("활성화 된 토론방 조회 시, 전체 댓글 수는 댓글 수와 대댓글 수의 합이다")
+        void getActiveDiscussions_totalCommentCount() {
+            // given
+            final Long memberId = 1L;
+            final int periodDays = 2;
+            final int size = 1;
+
+            // when
+            final ActiveDiscussionPageResponse firstPage = discussionQueryService.getActiveDiscussions(
+                    memberId, periodDays, size, null
+            );
+
+            // then
+            assertThat(firstPage.items().get(0).commentCount()).isEqualTo(3);
+        }
+
+        @ParameterizedTest(name = "size={0} 일 때 예외 없음")
+        @ValueSource(ints = {1, 50})
+        @DisplayName("페이지 크기 경계값(1, 50)에서는 예외가 발생하지 않는다")
+        void getActiveDiscussions_sizeBoundary_ok(final int size) {
+            databaseInitializer.setDefaultUserInfo();
+            databaseInitializer.setDefaultBookInfo();
+
+            final Long memberId = 1L;
+            final int periodDays = 2;
+
+            assertThatCode(() ->
+                    discussionQueryService.getActiveDiscussions(memberId, periodDays, size, null)
+            ).doesNotThrowAnyException();
+        }
+
+        @ParameterizedTest(name = "size={0} 일 때 예외 발생")
+        @ValueSource(ints = {0, 51})
+        @DisplayName("페이지 크기가 경계 밖(0, 51)이면 예외가 발생한다")
+        void getActiveDiscussions_sizeOutOfRange_fail(final int size) {
+            databaseInitializer.setDefaultUserInfo();
+            databaseInitializer.setDefaultBookInfo();
+
+            final Long memberId = 1L;
+            final int periodDays = 2;
+
+            assertThatThrownBy(() ->
+                    discussionQueryService.getActiveDiscussions(memberId, periodDays, size, null)
+            )
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessageContaining("유효하지 않은 페이지 사이즈입니다. 1 이상 50 이하의 페이징을 시도해주세요");
+        }
     }
 }
