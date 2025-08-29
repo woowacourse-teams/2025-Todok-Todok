@@ -58,13 +58,13 @@ class SelectBookViewModel(
                     if (books.isEmpty()) {
                         _uiState.value =
                             _uiState.value?.copy(status = SearchedBookResultStatus.NotFound)
-                    } else {
-                        _uiState.value =
-                            _uiState.value?.copy(
-                                status = SearchedBookResultStatus.Success,
-                                searchedBooks = books,
-                            )
+                        return@onSuccess
                     }
+                    _uiState.value =
+                        _uiState.value?.copy(
+                            status = SearchedBookResultStatus.Success,
+                            searchedBooks = books,
+                        )
                 }.onFailure { exception: TodokTodokExceptions ->
                     _uiState.value =
                         _uiState.value?.copy(status = SearchedBookResultStatus.NotStarted)

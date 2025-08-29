@@ -8,6 +8,8 @@ data class SelectBookUiState(
     val searchedBooks: AladinBooks = AladinBooks(emptyList()),
     val status: SearchedBookResultStatus = SearchedBookResultStatus.NotStarted,
 ) {
+    val size: Int get() = searchedBooks.size
+
     fun selectedBook(position: Int): AladinBook? {
         if (isExist(position)) return searchedBooks[position]
         return null

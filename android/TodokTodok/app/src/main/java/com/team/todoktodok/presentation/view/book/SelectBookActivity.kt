@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
-import android.view.MotionEvent
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowInsetsAnimation
@@ -48,16 +47,9 @@ class SelectBookActivity : AppCompatActivity() {
         setContentView(binding.main)
         initSystemBar(binding)
         initView(binding, adapter)
-        setupUiState(binding, adapter)
-        setupUiEvent(binding)
+        setUpUiState(binding, adapter)
+        setUpUiEvent(binding)
         liftViewWithIme(binding.nsvEmptySearchResult, R.dimen.space_120)
-    }
-
-    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
-        if (ev?.action == MotionEvent.ACTION_DOWN) {
-            hideKeyBoard(view = currentFocus ?: View(this))
-        }
-        return super.dispatchTouchEvent(ev)
     }
 
     private fun initSystemBar(binding: ActivitySelectBookBinding) {
@@ -82,7 +74,7 @@ class SelectBookActivity : AppCompatActivity() {
             btnBack.setOnClickListener {
                 finish()
             }
-            etlSearchKeyword.requestFocus()
+            etSearchKeyword.requestFocus()
             etlSearchKeyword.setEndIconOnClickListener {
                 binding.etSearchKeyword.text = null
                 viewModel.updateKeyword(binding.etSearchKeyword.text.toString())
@@ -106,13 +98,21 @@ class SelectBookActivity : AppCompatActivity() {
             false
         }
 
-    private fun setupUiState(
+    private fun setUpUiState(
         binding: ActivitySelectBookBinding,
         adapter: SearchBooksAdapter,
     ) {
         viewModel.uiState.observe(this) { state: SelectBookUiState ->
             updateSearchedBooks(state, binding, adapter)
+            updateKeyword(state.keyword, binding)
         }
+    }
+
+    private fun updateKeyword(
+        keyword: String,
+        binding: ActivitySelectBookBinding,
+    ) {
+        binding.etSearchKeyword.setText(keyword)
     }
 
     private fun updateSearchedBooks(
@@ -120,44 +120,60 @@ class SelectBookActivity : AppCompatActivity() {
         binding: ActivitySelectBookBinding,
         adapter: SearchBooksAdapter,
     ) {
-        hideKeyBoard(view = currentFocus ?: View(this))
         when (state.status) {
-            is SearchedBookResultStatus.Loading -> {
-                binding.progressBar.visibility = View.VISIBLE
-                binding.nsvEmptySearchResult.visibility = View.GONE
-                binding.rvSearchedBooks.visibility = View.GONE
-            }
-
-            is SearchedBookResultStatus.NotStarted -> {
-                binding.progressBar.visibility = View.GONE
-                binding.nsvEmptySearchResult.visibility = View.VISIBLE
-                binding.rvSearchedBooks.visibility = View.GONE
-            }
-
-            is SearchedBookResultStatus.NotFound -> {
-                binding.progressBar.visibility = View.GONE
-                binding.nsvEmptySearchResult.visibility = View.VISIBLE
-                binding.rvSearchedBooks.visibility = View.GONE
-                binding.tvEmptySearchResultTitle.text =
-                    highlightKeyword(state.keyword)
-                binding.tvEmptySearchResultSubTitle.setText(R.string.select_book_empty_search_result_content)
-            }
-
-            is SearchedBookResultStatus.Success -> {
-                binding.progressBar.visibility = View.GONE
-                binding.tvSearchedBooksCount.text =
-                    getString(
-                        R.string.select_book_searched_books_count,
-                        state.searchedBooks.size,
-                    )
-                binding.nsvEmptySearchResult.visibility = View.GONE
-                binding.rvSearchedBooks.visibility = View.VISIBLE
-                adapter.submitList(state.searchedBooks.value)
-            }
+            is SearchedBookResultStatus.Loading -> updateLoadingStatus(binding)
+            is SearchedBookResultStatus.NotStarted -> updateNotStartStatus(binding)
+            is SearchedBookResultStatus.NotFound -> updateNotFoundStatus(binding, state)
+            is SearchedBookResultStatus.Success -> updateSuccessStatus(binding, state, adapter)
         }
     }
 
-    private fun setupUiEvent(binding: ActivitySelectBookBinding) {
+    private fun updateSuccessStatus(
+        binding: ActivitySelectBookBinding,
+        state: SelectBookUiState,
+        adapter: SearchBooksAdapter,
+    ) {
+        hideKeyBoard(view = currentFocus ?: View(this))
+        binding.tvSearchedBooksCount.visibility = View.VISIBLE
+        binding.progressBar.visibility = View.GONE
+        binding.tvSearchedBooksCount.text =
+            getString(
+                R.string.select_book_searched_books_count,
+                state.size,
+            )
+        binding.nsvEmptySearchResult.visibility = View.GONE
+        binding.rvSearchedBooks.visibility = View.VISIBLE
+        adapter.submitList(state.searchedBooks.value)
+    }
+
+    private fun updateNotFoundStatus(
+        binding: ActivitySelectBookBinding,
+        state: SelectBookUiState,
+    ) {
+        binding.progressBar.visibility = View.GONE
+        binding.nsvEmptySearchResult.visibility = View.VISIBLE
+        binding.rvSearchedBooks.visibility = View.GONE
+        binding.tvEmptySearchResultTitle.text =
+            highlightKeyword(state.keyword)
+        binding.tvEmptySearchResultSubTitle.setText(R.string.select_book_empty_search_result_content)
+        binding.tvSearchedBooksCount.visibility = View.GONE
+    }
+
+    private fun updateNotStartStatus(binding: ActivitySelectBookBinding) {
+        binding.progressBar.visibility = View.GONE
+        binding.nsvEmptySearchResult.visibility = View.VISIBLE
+        binding.rvSearchedBooks.visibility = View.GONE
+        binding.tvSearchedBooksCount.visibility = View.GONE
+    }
+
+    private fun updateLoadingStatus(binding: ActivitySelectBookBinding) {
+        binding.progressBar.visibility = View.VISIBLE
+        binding.nsvEmptySearchResult.visibility = View.GONE
+        binding.rvSearchedBooks.visibility = View.GONE
+        binding.tvSearchedBooksCount.visibility = View.GONE
+    }
+
+    private fun setUpUiEvent(binding: ActivitySelectBookBinding) {
         viewModel.uiEvent.observe(this) { event ->
             when (event) {
                 is SelectBookUiEvent.NavigateToCreateDiscussionRoom ->
@@ -196,12 +212,6 @@ class SelectBookActivity : AppCompatActivity() {
             )
         startActivity(intent)
         finish()
-    }
-
-    private fun showKeyBoard(view: View) {
-        val inputMethodManager: InputMethodManager =
-            this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        inputMethodManager.showSoftInput(view, 0)
     }
 
     private fun hideKeyBoard(view: View) {
