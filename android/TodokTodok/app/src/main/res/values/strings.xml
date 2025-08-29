@@ -38,6 +38,7 @@
     <string name="all_relative_months">%d달전</string>
     <string name="all_relative_years">%d년전</string>
     <string name="all_last_page">마지막 페이지입니다</string>
+    <string name="all_create_discussion_room">토론방 생성</string>
 
     <!--  토론 목록 페이지  -->
     <string name="discussions_hot_discussion_rooms">인기 토론방</string>
@@ -117,26 +118,21 @@
     <string name="comment_content_description_noting_comment">댓글이 없을 때 나오는 토독이</string>
 
     <!-- 토론방 도서 선택 화면 -->
-    <string name="content_description_ut_discussion_img">토론방 도서 이미지</string>
-    <string name="create_discussion_room">토론방 생성</string>
-    <string name="content_description_btn_back">메인 페이지로 이동합니다</string>
-    <string name="content_description_book_cover">도서 이미지입니다</string>
+    <string name="select_book_content_description_ut_discussion_img">토론방 도서 이미지</string>
+    <string name="select_book_content_description_btn_back">메인 페이지로 이동합니다</string>
+    <string name="select_book_content_description_book_cover">도서 이미지입니다</string>
     <string name="select_book">토론방 도서 선택</string>
-    <string name="content_description_search_keyword">도서 검색을 합니다</string>
-    <string name="hint_search_keyword">도서 제목 또는 저자를 입력해주세요</string>
-    <string name="draft_discussion_exist">임시저장된 문서를 불러오시겠습니까?</string>
-    <string name="load">불러오기</string>
-    <string name="empty_search_result">도서 \'%s\'\n검색 결과가 없습니다</string>
-    <string name="empty_search_result_description">입력한 검색어의 철자 또는 띄어쓰기가\n정확한지 다시 한번 확인해 주세요.</string>
-
-    <string name="error_empty_keyword">검색어는 1자 이상이어야 합니다</string>
-    <string name="error_empty_isbn">도서 ISBN을 입력해주세요</string>
-    <string name="error_no_selected_book">도서를 선택해주세요</string>
-    <string name="error_network">네트워크 에러가 발생했어요</string>
-    <string name="error_same_keyword">동일한 키워드를 입력했습니다</string>
+    <string name="select_book_content_description_search_keyword">도서 검색을 합니다</string>
+    <string name="select_book_hint_search_keyword">도서 제목 또는 저자를 입력해주세요</string>
+    <string name="select_book_empty_search_result">도서 \'%s\'\n검색 결과가 없습니다</string>
+    <string name="select_book_empty_search_result_content">입력한 검색어의 철자 또는 띄어쓰기가\n정확한지 다시 한번 확인해 주세요.</string>
+    <string name="select_book_searched_books_count">%,d개</string>
+    <string name="select_book_error_empty_keyword">검색어는 1자 이상이어야 합니다</string>
+    <string name="select_book_error_empty_isbn">도서 ISBN을 입력해주세요</string>
+    <string name="select_book_error_no_selected_book">도서를 선택해주세요</string>
 
     <!-- 토론방 생성 화면 -->
-    <string name="create_discussion_room_appbar">토론방 생성</string>
+    <string name="all_create_discussion_room_appbar">토론방 생성</string>
     <string name="create">등록</string>
     <string name="content_description_edit_book_in_discussion_room">토론방 도서를 변경합니다</string>
     <string name="hint_discussion_room_opinion">최근에 읽은 도서에서 이야기하고 싶은 내용을 입력해주세요!</string>
@@ -244,4 +240,5 @@
     <string name="error_reply_comment_not_in_discussion">해당 토론방에 있는 댓글이 아닙니다</string>
     <string name="error_reply_not_in_comment">해당 댓글에 있는 대댓글이 아닙니다</string>
     <string name="error_reply_only_owner_can_modify_or_delete">자기 자신의 대댓글만 수정/삭제 가능합니다</string>
+    <string name="content_description_delete_keyword">입력한 키워드를 삭제합니다</string>
 </resources>

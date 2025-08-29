@@ -23,7 +23,7 @@
         style="@style/HeaderTitleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/create_discussion_room_appbar"
+        android:text="@string/all_create_discussion_room"
         app:layout_constraintBottom_toBottomOf="@id/topBar_create_discussion_room"
         app:layout_constraintEnd_toEndOf="@id/topBar_create_discussion_room"
         app:layout_constraintStart_toStartOf="@id/topBar_create_discussion_room"
@@ -34,7 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/btn_back"
-        android:contentDescription="@string/content_description_btn_back"
+        android:contentDescription="@string/select_book_content_description_btn_back"
         app:layout_constraintBottom_toBottomOf="@id/topBar_create_discussion_room"
         app:layout_constraintStart_toStartOf="@id/topBar_create_discussion_room"
         app:layout_constraintTop_toTopOf="@id/topBar_create_discussion_room" />
@@ -56,14 +56,14 @@
         android:id="@+id/scroll_container"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:fillViewport="true"
         android:clipToPadding="false"
         android:descendantFocusability="afterDescendants"
+        android:fillViewport="true"
         android:focusableInTouchMode="true"
-        app:layout_constraintTop_toBottomOf="@id/topBar_create_discussion_room"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/topBar_create_discussion_room">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/content_container"
@@ -75,11 +75,11 @@
                 android:layout_width="80dp"
                 android:layout_height="100dp"
                 android:layout_marginVertical="@dimen/space_8"
-                android:contentDescription="@string/content_description_book_cover"
+                android:contentDescription="@string/select_book_content_description_book_cover"
                 android:scaleType="centerCrop"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/etl_discussion_room_title"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 app:shapeAppearanceOverlay="@style/RoundedImageStyle"
                 tools:src="@drawable/img_mascort" />
 
@@ -93,10 +93,10 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:textSize="18sp"
-                app:layout_constraintTop_toTopOf="@id/iv_book_image"
                 app:layout_constraintBottom_toTopOf="@id/tv_book_author"
-                app:layout_constraintStart_toEndOf="@id/iv_book_image"
                 app:layout_constraintEnd_toStartOf="@id/btn_edit"
+                app:layout_constraintStart_toEndOf="@id/iv_book_image"
+                app:layout_constraintTop_toTopOf="@id/iv_book_image"
                 app:layout_constraintVertical_chainStyle="packed"
                 tools:text="나무처럼 생각하기 : 나무처럼 자연의 질서 속에서 다시 살아가는 방법에 대하여" />
 
@@ -111,10 +111,10 @@
                 android:maxLines="1"
                 android:textColor="@color/gray_66"
                 android:textSize="@dimen/font_size_normal"
-                app:layout_constraintTop_toBottomOf="@id/tv_book_title"
                 app:layout_constraintBottom_toBottomOf="@id/iv_book_image"
-                app:layout_constraintStart_toStartOf="@id/tv_book_title"
                 app:layout_constraintEnd_toStartOf="@id/btn_edit"
+                app:layout_constraintStart_toStartOf="@id/tv_book_title"
+                app:layout_constraintTop_toBottomOf="@id/tv_book_title"
                 tools:text="조슈아 블로쉬" />
 
             <ImageView
@@ -123,9 +123,9 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/ic_edit"
                 android:contentDescription="@string/content_description_edit_book_in_discussion_room"
-                app:layout_constraintTop_toTopOf="@id/iv_book_image"
                 app:layout_constraintBottom_toBottomOf="@id/iv_book_image"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/iv_book_image" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/etl_discussion_room_title"
@@ -139,9 +139,9 @@
                 app:boxStrokeWidthFocused="@dimen/space_0"
                 app:counterEnabled="false"
                 app:hintEnabled="false"
-                app:layout_constraintTop_toBottomOf="@id/iv_book_image"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
+                app:layout_constraintTop_toBottomOf="@id/iv_book_image">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_discussion_room_title"
@@ -149,13 +149,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/pretendard_regular"
-                    android:hint="@string/hint_discussion_room_title"
-                    android:overScrollMode="ifContentScrolls"
-                    android:inputType="text|textMultiLine"
-                    android:nextFocusDown="@id/et_discussion_room_opinion"
                     android:gravity="top|start"
-                    android:maxLength="50"
+                    android:hint="@string/hint_discussion_room_title"
                     android:imeOptions="actionNext"
+                    android:inputType="text|textMultiLine"
+                    android:maxLength="50"
+                    android:nextFocusDown="@id/et_discussion_room_opinion"
+                    android:overScrollMode="ifContentScrolls"
                     android:paddingVertical="@dimen/space_0"
                     android:textColor="@color/black_18"
                     android:textColorHint="@color/gray_76" />
@@ -167,9 +167,9 @@
                 android:layout_height="1dp"
                 android:layout_marginTop="@dimen/space_20"
                 android:background="@color/gray_76"
-                app:layout_constraintTop_toBottomOf="@id/etl_discussion_room_title"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintTop_toBottomOf="@id/etl_discussion_room_title" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/etl_discussion_room_opinion"
@@ -184,10 +184,9 @@
                 app:boxStrokeWidthFocused="@dimen/space_0"
                 app:counterEnabled="false"
                 app:hintEnabled="false"
-                app:layout_constraintTop_toBottomOf="@id/view_divider"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                >
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/view_divider">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_discussion_room_opinion"
@@ -197,10 +196,10 @@
                     android:fontFamily="@font/pretendard_regular"
                     android:gravity="top|start"
                     android:hint="@string/hint_discussion_room_opinion"
+                    android:imeOptions="actionDone"
                     android:inputType="text|textMultiLine"
                     android:maxLength="2500"
                     android:overScrollMode="never"
-                    android:imeOptions="actionDone"
                     android:scrollbars="none"
                     android:textColor="@color/black_18"
                     android:textColorHint="@color/gray_76" />

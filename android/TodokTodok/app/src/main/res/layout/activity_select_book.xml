@@ -35,7 +35,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/btn_back"
-        android:contentDescription="@string/content_description_btn_back"
+        android:contentDescription="@string/select_book_content_description_btn_back"
         app:layout_constraintBottom_toBottomOf="@id/topBar_select_book"
         app:layout_constraintStart_toStartOf="@id/topBar_select_book"
         app:layout_constraintTop_toTopOf="@id/topBar_select_book" />
@@ -70,7 +70,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fontFamily="@font/pretendard_regular"
-            android:hint="@string/hint_search_keyword"
+            android:hint="@string/select_book_hint_search_keyword"
             android:imeOptions="actionSearch"
             android:inputType="text"
             android:maxLines="1"
@@ -80,19 +80,35 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
+    <TextView
+        android:id="@+id/tv_searched_books_count"
+        style="@style/BaseTextStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/pretendard_regular"
+        android:paddingLeft="@dimen/space_16"
+        android:textColor="@color/gray_66"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/etl_search_keyword"
+        tools:text="50개" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_searched_books"
         android:layout_width="match_parent"
         android:layout_height="@dimen/space_0"
-        android:layout_marginTop="10dp"
         android:paddingBottom="10dp"
+        android:scrollbarFadeDuration="0"
+        android:scrollbarStyle="insideOverlay"
+        android:scrollbars="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/etl_search_keyword"
+        app:layout_constraintTop_toBottomOf="@id/tv_searched_books_count"
         tools:listitem="@layout/item_book" />
+
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nsv_empty_search_result"
