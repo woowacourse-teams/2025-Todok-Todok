@@ -4,9 +4,9 @@ import com.team.domain.model.Book
 import com.team.domain.model.Discussion
 import com.team.domain.model.LikeStatus
 import com.team.domain.model.active.ActivatedDiscussionPage
+import com.team.domain.model.discussionroom.DiscussionRoom
 import com.team.domain.model.exception.NetworkResult
 import com.team.domain.model.latest.LatestDiscussionPage
-import com.team.domain.model.member.DiscussionRoom
 
 interface DiscussionRepository {
     suspend fun getSearchDiscussion(keyword: String): NetworkResult<List<Discussion>>

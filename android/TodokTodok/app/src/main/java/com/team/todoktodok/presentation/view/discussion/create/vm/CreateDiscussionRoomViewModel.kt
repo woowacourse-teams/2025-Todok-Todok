@@ -5,11 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.team.domain.model.Book
+import com.team.domain.model.discussionroom.DiscussionRoom
+import com.team.domain.model.discussionroom.DiscussionRoom.Companion.DiscussionRoom
 import com.team.domain.model.exception.onFailure
 import com.team.domain.model.exception.onSuccess
 import com.team.domain.model.exception.onSuccessSuspend
-import com.team.domain.model.member.DiscussionRoom
-import com.team.domain.model.member.DiscussionRoom.Companion.DiscussionRoom
 import com.team.domain.repository.BookRepository
 import com.team.domain.repository.DiscussionRepository
 import com.team.domain.repository.TokenRepository

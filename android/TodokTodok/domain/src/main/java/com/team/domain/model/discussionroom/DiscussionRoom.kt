@@ -1,7 +1,7 @@
-package com.team.domain.model.member
+package com.team.domain.model.discussionroom
 
 data class DiscussionRoom(
-    private val _title: Title,
+    private val _title: DiscussionRoomTitle,
     private val _opinion: Opinion,
 ) {
     val title: String get() = _title.value
@@ -13,7 +13,7 @@ data class DiscussionRoom(
             opinion: String,
         ): DiscussionRoom =
             DiscussionRoom(
-                _title = Title(title),
+                _title = DiscussionRoomTitle(title),
                 _opinion = Opinion(opinion),
             )
     }

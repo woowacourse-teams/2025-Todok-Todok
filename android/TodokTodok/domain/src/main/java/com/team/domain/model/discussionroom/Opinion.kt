@@ -1,4 +1,4 @@
-package com.team.domain.model.member
+package com.team.domain.model.discussionroom
 
 @JvmInline
 value class Opinion(

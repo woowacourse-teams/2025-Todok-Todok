@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import com.team.domain.model.member.DiscussionRoom.Companion.DiscussionRoom
+import com.team.domain.model.discussionroom.DiscussionRoom.Companion.DiscussionRoom
 
 @Entity(
     tableName = "discussion",
