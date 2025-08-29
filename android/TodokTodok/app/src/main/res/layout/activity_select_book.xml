@@ -53,6 +53,7 @@
         app:boxCornerRadiusTopStart="@dimen/space_8"
         app:boxStrokeWidth="@dimen/space_0"
         app:boxStrokeWidthFocused="@dimen/space_0"
+        app:endIconContentDescription="@string/content_description_delete_keyword"
         app:endIconDrawable="@drawable/ic_cancel"
         app:endIconMode="clear_text"
         app:endIconTint="@color/gray_76"
@@ -142,9 +143,9 @@
         android:id="@+id/progress_bar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/space_0"
-        app:layout_constraintBottom_toBottomOf="parent"
         android:clickable="true"
         android:focusable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/etl_search_keyword" />
