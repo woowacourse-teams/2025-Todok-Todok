@@ -1,8 +1,13 @@
 package com.team.todoktodok.presentation.core
 
+import com.team.domain.model.exception.BookAuthorException
+import com.team.domain.model.exception.BookException
+import com.team.domain.model.exception.BookImageException
+import com.team.domain.model.exception.BookTitleException
 import com.team.domain.model.exception.BooksExceptions
 import com.team.domain.model.exception.CommentExceptions
 import com.team.domain.model.exception.DiscussionExceptions
+import com.team.domain.model.exception.ISBNException
 import com.team.domain.model.exception.ReplyExceptions
 import com.team.domain.model.exception.TodokTodokExceptions
 import com.team.todoktodok.R
@@ -89,8 +94,8 @@ class ExceptionMessageConverter {
             DiscussionExceptions.EmptyContent -> R.string.error_empty_content
             DiscussionExceptions.EmptyTitle -> R.string.error_empty_title
 
-            BooksExceptions.EmptyKeywordException -> R.string.error_empty_keyword
-            BooksExceptions.EmptyISBNException -> R.string.error_empty_isbn
+            BooksExceptions.EmptyKeywordException -> R.string.select_book_error_empty_keyword
+            BooksExceptions.EmptyISBNException -> R.string.select_book_error_empty_isbn
 
             CommentExceptions.AlreadyReported -> R.string.error_comment_already_reported
             CommentExceptions.CannotDeleteWithReplies -> R.string.error_comment_cannot_delete_with_replies
@@ -107,5 +112,14 @@ class ExceptionMessageConverter {
             ReplyExceptions.CommentNotBelongToDiscussion -> R.string.error_reply_comment_not_in_discussion
             ReplyExceptions.ReplyNotBelongToComment -> R.string.error_reply_not_in_comment
             ReplyExceptions.OnlyOwnerCanModifyOrDelete -> R.string.error_reply_only_owner_can_modify_or_delete
+
+            BookAuthorException.EmptyBookAuthor -> TODO()
+            BookException.EmptyISBNException -> TODO()
+            BookException.EmptyKeywordException -> TODO()
+            BookException.EmptySelectedBook -> TODO()
+            BookImageException.InvalidUrl -> TODO()
+            BookTitleException.EmptyBookTitle -> TODO()
+            ISBNException.InvalidFormat -> TODO()
+            ISBNException.InvalidLength -> TODO()
         }
 }

@@ -2,13 +2,13 @@ package com.team.todoktodok.presentation.view.book.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
-import com.team.domain.model.Book
+import com.team.domain.model.book.AladinBook
 import com.team.todoktodok.presentation.view.book.adapter.SearchBooksViewHolder.Companion.SearchBooksViewHolder
 import com.team.todoktodok.presentation.view.book.adapter.SearchBooksViewHolder.SelectBookClickListener
 
 class SearchBooksAdapter(
     private val selectBook: SelectBookClickListener,
-) : ListAdapter<Book, SearchBooksViewHolder>(SearchedBookDiffUtil()) {
+) : ListAdapter<AladinBook, SearchBooksViewHolder>(SearchedBookDiffUtil()) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
