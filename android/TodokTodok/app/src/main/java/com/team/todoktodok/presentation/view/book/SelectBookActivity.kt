@@ -82,6 +82,7 @@ class SelectBookActivity : AppCompatActivity() {
             btnBack.setOnClickListener {
                 finish()
             }
+            etlSearchKeyword.requestFocus()
             etlSearchKeyword.setEndIconOnClickListener {
                 binding.etSearchKeyword.text = null
                 viewModel.updateKeyword(binding.etSearchKeyword.text.toString())
@@ -119,6 +120,7 @@ class SelectBookActivity : AppCompatActivity() {
         binding: ActivitySelectBookBinding,
         adapter: SearchBooksAdapter,
     ) {
+        hideKeyBoard(view = currentFocus ?: View(this))
         when (state.status) {
             is SearchedBookResultStatus.Loading -> {
                 binding.progressBar.visibility = View.VISIBLE
@@ -194,6 +196,12 @@ class SelectBookActivity : AppCompatActivity() {
             )
         startActivity(intent)
         finish()
+    }
+
+    private fun showKeyBoard(view: View) {
+        val inputMethodManager: InputMethodManager =
+            this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.showSoftInput(view, 0)
     }
 
     private fun hideKeyBoard(view: View) {
