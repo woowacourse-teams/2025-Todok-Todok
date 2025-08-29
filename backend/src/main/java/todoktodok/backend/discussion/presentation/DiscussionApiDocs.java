@@ -284,38 +284,48 @@ public interface DiscussionApiDocs {
                                               "items": [
                                                   {
                                                     "discussionId": 2,
-                                                    "title": "토론방 제목1",
-                                                    "content": "토론방 내용1",
-                                                    "author": {
-                                                      "id": 1,
-                                                      "nickname": "듀이",
-                                                      "email": "user1@example.com",
-                                                      "profileImage": "https://example.com/image1.png"
+                                                    "book": {
+                                                        "bookId": 1,
+                                                        "bookTitle": "오브젝트",
+                                                        "bookAuthor": "조영호",
+                                                        "bookImage": "https://image.png"
+                                                    },
+                                                    "member": {
+                                                        "memberId": 1,
+                                                        "nickname": "듀이",
+                                                        "profileImage": "https://example.com/image1.png"
                                                     },
                                                     "createdAt": "2025-08-14T10:00:00",
-                                                    "commentCount": 5,
+                                                    "discussionTitle": "토론방 제목1",
+                                                    "discussionOpinion": "토론방 내용1",
                                                     "likeCount": 10,
+                                                    "commentCount": 5,
                                                     "isLikedByMe": true
                                                   },
                                                   {
                                                     "discussionId": 1,
-                                                    "title": "토론방 제목2",
-                                                    "content": "토론방 내용2",
-                                                    "author": {
-                                                      "id": 2,
-                                                      "nickname": "모다",
-                                                      "email": "user2@example.com",
-                                                      "profileImage": "https://example.com/image2.png"
+                                                    "book": {
+                                                        "bookId": 1,
+                                                        "bookTitle": "오브젝트",
+                                                        "bookAuthor": "조영호",
+                                                        "bookImage": "https://image.png"
+                                                    },
+                                                    "member": {
+                                                        "memberId": 2,
+                                                        "nickname": "모다",
+                                                        "profileImage": "https://example.com/image2.png"
                                                     },
                                                     "createdAt": "2025-08-14T10:05:00",
-                                                    "commentCount": 3,
+                                                    "discussionTitle": "토론방 제목2",
+                                                    "discussionOpinion": "토론방 내용2",
                                                     "likeCount": 5,
+                                                    "commentCount": 3,
                                                     "isLikedByMe": false
                                                   }
                                               ],
                                               "pageInfo": {
                                                 "hasNext": true,
-                                                "nextCursor": "NA=="
+                                                "nextCursor": "Mw=="
                                               }
                                             }
                                             """
@@ -377,7 +387,7 @@ public interface DiscussionApiDocs {
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
-                    description = "토론방 목록 조회 성공",
+                    description = "토론방 필터링 목록 조회 성공",
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = DiscussionResponse.class),
@@ -835,28 +845,54 @@ public interface DiscussionApiDocs {
                                             name = "첫 페이지 예시",
                                             value = """
                                                 {
-                                                  "discussions": [
+                                                  "items": [
                                                     {
                                                       "discussionId": 4,
+                                                      "book": {
+                                                        "bookId": 1,
+                                                        "bookTitle": "오브젝트",
+                                                        "bookAuthor": "조영호",
+                                                        "bookImage": "https://image.png"
+                                                      },
+                                                      "member": {
+                                                        "memberId": 1,
+                                                        "nickname": "듀이",
+                                                        "profileImage": "https://example.com/image1.png"
+                                                      },
+                                                      "createdAt": "2025-08-14T10:00:00",
                                                       "discussionTitle": "토론방4",
                                                       "discussionOpinion": "내용4",
-                                                      "commentCount": 1,
                                                       "likeCount": 0,
-                                                      "likedByMe": false,
+                                                      "commentCount": 1,
+                                                      "isLikedByMe": false,
                                                       "lastCommentedAt": "2025-08-20T14:49:00"
                                                     },
                                                     {
                                                       "discussionId": 3,
+                                                      "book": {
+                                                        "bookId": 1,
+                                                        "bookTitle": "오브젝트",
+                                                        "bookAuthor": "조영호",
+                                                        "bookImage": "https://image.png"
+                                                      },
+                                                      "member": {
+                                                        "memberId": 2,
+                                                        "nickname": "모다",
+                                                        "profileImage": "https://example.com/image2.png"
+                                                      },
+                                                      "createdAt": "2025-08-14T10:00:00",
                                                       "discussionTitle": "토론방3",
                                                       "discussionOpinion": "내용3",
-                                                      "commentCount": 3,
                                                       "likeCount": 2,
-                                                      "likedByMe": true,
+                                                      "commentCount": 3,
+                                                      "isLikedByMe": true,
                                                       "lastCommentedAt": "2025-08-20T14:50:00"
                                                     }
                                                   ],
-                                                  "hasNext": true,
-                                                  "nextCursor": "MjAyNS0wOC0yMFQxNDo1MDowMF8z"
+                                                  "pageInfo": {
+                                                    "hasNext": true,
+                                                    "nextCursor": "MjAyNS0wOC0yMFQxNDo1MDowMF8z"
+                                                  }
                                                 }
                                                 """
                                     ),
@@ -864,19 +900,33 @@ public interface DiscussionApiDocs {
                                             name = "마지막 페이지 예시",
                                             value = """
                                                 {
-                                                  "discussions": [
+                                                  "items": [
                                                     {
                                                       "discussionId": 2,
+                                                      "book": {
+                                                        "bookId": 1,
+                                                        "bookTitle": "오브젝트",
+                                                        "bookAuthor": "조영호",
+                                                        "bookImage": "https://image.png"
+                                                      },
+                                                      "member": {
+                                                        "memberId": 1,
+                                                        "nickname": "듀이",
+                                                        "profileImage": "https://example.com/image1.png"
+                                                      },
+                                                      "createdAt": "2025-08-14T10:00:00",
                                                       "discussionTitle": "토론방2",
                                                       "discussionOpinion": "내용2",
-                                                      "commentCount": 2,
                                                       "likeCount": 1,
-                                                      "likedByMe": false,
+                                                      "commentCount": 2,
+                                                      "isLikedByMe": false,
                                                       "lastCommentedAt": "2025-08-20T15:30:00"
                                                     }
                                                   ],
-                                                  "hasNext": false,
-                                                  "nextCursor": null
+                                                  "pageInfo": {
+                                                    "hasNext": false,
+                                                    "nextCursor": null
+                                                  }
                                                 }
                                                 """
                                     )
