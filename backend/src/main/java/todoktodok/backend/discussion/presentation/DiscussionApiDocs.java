@@ -864,7 +864,7 @@ public interface DiscussionApiDocs {
                                                       "discussionOpinion": "내용4",
                                                       "likeCount": 0,
                                                       "commentCount": 1,
-                                                      "likedByMe": false,
+                                                      "isLikedByMe": false,
                                                       "lastCommentedAt": "2025-08-20T14:49:00"
                                                     },
                                                     {
@@ -885,7 +885,7 @@ public interface DiscussionApiDocs {
                                                       "discussionOpinion": "내용3",
                                                       "likeCount": 2,
                                                       "commentCount": 3,
-                                                      "likedByMe": true,
+                                                      "isLikedByMe": true,
                                                       "lastCommentedAt": "2025-08-20T14:50:00"
                                                     }
                                                   ],
@@ -900,7 +900,7 @@ public interface DiscussionApiDocs {
                                             name = "마지막 페이지 예시",
                                             value = """
                                                 {
-                                                  "discussions": [
+                                                  "items": [
                                                     {
                                                       "discussionId": 2,
                                                       "book": {
@@ -919,7 +919,7 @@ public interface DiscussionApiDocs {
                                                       "discussionOpinion": "내용2",
                                                       "likeCount": 1,
                                                       "commentCount": 2,
-                                                      "likedByMe": false,
+                                                      "isLikedByMe": false,
                                                       "lastCommentedAt": "2025-08-20T15:30:00"
                                                     }
                                                   ],
