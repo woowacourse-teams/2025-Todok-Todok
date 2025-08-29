@@ -13,6 +13,7 @@ import com.team.domain.model.exception.onSuccess
 import com.team.domain.repository.BookRepository
 import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
 import com.team.todoktodok.presentation.core.event.SingleLiveData
+import com.team.todoktodok.presentation.view.book.SearchedBookResultStatus
 import com.team.todoktodok.presentation.view.book.SelectBookUiEvent
 import com.team.todoktodok.presentation.view.book.SelectBookUiState
 import kotlinx.coroutines.launch
@@ -32,7 +33,7 @@ class SelectBookViewModel(
         if (isPossibleSearchKeyword) updateSearchedBooks(keyword)
     }
 
-    private fun updateKeyword(keyword: String) {
+    fun updateKeyword(keyword: String) {
         _uiState.value = _uiState.value?.copy(keyword = keyword)
     }
 
@@ -40,14 +41,24 @@ class SelectBookViewModel(
         !(keyword.isBlank() || keyword.isEmpty() || _uiState.value?.isSameKeyword(keyword) == true)
 
     private fun updateSearchedBooks(keyword: String) {
-        _uiState.value = _uiState.value?.copy(isLoading = true)
+        _uiState.value = _uiState.value?.copy(status = SearchedBookResultStatus.Loading)
         viewModelScope.launch {
             bookRepository
                 .fetchBooks(keyword)
                 .onSuccess { books: AladinBooks ->
-                    _uiState.value = _uiState.value?.copy(isLoading = false, searchedBooks = books)
+                    if (books.isEmpty()) {
+                        _uiState.value =
+                            _uiState.value?.copy(status = SearchedBookResultStatus.NotFound)
+                    } else {
+                        _uiState.value =
+                            _uiState.value?.copy(
+                                status = SearchedBookResultStatus.Success,
+                                searchedBooks = books,
+                            )
+                    }
                 }.onFailure { exception: TodokTodokExceptions ->
-                    _uiState.value = _uiState.value?.copy(isLoading = false)
+                    _uiState.value =
+                        _uiState.value?.copy(status = SearchedBookResultStatus.NotStarted)
                     _uiEvent.setValue(SelectBookUiEvent.ShowException(exception))
                 }
         }

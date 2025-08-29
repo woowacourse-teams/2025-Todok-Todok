@@ -17,14 +17,12 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.team.domain.model.Book
-import com.team.domain.model.Books
+import com.team.domain.model.book.AladinBook
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivitySelectBookBinding
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
-import com.team.todoktodok.presentation.core.component.CommonDialog
 import com.team.todoktodok.presentation.view.book.adapter.SearchBooksAdapter
 import com.team.todoktodok.presentation.view.book.vm.SelectBookViewModel
 import com.team.todoktodok.presentation.view.book.vm.SelectBookViewModelFactory
@@ -81,8 +79,6 @@ class SelectBookActivity : AppCompatActivity() {
         adapter: SearchBooksAdapter,
     ) {
         binding.apply {
-            etSearchKeyword.requestFocus()
-            rvSearchedBooks.adapter = adapter
             btnBack.setOnClickListener {
                 finish()
             }
@@ -93,6 +89,7 @@ class SelectBookActivity : AppCompatActivity() {
             etSearchKeyword.setOnEditorActionListener { view, actionId, _ ->
                 handleSearchAction(view, actionId)
             }
+            rvSearchedBooks.adapter = adapter
         }
     }
 
@@ -113,37 +110,49 @@ class SelectBookActivity : AppCompatActivity() {
         adapter: SearchBooksAdapter,
     ) {
         viewModel.uiState.observe(this) { state: SelectBookUiState ->
-            updateSearchedBooks(state.searchedBooks, binding, adapter)
-            updateLoadingState(state, binding)
+            updateSearchedBooks(state, binding, adapter)
         }
-    }
-
-    private fun updateLoadingState(
-        state: SelectBookUiState,
-        binding: ActivitySelectBookBinding,
-    ) {
-        if (state.isLoading) {
-            binding.progressBar.visibility = View.VISIBLE
-            binding.nsvEmptySearchResult.visibility = View.GONE
-            binding.rvSearchedBooks.visibility = View.GONE
-            return
-        }
-        binding.progressBar.visibility = View.GONE
     }
 
     private fun updateSearchedBooks(
-        searchedBooks: Books,
+        state: SelectBookUiState,
         binding: ActivitySelectBookBinding,
         adapter: SearchBooksAdapter,
     ) {
-        if (searchedBooks.size == IS_EMPTY_SEARCH_RESULT) {
-            binding.nsvEmptySearchResult.visibility = View.VISIBLE
-            binding.rvSearchedBooks.visibility = View.GONE
-            return
+        when (state.status) {
+            is SearchedBookResultStatus.Loading -> {
+                binding.progressBar.visibility = View.VISIBLE
+                binding.nsvEmptySearchResult.visibility = View.GONE
+                binding.rvSearchedBooks.visibility = View.GONE
+            }
+
+            is SearchedBookResultStatus.NotStarted -> {
+                binding.progressBar.visibility = View.GONE
+                binding.nsvEmptySearchResult.visibility = View.VISIBLE
+                binding.rvSearchedBooks.visibility = View.GONE
+            }
+
+            is SearchedBookResultStatus.NotFound -> {
+                binding.progressBar.visibility = View.GONE
+                binding.nsvEmptySearchResult.visibility = View.VISIBLE
+                binding.rvSearchedBooks.visibility = View.GONE
+                binding.tvEmptySearchResultTitle.text =
+                    highlightKeyword(state.keyword)
+                binding.tvEmptySearchResultSubTitle.setText(R.string.select_book_empty_search_result_content)
+            }
+
+            is SearchedBookResultStatus.Success -> {
+                binding.progressBar.visibility = View.GONE
+                binding.tvSearchedBooksCount.text =
+                    getString(
+                        R.string.select_book_searched_books_count,
+                        state.searchedBooks.size,
+                    )
+                binding.nsvEmptySearchResult.visibility = View.GONE
+                binding.rvSearchedBooks.visibility = View.VISIBLE
+                adapter.submitList(state.searchedBooks.value)
+            }
         }
-        binding.nsvEmptySearchResult.visibility = View.GONE
-        binding.rvSearchedBooks.visibility = View.VISIBLE
-        adapter.submitList(searchedBooks.items)
     }
 
     private fun setupUiEvent(binding: ActivitySelectBookBinding) {
@@ -152,14 +161,7 @@ class SelectBookActivity : AppCompatActivity() {
                 is SelectBookUiEvent.NavigateToCreateDiscussionRoom ->
                     navigateToCreateDiscussionRoom(event.book)
 
-                is SelectBookUiEvent.ShowError -> {
-                    AlertSnackBar(
-                        binding.root,
-                        event.message.id,
-                    ).show()
-                }
-
-                is SelectBookUiEvent.ShowTodokTodokException -> {
+                is SelectBookUiEvent.ShowException -> {
                     val messageConverter = ExceptionMessageConverter()
                     AlertSnackBar(binding.root, messageConverter(event.exception)).show()
                 }
@@ -168,7 +170,7 @@ class SelectBookActivity : AppCompatActivity() {
     }
 
     private fun highlightKeyword(keyword: String): SpannableString {
-        val title = getString(R.string.empty_search_result, keyword)
+        val title = getString(R.string.select_book_empty_search_result, keyword)
         val spannableTitle = SpannableString(title)
         val start = title.indexOf(keyword)
         val end = start + keyword.length
@@ -183,7 +185,7 @@ class SelectBookActivity : AppCompatActivity() {
         return spannableTitle
     }
 
-    private fun navigateToCreateDiscussionRoom(book: Book) {
+    private fun navigateToCreateDiscussionRoom(book: AladinBook) {
         val serializationBook: SerializationBook = book.toSerialization()
         val intent =
             CreateDiscussionRoomActivity.Intent(
@@ -221,14 +223,6 @@ class SelectBookActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val IS_EMPTY_SEARCH_RESULT: Int = 0
-
         fun Intent(context: Context): Intent = Intent(context, SelectBookActivity::class.java)
     }
 }
-
-
-//binding.rvSearchedBooks.visibility = View.GONE
-//binding.nsvEmptySearchResult.visibility = View.VISIBLE
-//binding.tvEmptySearchResultTitle.text = strongKeyword
-//binding.tvEmptySearchResultSubTitle.setText(R.string.empty_search_result_description)
