@@ -11,6 +11,6 @@ value class BookImage(
     }
 
     companion object {
-        private const val IMAGE_URL_PREFIX: String = "https://image.aladin.co.kr/product/"
+        private const val IMAGE_URL_PREFIX: String = "https://image.aladin.co.kr/"
     }
 }
