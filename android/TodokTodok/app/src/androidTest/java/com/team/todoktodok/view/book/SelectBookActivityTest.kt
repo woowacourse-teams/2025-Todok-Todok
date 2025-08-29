@@ -41,7 +41,7 @@ class SelectBookActivityTest {
 
     @Test
     fun shouldShowSearchHintText() {
-        onView(withId(R.id.et_search_keyword)).check(matches(withHint(R.string.hint_search_keyword)))
+        onView(withId(R.id.et_search_keyword)).check(matches(withHint(R.string.select_book_hint_search_keyword)))
     }
 
     @Test
