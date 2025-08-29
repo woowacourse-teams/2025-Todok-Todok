@@ -37,6 +37,15 @@ class SelectBookViewModel(
         _uiState.value = _uiState.value?.copy(keyword = keyword)
     }
 
+    fun updateSelectedBook(position: Int) {
+        val selectedBook: AladinBook? = _uiState.value?.selectedBook(position)
+        if (selectedBook == null) {
+            _uiEvent.setValue(SelectBookUiEvent.ShowException(BookException.EmptySelectedBook))
+            return
+        }
+        _uiEvent.setValue(SelectBookUiEvent.NavigateToCreateDiscussionRoom(selectedBook))
+    }
+
     private fun isPossibleSearchKeyword(keyword: String): Boolean =
         !(keyword.isBlank() || keyword.isEmpty() || _uiState.value?.isSameKeyword(keyword) == true)
 
@@ -62,14 +71,5 @@ class SelectBookViewModel(
                     _uiEvent.setValue(SelectBookUiEvent.ShowException(exception))
                 }
         }
-    }
-
-    fun updateSelectedBook(position: Int) {
-        val selectedBook: AladinBook? = _uiState.value?.selectedBook(position)
-        if (selectedBook == null) {
-            _uiEvent.setValue(SelectBookUiEvent.ShowException(BookException.EmptySelectedBook))
-            return
-        }
-        _uiEvent.setValue(SelectBookUiEvent.NavigateToCreateDiscussionRoom(selectedBook))
     }
 }
