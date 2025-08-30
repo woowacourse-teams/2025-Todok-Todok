@@ -5,11 +5,11 @@ class AladinBooks(
 ) {
     val size get() = value.size
 
-    fun isExist(position: Int): Boolean = value.getOrNull(position) != null
-
     fun isEmpty(): Boolean = value.isEmpty()
 
     operator fun get(position: Int): AladinBook = value[position]
+
+    operator fun contains(position: Int): Boolean = position in value.indices
 }
 
-fun <R> AladinBooks.map(transform: (AladinBook) -> R): List<R> = value.map(transform)
+inline fun <R> AladinBooks.map(transform: (AladinBook) -> R): List<R> = this.value.map(transform)
