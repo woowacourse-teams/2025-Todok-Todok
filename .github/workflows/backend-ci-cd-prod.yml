@@ -59,6 +59,7 @@ jobs:
     steps:
       - name: Cleanup backend log directory before checkout
         run: |
+          sudo chown -R ubuntu:ubuntu backend/log
           sudo rm -rf backend/log || true
 
       - name: Checkout repository
