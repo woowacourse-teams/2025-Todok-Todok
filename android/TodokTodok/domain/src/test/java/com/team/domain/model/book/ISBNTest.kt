@@ -9,29 +9,26 @@ import org.junit.jupiter.params.provider.ValueSource
 
 class ISBNTest {
     @ParameterizedTest
-    @ValueSource(strings = ["1234567891234"])
-    fun `도서 ISBDN의 자리수가 13자리인 숫자인 경우 정상적으로 생성된다`(value: String) {
+    @ValueSource(longs = [1234567891234L])
+    fun `도서 ISBN의 자리수가 13자리인 숫자인 경우 정상적으로 생성된다`(value: Long) {
         // when & then
         assertDoesNotThrow { ISBN(value) }
     }
 
     @ParameterizedTest
-    @ValueSource(strings = ["123456789123", "12345678912345"])
-    fun `도서 ISBN의 자리수가 13자리가 아닐 경우 예외가 발생한다`(value: String) {
-        // given, when
+    @ValueSource(longs = [1234567891L])
+    fun `도서 ISBN의 자리수가 10자리인 숫자인 경우 정상적으로 생성된다`(value: Long) {
+        // when & then
+        assertDoesNotThrow { ISBN(value) }
+    }
+
+    @ParameterizedTest
+    @ValueSource(longs = [123456789L, 12345678912L, 123456789123L, 12345678912345L])
+    fun `도서 ISBN의 자리수가 10자리 또는 13자리가 아닐 경우 예외가 발생한다`(value: Long) {
+        // when
         val exception = assertThrows<IllegalArgumentException> { ISBN(value) }
 
         // then
         assertEquals(ISBNException.InvalidLength.message, exception.message)
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = ["1a34567891234", "1ㄱ34567891234"])
-    fun `도서 ISBN이 숫자가 아닐 경우 예외가 발생한다`(value: String) {
-        // given, when
-        val exception = assertThrows<IllegalArgumentException> { ISBN(value) }
-
-        // than
-        assertEquals(ISBNException.InvalidFormat.message, exception.message)
     }
 }

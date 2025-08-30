@@ -4,15 +4,12 @@ import com.team.domain.model.exception.ISBNException
 
 @JvmInline
 value class ISBN(
-    val value: String,
+    val value: Long,
 ) {
     init {
-        require(value.length in ISBN_LENGTH_BEFORE_2007..ISBN_LENGTH_AFTER_2007) { ISBNException.InvalidLength.message }
-        require(
-            value
-                .map { it.digitToIntOrNull() != null }
-                .all { it == true },
-        ) { ISBNException.InvalidFormat.message }
+        require(value.toString().length == ISBN_LENGTH_BEFORE_2007 || value.toString().length == ISBN_LENGTH_AFTER_2007) {
+            ISBNException.InvalidLength.message
+        }
     }
 
     companion object {
