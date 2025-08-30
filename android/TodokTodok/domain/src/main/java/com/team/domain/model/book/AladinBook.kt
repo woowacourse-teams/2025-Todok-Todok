@@ -16,13 +16,13 @@ data class AladinBook(
 
     companion object {
         fun AladinBook(
-            isbn: String,
+            isbn: Long,
             title: String,
             author: String,
             image: String,
         ): AladinBook =
             AladinBook(
-                _isbn = ISBN(isbn.toLong()),
+                _isbn = ISBN(isbn),
                 _title = BookTitle(title),
                 _author = BookAuthor(author),
                 _image = BookImage(image),
