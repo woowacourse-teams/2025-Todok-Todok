@@ -2,6 +2,7 @@ package com.team.domain.model.book
 
 import com.team.domain.model.exception.BookTitleException
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
@@ -23,5 +24,21 @@ class BookTitleTest {
 
         // then
         assertEquals(BookTitleException.EmptyBookTitle.message, exception.message)
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = ["오브젝트 - 코드로 이해하는 객체지향 설계"])
+    fun `도서 제목을 본제와 부제로 분리할 수 있다`(value: String) {
+        // given
+        val bookTitle = BookTitle(value)
+
+        // when
+        val mainTitle = bookTitle.mainTitle
+        val subTitle = bookTitle.subTitle
+
+        assertAll(
+            { assertEquals("오브젝트", mainTitle) },
+            { assertEquals("코드로 이해하는 객체지향 설계", subTitle) },
+        )
     }
 }
