@@ -54,7 +54,7 @@ class SelectBookActivity : AppCompatActivity() {
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
         if (ev.action == MotionEvent.ACTION_DOWN) {
             val view = currentFocus
-            if (view !is TextInputLayout) {
+            if (view !is TextInputLayout || view !is TextInputLayout.OnEndIconChangedListener) {
                 hideKeyBoard(view = view ?: View(this))
             }
         }
@@ -156,16 +156,10 @@ class SelectBookActivity : AppCompatActivity() {
         adapter: SearchBooksAdapter,
     ) {
         hideKeyBoard(view = currentFocus ?: View(this))
-        binding.tvSearchedBooksCount.visibility = View.VISIBLE
         binding.progressBar.visibility = View.GONE
-        binding.tvSearchedBooksCount.text =
-            getString(
-                R.string.select_book_searched_books_count,
-                state.size,
-            )
         binding.nsvEmptySearchResult.visibility = View.GONE
         binding.rvSearchedBooks.visibility = View.VISIBLE
-        adapter.submitList(state.searchedBooks.value)
+        adapter.submitList(state.searchBookGroup)
     }
 
     private fun updateNotFoundStatus(
@@ -178,21 +172,18 @@ class SelectBookActivity : AppCompatActivity() {
         binding.tvEmptySearchResultTitle.text =
             highlightKeyword(state.keyword)
         binding.tvEmptySearchResultSubTitle.setText(R.string.select_book_empty_search_result_content)
-        binding.tvSearchedBooksCount.visibility = View.GONE
     }
 
     private fun updateNotStartStatus(binding: ActivitySelectBookBinding) {
         binding.progressBar.visibility = View.GONE
         binding.nsvEmptySearchResult.visibility = View.VISIBLE
         binding.rvSearchedBooks.visibility = View.GONE
-        binding.tvSearchedBooksCount.visibility = View.GONE
     }
 
     private fun updateLoadingStatus(binding: ActivitySelectBookBinding) {
         binding.progressBar.visibility = View.VISIBLE
         binding.nsvEmptySearchResult.visibility = View.GONE
         binding.rvSearchedBooks.visibility = View.GONE
-        binding.tvSearchedBooksCount.visibility = View.GONE
     }
 
     private fun setUpUiEvent(binding: ActivitySelectBookBinding) {

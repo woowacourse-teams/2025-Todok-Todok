@@ -11,3 +11,5 @@ class AladinBooks(
 
     operator fun get(position: Int): AladinBook = value[position]
 }
+
+fun <R> AladinBooks.map(transform: (AladinBook) -> R): List<R> = value.map(transform)
