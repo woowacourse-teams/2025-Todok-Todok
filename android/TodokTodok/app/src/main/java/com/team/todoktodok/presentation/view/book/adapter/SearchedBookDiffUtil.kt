@@ -10,8 +10,8 @@ class SearchedBookDiffUtil : DiffUtil.ItemCallback<SearchBooksGroup>() {
         when {
             oldItem is SearchBooksGroup.Count && newItem is SearchBooksGroup.Count -> true
             oldItem is SearchBooksGroup.Book && newItem is SearchBooksGroup.Book ->
-                oldItem.book.id ==
-                    newItem.book.id
+                oldItem.book.isbn ==
+                    newItem.book.isbn
 
             else -> false
         }

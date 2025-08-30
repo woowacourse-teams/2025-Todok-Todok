@@ -19,7 +19,7 @@ class SearchBooksViewHolder private constructor(
 
     fun bind(book: AladinBook) {
         binding.apply {
-            tvBookTitle.text = book.title
+            tvBookTitle.text = book.mainTitle
             tvBookAuthor.text = book.author
             ivBookImage.loadImage(book.image)
         }

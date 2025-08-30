@@ -25,8 +25,8 @@ fun Book.toSerialization(): SerializationBook =
 
 fun AladinBook.toSerialization(): SerializationBook =
     SerializationBook(
-        id = id.toLong(),
-        title = title,
+        id = isbn,
+        title = mainTitle,
         author = author,
         image = image,
     )

@@ -25,5 +25,5 @@ data class SelectBookUiState(
 
     fun isSameKeyword(keyword: String): Boolean = this.keyword == keyword
 
-    private fun isExist(position: Int): Boolean = searchedBooks.isExist(position)
+    private fun isExist(position: Int): Boolean = searchedBooks.contains(position)
 }

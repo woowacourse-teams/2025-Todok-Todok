@@ -22,7 +22,7 @@ fun BookResponse.toDomain() =
 
 fun BookResponse.toAladinBook() =
     AladinBook(
-        id = bookId.toString(),
+        isbn = bookId,
         title = bookTitle,
         author = bookAuthor,
         image = bookImage,
