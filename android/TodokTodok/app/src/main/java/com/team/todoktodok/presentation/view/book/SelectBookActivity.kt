@@ -5,9 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
+import android.view.MotionEvent
 import android.view.View
-import android.view.WindowInsets
-import android.view.WindowInsetsAnimation
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
@@ -16,6 +15,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.android.material.textfield.TextInputLayout
 import com.team.domain.model.book.AladinBook
 import com.team.todoktodok.App
 import com.team.todoktodok.R
@@ -49,18 +49,40 @@ class SelectBookActivity : AppCompatActivity() {
         initView(binding, adapter)
         setUpUiState(binding, adapter)
         setUpUiEvent(binding)
-        liftViewWithIme(binding.nsvEmptySearchResult, R.dimen.space_120)
+    }
+
+    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+        if (ev.action == MotionEvent.ACTION_DOWN) {
+            val view = currentFocus
+            if (view !is TextInputLayout) {
+                hideKeyBoard(view = view ?: View(this))
+            }
+        }
+        return super.dispatchTouchEvent(ev)
     }
 
     private fun initSystemBar(binding: ActivitySelectBookBinding) {
         enableEdgeToEdge()
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val imeBottom = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
             v.setPadding(
                 binding.main.paddingLeft,
                 systemBars.top,
                 binding.main.paddingRight,
                 systemBars.bottom,
+            )
+            binding.rvSearchedBooks.setPadding(
+                binding.rvSearchedBooks.paddingLeft,
+                binding.rvSearchedBooks.paddingTop,
+                binding.rvSearchedBooks.paddingRight,
+                imeBottom,
+            )
+            binding.nsvEmptySearchResult.setPadding(
+                binding.nsvEmptySearchResult.paddingLeft,
+                binding.nsvEmptySearchResult.paddingTop,
+                binding.nsvEmptySearchResult.paddingRight,
+                imeBottom,
             )
             insets
         }
@@ -75,10 +97,6 @@ class SelectBookActivity : AppCompatActivity() {
                 finish()
             }
             etSearchKeyword.requestFocus()
-            etlSearchKeyword.setEndIconOnClickListener {
-                binding.etSearchKeyword.text = null
-                viewModel.updateKeyword(binding.etSearchKeyword.text.toString())
-            }
             etSearchKeyword.setOnEditorActionListener { view, actionId, _ ->
                 handleSearchAction(view, actionId)
             }
@@ -112,7 +130,11 @@ class SelectBookActivity : AppCompatActivity() {
         keyword: String,
         binding: ActivitySelectBookBinding,
     ) {
-        binding.etSearchKeyword.setText(keyword)
+        val currentText = binding.etSearchKeyword.text.toString()
+        if (currentText != keyword) {
+            binding.etSearchKeyword.setText(keyword)
+            binding.etSearchKeyword.setSelection(keyword.length)
+        }
     }
 
     private fun updateSearchedBooks(
@@ -218,26 +240,6 @@ class SelectBookActivity : AppCompatActivity() {
         val inputMethodManager: InputMethodManager =
             this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
-    }
-
-    private fun liftViewWithIme(
-        view: View,
-        size: Int,
-    ) {
-        view.setWindowInsetsAnimationCallback(
-            object : WindowInsetsAnimation.Callback(DISPATCH_MODE_STOP) {
-                override fun onProgress(
-                    insets: WindowInsets,
-                    runningAnimations: MutableList<WindowInsetsAnimation>,
-                ): WindowInsets {
-                    val imeBottom = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
-                    val maxLiftPx = resources.getDimensionPixelSize(size)
-                    val lift = minOf(imeBottom, maxLiftPx)
-                    view.translationY = (-lift).toFloat()
-                    return insets
-                }
-            },
-        )
     }
 
     companion object {
