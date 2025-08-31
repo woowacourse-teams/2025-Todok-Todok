@@ -4,10 +4,10 @@ import com.team.domain.model.Book
 import com.team.domain.model.Discussion
 import com.team.domain.model.LikeStatus
 import com.team.domain.model.active.ActivatedDiscussionPage
+import com.team.domain.model.discussionroom.DiscussionRoom
 import com.team.domain.model.exception.NetworkResult
 import com.team.domain.model.exception.map
 import com.team.domain.model.latest.LatestDiscussionPage
-import com.team.domain.model.member.DiscussionRoom
 import com.team.domain.repository.DiscussionRepository
 import com.team.todoktodok.data.datasource.discussion.DiscussionLocalDataSource
 import com.team.todoktodok.data.datasource.discussion.DiscussionRemoteDataSource

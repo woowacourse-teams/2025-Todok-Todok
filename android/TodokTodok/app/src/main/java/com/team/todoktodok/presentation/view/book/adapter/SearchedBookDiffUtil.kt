@@ -1,16 +1,32 @@
 package com.team.todoktodok.presentation.view.book.adapter
 
 import androidx.recyclerview.widget.DiffUtil
-import com.team.domain.model.Book
 
-class SearchedBookDiffUtil : DiffUtil.ItemCallback<Book>() {
+class SearchedBookDiffUtil : DiffUtil.ItemCallback<SearchBooksGroup>() {
     override fun areItemsTheSame(
-        oldItem: Book,
-        newItem: Book,
-    ): Boolean = oldItem.id == newItem.id
+        oldItem: SearchBooksGroup,
+        newItem: SearchBooksGroup,
+    ): Boolean =
+        when {
+            oldItem is SearchBooksGroup.Count && newItem is SearchBooksGroup.Count -> true
+            oldItem is SearchBooksGroup.Book && newItem is SearchBooksGroup.Book ->
+                oldItem.book.isbn ==
+                    newItem.book.isbn
+
+            else -> false
+        }
 
     override fun areContentsTheSame(
-        oldItem: Book,
-        newItem: Book,
-    ): Boolean = oldItem == newItem
+        oldItem: SearchBooksGroup,
+        newItem: SearchBooksGroup,
+    ): Boolean =
+        when {
+            oldItem is SearchBooksGroup.Count && newItem is SearchBooksGroup.Count ->
+                oldItem.size == newItem.size
+
+            oldItem is SearchBooksGroup.Book && newItem is SearchBooksGroup.Book ->
+                oldItem.book == newItem.book
+
+            else -> false
+        }
 }

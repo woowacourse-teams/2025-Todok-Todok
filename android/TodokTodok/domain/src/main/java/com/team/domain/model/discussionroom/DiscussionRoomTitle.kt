@@ -1,7 +1,7 @@
-package com.team.domain.model.member
+package com.team.domain.model.discussionroom
 
 @JvmInline
-value class Title(
+value class DiscussionRoomTitle(
     val value: String,
 ) {
     init {

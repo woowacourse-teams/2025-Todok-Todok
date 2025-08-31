@@ -168,8 +168,22 @@ sealed class TodokTodokExceptions : Throwable() {
                 DiscussionExceptions.EmptyContent.message -> DiscussionExceptions.EmptyContent
 
                 // 도서 관련 예외
-                BooksExceptions.EmptyKeywordException.message -> BooksExceptions.EmptyKeywordException
-                BooksExceptions.EmptyISBNException.message -> BooksExceptions.EmptyISBNException
+                BookException.EmptyKeywordException.message -> BookException.EmptyKeywordException
+                BookException.EmptyISBNException.message -> BookException.EmptyISBNException
+                BookException.EmptySelectedBook.message -> BookException.EmptySelectedBook
+
+                // 도서 저자 관련 예외
+                BookAuthorException.EmptyBookAuthor.message -> BookAuthorException.EmptyBookAuthor
+
+                // 도서 제목 관련 예외
+                BookTitleException.EmptyBookTitle.message -> BookTitleException.EmptyBookTitle
+
+                // 도서 이미지 관련 예외
+                BookImageException.InvalidUrl.message -> BookImageException.InvalidUrl
+
+                // 도서 ISBN 관련 예외
+                ISBNException.InvalidLength.message -> ISBNException.InvalidLength
+                ISBNException.InvalidFormat.message -> ISBNException.InvalidFormat
 
                 // 댓글 관련 예외
                 CommentExceptions.EmptyContent.message -> CommentExceptions.EmptyContent
