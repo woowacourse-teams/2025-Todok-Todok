@@ -3,7 +3,6 @@ package com.team.todoktodok.presentation.view.book.vm
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.team.domain.repository.BookRepository
-import com.team.domain.repository.DiscussionRepository
 
 class SelectBookViewModelFactory(
     private val bookRepository: BookRepository,
