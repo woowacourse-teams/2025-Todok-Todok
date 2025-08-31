@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
-import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -15,7 +14,6 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.google.android.material.textfield.TextInputLayout
 import com.team.domain.model.book.AladinBook
 import com.team.todoktodok.App
 import com.team.todoktodok.R
@@ -49,16 +47,6 @@ class SelectBookActivity : AppCompatActivity() {
         initView(binding, adapter)
         setUpUiState(binding, adapter)
         setUpUiEvent(binding)
-    }
-
-    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
-        if (ev.action == MotionEvent.ACTION_DOWN) {
-            val view = currentFocus
-            if (view !is TextInputLayout || view !is TextInputLayout.OnEndIconChangedListener) {
-                hideKeyBoard(view = view ?: View(this))
-            }
-        }
-        return super.dispatchTouchEvent(ev)
     }
 
     private fun initSystemBar(binding: ActivitySelectBookBinding) {
