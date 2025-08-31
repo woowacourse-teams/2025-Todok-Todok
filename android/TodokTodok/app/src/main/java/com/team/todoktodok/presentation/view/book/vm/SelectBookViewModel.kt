@@ -13,7 +13,7 @@ import com.team.domain.model.exception.onSuccess
 import com.team.domain.repository.BookRepository
 import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
 import com.team.todoktodok.presentation.core.event.SingleLiveData
-import com.team.todoktodok.presentation.view.book.SearchedBookResultStatus
+import com.team.todoktodok.presentation.view.book.SearchedBookStatus
 import com.team.todoktodok.presentation.view.book.SelectBookUiEvent
 import com.team.todoktodok.presentation.view.book.SelectBookUiState
 import kotlinx.coroutines.launch
@@ -33,10 +33,6 @@ class SelectBookViewModel(
         if (isPossibleSearchKeyword) updateSearchedBooks(keyword)
     }
 
-    fun updateKeyword(keyword: String) {
-        _uiState.value = _uiState.value?.copy(keyword = keyword)
-    }
-
     fun updateSelectedBook(position: Int) {
         val selectedBook: AladinBook? = _uiState.value?.selectedBook(position)
         if (selectedBook == null) {
@@ -46,30 +42,37 @@ class SelectBookViewModel(
         _uiEvent.setValue(SelectBookUiEvent.NavigateToCreateDiscussionRoom(selectedBook))
     }
 
+    fun updateKeyword(keyword: String) {
+        setState { copy(keyword = keyword) }
+    }
+
     private fun isPossibleSearchKeyword(keyword: String): Boolean =
         !(keyword.isBlank() || keyword.isEmpty() || _uiState.value?.isSameKeyword(keyword) == true)
 
     private fun updateSearchedBooks(keyword: String) {
-        _uiState.value = _uiState.value?.copy(status = SearchedBookResultStatus.Loading)
+        setState { copy(status = SearchedBookStatus.Loading) }
         viewModelScope.launch {
             bookRepository
                 .fetchBooks(keyword)
                 .onSuccess { books: AladinBooks ->
                     if (books.isEmpty()) {
-                        _uiState.value =
-                            _uiState.value?.copy(status = SearchedBookResultStatus.NotFound)
+                        setState { copy(status = SearchedBookStatus.NotFound) }
                         return@onSuccess
                     }
-                    _uiState.value =
-                        _uiState.value?.copy(
-                            status = SearchedBookResultStatus.Success,
+                    setState {
+                        copy(
+                            status = SearchedBookStatus.Success,
                             searchedBooks = books,
                         )
+                    }
                 }.onFailure { exception: TodokTodokExceptions ->
-                    _uiState.value =
-                        _uiState.value?.copy(status = SearchedBookResultStatus.NotStarted)
+                    setState { copy(status = SearchedBookStatus.NotStarted) }
                     _uiEvent.setValue(SelectBookUiEvent.ShowException(exception))
                 }
         }
+    }
+
+    private inline fun setState(transform: SelectBookUiState.() -> SelectBookUiState) {
+        _uiState.value = _uiState.value?.transform()
     }
 }
