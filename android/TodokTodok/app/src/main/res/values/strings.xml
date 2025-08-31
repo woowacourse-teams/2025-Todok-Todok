@@ -129,7 +129,12 @@
     <string name="select_book_searched_books_count">%,d개</string>
     <string name="select_book_error_empty_keyword">검색어는 1자 이상이어야 합니다</string>
     <string name="select_book_error_empty_isbn">도서 ISBN을 입력해주세요</string>
+    <string name="select_book_error_empty_author">도서의 저자가 없습니다</string>
     <string name="select_book_error_no_selected_book">도서를 선택해주세요</string>
+    <string name="select_book_error_invalid_url">이미지 URL이 올바르지 않습니다</string>
+    <string name="select_book_error_empty_book_title">도서의 제목이 없습니다</string>
+    <string name="select_book_error_invalid_isbn_format">ISBN 형식에는 숫자만 들어올 수 있습니다</string>
+    <string name="select_book_error_invalid_isbn_length">ISBN은 13자리 입니다</string>
 
     <!-- 토론방 생성 화면 -->
     <string name="all_create_discussion_room_appbar">토론방 생성</string>

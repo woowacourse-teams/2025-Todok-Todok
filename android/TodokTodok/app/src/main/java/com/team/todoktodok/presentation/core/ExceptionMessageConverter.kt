@@ -113,13 +113,13 @@ class ExceptionMessageConverter {
             ReplyExceptions.ReplyNotBelongToComment -> R.string.error_reply_not_in_comment
             ReplyExceptions.OnlyOwnerCanModifyOrDelete -> R.string.error_reply_only_owner_can_modify_or_delete
 
-            BookAuthorException.EmptyBookAuthor -> TODO()
-            BookException.EmptyISBNException -> TODO()
-            BookException.EmptyKeywordException -> TODO()
-            BookException.EmptySelectedBook -> TODO()
-            BookImageException.InvalidUrl -> TODO()
-            BookTitleException.EmptyBookTitle -> TODO()
-            ISBNException.InvalidFormat -> TODO()
-            ISBNException.InvalidLength -> TODO()
+            BookAuthorException.EmptyBookAuthor -> R.string.select_book_error_empty_author
+            BookException.EmptyISBNException -> R.string.select_book_error_empty_isbn
+            BookException.EmptyKeywordException -> R.string.select_book_error_empty_keyword
+            BookException.EmptySelectedBook -> R.string.select_book_error_no_selected_book
+            BookImageException.InvalidUrl -> R.string.select_book_error_invalid_url
+            BookTitleException.EmptyBookTitle -> R.string.select_book_error_empty_book_title
+            ISBNException.InvalidFormat -> R.string.select_book_error_invalid_isbn_format
+            ISBNException.InvalidLength -> R.string.select_book_error_invalid_isbn_length
         }
 }
