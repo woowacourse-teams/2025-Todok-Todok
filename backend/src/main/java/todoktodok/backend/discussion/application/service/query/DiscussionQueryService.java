@@ -128,7 +128,7 @@ public class DiscussionQueryService {
                 discussionIds, sinceDate);
 
         final Map<Long, Integer> likesByDiscussionId = getLikeCountsByDiscussionId(likeSinceCounts);
-        final Map<Long, Integer> commentsByDiscussionId = getCommentCountsByDiscussionId(commentSinceCounts);
+        final Map<Long, Integer> commentsByDiscussionId = getTotalCommentCountsByDiscussionId(commentSinceCounts);
 
         final List<Discussion> hotDiscussions = findHotDiscussions(count, likesByDiscussionId, commentsByDiscussionId, discussions);
 
@@ -263,7 +263,7 @@ public class DiscussionQueryService {
         final List<DiscussionCommentCountDto> commentCounts = commentRepository.findCommentCountsByDiscussionIds(
                 discussionIds);
         final Map<Long, Integer> likesByDiscussionId = getLikeCountsByDiscussionId(likeCounts);
-        final Map<Long, Integer> commentsByDiscussionId = getCommentCountsByDiscussionId(commentCounts);
+        final Map<Long, Integer> commentsByDiscussionId = getTotalCommentCountsByDiscussionId(commentCounts);
         final List<Long> likedDiscussionIds = discussionLikeRepository.findLikedDiscussionIdsByMember(member, discussionIds);
 
         return makeResponsesFrom(discussions, likesByDiscussionId, commentsByDiscussionId, likedDiscussionIds);
@@ -287,7 +287,7 @@ public class DiscussionQueryService {
     }
 
 
-    private Map<Long, Integer> getCommentCountsByDiscussionId(final List<DiscussionCommentCountDto> commentCounts) {
+    private Map<Long, Integer> getTotalCommentCountsByDiscussionId(final List<DiscussionCommentCountDto> commentCounts) {
         return commentCounts.stream()
                 .collect(Collectors.toMap(
                         DiscussionCommentCountDto::discussionId,
