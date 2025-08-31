@@ -8,7 +8,7 @@ import com.team.todoktodok.presentation.view.book.adapter.SearchBooksGroup
 data class SelectBookUiState(
     val keyword: String = "",
     val searchedBooks: AladinBooks = AladinBooks(emptyList()),
-    val status: SearchedBookResultStatus = SearchedBookResultStatus.NotStarted,
+    val status: SearchedBookStatus = SearchedBookStatus.NotStarted,
 ) {
     val searchBookGroup: List<SearchBooksGroup> =
         listOf(

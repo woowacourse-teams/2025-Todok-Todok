@@ -143,10 +143,10 @@ class SelectBookActivity : AppCompatActivity() {
         adapter: SearchBooksAdapter,
     ) {
         when (state.status) {
-            is SearchedBookResultStatus.Loading -> updateLoadingStatus(binding)
-            is SearchedBookResultStatus.NotStarted -> updateNotStartStatus(binding)
-            is SearchedBookResultStatus.NotFound -> updateNotFoundStatus(binding, state)
-            is SearchedBookResultStatus.Success -> updateSuccessStatus(binding, state, adapter)
+            is SearchedBookStatus.Loading -> updateLoadingStatus(binding)
+            is SearchedBookStatus.NotStarted -> updateNotStartStatus(binding)
+            is SearchedBookStatus.NotFound -> updateNotFoundStatus(binding, state)
+            is SearchedBookStatus.Success -> updateSuccessStatus(binding, state, adapter)
         }
     }
 
