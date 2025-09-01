@@ -1,37 +1,61 @@
 package com.team.todoktodok.data.repository
 
-import com.team.todoktodok.data.datasource.book.BookRemoteDataSource
-import com.team.todoktodok.fake.datasource.FakeBookRemoteDataSource
+import com.team.domain.model.book.AladinBook
+import com.team.domain.model.book.AladinBooks
+import com.team.domain.model.exception.NetworkResult
+import com.team.todoktodok.fake.datasource.StubBookRemoteDataSource
 import kotlinx.coroutines.test.runTest
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Assertions.assertAll
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 class DefaultBookRepositoryTest {
-    private lateinit var defaultBookRepository: DefaultBookRepository
-    private lateinit var bookRemoteDataSource: BookRemoteDataSource
+    @Test
+    fun `도서를 불러오면 도메인으로 매핑된다`() =
+        runTest {
+            val bookRemoteDataSource = StubBookRemoteDataSource()
+            val defaultBookRepository = DefaultBookRepository(bookRemoteDataSource)
+            val keyword = "오브젝트"
 
-    @BeforeEach
-    fun setUp() {
-        bookRemoteDataSource = FakeBookRemoteDataSource()
-        defaultBookRepository = DefaultBookRepository(bookRemoteDataSource)
-    }
+            val result = defaultBookRepository.fetchBooks(keyword)
+
+            assertAll(
+                { assertEquals(1, bookRemoteDataSource.callCount) },
+                { assertTrue(result is NetworkResult.Success) },
+                { assertEquals(16, (result as NetworkResult.Success).data.size) },
+                { assertTrue((result as NetworkResult.Success).data is AladinBooks) },
+                { assertTrue((result as NetworkResult.Success).data[0] is AladinBook) },
+            )
+        }
 
     @Test
-    fun `fetchBooks에서 강제 에러 발생 시 예외를 던진다`() =
+    fun `원격 실패면 실패가 그대로 전파된다`() =
         runTest {
             // given
+            val bookRemoteDataSource = StubBookRemoteDataSource()
+            val defaultBookRepository = DefaultBookRepository(bookRemoteDataSource)
+            bookRemoteDataSource.shouldFailFetchBooks = true
             val keyword = "오브젝트"
-            val fake =
-                FakeBookRemoteDataSource().apply {
-                    shouldFailFetchBooks = true
-                }
 
-            // when
-            val result = runCatching { fake.fetchBooks(keyword) }
+            val result = defaultBookRepository.fetchBooks(keyword)
 
             // then
-            assertThat(result.isFailure).isTrue()
-            assertThat(result.exceptionOrNull()?.message).isEqualTo("에러 발생")
+            assertTrue(result is NetworkResult.Failure)
+        }
+
+    @Test
+    fun `빈 리스트도 정상 매핑된다`() =
+        runTest {
+            val bookRemoteDataSource = StubBookRemoteDataSource()
+            val defaultBookRepository = DefaultBookRepository(bookRemoteDataSource)
+            val keyword = ""
+
+            val result = defaultBookRepository.fetchBooks(keyword)
+
+            assertAll(
+                { assertTrue(result is NetworkResult.Success) },
+                { assertTrue((result as NetworkResult.Success).data.isEmpty()) },
+            )
         }
 }
