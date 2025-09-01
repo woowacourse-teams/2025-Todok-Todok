@@ -4,16 +4,11 @@ import com.team.todoktodok.data.network.service.BookService
 import com.team.todoktodok.data.network.service.CommentService
 import com.team.todoktodok.data.network.service.DiscussionService
 import com.team.todoktodok.data.network.service.MemberService
-import com.team.todoktodok.data.network.service.NoteService
 import com.team.todoktodok.data.network.service.ReplyService
 
 class ServiceModule(
     retrofit: RetrofitModule,
 ) {
-    val noteService: NoteService by lazy {
-        retrofit.instance.create(NoteService::class.java)
-    }
-
     val discussionService: DiscussionService by lazy {
         retrofit.instance.create(DiscussionService::class.java)
     }
