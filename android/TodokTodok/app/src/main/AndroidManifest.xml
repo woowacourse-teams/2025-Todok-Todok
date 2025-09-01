@@ -17,21 +17,6 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".presentation.view.discussion.create.CreateDiscussionRoomActivity"
-            android:exported="false"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
-        <activity
-            android:name=".presentation.view.setting.SettingActivity"
-            android:exported="false" />
-        <activity
-            android:name=".presentation.view.discussions.DiscussionsActivity"
-            android:exported="false"></activity>
-        <activity
-            android:name=".presentation.view.profile.ProfileActivity"
-            android:exported="true">
-
-        </activity>
-        <activity
             android:name=".presentation.view.auth.AuthActivity"
             android:exported="true">
             <intent-filter>
@@ -40,14 +25,25 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".presentation.view.discussion.create.CreateDiscussionRoomActivity"
+            android:exported="false"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".presentation.view.setting.SettingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.view.discussions.DiscussionsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.view.profile.ProfileActivity"
+            android:exported="false" />
+        <activity
             android:name=".presentation.view.discussiondetail.DiscussionDetailActivity"
             android:exported="false" />
         <activity
             android:name=".presentation.view.book.SelectBookActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustResize">
-
-        </activity>
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>
