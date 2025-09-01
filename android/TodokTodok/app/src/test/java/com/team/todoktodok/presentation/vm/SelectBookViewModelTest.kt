@@ -2,6 +2,7 @@ package com.team.todoktodok.presentation.vm
 
 import com.team.domain.model.book.AladinBook.Companion.AladinBook
 import com.team.domain.model.book.AladinBooks
+import com.team.domain.model.book.Keyword
 import com.team.domain.model.exception.NetworkResult
 import com.team.domain.model.exception.TodokTodokExceptions
 import com.team.domain.repository.BookRepository
@@ -49,7 +50,7 @@ class SelectBookViewModelTest {
         // then
         val actual = viewModel.uiState.getOrAwaitValue()
         assertEquals(
-            keyword,
+            Keyword(keyword),
             actual.keyword,
         )
     }
@@ -92,7 +93,10 @@ class SelectBookViewModelTest {
             // given
             val keyword = "오브젝트"
             viewModel.updateKeyword(keyword)
-            coEvery { bookRepository.fetchBooks(keyword) } returns NetworkResult.Success(books)
+            coEvery { bookRepository.fetchBooks(Keyword(keyword)) } returns
+                NetworkResult.Success(
+                    books,
+                )
 
             // when
             viewModel.searchWithCurrentKeyword(keyword)
@@ -123,7 +127,10 @@ class SelectBookViewModelTest {
                         book,
                     ),
                 )
-            coEvery { bookRepository.fetchBooks(keyword) } returns NetworkResult.Success(books)
+            coEvery { bookRepository.fetchBooks(Keyword(keyword)) } returns
+                NetworkResult.Success(
+                    books,
+                )
 
             // when
             viewModel.searchWithCurrentKeyword(keyword)
@@ -144,7 +151,7 @@ class SelectBookViewModelTest {
             val keyword = "kotlin in action"
             coEvery {
                 viewModel.searchWithCurrentKeyword(keyword)
-                bookRepository.fetchBooks(keyword)
+                bookRepository.fetchBooks(Keyword(keyword))
             } returns
                 NetworkResult.Failure(TodokTodokExceptions.EmptyBodyException)
 
@@ -166,7 +173,7 @@ class SelectBookViewModelTest {
         runTest {
             // given
             val keyword = "객체 지향의 사실과 오해"
-            coEvery { bookRepository.fetchBooks(keyword) } returns
+            coEvery { bookRepository.fetchBooks(Keyword(keyword)) } returns
                 NetworkResult.Success(
                     AladinBooks(
                         emptyList(),
@@ -188,7 +195,7 @@ class SelectBookViewModelTest {
         runTest {
             // given
             val keyword = "실용주의 프로그래머"
-            coEvery { bookRepository.fetchBooks(keyword) } returns
+            coEvery { bookRepository.fetchBooks(Keyword(keyword)) } returns
                 NetworkResult.Success(
                     books,
                 )
@@ -208,7 +215,7 @@ class SelectBookViewModelTest {
         runTest {
             // given
             val keyword = "코드 작성 가이드"
-            coEvery { bookRepository.fetchBooks(keyword) } coAnswers {
+            coEvery { bookRepository.fetchBooks(Keyword(keyword)) } coAnswers {
                 delay(1000)
                 NetworkResult.Success(
                     books,

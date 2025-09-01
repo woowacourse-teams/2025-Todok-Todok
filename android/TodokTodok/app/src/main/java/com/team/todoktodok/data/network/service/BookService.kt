@@ -2,7 +2,7 @@ package com.team.todoktodok.data.network.service
 
 import com.team.domain.model.exception.NetworkResult
 import com.team.todoktodok.data.network.request.BookRequest
-import com.team.todoktodok.data.network.response.discussion.BookResponse
+import com.team.todoktodok.data.network.response.book.AladinBookResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -12,7 +12,7 @@ interface BookService {
     @GET("v1/books/search")
     suspend fun fetchBooks(
         @Query("keyword") keyword: String,
-    ): NetworkResult<List<BookResponse>>
+    ): NetworkResult<List<AladinBookResponse>>
 
     @POST("v1/books")
     suspend fun saveBook(
