@@ -2,6 +2,7 @@ package com.team.todoktodok.data.repository
 
 import com.team.domain.model.Book
 import com.team.domain.model.book.AladinBooks
+import com.team.domain.model.book.Keyword
 import com.team.domain.model.exception.NetworkResult
 import com.team.domain.model.exception.map
 import com.team.domain.repository.BookRepository
@@ -13,7 +14,7 @@ import com.team.todoktodok.data.network.response.book.toDomain
 class DefaultBookRepository(
     private val bookRemoteDataSource: BookRemoteDataSource,
 ) : BookRepository {
-    override suspend fun fetchBooks(keyword: String): NetworkResult<AladinBooks> =
+    override suspend fun fetchBooks(keyword: Keyword): NetworkResult<AladinBooks> =
         bookRemoteDataSource
             .fetchBooks(keyword)
             .map { aladinBookResponse: List<AladinBookResponse> -> AladinBooks(aladinBookResponse.map { it.toDomain() }) }

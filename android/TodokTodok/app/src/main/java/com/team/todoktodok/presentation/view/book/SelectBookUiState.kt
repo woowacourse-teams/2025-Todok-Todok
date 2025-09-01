@@ -2,11 +2,12 @@ package com.team.todoktodok.presentation.view.book
 
 import com.team.domain.model.book.AladinBook
 import com.team.domain.model.book.AladinBooks
+import com.team.domain.model.book.Keyword
 import com.team.domain.model.book.map
 import com.team.todoktodok.presentation.view.book.adapter.SearchBooksGroup
 
 data class SelectBookUiState(
-    val keyword: String = "",
+    val keyword: Keyword? = null,
     val searchedBooks: AladinBooks = AladinBooks(emptyList()),
     val status: SearchedBookStatus = SearchedBookStatus.NotStarted,
 ) {
@@ -23,7 +24,7 @@ data class SelectBookUiState(
         return null
     }
 
-    fun isSameKeyword(keyword: String): Boolean = this.keyword == keyword
+    fun isSameKeyword(value: String): Boolean = this.keyword == Keyword(value)
 
     private fun isExist(position: Int): Boolean = searchedBooks.contains(position)
 }
