@@ -50,7 +50,7 @@ class SelectBookViewModelTest {
         // then
         val actual = viewModel.uiState.getOrAwaitValue()
         assertEquals(
-            keyword,
+            Keyword(keyword),
             actual.keyword,
         )
     }
