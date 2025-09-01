@@ -16,7 +16,7 @@ class DefaultBookRepository(
 ) : BookRepository {
     override suspend fun fetchBooks(keyword: Keyword): NetworkResult<AladinBooks> =
         bookRemoteDataSource
-            .fetchBooks(keyword)
+            .fetchBooks(keyword.value)
             .map { aladinBookResponse: List<AladinBookResponse> -> AladinBooks(aladinBookResponse.map { it.toDomain() }) }
 
     override suspend fun saveBook(book: Book): NetworkResult<Long> = bookRemoteDataSource.saveBook(book.toRequest())
