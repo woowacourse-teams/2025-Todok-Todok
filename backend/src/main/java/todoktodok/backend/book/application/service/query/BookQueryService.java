@@ -13,6 +13,8 @@ import todoktodok.backend.book.infrastructure.aladin.AladinRestClient;
 @AllArgsConstructor
 public class BookQueryService {
 
+    private static final String ISBN13_PATTERN = "\\d{13}";
+
     private final AladinRestClient aladinRestClient;
 
     public List<AladinBookResponse> search(final String keyword) {
@@ -23,6 +25,7 @@ public class BookQueryService {
 
         return searchedBooks.item().stream()
                 .filter(book -> book.isbn13() != null && !book.isbn13().isEmpty())
+                .filter(book -> book.isbn13().matches(ISBN13_PATTERN))
                 .map(AladinBookResponse::new)
                 .toList();
     }
