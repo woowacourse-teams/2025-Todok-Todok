@@ -22,11 +22,12 @@ class StubBookRemoteDataSource : BookRemoteDataSource {
 
     var callCount = 0
     var shouldFailFetchBooks = false
+    var isInvalidKeyword = false
 
     override suspend fun fetchBooks(keyword: String): NetworkResult<List<AladinBookResponse>> {
         callCount++
         if (shouldFailFetchBooks) return NetworkResult.Failure(TodokTodokExceptions.ConnectException)
-        if (keyword.isBlank()) return NetworkResult.Success(emptyList<AladinBookResponse>())
+        if (isInvalidKeyword) return NetworkResult.Success(emptyList<AladinBookResponse>())
         return NetworkResult.Success(
             books,
         )

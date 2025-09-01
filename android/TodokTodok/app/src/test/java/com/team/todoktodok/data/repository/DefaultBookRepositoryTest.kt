@@ -2,6 +2,7 @@ package com.team.todoktodok.data.repository
 
 import com.team.domain.model.book.AladinBook
 import com.team.domain.model.book.AladinBooks
+import com.team.domain.model.book.Keyword
 import com.team.domain.model.exception.NetworkResult
 import com.team.todoktodok.fake.datasource.StubBookRemoteDataSource
 import kotlinx.coroutines.test.runTest
@@ -18,7 +19,7 @@ class DefaultBookRepositoryTest {
             val defaultBookRepository = DefaultBookRepository(bookRemoteDataSource)
             val keyword = "오브젝트"
 
-            val result = defaultBookRepository.fetchBooks(keyword)
+            val result = defaultBookRepository.fetchBooks(Keyword(keyword))
 
             assertAll(
                 { assertEquals(1, bookRemoteDataSource.callCount) },
@@ -38,20 +39,21 @@ class DefaultBookRepositoryTest {
             bookRemoteDataSource.shouldFailFetchBooks = true
             val keyword = "오브젝트"
 
-            val result = defaultBookRepository.fetchBooks(keyword)
+            val result = defaultBookRepository.fetchBooks(Keyword(keyword))
 
             // then
             assertTrue(result is NetworkResult.Failure)
         }
 
     @Test
-    fun `빈 리스트도 정상 매핑된다`() =
+    fun `도서 검색 결과가 없는 빈 리스트도 정상 매핑된다`() =
         runTest {
             val bookRemoteDataSource = StubBookRemoteDataSource()
             val defaultBookRepository = DefaultBookRepository(bookRemoteDataSource)
-            val keyword = ""
+            val keyword = "ㅁ나ㅣㅇ러;ㅣ마넝리ㅏ;ㅁ넝리;ㅏㅓㅁㄴㄹㅇ"
 
-            val result = defaultBookRepository.fetchBooks(keyword)
+            bookRemoteDataSource.isInvalidKeyword = true
+            val result = defaultBookRepository.fetchBooks(Keyword(keyword))
 
             assertAll(
                 { assertTrue(result is NetworkResult.Success) },
