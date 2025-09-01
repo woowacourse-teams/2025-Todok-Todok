@@ -8,6 +8,7 @@ import com.team.domain.model.exception.BooksExceptions
 import com.team.domain.model.exception.CommentExceptions
 import com.team.domain.model.exception.DiscussionExceptions
 import com.team.domain.model.exception.ISBNException
+import com.team.domain.model.exception.KeywordException
 import com.team.domain.model.exception.ReplyExceptions
 import com.team.domain.model.exception.TodokTodokExceptions
 import com.team.todoktodok.R
@@ -121,5 +122,8 @@ class ExceptionMessageConverter {
             BookTitleException.EmptyBookTitle -> R.string.select_book_error_empty_book_title
             ISBNException.InvalidFormat -> R.string.select_book_error_invalid_isbn_format
             ISBNException.InvalidLength -> R.string.select_book_error_invalid_isbn_length
+
+            KeywordException.BlankKeyword -> R.string.select_book_error_blank_keyword
+            KeywordException.EmptyKeyword -> R.string.select_book_error_empty_keyword
         }
 }

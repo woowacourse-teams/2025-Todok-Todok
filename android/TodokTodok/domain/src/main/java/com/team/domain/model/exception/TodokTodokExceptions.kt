@@ -185,6 +185,10 @@ sealed class TodokTodokExceptions : Throwable() {
                 ISBNException.InvalidLength.message -> ISBNException.InvalidLength
                 ISBNException.InvalidFormat.message -> ISBNException.InvalidFormat
 
+                // 도서 키워드 검색 예외
+                KeywordException.BlankKeyword.message -> KeywordException.BlankKeyword
+                KeywordException.EmptyKeyword.message -> KeywordException.EmptyKeyword
+
                 // 댓글 관련 예외
                 CommentExceptions.EmptyContent.message -> CommentExceptions.EmptyContent
                 CommentExceptions.InvalidContentLength.message -> CommentExceptions.InvalidContentLength
