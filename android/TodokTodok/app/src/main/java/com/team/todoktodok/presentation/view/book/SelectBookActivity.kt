@@ -15,6 +15,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.team.domain.model.book.AladinBook
+import com.team.domain.model.book.Keyword
+import com.team.domain.model.book.length
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivitySelectBookBinding
@@ -115,13 +117,13 @@ class SelectBookActivity : AppCompatActivity() {
     }
 
     private fun updateKeyword(
-        keyword: String,
+        keyword: Keyword?,
         binding: ActivitySelectBookBinding,
     ) {
         val currentText = binding.etSearchKeyword.text.toString()
-        if (currentText != keyword) {
-            binding.etSearchKeyword.setText(keyword)
-            binding.etSearchKeyword.setSelection(keyword.length)
+        if (currentText != keyword?.value) {
+            binding.etSearchKeyword.setText(keyword?.value)
+            keyword?.let { binding.etSearchKeyword.setSelection(it.length) }
         }
     }
 
@@ -188,19 +190,21 @@ class SelectBookActivity : AppCompatActivity() {
         }
     }
 
-    private fun highlightKeyword(keyword: String): SpannableString {
-        val title = getString(R.string.select_book_empty_search_result, keyword)
+    private fun highlightKeyword(keyword: Keyword?): SpannableString {
+        val title = getString(R.string.select_book_empty_search_result, keyword?.value)
         val spannableTitle = SpannableString(title)
-        val start = title.indexOf(keyword)
-        val end = start + keyword.length
-        spannableTitle.setSpan(
-            ForegroundColorSpan(
-                getColor(R.color.green_1A),
-            ),
-            start,
-            end,
-            SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE,
-        )
+        keyword?.let {
+            val start = title.indexOf(keyword.value)
+            val end = start + keyword.length
+            spannableTitle.setSpan(
+                ForegroundColorSpan(
+                    getColor(R.color.green_1A),
+                ),
+                start,
+                end,
+                SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE,
+            )
+        }
         return spannableTitle
     }
 
