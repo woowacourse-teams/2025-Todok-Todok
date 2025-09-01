@@ -52,7 +52,7 @@ class DefaultDiscussionRepository(
             .map { discussions -> discussions.toDomain() }
 
     override suspend fun getDiscussion(id: Long): NetworkResult<Discussion> =
-        discussionRemoteDataSource.getDiscussion(id).map { it.toDomain() }
+        discussionRemoteDataSource.fetchDiscussion(id).map { it.toDomain() }
 
     override suspend fun getDiscussion(): DiscussionRoom? = discussionLocalDataSource.getDiscussion()?.discussionRoomEntity?.toDomain()
 

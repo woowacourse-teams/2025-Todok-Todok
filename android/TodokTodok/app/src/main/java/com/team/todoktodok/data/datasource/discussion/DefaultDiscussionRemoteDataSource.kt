@@ -35,7 +35,7 @@ class DefaultDiscussionRemoteDataSource(
         cursor: String?,
     ): NetworkResult<LatestDiscussionsResponse> = discussionService.fetchLatestDiscussions(size, cursor)
 
-    override suspend fun getDiscussion(id: Long): NetworkResult<DiscussionResponse> = discussionService.fetchDiscussion(id)
+    override suspend fun fetchDiscussion(id: Long): NetworkResult<DiscussionResponse> = discussionService.fetchDiscussion(id)
 
     override suspend fun saveDiscussionRoom(
         bookId: Long,

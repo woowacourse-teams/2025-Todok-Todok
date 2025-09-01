@@ -1,5 +1,6 @@
 package com.team.todoktodok.data.repository
 
+import com.team.domain.model.LikeStatus
 import com.team.domain.model.exception.NetworkResult
 import com.team.domain.model.exception.onSuccess
 import com.team.todoktodok.data.datasource.discussion.DiscussionLocalDataSource
@@ -81,5 +82,68 @@ class DefaultDiscussionRepositoryTest {
             lastPageResult.onSuccess { page ->
                 assertThat(page.pageInfo.hasNext).isFalse()
             }
+        }
+
+    @Test
+    fun `toggleLike를 호출하면 LIKE 이후 UNLIKE 시퀀스가 반환되고 카운트가 왕복한다`() =
+        runTest {
+            // given
+            val targetId = 2L
+
+            // when
+            val likeRes = defaultDiscussionRepository.toggleLike(targetId)
+            val afterLike = defaultDiscussionRepository.getDiscussion(targetId)
+
+            val unlikeRes = defaultDiscussionRepository.toggleLike(targetId)
+            val afterUnlike = defaultDiscussionRepository.getDiscussion(targetId)
+
+            // then
+            likeRes.onSuccess { action ->
+                assertThat(action).isEqualTo(LikeStatus.LIKE)
+            }
+            afterLike.onSuccess { d ->
+                assertThat(d.isLikedByMe).isTrue()
+                assertThat(d.likeCount).isEqualTo(1)
+            }
+
+            unlikeRes.onSuccess { action ->
+                assertThat(action).isEqualTo(LikeStatus.UNLIKE)
+            }
+            afterUnlike.onSuccess { d ->
+                assertThat(d.isLikedByMe).isFalse()
+                assertThat(d.likeCount).isEqualTo(0)
+            }
+        }
+
+    @Test
+    fun `toggleLike 후 fetch 결과와 동일 아이템 상태가 일치한다`() =
+        runTest {
+            // given
+            val targetId = 3L
+            defaultDiscussionRepository
+                .toggleLike(targetId)
+                .onSuccess { assertThat(it).isEqualTo(LikeStatus.LIKE) }
+
+            // when
+            val detail = defaultDiscussionRepository.getDiscussion(targetId)
+            // then
+            detail.onSuccess { d ->
+                assertThat(d.isLikedByMe).isTrue()
+                assertThat(d.likeCount).isEqualTo(1)
+            }
+        }
+
+    @Test
+    fun `reportDiscussion는 존재하는 ID면 성공, 없으면 Failure를 반환한다`() =
+        runTest {
+            // given
+            val okId = 1L
+            val badId = 9999L
+
+            // when
+            val ok = defaultDiscussionRepository.reportDiscussion(okId, reason = "스팸")
+            val bad = defaultDiscussionRepository.reportDiscussion(badId, reason = "스팸")
+            assertThat(ok).isInstanceOf(NetworkResult.Success::class.java)
+            assertThat(bad).isInstanceOf(NetworkResult.Failure::class.java)
         }
 }
