@@ -16,9 +16,7 @@ public class BookQueryService {
     private final AladinRestClient aladinRestClient;
 
     public List<AladinBookResponse> search(final String keyword) {
-        if (keyword == null || keyword.isBlank()) {
-            return List.of();
-        }
+        validateKeyword(keyword);
 
         final String cleanKeyword = keyword.trim();
         final AladinItemResponses searchedBooks = aladinRestClient.searchBooksByKeyword(cleanKeyword);
@@ -27,5 +25,11 @@ public class BookQueryService {
                 .filter(book -> book.isbn13() != null && !book.isbn13().isEmpty())
                 .map(AladinBookResponse::new)
                 .toList();
+    }
+
+    private void validateKeyword(final String keyword) {
+        if (keyword == null || keyword.isBlank()) {
+            throw new IllegalArgumentException(String.format("검색어는 1자 이상이어야 합니다: keyword = %s", keyword));
+        }
     }
 }
