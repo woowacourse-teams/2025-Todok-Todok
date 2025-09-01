@@ -7,8 +7,8 @@ import com.team.domain.model.exception.map
 import com.team.domain.repository.BookRepository
 import com.team.todoktodok.data.datasource.book.BookRemoteDataSource
 import com.team.todoktodok.data.network.request.toRequest
-import com.team.todoktodok.data.network.response.discussion.BookResponse
-import com.team.todoktodok.data.network.response.discussion.toAladinBook
+import com.team.todoktodok.data.network.response.book.AladinBookResponse
+import com.team.todoktodok.data.network.response.book.toDomain
 
 class DefaultBookRepository(
     private val bookRemoteDataSource: BookRemoteDataSource,
@@ -16,7 +16,7 @@ class DefaultBookRepository(
     override suspend fun fetchBooks(keyword: String): NetworkResult<AladinBooks> =
         bookRemoteDataSource
             .fetchBooks(keyword)
-            .map { bookResponse: List<BookResponse> -> AladinBooks(bookResponse.map { it.toAladinBook() }) }
+            .map { aladinBookResponse: List<AladinBookResponse> -> AladinBooks(aladinBookResponse.map { it.toDomain() }) }
 
     override suspend fun saveBook(book: Book): NetworkResult<Long> = bookRemoteDataSource.saveBook(book.toRequest())
 }
