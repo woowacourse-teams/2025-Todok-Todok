@@ -57,9 +57,9 @@ jobs:
     needs: ci
     runs-on: [self-hosted, prod]
     steps:
-      - name: Cleanup backend log directory before checkout
+      - name: Cleanup backend log and promtail data directory before checkout
         run: |
-          sudo chown -R ubuntu:ubuntu backend/log || true
+          sudo rm -rf backend/promtail_data || true
           sudo rm -rf backend/log || true
 
       - name: Checkout repository

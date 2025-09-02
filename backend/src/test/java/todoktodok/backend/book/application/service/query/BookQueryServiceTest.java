@@ -1,6 +1,7 @@
 package todoktodok.backend.book.application.service.query;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -60,25 +61,23 @@ public class BookQueryServiceTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"", " "})
-    @DisplayName("도서 검색 시 검색어가 입력되지 않으면 빈 리스트를 반환한다")
+    @DisplayName("도서 검색 시 검색어가 입력되지 않으면 예외가 발생한다")
     void searchTest_isEmpty(final String keyword) {
-        // given - when
-        final List<AladinBookResponse> emptyBooks = bookQueryService.search(keyword);
-
-        // then
-        assertThat(emptyBooks).isEmpty();
+        // when - then
+        assertThatThrownBy(() -> bookQueryService.search(keyword))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("검색어는 1자 이상이어야 합니다");
     }
 
     @Test
-    @DisplayName("도서 검색 시 검색어가 null이면 빈 리스트를 반환한다")
+    @DisplayName("도서 검색 시 검색어가 null이면 예외가 발생한다")
     void searchTest_isNull() {
         // given
         final String keyword = null;
 
-        // when
-        final List<AladinBookResponse> emptyBooks = bookQueryService.search(keyword);
-
-        // then
-        assertThat(emptyBooks).isEmpty();
+        // when - then
+        assertThatThrownBy(() -> bookQueryService.search(keyword))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("검색어는 1자 이상이어야 합니다");
     }
 }

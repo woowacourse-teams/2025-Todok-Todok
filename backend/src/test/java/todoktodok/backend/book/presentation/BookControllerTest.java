@@ -59,7 +59,7 @@ public class BookControllerTest {
     }
 
     @Test
-    @DisplayName("검색어가 1자 미만이면 빈 리스트를 응답한다")
+    @DisplayName("검색어가 1자 미만이면 예외가 발생한다")
     void searchTestFailUnder1Char() {
         // given
         databaseInitializer.setDefaultUserInfo();
@@ -75,12 +75,11 @@ public class BookControllerTest {
                 .param("keyword", keyword)
                 .when().get("/api/v1/books/search")
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .body("size()", is(0));
+                .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
     @Test
-    @DisplayName("검색어 파라미터가 없으면 빈 리스트를 응답한다")
+    @DisplayName("검색어 파라미터가 없으면 예외가 발생한다")
     void searchTestFailEmptyParam() {
         // given
         databaseInitializer.setDefaultUserInfo();
@@ -94,8 +93,7 @@ public class BookControllerTest {
                 .header("Authorization", token)
                 .when().get("/api/v1/books/search")
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .body("size()", is(0));
+                .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
     @Test
