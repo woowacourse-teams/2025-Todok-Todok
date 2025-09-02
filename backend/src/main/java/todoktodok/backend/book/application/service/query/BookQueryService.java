@@ -13,19 +13,26 @@ import todoktodok.backend.book.infrastructure.aladin.AladinRestClient;
 @AllArgsConstructor
 public class BookQueryService {
 
+    private static final String ISBN13_PATTERN = "\\d{13}";
+
     private final AladinRestClient aladinRestClient;
 
     public List<AladinBookResponse> search(final String keyword) {
-        if (keyword == null || keyword.isBlank()) {
-            return List.of();
-        }
+        validateKeyword(keyword);
 
         final String cleanKeyword = keyword.trim();
         final AladinItemResponses searchedBooks = aladinRestClient.searchBooksByKeyword(cleanKeyword);
 
         return searchedBooks.item().stream()
                 .filter(book -> book.isbn13() != null && !book.isbn13().isEmpty())
+                .filter(book -> book.isbn13().matches(ISBN13_PATTERN))
                 .map(AladinBookResponse::new)
                 .toList();
+    }
+
+    private void validateKeyword(final String keyword) {
+        if (keyword == null || keyword.isBlank()) {
+            throw new IllegalArgumentException(String.format("검색어는 1자 이상이어야 합니다: keyword = %s", keyword));
+        }
     }
 }
