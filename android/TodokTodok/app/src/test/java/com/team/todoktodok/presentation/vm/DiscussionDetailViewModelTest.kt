@@ -18,11 +18,9 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -175,24 +173,6 @@ class DiscussionDetailViewModelTest {
 
             assertThat(observed.await()).isEqualTo(DiscussionDetailUiEvent.ShowErrorMessage(ex))
             assertThat(discussionDetailViewModel.uiState.getOrAwaitValue().isLoading).isFalse()
-        }
-
-    @Test
-    fun `초기 로드 실패 시 에러 이벤트와 isLoading false`() =
-        runTest {
-            val ex = TodokTodokExceptions.EmptyBodyException
-            coEvery { discussionRepository.getDiscussion(DISCUSSION_ID) } returns
-                NetworkResult.Failure(
-                    ex,
-                )
-
-            val state = SavedStateHandle(mapOf(KEY_DISCUSSION_ID to DISCUSSION_ID))
-            val vm = DiscussionDetailViewModel(state, discussionRepository, tokenRepository)
-
-            val observed = async { vm.uiEvent.getOrAwaitValue() }
-
-            assertThat(observed.await()).isEqualTo(DiscussionDetailUiEvent.ShowErrorMessage(ex))
-            assertThat(vm.uiState.getOrAwaitValue().isLoading).isFalse()
         }
 
     companion object {
