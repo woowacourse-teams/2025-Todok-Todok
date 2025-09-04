@@ -3,8 +3,12 @@ name: Backend CI
 on:
   push:
     branches: [ "be", "dev" ]
+    paths:
+      - 'backend/**'
   pull_request:
     branches: [ "be", "dev" ]
+    paths:
+      - 'backend/**'
 
 jobs:
   build:
