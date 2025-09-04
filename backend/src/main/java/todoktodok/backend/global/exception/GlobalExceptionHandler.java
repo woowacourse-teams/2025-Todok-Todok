@@ -33,7 +33,7 @@ public class GlobalExceptionHandler {
         final HttpStatus status = HttpStatus.FORBIDDEN;
 
         return ResponseEntity.status(status)
-                .body(new ErrorResponse(status.value(), PREFIX + e.getMessage()));
+                .body(new ErrorResponse(status.value(), PREFIX + getSafeErrorMessage(e)));
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
