@@ -4,5 +4,6 @@ public enum Role {
 
     GUEST,
     USER,
-    TEMP_USER
+    TEMP_USER,
+    EXPIRED_USER
 }

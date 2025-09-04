@@ -34,7 +34,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
     ) {
         final HttpServletRequest httpServletRequest = webRequest.getNativeRequest(HttpServletRequest.class);
         final String token = getTokenFromAuthorizationHeader(httpServletRequest);
-        return jwtTokenProvider.getInfo(token).id();
+        return jwtTokenProvider.getInfoByAccessToken(token).id();
     }
 
     private String getTokenFromAuthorizationHeader(HttpServletRequest httpServletRequest) {

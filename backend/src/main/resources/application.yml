@@ -16,5 +16,7 @@ jwt:
   secret-key: ${jwt.secret-key}
   access-token:
     expire-mills: ${jwt.access-token.expire-mills}
+  refresh-token:
+    expire-mills: ${jwt.refresh-token.expire-mills}
   temp-token:
     expire-mills: ${jwt.temp-token.expire-mills}

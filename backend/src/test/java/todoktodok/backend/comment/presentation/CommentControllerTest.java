@@ -47,7 +47,7 @@ public class CommentControllerTest {
 
         final CommentRequest commentRequest = new CommentRequest("상속의 핵심 목적은 타입 계층의 구축입니다!");
 
-        final String token = MemberFixture.login("user@gmail.com");
+        final String token = MemberFixture.getAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -68,7 +68,7 @@ public class CommentControllerTest {
         databaseInitializer.setDefaultDiscussionInfo();
         databaseInitializer.setDefaultCommentInfo();
 
-        final String token = MemberFixture.login("user@gmail.com");
+        final String token = MemberFixture.getAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -89,7 +89,7 @@ public class CommentControllerTest {
         databaseInitializer.setDefaultCommentInfo();
         databaseInitializer.setCommentLikeInfo(1L, 1L);
 
-        final String token = MemberFixture.login("user@gmail.com");
+        final String token = MemberFixture.getAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -111,7 +111,7 @@ public class CommentControllerTest {
         databaseInitializer.setDefaultDiscussionInfo();
         databaseInitializer.setCommentInfo("상속의 핵심 목적은 타입 계층의 구축입니다!", 2L, 1L);
 
-        final String token = MemberFixture.login("user@gmail.com");
+        final String token = MemberFixture.getAccessToken("user@gmail.com");
         final CommentReportRequest commentReportRequest = new CommentReportRequest("토론 주제와 무관한 내용");
 
         // when - then
@@ -134,7 +134,7 @@ public class CommentControllerTest {
 
         databaseInitializer.setCommentInfo("상속의 핵심 목적은 타입 계층의 구축입니다!", 1L, 1L);
 
-        final String token = MemberFixture.login("user@gmail.com");
+        final String token = MemberFixture.getAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -156,7 +156,7 @@ public class CommentControllerTest {
         databaseInitializer.setCommentInfo("상속의 핵심 목적은 타입 계층의 구축입니다!", 1L, 1L);
         databaseInitializer.setCommentInfo("조합은 재사용이 목적입니다!", 1L, 1L);
 
-        final String token = MemberFixture.login("user@gmail.com");
+        final String token = MemberFixture.getAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -183,7 +183,7 @@ public class CommentControllerTest {
                 updatedContent
         );
 
-        final String token = MemberFixture.login("user@gmail.com");
+        final String token = MemberFixture.getAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -205,7 +205,7 @@ public class CommentControllerTest {
 
         databaseInitializer.setCommentInfo("상속의 핵심 목적은 타입 계층의 구축입니다!", 1L, 1L);
 
-        final String token = MemberFixture.login("user@gmail.com");
+        final String token = MemberFixture.getAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
