@@ -235,7 +235,7 @@ public interface MemberApiDocs {
                     description = "리프레시 토큰",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = LoginRequest.class),
+                            schema = @Schema(implementation = RefreshTokenRequest.class),
                             examples = @ExampleObject(
                                     value = "{\"refreshToken\":\"eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJleHAiOjE3 NTU2MTgxNjZ9._-0qTNmPyO1m6LnpEAwkGAB92Es0yBwxNBtmsq_VrGk\"}"
                             )
