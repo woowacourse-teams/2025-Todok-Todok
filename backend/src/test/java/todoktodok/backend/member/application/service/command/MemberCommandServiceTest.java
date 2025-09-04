@@ -2,7 +2,10 @@ package todoktodok.backend.member.application.service.command;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
+import io.jsonwebtoken.JwtException;
+import jakarta.persistence.EntityManager;
 import java.util.NoSuchElementException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -12,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.DatabaseInitializer;
 import todoktodok.backend.InitializerTimer;
@@ -20,8 +24,12 @@ import todoktodok.backend.global.jwt.JwtTokenProvider;
 import todoktodok.backend.global.jwt.TokenInfo;
 import todoktodok.backend.member.application.dto.request.LoginRequest;
 import todoktodok.backend.member.application.dto.request.ProfileUpdateRequest;
+import todoktodok.backend.member.application.dto.request.RefreshTokenRequest;
 import todoktodok.backend.member.application.dto.request.SignupRequest;
 import todoktodok.backend.member.application.dto.response.ProfileUpdateResponse;
+import todoktodok.backend.member.application.dto.response.TokenResponse;
+import todoktodok.backend.member.domain.RefreshToken;
+import todoktodok.backend.member.domain.repository.RefreshTokenRepository;
 
 @ActiveProfiles("test")
 @Transactional
@@ -38,13 +46,19 @@ class MemberCommandServiceTest {
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
+    @Autowired
+    private RefreshTokenRepository refreshTokenRepository;
+
+    @Autowired
+    private EntityManager entityManager;
+
     @BeforeEach
     void setUp() {
         databaseInitializer.clear();
     }
 
     @Test
-    @DisplayName("기존 회원 로그인 시 회원 토큰을 발급한다")
+    @DisplayName("기존 회원 로그인 시 엑세스 토큰과 리프레시 토큰을 발급한다")
     void loginUserTest() {
         // given
         databaseInitializer.setDefaultUserInfo();
@@ -52,11 +66,15 @@ class MemberCommandServiceTest {
         final LoginRequest loginRequest = new LoginRequest("user@gmail.com");
 
         // when
-        final String token = memberCommandService.login(loginRequest);
-        final TokenInfo tokenInfo = jwtTokenProvider.getInfo(token);
+        final TokenResponse tokenResponse = memberCommandService.login(loginRequest);
+        final TokenInfo accessTokenInfo = jwtTokenProvider.getInfoByAccessToken(tokenResponse.accessToken());
+        final TokenInfo refreshTokenInfo = jwtTokenProvider.getInfoByAccessToken(tokenResponse.refreshToken());
 
         // then
-        assertThat(tokenInfo.role()).isEqualTo(Role.USER);
+        assertAll(
+                () -> assertThat(accessTokenInfo.role()).isEqualTo(Role.USER),
+                () -> assertThat(refreshTokenInfo.role()).isEqualTo(Role.USER)
+        );
     }
 
     @Test
@@ -66,26 +84,79 @@ class MemberCommandServiceTest {
         final LoginRequest loginRequest = new LoginRequest("user@gmail.com");
 
         // when
-        final String token = memberCommandService.login(loginRequest);
-        final TokenInfo tokenInfo = jwtTokenProvider.getInfo(token);
+        final TokenResponse tokenResponse = memberCommandService.login(loginRequest);
+        final TokenInfo accessTokenInfo = jwtTokenProvider.getInfoByAccessToken(tokenResponse.accessToken());
 
         // then
-        assertThat(tokenInfo.role()).isEqualTo(Role.TEMP_USER);
+        assertAll(
+                () -> assertThat(accessTokenInfo.role()).isEqualTo(Role.TEMP_USER),
+                () -> assertThat(tokenResponse.refreshToken()).isNull()
+        );
     }
 
     @Test
-    @DisplayName("임시 토큰으로 회원 가입 시 회원 토큰을 발급한다")
+    @DisplayName("임시 토큰으로 회원 가입 시 엑세스 토큰과 리프레시 토큰을 발급한다")
     void signUpTest() {
         // given
         final String email = "user@gmail.com";
         final SignupRequest signupRequest = new SignupRequest("user", "https://user.png", email);
 
         // when
-        final String token = memberCommandService.signup(signupRequest, email);
-        final TokenInfo tokenInfo = jwtTokenProvider.getInfo(token);
+        final TokenResponse tokenResponse = memberCommandService.signup(signupRequest, email);
+        final TokenInfo accessTokenInfo = jwtTokenProvider.getInfoByAccessToken(tokenResponse.accessToken());
+        final TokenInfo refreshTokenInfo = jwtTokenProvider.getInfoByAccessToken(tokenResponse.refreshToken());
 
         // then
-        assertThat(tokenInfo.role()).isEqualTo(Role.USER);
+        assertAll(
+                () -> assertThat(accessTokenInfo.role()).isEqualTo(Role.USER),
+                () -> assertThat(refreshTokenInfo.role()).isEqualTo(Role.USER)
+        );
+    }
+
+    @Test
+    @DisplayName("엑세스 토큰과 리프레시 토큰을 재발급한다")
+    void refreshTest() {
+        // given
+        final String email = "user@gmail.com";
+        final String nickname = "nick";
+        final String profileImage = "https://image.png";
+        final String profileMessage = "profileMessage";
+        databaseInitializer.setUserInfo(email, nickname, profileImage, profileMessage);
+
+        final TokenResponse oldTokenResponse = memberCommandService.login(new LoginRequest(email));
+        final String oldRefreshToken = oldTokenResponse.refreshToken();
+        final RefreshTokenRequest refreshTokenRequest = new RefreshTokenRequest(oldRefreshToken);
+
+        // when
+        final TokenResponse tokenResponse = memberCommandService.refresh(refreshTokenRequest);
+        final TokenInfo accessTokenInfo = jwtTokenProvider.getInfoByAccessToken(tokenResponse.accessToken());
+        final TokenInfo refreshTokenInfo = jwtTokenProvider.getInfoByRefreshToken(tokenResponse.refreshToken());
+
+        // then
+        assertAll(
+                () -> assertThat(accessTokenInfo.role()).isEqualTo(Role.USER),
+                () -> assertThat(refreshTokenInfo.role()).isEqualTo(Role.USER),
+                () -> assertThat(accessTokenInfo.id()).isEqualTo(1L),
+                () -> assertThat(refreshTokenInfo.id()).isEqualTo(1L)
+        );
+    }
+
+    @Test
+    @DisplayName("유효하지 않은 리프레시 토큰으로 재발급을 요청하면 예외가 발생한다")
+    void refreshTest_notValidate_fail() {
+        // given
+        final String email = "user@gmail.com";
+        final String nickname = "nick";
+        final String profileImage = "https://image.png";
+        final String profileMessage = "profileMessage";
+        databaseInitializer.setUserInfo(email, nickname, profileImage, profileMessage);
+
+        final RefreshTokenRequest refreshTokenRequest = new RefreshTokenRequest("notValidateToken");
+
+        // when - then
+        assertThatThrownBy(() -> memberCommandService.refresh(refreshTokenRequest))
+                .isInstanceOf(JwtException.class)
+                .hasMessageContaining("잘못된 로그인 시도입니다. 다시 시도해 주세요");
     }
 
     @Test
