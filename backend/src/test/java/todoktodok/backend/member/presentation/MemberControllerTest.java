@@ -7,6 +7,7 @@ import static org.hamcrest.Matchers.nullValue;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -101,6 +102,23 @@ class MemberControllerTest {
                 .when().post("/api/v1/members/signup")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value())
+                .body("refreshToken", notNullValue());
+    }
+
+    @Test
+    @DisplayName("토큰을 재발급한다")
+    void refreshTest() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        final TokenResponse tokens = MemberFixture.getAccessAndRefreshToken("user@gmail.com");
+
+        // when - then
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new RefreshTokenRequest(tokens.refreshToken()))
+                .when().post("/api/v1/members/refresh")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
                 .body("refreshToken", notNullValue());
     }
 
