@@ -32,10 +32,12 @@
 
     <ImageView
         android:id="@+id/btn_back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/btn_back"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:contentDescription="@string/select_book_content_description_btn_back"
+        android:paddingVertical="10dp"
+        android:paddingEnd="@dimen/space_20"
+        android:src="@drawable/btn_back"
         app:layout_constraintBottom_toBottomOf="@id/topBar_select_book"
         app:layout_constraintStart_toStartOf="@id/topBar_select_book"
         app:layout_constraintTop_toTopOf="@id/topBar_select_book" />
