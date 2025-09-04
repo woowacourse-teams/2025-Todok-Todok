@@ -4,7 +4,6 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.Jwts.SIG;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import java.util.Date;
@@ -23,6 +22,7 @@ import todoktodok.backend.member.domain.Member;
 public class JwtTokenProvider {
 
     private static final String JWT_EXCEPTION_MESSAGE = "잘못된 로그인 시도입니다. 다시 시도해 주세요";
+    private static final String ACCESS_TOKEN_EXPIRED_MESSAGE = "액세스 토큰이 만료되었습니다";
     private static final String TOKEN_PREFIX = "Bearer ";
     private static SecretKey SECRET_KEY;
 
@@ -32,6 +32,9 @@ public class JwtTokenProvider {
     @Value("${jwt.access-token.expire-mills}")
     private long validityInMilliseconds;
 
+    @Value("${jwt.refresh-token.expire-mills}")
+    private long validityRefreshInMilliseconds;
+
     @Value("${jwt.temp-token.expire-mills}")
     private long validityTempUserInMilliseconds;
 
@@ -40,11 +43,23 @@ public class JwtTokenProvider {
         SECRET_KEY = Keys.hmacShaKeyFor(secretKey.getBytes());
     }
 
-    public String createToken(final Member member) {
+    public String createAccessToken(final Member member) {
         final Date now = new Date();
         final Date validity = new Date(now.getTime() + validityInMilliseconds);
 
         return TOKEN_PREFIX + Jwts.builder()
+                .subject(member.getId().toString())
+                .claim("role", Role.USER)
+                .expiration(validity)
+                .signWith(SECRET_KEY)
+                .compact();
+    }
+
+    public String createRefreshToken(final Member member) {
+        final Date now = new Date();
+        final Date validity = new Date(now.getTime() + validityRefreshInMilliseconds);
+
+        return Jwts.builder()
                 .subject(member.getId().toString())
                 .claim("role", Role.USER)
                 .expiration(validity)
@@ -64,7 +79,7 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    public TokenInfo getInfo(final String token) {
+    public TokenInfo getInfoByAccessToken(final String token) {
         if (token == null || !token.startsWith("Bearer ")) {
             log.warn("유효한 JWT 토큰이 아닙니다");
             throw new JwtException(JWT_EXCEPTION_MESSAGE);
@@ -87,6 +102,16 @@ public class JwtTokenProvider {
         );
     }
 
+    public TokenInfo getInfoByRefreshToken(final String token) {
+        final Claims claims = validateToken(token);
+
+        return new TokenInfo(
+                Long.valueOf(claims.getSubject()),
+                null,
+                Role.valueOf(claims.get("role", String.class))
+        );
+    }
+
     private Claims validateToken(final String token) {
         if (token == null || token.trim().isEmpty()) {
             log.warn("JWT 토큰이 존재하지 않습니다");
@@ -100,7 +125,7 @@ public class JwtTokenProvider {
             throw new JwtException(JWT_EXCEPTION_MESSAGE);
         } catch (final ExpiredJwtException e) {
             log.warn("Expired JWT token, 만료된 JWT token 입니다");
-            throw new JwtException(JWT_EXCEPTION_MESSAGE);
+            throw new SecurityException(ACCESS_TOKEN_EXPIRED_MESSAGE);
         } catch (final UnsupportedJwtException e) {
             log.warn("Unsupported JWT token, 지원되지 않는 JWT 토큰 입니다");
             throw new JwtException(JWT_EXCEPTION_MESSAGE);
