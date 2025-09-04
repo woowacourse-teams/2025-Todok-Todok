@@ -45,7 +45,7 @@ public interface MemberApiDocs {
                                     ),
                                     @ExampleObject(
                                             name = "임시회원일 때",
-                                            value = "{\"refreshToken\":\"null\"}"
+                                            value = "{\"refreshToken\":null}"
                                     )
                             }
                     )
