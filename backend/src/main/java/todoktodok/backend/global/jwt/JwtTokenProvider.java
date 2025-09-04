@@ -62,6 +62,7 @@ public class JwtTokenProvider {
         return Jwts.builder()
                 .subject(member.getId().toString())
                 .claim("role", Role.USER)
+                .claim("type", "refresh")
                 .expiration(validity)
                 .signWith(SECRET_KEY)
                 .compact();
@@ -86,7 +87,7 @@ public class JwtTokenProvider {
         }
 
         final String extractedToken = token.replace("Bearer ","");
-        final Claims claims = validateToken(extractedToken);
+        final Claims claims = validateAccessToken(extractedToken);
 
         if (claims.getSubject() == null) {
             return new TokenInfo(
@@ -103,7 +104,7 @@ public class JwtTokenProvider {
     }
 
     public TokenInfo getInfoByRefreshToken(final String token) {
-        final Claims claims = validateToken(token);
+        final Claims claims = validateRefreshToken(token);
 
         return new TokenInfo(
                 Long.valueOf(claims.getSubject()),
@@ -112,7 +113,7 @@ public class JwtTokenProvider {
         );
     }
 
-    private Claims validateToken(final String token) {
+    private Claims validateAccessToken(final String token) {
         if (token == null || token.trim().isEmpty()) {
             log.warn("JWT 토큰이 존재하지 않습니다");
             throw new JwtException(JWT_EXCEPTION_MESSAGE);
@@ -124,8 +125,38 @@ public class JwtTokenProvider {
             log.warn("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다");
             throw new JwtException(JWT_EXCEPTION_MESSAGE);
         } catch (final ExpiredJwtException e) {
-            log.warn("Expired JWT token, 만료된 JWT token 입니다");
+            log.warn("Expired JWT token, 만료된 JWT access token 입니다");
             throw new SecurityException(ACCESS_TOKEN_EXPIRED_MESSAGE);
+        } catch (final UnsupportedJwtException e) {
+            log.warn("Unsupported JWT token, 지원되지 않는 JWT 토큰 입니다");
+            throw new JwtException(JWT_EXCEPTION_MESSAGE);
+        } catch (final IllegalArgumentException e) {
+            log.warn("JWT claims is empty, 잘못된 JWT 토큰 입니다");
+            throw new JwtException(JWT_EXCEPTION_MESSAGE);
+        }
+    }
+
+    private Claims validateRefreshToken(final String token) {
+        if (token == null || token.trim().isEmpty()) {
+            log.warn("JWT 토큰이 존재하지 않습니다");
+            throw new JwtException(JWT_EXCEPTION_MESSAGE);
+        }
+
+        try {
+            final Claims claims = Jwts.parser().verifyWith(SECRET_KEY).build().parseSignedClaims(token).getPayload();
+            final String type = claims.get("type", String.class);
+            if ("refresh".equals(type)) {
+                return claims;
+            }
+
+            log.warn("리프레시 토큰이 아닙니다");
+            throw new JwtException(JWT_EXCEPTION_MESSAGE);
+        } catch (final SecurityException | MalformedJwtException e) {
+            log.warn("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다");
+            throw new JwtException(JWT_EXCEPTION_MESSAGE);
+        } catch (final ExpiredJwtException e) {
+            log.warn("Expired JWT token, 만료된 JWT refresh token 입니다");
+            throw new JwtException(JWT_EXCEPTION_MESSAGE);
         } catch (final UnsupportedJwtException e) {
             log.warn("Unsupported JWT token, 지원되지 않는 JWT 토큰 입니다");
             throw new JwtException(JWT_EXCEPTION_MESSAGE);
