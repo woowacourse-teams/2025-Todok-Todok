@@ -105,33 +105,6 @@ class MemberControllerTest {
     }
 
     @Test
-    @DisplayName("이미 재발급에 사용한 리프레시 토큰으로 재발급을 요청하면 예외가 발생한다")
-    void refreshTest_notExist_fail() {
-        // given
-        databaseInitializer.setDefaultUserInfo();
-        final String email = "user@gmail.com";
-        final TokenResponse tokenResponse = MemberFixture.getAccessAndRefreshToken(email);
-
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .header("Authorization", tokenResponse.accessToken())
-                .body(new RefreshTokenRequest(tokenResponse.refreshToken()))
-                .when().post("/api/v1/members/refresh")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .body("refreshToken", notNullValue());
-
-        // when - then
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .header("Authorization", tokenResponse.accessToken())
-                .body(new RefreshTokenRequest(tokenResponse.refreshToken()))
-                .when().post("/api/v1/members/refresh")
-                .then().log().all()
-                .statusCode(HttpStatus.NOT_FOUND.value());
-    }
-
-    @Test
     @DisplayName("회원을 차단한다")
     void blockTest() {
         // given

@@ -68,7 +68,7 @@ class MemberCommandServiceTest {
         // when
         final TokenResponse tokenResponse = memberCommandService.login(loginRequest);
         final TokenInfo accessTokenInfo = jwtTokenProvider.getInfoByAccessToken(tokenResponse.accessToken());
-        final TokenInfo refreshTokenInfo = jwtTokenProvider.getInfoByAccessToken(tokenResponse.refreshToken());
+        final TokenInfo refreshTokenInfo = jwtTokenProvider.getInfoByRefreshToken(tokenResponse.refreshToken());
 
         // then
         assertAll(
@@ -104,7 +104,7 @@ class MemberCommandServiceTest {
         // when
         final TokenResponse tokenResponse = memberCommandService.signup(signupRequest, email);
         final TokenInfo accessTokenInfo = jwtTokenProvider.getInfoByAccessToken(tokenResponse.accessToken());
-        final TokenInfo refreshTokenInfo = jwtTokenProvider.getInfoByAccessToken(tokenResponse.refreshToken());
+        final TokenInfo refreshTokenInfo = jwtTokenProvider.getInfoByRefreshToken(tokenResponse.refreshToken());
 
         // then
         assertAll(
