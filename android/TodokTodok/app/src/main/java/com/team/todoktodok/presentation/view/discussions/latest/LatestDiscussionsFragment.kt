@@ -26,6 +26,11 @@ class LatestDiscussionsFragment : BaseDiscussionsFragment(R.layout.fragment_late
 
     private fun initView(binding: FragmentLatestDiscussionsBinding) {
         with(binding) {
+            rvRefresh.setOnRefreshListener {
+                viewModel.refreshLatestDiscussions()
+                rvRefresh.isRefreshing = false
+            }
+
             rvDiscussions.adapter = discussionAdapter
             rvDiscussions.setHasFixedSize(true)
             rvDiscussions.addOnScrollEndListener {

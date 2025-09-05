@@ -36,6 +36,8 @@ data class LatestDiscussionsUiState(
         return copy(items = newItems)
     }
 
+    fun clear() = copy(items = emptyList(), latestPage = PageInfo.EMPTY)
+
     val hasNext get() = latestPage.hasNext
     val nextCursor get() = latestPage.nextCursor
 }
