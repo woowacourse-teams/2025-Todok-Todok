@@ -106,6 +106,12 @@ public class MemberCommandService {
         return new ProfileUpdateResponse(member);
     }
 
+    public void deleteMember(final Long memberId) {
+        final Member member = findMember(memberId);
+
+        memberRepository.delete(member);
+    }
+
     public void deleteBlock(
             final Long memberId,
             final Long targetId

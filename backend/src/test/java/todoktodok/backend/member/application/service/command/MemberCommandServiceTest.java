@@ -22,6 +22,7 @@ import todoktodok.backend.member.application.dto.request.LoginRequest;
 import todoktodok.backend.member.application.dto.request.ProfileUpdateRequest;
 import todoktodok.backend.member.application.dto.request.SignupRequest;
 import todoktodok.backend.member.application.dto.response.ProfileUpdateResponse;
+import todoktodok.backend.member.presentation.fixture.MemberFixture;
 
 @ActiveProfiles("test")
 @Transactional
@@ -242,6 +243,18 @@ class MemberCommandServiceTest {
 
         // then
         assertThat(memberCommandService.updateProfile(memberId, profileUpdateRequest)).isEqualTo(expected);
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 회원이 탈퇴하면 예외가 발생한다")
+    void deleteMemberTest_notFoundMember_fail() {
+        // given
+        final Long notExistsMemberId = 999L;
+
+        // when - then
+        assertThatThrownBy(() -> memberCommandService.deleteMember(notExistsMemberId))
+                .isInstanceOf(NoSuchElementException.class)
+                .hasMessageContaining("해당 회원을 찾을 수 없습니다");
     }
 
     @Test
