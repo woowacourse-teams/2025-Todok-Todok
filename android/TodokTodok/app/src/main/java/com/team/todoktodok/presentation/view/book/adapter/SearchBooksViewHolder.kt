@@ -13,7 +13,7 @@ class SearchBooksViewHolder private constructor(
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
         binding.root.setOnClickListener {
-            selectBook.onClick(bindingAdapterPosition + SEARCH_BOOKS_COUNT_LINE_LENGTH)
+            selectBook.onClick(bindingAdapterPosition - SEARCH_BOOKS_COUNT_LENGTH)
         }
     }
 
@@ -26,7 +26,7 @@ class SearchBooksViewHolder private constructor(
     }
 
     companion object {
-        private const val SEARCH_BOOKS_COUNT_LINE_LENGTH: Int = 1
+        private const val SEARCH_BOOKS_COUNT_LENGTH: Int = 1
 
         fun SearchBooksViewHolder(
             parent: ViewGroup,
