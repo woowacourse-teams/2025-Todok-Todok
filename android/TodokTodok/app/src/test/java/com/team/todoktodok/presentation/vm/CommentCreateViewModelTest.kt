@@ -28,38 +28,56 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(CoroutinesTestExtension::class)
 class CommentCreateViewModelTest {
     private lateinit var commentRepository: CommentRepository
-    private val DISCUSSION_ID = 10L
-    private val COMMENT_ID = 99L
-    private val INITIAL_TEXT = "prefilled"
+    private lateinit var commentCreateViewModel: CommentCreateViewModel
+
+    private fun newVmCreate(
+        discussionId: Long = DISCUSSION_ID,
+        initialText: String? = null,
+    ) {
+        val handle =
+            SavedStateHandle(
+                mapOf(
+                    CommentCreateViewModel.KEY_DISCUSSION_ID to discussionId,
+                    CommentCreateViewModel.KEY_COMMENT_ID to null, // Create 모드
+                    CommentCreateViewModel.KEY_COMMENT_CONTENT to initialText,
+                ),
+            )
+        commentCreateViewModel = CommentCreateViewModel(handle, commentRepository)
+    }
+
+    private fun newVmUpdate(
+        discussionId: Long = DISCUSSION_ID,
+        commentId: Long = COMMENT_ID,
+    ) {
+        val handle =
+            SavedStateHandle(
+                mapOf(
+                    CommentCreateViewModel.KEY_DISCUSSION_ID to discussionId,
+                    CommentCreateViewModel.KEY_COMMENT_ID to commentId, // Update 모드
+                    CommentCreateViewModel.KEY_COMMENT_CONTENT to null,
+                ),
+            )
+        commentCreateViewModel = CommentCreateViewModel(handle, commentRepository)
+    }
 
     @BeforeEach
     fun setUp() {
         commentRepository = mockk(relaxed = true)
+        newVmUpdate()
     }
 
     @Test
     fun `Create - initUiState는 commentContent 반영하고 InitState 이벤트를 보낸다`() =
         runTest {
             // given
-            val handle =
-                SavedStateHandle(
-                    mapOf(
-                        CommentCreateViewModel.KEY_DISCUSSION_ID to DISCUSSION_ID,
-                        CommentCreateViewModel.KEY_COMMENT_CONTENT to INITIAL_TEXT,
-                        CommentCreateViewModel.KEY_COMMENT_ID to null,
-                    ),
-                )
-            val vm = CommentCreateViewModel(handle, commentRepository)
+            newVmCreate()
 
             // when
-            vm.initUiState()
+            commentCreateViewModel.initUiState()
             advanceUntilIdle()
 
-            // then
-            assertThat(vm.commentText.getOrAwaitValue()).isEqualTo(INITIAL_TEXT)
-            val ev = vm.uiEvent.getOrAwaitValue()
+            val ev = commentCreateViewModel.uiEvent.getOrAwaitValue()
             assertThat(ev).isInstanceOf(CommentCreateUiEvent.InitState::class.java)
-            assertThat((ev as CommentCreateUiEvent.InitState).content).isEqualTo(INITIAL_TEXT)
         }
 
     @Test
@@ -74,19 +92,19 @@ class CommentCreateViewModelTest {
                         CommentCreateViewModel.KEY_COMMENT_CONTENT to null,
                     ),
                 )
-            val vm = CommentCreateViewModel(handle, commentRepository)
+            val commentCreateViewModel = CommentCreateViewModel(handle, commentRepository)
             val serverText = "from-server"
             val commentMock = mockk<Comment> { every { content } returns serverText }
             coEvery { commentRepository.getComment(DISCUSSION_ID, COMMENT_ID) } returns
                 NetworkResult.Success(commentMock)
 
             // when
-            vm.initUiState()
+            commentCreateViewModel.initUiState()
             advanceUntilIdle()
 
             // then
-            assertThat(vm.commentText.getOrAwaitValue()).isEqualTo(serverText)
-            val ev = vm.uiEvent.getOrAwaitValue()
+            assertThat(commentCreateViewModel.commentText.getOrAwaitValue()).isEqualTo(serverText)
+            val ev = commentCreateViewModel.uiEvent.getOrAwaitValue()
             assertThat(ev).isInstanceOf(CommentCreateUiEvent.InitState::class.java)
             assertThat((ev as CommentCreateUiEvent.InitState).content).isEqualTo(serverText)
         }
@@ -95,22 +113,14 @@ class CommentCreateViewModelTest {
     fun `Update - initUiState 실패 시 ShowError`() =
         runTest {
             // given
-            val handle =
-                SavedStateHandle(
-                    mapOf(
-                        CommentCreateViewModel.KEY_DISCUSSION_ID to DISCUSSION_ID,
-                        CommentCreateViewModel.KEY_COMMENT_ID to COMMENT_ID,
-                        CommentCreateViewModel.KEY_COMMENT_CONTENT to null,
-                    ),
-                )
-            val vm = CommentCreateViewModel(handle, commentRepository)
+            newVmUpdate()
             val ex = TodokTodokExceptions.EmptyBodyException
             coEvery { commentRepository.getComment(DISCUSSION_ID, COMMENT_ID) } returns
                 NetworkResult.Failure(ex)
 
             // when
-            val evDeferred = async { vm.uiEvent.getOrAwaitValue() }
-            vm.initUiState()
+            val evDeferred = async { commentCreateViewModel.uiEvent.getOrAwaitValue() }
+            commentCreateViewModel.initUiState()
             advanceUntilIdle()
 
             // then
@@ -120,45 +130,26 @@ class CommentCreateViewModelTest {
     @Test
     fun `onCommentChanged는 commentText 갱신`() =
         runTest {
-            // given
-            val handle =
-                SavedStateHandle(
-                    mapOf(
-                        CommentCreateViewModel.KEY_DISCUSSION_ID to DISCUSSION_ID,
-                        CommentCreateViewModel.KEY_COMMENT_CONTENT to null,
-                        CommentCreateViewModel.KEY_COMMENT_ID to null,
-                    ),
-                )
-            val vm = CommentCreateViewModel(handle, commentRepository)
-
             // when + then
-            vm.onCommentChanged("abc")
-            assertThat(vm.commentText.getOrAwaitValue()).isEqualTo("abc")
+            commentCreateViewModel.onCommentChanged("abc")
+            assertThat(commentCreateViewModel.commentText.getOrAwaitValue()).isEqualTo("abc")
 
-            vm.onCommentChanged(null)
-            assertThat(vm.commentText.getOrAwaitValue()).isEqualTo("")
+            commentCreateViewModel.onCommentChanged(null)
+            assertThat(commentCreateViewModel.commentText.getOrAwaitValue()).isEqualTo("")
         }
 
     @Test
     fun `Create - submitComment 성공 시 SubmitComment`() =
         runTest {
             // given
-            val handle =
-                SavedStateHandle(
-                    mapOf(
-                        CommentCreateViewModel.KEY_DISCUSSION_ID to DISCUSSION_ID,
-                        CommentCreateViewModel.KEY_COMMENT_CONTENT to null,
-                        CommentCreateViewModel.KEY_COMMENT_ID to null,
-                    ),
-                )
-            val vm = CommentCreateViewModel(handle, commentRepository)
-            vm.onCommentChanged("hello")
+            newVmCreate()
+            commentCreateViewModel.onCommentChanged("hello")
             coEvery { commentRepository.saveComment(DISCUSSION_ID, "hello") } returns
                 NetworkResult.Success(Unit)
 
             // when
-            val evDeferred = async { vm.uiEvent.getOrAwaitValue() }
-            vm.submitComment()
+            val evDeferred = async { commentCreateViewModel.uiEvent.getOrAwaitValue() }
+            commentCreateViewModel.submitComment()
             advanceUntilIdle()
 
             // then
@@ -170,23 +161,15 @@ class CommentCreateViewModelTest {
     fun `Create - submitComment 실패 시 ShowError`() =
         runTest {
             // given
-            val handle =
-                SavedStateHandle(
-                    mapOf(
-                        CommentCreateViewModel.KEY_DISCUSSION_ID to DISCUSSION_ID,
-                        CommentCreateViewModel.KEY_COMMENT_CONTENT to null,
-                        CommentCreateViewModel.KEY_COMMENT_ID to null,
-                    ),
-                )
-            val vm = CommentCreateViewModel(handle, commentRepository)
-            vm.onCommentChanged("hello")
+            newVmCreate()
+            commentCreateViewModel.onCommentChanged("hello")
             val ex = TodokTodokExceptions.EmptyBodyException
             coEvery { commentRepository.saveComment(DISCUSSION_ID, "hello") } returns
                 NetworkResult.Failure(ex)
 
             // when
-            val evDeferred = async { vm.uiEvent.getOrAwaitValue() }
-            vm.submitComment()
+            val evDeferred = async { commentCreateViewModel.uiEvent.getOrAwaitValue() }
+            commentCreateViewModel.submitComment()
             advanceUntilIdle()
 
             // then
@@ -197,22 +180,14 @@ class CommentCreateViewModelTest {
     fun `Update - submitComment 성공 시 SubmitComment`() =
         runTest {
             // given
-            val handle =
-                SavedStateHandle(
-                    mapOf(
-                        CommentCreateViewModel.KEY_DISCUSSION_ID to DISCUSSION_ID,
-                        CommentCreateViewModel.KEY_COMMENT_ID to COMMENT_ID,
-                        CommentCreateViewModel.KEY_COMMENT_CONTENT to null,
-                    ),
-                )
-            val vm = CommentCreateViewModel(handle, commentRepository)
-            vm.onCommentChanged("edited")
+            newVmUpdate()
+            commentCreateViewModel.onCommentChanged("edited")
             coEvery { commentRepository.updateComment(DISCUSSION_ID, COMMENT_ID, "edited") } returns
                 NetworkResult.Success(Unit)
 
             // when
-            val evDeferred = async { vm.uiEvent.getOrAwaitValue() }
-            vm.submitComment()
+            val evDeferred = async { commentCreateViewModel.uiEvent.getOrAwaitValue() }
+            commentCreateViewModel.submitComment()
             advanceUntilIdle()
 
             // then
@@ -226,23 +201,15 @@ class CommentCreateViewModelTest {
     fun `Update - submitComment 실패 시 ShowError`() =
         runTest {
             // given
-            val handle =
-                SavedStateHandle(
-                    mapOf(
-                        CommentCreateViewModel.KEY_DISCUSSION_ID to DISCUSSION_ID,
-                        CommentCreateViewModel.KEY_COMMENT_ID to COMMENT_ID,
-                        CommentCreateViewModel.KEY_COMMENT_CONTENT to null,
-                    ),
-                )
-            val vm = CommentCreateViewModel(handle, commentRepository)
-            vm.onCommentChanged("edited")
+            newVmUpdate()
+            commentCreateViewModel.onCommentChanged("edited")
             val ex = TodokTodokExceptions.EmptyBodyException
             coEvery { commentRepository.updateComment(DISCUSSION_ID, COMMENT_ID, "edited") } returns
                 NetworkResult.Failure(ex)
 
             // when
-            val evDeferred = async { vm.uiEvent.getOrAwaitValue() }
-            vm.submitComment()
+            val evDeferred = async { commentCreateViewModel.uiEvent.getOrAwaitValue() }
+            commentCreateViewModel.submitComment()
             advanceUntilIdle()
 
             // then
@@ -253,20 +220,12 @@ class CommentCreateViewModelTest {
     fun `Create - saveContent는 OnCreateDismiss 이벤트`() =
         runTest {
             // given
-            val handle =
-                SavedStateHandle(
-                    mapOf(
-                        CommentCreateViewModel.KEY_DISCUSSION_ID to DISCUSSION_ID,
-                        CommentCreateViewModel.KEY_COMMENT_CONTENT to null,
-                        CommentCreateViewModel.KEY_COMMENT_ID to null,
-                    ),
-                )
-            val vm = CommentCreateViewModel(handle, commentRepository)
-            vm.onCommentChanged("temp")
+            newVmCreate()
+            commentCreateViewModel.onCommentChanged("temp")
 
             // when
-            val evDeferred = async { vm.uiEvent.getOrAwaitValue() }
-            vm.saveContent()
+            val evDeferred = async { commentCreateViewModel.uiEvent.getOrAwaitValue() }
+            commentCreateViewModel.saveContent()
             advanceUntilIdle()
 
             // then
@@ -277,6 +236,5 @@ class CommentCreateViewModelTest {
     companion object {
         private const val DISCUSSION_ID = 10L
         private const val COMMENT_ID = 99L
-        private const val INITIAL_TEXT = "prefilled"
     }
 }

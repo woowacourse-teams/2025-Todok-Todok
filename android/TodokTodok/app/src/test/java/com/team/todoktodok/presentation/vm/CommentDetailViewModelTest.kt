@@ -43,6 +43,21 @@ class CommentDetailViewModelTest {
 
     private lateinit var commentDetailViewModel: CommentDetailViewModel
 
+    private fun newVm(
+        discussionId: Long = DISCUSSION_ID,
+        commentId: Long = COMMENT_ID,
+    ) {
+        val state =
+            SavedStateHandle(
+                mapOf(
+                    KEY_DISCUSSION_ID to discussionId,
+                    KEY_COMMENT_ID to commentId,
+                ),
+            )
+        commentDetailViewModel =
+            CommentDetailViewModel(state, commentRepository, replyRepository, tokenRepository)
+    }
+
     @BeforeEach
     fun setup() {
         commentRepository = mockk(relaxed = true)
@@ -77,16 +92,7 @@ class CommentDetailViewModelTest {
                 )
             } returns NetworkResult.Success(listOf(replyMe, replyOther))
 
-            // when
-            val state =
-                SavedStateHandle(
-                    mapOf(
-                        KEY_DISCUSSION_ID to DISCUSSION_ID,
-                        KEY_COMMENT_ID to COMMENT_ID,
-                    ),
-                )
-            commentDetailViewModel =
-                CommentDetailViewModel(state, commentRepository, replyRepository, tokenRepository)
+            newVm(DISCUSSION_ID, COMMENT_ID)
             advanceUntilIdle()
 
             // then
@@ -117,16 +123,7 @@ class CommentDetailViewModelTest {
                 )
             } returns NetworkResult.Success(emptyList())
 
-            // when
-            val state =
-                SavedStateHandle(
-                    mapOf(
-                        KEY_DISCUSSION_ID to DISCUSSION_ID,
-                        KEY_COMMENT_ID to COMMENT_ID,
-                    ),
-                )
-            commentDetailViewModel =
-                CommentDetailViewModel(state, commentRepository, replyRepository, tokenRepository)
+            newVm(DISCUSSION_ID, COMMENT_ID)
             val eventJob = async { commentDetailViewModel.uiEvent.getOrAwaitValue() }
             advanceUntilIdle()
 
@@ -158,15 +155,7 @@ class CommentDetailViewModelTest {
                 )
             } returns NetworkResult.Success(listOf(replyOther))
 
-            val state =
-                SavedStateHandle(
-                    mapOf(
-                        KEY_DISCUSSION_ID to DISCUSSION_ID,
-                        KEY_COMMENT_ID to COMMENT_ID,
-                    ),
-                )
-            commentDetailViewModel =
-                CommentDetailViewModel(state, commentRepository, replyRepository, tokenRepository)
+            newVm(DISCUSSION_ID, COMMENT_ID)
             advanceUntilIdle()
 
             // when
@@ -199,16 +188,7 @@ class CommentDetailViewModelTest {
                 )
             } returns NetworkResult.Success(emptyList())
 
-            val state =
-                SavedStateHandle(
-                    mapOf(
-                        KEY_DISCUSSION_ID to DISCUSSION_ID,
-                        KEY_COMMENT_ID to COMMENT_ID,
-                    ),
-                )
-            commentDetailViewModel =
-                CommentDetailViewModel(state, commentRepository, replyRepository, tokenRepository)
-            advanceUntilIdle()
+            newVm(DISCUSSION_ID, COMMENT_ID)
 
             // when
             commentDetailViewModel.updateContent("hello")
@@ -242,15 +222,8 @@ class CommentDetailViewModelTest {
                 )
             } returns NetworkResult.Success(LikeStatus.LIKE)
 
-            val state =
-                SavedStateHandle(
-                    mapOf(
-                        KEY_DISCUSSION_ID to DISCUSSION_ID,
-                        KEY_COMMENT_ID to COMMENT_ID,
-                    ),
-                )
-            commentDetailViewModel =
-                CommentDetailViewModel(state, commentRepository, replyRepository, tokenRepository)
+            newVm(DISCUSSION_ID, COMMENT_ID)
+
             advanceUntilIdle()
 
             val ev = async { commentDetailViewModel.uiEvent.getOrAwaitValue() }
@@ -291,15 +264,8 @@ class CommentDetailViewModelTest {
                 )
             } returns NetworkResult.Success(Unit)
 
-            val state =
-                SavedStateHandle(
-                    mapOf(
-                        KEY_DISCUSSION_ID to DISCUSSION_ID,
-                        KEY_COMMENT_ID to COMMENT_ID,
-                    ),
-                )
-            commentDetailViewModel =
-                CommentDetailViewModel(state, commentRepository, replyRepository, tokenRepository)
+            newVm(DISCUSSION_ID, COMMENT_ID)
+
             advanceUntilIdle()
 
             val ev = async { commentDetailViewModel.uiEvent.getOrAwaitValue() }
@@ -340,15 +306,8 @@ class CommentDetailViewModelTest {
                 )
             } returns NetworkResult.Failure(ex)
 
-            val state =
-                SavedStateHandle(
-                    mapOf(
-                        KEY_DISCUSSION_ID to DISCUSSION_ID,
-                        KEY_COMMENT_ID to COMMENT_ID,
-                    ),
-                )
-            commentDetailViewModel =
-                CommentDetailViewModel(state, commentRepository, replyRepository, tokenRepository)
+            newVm(DISCUSSION_ID, COMMENT_ID)
+
             advanceUntilIdle()
 
             val ev = async { commentDetailViewModel.uiEvent.getOrAwaitValue() }
@@ -388,15 +347,7 @@ class CommentDetailViewModelTest {
                 )
             } returns NetworkResult.Success(Unit)
 
-            val state =
-                SavedStateHandle(
-                    mapOf(
-                        KEY_DISCUSSION_ID to DISCUSSION_ID,
-                        KEY_COMMENT_ID to COMMENT_ID,
-                    ),
-                )
-            commentDetailViewModel =
-                CommentDetailViewModel(state, commentRepository, replyRepository, tokenRepository)
+            newVm(DISCUSSION_ID, COMMENT_ID)
             advanceUntilIdle()
 
             val ev = async { commentDetailViewModel.uiEvent.getOrAwaitValue() }
@@ -428,15 +379,7 @@ class CommentDetailViewModelTest {
                 )
             } returns NetworkResult.Success(emptyList())
 
-            val state =
-                SavedStateHandle(
-                    mapOf(
-                        KEY_DISCUSSION_ID to DISCUSSION_ID,
-                        KEY_COMMENT_ID to COMMENT_ID,
-                    ),
-                )
-            commentDetailViewModel =
-                CommentDetailViewModel(state, commentRepository, replyRepository, tokenRepository)
+            newVm(DISCUSSION_ID, COMMENT_ID)
             advanceUntilIdle()
 
             commentDetailViewModel.updateContent("draft")
