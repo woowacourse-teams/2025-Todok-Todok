@@ -273,4 +273,10 @@ class CommentCreateViewModelTest {
             assertThat(evDeferred.await())
                 .isEqualTo(CommentCreateUiEvent.OnCreateDismiss("temp"))
         }
+
+    companion object {
+        private const val DISCUSSION_ID = 10L
+        private const val COMMENT_ID = 99L
+        private const val INITIAL_TEXT = "prefilled"
+    }
 }

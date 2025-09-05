@@ -41,12 +41,7 @@ class CommentDetailViewModelTest {
     private lateinit var replyRepository: ReplyRepository
     private lateinit var tokenRepository: TokenRepository
 
-    private lateinit var vm: CommentDetailViewModel
-
-    private val DISCUSSION_ID = 10L
-    private val COMMENT_ID = 99L
-    private val ME = 7L
-    private val OTHER = 13L
+    private lateinit var commentDetailViewModel: CommentDetailViewModel
 
     @BeforeEach
     fun setup() {
@@ -90,11 +85,12 @@ class CommentDetailViewModelTest {
                         KEY_COMMENT_ID to COMMENT_ID,
                     ),
                 )
-            vm = CommentDetailViewModel(state, commentRepository, replyRepository, tokenRepository)
+            commentDetailViewModel =
+                CommentDetailViewModel(state, commentRepository, replyRepository, tokenRepository)
             advanceUntilIdle()
 
             // then
-            val ui = vm.uiState.getOrAwaitValue()
+            val ui = commentDetailViewModel.uiState.getOrAwaitValue()
             assertFalse(ui.isLoading)
             assertNotNull(ui.comment)
             assertEquals(2, ui.replies.size)
@@ -129,13 +125,14 @@ class CommentDetailViewModelTest {
                         KEY_COMMENT_ID to COMMENT_ID,
                     ),
                 )
-            vm = CommentDetailViewModel(state, commentRepository, replyRepository, tokenRepository)
-            val eventJob = async { vm.uiEvent.getOrAwaitValue() }
+            commentDetailViewModel =
+                CommentDetailViewModel(state, commentRepository, replyRepository, tokenRepository)
+            val eventJob = async { commentDetailViewModel.uiEvent.getOrAwaitValue() }
             advanceUntilIdle()
 
             // then
             assertEquals(CommentDetailUiEvent.ShowError(ex), eventJob.await())
-            assertFalse(vm.uiState.getOrAwaitValue().isLoading)
+            assertFalse(commentDetailViewModel.uiState.getOrAwaitValue().isLoading)
         }
 
     @Test
@@ -168,12 +165,13 @@ class CommentDetailViewModelTest {
                         KEY_COMMENT_ID to COMMENT_ID,
                     ),
                 )
-            vm = CommentDetailViewModel(state, commentRepository, replyRepository, tokenRepository)
+            commentDetailViewModel =
+                CommentDetailViewModel(state, commentRepository, replyRepository, tokenRepository)
             advanceUntilIdle()
 
             // when
-            val ev = async { vm.uiEvent.getOrAwaitValue() }
-            vm.reloadComment()
+            val ev = async { commentDetailViewModel.uiEvent.getOrAwaitValue() }
+            commentDetailViewModel.reloadComment()
             advanceUntilIdle()
 
             // then
@@ -208,14 +206,15 @@ class CommentDetailViewModelTest {
                         KEY_COMMENT_ID to COMMENT_ID,
                     ),
                 )
-            vm = CommentDetailViewModel(state, commentRepository, replyRepository, tokenRepository)
+            commentDetailViewModel =
+                CommentDetailViewModel(state, commentRepository, replyRepository, tokenRepository)
             advanceUntilIdle()
 
             // when
-            vm.updateContent("hello")
+            commentDetailViewModel.updateContent("hello")
 
             // then
-            assertEquals("hello", vm.uiState.getOrAwaitValue().content)
+            assertEquals("hello", commentDetailViewModel.uiState.getOrAwaitValue().content)
         }
 
     @Test
@@ -250,13 +249,14 @@ class CommentDetailViewModelTest {
                         KEY_COMMENT_ID to COMMENT_ID,
                     ),
                 )
-            vm = CommentDetailViewModel(state, commentRepository, replyRepository, tokenRepository)
+            commentDetailViewModel =
+                CommentDetailViewModel(state, commentRepository, replyRepository, tokenRepository)
             advanceUntilIdle()
 
-            val ev = async { vm.uiEvent.getOrAwaitValue() }
+            val ev = async { commentDetailViewModel.uiEvent.getOrAwaitValue() }
 
             // when
-            vm.toggleCommentLike()
+            commentDetailViewModel.toggleCommentLike()
             advanceUntilIdle()
 
             // then
@@ -298,13 +298,14 @@ class CommentDetailViewModelTest {
                         KEY_COMMENT_ID to COMMENT_ID,
                     ),
                 )
-            vm = CommentDetailViewModel(state, commentRepository, replyRepository, tokenRepository)
+            commentDetailViewModel =
+                CommentDetailViewModel(state, commentRepository, replyRepository, tokenRepository)
             advanceUntilIdle()
 
-            val ev = async { vm.uiEvent.getOrAwaitValue() }
+            val ev = async { commentDetailViewModel.uiEvent.getOrAwaitValue() }
 
             // when
-            vm.deleteReply(1L)
+            commentDetailViewModel.deleteReply(1L)
             advanceUntilIdle()
 
             // then
@@ -346,18 +347,19 @@ class CommentDetailViewModelTest {
                         KEY_COMMENT_ID to COMMENT_ID,
                     ),
                 )
-            vm = CommentDetailViewModel(state, commentRepository, replyRepository, tokenRepository)
+            commentDetailViewModel =
+                CommentDetailViewModel(state, commentRepository, replyRepository, tokenRepository)
             advanceUntilIdle()
 
-            val ev = async { vm.uiEvent.getOrAwaitValue() }
+            val ev = async { commentDetailViewModel.uiEvent.getOrAwaitValue() }
 
             // when
-            vm.deleteComment()
+            commentDetailViewModel.deleteComment()
             advanceUntilIdle()
 
             // then
             assertEquals(CommentDetailUiEvent.ShowError(ex), ev.await())
-            assertFalse(vm.uiState.getOrAwaitValue().isLoading)
+            assertFalse(commentDetailViewModel.uiState.getOrAwaitValue().isLoading)
         }
 
     @Test
@@ -393,13 +395,14 @@ class CommentDetailViewModelTest {
                         KEY_COMMENT_ID to COMMENT_ID,
                     ),
                 )
-            vm = CommentDetailViewModel(state, commentRepository, replyRepository, tokenRepository)
+            commentDetailViewModel =
+                CommentDetailViewModel(state, commentRepository, replyRepository, tokenRepository)
             advanceUntilIdle()
 
-            val ev = async { vm.uiEvent.getOrAwaitValue() }
+            val ev = async { commentDetailViewModel.uiEvent.getOrAwaitValue() }
 
             // when
-            vm.reportComment("spam")
+            commentDetailViewModel.reportComment("spam")
             advanceUntilIdle()
 
             // then
@@ -432,14 +435,15 @@ class CommentDetailViewModelTest {
                         KEY_COMMENT_ID to COMMENT_ID,
                     ),
                 )
-            vm = CommentDetailViewModel(state, commentRepository, replyRepository, tokenRepository)
+            commentDetailViewModel =
+                CommentDetailViewModel(state, commentRepository, replyRepository, tokenRepository)
             advanceUntilIdle()
 
-            vm.updateContent("draft")
-            val ev = async { vm.uiEvent.getOrAwaitValue() }
+            commentDetailViewModel.updateContent("draft")
+            val ev = async { commentDetailViewModel.uiEvent.getOrAwaitValue() }
 
             // when
-            vm.showReplyCreate()
+            commentDetailViewModel.showReplyCreate()
             advanceUntilIdle()
 
             // then
@@ -448,4 +452,11 @@ class CommentDetailViewModelTest {
                 ev.await(),
             )
         }
+
+    companion object {
+        private const val DISCUSSION_ID = 10L
+        private const val COMMENT_ID = 99L
+        private const val ME = 7L
+        private const val OTHER = 13L
+    }
 }

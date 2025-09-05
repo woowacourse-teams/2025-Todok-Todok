@@ -25,7 +25,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(InstantTaskExecutorExtension::class)
 @ExtendWith(CoroutinesTestExtension::class)
 class ReplyCreateViewModelTest {
-    private lateinit var repo: ReplyRepository
+    private lateinit var replyRepository: ReplyRepository
 
     private val DISCUSSION_ID = 10L
     private val COMMENT_ID = 99L
@@ -33,7 +33,7 @@ class ReplyCreateViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        repo = mockk(relaxed = true)
+        replyRepository = mockk(relaxed = true)
     }
 
     private fun newVmCreate(
@@ -50,7 +50,7 @@ class ReplyCreateViewModelTest {
                     ReplyCreateViewModel.KEY_REPLY_CONTENT to content,
                 ),
             )
-        return ReplyCreateViewModel(handle, repo)
+        return ReplyCreateViewModel(handle, replyRepository)
     }
 
     private fun newVmUpdate(
@@ -68,7 +68,7 @@ class ReplyCreateViewModelTest {
                     ReplyCreateViewModel.KEY_REPLY_CONTENT to content,
                 ),
             )
-        return ReplyCreateViewModel(handle, repo)
+        return ReplyCreateViewModel(handle, replyRepository)
     }
 
     @Test
@@ -102,7 +102,7 @@ class ReplyCreateViewModelTest {
         runTest {
             val vm = newVmCreate()
             vm.onReplyChanged("hello")
-            coEvery { repo.saveReply(DISCUSSION_ID, COMMENT_ID, "hello") } returns
+            coEvery { replyRepository.saveReply(DISCUSSION_ID, COMMENT_ID, "hello") } returns
                 NetworkResult.Success(Unit)
 
             val evDeferred = async { vm.uiEvent.getOrAwaitValue() }
@@ -110,7 +110,7 @@ class ReplyCreateViewModelTest {
             advanceUntilIdle()
 
             assertThat(evDeferred.await()).isEqualTo(ReplyCreateUiEvent.CreateReply)
-            coVerify(exactly = 1) { repo.saveReply(DISCUSSION_ID, COMMENT_ID, "hello") }
+            coVerify(exactly = 1) { replyRepository.saveReply(DISCUSSION_ID, COMMENT_ID, "hello") }
         }
 
     @Test
@@ -119,7 +119,7 @@ class ReplyCreateViewModelTest {
             val vm = newVmCreate()
             vm.onReplyChanged("hello")
             val ex = TodokTodokExceptions.EmptyBodyException
-            coEvery { repo.saveReply(DISCUSSION_ID, COMMENT_ID, "hello") } returns
+            coEvery { replyRepository.saveReply(DISCUSSION_ID, COMMENT_ID, "hello") } returns
                 NetworkResult.Failure(ex)
 
             val evDeferred = async { vm.uiEvent.getOrAwaitValue() }
@@ -135,7 +135,7 @@ class ReplyCreateViewModelTest {
             val vm = newVmUpdate(replyId = REPLY_ID)
             vm.onReplyChanged("edited")
             coEvery {
-                repo.updateReply(DISCUSSION_ID, COMMENT_ID, REPLY_ID, "edited")
+                replyRepository.updateReply(DISCUSSION_ID, COMMENT_ID, REPLY_ID, "edited")
             } returns NetworkResult.Success(Unit)
 
             val evDeferred = async { vm.uiEvent.getOrAwaitValue() }
@@ -144,7 +144,7 @@ class ReplyCreateViewModelTest {
 
             assertThat(evDeferred.await()).isEqualTo(ReplyCreateUiEvent.CreateReply)
             coVerify(exactly = 1) {
-                repo.updateReply(DISCUSSION_ID, COMMENT_ID, REPLY_ID, "edited")
+                replyRepository.updateReply(DISCUSSION_ID, COMMENT_ID, REPLY_ID, "edited")
             }
         }
 
@@ -155,7 +155,7 @@ class ReplyCreateViewModelTest {
             vm.onReplyChanged("edited")
             val ex = TodokTodokExceptions.EmptyBodyException
             coEvery {
-                repo.updateReply(DISCUSSION_ID, COMMENT_ID, REPLY_ID, "edited")
+                replyRepository.updateReply(DISCUSSION_ID, COMMENT_ID, REPLY_ID, "edited")
             } returns NetworkResult.Failure(ex)
 
             val evDeferred = async { vm.uiEvent.getOrAwaitValue() }
