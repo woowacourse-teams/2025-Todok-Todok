@@ -18,6 +18,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -134,7 +135,7 @@ class DiscussionDetailViewModelTest {
             val event = discussionDetailViewModel.uiEvent.getOrAwaitValue()
 
             assertThat(event).isEqualTo(DiscussionDetailUiEvent.ShowErrorMessage(ex))
-            assertThat(discussionDetailViewModel.uiState.getOrAwaitValue().isLoading).isFalse()
+            assertFalse(discussionDetailViewModel.uiState.getOrAwaitValue().isLoading)
         }
 
     @Test
@@ -170,7 +171,7 @@ class DiscussionDetailViewModelTest {
             val event = discussionDetailViewModel.uiEvent.getOrAwaitValue()
 
             assertThat(event).isEqualTo(DiscussionDetailUiEvent.ShowErrorMessage(ex))
-            assertThat(discussionDetailViewModel.uiState.getOrAwaitValue().isLoading).isFalse()
+            assertFalse(discussionDetailViewModel.uiState.getOrAwaitValue().isLoading)
         }
 
     companion object {
