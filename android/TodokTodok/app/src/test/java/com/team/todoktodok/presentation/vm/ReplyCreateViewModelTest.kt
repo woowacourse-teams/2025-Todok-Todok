@@ -71,25 +71,25 @@ class ReplyCreateViewModelTest {
     @Test
     fun `Create - init은 content를 반영`() =
         runTest {
-            replyCreateViewModel = newVmCreate(content = "prefilled")
+            replyCreateViewModel = newVmCreate(content = "이전 작성 내용")
             advanceUntilIdle()
-            assertThat(replyCreateViewModel.replyContent.getOrAwaitValue()).isEqualTo("prefilled")
+            assertThat(replyCreateViewModel.replyContent.getOrAwaitValue()).isEqualTo("이전 작성 내용")
         }
 
     @Test
     fun `Update - init은 content를 반영`() =
         runTest {
-            replyCreateViewModel = newVmUpdate(content = "from-server")
+            replyCreateViewModel = newVmUpdate(content = "업데이트 할 내용")
             advanceUntilIdle()
-            assertThat(replyCreateViewModel.replyContent.getOrAwaitValue()).isEqualTo("from-server")
+            assertThat(replyCreateViewModel.replyContent.getOrAwaitValue()).isEqualTo("업데이트 할 내용")
         }
 
     @Test
     fun `onReplyChanged는 replyContent 갱신`() =
         runTest {
             replyCreateViewModel = newVmCreate()
-            replyCreateViewModel.onReplyChanged("abc")
-            assertThat(replyCreateViewModel.replyContent.getOrAwaitValue()).isEqualTo("abc")
+            replyCreateViewModel.onReplyChanged("지워질 내용")
+            assertThat(replyCreateViewModel.replyContent.getOrAwaitValue()).isEqualTo("지워질 내용")
             replyCreateViewModel.onReplyChanged(null)
             assertThat(replyCreateViewModel.replyContent.getOrAwaitValue()).isEqualTo("")
         }
@@ -98,8 +98,8 @@ class ReplyCreateViewModelTest {
     fun `Create - submitReply 성공 시 CreateReply 이벤트`() =
         runTest {
             replyCreateViewModel = newVmCreate()
-            replyCreateViewModel.onReplyChanged("hello")
-            coEvery { replyRepository.saveReply(DISCUSSION_ID, COMMENT_ID, "hello") } returns
+            replyCreateViewModel.onReplyChanged("대댓글 생성 성공")
+            coEvery { replyRepository.saveReply(DISCUSSION_ID, COMMENT_ID, "대댓글 생성 성공") } returns
                 NetworkResult.Success(Unit)
 
             replyCreateViewModel.submitReply()
@@ -107,16 +107,22 @@ class ReplyCreateViewModelTest {
             val event = replyCreateViewModel.uiEvent.getOrAwaitValue()
 
             assertThat(event).isEqualTo(ReplyCreateUiEvent.CreateReply)
-            coVerify(exactly = 1) { replyRepository.saveReply(DISCUSSION_ID, COMMENT_ID, "hello") }
+            coVerify(exactly = 1) {
+                replyRepository.saveReply(
+                    DISCUSSION_ID,
+                    COMMENT_ID,
+                    "대댓글 생성 성공",
+                )
+            }
         }
 
     @Test
     fun `Create - submitReply 실패 시 ShowErrorMessage`() =
         runTest {
             replyCreateViewModel = newVmCreate()
-            replyCreateViewModel.onReplyChanged("hello")
+            replyCreateViewModel.onReplyChanged("대댓글 생성 실패")
             val ex = TodokTodokExceptions.EmptyBodyException
-            coEvery { replyRepository.saveReply(DISCUSSION_ID, COMMENT_ID, "hello") } returns
+            coEvery { replyRepository.saveReply(DISCUSSION_ID, COMMENT_ID, "대댓글 생성 실패") } returns
                 NetworkResult.Failure(ex)
 
             replyCreateViewModel.submitReply()
@@ -130,9 +136,9 @@ class ReplyCreateViewModelTest {
     fun `Update - submitReply 성공 시 CreateReply 이벤트`() =
         runTest {
             replyCreateViewModel = newVmUpdate(replyId = REPLY_ID)
-            replyCreateViewModel.onReplyChanged("edited")
+            replyCreateViewModel.onReplyChanged("대댓글 수정 성공")
             coEvery {
-                replyRepository.updateReply(DISCUSSION_ID, COMMENT_ID, REPLY_ID, "edited")
+                replyRepository.updateReply(DISCUSSION_ID, COMMENT_ID, REPLY_ID, "대댓글 수정 성공")
             } returns NetworkResult.Success(Unit)
 
             replyCreateViewModel.submitReply()
@@ -141,7 +147,7 @@ class ReplyCreateViewModelTest {
 
             assertThat(event).isEqualTo(ReplyCreateUiEvent.CreateReply)
             coVerify(exactly = 1) {
-                replyRepository.updateReply(DISCUSSION_ID, COMMENT_ID, REPLY_ID, "edited")
+                replyRepository.updateReply(DISCUSSION_ID, COMMENT_ID, REPLY_ID, "대댓글 수정 성공")
             }
         }
 
@@ -149,10 +155,10 @@ class ReplyCreateViewModelTest {
     fun `Update - submitReply 실패 시 ShowErrorMessage`() =
         runTest {
             replyCreateViewModel = newVmUpdate(replyId = REPLY_ID)
-            replyCreateViewModel.onReplyChanged("edited")
+            replyCreateViewModel.onReplyChanged("대댓글 수정 실패")
             val ex = TodokTodokExceptions.EmptyBodyException
             coEvery {
-                replyRepository.updateReply(DISCUSSION_ID, COMMENT_ID, REPLY_ID, "edited")
+                replyRepository.updateReply(DISCUSSION_ID, COMMENT_ID, REPLY_ID, "대댓글 수정 실패")
             } returns NetworkResult.Failure(ex)
 
             replyCreateViewModel.submitReply()
@@ -166,13 +172,13 @@ class ReplyCreateViewModelTest {
     fun `Create - saveReply는 SaveContent 이벤트`() =
         runTest {
             val vm = newVmCreate()
-            vm.onReplyChanged("temp")
+            vm.onReplyChanged("작성중이던 대댓글 저장")
 
             vm.saveReply()
             advanceUntilIdle()
             val event = vm.uiEvent.getOrAwaitValue()
 
-            assertThat(event).isEqualTo(ReplyCreateUiEvent.SaveContent("temp"))
+            assertThat(event).isEqualTo(ReplyCreateUiEvent.SaveContent("작성중이던 대댓글 저장"))
         }
 
     companion object {
