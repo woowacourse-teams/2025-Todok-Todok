@@ -27,10 +27,6 @@ class ReplyCreateViewModelTest {
     private lateinit var replyRepository: ReplyRepository
     private lateinit var replyCreateViewModel: ReplyCreateViewModel
 
-    private val DISCUSSION_ID = 10L
-    private val COMMENT_ID = 99L
-    private val REPLY_ID = 7L
-
     @BeforeEach
     fun setUp() {
         replyRepository = mockk(relaxed = true)
@@ -178,4 +174,10 @@ class ReplyCreateViewModelTest {
 
             assertThat(event).isEqualTo(ReplyCreateUiEvent.SaveContent("temp"))
         }
+
+    companion object {
+        private const val DISCUSSION_ID = 10L
+        private const val COMMENT_ID = 99L
+        private const val REPLY_ID = 7L
+    }
 }
