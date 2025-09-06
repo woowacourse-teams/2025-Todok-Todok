@@ -15,6 +15,7 @@ androidx-fragment-ktx = "1.8.8"
 androidx-recyclerview = "1.4.0"
 androidx-datastore = "1.1.1"
 androidx-credentials = "1.5.0"
+androidx-swiperefreshlayout = "1.1.0"
 
 # Network
 retrofit = "3.0.0"
@@ -70,6 +71,7 @@ androidx-credentials-play-services-auth = { module = "androidx.credentials:crede
 androidx-fragment = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "androidx-fragment-ktx" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }
 androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "androidx-recyclerview" }
+androidx-swiperefreshlayout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "androidx-swiperefreshlayout" }
 androidx-datastore = { module = "androidx.datastore:datastore-preferences", version.ref = "androidx-datastore" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room-runtime" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room-runtime" }
@@ -128,6 +130,7 @@ androidx = [
     "androidx-credentials",
     "androidx-credentials-play-services-auth",
     "androidx-room-runtime",
+    "androidx-swiperefreshlayout"
 ]
 
 kotlin = [

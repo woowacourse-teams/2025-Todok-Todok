@@ -105,7 +105,6 @@ dependencies {
     implementation(libs.bundles.logging)
     testImplementation(libs.bundles.test)
     testImplementation(libs.androidx.core.testing)
-
     ksp(libs.androidx.room.compiler)
 
     androidTestImplementation(libs.bundles.android.test)

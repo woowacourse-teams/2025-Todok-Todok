@@ -152,6 +152,11 @@ class DiscussionsViewModel(
         }
     }
 
+    fun refreshLatestDiscussions() {
+        _uiState.value = _uiState.value?.clearLatestDiscussion()
+        loadLatestDiscussions()
+    }
+
     fun clearSearchResult() {
         _uiState.value = _uiState.value?.clearSearchDiscussion()
     }
