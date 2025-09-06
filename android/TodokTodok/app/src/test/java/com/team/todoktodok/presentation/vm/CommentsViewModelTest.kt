@@ -6,6 +6,7 @@ import com.team.domain.model.exception.NetworkResult
 import com.team.domain.model.exception.TodokTodokExceptions
 import com.team.domain.repository.CommentRepository
 import com.team.domain.repository.TokenRepository
+import com.team.todoktodok.CoroutinesTestExtension
 import com.team.todoktodok.InstantTaskExecutorExtension
 import com.team.todoktodok.ext.getOrAwaitValue
 import com.team.todoktodok.fixture.COMMENTS
@@ -13,64 +14,52 @@ import com.team.todoktodok.presentation.view.discussiondetail.comments.CommentsU
 import com.team.todoktodok.presentation.view.discussiondetail.comments.vm.CommentsViewModel
 import io.mockk.coEvery
 import io.mockk.mockk
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
-import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
 @OptIn(ExperimentalCoroutinesApi::class)
+@ExtendWith(CoroutinesTestExtension::class)
 @ExtendWith(InstantTaskExecutorExtension::class)
 class CommentsViewModelTest {
-    private lateinit var vm: CommentsViewModel
-    private lateinit var repo: CommentRepository
-    private lateinit var tokenRepo: TokenRepository
-
-    private val testDispatcher = StandardTestDispatcher()
+    private lateinit var commentsViewModel: CommentsViewModel
+    private lateinit var commentRepository: CommentRepository
+    private lateinit var tokenRepository: TokenRepository
 
     @BeforeEach
     fun setUp() {
-        Dispatchers.setMain(testDispatcher)
+        commentRepository = mockk(relaxed = true)
+        tokenRepository = mockk(relaxed = true)
 
-        repo = mockk(relaxed = true)
-        tokenRepo = mockk(relaxed = true)
-
-        coEvery { tokenRepo.getMemberId() } returns ME
-        coEvery { repo.getCommentsByDiscussionId(DISCUSSION_ID) } returns
+        coEvery { tokenRepository.getMemberId() } returns ME
+        coEvery { commentRepository.getCommentsByDiscussionId(DISCUSSION_ID) } returns
             NetworkResult.Success(COMMENTS)
 
         val state = SavedStateHandle(mapOf(CommentsViewModel.KEY_DISCUSSION_ID to DISCUSSION_ID))
-        vm = CommentsViewModel(state, repo, tokenRepo)
-    }
-
-    @AfterEach
-    fun tearDown() {
-        Dispatchers.resetMain()
+        commentsViewModel = CommentsViewModel(state, commentRepository, tokenRepository)
     }
 
     @Test
     fun `초기 로드 성공시 comments 채워지고 isLoading=false`() =
         runTest {
-            val ui = vm.uiState.getOrAwaitValue()
+            val ui = commentsViewModel.uiState.getOrAwaitValue()
             advanceUntilIdle()
-            assertThat(ui.isLoading).isFalse()
+            assertFalse(ui.isLoading)
             assertThat(ui.comments.map { it.comment.id }).containsExactly(1L, 2L, 3L, 4L, 5L)
         }
 
     @Test
     fun `showNewComment는 목록 재로딩 후 이벤트 발생`() =
         runTest {
-            vm.showNewComment()
-            val observed = async { vm.uiEvent.getOrAwaitValue() }
-            assertThat(observed.await()).isEqualTo(CommentsUiEvent.ShowNewComment)
+            commentsViewModel.showNewComment()
+            val event = commentsViewModel.uiEvent.getOrAwaitValue()
+            assertThat(event).isEqualTo(CommentsUiEvent.ShowNewComment)
         }
 
     @Test
@@ -79,17 +68,22 @@ class CommentsViewModelTest {
             // 초기 로드
             advanceUntilIdle()
 
-            coEvery { repo.toggleLike(DISCUSSION_ID, 1L) } returns
+            coEvery { commentRepository.toggleLike(DISCUSSION_ID, 1L) } returns
                 NetworkResult.Success(
                     LikeStatus.LIKE,
                 )
-            val c1Updated = COMMENTS[0].copy(isLikedByMe = true, likeCount = 1)
-            coEvery { repo.getComment(DISCUSSION_ID, 1L) } returns NetworkResult.Success(c1Updated)
+            val updatedComment = COMMENTS[0].copy(isLikedByMe = true, likeCount = 1)
+            coEvery {
+                commentRepository.getComment(
+                    DISCUSSION_ID,
+                    1L,
+                )
+            } returns NetworkResult.Success(updatedComment)
 
-            vm.toggleLike(1L)
+            commentsViewModel.toggleLike(1L)
             advanceUntilIdle()
 
-            val ui = vm.uiState.getOrAwaitValue()
+            val ui = commentsViewModel.uiState.getOrAwaitValue()
             val updated = ui.comments.first { it.comment.id == 1L }.comment
             assertThat(updated.isLikedByMe).isTrue()
             assertThat(updated.likeCount).isEqualTo(1)
@@ -100,65 +94,80 @@ class CommentsViewModelTest {
     @Test
     fun `deleteComment 성공 시 목록 재로딩되고 DeleteComment 이벤트 발생`() =
         runTest {
-            coEvery { repo.deleteComment(DISCUSSION_ID, 2L) } returns NetworkResult.Success(Unit)
-            coEvery { repo.getCommentsByDiscussionId(DISCUSSION_ID) } returns
+            coEvery {
+                commentRepository.deleteComment(
+                    DISCUSSION_ID,
+                    2L,
+                )
+            } returns NetworkResult.Success(Unit)
+            coEvery { commentRepository.getCommentsByDiscussionId(DISCUSSION_ID) } returns
                 NetworkResult.Success(
                     COMMENTS.minus(COMMENTS[1]),
                 )
 
-            vm.deleteComment(2L)
+            commentsViewModel.deleteComment(2L)
             advanceUntilIdle()
-            val observed = async { vm.uiEvent.getOrAwaitValue() }
-            val ui = vm.uiState.getOrAwaitValue()
-            assertThat(observed.await()).isEqualTo(CommentsUiEvent.DeleteComment)
-            assertThat(ui.comments.map { it.comment.id }).containsExactly(1L, 3L, 4L, 5L)
+            val event = commentsViewModel.uiEvent.getOrAwaitValue()
+            val state = commentsViewModel.uiState.getOrAwaitValue()
+            assertThat(event).isEqualTo(CommentsUiEvent.DeleteComment)
+            assertThat(state.comments.map { it.comment.id }).containsExactly(1L, 3L, 4L, 5L)
         }
 
     @Test
     fun `updateComment는 ShowCommentUpdate 이벤트 발생`() =
         runTest {
             val expected = CommentsUiEvent.ShowCommentUpdate(DISCUSSION_ID, 1L, "edit")
-            vm.updateComment(commentId = 1L, content = "edit")
-            val observed = async { vm.uiEvent.getOrAwaitValue() }
-
-            assertThat(observed.await()).isEqualTo(expected)
+            commentsViewModel.updateComment(commentId = 1L, content = "edit")
+            advanceUntilIdle()
+            val event = commentsViewModel.uiEvent.getOrAwaitValue()
+            assertThat(event).isEqualTo(expected)
         }
 
     @Test
     fun `report 성공 시 성공 메시지 이벤트`() =
         runTest {
-            coEvery { repo.report(DISCUSSION_ID, 2L, any()) } returns NetworkResult.Success(Unit)
+            coEvery {
+                commentRepository.report(
+                    DISCUSSION_ID,
+                    2L,
+                    any(),
+                )
+            } returns NetworkResult.Success(Unit)
 
-            vm.reportComment(2L, "스팸")
-            val observed = async { vm.uiEvent.getOrAwaitValue() }
+            commentsViewModel.reportComment(2L, "스팸")
+            val event = commentsViewModel.uiEvent.getOrAwaitValue()
             advanceUntilIdle()
-
-            assertThat(observed.await()).isEqualTo(CommentsUiEvent.ShowReportCommentSuccessMessage)
+            assertThat(event).isEqualTo(CommentsUiEvent.ShowReportCommentSuccessMessage)
         }
 
     @Test
     fun `report 실패 시 에러 이벤트와 isLoading=false`() =
         runTest {
             val ex = TodokTodokExceptions.EmptyBodyException
-            coEvery { repo.report(DISCUSSION_ID, 2L, any()) } returns NetworkResult.Failure(ex)
+            coEvery {
+                commentRepository.report(
+                    DISCUSSION_ID,
+                    2L,
+                    any(),
+                )
+            } returns NetworkResult.Failure(ex)
 
-            vm.reportComment(2L, "사유")
-            val observed = async { vm.uiEvent.getOrAwaitValue() }
+            commentsViewModel.reportComment(2L, "사유")
+            val observed = async { commentsViewModel.uiEvent.getOrAwaitValue() }
 
             assertThat(observed.await()).isEqualTo(CommentsUiEvent.ShowError(ex))
-            assertThat(vm.uiState.getOrAwaitValue().isLoading).isFalse()
+            assertThat(commentsViewModel.uiState.getOrAwaitValue().isLoading).isFalse()
         }
 
     @Test
     fun `showCommentCreate는 현재 입력값과 함께 이벤트 발생`() =
         runTest {
-            // 입력값 업데이트
-            vm.updateCommentContent("hello")
-            vm.showCommentCreate()
-            val observed = async { vm.uiEvent.getOrAwaitValue() }
+            commentsViewModel.updateCommentContent("hello")
+            commentsViewModel.showCommentCreate()
+            val event = commentsViewModel.uiEvent.getOrAwaitValue()
             advanceUntilIdle()
 
-            assertThat(observed.await()).isEqualTo(
+            assertThat(event).isEqualTo(
                 CommentsUiEvent.ShowCommentCreate(discussionId = DISCUSSION_ID, content = "hello"),
             )
         }
@@ -166,8 +175,8 @@ class CommentsViewModelTest {
     @Test
     fun `updateCommentContent는 uiState commentContent를 갱신`() =
         runTest {
-            vm.updateCommentContent("abc")
-            val ui = vm.uiState.getOrAwaitValue()
+            commentsViewModel.updateCommentContent("abc")
+            val ui = commentsViewModel.uiState.getOrAwaitValue()
             assertThat(ui.commentContent).isEqualTo("abc")
         }
 
@@ -175,20 +184,20 @@ class CommentsViewModelTest {
     fun `초기 로드 실패 시 에러 이벤트와 isLoading=false`() =
         runTest {
             val ex = TodokTodokExceptions.EmptyBodyException
-            coEvery { repo.getCommentsByDiscussionId(DISCUSSION_ID) } returns
+            coEvery { commentRepository.getCommentsByDiscussionId(DISCUSSION_ID) } returns
                 NetworkResult.Failure(
                     ex,
                 )
 
             val state =
                 SavedStateHandle(mapOf(CommentsViewModel.KEY_DISCUSSION_ID to DISCUSSION_ID))
-            val vm2 = CommentsViewModel(state, repo, tokenRepo)
+            val failedViewModel = CommentsViewModel(state, commentRepository, tokenRepository)
 
-            val observed = async { vm2.uiEvent.getOrAwaitValue() }
+            val observed = async { failedViewModel.uiEvent.getOrAwaitValue() }
             advanceUntilIdle()
 
             assertThat(observed.await()).isEqualTo(CommentsUiEvent.ShowError(ex))
-            assertThat(vm2.uiState.getOrAwaitValue().isLoading).isFalse()
+            assertThat(failedViewModel.uiState.getOrAwaitValue().isLoading).isFalse()
         }
 
     companion object {
