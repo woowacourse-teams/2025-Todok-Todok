@@ -26,7 +26,7 @@ interface DiscussionRemoteDataSource {
         cursor: String? = null,
     ): NetworkResult<LatestDiscussionsResponse>
 
-    suspend fun getDiscussion(id: Long): NetworkResult<DiscussionResponse>
+    suspend fun fetchDiscussion(id: Long): NetworkResult<DiscussionResponse>
 
     suspend fun saveDiscussionRoom(
         bookId: Long,

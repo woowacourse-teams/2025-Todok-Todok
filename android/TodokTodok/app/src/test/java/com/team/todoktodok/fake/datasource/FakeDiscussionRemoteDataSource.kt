@@ -1,6 +1,7 @@
 package com.team.todoktodok.fake.datasource
 
 import com.team.domain.model.exception.NetworkResult
+import com.team.domain.model.exception.TodokTodokExceptions
 import com.team.todoktodok.data.datasource.discussion.DiscussionRemoteDataSource
 import com.team.todoktodok.data.network.model.LikeAction
 import com.team.todoktodok.data.network.response.discussion.BookResponse
@@ -13,8 +14,8 @@ import com.team.todoktodok.fixture.LATEST_DISCUSSIONS_RESPONSE
 import retrofit2.Response
 
 class FakeDiscussionRemoteDataSource : DiscussionRemoteDataSource {
-    val discussionResponses =
-        listOf(
+    private val _discussionResponses: MutableList<DiscussionResponse> =
+        mutableListOf(
             DiscussionResponse(
                 discussionId = 1,
                 discussionTitle = "JPA 성능 최적화",
@@ -71,6 +72,7 @@ class FakeDiscussionRemoteDataSource : DiscussionRemoteDataSource {
                 isLikedByMe = false,
             ),
         )
+    val discussionResponses = _discussionResponses.map { it.copy() }
 
     override suspend fun getSearchDiscussion(keyword: String): NetworkResult<List<DiscussionResponse>> {
         TODO("Not yet implemented")
@@ -108,9 +110,9 @@ class FakeDiscussionRemoteDataSource : DiscussionRemoteDataSource {
         return NetworkResult.Success(page)
     }
 
-    override suspend fun getDiscussion(id: Long): NetworkResult<DiscussionResponse> =
+    override suspend fun fetchDiscussion(id: Long): NetworkResult<DiscussionResponse> =
         NetworkResult.Success(
-            discussionResponses.find { id == it.discussionId }
+            _discussionResponses.find { id == it.discussionId }
                 ?: throw IllegalArgumentException(),
         )
 
@@ -135,13 +137,32 @@ class FakeDiscussionRemoteDataSource : DiscussionRemoteDataSource {
     }
 
     override suspend fun toggleLike(discussionId: Long): NetworkResult<LikeAction> {
-        TODO("Not yet implemented")
+        val idx = _discussionResponses.indexOfFirst { it.discussionId == discussionId }
+        if (idx < 0) {
+            return NetworkResult.Failure(TodokTodokExceptions.EmptyBodyException)
+        }
+        val cur = _discussionResponses[idx]
+        val likeAction = if (!cur.isLikedByMe) LikeAction.LIKE else LikeAction.UNLIKE
+        val nowLiked = !cur.isLikedByMe
+        val newCount = (cur.likeCount + if (nowLiked) 1 else -1).coerceAtLeast(0)
+
+        _discussionResponses[idx] =
+            cur.copy(
+                isLikedByMe = nowLiked,
+                likeCount = newCount,
+            )
+        return NetworkResult.Success(likeAction)
     }
 
     override suspend fun reportDiscussion(
         discussionId: Long,
         reason: String,
     ): NetworkResult<Unit> {
-        TODO("Not yet implemented")
+        val discussionResponse = _discussionResponses.find { it.discussionId == discussionId }
+        return if (discussionResponse != null) {
+            NetworkResult.Success(Unit)
+        } else {
+            NetworkResult.Failure(TodokTodokExceptions.EmptyBodyException)
+        }
     }
 }
