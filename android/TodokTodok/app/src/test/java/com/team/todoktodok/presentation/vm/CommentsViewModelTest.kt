@@ -65,9 +65,6 @@ class CommentsViewModelTest {
     @Test
     fun `toggleLike 성공 시 해당 코멘트만 재로딩되어 갱신`() =
         runTest {
-            // 초기 로드
-            advanceUntilIdle()
-
             coEvery { commentRepository.toggleLike(DISCUSSION_ID, 1L) } returns
                 NetworkResult.Success(
                     LikeStatus.LIKE,
@@ -193,10 +190,10 @@ class CommentsViewModelTest {
                 SavedStateHandle(mapOf(CommentsViewModel.KEY_DISCUSSION_ID to DISCUSSION_ID))
             val failedViewModel = CommentsViewModel(state, commentRepository, tokenRepository)
 
-            val observed = async { failedViewModel.uiEvent.getOrAwaitValue() }
+            val event = failedViewModel.uiEvent.getOrAwaitValue()
             advanceUntilIdle()
 
-            assertThat(observed.await()).isEqualTo(CommentsUiEvent.ShowError(ex))
+            assertThat(event).isEqualTo(CommentsUiEvent.ShowError(ex))
             assertThat(failedViewModel.uiState.getOrAwaitValue().isLoading).isFalse()
         }
 
