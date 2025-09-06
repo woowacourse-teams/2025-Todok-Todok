@@ -105,14 +105,14 @@ class DefaultCommentRepositoryTest {
             coEvery {
                 commentRemoteDataSource.saveComment(
                     DISCUSSION_ID,
-                    CommentRequest("hi"),
+                    CommentRequest("저장 성공"),
                 )
             } returns NetworkResult.Success(Unit)
 
-            val result = commentRepository.saveComment(DISCUSSION_ID, "hi")
+            val result = commentRepository.saveComment(DISCUSSION_ID, "저장 성공")
 
             assertThat(result).isEqualTo(NetworkResult.Success(Unit))
-            coVerify { commentRemoteDataSource.saveComment(DISCUSSION_ID, CommentRequest("hi")) }
+            coVerify { commentRemoteDataSource.saveComment(DISCUSSION_ID, CommentRequest("저장 성공")) }
         }
 
     @Test
@@ -122,11 +122,11 @@ class DefaultCommentRepositoryTest {
             coEvery {
                 commentRemoteDataSource.saveComment(
                     DISCUSSION_ID,
-                    CommentRequest("x"),
+                    CommentRequest("저장 실패"),
                 )
             } returns NetworkResult.Failure(ex)
 
-            val result = commentRepository.saveComment(DISCUSSION_ID, "x")
+            val result = commentRepository.saveComment(DISCUSSION_ID, "저장 실패")
 
             assertThat(result).isEqualTo(NetworkResult.Failure(ex))
         }
@@ -170,14 +170,14 @@ class DefaultCommentRepositoryTest {
                 commentRemoteDataSource.updateComment(
                     DISCUSSION_ID,
                     COMMENT_ID,
-                    "edit",
+                    "수정",
                 )
             } returns NetworkResult.Success(Unit)
 
-            val result = commentRepository.updateComment(DISCUSSION_ID, COMMENT_ID, "edit")
+            val result = commentRepository.updateComment(DISCUSSION_ID, COMMENT_ID, "수정")
 
             assertThat(result).isEqualTo(NetworkResult.Success(Unit))
-            coVerify { commentRemoteDataSource.updateComment(DISCUSSION_ID, COMMENT_ID, "edit") }
+            coVerify { commentRemoteDataSource.updateComment(DISCUSSION_ID, COMMENT_ID, "수정") }
         }
 
     @Test
@@ -188,11 +188,11 @@ class DefaultCommentRepositoryTest {
                 commentRemoteDataSource.updateComment(
                     DISCUSSION_ID,
                     COMMENT_ID,
-                    "e",
+                    "에러",
                 )
             } returns NetworkResult.Failure(ex)
 
-            val result = commentRepository.updateComment(DISCUSSION_ID, COMMENT_ID, "e")
+            val result = commentRepository.updateComment(DISCUSSION_ID, COMMENT_ID, "에러")
 
             assertThat(result).isEqualTo(NetworkResult.Failure(ex))
         }
@@ -230,15 +230,15 @@ class DefaultCommentRepositoryTest {
     @Test
     fun `report - 성공 시 Unit 성공 전달`() =
         runTest {
-            coEvery { commentRemoteDataSource.report(DISCUSSION_ID, COMMENT_ID, "spam") } returns
+            coEvery { commentRemoteDataSource.report(DISCUSSION_ID, COMMENT_ID, "스햄") } returns
                 NetworkResult.Success(
                     Unit,
                 )
 
-            val result = commentRepository.report(DISCUSSION_ID, COMMENT_ID, "spam")
+            val result = commentRepository.report(DISCUSSION_ID, COMMENT_ID, "스햄")
 
             assertThat(result).isEqualTo(NetworkResult.Success(Unit))
-            coVerify { commentRemoteDataSource.report(DISCUSSION_ID, COMMENT_ID, "spam") }
+            coVerify { commentRemoteDataSource.report(DISCUSSION_ID, COMMENT_ID, "스햄") }
         }
 
     @Test
@@ -249,11 +249,11 @@ class DefaultCommentRepositoryTest {
                 commentRemoteDataSource.report(
                     DISCUSSION_ID,
                     COMMENT_ID,
-                    "reason",
+                    "이유",
                 )
             } returns NetworkResult.Failure(ex)
 
-            val result = commentRepository.report(DISCUSSION_ID, COMMENT_ID, "reason")
+            val result = commentRepository.report(DISCUSSION_ID, COMMENT_ID, "이유")
 
             assertThat(result).isEqualTo(NetworkResult.Failure(ex))
         }
