@@ -20,6 +20,7 @@ import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -48,10 +49,10 @@ class CommentsViewModelTest {
     @Test
     fun `초기 로드 성공시 comments 채워지고 isLoading=false`() =
         runTest {
-            val ui = commentsViewModel.uiState.getOrAwaitValue()
+            val state = commentsViewModel.uiState.getOrAwaitValue()
             advanceUntilIdle()
-            assertFalse(ui.isLoading)
-            assertThat(ui.comments.map { it.comment.id }).containsExactly(1L, 2L, 3L, 4L, 5L)
+            assertFalse(state.isLoading)
+            assertThat(state.comments.map { it.comment.id }).containsExactly(1L, 2L, 3L, 4L, 5L)
         }
 
     @Test
@@ -80,12 +81,12 @@ class CommentsViewModelTest {
             commentsViewModel.toggleLike(1L)
             advanceUntilIdle()
 
-            val ui = commentsViewModel.uiState.getOrAwaitValue()
-            val updated = ui.comments.first { it.comment.id == 1L }.comment
-            assertThat(updated.isLikedByMe).isTrue()
+            val state = commentsViewModel.uiState.getOrAwaitValue()
+            val updated = state.comments.first { it.comment.id == 1L }.comment
+            assertTrue(updated.isLikedByMe)
             assertThat(updated.likeCount).isEqualTo(1)
-            val untouched = ui.comments.first { it.comment.id == 2L }.comment
-            assertThat(untouched.isLikedByMe).isFalse()
+            val untouched = state.comments.first { it.comment.id == 2L }.comment
+            assertFalse(untouched.isLikedByMe)
         }
 
     @Test
@@ -153,7 +154,7 @@ class CommentsViewModelTest {
             val observed = async { commentsViewModel.uiEvent.getOrAwaitValue() }
 
             assertThat(observed.await()).isEqualTo(CommentsUiEvent.ShowError(ex))
-            assertThat(commentsViewModel.uiState.getOrAwaitValue().isLoading).isFalse()
+            assertFalse(commentsViewModel.uiState.getOrAwaitValue().isLoading)
         }
 
     @Test
@@ -173,8 +174,8 @@ class CommentsViewModelTest {
     fun `updateCommentContent는 uiState commentContent를 갱신`() =
         runTest {
             commentsViewModel.updateCommentContent("abc")
-            val ui = commentsViewModel.uiState.getOrAwaitValue()
-            assertThat(ui.commentContent).isEqualTo("abc")
+            val state = commentsViewModel.uiState.getOrAwaitValue()
+            assertThat(state.commentContent).isEqualTo("abc")
         }
 
     @Test
@@ -194,7 +195,7 @@ class CommentsViewModelTest {
             advanceUntilIdle()
 
             assertThat(event).isEqualTo(CommentsUiEvent.ShowError(ex))
-            assertThat(failedViewModel.uiState.getOrAwaitValue().isLoading).isFalse()
+            assertFalse(failedViewModel.uiState.getOrAwaitValue().isLoading)
         }
 
     companion object {
