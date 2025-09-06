@@ -5,6 +5,7 @@ import com.team.domain.model.exception.NetworkResult
 import com.team.domain.model.exception.TodokTodokExceptions
 import com.team.domain.repository.DiscussionRepository
 import com.team.domain.repository.TokenRepository
+import com.team.todoktodok.CoroutinesTestExtension
 import com.team.todoktodok.InstantTaskExecutorExtension
 import com.team.todoktodok.ext.getOrAwaitValue
 import com.team.todoktodok.fixture.DISCUSSIONS
@@ -13,31 +14,24 @@ import com.team.todoktodok.presentation.view.discussiondetail.vm.DiscussionDetai
 import com.team.todoktodok.presentation.view.discussiondetail.vm.DiscussionDetailViewModel.Companion.KEY_DISCUSSION_ID
 import io.mockk.coEvery
 import io.mockk.mockk
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.async
-import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(InstantTaskExecutorExtension::class)
+@ExtendWith(CoroutinesTestExtension::class)
 @OptIn(ExperimentalCoroutinesApi::class)
 class DiscussionDetailViewModelTest {
     private lateinit var discussionDetailViewModel: DiscussionDetailViewModel
     private lateinit var discussionRepository: DiscussionRepository
     private lateinit var tokenRepository: TokenRepository
 
-    private val testDispatcher = StandardTestDispatcher()
-
     @BeforeEach
     fun setUp() {
-        Dispatchers.setMain(testDispatcher)
-
         val state = SavedStateHandle(mapOf(KEY_DISCUSSION_ID to DISCUSSION_ID))
 
         tokenRepository = mockk(relaxed = true)
@@ -60,6 +54,7 @@ class DiscussionDetailViewModelTest {
         runTest {
             val expected =
                 (discussionRepository.getDiscussion(DISCUSSION_ID) as NetworkResult.Success).data
+            advanceUntilIdle()
 
             assertThat(
                 discussionDetailViewModel.uiState
@@ -75,10 +70,11 @@ class DiscussionDetailViewModelTest {
         runTest {
             val expected = DiscussionDetailUiEvent.UpdateDiscussion(DISCUSSION_ID)
 
-            val observed = async { discussionDetailViewModel.uiEvent.getOrAwaitValue() }
             discussionDetailViewModel.updateDiscussion()
+            advanceUntilIdle()
+            val event = discussionDetailViewModel.uiEvent.getOrAwaitValue()
 
-            assertThat(observed.await()).isEqualTo(expected)
+            assertThat(event).isEqualTo(expected)
         }
 
     @Test
@@ -86,11 +82,11 @@ class DiscussionDetailViewModelTest {
         runTest {
             val expected = DiscussionDetailUiEvent.ShowComments(DISCUSSION_ID)
 
-            val observed = async { discussionDetailViewModel.uiEvent.getOrAwaitValue() }
             discussionDetailViewModel.showComments()
             advanceUntilIdle()
+            val event = discussionDetailViewModel.uiEvent.getOrAwaitValue()
 
-            assertThat(observed.await()).isEqualTo(expected)
+            assertThat(event).isEqualTo(expected)
         }
 
     @Test
@@ -98,11 +94,11 @@ class DiscussionDetailViewModelTest {
         runTest {
             val expected = DiscussionDetailUiEvent.NavigateToProfile(WRITER_ID)
 
-            val observed = async { discussionDetailViewModel.uiEvent.getOrAwaitValue() }
             discussionDetailViewModel.navigateToProfile()
             advanceUntilIdle()
+            val event = discussionDetailViewModel.uiEvent.getOrAwaitValue()
 
-            assertThat(observed.await()).isEqualTo(expected)
+            assertThat(event).isEqualTo(expected)
         }
 
     @Test
@@ -116,16 +112,15 @@ class DiscussionDetailViewModelTest {
             } returns NetworkResult.Success(Unit)
 
             discussionDetailViewModel.reportDiscussion("스팸")
-            val observed = async { discussionDetailViewModel.uiEvent.getOrAwaitValue() }
             advanceUntilIdle()
+            val event = discussionDetailViewModel.uiEvent.getOrAwaitValue()
 
-            assertThat(observed.await()).isEqualTo(DiscussionDetailUiEvent.ShowReportDiscussionSuccessMessage)
+            assertThat(event).isEqualTo(DiscussionDetailUiEvent.ShowReportDiscussionSuccessMessage)
         }
 
     @Test
     fun `토론방 신고 실패 시 에러 이벤트와 isLoading false로 내린다`() =
         runTest {
-            advanceUntilIdle()
             val ex = TodokTodokExceptions.EmptyBodyException
             coEvery {
                 discussionRepository.reportDiscussion(
@@ -135,9 +130,10 @@ class DiscussionDetailViewModelTest {
             } returns NetworkResult.Failure(ex)
 
             discussionDetailViewModel.reportDiscussion("사유")
-            val observed = async { discussionDetailViewModel.uiEvent.getOrAwaitValue() }
+            advanceUntilIdle()
+            val event = discussionDetailViewModel.uiEvent.getOrAwaitValue()
 
-            assertThat(observed.await()).isEqualTo(DiscussionDetailUiEvent.ShowErrorMessage(ex))
+            assertThat(event).isEqualTo(DiscussionDetailUiEvent.ShowErrorMessage(ex))
             assertThat(discussionDetailViewModel.uiState.getOrAwaitValue().isLoading).isFalse()
         }
 
@@ -150,9 +146,10 @@ class DiscussionDetailViewModelTest {
                 )
 
             discussionDetailViewModel.deleteDiscussion()
-            val observed = async { discussionDetailViewModel.uiEvent.getOrAwaitValue() }
+            advanceUntilIdle()
+            val event = discussionDetailViewModel.uiEvent.getOrAwaitValue()
 
-            assertThat(observed.await()).isEqualTo(
+            assertThat(event).isEqualTo(
                 DiscussionDetailUiEvent.DeleteDiscussion(
                     DISCUSSION_ID,
                 ),
@@ -169,9 +166,10 @@ class DiscussionDetailViewModelTest {
                 )
 
             discussionDetailViewModel.deleteDiscussion()
-            val observed = async { discussionDetailViewModel.uiEvent.getOrAwaitValue() }
+            advanceUntilIdle()
+            val event = discussionDetailViewModel.uiEvent.getOrAwaitValue()
 
-            assertThat(observed.await()).isEqualTo(DiscussionDetailUiEvent.ShowErrorMessage(ex))
+            assertThat(event).isEqualTo(DiscussionDetailUiEvent.ShowErrorMessage(ex))
             assertThat(discussionDetailViewModel.uiState.getOrAwaitValue().isLoading).isFalse()
         }
 
