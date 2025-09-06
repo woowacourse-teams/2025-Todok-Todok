@@ -15,7 +15,6 @@ import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.async
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
@@ -81,7 +80,7 @@ class CommentCreateViewModelTest {
         }
 
     @Test
-    fun `Update - initUiState 성공 시 서버 텍스트와 InitState 이벤트`() =
+    fun `Update - initUiState 성공 시 최신 텍스트와 InitState 이벤트`() =
         runTest {
             // given
             val handle =
@@ -93,8 +92,8 @@ class CommentCreateViewModelTest {
                     ),
                 )
             val commentCreateViewModel = CommentCreateViewModel(handle, commentRepository)
-            val serverText = "from-server"
-            val commentMock = mockk<Comment> { every { content } returns serverText }
+            val currentComment = "currentComment"
+            val commentMock = mockk<Comment> { every { content } returns currentComment }
             coEvery { commentRepository.getComment(DISCUSSION_ID, COMMENT_ID) } returns
                 NetworkResult.Success(commentMock)
 
@@ -103,10 +102,12 @@ class CommentCreateViewModelTest {
             advanceUntilIdle()
 
             // then
-            assertThat(commentCreateViewModel.commentText.getOrAwaitValue()).isEqualTo(serverText)
-            val ev = commentCreateViewModel.uiEvent.getOrAwaitValue()
-            assertThat(ev).isInstanceOf(CommentCreateUiEvent.InitState::class.java)
-            assertThat((ev as CommentCreateUiEvent.InitState).content).isEqualTo(serverText)
+            assertThat(commentCreateViewModel.commentText.getOrAwaitValue()).isEqualTo(
+                currentComment,
+            )
+            val event = commentCreateViewModel.uiEvent.getOrAwaitValue()
+            assertThat(event).isInstanceOf(CommentCreateUiEvent.InitState::class.java)
+            assertThat((event as CommentCreateUiEvent.InitState).content).isEqualTo(currentComment)
         }
 
     @Test
@@ -119,12 +120,12 @@ class CommentCreateViewModelTest {
                 NetworkResult.Failure(ex)
 
             // when
-            val evDeferred = async { commentCreateViewModel.uiEvent.getOrAwaitValue() }
             commentCreateViewModel.initUiState()
             advanceUntilIdle()
+            val event = commentCreateViewModel.uiEvent.getOrAwaitValue()
 
             // then
-            assertThat(evDeferred.await()).isEqualTo(CommentCreateUiEvent.ShowError(ex))
+            assertThat(event).isEqualTo(CommentCreateUiEvent.ShowError(ex))
         }
 
     @Test
@@ -148,12 +149,12 @@ class CommentCreateViewModelTest {
                 NetworkResult.Success(Unit)
 
             // when
-            val evDeferred = async { commentCreateViewModel.uiEvent.getOrAwaitValue() }
             commentCreateViewModel.submitComment()
             advanceUntilIdle()
+            val event = commentCreateViewModel.uiEvent.getOrAwaitValue()
 
             // then
-            assertThat(evDeferred.await()).isEqualTo(CommentCreateUiEvent.SubmitComment)
+            assertThat(event).isEqualTo(CommentCreateUiEvent.SubmitComment)
             coVerify(exactly = 1) { commentRepository.saveComment(DISCUSSION_ID, "hello") }
         }
 
@@ -168,12 +169,12 @@ class CommentCreateViewModelTest {
                 NetworkResult.Failure(ex)
 
             // when
-            val evDeferred = async { commentCreateViewModel.uiEvent.getOrAwaitValue() }
             commentCreateViewModel.submitComment()
             advanceUntilIdle()
+            val event = commentCreateViewModel.uiEvent.getOrAwaitValue()
 
             // then
-            assertThat(evDeferred.await()).isEqualTo(CommentCreateUiEvent.ShowError(ex))
+            assertThat(event).isEqualTo(CommentCreateUiEvent.ShowError(ex))
         }
 
     @Test
@@ -186,12 +187,12 @@ class CommentCreateViewModelTest {
                 NetworkResult.Success(Unit)
 
             // when
-            val evDeferred = async { commentCreateViewModel.uiEvent.getOrAwaitValue() }
             commentCreateViewModel.submitComment()
             advanceUntilIdle()
+            val event = commentCreateViewModel.uiEvent.getOrAwaitValue()
 
             // then
-            assertThat(evDeferred.await()).isEqualTo(CommentCreateUiEvent.SubmitComment)
+            assertThat(event).isEqualTo(CommentCreateUiEvent.SubmitComment)
             coVerify(exactly = 1) {
                 commentRepository.updateComment(DISCUSSION_ID, COMMENT_ID, "edited")
             }
@@ -208,12 +209,12 @@ class CommentCreateViewModelTest {
                 NetworkResult.Failure(ex)
 
             // when
-            val evDeferred = async { commentCreateViewModel.uiEvent.getOrAwaitValue() }
             commentCreateViewModel.submitComment()
             advanceUntilIdle()
+            val event = commentCreateViewModel.uiEvent.getOrAwaitValue()
 
             // then
-            assertThat(evDeferred.await()).isEqualTo(CommentCreateUiEvent.ShowError(ex))
+            assertThat(event).isEqualTo(CommentCreateUiEvent.ShowError(ex))
         }
 
     @Test
@@ -224,12 +225,12 @@ class CommentCreateViewModelTest {
             commentCreateViewModel.onCommentChanged("temp")
 
             // when
-            val evDeferred = async { commentCreateViewModel.uiEvent.getOrAwaitValue() }
             commentCreateViewModel.saveContent()
             advanceUntilIdle()
+            val event = commentCreateViewModel.uiEvent.getOrAwaitValue()
 
             // then
-            assertThat(evDeferred.await())
+            assertThat(event)
                 .isEqualTo(CommentCreateUiEvent.OnCreateDismiss("temp"))
         }
 

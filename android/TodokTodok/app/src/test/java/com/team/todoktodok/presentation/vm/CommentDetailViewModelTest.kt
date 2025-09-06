@@ -100,7 +100,7 @@ class CommentDetailViewModelTest {
             assertFalse(ui.isLoading)
             assertNotNull(ui.comment)
             assertEquals(2, ui.replies.size)
-            assertTrue(ui.comment!!.isMyComment)
+            assertTrue(ui.comment.isMyComment)
             assertTrue(ui.replies[0].isMyReply)
             assertFalse(ui.replies[1].isMyReply)
         }
@@ -124,11 +124,11 @@ class CommentDetailViewModelTest {
             } returns NetworkResult.Success(emptyList())
 
             newVm(DISCUSSION_ID, COMMENT_ID)
-            val eventJob = async { commentDetailViewModel.uiEvent.getOrAwaitValue() }
             advanceUntilIdle()
+            val event = commentDetailViewModel.uiEvent.getOrAwaitValue()
 
             // then
-            assertEquals(CommentDetailUiEvent.ShowError(ex), eventJob.await())
+            assertEquals(CommentDetailUiEvent.ShowError(ex), event)
             assertFalse(commentDetailViewModel.uiState.getOrAwaitValue().isLoading)
         }
 
@@ -156,17 +156,15 @@ class CommentDetailViewModelTest {
             } returns NetworkResult.Success(listOf(replyOther))
 
             newVm(DISCUSSION_ID, COMMENT_ID)
-            advanceUntilIdle()
 
-            // when
-            val ev = async { commentDetailViewModel.uiEvent.getOrAwaitValue() }
             commentDetailViewModel.reloadComment()
             advanceUntilIdle()
+            val event = commentDetailViewModel.uiEvent.getOrAwaitValue()
 
             // then
             coVerify(exactly = 2) { commentRepository.getComment(DISCUSSION_ID, COMMENT_ID) }
             coVerify(exactly = 2) { replyRepository.getReplies(DISCUSSION_ID, COMMENT_ID) }
-            assertEquals(CommentDetailUiEvent.ShowNewReply, ev.await())
+            assertEquals(CommentDetailUiEvent.ShowNewReply, event)
         }
 
     @Test
@@ -192,9 +190,11 @@ class CommentDetailViewModelTest {
 
             // when
             commentDetailViewModel.updateContent("hello")
+            advanceUntilIdle()
+            val state = commentDetailViewModel.uiState.getOrAwaitValue()
 
             // then
-            assertEquals("hello", commentDetailViewModel.uiState.getOrAwaitValue().content)
+            assertEquals("hello", state.content)
         }
 
     @Test
@@ -224,18 +224,15 @@ class CommentDetailViewModelTest {
 
             newVm(DISCUSSION_ID, COMMENT_ID)
 
-            advanceUntilIdle()
-
-            val ev = async { commentDetailViewModel.uiEvent.getOrAwaitValue() }
-
             // when
             commentDetailViewModel.toggleCommentLike()
             advanceUntilIdle()
+            val event = commentDetailViewModel.uiEvent.getOrAwaitValue()
 
             // then
             coVerify(exactly = 1) { commentRepository.toggleLike(DISCUSSION_ID, COMMENT_ID) }
             coVerify(exactly = 2) { commentRepository.getComment(DISCUSSION_ID, COMMENT_ID) }
-            assertEquals(CommentDetailUiEvent.ToggleCommentLike, ev.await())
+            assertEquals(CommentDetailUiEvent.ToggleCommentLike, event)
         }
 
     @Test
@@ -266,18 +263,15 @@ class CommentDetailViewModelTest {
 
             newVm(DISCUSSION_ID, COMMENT_ID)
 
-            advanceUntilIdle()
-
-            val ev = async { commentDetailViewModel.uiEvent.getOrAwaitValue() }
-
             // when
             commentDetailViewModel.deleteReply(1L)
             advanceUntilIdle()
+            val event = commentDetailViewModel.uiEvent.getOrAwaitValue()
 
             // then
             coVerify(exactly = 1) { replyRepository.deleteReply(DISCUSSION_ID, COMMENT_ID, 1L) }
             coVerify(exactly = 2) { replyRepository.getReplies(DISCUSSION_ID, COMMENT_ID) }
-            assertEquals(CommentDetailUiEvent.DeleteReply, ev.await())
+            assertEquals(CommentDetailUiEvent.DeleteReply, event)
         }
 
     @Test
@@ -308,16 +302,13 @@ class CommentDetailViewModelTest {
 
             newVm(DISCUSSION_ID, COMMENT_ID)
 
-            advanceUntilIdle()
-
-            val ev = async { commentDetailViewModel.uiEvent.getOrAwaitValue() }
-
             // when
             commentDetailViewModel.deleteComment()
             advanceUntilIdle()
+            val event = commentDetailViewModel.uiEvent.getOrAwaitValue()
 
             // then
-            assertEquals(CommentDetailUiEvent.ShowError(ex), ev.await())
+            assertEquals(CommentDetailUiEvent.ShowError(ex), event)
             assertFalse(commentDetailViewModel.uiState.getOrAwaitValue().isLoading)
         }
 
@@ -348,16 +339,14 @@ class CommentDetailViewModelTest {
             } returns NetworkResult.Success(Unit)
 
             newVm(DISCUSSION_ID, COMMENT_ID)
-            advanceUntilIdle()
-
-            val ev = async { commentDetailViewModel.uiEvent.getOrAwaitValue() }
 
             // when
-            commentDetailViewModel.reportComment("spam")
+            commentDetailViewModel.reportComment("스팸")
             advanceUntilIdle()
+            val event = commentDetailViewModel.uiEvent.getOrAwaitValue()
 
             // then
-            assertEquals(CommentDetailUiEvent.ShowReportCommentSuccessMessage, ev.await())
+            assertEquals(CommentDetailUiEvent.ShowReportCommentSuccessMessage, event)
         }
 
     @Test
@@ -380,19 +369,17 @@ class CommentDetailViewModelTest {
             } returns NetworkResult.Success(emptyList())
 
             newVm(DISCUSSION_ID, COMMENT_ID)
-            advanceUntilIdle()
-
-            commentDetailViewModel.updateContent("draft")
-            val ev = async { commentDetailViewModel.uiEvent.getOrAwaitValue() }
 
             // when
+            commentDetailViewModel.updateContent("draft")
             commentDetailViewModel.showReplyCreate()
             advanceUntilIdle()
+            val event = commentDetailViewModel.uiEvent.getOrAwaitValue()
 
             // then
             assertEquals(
                 CommentDetailUiEvent.ShowReplyCreate(DISCUSSION_ID, COMMENT_ID, "draft"),
-                ev.await(),
+                event,
             )
         }
 

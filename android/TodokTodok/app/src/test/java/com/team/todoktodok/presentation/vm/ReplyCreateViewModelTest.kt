@@ -13,7 +13,6 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.async
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
@@ -26,6 +25,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(CoroutinesTestExtension::class)
 class ReplyCreateViewModelTest {
     private lateinit var replyRepository: ReplyRepository
+    private lateinit var replyCreateViewModel: ReplyCreateViewModel
 
     private val DISCUSSION_ID = 10L
     private val COMMENT_ID = 99L
@@ -34,6 +34,7 @@ class ReplyCreateViewModelTest {
     @BeforeEach
     fun setUp() {
         replyRepository = mockk(relaxed = true)
+        replyCreateViewModel = newVmCreate()
     }
 
     private fun newVmCreate(
@@ -74,75 +75,75 @@ class ReplyCreateViewModelTest {
     @Test
     fun `Create - init은 content를 반영`() =
         runTest {
-            val vm = newVmCreate(content = "prefilled")
+            replyCreateViewModel = newVmCreate(content = "prefilled")
             advanceUntilIdle()
-            assertThat(vm.replyContent.getOrAwaitValue()).isEqualTo("prefilled")
+            assertThat(replyCreateViewModel.replyContent.getOrAwaitValue()).isEqualTo("prefilled")
         }
 
     @Test
     fun `Update - init은 content를 반영`() =
         runTest {
-            val vm = newVmUpdate(content = "from-server")
+            replyCreateViewModel = newVmUpdate(content = "from-server")
             advanceUntilIdle()
-            assertThat(vm.replyContent.getOrAwaitValue()).isEqualTo("from-server")
+            assertThat(replyCreateViewModel.replyContent.getOrAwaitValue()).isEqualTo("from-server")
         }
 
     @Test
     fun `onReplyChanged는 replyContent 갱신`() =
         runTest {
-            val vm = newVmCreate()
-            vm.onReplyChanged("abc")
-            assertThat(vm.replyContent.getOrAwaitValue()).isEqualTo("abc")
-            vm.onReplyChanged(null)
-            assertThat(vm.replyContent.getOrAwaitValue()).isEqualTo("")
+            replyCreateViewModel = newVmCreate()
+            replyCreateViewModel.onReplyChanged("abc")
+            assertThat(replyCreateViewModel.replyContent.getOrAwaitValue()).isEqualTo("abc")
+            replyCreateViewModel.onReplyChanged(null)
+            assertThat(replyCreateViewModel.replyContent.getOrAwaitValue()).isEqualTo("")
         }
 
     @Test
     fun `Create - submitReply 성공 시 CreateReply 이벤트`() =
         runTest {
-            val vm = newVmCreate()
-            vm.onReplyChanged("hello")
+            replyCreateViewModel = newVmCreate()
+            replyCreateViewModel.onReplyChanged("hello")
             coEvery { replyRepository.saveReply(DISCUSSION_ID, COMMENT_ID, "hello") } returns
                 NetworkResult.Success(Unit)
 
-            val evDeferred = async { vm.uiEvent.getOrAwaitValue() }
-            vm.submitReply()
+            replyCreateViewModel.submitReply()
             advanceUntilIdle()
+            val event = replyCreateViewModel.uiEvent.getOrAwaitValue()
 
-            assertThat(evDeferred.await()).isEqualTo(ReplyCreateUiEvent.CreateReply)
+            assertThat(event).isEqualTo(ReplyCreateUiEvent.CreateReply)
             coVerify(exactly = 1) { replyRepository.saveReply(DISCUSSION_ID, COMMENT_ID, "hello") }
         }
 
     @Test
     fun `Create - submitReply 실패 시 ShowErrorMessage`() =
         runTest {
-            val vm = newVmCreate()
-            vm.onReplyChanged("hello")
+            replyCreateViewModel = newVmCreate()
+            replyCreateViewModel.onReplyChanged("hello")
             val ex = TodokTodokExceptions.EmptyBodyException
             coEvery { replyRepository.saveReply(DISCUSSION_ID, COMMENT_ID, "hello") } returns
                 NetworkResult.Failure(ex)
 
-            val evDeferred = async { vm.uiEvent.getOrAwaitValue() }
-            vm.submitReply()
+            replyCreateViewModel.submitReply()
             advanceUntilIdle()
+            val event = replyCreateViewModel.uiEvent.getOrAwaitValue()
 
-            assertThat(evDeferred.await()).isEqualTo(ReplyCreateUiEvent.ShowErrorMessage(ex))
+            assertThat(event).isEqualTo(ReplyCreateUiEvent.ShowErrorMessage(ex))
         }
 
     @Test
     fun `Update - submitReply 성공 시 CreateReply 이벤트`() =
         runTest {
-            val vm = newVmUpdate(replyId = REPLY_ID)
-            vm.onReplyChanged("edited")
+            replyCreateViewModel = newVmUpdate(replyId = REPLY_ID)
+            replyCreateViewModel.onReplyChanged("edited")
             coEvery {
                 replyRepository.updateReply(DISCUSSION_ID, COMMENT_ID, REPLY_ID, "edited")
             } returns NetworkResult.Success(Unit)
 
-            val evDeferred = async { vm.uiEvent.getOrAwaitValue() }
-            vm.submitReply()
+            replyCreateViewModel.submitReply()
             advanceUntilIdle()
+            val event = replyCreateViewModel.uiEvent.getOrAwaitValue()
 
-            assertThat(evDeferred.await()).isEqualTo(ReplyCreateUiEvent.CreateReply)
+            assertThat(event).isEqualTo(ReplyCreateUiEvent.CreateReply)
             coVerify(exactly = 1) {
                 replyRepository.updateReply(DISCUSSION_ID, COMMENT_ID, REPLY_ID, "edited")
             }
@@ -151,18 +152,18 @@ class ReplyCreateViewModelTest {
     @Test
     fun `Update - submitReply 실패 시 ShowErrorMessage`() =
         runTest {
-            val vm = newVmUpdate(replyId = REPLY_ID)
-            vm.onReplyChanged("edited")
+            replyCreateViewModel = newVmUpdate(replyId = REPLY_ID)
+            replyCreateViewModel.onReplyChanged("edited")
             val ex = TodokTodokExceptions.EmptyBodyException
             coEvery {
                 replyRepository.updateReply(DISCUSSION_ID, COMMENT_ID, REPLY_ID, "edited")
             } returns NetworkResult.Failure(ex)
 
-            val evDeferred = async { vm.uiEvent.getOrAwaitValue() }
-            vm.submitReply()
+            replyCreateViewModel.submitReply()
             advanceUntilIdle()
+            val event = replyCreateViewModel.uiEvent.getOrAwaitValue()
 
-            assertThat(evDeferred.await()).isEqualTo(ReplyCreateUiEvent.ShowErrorMessage(ex))
+            assertThat(event).isEqualTo(ReplyCreateUiEvent.ShowErrorMessage(ex))
         }
 
     @Test
@@ -171,10 +172,10 @@ class ReplyCreateViewModelTest {
             val vm = newVmCreate()
             vm.onReplyChanged("temp")
 
-            val evDeferred = async { vm.uiEvent.getOrAwaitValue() }
             vm.saveReply()
             advanceUntilIdle()
+            val event = vm.uiEvent.getOrAwaitValue()
 
-            assertThat(evDeferred.await()).isEqualTo(ReplyCreateUiEvent.SaveContent("temp"))
+            assertThat(event).isEqualTo(ReplyCreateUiEvent.SaveContent("temp"))
         }
 }
