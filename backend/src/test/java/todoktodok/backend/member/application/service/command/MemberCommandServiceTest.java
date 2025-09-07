@@ -6,7 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import io.jsonwebtoken.JwtException;
 import jakarta.persistence.EntityManager;
+
 import java.util.NoSuchElementException;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -166,10 +168,10 @@ class MemberCommandServiceTest {
         databaseInitializer.setDefaultUserInfo();
 
         final String nickname = "user";
-        final SignupRequest signupRequest = new SignupRequest(nickname, "https://user.png",  "user22@gmail.com");
+        final SignupRequest signupRequest = new SignupRequest(nickname, "https://user.png", "user22@gmail.com");
 
         // when - then
-        assertThatThrownBy(() -> memberCommandService.signup(signupRequest,  "user22@gmail.com"))
+        assertThatThrownBy(() -> memberCommandService.signup(signupRequest, "user22@gmail.com"))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("이미 존재하는 닉네임입니다");
     }
