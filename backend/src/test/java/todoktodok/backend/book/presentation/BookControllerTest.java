@@ -44,7 +44,7 @@ public class BookControllerTest {
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
 
-        final String token = MemberFixture.login("user@gmail.com");
+        final String token = MemberFixture.getAccessToken("user@gmail.com");
         final String keyword = "오브젝트";
 
         // when - then
@@ -65,7 +65,7 @@ public class BookControllerTest {
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
 
-        final String token = MemberFixture.login("user@gmail.com");
+        final String token = MemberFixture.getAccessToken("user@gmail.com");
         final String keyword = "";
 
         // when - then
@@ -85,7 +85,7 @@ public class BookControllerTest {
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
 
-        final String token = MemberFixture.login("user@gmail.com");
+        final String token = MemberFixture.getAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -102,7 +102,7 @@ public class BookControllerTest {
         // given
         databaseInitializer.setDefaultUserInfo();
 
-        final String token = MemberFixture.login("user@gmail.com");
+        final String token = MemberFixture.getAccessToken("user@gmail.com");
 
         final BookRequest bookRequest = new BookRequest(
                 "9791158391409",

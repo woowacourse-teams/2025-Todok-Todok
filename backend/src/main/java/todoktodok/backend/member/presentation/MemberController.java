@@ -1,7 +1,9 @@
 package todoktodok.backend.member.presentation;
 
 import jakarta.validation.Valid;
+
 import java.util.List;
+
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,10 +25,13 @@ import todoktodok.backend.global.resolver.TempMember;
 import todoktodok.backend.member.application.dto.request.LoginRequest;
 import todoktodok.backend.member.application.dto.request.MemberReportRequest;
 import todoktodok.backend.member.application.dto.request.ProfileUpdateRequest;
+import todoktodok.backend.member.application.dto.request.RefreshTokenRequest;
 import todoktodok.backend.member.application.dto.request.SignupRequest;
 import todoktodok.backend.member.application.dto.response.BlockMemberResponse;
 import todoktodok.backend.member.application.dto.response.ProfileResponse;
 import todoktodok.backend.member.application.dto.response.ProfileUpdateResponse;
+import todoktodok.backend.member.application.dto.response.RefreshTokenResponse;
+import todoktodok.backend.member.application.dto.response.TokenResponse;
 import todoktodok.backend.member.application.service.command.MemberCommandService;
 import todoktodok.backend.member.application.service.query.MemberQueryService;
 import todoktodok.backend.member.domain.MemberDiscussionFilterType;
@@ -41,23 +46,45 @@ public class MemberController implements MemberApiDocs {
 
     @Auth(value = Role.GUEST)
     @PostMapping("/login")
-    public ResponseEntity<Void> login(
+    public ResponseEntity<RefreshTokenResponse> login(
             @RequestBody @Valid final LoginRequest loginRequest
     ) {
+        final TokenResponse tokenResponse = memberCommandService.login(loginRequest);
+
         return ResponseEntity.status(HttpStatus.OK)
-                .header("Authorization", memberCommandService.login(loginRequest))
-                .build();
+                .header("Authorization", tokenResponse.accessToken())
+                .header("Cache-Control", "no-store")
+                .header("Pragma", "no-cache")
+                .body(new RefreshTokenResponse(tokenResponse.refreshToken()));
     }
 
     @Auth(value = Role.TEMP_USER)
     @PostMapping("/signup")
-    public ResponseEntity<Void> signup(
+    public ResponseEntity<RefreshTokenResponse> signup(
             @TempMember final String memberEmail,
             @RequestBody @Valid final SignupRequest signupRequest
     ) {
+        final TokenResponse tokenResponse = memberCommandService.signup(signupRequest, memberEmail);
+
         return ResponseEntity.status(HttpStatus.CREATED)
-                .header("Authorization", memberCommandService.signup(signupRequest, memberEmail))
-                .build();
+                .header("Authorization", tokenResponse.accessToken())
+                .header("Cache-Control", "no-store")
+                .header("Pragma", "no-cache")
+                .body(new RefreshTokenResponse(tokenResponse.refreshToken()));
+    }
+
+    @Auth(value = Role.EXPIRED_USER)
+    @PostMapping("/refresh")
+    public ResponseEntity<RefreshTokenResponse> refresh(
+            @RequestBody @Valid final RefreshTokenRequest refreshTokenRequest
+    ) {
+        final TokenResponse tokenResponse = memberCommandService.refresh(refreshTokenRequest);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .header("Authorization", tokenResponse.accessToken())
+                .header("Cache-Control", "no-store")
+                .header("Pragma", "no-cache")
+                .body(new RefreshTokenResponse(tokenResponse.refreshToken()));
     }
 
     @Auth(value = Role.USER)
@@ -128,6 +155,17 @@ public class MemberController implements MemberApiDocs {
     ) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(memberCommandService.updateProfile(memberId, profileUpdateRequest));
+    }
+
+    @Auth(value = Role.USER)
+    @DeleteMapping
+    public ResponseEntity<Void> deleteMember(
+            @LoginMember final Long memberId,
+            @RequestBody @Valid final RefreshTokenRequest refreshTokenRequest
+    ) {
+        memberCommandService.deleteMember(memberId, refreshTokenRequest);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .build();
     }
 
     @Auth(value = Role.USER)

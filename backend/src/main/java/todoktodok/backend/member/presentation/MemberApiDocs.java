@@ -12,17 +12,21 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.util.List;
 
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import todoktodok.backend.book.application.dto.response.BookResponse;
 import todoktodok.backend.discussion.application.dto.response.DiscussionResponse;
 import todoktodok.backend.global.exception.ErrorResponse;
+import todoktodok.backend.global.resolver.LoginMember;
 import todoktodok.backend.member.application.dto.request.LoginRequest;
 import todoktodok.backend.member.application.dto.request.MemberReportRequest;
 import todoktodok.backend.member.application.dto.request.ProfileUpdateRequest;
+import todoktodok.backend.member.application.dto.request.RefreshTokenRequest;
 import todoktodok.backend.member.application.dto.request.SignupRequest;
 import todoktodok.backend.member.application.dto.response.BlockMemberResponse;
 import todoktodok.backend.member.application.dto.response.ProfileResponse;
 import todoktodok.backend.member.application.dto.response.ProfileUpdateResponse;
+import todoktodok.backend.member.application.dto.response.RefreshTokenResponse;
 import todoktodok.backend.member.domain.MemberDiscussionFilterType;
 
 @Tag(name = "회원 API")
@@ -32,7 +36,21 @@ public interface MemberApiDocs {
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
-                    description = "로그인 성공"
+                    description = "로그인 성공",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = RefreshTokenResponse.class),
+                            examples = {
+                                    @ExampleObject(
+                                            name = "회원일 때 - 리프레시 토큰 존재",
+                                            value = "{\"refreshToken\":\"eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJleHAiOjE3 NTU2MTgxNjZ9._-0qTNmPyO1m6LnpEAwkGAB92Es0yBwxNBtmsq_VrGk\"}"
+                                    ),
+                                    @ExampleObject(
+                                            name = "임시회원일 때",
+                                            value = "{\"refreshToken\":null}"
+                                    )
+                            }
+                    )
             ),
             @ApiResponse(
                     responseCode = "400",
@@ -57,7 +75,7 @@ public interface MemberApiDocs {
                             )
                     ))
     })
-    ResponseEntity<Void> login(
+    ResponseEntity<RefreshTokenResponse> login(
             @RequestBody(
                     description = "로그인 정보",
                     content = @Content(
@@ -72,7 +90,17 @@ public interface MemberApiDocs {
     @ApiResponses({
             @ApiResponse(
                     responseCode = "201",
-                    description = "회원가입 성공"
+                    description = "회원가입 성공",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = RefreshTokenResponse.class),
+                            examples = {
+                                    @ExampleObject(
+                                            name = "리프레시 토큰",
+                                            value = "{\"refreshToken\":\"eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJleHAiOjE3 NTU2MTgxNjZ9._-0qTNmPyO1m6LnpEAwkGAB92Es0yBwxNBtmsq_VrGk\"}"
+                                    )
+                            }
+                    )
             ),
             @ApiResponse(
                     responseCode = "400",
@@ -134,7 +162,7 @@ public interface MemberApiDocs {
                             )
                     ))
     })
-    ResponseEntity<Void> signup(
+    ResponseEntity<RefreshTokenResponse> signup(
             @Parameter(hidden = true) final String memberEmail,
             @RequestBody(
                     description = "회원가입 정보",
@@ -152,6 +180,69 @@ public interface MemberApiDocs {
                             )
                     )
             ) final SignupRequest signupRequest
+    );
+
+    @Operation(summary = "토큰 재발급 API")
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "토큰 재발급 성공",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = RefreshTokenResponse.class),
+                            examples = {
+                                    @ExampleObject(
+                                            name = "재발급한 리프레시 토큰",
+                                            value = "{\"refreshToken\":\"eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJleHAiOjE3 NTU2MTgxNjZ9._-0qTNmPyO1m6LnpEAwkGAB92Es0yBwxNBtmsq_VrGk\"}"
+                                    )
+                            }
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "토큰 인증 오류",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "JWT 오류",
+                                    value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
+                            )
+                    )),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "이미 사용한 리프레시 토큰 오류",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "이미 사용한 리프레시 토큰 오류",
+                                    value = "{\"code\":404, \"message\":\"[ERROR] 해당 리프레시 토큰을 찾을 수 없습니다\"}"
+                            )
+                    )),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "서버 오류",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "서버 오류",
+                                    value = "{\"code\":500, \"message\":\"[ERROR] 서버 내부 오류가 발생했습니다\"}"
+                            )
+                    ))
+    })
+    ResponseEntity<RefreshTokenResponse> refresh(
+            @RequestBody(
+                    description = "리프레시 토큰",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = RefreshTokenRequest.class),
+                            examples = @ExampleObject(
+                                    value = "{\"refreshToken\":\"eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJleHAiOjE3 NTU2MTgxNjZ9._-0qTNmPyO1m6LnpEAwkGAB92Es0yBwxNBtmsq_VrGk\"}"
+                            )
+                    )
+            ) final RefreshTokenRequest refreshTokenRequest
     );
 
     @Operation(summary = "작성자 차단 API")
@@ -257,6 +348,17 @@ public interface MemberApiDocs {
                             )
                     )),
             @ApiResponse(
+                    responseCode = "403",
+                    description = "액세스 토큰 만료 오류",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "액세스 토큰 만료 오류",
+                                    value = "{\"code\":403, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
+                            )
+                    )),
+            @ApiResponse(
                     responseCode = "404",
                     description = "존재하지 않는 리소스",
                     content = @Content(
@@ -320,6 +422,28 @@ public interface MemberApiDocs {
                             )
                     )),
             @ApiResponse(
+                    responseCode = "401",
+                    description = "토큰 인증 오류",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "JWT 오류",
+                                    value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
+                            )
+                    )),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "액세스 토큰 만료 오류",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "액세스 토큰 만료 오류",
+                                    value = "{\"code\":403, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
+                            )
+                    )),
+            @ApiResponse(
                     responseCode = "404",
                     description = "존재하지 않는 리소스",
                     content = @Content(
@@ -377,6 +501,28 @@ public interface MemberApiDocs {
                                               }
                                             ]
                                             """
+                            )
+                    )),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "토큰 인증 오류",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "JWT 오류",
+                                    value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
+                            )
+                    )),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "액세스 토큰 만료 오류",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "액세스 토큰 만료 오류",
+                                    value = "{\"code\":403, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
                             )
                     )),
             @ApiResponse(
@@ -468,6 +614,28 @@ public interface MemberApiDocs {
                             )
                     )),
             @ApiResponse(
+                    responseCode = "401",
+                    description = "토큰 인증 오류",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "JWT 오류",
+                                    value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
+                            )
+                    )),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "액세스 토큰 만료 오류",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "액세스 토큰 만료 오류",
+                                    value = "{\"code\":403, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
+                            )
+                    )),
+            @ApiResponse(
                     responseCode = "404",
                     description = "존재하지 않는 리소스",
                     content = @Content(
@@ -539,6 +707,17 @@ public interface MemberApiDocs {
                             )
                     )),
             @ApiResponse(
+                    responseCode = "403",
+                    description = "액세스 토큰 만료 오류",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "액세스 토큰 만료 오류",
+                                    value = "{\"code\":403, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
+                            )
+                    )),
+            @ApiResponse(
                     responseCode = "500",
                     description = "서버 오류",
                     content = @Content(
@@ -603,6 +782,17 @@ public interface MemberApiDocs {
                             )
                     )),
             @ApiResponse(
+                    responseCode = "403",
+                    description = "액세스 토큰 만료 오류",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "액세스 토큰 만료 오류",
+                                    value = "{\"code\":403, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
+                            )
+                    )),
+            @ApiResponse(
                     responseCode = "500",
                     description = "서버 오류",
                     content = @Content(
@@ -624,6 +814,86 @@ public interface MemberApiDocs {
                             examples = @ExampleObject(value = "{\"nickname\":\"수정된닉네임\", \"profileMessage\":\"수정된상태메시지\"}")
                     )
             ) final ProfileUpdateRequest profileUpdateRequest
+    );
+
+    @Operation(summary = "회원 탈퇴 API")
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "204",
+                    description = "회원 탈퇴 성공"
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "잘못된 요청",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "리프레시 토큰과 액세스 토큰의 회원 id 불일치",
+                                    value = "{\"code\":400, \"message\":\"[ERROR] 리프레시 토큰과 액세스 토큰의 회원 정보가 일치하지 않습니다\"}"
+                            )
+                    )),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "토큰 인증 오류",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "JWT 오류",
+                                    value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
+                            )
+                    )),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "액세스 토큰 만료 오류",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "액세스 토큰 만료 오류",
+                                    value = "{\"code\":403, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
+                            )
+                    )),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "존재하지 않는 리소스",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = {
+                                    @ExampleObject(
+                                            name = "회원 없음",
+                                            value = "{\"code\":404, \"message\":\"[ERROR] 해당 회원을 찾을 수 없습니다\"}"
+                                    ),
+                                    @ExampleObject(
+                                            name = "리프레시 토큰 없음",
+                                            value = "{\"code\":404, \"message\":\"[ERROR] 해당 리프레시 토큰을 찾을 수 없습니다\"}"
+                                    )
+                            }
+                    )),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "서버 오류",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "서버 오류",
+                                    value = "{\"code\":500, \"message\":\"[ERROR] 서버 내부 오류가 발생했습니다\"}"
+                            )
+                    ))
+    })
+    ResponseEntity<Void> deleteMember(
+            @Parameter(hidden = true) final Long memberId,
+            @RequestBody(
+                    description = "리프레시 토큰",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = RefreshTokenRequest.class),
+                            examples = @ExampleObject(value = "{\"refreshToken\":\"eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJleHAiOjE3 NTU2MTgxNjZ9._-0qTNmPyO1m6LnpEAwkGAB92Es0yBwxNBtmsq_VrGk\"}")
+                    )
+            ) final RefreshTokenRequest refreshTokenRequest
     );
 
     @Operation(summary = "차단 해제 API")
@@ -652,6 +922,17 @@ public interface MemberApiDocs {
                             examples = @ExampleObject(
                                     name = "JWT 오류",
                                     value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
+                            )
+                    )),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "액세스 토큰 만료 오류",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "액세스 토큰 만료 오류",
+                                    value = "{\"code\":403, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
                             )
                     )),
             @ApiResponse(
