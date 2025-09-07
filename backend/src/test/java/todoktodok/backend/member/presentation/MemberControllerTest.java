@@ -359,12 +359,13 @@ class MemberControllerTest {
         // given
         databaseInitializer.setUserInfo("user@gmail.com", "user", "https://image.png", "user");
 
-        final String accessToken = MemberFixture.getAccessToken("user@gmail.com");
+        final TokenResponse tokenResponse = MemberFixture.getAccessAndRefreshToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .header("Authorization", accessToken)
+                .header("Authorization", tokenResponse.accessToken())
+                .body(new RefreshTokenRequest(tokenResponse.refreshToken()))
                 .when().delete("/api/v1/members")
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
