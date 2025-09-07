@@ -144,7 +144,7 @@ public class MemberCommandService {
             final RefreshTokenRequest refreshTokenRequest
     ) {
         final TokenInfo tokenInfo = jwtTokenProvider.getInfoByRefreshToken(refreshTokenRequest.refreshToken());
-        Long refreshTokenMemberId = tokenInfo.id();
+        final Long refreshTokenMemberId = tokenInfo.id();
         validateTokenMemberId(accessTokenMemberId, refreshTokenMemberId);
 
         final Member member = findMember(accessTokenMemberId);
