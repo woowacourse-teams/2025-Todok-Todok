@@ -161,7 +161,7 @@ public class MemberController implements MemberApiDocs {
     @DeleteMapping
     public ResponseEntity<Void> deleteMember(
             @LoginMember final Long memberId,
-            @RequestBody @Valid RefreshTokenRequest refreshTokenRequest
+            @RequestBody @Valid final RefreshTokenRequest refreshTokenRequest
     ) {
         memberCommandService.deleteMember(memberId, refreshTokenRequest);
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
