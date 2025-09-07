@@ -139,10 +139,24 @@ public class MemberCommandService {
         return new ProfileUpdateResponse(member);
     }
 
-    public void deleteMember(final Long memberId) {
-        final Member member = findMember(memberId);
+    public void deleteMember(
+            final Long accessTokenMemberId,
+            final RefreshTokenRequest refreshTokenRequest
+    ) {
+        final TokenInfo tokenInfo = jwtTokenProvider.getInfoByRefreshToken(refreshTokenRequest.refreshToken());
+        Long refreshTokenMemberId = tokenInfo.id();
+        if (!refreshTokenMemberId.equals(accessTokenMemberId)) {
+            throw new IllegalArgumentException(
+                    String.format("리프레시 토큰과 액세스 토큰의 회원 정보가 일치하지 않습니다: accessToken memberId = %d, refreshToken memberId = %d",
+                            accessTokenMemberId, refreshTokenMemberId)
+            );
+        }
+
+        final Member member = findMember(accessTokenMemberId);
+        final RefreshToken refreshToken = findRefreshToken(refreshTokenRequest.refreshToken());
 
         memberRepository.delete(member);
+        refreshTokenRepository.delete(refreshToken);
     }
 
     public void deleteBlock(
