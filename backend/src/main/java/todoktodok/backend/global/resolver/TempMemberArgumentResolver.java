@@ -35,7 +35,7 @@ public class TempMemberArgumentResolver implements HandlerMethodArgumentResolver
     ) {
         final HttpServletRequest httpServletRequest = webRequest.getNativeRequest(HttpServletRequest.class);
         final String token = getTokenFromAuthorizationHeader(httpServletRequest);
-        final TokenInfo tokenInfo = jwtTokenProvider.getInfo(token);
+        final TokenInfo tokenInfo = jwtTokenProvider.getInfoByAccessToken(token);
 
         if (tokenInfo.tempUserEmail() == null) {
             log.warn("JWT 토큰에서 이메일 정보를 확인할 수 없습니다");
