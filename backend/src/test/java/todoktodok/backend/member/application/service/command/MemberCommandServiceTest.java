@@ -15,7 +15,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.DatabaseInitializer;
 import todoktodok.backend.InitializerTimer;
@@ -27,10 +26,10 @@ import todoktodok.backend.member.application.dto.request.ProfileUpdateRequest;
 import todoktodok.backend.member.application.dto.request.RefreshTokenRequest;
 import todoktodok.backend.member.application.dto.request.SignupRequest;
 import todoktodok.backend.member.application.dto.response.ProfileUpdateResponse;
-import todoktodok.backend.member.presentation.fixture.MemberFixture;
 import todoktodok.backend.member.application.dto.response.TokenResponse;
-import todoktodok.backend.member.domain.RefreshToken;
+import todoktodok.backend.member.domain.Member;
 import todoktodok.backend.member.domain.repository.RefreshTokenRepository;
+import todoktodok.backend.member.presentation.fixture.MemberFixture;
 
 @ActiveProfiles("test")
 @Transactional
@@ -317,15 +316,47 @@ class MemberCommandServiceTest {
     }
 
     @Test
-    @DisplayName("존재하지 않는 회원이 탈퇴하면 예외가 발생한다")
+    @DisplayName("회원을 탈퇴하면 회원과 리프레시 토큰이 삭제되고 회원 서비스를 사용할 수 없다")
+    void deleteMemberTest() {
+        // given
+        final String email = "user@gmail.com";
+
+        databaseInitializer.setUserInfo(email, "user", "https://user.png", "");
+        databaseInitializer.setUserInfo("user2@gmail.com", "user2", "https://user.png", "");
+
+        final TokenResponse tokenResponse = memberCommandService.login(new LoginRequest(email));
+        final Long memberId = 1L;
+        final String refreshToken = tokenResponse.refreshToken();
+
+        // when
+        memberCommandService.deleteMember(memberId, new RefreshTokenRequest(tokenResponse.refreshToken()));
+
+        // then
+        assertAll(
+                () -> assertThatThrownBy(() -> memberCommandService.deleteBlock(memberId, 2L))
+                        .isInstanceOf(NoSuchElementException.class)
+                        .hasMessageContaining("해당 회원을 찾을 수 없습니다"),
+                () -> assertThatThrownBy(() -> memberCommandService.refresh(new RefreshTokenRequest(refreshToken)))
+                        .isInstanceOf(NoSuchElementException.class)
+                        .hasMessageContaining("해당 회원을 찾을 수 없습니다")
+        );
+    }
+
+    @Test
+    @DisplayName("회원 탈퇴 시 리프레시 토큰과 액세스 토큰의 memberId가 불일치하면 예외가 발생한다")
     void deleteMemberTest_notFoundMember_fail() {
         // given
-        final Long notExistsMemberId = 999L;
+        final String email = "user@gmail.com";
+
+        databaseInitializer.setUserInfo(email, "user", "https://user.png", "");
+
+        final TokenResponse tokenResponse = memberCommandService.login(new LoginRequest(email));
+        final Long wrongMemberId = 999L;
 
         // when - then
-        assertThatThrownBy(() -> memberCommandService.deleteMember(notExistsMemberId))
-                .isInstanceOf(NoSuchElementException.class)
-                .hasMessageContaining("해당 회원을 찾을 수 없습니다");
+        assertThatThrownBy(() -> memberCommandService.deleteMember(wrongMemberId, new RefreshTokenRequest(tokenResponse.refreshToken())))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("리프레시 토큰과 액세스 토큰의 회원 정보가 일치하지 않습니다");
     }
 
     @Test
