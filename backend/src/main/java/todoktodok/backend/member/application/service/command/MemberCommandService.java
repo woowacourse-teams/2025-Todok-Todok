@@ -145,12 +145,7 @@ public class MemberCommandService {
     ) {
         final TokenInfo tokenInfo = jwtTokenProvider.getInfoByRefreshToken(refreshTokenRequest.refreshToken());
         Long refreshTokenMemberId = tokenInfo.id();
-        if (!refreshTokenMemberId.equals(accessTokenMemberId)) {
-            throw new IllegalArgumentException(
-                    String.format("리프레시 토큰과 액세스 토큰의 회원 정보가 일치하지 않습니다: accessToken memberId = %d, refreshToken memberId = %d",
-                            accessTokenMemberId, refreshTokenMemberId)
-            );
-        }
+        validateTokenMemberId(accessTokenMemberId, refreshTokenMemberId);
 
         final Member member = findMember(accessTokenMemberId);
         final RefreshToken refreshToken = findRefreshToken(refreshTokenRequest.refreshToken());
@@ -200,6 +195,18 @@ public class MemberCommandService {
         return memberRepository.findById(memberId)
                 .orElseThrow(
                         () -> new NoSuchElementException(String.format("해당 회원을 찾을 수 없습니다: memberId = %s", memberId)));
+    }
+
+    private static void validateTokenMemberId(
+            final Long accessTokenMemberId,
+            final Long refreshTokenMemberId
+    ) {
+        if (!refreshTokenMemberId.equals(accessTokenMemberId)) {
+            throw new IllegalArgumentException(
+                    String.format("리프레시 토큰과 액세스 토큰의 회원 정보가 일치하지 않습니다: accessToken memberId = %d, refreshToken memberId = %d",
+                            accessTokenMemberId, refreshTokenMemberId)
+            );
+        }
     }
 
     private void validateDuplicatedBlock(
