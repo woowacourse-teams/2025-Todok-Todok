@@ -6,7 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import io.jsonwebtoken.JwtException;
 import jakarta.persistence.EntityManager;
+
 import java.util.NoSuchElementException;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,7 +17,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.DatabaseInitializer;
 import todoktodok.backend.InitializerTimer;
@@ -28,8 +29,9 @@ import todoktodok.backend.member.application.dto.request.RefreshTokenRequest;
 import todoktodok.backend.member.application.dto.request.SignupRequest;
 import todoktodok.backend.member.application.dto.response.ProfileUpdateResponse;
 import todoktodok.backend.member.application.dto.response.TokenResponse;
-import todoktodok.backend.member.domain.RefreshToken;
+import todoktodok.backend.member.domain.Member;
 import todoktodok.backend.member.domain.repository.RefreshTokenRepository;
+import todoktodok.backend.member.presentation.fixture.MemberFixture;
 
 @ActiveProfiles("test")
 @Transactional
@@ -166,10 +168,10 @@ class MemberCommandServiceTest {
         databaseInitializer.setDefaultUserInfo();
 
         final String nickname = "user";
-        final SignupRequest signupRequest = new SignupRequest(nickname, "https://user.png",  "user22@gmail.com");
+        final SignupRequest signupRequest = new SignupRequest(nickname, "https://user.png", "user22@gmail.com");
 
         // when - then
-        assertThatThrownBy(() -> memberCommandService.signup(signupRequest,  "user22@gmail.com"))
+        assertThatThrownBy(() -> memberCommandService.signup(signupRequest, "user22@gmail.com"))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("이미 존재하는 닉네임입니다");
     }
@@ -313,6 +315,50 @@ class MemberCommandServiceTest {
 
         // then
         assertThat(memberCommandService.updateProfile(memberId, profileUpdateRequest)).isEqualTo(expected);
+    }
+
+    @Test
+    @DisplayName("회원을 탈퇴하면 회원과 리프레시 토큰이 삭제되고 회원 서비스를 사용할 수 없다")
+    void deleteMemberTest() {
+        // given
+        final String email = "user@gmail.com";
+
+        databaseInitializer.setUserInfo(email, "user", "https://user.png", "");
+        databaseInitializer.setUserInfo("user2@gmail.com", "user2", "https://user.png", "");
+
+        final TokenResponse tokenResponse = memberCommandService.login(new LoginRequest(email));
+        final Long memberId = 1L;
+        final String refreshToken = tokenResponse.refreshToken();
+
+        // when
+        memberCommandService.deleteMember(memberId, new RefreshTokenRequest(tokenResponse.refreshToken()));
+
+        // then
+        assertAll(
+                () -> assertThatThrownBy(() -> memberCommandService.deleteBlock(memberId, 2L))
+                        .isInstanceOf(NoSuchElementException.class)
+                        .hasMessageContaining("해당 회원을 찾을 수 없습니다"),
+                () -> assertThatThrownBy(() -> memberCommandService.refresh(new RefreshTokenRequest(refreshToken)))
+                        .isInstanceOf(NoSuchElementException.class)
+                        .hasMessageContaining("해당 회원을 찾을 수 없습니다")
+        );
+    }
+
+    @Test
+    @DisplayName("회원 탈퇴 시 리프레시 토큰과 액세스 토큰의 memberId가 불일치하면 예외가 발생한다")
+    void deleteMemberTest_notFoundMember_fail() {
+        // given
+        final String email = "user@gmail.com";
+
+        databaseInitializer.setUserInfo(email, "user", "https://user.png", "");
+
+        final TokenResponse tokenResponse = memberCommandService.login(new LoginRequest(email));
+        final Long wrongMemberId = 999L;
+
+        // when - then
+        assertThatThrownBy(() -> memberCommandService.deleteMember(wrongMemberId, new RefreshTokenRequest(tokenResponse.refreshToken())))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("리프레시 토큰과 액세스 토큰의 회원 정보가 일치하지 않습니다");
     }
 
     @Test

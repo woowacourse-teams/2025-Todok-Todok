@@ -354,6 +354,24 @@ class MemberControllerTest {
     }
 
     @Test
+    @DisplayName("회원이 탈퇴한다")
+    void deleteMemberTest() {
+        // given
+        databaseInitializer.setUserInfo("user@gmail.com", "user", "https://image.png", "user");
+
+        final TokenResponse tokenResponse = MemberFixture.getAccessAndRefreshToken("user@gmail.com");
+
+        // when - then
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .header("Authorization", tokenResponse.accessToken())
+                .body(new RefreshTokenRequest(tokenResponse.refreshToken()))
+                .when().delete("/api/v1/members")
+                .then().log().all()
+                .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    @Test
     @DisplayName("차단한 회원 전체를 조회한다")
     void getBlockMembersTest() {
         // given

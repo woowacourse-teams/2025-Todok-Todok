@@ -1,7 +1,9 @@
 package todoktodok.backend.member.presentation;
 
 import jakarta.validation.Valid;
+
 import java.util.List;
+
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -153,6 +155,17 @@ public class MemberController implements MemberApiDocs {
     ) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(memberCommandService.updateProfile(memberId, profileUpdateRequest));
+    }
+
+    @Auth(value = Role.USER)
+    @DeleteMapping
+    public ResponseEntity<Void> deleteMember(
+            @LoginMember final Long memberId,
+            @RequestBody @Valid final RefreshTokenRequest refreshTokenRequest
+    ) {
+        memberCommandService.deleteMember(memberId, refreshTokenRequest);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .build();
     }
 
     @Auth(value = Role.USER)

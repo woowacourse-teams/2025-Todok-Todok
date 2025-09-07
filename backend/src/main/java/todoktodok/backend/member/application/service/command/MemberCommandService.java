@@ -2,6 +2,7 @@ package todoktodok.backend.member.application.service.command;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
+
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -139,6 +140,21 @@ public class MemberCommandService {
         return new ProfileUpdateResponse(member);
     }
 
+    public void deleteMember(
+            final Long accessTokenMemberId,
+            final RefreshTokenRequest refreshTokenRequest
+    ) {
+        final TokenInfo tokenInfo = jwtTokenProvider.getInfoByRefreshToken(refreshTokenRequest.refreshToken());
+        final Long refreshTokenMemberId = tokenInfo.id();
+        validateTokenMemberId(accessTokenMemberId, refreshTokenMemberId);
+
+        final Member member = findMember(accessTokenMemberId);
+        final RefreshToken refreshToken = findRefreshToken(refreshTokenRequest.refreshToken());
+
+        memberRepository.delete(member);
+        refreshTokenRepository.delete(refreshToken);
+    }
+
     public void deleteBlock(
             final Long memberId,
             final Long targetId
@@ -180,6 +196,18 @@ public class MemberCommandService {
         return memberRepository.findById(memberId)
                 .orElseThrow(
                         () -> new NoSuchElementException(String.format("해당 회원을 찾을 수 없습니다: memberId = %s", memberId)));
+    }
+
+    private static void validateTokenMemberId(
+            final Long accessTokenMemberId,
+            final Long refreshTokenMemberId
+    ) {
+        if (!refreshTokenMemberId.equals(accessTokenMemberId)) {
+            throw new IllegalArgumentException(
+                    String.format("리프레시 토큰과 액세스 토큰의 회원 정보가 일치하지 않습니다: accessToken memberId = %d, refreshToken memberId = %d",
+                            accessTokenMemberId, refreshTokenMemberId)
+            );
+        }
     }
 
     private void validateDuplicatedBlock(
