@@ -43,15 +43,15 @@
         android:layout_marginStart="@dimen/space_24"
         android:layout_marginTop="14dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toTopOf="@id/tv_input_comment"
+        app:layout_constraintBottom_toTopOf="@id/tv_input_reply"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@id/abl_comment_detail"
         app:layout_constraintTop_toBottomOf="@id/abl_comment_detail" />
 
     <TextView
-        android:id="@+id/tv_input_comment"
+        android:id="@+id/tv_input_reply"
         style="@style/BaseTextStyle"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="36dp"
         android:layout_marginBottom="@dimen/space_20"
         android:background="@drawable/bg_green_f0_radius_8dp"
@@ -60,10 +60,24 @@
         android:paddingStart="10dp"
         android:paddingTop="@dimen/space_4"
         android:paddingBottom="2dp"
-        android:text="@string/reply_input_hint"
         android:textColor="@color/gray_76"
         android:textSize="@dimen/font_size_large"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/iv_add_reply"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="대댓글 입력" />
+
+    <ImageView
+        android:id="@+id/iv_add_reply"
+        android:layout_width="@dimen/space_28"
+        android:layout_height="@dimen/space_28"
+        android:layout_marginStart="10dp"
+        android:background="@drawable/btn_comment_background"
+        android:contentDescription="@string/content_description_add_comment"
+        app:layout_constraintBottom_toBottomOf="@id/tv_input_reply"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tv_input_reply"
+        app:layout_constraintTop_toTopOf="@id/tv_input_reply" />
 
     <com.team.todoktodok.presentation.core.component.CloverProgressBar
         android:id="@+id/progress_bar"

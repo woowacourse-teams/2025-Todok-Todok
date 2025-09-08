@@ -140,6 +140,21 @@ class CommentDetailViewModel(
         _uiEvent.setValue(CommentDetailUiEvent.ShowReplyCreate(discussionId, commentId, content))
     }
 
+    fun createReply() {
+        viewModelScope.launch {
+            handleResult(
+                replyRepository.saveReply(
+                    discussionId,
+                    commentId,
+                    _uiState.value?.content.orEmpty(),
+                ),
+            ) {
+                loadReplies()
+                _uiState.value = _uiState.value?.copy(content = "")
+            }
+        }
+    }
+
     private fun showNewReply() {
         _uiEvent.setValue(CommentDetailUiEvent.ShowNewReply)
     }
