@@ -118,6 +118,7 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
     private fun setupOnClick(binding: FragmentCommentsBinding) {
         with(binding) {
             tvInputComment.setOnClickListener { viewModel.showCommentCreate() }
+            ivAddComment.setOnClickListener { viewModel.createComment() }
         }
     }
 
@@ -133,6 +134,10 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
             } else {
                 binding.llNothingCommentsLayout.visibility = View.GONE
             }
+            val hasCommentText = state.commentContent.isNotBlank()
+            binding.ivAddComment.isEnabled = hasCommentText
+            binding.tvInputComment.text =
+                if (hasCommentText) state.commentContent else getString(R.string.comment_input_hint)
             adapter.submitList(state.comments) {
                 viewModel.commentsRvState?.let { saved ->
                     binding.rvComments.layoutManager?.onRestoreInstanceState(saved)

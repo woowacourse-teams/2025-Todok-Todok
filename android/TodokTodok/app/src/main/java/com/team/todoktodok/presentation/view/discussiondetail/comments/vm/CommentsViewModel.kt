@@ -90,6 +90,20 @@ class CommentsViewModel(
         )
     }
 
+    fun createComment() {
+        viewModelScope.launch {
+            handleResult(
+                commentRepository.saveComment(
+                    discussionId,
+                    _uiState.value?.commentContent.orEmpty(),
+                ),
+            ) {
+                loadComments()
+                _uiState.value = _uiState.value?.copy(commentContent = "")
+            }
+        }
+    }
+
     fun updateCommentContent(content: String) {
         _uiState.value = _uiState.value?.copy(commentContent = content)
     }
