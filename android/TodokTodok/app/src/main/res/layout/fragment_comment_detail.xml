@@ -42,6 +42,7 @@
         android:layout_height="0dp"
         android:layout_marginStart="@dimen/space_24"
         android:layout_marginTop="14dp"
+        android:scrollbars="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@id/tv_input_reply"
         app:layout_constraintEnd_toEndOf="parent"
