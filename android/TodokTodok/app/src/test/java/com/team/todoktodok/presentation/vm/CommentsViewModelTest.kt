@@ -141,19 +141,19 @@ class CommentsViewModelTest {
     @Test
     fun `report 실패 시 에러 이벤트와 isLoading=false`() =
         runTest {
-            val ex = TodokTodokExceptions.EmptyBodyException
+            val exception = TodokTodokExceptions.EmptyBodyException
             coEvery {
                 commentRepository.report(
                     DISCUSSION_ID,
                     2L,
                     any(),
                 )
-            } returns NetworkResult.Failure(ex)
+            } returns NetworkResult.Failure(exception)
 
             commentsViewModel.reportComment(2L, "사유")
             val observed = async { commentsViewModel.uiEvent.getOrAwaitValue() }
 
-            assertThat(observed.await()).isEqualTo(CommentsUiEvent.ShowError(ex))
+            assertThat(observed.await()).isEqualTo(CommentsUiEvent.ShowError(exception))
             assertFalse(commentsViewModel.uiState.getOrAwaitValue().isLoading)
         }
 
@@ -181,10 +181,10 @@ class CommentsViewModelTest {
     @Test
     fun `초기 로드 실패 시 에러 이벤트와 isLoading=false`() =
         runTest {
-            val ex = TodokTodokExceptions.EmptyBodyException
+            val exception = TodokTodokExceptions.EmptyBodyException
             coEvery { commentRepository.getCommentsByDiscussionId(DISCUSSION_ID) } returns
                 NetworkResult.Failure(
-                    ex,
+                    exception,
                 )
 
             val state =
@@ -194,7 +194,7 @@ class CommentsViewModelTest {
             val event = failedViewModel.uiEvent.getOrAwaitValue()
             advanceUntilIdle()
 
-            assertThat(event).isEqualTo(CommentsUiEvent.ShowError(ex))
+            assertThat(event).isEqualTo(CommentsUiEvent.ShowError(exception))
             assertFalse(failedViewModel.uiState.getOrAwaitValue().isLoading)
         }
 

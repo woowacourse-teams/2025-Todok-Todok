@@ -29,7 +29,7 @@ class CommentCreateViewModelTest {
     private lateinit var commentRepository: CommentRepository
     private lateinit var commentCreateViewModel: CommentCreateViewModel
 
-    private fun newVmCreate(
+    private fun loadCommentCreateViewModelCreate(
         discussionId: Long = DISCUSSION_ID,
         initialText: String? = null,
     ) {
@@ -44,7 +44,7 @@ class CommentCreateViewModelTest {
         commentCreateViewModel = CommentCreateViewModel(handle, commentRepository)
     }
 
-    private fun newVmUpdate(
+    private fun loadCommentCreateViewModelUpdate(
         discussionId: Long = DISCUSSION_ID,
         commentId: Long = COMMENT_ID,
     ) {
@@ -62,21 +62,21 @@ class CommentCreateViewModelTest {
     @BeforeEach
     fun setUp() {
         commentRepository = mockk(relaxed = true)
-        newVmUpdate()
+        loadCommentCreateViewModelUpdate()
     }
 
     @Test
     fun `Create - initUiState는 commentContent 반영하고 InitState 이벤트를 보낸다`() =
         runTest {
             // given
-            newVmCreate()
+            loadCommentCreateViewModelCreate()
 
             // when
             commentCreateViewModel.initUiState()
             advanceUntilIdle()
 
-            val ev = commentCreateViewModel.uiEvent.getOrAwaitValue()
-            assertThat(ev).isInstanceOf(CommentCreateUiEvent.InitState::class.java)
+            val event = commentCreateViewModel.uiEvent.getOrAwaitValue()
+            assertThat(event).isInstanceOf(CommentCreateUiEvent.InitState::class.java)
         }
 
     @Test
@@ -114,10 +114,10 @@ class CommentCreateViewModelTest {
     fun `Update - initUiState 실패 시 ShowError`() =
         runTest {
             // given
-            newVmUpdate()
-            val ex = TodokTodokExceptions.EmptyBodyException
+            loadCommentCreateViewModelUpdate()
+            val exception = TodokTodokExceptions.EmptyBodyException
             coEvery { commentRepository.getComment(DISCUSSION_ID, COMMENT_ID) } returns
-                NetworkResult.Failure(ex)
+                NetworkResult.Failure(exception)
 
             // when
             commentCreateViewModel.initUiState()
@@ -125,7 +125,7 @@ class CommentCreateViewModelTest {
             val event = commentCreateViewModel.uiEvent.getOrAwaitValue()
 
             // then
-            assertThat(event).isEqualTo(CommentCreateUiEvent.ShowError(ex))
+            assertThat(event).isEqualTo(CommentCreateUiEvent.ShowError(exception))
         }
 
     @Test
@@ -143,7 +143,7 @@ class CommentCreateViewModelTest {
     fun `Create - submitComment 성공 시 SubmitComment`() =
         runTest {
             // given
-            newVmCreate()
+            loadCommentCreateViewModelCreate()
             commentCreateViewModel.onCommentChanged("hello")
             coEvery { commentRepository.saveComment(DISCUSSION_ID, "hello") } returns
                 NetworkResult.Success(Unit)
@@ -162,11 +162,11 @@ class CommentCreateViewModelTest {
     fun `Create - submitComment 실패 시 ShowError`() =
         runTest {
             // given
-            newVmCreate()
+            loadCommentCreateViewModelCreate()
             commentCreateViewModel.onCommentChanged("hello")
-            val ex = TodokTodokExceptions.EmptyBodyException
+            val exception = TodokTodokExceptions.EmptyBodyException
             coEvery { commentRepository.saveComment(DISCUSSION_ID, "hello") } returns
-                NetworkResult.Failure(ex)
+                NetworkResult.Failure(exception)
 
             // when
             commentCreateViewModel.submitComment()
@@ -174,14 +174,14 @@ class CommentCreateViewModelTest {
             val event = commentCreateViewModel.uiEvent.getOrAwaitValue()
 
             // then
-            assertThat(event).isEqualTo(CommentCreateUiEvent.ShowError(ex))
+            assertThat(event).isEqualTo(CommentCreateUiEvent.ShowError(exception))
         }
 
     @Test
     fun `Update - submitComment 성공 시 SubmitComment`() =
         runTest {
             // given
-            newVmUpdate()
+            loadCommentCreateViewModelUpdate()
             commentCreateViewModel.onCommentChanged("edited")
             coEvery { commentRepository.updateComment(DISCUSSION_ID, COMMENT_ID, "edited") } returns
                 NetworkResult.Success(Unit)
@@ -202,11 +202,11 @@ class CommentCreateViewModelTest {
     fun `Update - submitComment 실패 시 ShowError`() =
         runTest {
             // given
-            newVmUpdate()
+            loadCommentCreateViewModelUpdate()
             commentCreateViewModel.onCommentChanged("edited")
-            val ex = TodokTodokExceptions.EmptyBodyException
+            val exception = TodokTodokExceptions.EmptyBodyException
             coEvery { commentRepository.updateComment(DISCUSSION_ID, COMMENT_ID, "edited") } returns
-                NetworkResult.Failure(ex)
+                NetworkResult.Failure(exception)
 
             // when
             commentCreateViewModel.submitComment()
@@ -214,14 +214,14 @@ class CommentCreateViewModelTest {
             val event = commentCreateViewModel.uiEvent.getOrAwaitValue()
 
             // then
-            assertThat(event).isEqualTo(CommentCreateUiEvent.ShowError(ex))
+            assertThat(event).isEqualTo(CommentCreateUiEvent.ShowError(exception))
         }
 
     @Test
     fun `Create - saveContent는 OnCreateDismiss 이벤트`() =
         runTest {
             // given
-            newVmCreate()
+            loadCommentCreateViewModelCreate()
             commentCreateViewModel.onCommentChanged("temp")
 
             // when

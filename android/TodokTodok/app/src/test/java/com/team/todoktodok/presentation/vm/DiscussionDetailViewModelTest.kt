@@ -122,19 +122,19 @@ class DiscussionDetailViewModelTest {
     @Test
     fun `토론방 신고 실패 시 에러 이벤트와 isLoading false로 내린다`() =
         runTest {
-            val ex = TodokTodokExceptions.EmptyBodyException
+            val exception = TodokTodokExceptions.EmptyBodyException
             coEvery {
                 discussionRepository.reportDiscussion(
                     DISCUSSION_ID,
                     any(),
                 )
-            } returns NetworkResult.Failure(ex)
+            } returns NetworkResult.Failure(exception)
 
             discussionDetailViewModel.reportDiscussion("사유")
             advanceUntilIdle()
             val event = discussionDetailViewModel.uiEvent.getOrAwaitValue()
 
-            assertThat(event).isEqualTo(DiscussionDetailUiEvent.ShowErrorMessage(ex))
+            assertThat(event).isEqualTo(DiscussionDetailUiEvent.ShowErrorMessage(exception))
             assertFalse(discussionDetailViewModel.uiState.getOrAwaitValue().isLoading)
         }
 
@@ -160,17 +160,17 @@ class DiscussionDetailViewModelTest {
     @Test
     fun `토론방 삭제 실패 시 에러 이벤트와 isLoading false로 내린다`() =
         runTest {
-            val ex = TodokTodokExceptions.EmptyBodyException
+            val exception = TodokTodokExceptions.EmptyBodyException
             coEvery { discussionRepository.deleteDiscussion(DISCUSSION_ID) } returns
                 NetworkResult.Failure(
-                    ex,
+                    exception,
                 )
 
             discussionDetailViewModel.deleteDiscussion()
             advanceUntilIdle()
             val event = discussionDetailViewModel.uiEvent.getOrAwaitValue()
 
-            assertThat(event).isEqualTo(DiscussionDetailUiEvent.ShowErrorMessage(ex))
+            assertThat(event).isEqualTo(DiscussionDetailUiEvent.ShowErrorMessage(exception))
             assertFalse(discussionDetailViewModel.uiState.getOrAwaitValue().isLoading)
         }
 

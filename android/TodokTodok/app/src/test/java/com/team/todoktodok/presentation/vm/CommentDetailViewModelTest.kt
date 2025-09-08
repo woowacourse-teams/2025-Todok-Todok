@@ -42,7 +42,7 @@ class CommentDetailViewModelTest {
 
     private lateinit var commentDetailViewModel: CommentDetailViewModel
 
-    private fun newVm(
+    private fun loadViewModel(
         discussionId: Long = DISCUSSION_ID,
         commentId: Long = COMMENT_ID,
     ) {
@@ -91,7 +91,7 @@ class CommentDetailViewModelTest {
                 )
             } returns NetworkResult.Success(listOf(replyMe, replyOther))
 
-            newVm(DISCUSSION_ID, COMMENT_ID)
+            loadViewModel(DISCUSSION_ID, COMMENT_ID)
             advanceUntilIdle()
 
             // then
@@ -108,13 +108,13 @@ class CommentDetailViewModelTest {
     fun `init 실패(댓글 로드 실패) - 에러 이벤트 방출, isLoading false`() =
         runTest {
             // given
-            val ex = TodokTodokExceptions.EmptyBodyException
+            val exception = TodokTodokExceptions.EmptyBodyException
             coEvery {
                 commentRepository.getComment(
                     DISCUSSION_ID,
                     COMMENT_ID,
                 )
-            } returns NetworkResult.Failure(ex)
+            } returns NetworkResult.Failure(exception)
             coEvery {
                 replyRepository.getReplies(
                     DISCUSSION_ID,
@@ -122,12 +122,12 @@ class CommentDetailViewModelTest {
                 )
             } returns NetworkResult.Success(emptyList())
 
-            newVm(DISCUSSION_ID, COMMENT_ID)
+            loadViewModel(DISCUSSION_ID, COMMENT_ID)
             advanceUntilIdle()
             val event = commentDetailViewModel.uiEvent.getOrAwaitValue()
 
             // then
-            assertEquals(CommentDetailUiEvent.ShowError(ex), event)
+            assertEquals(CommentDetailUiEvent.ShowError(exception), event)
             assertFalse(commentDetailViewModel.uiState.getOrAwaitValue().isLoading)
         }
 
@@ -154,7 +154,7 @@ class CommentDetailViewModelTest {
                 )
             } returns NetworkResult.Success(listOf(replyOther))
 
-            newVm(DISCUSSION_ID, COMMENT_ID)
+            loadViewModel(DISCUSSION_ID, COMMENT_ID)
 
             commentDetailViewModel.reloadComment()
             advanceUntilIdle()
@@ -185,7 +185,7 @@ class CommentDetailViewModelTest {
                 )
             } returns NetworkResult.Success(emptyList())
 
-            newVm(DISCUSSION_ID, COMMENT_ID)
+            loadViewModel(DISCUSSION_ID, COMMENT_ID)
 
             // when
             commentDetailViewModel.updateContent("hello")
@@ -221,7 +221,7 @@ class CommentDetailViewModelTest {
                 )
             } returns NetworkResult.Success(LikeStatus.LIKE)
 
-            newVm(DISCUSSION_ID, COMMENT_ID)
+            loadViewModel(DISCUSSION_ID, COMMENT_ID)
 
             // when
             commentDetailViewModel.toggleCommentLike()
@@ -260,7 +260,7 @@ class CommentDetailViewModelTest {
                 )
             } returns NetworkResult.Success(Unit)
 
-            newVm(DISCUSSION_ID, COMMENT_ID)
+            loadViewModel(DISCUSSION_ID, COMMENT_ID)
 
             // when
             commentDetailViewModel.deleteReply(1L)
@@ -291,15 +291,15 @@ class CommentDetailViewModelTest {
                     COMMENT_ID,
                 )
             } returns NetworkResult.Success(emptyList())
-            val ex = TodokTodokExceptions.EmptyBodyException
+            val exception = TodokTodokExceptions.EmptyBodyException
             coEvery {
                 commentRepository.deleteComment(
                     DISCUSSION_ID,
                     COMMENT_ID,
                 )
-            } returns NetworkResult.Failure(ex)
+            } returns NetworkResult.Failure(exception)
 
-            newVm(DISCUSSION_ID, COMMENT_ID)
+            loadViewModel(DISCUSSION_ID, COMMENT_ID)
 
             // when
             commentDetailViewModel.deleteComment()
@@ -307,7 +307,7 @@ class CommentDetailViewModelTest {
             val event = commentDetailViewModel.uiEvent.getOrAwaitValue()
 
             // then
-            assertEquals(CommentDetailUiEvent.ShowError(ex), event)
+            assertEquals(CommentDetailUiEvent.ShowError(exception), event)
             assertFalse(commentDetailViewModel.uiState.getOrAwaitValue().isLoading)
         }
 
@@ -337,7 +337,7 @@ class CommentDetailViewModelTest {
                 )
             } returns NetworkResult.Success(Unit)
 
-            newVm(DISCUSSION_ID, COMMENT_ID)
+            loadViewModel(DISCUSSION_ID, COMMENT_ID)
 
             // when
             commentDetailViewModel.reportComment("스팸")
@@ -367,7 +367,7 @@ class CommentDetailViewModelTest {
                 )
             } returns NetworkResult.Success(emptyList())
 
-            newVm(DISCUSSION_ID, COMMENT_ID)
+            loadViewModel(DISCUSSION_ID, COMMENT_ID)
 
             // when
             commentDetailViewModel.updateContent("draft")
