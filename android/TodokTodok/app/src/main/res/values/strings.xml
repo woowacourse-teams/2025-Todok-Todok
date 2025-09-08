@@ -54,6 +54,7 @@
     <string name="content_description_discussion_detail_user_profile">토론방 유저 이미지 버튼</string>
     <string name="comment_input_hint">댓글 입력</string>
     <string name="content_description_add_comment">댓글을 추가합니다</string>
+    <string name="reply_input_hint">대댓글 입력</string>
 
     <!-- 내 서재 페이지 -->
     <string name="content_description_navigate_to_book_search">도서 검색 화면으로 이동합니다</string>

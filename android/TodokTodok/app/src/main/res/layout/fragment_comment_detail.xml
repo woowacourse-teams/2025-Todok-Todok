@@ -60,7 +60,7 @@
         android:paddingStart="10dp"
         android:paddingTop="@dimen/space_4"
         android:paddingBottom="2dp"
-        android:text="@string/comment_input_hint"
+        android:text="@string/reply_input_hint"
         android:textColor="@color/gray_76"
         android:textSize="@dimen/font_size_large"
         app:layout_constraintBottom_toBottomOf="parent" />
