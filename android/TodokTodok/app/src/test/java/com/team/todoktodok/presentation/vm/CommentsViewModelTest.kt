@@ -35,22 +35,28 @@ class CommentsViewModelTest {
 
     @BeforeEach
     fun setUp() {
+        // given
         commentRepository = mockk(relaxed = true)
         tokenRepository = mockk(relaxed = true)
-
         coEvery { tokenRepository.getMemberId() } returns ME
         coEvery { commentRepository.getCommentsByDiscussionId(DISCUSSION_ID) } returns
             NetworkResult.Success(COMMENTS)
 
+        // when
         val state = SavedStateHandle(mapOf(CommentsViewModel.KEY_DISCUSSION_ID to DISCUSSION_ID))
         commentsViewModel = CommentsViewModel(state, commentRepository, tokenRepository)
+
+        // then (생성 완료가 준비 상태)
     }
 
     @Test
     fun `초기 로드 성공시 comments 채워지고 isLoading=false`() =
         runTest {
+            // when
             val state = commentsViewModel.uiState.getOrAwaitValue()
             advanceUntilIdle()
+
+            // then
             assertFalse(state.isLoading)
             assertThat(state.comments.map { it.comment.id }).containsExactly(1L, 2L, 3L, 4L, 5L)
         }
@@ -58,30 +64,30 @@ class CommentsViewModelTest {
     @Test
     fun `showNewComment는 목록 재로딩 후 이벤트 발생`() =
         runTest {
+            // when
             commentsViewModel.showNewComment()
             val event = commentsViewModel.uiEvent.getOrAwaitValue()
+
+            // then
             assertThat(event).isEqualTo(CommentsUiEvent.ShowNewComment)
         }
 
     @Test
     fun `toggleLike 성공 시 해당 코멘트만 재로딩되어 갱신`() =
         runTest {
+            // given
             coEvery { commentRepository.toggleLike(DISCUSSION_ID, 1L) } returns
-                NetworkResult.Success(
-                    LikeStatus.LIKE,
-                )
+                NetworkResult.Success(LikeStatus.LIKE)
             val updatedComment = COMMENTS[0].copy(isLikedByMe = true, likeCount = 1)
-            coEvery {
-                commentRepository.getComment(
-                    DISCUSSION_ID,
-                    1L,
-                )
-            } returns NetworkResult.Success(updatedComment)
+            coEvery { commentRepository.getComment(DISCUSSION_ID, 1L) } returns
+                NetworkResult.Success(updatedComment)
 
+            // when
             commentsViewModel.toggleLike(1L)
             advanceUntilIdle()
-
             val state = commentsViewModel.uiState.getOrAwaitValue()
+
+            // then
             val updated = state.comments.first { it.comment.id == 1L }.comment
             assertTrue(updated.isLikedByMe)
             assertThat(updated.likeCount).isEqualTo(1)
@@ -92,6 +98,7 @@ class CommentsViewModelTest {
     @Test
     fun `deleteComment 성공 시 목록 재로딩되고 DeleteComment 이벤트 발생`() =
         runTest {
+            // given
             coEvery {
                 commentRepository.deleteComment(
                     DISCUSSION_ID,
@@ -99,14 +106,15 @@ class CommentsViewModelTest {
                 )
             } returns NetworkResult.Success(Unit)
             coEvery { commentRepository.getCommentsByDiscussionId(DISCUSSION_ID) } returns
-                NetworkResult.Success(
-                    COMMENTS.minus(COMMENTS[1]),
-                )
+                NetworkResult.Success(COMMENTS.minus(COMMENTS[1]))
 
+            // when
             commentsViewModel.deleteComment(2L)
             advanceUntilIdle()
             val event = commentsViewModel.uiEvent.getOrAwaitValue()
             val state = commentsViewModel.uiState.getOrAwaitValue()
+
+            // then
             assertThat(event).isEqualTo(CommentsUiEvent.DeleteComment)
             assertThat(state.comments.map { it.comment.id }).containsExactly(1L, 3L, 4L, 5L)
         }
@@ -114,16 +122,22 @@ class CommentsViewModelTest {
     @Test
     fun `updateComment는 ShowCommentUpdate 이벤트 발생`() =
         runTest {
+            // given
             val expected = CommentsUiEvent.ShowCommentUpdate(DISCUSSION_ID, 1L, "edit")
+
+            // when
             commentsViewModel.updateComment(commentId = 1L, content = "edit")
             advanceUntilIdle()
             val event = commentsViewModel.uiEvent.getOrAwaitValue()
+
+            // then
             assertThat(event).isEqualTo(expected)
         }
 
     @Test
     fun `report 성공 시 성공 메시지 이벤트`() =
         runTest {
+            // given
             coEvery {
                 commentRepository.report(
                     DISCUSSION_ID,
@@ -132,27 +146,28 @@ class CommentsViewModelTest {
                 )
             } returns NetworkResult.Success(Unit)
 
+            // when
             commentsViewModel.reportComment(2L, "스팸")
             val event = commentsViewModel.uiEvent.getOrAwaitValue()
             advanceUntilIdle()
+
+            // then
             assertThat(event).isEqualTo(CommentsUiEvent.ShowReportCommentSuccessMessage)
         }
 
     @Test
     fun `report 실패 시 에러 이벤트와 isLoading=false`() =
         runTest {
+            // given
             val exception = TodokTodokExceptions.EmptyBodyException
-            coEvery {
-                commentRepository.report(
-                    DISCUSSION_ID,
-                    2L,
-                    any(),
-                )
-            } returns NetworkResult.Failure(exception)
+            coEvery { commentRepository.report(DISCUSSION_ID, 2L, any()) } returns
+                NetworkResult.Failure(exception)
 
+            // when
             commentsViewModel.reportComment(2L, "사유")
             val observed = async { commentsViewModel.uiEvent.getOrAwaitValue() }
 
+            // then
             assertThat(observed.await()).isEqualTo(CommentsUiEvent.ShowError(exception))
             assertFalse(commentsViewModel.uiState.getOrAwaitValue().isLoading)
         }
@@ -160,11 +175,15 @@ class CommentsViewModelTest {
     @Test
     fun `showCommentCreate는 현재 입력값과 함께 이벤트 발생`() =
         runTest {
+            // given
             commentsViewModel.updateCommentContent("hello")
+
+            // when
             commentsViewModel.showCommentCreate()
             val event = commentsViewModel.uiEvent.getOrAwaitValue()
             advanceUntilIdle()
 
+            // then
             assertThat(event).isEqualTo(
                 CommentsUiEvent.ShowCommentCreate(discussionId = DISCUSSION_ID, content = "hello"),
             )
@@ -173,27 +192,29 @@ class CommentsViewModelTest {
     @Test
     fun `updateCommentContent는 uiState commentContent를 갱신`() =
         runTest {
+            // when
             commentsViewModel.updateCommentContent("abc")
             val state = commentsViewModel.uiState.getOrAwaitValue()
+
+            // then
             assertThat(state.commentContent).isEqualTo("abc")
         }
 
     @Test
     fun `초기 로드 실패 시 에러 이벤트와 isLoading=false`() =
         runTest {
+            // given
             val exception = TodokTodokExceptions.EmptyBodyException
             coEvery { commentRepository.getCommentsByDiscussionId(DISCUSSION_ID) } returns
-                NetworkResult.Failure(
-                    exception,
-                )
+                NetworkResult.Failure(exception)
 
-            val state =
-                SavedStateHandle(mapOf(CommentsViewModel.KEY_DISCUSSION_ID to DISCUSSION_ID))
+            // when
+            val state = SavedStateHandle(mapOf(CommentsViewModel.KEY_DISCUSSION_ID to DISCUSSION_ID))
             val failedViewModel = CommentsViewModel(state, commentRepository, tokenRepository)
-
             val event = failedViewModel.uiEvent.getOrAwaitValue()
             advanceUntilIdle()
 
+            // then
             assertThat(event).isEqualTo(CommentsUiEvent.ShowError(exception))
             assertFalse(failedViewModel.uiState.getOrAwaitValue().isLoading)
         }

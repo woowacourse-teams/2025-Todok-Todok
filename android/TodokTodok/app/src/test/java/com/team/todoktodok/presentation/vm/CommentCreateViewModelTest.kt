@@ -131,11 +131,18 @@ class CommentCreateViewModelTest {
     @Test
     fun `onCommentChanged는 commentText 갱신`() =
         runTest {
-            // when + then
+            // when
             commentCreateViewModel.onCommentChanged("abc")
+            // then
             assertThat(commentCreateViewModel.commentText.getOrAwaitValue()).isEqualTo("abc")
+        }
 
+    @Test
+    fun `onCommentChanged는 commentText null로 갱신`() =
+        runTest {
+            // when
             commentCreateViewModel.onCommentChanged(null)
+            // then
             assertThat(commentCreateViewModel.commentText.getOrAwaitValue()).isEqualTo("")
         }
 

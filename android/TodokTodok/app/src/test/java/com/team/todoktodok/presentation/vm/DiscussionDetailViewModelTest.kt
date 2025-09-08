@@ -33,145 +33,154 @@ class DiscussionDetailViewModelTest {
 
     @BeforeEach
     fun setUp() {
+        // given
         val state = SavedStateHandle(mapOf(KEY_DISCUSSION_ID to DISCUSSION_ID))
-
         tokenRepository = mockk(relaxed = true)
         coEvery { tokenRepository.getMemberId() } returns WRITER_ID
-
         discussionRepository = mockk(relaxed = true)
         coEvery { discussionRepository.getDiscussion(DISCUSSION_ID) } returns
             NetworkResult.Success(DISCUSSIONS.first())
 
+        // when
         discussionDetailViewModel =
             DiscussionDetailViewModel(
                 state,
                 discussionRepository,
                 tokenRepository,
             )
+
+        // then (no-op: 생성 성공이 곧 준비 완료)
     }
 
     @Test
     fun `저장소에서 불러온 토론방을 가진다`() =
         runTest {
+            // given
             val expected =
                 (discussionRepository.getDiscussion(DISCUSSION_ID) as NetworkResult.Success).data
+
+            // when
             advanceUntilIdle()
 
+            // then
             assertThat(
-                discussionDetailViewModel.uiState
-                    .getOrAwaitValue()
-                    .discussion,
-            ).isEqualTo(
-                expected,
-            )
+                discussionDetailViewModel.uiState.getOrAwaitValue().discussion,
+            ).isEqualTo(expected)
         }
 
     @Test
     fun `토론방 수정 이벤트를 발생시킨다`() =
         runTest {
+            // given
             val expected = DiscussionDetailUiEvent.UpdateDiscussion(DISCUSSION_ID)
 
+            // when
             discussionDetailViewModel.updateDiscussion()
             advanceUntilIdle()
             val event = discussionDetailViewModel.uiEvent.getOrAwaitValue()
 
+            // then
             assertThat(event).isEqualTo(expected)
         }
 
     @Test
     fun `댓글 보기 이벤트를 발생시킨다`() =
         runTest {
+            // given
             val expected = DiscussionDetailUiEvent.ShowComments(DISCUSSION_ID)
 
+            // when
             discussionDetailViewModel.showComments()
             advanceUntilIdle()
             val event = discussionDetailViewModel.uiEvent.getOrAwaitValue()
 
+            // then
             assertThat(event).isEqualTo(expected)
         }
 
     @Test
     fun `프로필 이동 이벤트를 발생시킨다`() =
         runTest {
+            // given
             val expected = DiscussionDetailUiEvent.NavigateToProfile(WRITER_ID)
 
+            // when
             discussionDetailViewModel.navigateToProfile()
             advanceUntilIdle()
             val event = discussionDetailViewModel.uiEvent.getOrAwaitValue()
 
+            // then
             assertThat(event).isEqualTo(expected)
         }
 
     @Test
     fun `토론방 신고 성공 시 성공 메시지 이벤트를 발생시킨다`() =
         runTest {
-            coEvery {
-                discussionRepository.reportDiscussion(
-                    DISCUSSION_ID,
-                    any(),
-                )
-            } returns NetworkResult.Success(Unit)
+            // given
+            coEvery { discussionRepository.reportDiscussion(DISCUSSION_ID, any()) } returns
+                NetworkResult.Success(Unit)
 
+            // when
             discussionDetailViewModel.reportDiscussion("스팸")
             advanceUntilIdle()
             val event = discussionDetailViewModel.uiEvent.getOrAwaitValue()
 
+            // then
             assertThat(event).isEqualTo(DiscussionDetailUiEvent.ShowReportDiscussionSuccessMessage)
         }
 
     @Test
     fun `토론방 신고 실패 시 에러 이벤트와 isLoading false로 내린다`() =
         runTest {
+            // given
             val exception = TodokTodokExceptions.EmptyBodyException
-            coEvery {
-                discussionRepository.reportDiscussion(
-                    DISCUSSION_ID,
-                    any(),
-                )
-            } returns NetworkResult.Failure(exception)
+            coEvery { discussionRepository.reportDiscussion(DISCUSSION_ID, any()) } returns
+                NetworkResult.Failure(exception)
 
+            // when
             discussionDetailViewModel.reportDiscussion("사유")
             advanceUntilIdle()
             val event = discussionDetailViewModel.uiEvent.getOrAwaitValue()
+            val uiState = discussionDetailViewModel.uiState.getOrAwaitValue()
 
+            // then
             assertThat(event).isEqualTo(DiscussionDetailUiEvent.ShowErrorMessage(exception))
-            assertFalse(discussionDetailViewModel.uiState.getOrAwaitValue().isLoading)
+            assertFalse(uiState.isLoading)
         }
 
     @Test
     fun `토론방 삭제 성공 시 삭제 이벤트를 발생시킨다`() =
         runTest {
+            // given
             coEvery { discussionRepository.deleteDiscussion(DISCUSSION_ID) } returns
-                NetworkResult.Success(
-                    Unit,
-                )
+                NetworkResult.Success(Unit)
 
+            // when
             discussionDetailViewModel.deleteDiscussion()
             advanceUntilIdle()
             val event = discussionDetailViewModel.uiEvent.getOrAwaitValue()
 
-            assertThat(event).isEqualTo(
-                DiscussionDetailUiEvent.DeleteDiscussion(
-                    DISCUSSION_ID,
-                ),
-            )
+            // then
+            assertThat(event).isEqualTo(DiscussionDetailUiEvent.DeleteDiscussion(DISCUSSION_ID))
         }
 
     @Test
     fun `토론방 삭제 실패 시 에러 이벤트와 isLoading false로 내린다`() =
         runTest {
+            // given
             val exception = TodokTodokExceptions.EmptyBodyException
             coEvery { discussionRepository.deleteDiscussion(DISCUSSION_ID) } returns
-                NetworkResult.Failure(
-                    exception,
-                )
+                NetworkResult.Failure(exception)
 
+            // when
             discussionDetailViewModel.deleteDiscussion()
             advanceUntilIdle()
             val event = discussionDetailViewModel.uiEvent.getOrAwaitValue()
+            val uiState = discussionDetailViewModel.uiState.getOrAwaitValue()
 
+            // then
             assertThat(event).isEqualTo(DiscussionDetailUiEvent.ShowErrorMessage(exception))
-            assertFalse(discussionDetailViewModel.uiState.getOrAwaitValue().isLoading)
+            assertFalse(uiState.isLoading)
         }
 
     companion object {
