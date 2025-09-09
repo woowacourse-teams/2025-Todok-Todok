@@ -6,6 +6,10 @@ spring:
       - submodule/security/aladin.yml
       - submodule/security/jwt.yml
       - submodule/security/aws.yml
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
 
 aladin:
   base-url: ${aladin.base-url}
@@ -27,3 +31,4 @@ cloud:
     s3:
       bucket: ${cloud.aws.s3.bucket}
       key-prefix: ${cloud.aws.s3.key-prefix}
+      region: ${cloud.aws.s3.region}
