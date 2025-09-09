@@ -314,7 +314,7 @@ public class MemberCommandService {
 
     private void validateProfileImageType(final Member member, final MultipartFile profileImage) {
         final String contentType = profileImage.getContentType();
-        if (!(contentType.contains(PNG) && contentType.contains(JPG) && contentType.contains(JPEG))) {
+        if (!(contentType.contains(PNG) || contentType.contains(JPG) || contentType.contains(JPEG))) {
             throw new IllegalArgumentException(
                     String.format("이미지 파일이 아닙니다: memberId = %s, contentType = %s", member.getId(), contentType)
             );
