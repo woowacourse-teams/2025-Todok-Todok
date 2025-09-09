@@ -8,7 +8,7 @@ import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.S3Exception;
-import todoktodok.backend.member.application.dto.request.ProfileImageRequest;
+import todoktodok.backend.member.application.dto.response.ProfileImageResponse;
 import todoktodok.backend.member.infrastructure.exception.AwsApiException;
 
 public class S3ImageUploadClient {
@@ -30,7 +30,7 @@ public class S3ImageUploadClient {
         this.keyPrefix = keyPrefix;
     }
 
-    public ProfileImageRequest uploadImage(final MultipartFile file) {
+    public ProfileImageResponse uploadImage(final MultipartFile file) {
         try {
             final String key = keyPrefix + UUID.randomUUID();
             final PutObjectRequest putObj = PutObjectRequest.builder()
@@ -42,7 +42,7 @@ public class S3ImageUploadClient {
 
             final String downloadUrl = "https://" + bucketName + ".s3." + region.id() + ".amazonaws.com/" + key;
 
-            return new ProfileImageRequest(key, downloadUrl);
+            return new ProfileImageResponse(downloadUrl);
         } catch (final S3Exception e) { // S3 API 서버 측 오류
             throw new AwsApiException(e.getMessage());
         } catch (final SdkClientException e) { // AWS 입장에서 클라이언트 측(==우리 서버)에서 발생한 오류
