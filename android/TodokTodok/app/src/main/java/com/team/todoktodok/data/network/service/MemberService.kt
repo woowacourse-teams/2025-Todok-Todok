@@ -20,8 +20,6 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface MemberService {
-    @POST("v1/refresh")
-    suspend fun refresh(): NetworkResult<Unit>
 
     @POST("v1/members/login")
     suspend fun login(

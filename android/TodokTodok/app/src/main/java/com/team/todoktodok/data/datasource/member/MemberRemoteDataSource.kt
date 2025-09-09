@@ -13,7 +13,6 @@ import com.team.todoktodok.data.network.response.discussion.BookResponse
 import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
 
 interface MemberRemoteDataSource {
-    suspend fun refresh(): NetworkResult<Unit>
 
     suspend fun login(request: String): NetworkResult<MemberType>
 

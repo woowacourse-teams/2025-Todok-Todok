@@ -23,8 +23,6 @@ class DefaultMemberRemoteDataSource(
     private val memberService: MemberService,
     private val tokenDataSource: TokenDataSource,
 ) : MemberRemoteDataSource {
-    override suspend fun refresh(): NetworkResult<Unit> = memberService.refresh()
-
     override suspend fun login(request: String): NetworkResult<MemberType> =
         runCatching {
             val response = memberService.login(LoginRequest(request))
@@ -60,7 +58,7 @@ class DefaultMemberRemoteDataSource(
         refreshToken: String,
     ) {
         val memberId = parser.parseToMemberId()
-        tokenDataSource.saveToken(accessToken, refreshToken, memberId)
+        tokenDataSource.saveSetting(accessToken, refreshToken, memberId)
     }
 
     override suspend fun fetchProfile(request: MemberId): NetworkResult<ProfileResponse> {
