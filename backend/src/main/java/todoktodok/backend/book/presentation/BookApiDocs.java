@@ -77,14 +77,14 @@ public interface BookApiDocs {
                             )
                     )),
             @ApiResponse(
-                    responseCode = "403",
+                    responseCode = "401",
                     description = "액세스 토큰 만료 오류",
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class),
                             examples = @ExampleObject(
                                     name = "액세스 토큰 만료 오류",
-                                    value = "{\"code\":403, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
+                                    value = "{\"code\":401, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
                             )
                     )),
             @ApiResponse(
@@ -173,14 +173,14 @@ public interface BookApiDocs {
                             )
                     )),
             @ApiResponse(
-                    responseCode = "403",
+                    responseCode = "401",
                     description = "액세스 토큰 만료 오류",
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class),
                             examples = @ExampleObject(
                                     name = "액세스 토큰 만료 오류",
-                                    value = "{\"code\":403, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
+                                    value = "{\"code\":401, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
                             )
                     )),
             @ApiResponse(
