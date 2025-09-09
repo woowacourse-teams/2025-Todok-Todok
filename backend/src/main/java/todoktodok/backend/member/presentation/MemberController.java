@@ -165,7 +165,7 @@ public class MemberController implements MemberApiDocs {
     @PatchMapping("/profile/image")
     public ResponseEntity<ProfileImageUpdateResponse> updateProfileImage(
             @LoginMember final Long memberId,
-            @RequestPart final MultipartFile profileImage
+            @RequestPart("profileImage") final MultipartFile profileImage
     ) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(memberCommandService.updateProfileImage(memberId, profileImage));
