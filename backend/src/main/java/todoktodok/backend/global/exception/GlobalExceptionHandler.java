@@ -129,7 +129,7 @@ public class GlobalExceptionHandler {
         log.error(PREFIX + e.getMessage());
 
         return ResponseEntity.status(status)
-                .body(new ErrorResponse(status.value(), PREFIX + getSafeErrorMessage(e)));
+                .body(new ErrorResponse(status.value(), PREFIX + "AWS 처리 중 오류가 발생했습니다"));
     }
 
     private String toSafeLogValue(
