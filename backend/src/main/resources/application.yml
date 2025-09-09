@@ -5,6 +5,7 @@ spring:
     import:
       - submodule/security/aladin.yml
       - submodule/security/jwt.yml
+      - submodule/security/aws.yml
 
 aladin:
   base-url: ${aladin.base-url}
@@ -20,3 +21,9 @@ jwt:
     expire-mills: ${jwt.refresh-token.expire-mills}
   temp-token:
     expire-mills: ${jwt.temp-token.expire-mills}
+
+cloud:
+  aws:
+    s3:
+      bucket: ${cloud.aws.s3.bucket}
+      key-prefix: ${cloud.aws.s3.key-prefix}
