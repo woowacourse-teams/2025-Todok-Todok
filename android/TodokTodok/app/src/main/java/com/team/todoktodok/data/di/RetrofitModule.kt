@@ -24,4 +24,6 @@ class RetrofitModule(
             .addCallAdapterFactory(TodokTodokCallAdapterFactory())
             .addConverterFactory(json.asConverterFactory(contentType))
             .build()
+
+    fun <T> createService(serviceClass: Class<T>): T = instance.create(serviceClass)
 }

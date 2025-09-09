@@ -10,22 +10,22 @@ class ServiceModule(
     retrofit: RetrofitModule,
 ) {
     val discussionService: DiscussionService by lazy {
-        retrofit.instance.create(DiscussionService::class.java)
+        retrofit.createService(DiscussionService::class.java)
     }
 
     val memberService: MemberService by lazy {
-        retrofit.instance.create(MemberService::class.java)
+        retrofit.createService(MemberService::class.java)
     }
 
     val commentService: CommentService by lazy {
-        retrofit.instance.create(CommentService::class.java)
+        retrofit.createService(CommentService::class.java)
     }
 
     val bookService: BookService by lazy {
-        retrofit.instance.create(BookService::class.java)
+        retrofit.createService(BookService::class.java)
     }
 
     val replyService: ReplyService by lazy {
-        retrofit.instance.create(ReplyService::class.java)
+        retrofit.createService(ReplyService::class.java)
     }
 }
