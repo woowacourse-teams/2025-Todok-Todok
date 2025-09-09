@@ -9,13 +9,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import todoktodok.backend.book.application.dto.response.BookResponse;
 import todoktodok.backend.discussion.application.dto.response.DiscussionResponse;
 import todoktodok.backend.global.auth.Auth;
@@ -28,6 +31,7 @@ import todoktodok.backend.member.application.dto.request.ProfileUpdateRequest;
 import todoktodok.backend.member.application.dto.request.RefreshTokenRequest;
 import todoktodok.backend.member.application.dto.request.SignupRequest;
 import todoktodok.backend.member.application.dto.response.BlockMemberResponse;
+import todoktodok.backend.member.application.dto.response.ProfileImageUpdateResponse;
 import todoktodok.backend.member.application.dto.response.ProfileResponse;
 import todoktodok.backend.member.application.dto.response.ProfileUpdateResponse;
 import todoktodok.backend.member.application.dto.response.RefreshTokenResponse;
@@ -155,6 +159,16 @@ public class MemberController implements MemberApiDocs {
     ) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(memberCommandService.updateProfile(memberId, profileUpdateRequest));
+    }
+
+    @Auth(value = Role.USER)
+    @PatchMapping("/profile/image")
+    public ResponseEntity<ProfileImageUpdateResponse> updateProfileImage(
+            @LoginMember final Long memberId,
+            @RequestPart final MultipartFile profileImage
+    ) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(memberCommandService.updateProfileImage(memberId, profileImage));
     }
 
     @Auth(value = Role.USER)

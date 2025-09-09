@@ -8,7 +8,6 @@ import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.S3Exception;
-import todoktodok.backend.member.application.dto.response.ProfileImageResponse;
 import todoktodok.backend.member.infrastructure.exception.AwsApiException;
 
 public class S3ImageUploadClient {
