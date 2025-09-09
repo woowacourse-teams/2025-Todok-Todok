@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import todoktodok.backend.book.infrastructure.aladin.exception.AladinApiException;
+import todoktodok.backend.member.infrastructure.exception.AwsApiException;
 
 @Slf4j
 @RestControllerAdvice
@@ -123,6 +124,15 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(AladinApiException.class)
     public ResponseEntity<ErrorResponse> handleAladinApiException(final AladinApiException e) {
+        final HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+        log.error(PREFIX + e.getMessage());
+
+        return ResponseEntity.status(status)
+                .body(new ErrorResponse(status.value(), PREFIX + getSafeErrorMessage(e)));
+    }
+
+    @ExceptionHandler(AwsApiException.class)
+    public ResponseEntity<ErrorResponse> handleAwsApiException(final AwsApiException e) {
         final HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
         log.error(PREFIX + e.getMessage());
 
