@@ -29,14 +29,6 @@ public class GlobalExceptionHandler {
                 .body(new ErrorResponse(status.value(), PREFIX + e.getMessage()));
     }
 
-    @ExceptionHandler(SecurityException.class)
-    public ResponseEntity<ErrorResponse> handleSecurityException(final SecurityException e) {
-        final HttpStatus status = HttpStatus.FORBIDDEN;
-
-        return ResponseEntity.status(status)
-                .body(new ErrorResponse(status.value(), PREFIX + getSafeErrorMessage(e)));
-    }
-
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponse> handleBadRequestException(final IllegalArgumentException e) {
         final HttpStatus status = HttpStatus.BAD_REQUEST;
