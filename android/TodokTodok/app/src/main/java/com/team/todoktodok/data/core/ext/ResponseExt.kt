@@ -4,11 +4,14 @@ import com.team.domain.model.exception.NetworkResult
 import com.team.domain.model.exception.TodokTodokExceptions
 import com.team.todoktodok.data.network.auth.AuthInterceptor.Companion.AUTHORIZATION_NAME
 import com.team.todoktodok.data.network.model.LikeAction
+import com.team.todoktodok.data.network.response.LoginResponse
 import retrofit2.Response
 import java.net.HttpURLConnection.HTTP_CREATED
 import java.net.HttpURLConnection.HTTP_NO_CONTENT
 
-suspend fun <R, T> Response<T>.extractAccessToken(onTokenReceived: suspend (token: String) -> R): NetworkResult<R> {
+suspend fun <R> Response<LoginResponse>.extractAccessToken(
+    onTokenReceived: suspend (accessToken: String, refreshToken: String) -> R,
+): NetworkResult<R> {
     if (!isSuccessful) {
         return NetworkResult.Failure(TodokTodokExceptions.from(code(), message()))
     }
@@ -17,8 +20,13 @@ suspend fun <R, T> Response<T>.extractAccessToken(onTokenReceived: suspend (toke
         headers()[AUTHORIZATION_NAME]
             ?: return NetworkResult.Failure(TodokTodokExceptions.MissingLocationHeaderException)
 
+    val refreshToken = body()?.refreshToken
+
+    if (refreshToken.isNullOrBlank()) {
+        return NetworkResult.Failure(TodokTodokExceptions.RefreshTokenNotReceivedException)
+    }
     return runCatching {
-        NetworkResult.Success(onTokenReceived(accessToken))
+        NetworkResult.Success(onTokenReceived(accessToken, refreshToken))
     }.getOrElse {
         NetworkResult.Failure(TodokTodokExceptions.UnknownException(it))
     }

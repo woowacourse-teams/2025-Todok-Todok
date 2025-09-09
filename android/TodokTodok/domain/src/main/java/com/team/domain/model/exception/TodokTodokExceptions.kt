@@ -28,6 +28,8 @@ sealed class TodokTodokExceptions : Throwable() {
 
     data object CancellationException : TodokTodokExceptions()
 
+    data object RefreshTokenNotReceivedException : TodokTodokExceptions()
+
     /** 알 수 없는 예외 발생 */
     data class UnknownException(
         val e: Throwable?,

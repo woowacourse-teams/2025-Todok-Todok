@@ -67,6 +67,9 @@ class ExceptionMessageConverter {
             is TodokTodokExceptions.ConnectException ->
                 R.string.error_no_internet
 
+            TodokTodokExceptions.RefreshTokenNotReceivedException ->
+                R.string.error_refresh_token_not_received
+
             is TodokTodokExceptions.IOException ->
                 R.string.error_io_exception
 

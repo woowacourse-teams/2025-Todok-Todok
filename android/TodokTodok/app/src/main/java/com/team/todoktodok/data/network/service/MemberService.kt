@@ -6,6 +6,7 @@ import com.team.todoktodok.data.network.request.ModifyProfileRequest
 import com.team.todoktodok.data.network.request.ReportRequest
 import com.team.todoktodok.data.network.request.SignUpRequest
 import com.team.todoktodok.data.network.response.BlockedMemberResponse
+import com.team.todoktodok.data.network.response.LoginResponse
 import com.team.todoktodok.data.network.response.ProfileResponse
 import com.team.todoktodok.data.network.response.discussion.BookResponse
 import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
@@ -19,16 +20,19 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface MemberService {
+    @POST("v1/refresh")
+    suspend fun refresh(): NetworkResult<Unit>
+
     @POST("v1/members/login")
     suspend fun login(
         @Body requestBody: LoginRequest,
-    ): Response<Unit>
+    ): Response<LoginResponse>
 
     @POST("v1/members/signup")
     suspend fun signUp(
         @Query("memberEmail") request: String,
         @Body requestBody: SignUpRequest,
-    ): Response<Unit>
+    ): Response<LoginResponse>
 
     @GET("v1/members/{memberId}/profile")
     suspend fun fetchProfile(
