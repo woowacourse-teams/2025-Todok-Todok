@@ -1,4 +1,4 @@
 package todoktodok.backend.member.application.dto.response;
 
-public record ProfileImageUpdateResponse(String imageUrl) {
+public record ProfileImageUpdateResponse(String profileImage) {
 }
