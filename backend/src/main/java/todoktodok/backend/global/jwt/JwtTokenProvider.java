@@ -126,7 +126,7 @@ public class JwtTokenProvider {
             throw new JwtException(JWT_EXCEPTION_MESSAGE);
         } catch (final ExpiredJwtException e) {
             log.warn("Expired JWT token, 만료된 JWT access token 입니다");
-            throw new SecurityException(ACCESS_TOKEN_EXPIRED_MESSAGE);
+            throw new JwtException(ACCESS_TOKEN_EXPIRED_MESSAGE);
         } catch (final UnsupportedJwtException e) {
             log.warn("Unsupported JWT token, 지원되지 않는 JWT 토큰 입니다");
             throw new JwtException(JWT_EXCEPTION_MESSAGE);
