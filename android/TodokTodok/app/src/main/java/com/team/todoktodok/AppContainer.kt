@@ -8,10 +8,23 @@ import com.team.todoktodok.data.di.RepositoryModule
 import com.team.todoktodok.data.di.RetrofitModule
 import com.team.todoktodok.data.di.ServiceModule
 import com.team.todoktodok.data.network.auth.AuthInterceptor
+import com.team.todoktodok.data.network.auth.TokenAuthenticator
+import com.team.todoktodok.data.network.auth.TokenRefreshDelegate
+import com.team.todoktodok.data.network.auth.TokenRefreshDelegator
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
+import kotlin.getValue
 
 class AppContainer(
     context: Context,
 ) {
+    private val refreshTokenHandler: TokenRefreshDelegate by lazy {
+        TokenRefreshDelegator(
+            serviceModule.refreshService,
+            tokenDataSource,
+        )
+    }
+
     private val tokenDataSource: TokenDataSource by lazy {
         TokenDataSource(context)
     }
@@ -20,20 +33,27 @@ class AppContainer(
         AuthInterceptor(tokenDataSource)
     }
 
-    val retrofitModule: RetrofitModule by lazy {
+    val tokenAuthenticator: TokenAuthenticator by lazy {
+        TokenAuthenticator(
+            tokenRefreshDelegate = { refreshTokenHandler },
+            scope = CoroutineScope(SupervisorJob())
+        )
+    }
+
+    private val retrofitModule: RetrofitModule by lazy {
         RetrofitModule(okHttpModule)
     }
 
-    val serviceModule: ServiceModule by lazy {
+    private val serviceModule: ServiceModule by lazy {
         ServiceModule(retrofitModule)
     }
 
-    val dataSourceModule: DataSourceModule by lazy {
+    private val dataSourceModule: DataSourceModule by lazy {
         DataSourceModule(serviceModule, context)
     }
 
-    val okHttpModule: OkhttpModule by lazy {
-        OkhttpModule(authInterceptor)
+    private val okHttpModule: OkhttpModule by lazy {
+        OkhttpModule(tokenAuthenticator, authInterceptor)
     }
 
     val repositoryModule: RepositoryModule by lazy {

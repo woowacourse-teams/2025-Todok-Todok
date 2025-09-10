@@ -14,9 +14,23 @@ class TokenDataSource(
 
     suspend fun getAccessToken(): String = dataStore.data.first().accessToken
 
+    suspend fun getRefreshToken(): String = dataStore.data.first().refreshToken
+
     suspend fun getMemberId(): Long = dataStore.data.first().memberId
 
     suspend fun saveToken(
+        accessToken: String,
+        refreshToken: String,
+    ) {
+        dataStore.updateData {
+            it.copy(
+                accessToken,
+                refreshToken,
+            )
+        }
+    }
+
+    suspend fun saveSetting(
         accessToken: String,
         refreshToken: String,
         memberId: Long = TEMPORARY_MEMBER_ID,
