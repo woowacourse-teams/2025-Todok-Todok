@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import todoktodok.backend.global.jwt.JwtTokenProvider;
 import todoktodok.backend.global.jwt.TokenInfo;
+import todoktodok.backend.member.application.ImageType;
 import todoktodok.backend.member.application.dto.request.LoginRequest;
 import todoktodok.backend.member.application.dto.request.ProfileUpdateRequest;
 import todoktodok.backend.member.application.dto.request.RefreshTokenRequest;
@@ -34,9 +35,6 @@ import todoktodok.backend.member.infrastructure.S3ImageUploadClient;
 public class MemberCommandService {
 
     private static final long MAX_FILE_SIZE = 5 * 1024 * 1024;
-    private static final String PNG = "image/png";
-    private static final String JPG = "image/jpg";
-    private static final String JPEG = "image/jpeg";
 
     private final MemberRepository memberRepository;
     private final BlockRepository blockRepository;
@@ -326,7 +324,7 @@ public class MemberCommandService {
             final MultipartFile profileImage
     ) {
         final String contentType = profileImage.getContentType();
-        if (!(contentType.contains(PNG) || contentType.contains(JPG) || contentType.contains(JPEG))) {
+        if (!ImageType.contains(contentType)) {
             throw new IllegalArgumentException(
                     String.format("이미지 파일이 아닙니다: memberId = %s, contentType = %s", member.getId(), contentType)
             );
