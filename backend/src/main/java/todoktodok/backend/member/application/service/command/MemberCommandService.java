@@ -150,7 +150,10 @@ public class MemberCommandService {
         return new ProfileUpdateResponse(member);
     }
 
-    public ProfileImageUpdateResponse updateProfileImage(final Long memberId, final MultipartFile profileImage) {
+    public ProfileImageUpdateResponse updateProfileImage(
+            final Long memberId,
+            final MultipartFile profileImage
+    ) {
         final Member member = findMember(memberId);
 
         validateUpdateProfileImage(member, profileImage);
