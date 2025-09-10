@@ -37,9 +37,6 @@ class ExceptionMessageConverter {
             is TodokTodokExceptions.SignUpException.ProfileImageNotExistException ->
                 R.string.error_profile_image_not_exist
 
-            is TodokTodokExceptions.HttpExceptions.AuthenticationException ->
-                R.string.error_authentication
-
             is TodokTodokExceptions.HttpExceptions.AuthorizationException ->
                 R.string.error_authorization
 
