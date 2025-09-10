@@ -8,7 +8,7 @@ import com.team.domain.model.member.MemberId
 import com.team.domain.model.member.MemberType
 import com.team.todoktodok.data.core.JwtParser
 import com.team.todoktodok.data.core.ext.extractTokens
-import com.team.todoktodok.data.datasource.token.TokenDataSource
+import com.team.todoktodok.data.datasource.token.TokenLocalDataSource
 import com.team.todoktodok.data.network.request.LoginRequest
 import com.team.todoktodok.data.network.request.ModifyProfileRequest
 import com.team.todoktodok.data.network.request.ReportRequest
@@ -21,7 +21,7 @@ import com.team.todoktodok.data.network.service.MemberService
 
 class DefaultMemberRemoteDataSource(
     private val memberService: MemberService,
-    private val tokenDataSource: TokenDataSource,
+    private val tokenLocalDataSource: TokenLocalDataSource,
 ) : MemberRemoteDataSource {
     override suspend fun login(request: String): NetworkResult<MemberType> =
         runCatching {
@@ -32,7 +32,7 @@ class DefaultMemberRemoteDataSource(
 
                 when (memberType) {
                     MemberType.USER -> saveMemberSetting(parser, accessToken, refreshToken)
-                    MemberType.TEMP_USER -> tokenDataSource.saveToken(accessToken, refreshToken)
+                    MemberType.TEMP_USER -> tokenLocalDataSource.saveToken(accessToken, refreshToken)
                 }
                 memberType
             }
@@ -58,7 +58,7 @@ class DefaultMemberRemoteDataSource(
         refreshToken: String,
     ) {
         val memberId = parser.parseToMemberId()
-        tokenDataSource.saveSetting(accessToken, refreshToken, memberId)
+        tokenLocalDataSource.saveSetting(accessToken, refreshToken, memberId)
     }
 
     override suspend fun fetchProfile(request: MemberId): NetworkResult<ProfileResponse> {
@@ -91,7 +91,7 @@ class DefaultMemberRemoteDataSource(
 
     private suspend fun adjustMemberType(request: MemberId): Long =
         when (request) {
-            MemberId.Mine -> tokenDataSource.getMemberId()
+            MemberId.Mine -> tokenLocalDataSource.getMemberId()
             is MemberId.OtherUser -> request.id
         }
 

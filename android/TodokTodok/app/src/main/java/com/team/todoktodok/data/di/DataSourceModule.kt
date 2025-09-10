@@ -14,7 +14,7 @@ import com.team.todoktodok.data.datasource.member.DefaultMemberRemoteDataSource
 import com.team.todoktodok.data.datasource.member.MemberRemoteDataSource
 import com.team.todoktodok.data.datasource.reply.DefaultReplyRemoteDataSource
 import com.team.todoktodok.data.datasource.reply.ReplyRemoteDataSource
-import com.team.todoktodok.data.datasource.token.TokenDataSource
+import com.team.todoktodok.data.datasource.token.TokenLocalDataSource
 import com.team.todoktodok.data.local.discussion.DiscussionDatabase
 
 class DataSourceModule(
@@ -33,7 +33,7 @@ class DataSourceModule(
         )
     }
 
-    val tokenLocalDataSource: TokenDataSource by lazy { TokenDataSource(context) }
+    val tokenLocalDataSource: TokenLocalDataSource by lazy { TokenLocalDataSource(context) }
 
     val memberRemoteDataSource: MemberRemoteDataSource by lazy {
         DefaultMemberRemoteDataSource(

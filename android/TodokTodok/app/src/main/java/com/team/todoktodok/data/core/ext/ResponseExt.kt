@@ -2,7 +2,7 @@ package com.team.todoktodok.data.core.ext
 
 import com.team.domain.model.exception.NetworkResult
 import com.team.domain.model.exception.TodokTodokExceptions
-import com.team.todoktodok.data.network.auth.AuthInterceptor.Companion.AUTHORIZATION_NAME
+import com.team.todoktodok.data.core.AuthorizationConstants
 import com.team.todoktodok.data.network.model.LikeAction
 import com.team.todoktodok.data.network.response.LoginResponse
 import retrofit2.Response
@@ -17,7 +17,7 @@ suspend fun <R> Response<LoginResponse>.extractTokens(
     }
 
     val accessToken =
-        headers()[AUTHORIZATION_NAME]
+        headers()[AuthorizationConstants.HEADER_AUTHORIZATION]
             ?: return NetworkResult.Failure(TodokTodokExceptions.MissingLocationHeaderException)
 
     val refreshToken = body()?.refreshToken
@@ -43,3 +43,5 @@ fun <T> Response<T>.mapToggleLikeResponse(): NetworkResult<LikeAction> =
         val msg = errorBody()?.string()
         NetworkResult.Failure(TodokTodokExceptions.from(code(), msg))
     }
+
+fun okhttp3.Response.retryAttemptCount(): Int = generateSequence(this) { it.priorResponse }.count()

@@ -8,7 +8,7 @@ import com.team.domain.model.member.MemberId
 import com.team.domain.model.member.MemberType
 import com.team.todoktodok.data.core.JwtParser
 import com.team.todoktodok.data.datasource.member.DefaultMemberRemoteDataSource
-import com.team.todoktodok.data.datasource.token.TokenDataSource
+import com.team.todoktodok.data.datasource.token.TokenLocalDataSource
 import com.team.todoktodok.data.network.auth.AuthInterceptor.Companion.AUTHORIZATION_NAME
 import com.team.todoktodok.data.network.request.LoginRequest
 import com.team.todoktodok.data.network.request.ModifyProfileRequest
@@ -33,14 +33,14 @@ import retrofit2.Response
 
 class DefaultMemberRemoteDataSourceTest {
     private lateinit var memberService: MemberService
-    private lateinit var tokenDataSource: TokenDataSource
+    private lateinit var tokenLocalDataSource: TokenLocalDataSource
     private lateinit var dataSource: DefaultMemberRemoteDataSource
 
     @BeforeEach
     fun setUp() {
         memberService = mockk()
-        tokenDataSource = mockk(relaxed = true)
-        dataSource = DefaultMemberRemoteDataSource(memberService, tokenDataSource)
+        tokenLocalDataSource = mockk(relaxed = true)
+        dataSource = DefaultMemberRemoteDataSource(memberService, tokenLocalDataSource)
     }
 
     @Test
@@ -71,7 +71,7 @@ class DefaultMemberRemoteDataSourceTest {
             // then
             assertTrue(result is NetworkResult.Success)
             assertEquals(MemberType.USER, (result as NetworkResult.Success).data)
-            coVerify { tokenDataSource.saveToken(accessToken, refreshToken, memberId) }
+            coVerify { tokenLocalDataSource.saveToken(accessToken, refreshToken, memberId) }
         }
 
     @Test
@@ -153,7 +153,7 @@ class DefaultMemberRemoteDataSourceTest {
             // given
             val memberId = 2L
             val exception = TodokTodokExceptions.UnknownException(null)
-            coEvery { tokenDataSource.getMemberId() } returns memberId
+            coEvery { tokenLocalDataSource.getMemberId() } returns memberId
             coEvery { memberService.fetchProfile(memberId) } returns NetworkResult.Failure(exception)
 
             // when
@@ -169,7 +169,7 @@ class DefaultMemberRemoteDataSourceTest {
             // given
             val memberId = 2L
             val profileResponse = mockk<ProfileResponse>()
-            coEvery { tokenDataSource.getMemberId() } returns memberId
+            coEvery { tokenLocalDataSource.getMemberId() } returns memberId
             coEvery { memberService.fetchProfile(memberId) } returns
                 NetworkResult.Success(
                     profileResponse,
@@ -208,7 +208,7 @@ class DefaultMemberRemoteDataSourceTest {
             val type = MemberDiscussionType.PARTICIPATED
             val response = NetworkResult.Success(mockk<List<DiscussionResponse>>())
 
-            coEvery { tokenDataSource.getMemberId() } returns memberId
+            coEvery { tokenLocalDataSource.getMemberId() } returns memberId
             coEvery {
                 memberService.fetchMemberDiscussionRooms(
                     memberId,
