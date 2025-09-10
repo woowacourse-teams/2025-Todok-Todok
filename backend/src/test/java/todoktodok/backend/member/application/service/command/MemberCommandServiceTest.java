@@ -29,9 +29,7 @@ import todoktodok.backend.member.application.dto.request.RefreshTokenRequest;
 import todoktodok.backend.member.application.dto.request.SignupRequest;
 import todoktodok.backend.member.application.dto.response.ProfileUpdateResponse;
 import todoktodok.backend.member.application.dto.response.TokenResponse;
-import todoktodok.backend.member.domain.Member;
 import todoktodok.backend.member.domain.repository.RefreshTokenRepository;
-import todoktodok.backend.member.presentation.fixture.MemberFixture;
 
 @ActiveProfiles("test")
 @Transactional

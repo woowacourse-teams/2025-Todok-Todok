@@ -7,4 +7,6 @@ import todoktodok.backend.member.domain.RefreshToken;
 public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long> {
 
     Optional<RefreshToken> findByToken(final String token);
+
+    boolean existsByToken(final String refreshToken);
 }

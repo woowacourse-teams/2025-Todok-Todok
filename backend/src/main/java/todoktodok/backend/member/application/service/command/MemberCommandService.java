@@ -4,6 +4,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import lombok.AllArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.global.jwt.JwtTokenProvider;
@@ -40,7 +41,9 @@ public class MemberCommandService {
         if (memberOrEmpty.isPresent()) {
             final String accessToken = jwtTokenProvider.createAccessToken(memberOrEmpty.get());
             final String refreshToken = jwtTokenProvider.createRefreshToken(memberOrEmpty.get());
-            refreshTokenRepository.save(RefreshToken.create(refreshToken));
+
+            final RefreshToken savedRefreshToken = RefreshToken.create(refreshToken);
+            saveRefreshTokenIfUnique(savedRefreshToken, memberOrEmpty.get().getId());
 
             return new TokenResponse(accessToken, refreshToken);
         }
@@ -82,10 +85,11 @@ public class MemberCommandService {
 
         refreshTokenRepository.delete(oldRefreshToken);
 
-        final String refreshToken = jwtTokenProvider.createRefreshToken(member);
-        refreshTokenRepository.save(RefreshToken.create(refreshToken));
+        final RefreshToken newRefreshToken = RefreshToken.create(jwtTokenProvider.createRefreshToken(member));
 
-        return new TokenResponse(accessToken, refreshToken);
+        saveRefreshTokenIfUnique(newRefreshToken, memberId);
+
+        return new TokenResponse(accessToken, newRefreshToken.getToken());
     }
 
     public void block(
@@ -196,6 +200,29 @@ public class MemberCommandService {
         return memberRepository.findById(memberId)
                 .orElseThrow(
                         () -> new NoSuchElementException(String.format("해당 회원을 찾을 수 없습니다: memberId = %s", memberId)));
+    }
+
+    private void saveRefreshTokenIfUnique(
+            final RefreshToken refreshToken,
+            final Long memberId
+    ) {
+        try {
+            validateDuplicatedRefreshToken(refreshToken, memberId);
+
+            refreshTokenRepository.save(refreshToken);
+        } catch (final DataIntegrityViolationException e) {
+            throw new IllegalArgumentException(
+                    String.format("중복된 리프레시 토큰 발급 요청입니다: memberId = %d", memberId));
+        }
+    }
+
+    private void validateDuplicatedRefreshToken(
+            final RefreshToken refreshToken,
+            final Long memberId
+    ) {
+        if (refreshTokenRepository.existsByToken(refreshToken.getToken())) {
+            throw new IllegalArgumentException(String.format("중복된 리프레시 토큰 발급 요청입니다: memberId = %d", memberId));
+        }
     }
 
     private static void validateTokenMemberId(
