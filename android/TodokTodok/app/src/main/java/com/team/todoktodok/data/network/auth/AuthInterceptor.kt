@@ -1,5 +1,6 @@
 package com.team.todoktodok.data.network.auth
 
+import com.team.todoktodok.data.core.AuthorizationConstants
 import com.team.todoktodok.data.datasource.token.TokenDataSource
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
@@ -12,13 +13,8 @@ class AuthInterceptor(
         val request = chain.request()
         val builder = request.newBuilder()
         val accessToken = runBlocking { tokenDataSource.getAccessToken() }
-
-        builder.addHeader(AUTHORIZATION_NAME, accessToken)
+        builder.addHeader(AuthorizationConstants.HEADER_AUTHORIZATION, accessToken)
 
         return chain.proceed(builder.build())
-    }
-
-    companion object {
-        const val AUTHORIZATION_NAME = "Authorization"
     }
 }
