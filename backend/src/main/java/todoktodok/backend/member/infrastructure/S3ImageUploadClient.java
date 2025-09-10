@@ -39,7 +39,7 @@ public class S3ImageUploadClient {
                     .build();
             s3Client.putObject(putObj, RequestBody.fromBytes(file.getBytes()));
 
-            final String downloadUrl = "https://" + bucketName + ".s3." + region.id() + ".amazonaws.com/" + key;
+            final String downloadUrl = String.format("https://%s.s3.%s.amazonaws.com/%s", bucketName, region.id(), key);
 
             return new ProfileImageResponse(downloadUrl);
         } catch (final S3Exception e) { // S3 API 서버 측 오류
