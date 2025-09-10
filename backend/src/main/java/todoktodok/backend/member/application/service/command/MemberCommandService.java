@@ -7,12 +7,15 @@ import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import todoktodok.backend.global.jwt.JwtTokenProvider;
 import todoktodok.backend.global.jwt.TokenInfo;
+import todoktodok.backend.member.application.ImageType;
 import todoktodok.backend.member.application.dto.request.LoginRequest;
 import todoktodok.backend.member.application.dto.request.ProfileUpdateRequest;
 import todoktodok.backend.member.application.dto.request.RefreshTokenRequest;
 import todoktodok.backend.member.application.dto.request.SignupRequest;
+import todoktodok.backend.member.application.dto.response.ProfileImageUpdateResponse;
 import todoktodok.backend.member.application.dto.response.ProfileUpdateResponse;
 import todoktodok.backend.member.application.dto.response.TokenResponse;
 import todoktodok.backend.member.domain.Block;
@@ -24,17 +27,22 @@ import todoktodok.backend.member.domain.repository.BlockRepository;
 import todoktodok.backend.member.domain.repository.MemberReportRepository;
 import todoktodok.backend.member.domain.repository.MemberRepository;
 import todoktodok.backend.member.domain.repository.RefreshTokenRepository;
+import todoktodok.backend.member.infrastructure.ProfileImageResponse;
+import todoktodok.backend.member.infrastructure.S3ImageUploadClient;
 
 @Service
 @Transactional
 @AllArgsConstructor
 public class MemberCommandService {
 
+    private static final long MAX_FILE_SIZE = 5 * 1024 * 1024;
+
     private final MemberRepository memberRepository;
     private final BlockRepository blockRepository;
     private final MemberReportRepository memberReportRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final JwtTokenProvider jwtTokenProvider;
+    private final S3ImageUploadClient s3ImageUploadClient;
 
     public TokenResponse login(final LoginRequest loginRequest) {
         final Optional<Member> memberOrEmpty = memberRepository.findByEmail(loginRequest.email());
@@ -142,6 +150,22 @@ public class MemberCommandService {
         member.updateNicknameAndProfileMessage(newNickname, newProfileMessage);
 
         return new ProfileUpdateResponse(member);
+    }
+
+    public ProfileImageUpdateResponse updateProfileImage(
+            final Long memberId,
+            final MultipartFile profileImage
+    ) {
+        final Member member = findMember(memberId);
+
+        validateUpdateProfileImage(member, profileImage);
+
+        final ProfileImageResponse profileImageResponse = s3ImageUploadClient.uploadImage(profileImage);
+
+        final String downloadUrl = profileImageResponse.downloadUrl();
+        member.updateProfileImage(downloadUrl);
+
+        return new ProfileImageUpdateResponse(downloadUrl);
     }
 
     public void deleteMember(
@@ -287,5 +311,50 @@ public class MemberCommandService {
         return refreshTokenRepository.findByToken(oldRefreshToken)
                 .orElseThrow(() -> new NoSuchElementException(
                         String.format("해당 리프레시 토큰을 찾을 수 없습니다: refreshToken = %s", oldRefreshToken)));
+    }
+
+    private void validateUpdateProfileImage(
+            final Member member,
+            final MultipartFile profileImage
+    ) {
+        validateIsProfileImageEmpty(member, profileImage);
+        validateProfileImageSize(member, profileImage);
+        validateProfileImageType(member, profileImage);
+
+    }
+
+    private void validateIsProfileImageEmpty(
+            final Member member,
+            final MultipartFile profileImage
+    ) {
+        if (profileImage.isEmpty()) {
+            throw new IllegalArgumentException(
+                    String.format("파일이 비어있습니다: memberId = %s", member.getId())
+            );
+        }
+    }
+
+    private void validateProfileImageSize(
+            final Member member,
+            final MultipartFile profileImage
+    ) {
+        final long imageSize = profileImage.getSize();
+        if (imageSize > MAX_FILE_SIZE) {
+            throw new IllegalArgumentException(
+                    String.format("파일 크기가 5MB 초과입니다: memberId = %s, imageSize = %d", member.getId(), imageSize)
+            );
+        }
+    }
+
+    private void validateProfileImageType(
+            final Member member,
+            final MultipartFile profileImage
+    ) {
+        final String contentType = profileImage.getContentType();
+        if (!ImageType.contains(contentType)) {
+            throw new IllegalArgumentException(
+                    String.format("이미지 파일이 아닙니다: memberId = %s, contentType = %s", member.getId(), contentType)
+            );
+        }
     }
 }

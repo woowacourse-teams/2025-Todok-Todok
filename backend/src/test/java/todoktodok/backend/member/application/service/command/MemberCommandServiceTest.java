@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import io.jsonwebtoken.JwtException;
 import jakarta.persistence.EntityManager;
 
+import java.nio.charset.StandardCharsets;
 import java.util.NoSuchElementException;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -15,9 +16,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import todoktodok.backend.DatabaseInitializer;
 import todoktodok.backend.InitializerTimer;
 import todoktodok.backend.global.auth.Role;
@@ -313,6 +316,63 @@ class MemberCommandServiceTest {
 
         // then
         assertThat(memberCommandService.updateProfile(memberId, profileUpdateRequest)).isEqualTo(expected);
+    }
+
+    @Test
+    @DisplayName("프로필 사진 수정 시 파일이 비어있다면 예외가 발생한다")
+    void updateProfileImageTest_isEmpty_fail() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        final Long memberId = 1L;
+        final MultipartFile multipartFile = new MockMultipartFile(
+                "profileImage",
+                "empty.jpg",
+                "image/jpg",
+                new byte[]{}
+        );
+
+        // when - then
+        assertThatThrownBy(() -> memberCommandService.updateProfileImage(memberId, multipartFile))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("파일이 비어있습니다");
+    }
+
+    @Test
+    @DisplayName("프로필 사진 수정 시 파일 크기가 5MB 이상이면 예외가 발생한다")
+    void updateProfileImageTest_isOverSize_fail() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        final Long memberId = 1L;
+        final MultipartFile multipartFile = new MockMultipartFile(
+                "profileImage",
+                "over5Mb.png",
+                "image/png",
+                new byte[6 * 1024 * 1024]
+        );
+
+        // when - then
+        assertThatThrownBy(() -> memberCommandService.updateProfileImage(memberId, multipartFile))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("파일 크기가 5MB 초과입니다");
+    }
+
+    @Test
+    @DisplayName("프로필 사진 수정 시 확장자가 이미지 파일이 아니라면 예외가 발생한다")
+    void updateProfileImageTest_isNotImageType_fail() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        final Long memberId = 1L;
+        final MultipartFile multipartFile = new MockMultipartFile(
+                "profileImage",
+                "notImageType.txt",
+                "text/plain",
+                "hello".getBytes(StandardCharsets.UTF_8)
+        );
+
+        // when - then
+        assertThatThrownBy(() -> memberCommandService.updateProfileImage(memberId, multipartFile))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("이미지 파일이 아닙니다");
     }
 
     @Test
