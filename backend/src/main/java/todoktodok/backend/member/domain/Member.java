@@ -71,6 +71,10 @@ public class Member extends TimeStamp {
         this.profileMessage = profileMessage;
     }
 
+    public void updateProfileImage(final String profileImage) {
+        this.profileImage = profileImage;
+    }
+
     public boolean isMyNickname(final String nickname) {
         return this.nickname.equals(nickname);
     }
