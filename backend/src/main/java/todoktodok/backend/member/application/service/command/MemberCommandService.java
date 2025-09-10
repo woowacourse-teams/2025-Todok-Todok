@@ -298,7 +298,10 @@ public class MemberCommandService {
 
     }
 
-    private void validateIsProfileImageEmpty(final Member member, final MultipartFile profileImage) {
+    private void validateIsProfileImageEmpty(
+            final Member member,
+            final MultipartFile profileImage
+    ) {
         if (profileImage.isEmpty()) {
             throw new IllegalArgumentException(
                     String.format("파일이 비어있습니다: memberId = %s", member.getId())
@@ -306,7 +309,10 @@ public class MemberCommandService {
         }
     }
 
-    private void validateProfileImageSize(final Member member, final MultipartFile profileImage) {
+    private void validateProfileImageSize(
+            final Member member,
+            final MultipartFile profileImage
+    ) {
         final long imageSize = profileImage.getSize();
         if (imageSize > MAX_FILE_SIZE) {
             throw new IllegalArgumentException(
@@ -315,7 +321,10 @@ public class MemberCommandService {
         }
     }
 
-    private void validateProfileImageType(final Member member, final MultipartFile profileImage) {
+    private void validateProfileImageType(
+            final Member member,
+            final MultipartFile profileImage
+    ) {
         final String contentType = profileImage.getContentType();
         if (!(contentType.contains(PNG) || contentType.contains(JPG) || contentType.contains(JPEG))) {
             throw new IllegalArgumentException(
