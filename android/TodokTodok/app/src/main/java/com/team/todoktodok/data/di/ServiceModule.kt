@@ -4,28 +4,33 @@ import com.team.todoktodok.data.network.service.BookService
 import com.team.todoktodok.data.network.service.CommentService
 import com.team.todoktodok.data.network.service.DiscussionService
 import com.team.todoktodok.data.network.service.MemberService
+import com.team.todoktodok.data.network.service.RefreshService
 import com.team.todoktodok.data.network.service.ReplyService
 
 class ServiceModule(
     retrofit: RetrofitModule,
 ) {
     val discussionService: DiscussionService by lazy {
-        retrofit.createService(DiscussionService::class.java)
+        retrofit.createAuthService(DiscussionService::class.java)
     }
 
     val memberService: MemberService by lazy {
-        retrofit.createService(MemberService::class.java)
+        retrofit.createAuthService(MemberService::class.java)
     }
 
     val commentService: CommentService by lazy {
-        retrofit.createService(CommentService::class.java)
+        retrofit.createAuthService(CommentService::class.java)
     }
 
     val bookService: BookService by lazy {
-        retrofit.createService(BookService::class.java)
+        retrofit.createAuthService(BookService::class.java)
     }
 
     val replyService: ReplyService by lazy {
-        retrofit.createService(ReplyService::class.java)
+        retrofit.createAuthService(ReplyService::class.java)
+    }
+
+    val refreshService: RefreshService by lazy {
+        retrofit.createService(RefreshService::class.java)
     }
 }
