@@ -17,12 +17,11 @@ import todoktodok.backend.member.domain.Member;
 import todoktodok.backend.member.domain.RefreshToken;
 import todoktodok.backend.member.domain.repository.RefreshTokenRepository;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.CountDownLatch;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @ActiveProfiles("local")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
@@ -39,7 +38,7 @@ class MemberCommandServiceConcurrencyTest {
     JwtTokenProvider jwtTokenProvider;
 
     @Test
-    @DisplayName("리프레시 토큰 발급 요청을 중복으로 보낼 때, 중복된 토큰 생성 시 예외를 발생한다")
+    @DisplayName("리프레시 토큰 발급 요청을 중복으로 보낼 때, 중복된 토큰 생성 시 IllegalArgumentException으로 매핑한다")
     void refresh_validateDuplicatedToken() throws Exception {
         // given
         final String oldRefresh = "old-token";
@@ -48,7 +47,7 @@ class MemberCommandServiceConcurrencyTest {
 
         // 기존 토큰/회원 식별 가능하도록 JwtTokenProvider 동작 고정
         Mockito.when(jwtTokenProvider.getInfoByRefreshToken(oldRefresh))
-                .thenReturn(new TokenInfo(memberId, "user@gmail.com", Role.USER));
+                .thenReturn(new TokenInfo(memberId, "chanho680526@gmail.com", Role.USER));
         Mockito.when(jwtTokenProvider.createAccessToken(Mockito.any(Member.class)))
                 .thenReturn("any-access");
         Mockito.when(jwtTokenProvider.createRefreshToken(Mockito.any(Member.class)))
@@ -85,14 +84,15 @@ class MemberCommandServiceConcurrencyTest {
         start.countDown();
         done.await();
 
-        // then: 하나는 성공, 하나는 UNIQUE 위반 예외
+        // then: 첫 요청은 DB 저장 성공, 두번째 요청은 UNIQUE 위반 예외로 ConcurrentModificationException 발생 후 저장되지 않음
         final boolean saved = refreshTokenRepository.findByToken(newFixed).isPresent();
-        assertThat(saved).isTrue();
+        final List<Throwable> thrownExceptions = errors.stream().filter(e -> e instanceof Exception).toList();
 
-        // 예외 검증(구체 예외는 DB/Hibernate에 따라 상이)
-        final boolean hasUniqueViolation = errors.stream().anyMatch(e ->
-                e instanceof org.springframework.dao.DataIntegrityViolationException
-                        || e.getCause() instanceof org.hibernate.exception.ConstraintViolationException);
-        assertThat(hasUniqueViolation).isFalse();
+        assertAll(
+                () -> assertThat(saved).isTrue(),
+                () -> assertThat(thrownExceptions).hasSize(1),
+                () -> assertThat(thrownExceptions.getFirst()).isInstanceOf(ConcurrentModificationException.class)
+                        .hasMessageContaining("중복된 리프레시 토큰 발급 요청입니다")
+        );
     }
 }

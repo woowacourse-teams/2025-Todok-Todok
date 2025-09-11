@@ -246,7 +246,7 @@ public class MemberCommandService {
             final Long memberId
     ) {
         if (refreshTokenRepository.existsByToken(refreshToken.getToken())) {
-            throw new IllegalArgumentException(String.format("중복된 리프레시 토큰 발급 요청입니다: memberId = %d", memberId));
+            throw new ConcurrentModificationException(String.format("중복된 리프레시 토큰 발급 요청입니다: memberId = %d", memberId));
         }
     }
 
