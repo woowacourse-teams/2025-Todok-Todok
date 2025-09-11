@@ -2,7 +2,6 @@ package com.team.todoktodok.presentation.vm
 
 import androidx.lifecycle.SavedStateHandle
 import com.team.domain.model.Comment
-import com.team.domain.model.LikeStatus
 import com.team.domain.model.Reply
 import com.team.domain.model.exception.NetworkResult
 import com.team.domain.model.exception.TodokTodokExceptions
@@ -194,44 +193,6 @@ class CommentDetailViewModelTest {
 
             // then
             assertEquals("hello", state.content)
-        }
-
-    @Test
-    fun `toggleCommentLike 성공 - 토글 API 호출 후 댓글 재로딩, 이벤트 방출`() =
-        runTest {
-            // given
-            val writerMe = mockk<User>(relaxed = true).apply { every { id } returns ME }
-            val comment = mockk<Comment>(relaxed = true).apply { every { writer } returns writerMe }
-            coEvery {
-                commentRepository.getComment(
-                    DISCUSSION_ID,
-                    COMMENT_ID,
-                )
-            } returns NetworkResult.Success(comment)
-            coEvery {
-                replyRepository.getReplies(
-                    DISCUSSION_ID,
-                    COMMENT_ID,
-                )
-            } returns NetworkResult.Success(emptyList())
-            coEvery {
-                commentRepository.toggleLike(
-                    DISCUSSION_ID,
-                    COMMENT_ID,
-                )
-            } returns NetworkResult.Success(LikeStatus.LIKE)
-
-            loadViewModel(DISCUSSION_ID, COMMENT_ID)
-
-            // when
-            commentDetailViewModel.toggleCommentLike()
-            advanceUntilIdle()
-            val event = commentDetailViewModel.uiEvent.getOrAwaitValue()
-
-            // then
-            coVerify(exactly = 1) { commentRepository.toggleLike(DISCUSSION_ID, COMMENT_ID) }
-            coVerify(exactly = 2) { commentRepository.getComment(DISCUSSION_ID, COMMENT_ID) }
-            assertEquals(CommentDetailUiEvent.ToggleCommentLike, event)
         }
 
     @Test

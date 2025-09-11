@@ -1,6 +1,5 @@
 package com.team.todoktodok.presentation.view.discussiondetail.commentdetail.vm
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -123,8 +122,8 @@ class CommentDetailViewModel(
         val targetItem = prevState.replyItems.find { it.reply.replyId == replyId } ?: return
         val initialLikeCount = targetItem.reply.likeCount
 
-        _uiState.value = applyOptimisticToggle(prevState, targetItem)
-        scheduleCoalescedToggle(replyId, initialLikeCount)
+        _uiState.value = applyOptimisticReplyToggle(prevState, targetItem)
+        scheduleCoalescedReplyToggle(replyId, initialLikeCount)
     }
 
     private fun updateReplyItem(
@@ -137,7 +136,7 @@ class CommentDetailViewModel(
                 uiState.replyItems.map { item -> if (item.reply.replyId == replyId) update(item) else item },
         )
 
-    private fun applyOptimisticToggle(
+    private fun applyOptimisticReplyToggle(
         prevState: CommentDetailUiState,
         replyItemUiState: ReplyItemUiState,
     ): CommentDetailUiState {
@@ -157,14 +156,14 @@ class CommentDetailViewModel(
         }
     }
 
-    private fun scheduleCoalescedToggle(
+    private fun scheduleCoalescedReplyToggle(
         replyId: Long,
         initialLikeCount: Int,
     ) {
         val coalescedJob =
             viewModelScope.launch {
                 delay(250)
-                if (!shouldSendToggle(replyId, initialLikeCount)) return@launch
+                if (!shouldSendReplyToggle(replyId, initialLikeCount)) return@launch
                 handleResult(replyRepository.toggleLike(discussionId, commentId, replyId)) {
                     loadReplies()
                 }
@@ -176,7 +175,7 @@ class CommentDetailViewModel(
             }
     }
 
-    private fun shouldSendToggle(
+    private fun shouldSendReplyToggle(
         replyId: Long,
         initialLikeCount: Int,
     ): Boolean {

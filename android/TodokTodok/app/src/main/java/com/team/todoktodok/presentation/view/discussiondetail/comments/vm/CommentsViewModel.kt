@@ -1,7 +1,6 @@
 package com.team.todoktodok.presentation.view.discussiondetail.comments.vm
 
 import android.os.Parcelable
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
