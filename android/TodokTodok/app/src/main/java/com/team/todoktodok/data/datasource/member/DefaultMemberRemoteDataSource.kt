@@ -21,7 +21,7 @@ import com.team.todoktodok.data.network.service.MemberService
 
 class DefaultMemberRemoteDataSource(
     private val memberService: MemberService,
-    private val tokenLocalDataSource: TokenLocalDataSource,
+    private val tokenLocalDataSource: TokenDataSource,
 ) : MemberRemoteDataSource {
     override suspend fun login(request: String): NetworkResult<MemberType> =
         runCatching {

@@ -5,10 +5,12 @@ import com.team.todoktodok.data.core.ext.retryAttemptCount
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
 import okhttp3.Authenticator
 import okhttp3.Request
 import okhttp3.Response
@@ -55,7 +57,10 @@ class TokenAuthenticator(
         return deferred
     }
 
-    private suspend fun executeTokenRefresh(): String? = runCatching { tokenRefreshDelegate().refresh() }.getOrNull()
+    private suspend fun executeTokenRefresh(): String? =
+        withContext(Dispatchers.IO) {
+            runCatching { tokenRefreshDelegate().refresh() }.getOrNull()
+        }
 
     private fun buildRequestWithToken(
         originalRequest: Request,
