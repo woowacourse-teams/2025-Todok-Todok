@@ -8,6 +8,7 @@ import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.S3Exception;
+import todoktodok.backend.member.application.ImageType;
 import todoktodok.backend.member.infrastructure.exception.AwsApiException;
 
 public class S3ImageUploadClient {
@@ -31,11 +32,14 @@ public class S3ImageUploadClient {
 
     public ProfileImageResponse uploadImage(final MultipartFile file) {
         try {
-            final String key = keyPrefix + UUID.randomUUID();
+            final String contentType = file.getContentType();
+            final String extension = ImageType.getExtension(contentType);
+
+            final String key = String.format("%s%s%s", keyPrefix, UUID.randomUUID(), extension);
             final PutObjectRequest putObj = PutObjectRequest.builder()
                     .bucket(bucketName)
                     .key(key)
-                    .contentType(file.getContentType())
+                    .contentType(contentType)
                     .build();
             s3Client.putObject(putObj, RequestBody.fromBytes(file.getBytes()));
 
