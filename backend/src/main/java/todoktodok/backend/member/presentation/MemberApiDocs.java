@@ -12,18 +12,19 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.util.List;
 
-import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.multipart.MultipartFile;
 import todoktodok.backend.book.application.dto.response.BookResponse;
 import todoktodok.backend.discussion.application.dto.response.DiscussionResponse;
 import todoktodok.backend.global.exception.ErrorResponse;
-import todoktodok.backend.global.resolver.LoginMember;
 import todoktodok.backend.member.application.dto.request.LoginRequest;
 import todoktodok.backend.member.application.dto.request.MemberReportRequest;
 import todoktodok.backend.member.application.dto.request.ProfileUpdateRequest;
 import todoktodok.backend.member.application.dto.request.RefreshTokenRequest;
 import todoktodok.backend.member.application.dto.request.SignupRequest;
 import todoktodok.backend.member.application.dto.response.BlockMemberResponse;
+import todoktodok.backend.member.application.dto.response.ProfileImageUpdateResponse;
 import todoktodok.backend.member.application.dto.response.ProfileResponse;
 import todoktodok.backend.member.application.dto.response.ProfileUpdateResponse;
 import todoktodok.backend.member.application.dto.response.RefreshTokenResponse;
@@ -58,10 +59,16 @@ public interface MemberApiDocs {
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(
-                                    name = "이메일 형식 오류",
-                                    value = "{\"code\":400, \"message\":\"[ERROR] 올바른 이메일 형식을 입력해주세요\"}"
-                            )
+                            examples = {
+                                    @ExampleObject(
+                                            name = "이메일 형식 오류",
+                                            value = "{\"code\":400, \"message\":\"[ERROR] 올바른 이메일 형식을 입력해주세요\"}"
+                                    ),
+                                    @ExampleObject(
+                                            name = "토큰 중복 발급 오류",
+                                            value = "{\"code\":400, \"message\":\"[ERROR] 중복된 리프레시 토큰 발급 요청입니다\"}"
+                                    )
+                            }
                     )),
             @ApiResponse(
                     responseCode = "500",
@@ -198,6 +205,17 @@ public interface MemberApiDocs {
                             }
                     )
             ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "잘못된 요청",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "토큰 중복 발급 오류",
+                                    value = "{\"code\":400, \"message\":\"[ERROR] 중복된 리프레시 토큰 발급 요청입니다\"}"
+                            )
+                    )),
             @ApiResponse(
                     responseCode = "401",
                     description = "토큰 인증 오류",
@@ -814,6 +832,85 @@ public interface MemberApiDocs {
                             examples = @ExampleObject(value = "{\"nickname\":\"수정된닉네임\", \"profileMessage\":\"수정된상태메시지\"}")
                     )
             ) final ProfileUpdateRequest profileUpdateRequest
+    );
+
+    @Operation(summary = "프로필 사진 수정 API")
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "프로필 사진 수정 성공",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ProfileImageUpdateResponse.class),
+                            examples = @ExampleObject(
+                                    value = "{\"profileImage\":\"https://awsbucketname.s3.region.amazonaws.com/todoktodok\"}"
+                            )
+                    )),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "요청 값 입력 오류",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = {
+                                    @ExampleObject(
+                                            name = "파일 비어있음",
+                                            value = "{\"code\":400, \"message\":\"[ERROR] 파일이 비어있습니다\"}"
+                                    ),
+                                    @ExampleObject(
+                                            name = "파일 크기 부적합",
+                                            value = "{\"code\":400, \"message\":\"[ERROR] 파일 크기가 5MB 초과입니다\"}"
+                                    ),
+                                    @ExampleObject(
+                                            name = "파일 타입 부적합",
+                                            value = "{\"code\":400, \"message\":\"[ERROR] 이미지 파일이 아닙니다\"}"
+                                    ),
+                            }
+                    )),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "토큰 인증 오류",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "JWT 오류",
+                                    value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
+                            )
+                    )),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "액세스 토큰 만료 오류",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "액세스 토큰 만료 오류",
+                                    value = "{\"code\":401, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
+                            )
+                    )),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "서버 오류",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = {
+                                    @ExampleObject(
+                                            name = "서버 오류",
+                                            value = "{\"code\":500, \"message\":\"[ERROR] 서버 내부 오류가 발생했습니다\"}"
+                                    ),
+                                    @ExampleObject(
+                                            name = "AWS 오류",
+                                            value = "{\"code\":500, \"message\":\"[ERROR] AWS 처리 중 오류가 발생했습니다\"}"
+                                    ),
+                            }
+                    ))
+    })
+    ResponseEntity<ProfileImageUpdateResponse> updateProfileImage(
+            @Parameter(hidden = true) final Long memberId,
+            @Parameter(description = "수정할 프로필 이미지 (swagger로 aws 업로드 테스트는 불가)")
+            @RequestPart("profileImage") MultipartFile profileImage
     );
 
     @Operation(summary = "회원 탈퇴 API")

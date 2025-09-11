@@ -37,11 +37,11 @@ public class TempMemberArgumentResolver implements HandlerMethodArgumentResolver
         final String token = getTokenFromAuthorizationHeader(httpServletRequest);
         final TokenInfo tokenInfo = jwtTokenProvider.getInfoByAccessToken(token);
 
-        if (tokenInfo.tempUserEmail() == null) {
+        if (tokenInfo.email() == null) {
             log.warn("JWT 토큰에서 이메일 정보를 확인할 수 없습니다");
             throw new JwtException("잘못된 로그인 시도입니다. 다시 시도해주세요.");
         }
-        return tokenInfo.tempUserEmail();
+        return tokenInfo.email();
     }
 
     private String getTokenFromAuthorizationHeader(final HttpServletRequest httpServletRequest) {
