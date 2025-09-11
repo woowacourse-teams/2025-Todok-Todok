@@ -1,5 +1,6 @@
 package com.team.todoktodok.presentation.view.discussiondetail.vm
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -13,6 +14,8 @@ import com.team.todoktodok.presentation.core.event.SingleLiveData
 import com.team.todoktodok.presentation.view.discussion.create.SerializationCreateDiscussionRoomMode
 import com.team.todoktodok.presentation.view.discussiondetail.DiscussionDetailUiEvent
 import com.team.todoktodok.presentation.view.discussiondetail.DiscussionDetailUiState
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class DiscussionDetailViewModel(
@@ -25,7 +28,7 @@ class DiscussionDetailViewModel(
 
     var mode = savedStateHandle.get<SerializationCreateDiscussionRoomMode>(KEY_MODE)
         private set
-
+    private var coalesceJob: Job? = null
     private val _uiState = MutableLiveData<DiscussionDetailUiState>()
     val uiState: LiveData<DiscussionDetailUiState> = _uiState
 
@@ -88,11 +91,32 @@ class DiscussionDetailViewModel(
     }
 
     fun toggleLike() {
-        viewModelScope.launch {
-            handleResult(discussionRepository.toggleLike(discussionId)) {
-                loadDiscussionRoom()
+        val currentUiState = _uiState.value ?: return
+        val currentDiscussion = currentUiState.discussion
+        val desiredIsLikedByMe = !currentDiscussion.isLikedByMe
+        val likeCountDelta = if (desiredIsLikedByMe) 1 else -1
+        _uiState.value =
+            currentUiState.copy(
+                discussion =
+                    currentUiState.discussion.copy(
+                        isLikedByMe = desiredIsLikedByMe,
+                        likeCount =
+                            (currentUiState.discussion.likeCount + likeCountDelta).coerceAtLeast(
+                                0,
+                            ),
+                    ),
+            )
+        coalesceJob?.cancel()
+        coalesceJob =
+            viewModelScope.launch {
+                delay(250)
+                val isToggle =
+                    currentDiscussion.likeCount != _uiState.value?.discussion?.likeCount
+                if (!isToggle) return@launch
+                handleResult(discussionRepository.toggleLike(discussionId)) {
+                    loadDiscussionRoom()
+                }
             }
-        }
     }
 
     fun navigateToProfile() {
@@ -117,11 +141,13 @@ class DiscussionDetailViewModel(
 
     private inline fun <T> handleResult(
         result: NetworkResult<T>,
-        onSuccess: (T) -> Unit,
+        onFailure: () -> Unit = {},
+        onSuccess: (T) -> Unit = {},
     ) {
         when (result) {
             is NetworkResult.Success -> onSuccess(result.data)
             is NetworkResult.Failure -> {
+                onFailure()
                 onUiEvent(
                     DiscussionDetailUiEvent.ShowErrorMessage(result.exception),
                 )
