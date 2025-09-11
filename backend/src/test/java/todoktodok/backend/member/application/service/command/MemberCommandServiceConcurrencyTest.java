@@ -58,9 +58,9 @@ class MemberCommandServiceConcurrencyTest {
 
         // 동시 시작 장치
         final int threads = 2;
-        CountDownLatch ready = new CountDownLatch(threads);
-        CountDownLatch start = new CountDownLatch(1);
-        CountDownLatch done = new CountDownLatch(threads);
+        final CountDownLatch ready = new CountDownLatch(threads);
+        final CountDownLatch start = new CountDownLatch(1);
+        final CountDownLatch done = new CountDownLatch(threads);
 
         final List<Throwable> errors = Collections.synchronizedList(new ArrayList<>());
 
