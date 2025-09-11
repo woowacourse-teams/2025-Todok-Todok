@@ -1,6 +1,7 @@
 package com.team.todoktodok.presentation.view.discussiondetail.comments.vm
 
 import android.os.Parcelable
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -14,6 +15,7 @@ import com.team.todoktodok.presentation.core.event.SingleLiveData
 import com.team.todoktodok.presentation.view.discussiondetail.comments.CommentsUiEvent
 import com.team.todoktodok.presentation.view.discussiondetail.comments.CommentsUiState
 import com.team.todoktodok.presentation.view.discussiondetail.model.CommentItemUiState
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class CommentsViewModel(
@@ -50,12 +52,81 @@ class CommentsViewModel(
             onUiEvent(CommentsUiEvent.ShowNewComment)
         }
 
-    fun toggleLike(commentId: Long) =
-        viewModelScope.launch {
-            handleResult(commentRepository.toggleLike(discussionId, commentId)) {
-                loadComment(commentId)
-            }
+    fun toggleLike(commentId: Long) {
+        val prevState = _uiState.value ?: return
+        val targetItem = prevState.comments.find { it.comment.id == commentId } ?: return
+        val initialLikeCount = targetItem.comment.likeCount
+
+        _uiState.value = applyOptimisticToggle(prevState, targetItem)
+        scheduleCoalescedToggle(commentId, initialLikeCount)
+    }
+
+    private fun updateCommentItem(
+        uiState: CommentsUiState,
+        commentId: Long,
+        update: (CommentItemUiState) -> CommentItemUiState,
+    ): CommentsUiState =
+        uiState.copy(
+            comments =
+                uiState.comments.map { item ->
+                    if (item.comment.id == commentId) update(item) else item
+                },
+        )
+
+    private fun applyOptimisticToggle(
+        prevState: CommentsUiState,
+        targetItem: CommentItemUiState,
+    ): CommentsUiState {
+        val isLikedAfterToggle = !targetItem.comment.isLikedByMe
+        val likeCountStep = if (isLikedAfterToggle) 1 else -1
+
+        return updateCommentItem(prevState, targetItem.comment.id) { item ->
+            item.itemJob?.cancel()
+            item.copy(
+                comment =
+                    item.comment.copy(
+                        isLikedByMe = isLikedAfterToggle,
+                        likeCount = (item.comment.likeCount + likeCountStep).coerceAtLeast(0),
+                    ),
+                itemJob = null,
+            )
         }
+    }
+
+    private fun scheduleCoalescedToggle(
+        commentId: Long,
+        initialLikeCount: Int,
+    ) {
+        val coalescedJob =
+            viewModelScope.launch {
+                delay(250)
+                if (!shouldSendToggle(commentId, initialLikeCount)) return@launch
+
+                handleResult(commentRepository.toggleLike(discussionId, commentId)) {
+                    loadComment(commentId)
+                }
+            }
+
+        _uiState.value =
+            _uiState.value?.let { current ->
+                updateCommentItem(current, commentId) { item -> item.copy(itemJob = coalescedJob) }
+            }
+    }
+
+    private fun shouldSendToggle(
+        commentId: Long,
+        initialLikeCount: Int,
+    ): Boolean {
+        val currentLikeCount =
+            _uiState.value
+                ?.comments
+                ?.find { it.comment.id == commentId }
+                ?.comment
+                ?.likeCount
+                ?: return false
+
+        return currentLikeCount != initialLikeCount
+    }
 
     fun deleteComment(commentId: Long) =
         viewModelScope.launch {
