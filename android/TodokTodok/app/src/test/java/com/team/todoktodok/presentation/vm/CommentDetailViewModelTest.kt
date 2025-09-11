@@ -97,11 +97,11 @@ class CommentDetailViewModelTest {
             // then
             val ui = commentDetailViewModel.uiState.getOrAwaitValue()
             assertFalse(ui.isLoading)
-            assertNotNull(ui.comment)
-            assertEquals(2, ui.replies.size)
-            assertTrue(ui.comment.isMyComment)
-            assertTrue(ui.replies[0].isMyReply)
-            assertFalse(ui.replies[1].isMyReply)
+            assertNotNull(ui.commentItem)
+            assertEquals(2, ui.replyItems.size)
+            assertTrue(ui.commentItem.isMyComment)
+            assertTrue(ui.replyItems[0].isMyReply)
+            assertFalse(ui.replyItems[1].isMyReply)
         }
 
     @Test
