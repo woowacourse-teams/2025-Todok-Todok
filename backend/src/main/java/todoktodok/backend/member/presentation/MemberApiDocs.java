@@ -9,7 +9,9 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+
 import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
@@ -57,10 +59,16 @@ public interface MemberApiDocs {
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(
-                                    name = "이메일 형식 오류",
-                                    value = "{\"code\":400, \"message\":\"[ERROR] 올바른 이메일 형식을 입력해주세요\"}"
-                            )
+                            examples = {
+                                    @ExampleObject(
+                                            name = "이메일 형식 오류",
+                                            value = "{\"code\":400, \"message\":\"[ERROR] 올바른 이메일 형식을 입력해주세요\"}"
+                                    ),
+                                    @ExampleObject(
+                                            name = "토큰 중복 발급 오류",
+                                            value = "{\"code\":400, \"message\":\"[ERROR] 중복된 리프레시 토큰 발급 요청입니다\"}"
+                                    )
+                            }
                     )),
             @ApiResponse(
                     responseCode = "500",
@@ -197,6 +205,17 @@ public interface MemberApiDocs {
                             }
                     )
             ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "잘못된 요청",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "토큰 중복 발급 오류",
+                                    value = "{\"code\":400, \"message\":\"[ERROR] 중복된 리프레시 토큰 발급 요청입니다\"}"
+                            )
+                    )),
             @ApiResponse(
                     responseCode = "401",
                     description = "토큰 인증 오류",
