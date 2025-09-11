@@ -1,6 +1,8 @@
 package com.team.todoktodok
 
 import android.content.Context
+import androidx.lifecycle.ProcessLifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import com.team.todoktodok.data.datasource.token.TokenDataSource
 import com.team.todoktodok.data.datasource.token.TokenLocalDataSource
 import com.team.todoktodok.data.di.DataSourceModule
@@ -12,13 +14,18 @@ import com.team.todoktodok.data.network.auth.AuthInterceptor
 import com.team.todoktodok.data.network.auth.TokenAuthenticator
 import com.team.todoktodok.data.network.auth.TokenRefreshDelegate
 import com.team.todoktodok.data.network.auth.TokenRefreshDelegator
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.SupervisorJob
 import kotlin.getValue
 
 class AppContainer(
     context: Context,
 ) {
+    val tokenAuthenticator: TokenAuthenticator by lazy {
+        TokenAuthenticator(
+            tokenRefreshDelegate = { refreshTokenHandler },
+            scope = ProcessLifecycleOwner.get().lifecycleScope,
+        )
+    }
+
     private val refreshTokenHandler: TokenRefreshDelegate by lazy {
         TokenRefreshDelegator(
             serviceModule.refreshService,
@@ -32,13 +39,6 @@ class AppContainer(
 
     val authInterceptor: AuthInterceptor by lazy {
         AuthInterceptor(tokenLocalDataSource)
-    }
-
-    val tokenAuthenticator: TokenAuthenticator by lazy {
-        TokenAuthenticator(
-            tokenRefreshDelegate = { refreshTokenHandler },
-            scope = CoroutineScope(SupervisorJob()),
-        )
     }
 
     private val retrofitModule: RetrofitModule by lazy {

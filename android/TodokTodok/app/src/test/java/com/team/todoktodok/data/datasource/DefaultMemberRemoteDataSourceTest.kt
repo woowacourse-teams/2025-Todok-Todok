@@ -9,7 +9,6 @@ import com.team.domain.model.member.MemberType
 import com.team.todoktodok.data.core.JwtParser
 import com.team.todoktodok.data.datasource.member.DefaultMemberRemoteDataSource
 import com.team.todoktodok.data.datasource.token.TokenLocalDataSource
-import com.team.todoktodok.data.network.auth.AuthInterceptor.Companion.AUTHORIZATION_NAME
 import com.team.todoktodok.data.network.request.LoginRequest
 import com.team.todoktodok.data.network.request.ModifyProfileRequest
 import com.team.todoktodok.data.network.request.ReportRequest
@@ -56,7 +55,7 @@ class DefaultMemberRemoteDataSourceTest {
 
             val mockResponse = mockk<Response<LoginResponse>>()
             every { mockResponse.isSuccessful } returns true
-            every { mockResponse.headers() } returns mapOf(AUTHORIZATION_NAME to accessToken).toHeaders()
+            every { mockResponse.headers() } returns mapOf("Authorization" to accessToken).toHeaders()
             every { mockResponse.body() } returns loginResponse
 
             coEvery { memberService.login(LoginRequest(email)) } returns mockResponse
@@ -71,7 +70,7 @@ class DefaultMemberRemoteDataSourceTest {
             // then
             assertTrue(result is NetworkResult.Success)
             assertEquals(MemberType.USER, (result as NetworkResult.Success).data)
-            coVerify { tokenLocalDataSource.saveToken(accessToken, refreshToken, memberId) }
+            coVerify { tokenLocalDataSource.saveSetting(accessToken, refreshToken, memberId) }
         }
 
     @Test
