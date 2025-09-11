@@ -909,7 +909,7 @@ public interface MemberApiDocs {
     })
     ResponseEntity<ProfileImageUpdateResponse> updateProfileImage(
             @Parameter(hidden = true) final Long memberId,
-            @Parameter(description = "수정할 프로필 이미지 (swagger로 aws 업로드 테스트는 불가)")
+            @Parameter(description = "수정할 프로필 이미지")
             @RequestPart("profileImage") MultipartFile profileImage
     );
 
