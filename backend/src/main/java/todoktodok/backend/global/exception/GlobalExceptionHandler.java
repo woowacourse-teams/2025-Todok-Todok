@@ -1,6 +1,8 @@
 package todoktodok.backend.global.exception;
 
 import io.jsonwebtoken.JwtException;
+
+import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import lombok.extern.slf4j.Slf4j;
@@ -94,6 +96,15 @@ public class GlobalExceptionHandler {
                         status.value(),
                         PREFIX + String.format("파라미터 %s가 존재하지 않습니다", e.getParameterName())
                 ));
+    }
+
+    @ExceptionHandler(ConcurrentModificationException.class)
+    public ResponseEntity<ErrorResponse> handleConcurrentModificationException(final ConcurrentModificationException e) {
+        final HttpStatus status = HttpStatus.CONFLICT;
+        log.warn(PREFIX + e.getMessage());
+
+        return ResponseEntity.status(status)
+                .body(new ErrorResponse(status.value(), PREFIX + getSafeErrorMessage(e)));
     }
 
     @ExceptionHandler(IllegalStateException.class)

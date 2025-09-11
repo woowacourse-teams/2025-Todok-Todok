@@ -1,5 +1,6 @@
 package todoktodok.backend.member.application.service.command;
 
+import java.util.ConcurrentModificationException;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -235,7 +236,7 @@ public class MemberCommandService {
 
             refreshTokenRepository.save(refreshToken);
         } catch (final DataIntegrityViolationException e) {
-            throw new IllegalArgumentException(
+            throw new ConcurrentModificationException(
                     String.format("중복된 리프레시 토큰 발급 요청입니다: memberId = %d", memberId));
         }
     }
