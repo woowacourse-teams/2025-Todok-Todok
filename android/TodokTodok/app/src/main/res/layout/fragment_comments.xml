@@ -21,6 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="40dp"
+        android:scrollbars="vertical"
         app:layout_constraintBottom_toTopOf="@id/tv_input_comment"
         app:layout_constraintTop_toBottomOf="@id/iv_bottom_sheet_header"
         tools:listitem="@layout/item_comment" />
@@ -28,7 +29,7 @@
     <TextView
         android:id="@+id/tv_input_comment"
         style="@style/BaseTextStyle"
-        android:layout_width="match_parent"
+        android:layout_width="@dimen/space_0"
         android:layout_height="36dp"
         android:layout_marginBottom="@dimen/space_20"
         android:background="@drawable/bg_green_f0_radius_8dp"
@@ -37,10 +38,24 @@
         android:paddingStart="10dp"
         android:paddingTop="@dimen/space_4"
         android:paddingBottom="2dp"
-        android:text="@string/comment_input_hint"
         android:textColor="@color/gray_76"
         android:textSize="@dimen/font_size_large"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/iv_add_comment"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="댓글 입력" />
+
+    <ImageView
+        android:id="@+id/iv_add_comment"
+        android:layout_width="@dimen/space_28"
+        android:layout_height="@dimen/space_28"
+        android:layout_marginStart="10dp"
+        android:background="@drawable/btn_comment_background"
+        android:contentDescription="@string/content_description_add_comment"
+        app:layout_constraintBottom_toBottomOf="@id/tv_input_comment"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tv_input_comment"
+        app:layout_constraintTop_toTopOf="@id/tv_input_comment" />
 
     <LinearLayout
         android:id="@+id/ll_nothing_comments_layout"

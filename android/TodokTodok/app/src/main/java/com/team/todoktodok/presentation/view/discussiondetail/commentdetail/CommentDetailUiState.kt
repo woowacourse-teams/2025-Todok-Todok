@@ -9,14 +9,14 @@ import com.team.todoktodok.presentation.view.discussiondetail.model.ReplyItemUiS
 import java.time.LocalDateTime
 
 data class CommentDetailUiState(
-    val comment: CommentItemUiState = INIT_COMMENT,
-    val replies: List<ReplyItemUiState> = emptyList(),
+    val commentItem: CommentItemUiState = INIT_COMMENT,
+    val replyItems: List<ReplyItemUiState> = emptyList(),
     val content: String = "",
     val isLoading: Boolean = false,
 ) {
     fun getCommentDetailItems() =
-        listOf(CommentDetailItems.CommentItem(comment)) +
-            replies.map {
+        listOf(CommentDetailItems.CommentItem(commentItem)) +
+            replyItems.map {
                 CommentDetailItems.ReplyItem(it)
             }
 

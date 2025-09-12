@@ -15,6 +15,7 @@ import com.team.todoktodok.presentation.view.discussiondetail.commentdetail.Comm
 import com.team.todoktodok.presentation.view.discussiondetail.commentdetail.CommentDetailUiState
 import com.team.todoktodok.presentation.view.discussiondetail.model.CommentItemUiState
 import com.team.todoktodok.presentation.view.discussiondetail.model.ReplyItemUiState
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class CommentDetailViewModel(
@@ -117,27 +118,161 @@ class CommentDetailViewModel(
     }
 
     fun toggleReplyLike(replyId: Long) {
-        viewModelScope.launch {
-            handleResult(
-                replyRepository.toggleLike(discussionId, commentId, replyId),
-            ) {
-                loadReplies()
-            }
+        val prevState = _uiState.value ?: return
+        val targetItem = prevState.replyItems.find { it.reply.replyId == replyId } ?: return
+        val initialLikeCount = targetItem.reply.likeCount
+
+        _uiState.value = applyOptimisticReplyToggle(prevState, targetItem)
+        scheduleCoalescedReplyToggle(replyId, initialLikeCount)
+    }
+
+    private fun updateReplyItem(
+        uiState: CommentDetailUiState,
+        replyId: Long,
+        update: (ReplyItemUiState) -> ReplyItemUiState,
+    ): CommentDetailUiState =
+        uiState.copy(
+            replyItems =
+                uiState.replyItems.map { item -> if (item.reply.replyId == replyId) update(item) else item },
+        )
+
+    private fun applyOptimisticReplyToggle(
+        prevState: CommentDetailUiState,
+        replyItemUiState: ReplyItemUiState,
+    ): CommentDetailUiState {
+        val isLikedAfterToggle = !replyItemUiState.reply.isLikedByMe
+        val likeCountStep = if (isLikedAfterToggle) 1 else -1
+
+        return updateReplyItem(prevState, replyItemUiState.reply.replyId) { item ->
+            item.itemJob?.cancel()
+            item.copy(
+                reply =
+                    item.reply.copy(
+                        isLikedByMe = isLikedAfterToggle,
+                        likeCount = (item.reply.likeCount + likeCountStep).coerceAtLeast(0),
+                    ),
+                itemJob = null,
+            )
         }
     }
 
-    fun toggleCommentLike() {
-        viewModelScope.launch {
-            handleResult(commentRepository.toggleLike(discussionId, commentId)) {
-                loadComment()
-                _uiEvent.setValue(CommentDetailUiEvent.ToggleCommentLike)
+    private fun scheduleCoalescedReplyToggle(
+        replyId: Long,
+        initialLikeCount: Int,
+    ) {
+        val coalescedJob =
+            viewModelScope.launch {
+                delay(250)
+                if (!shouldSendReplyToggle(replyId, initialLikeCount)) return@launch
+                handleResult(replyRepository.toggleLike(discussionId, commentId, replyId)) {
+                    loadReplies()
+                }
             }
+
+        _uiState.value =
+            _uiState.value?.let { current ->
+                updateReplyItem(current, replyId) { item -> item.copy(itemJob = coalescedJob) }
+            }
+    }
+
+    private fun shouldSendReplyToggle(
+        replyId: Long,
+        initialLikeCount: Int,
+    ): Boolean {
+        val currentLikeCount =
+            _uiState.value
+                ?.replyItems
+                ?.find { it.reply.replyId == replyId }
+                ?.reply
+                ?.likeCount
+                ?: return false
+
+        return currentLikeCount != initialLikeCount
+    }
+
+    fun toggleCommentLike() {
+        val prevState = _uiState.value ?: return
+        val targetItem = prevState.commentItem
+        val initialLikeCount = targetItem.comment.likeCount
+
+        _uiState.value = applyOptimisticCommentToggle(prevState, targetItem)
+        scheduleCoalescedCommentToggle(initialLikeCount)
+    }
+
+    private fun applyOptimisticCommentToggle(
+        prevState: CommentDetailUiState,
+        commentItemUiState: CommentItemUiState,
+    ): CommentDetailUiState {
+        val isLikedAfterToggle = !commentItemUiState.comment.isLikedByMe
+        val likeCountStep = if (isLikedAfterToggle) 1 else -1
+
+        return updateCommentItem(prevState) { item ->
+            item.itemJob?.cancel()
+            item.copy(
+                comment =
+                    item.comment.copy(
+                        isLikedByMe = isLikedAfterToggle,
+                        likeCount = (item.comment.likeCount + likeCountStep).coerceAtLeast(0),
+                    ),
+                itemJob = null,
+            )
         }
+    }
+
+    private fun scheduleCoalescedCommentToggle(initialLikeCount: Int) {
+        val coalescedJob =
+            viewModelScope.launch {
+                delay(250)
+                if (!shouldSendCommentToggle(initialLikeCount)) return@launch
+                handleResult(commentRepository.toggleLike(discussionId, commentId)) {
+                    loadComment()
+                    _uiEvent.setValue(CommentDetailUiEvent.ToggleCommentLike)
+                }
+            }
+
+        _uiState.value =
+            _uiState.value?.let { current ->
+                updateCommentItem(current) { item -> item.copy(itemJob = coalescedJob) }
+            }
+    }
+
+    private fun updateCommentItem(
+        uiState: CommentDetailUiState,
+        update: (CommentItemUiState) -> CommentItemUiState,
+    ): CommentDetailUiState =
+        uiState.copy(
+            commentItem = update(uiState.commentItem),
+        )
+
+    private fun shouldSendCommentToggle(initialLikeCount: Int): Boolean {
+        val currentLikeCount =
+            _uiState.value
+                ?.commentItem
+                ?.comment
+                ?.likeCount
+                ?: return false
+
+        return currentLikeCount != initialLikeCount
     }
 
     fun showReplyCreate() {
         val content = _uiState.value?.content ?: ""
         _uiEvent.setValue(CommentDetailUiEvent.ShowReplyCreate(discussionId, commentId, content))
+    }
+
+    fun createReply() {
+        viewModelScope.launch {
+            handleResult(
+                replyRepository.saveReply(
+                    discussionId,
+                    commentId,
+                    _uiState.value?.content.orEmpty(),
+                ),
+            ) {
+                loadReplies()
+                _uiState.value = _uiState.value?.copy(content = "")
+            }
+        }
     }
 
     private fun showNewReply() {
@@ -152,7 +287,7 @@ class CommentDetailViewModel(
             val isMyComment = comment.writer.id == tokenRepository.getMemberId()
             _uiState.value =
                 currentUiState?.copy(
-                    comment =
+                    commentItem =
                         CommentItemUiState(
                             comment,
                             isMyComment,
@@ -175,7 +310,7 @@ class CommentDetailViewModel(
                         reply.writer.id == memberId,
                     )
                 }
-            _uiState.value = currentUiState?.copy(replies = replyItems, isLoading = false)
+            _uiState.value = currentUiState?.copy(replyItems = replyItems, isLoading = false)
         }
     }
 

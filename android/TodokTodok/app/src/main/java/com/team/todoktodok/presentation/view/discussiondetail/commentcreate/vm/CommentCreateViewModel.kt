@@ -54,20 +54,20 @@ class CommentCreateViewModel(
 
     fun saveContent() {
         if (commentCreateState is CommentCreateState.Create) {
-            onUiEvent(CommentCreateUiEvent.OnCreateDismiss(_commentText.value.orEmpty()))
+            onUiEvent(CommentCreateUiEvent.OnCreateDismiss(_commentText.value.orEmpty().trim()))
         }
     }
 
     private fun initializeForCreate() {
         onCommentChanged(commentContent)
-        onUiEvent(CommentCreateUiEvent.InitState(_commentText.value.orEmpty()))
+        onUiEvent(CommentCreateUiEvent.InitState(_commentText.value.orEmpty().trim()))
     }
 
     private suspend fun submitCreate() {
         handleResult(
             commentRepository.saveComment(
                 discussionId,
-                commentText.value.orEmpty(),
+                commentText.value.orEmpty().trim(),
             ),
         ) {
             onUiEvent(CommentCreateUiEvent.SubmitComment)
@@ -78,7 +78,7 @@ class CommentCreateViewModel(
         when (val res = commentRepository.getComment(discussionId, commentId)) {
             is NetworkResult.Success -> {
                 onCommentChanged(res.data.content)
-                onUiEvent(CommentCreateUiEvent.InitState(_commentText.value.orEmpty()))
+                onUiEvent(CommentCreateUiEvent.InitState(_commentText.value.orEmpty().trim()))
             }
 
             is NetworkResult.Failure -> onUiEvent(CommentCreateUiEvent.ShowError(res.exception))
@@ -90,7 +90,7 @@ class CommentCreateViewModel(
             commentRepository.updateComment(
                 discussionId,
                 commentId,
-                commentText.value.orEmpty(),
+                commentText.value.orEmpty().trim(),
             ),
         ) {
             onUiEvent(CommentCreateUiEvent.SubmitComment)

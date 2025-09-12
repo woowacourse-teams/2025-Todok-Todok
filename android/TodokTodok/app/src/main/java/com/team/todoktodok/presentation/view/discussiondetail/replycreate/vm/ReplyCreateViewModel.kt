@@ -40,13 +40,13 @@ class ReplyCreateViewModel(
 
     private fun initReplyContent() {
         when (replyCreateState) {
-            ReplyCreateState.Create -> onReplyChanged(content ?: "")
-            is ReplyCreateState.Update -> onReplyChanged(content ?: "")
+            ReplyCreateState.Create -> onReplyChanged(content.orEmpty())
+            is ReplyCreateState.Update -> onReplyChanged(content.orEmpty())
         }
     }
 
     fun onReplyChanged(text: CharSequence?) {
-        _replyContent.value = text?.toString() ?: ""
+        _replyContent.value = text?.toString().orEmpty()
     }
 
     fun submitReply() {
@@ -57,7 +57,7 @@ class ReplyCreateViewModel(
                         replyRepository.saveReply(
                             discussionId,
                             commentId,
-                            replyContent.value ?: throw IllegalStateException(),
+                            replyContent.value?.trim().orEmpty(),
                         ),
                     ) { _uiEvent.setValue(ReplyCreateUiEvent.CreateReply) }
                 }
@@ -68,7 +68,7 @@ class ReplyCreateViewModel(
                             discussionId,
                             commentId,
                             replyCreateState.replyId,
-                            replyContent.value ?: throw IllegalStateException(),
+                            replyContent.value?.trim().orEmpty(),
                         ),
                     ) { _uiEvent.setValue(ReplyCreateUiEvent.CreateReply) }
                 }
@@ -81,7 +81,7 @@ class ReplyCreateViewModel(
             ReplyCreateState.Create -> {
                 _uiEvent.setValue(
                     ReplyCreateUiEvent.SaveContent(
-                        _replyContent.value ?: "",
+                        _replyContent.value?.trim().orEmpty(),
                     ),
                 )
             }
