@@ -3,6 +3,7 @@ package com.team.todoktodok.data.network.service
 import com.team.domain.model.exception.NetworkResult
 import com.team.todoktodok.data.network.request.LoginRequest
 import com.team.todoktodok.data.network.request.ModifyProfileRequest
+import com.team.todoktodok.data.network.request.RefreshRequest
 import com.team.todoktodok.data.network.request.ReportRequest
 import com.team.todoktodok.data.network.request.SignUpRequest
 import com.team.todoktodok.data.network.response.BlockedMemberResponse
@@ -14,6 +15,7 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.HTTP
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
@@ -69,5 +71,10 @@ interface MemberService {
     @DELETE("v1/members/{memberId}/block")
     suspend fun unblock(
         @Path("memberId") memberId: Long,
+    ): NetworkResult<Unit>
+
+    @HTTP(method = "DELETE", path = "v1/members", hasBody = true)
+    suspend fun withdraw(
+        @Body requestBody: RefreshRequest,
     ): NetworkResult<Unit>
 }

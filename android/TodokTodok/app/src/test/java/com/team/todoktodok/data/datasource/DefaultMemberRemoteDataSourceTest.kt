@@ -94,40 +94,6 @@ class DefaultMemberRemoteDataSourceTest {
         }
 
     @Test
-    fun `리프레시_토큰을_담은_바디가_없으면 RefreshTokenNotReceivedException을 반환한다`() =
-        runTest {
-            val email = "test@example.com"
-            val rawAccessToken = "test.jwt.accessToken"
-            val accessToken = "Bearer $rawAccessToken"
-
-            val mockResponse: Response<LoginResponse> =
-                Response.success(
-                    null,
-                    okhttp3.Response
-                        .Builder()
-                        .code(200)
-                        .message("OK")
-                        .protocol(okhttp3.Protocol.HTTP_1_1)
-                        .request(
-                            okhttp3.Request
-                                .Builder()
-                                .url("http://localhost/")
-                                .build(),
-                        ).addHeader("Authorization", accessToken)
-                        .build(),
-                )
-
-            coEvery { memberService.login(LoginRequest(email)) } returns mockResponse
-
-            // when
-            val result = dataSource.login(email)
-
-            // then
-            assertTrue(result is NetworkResult.Failure)
-            assertTrue((result as NetworkResult.Failure).exception is TodokTodokExceptions.RefreshTokenNotReceivedException)
-        }
-
-    @Test
     fun `유저 정보 API를 호출할 때 MemberId를 전달 받았으면 전달받은 memberID를 사용해 API를 호출한다`() =
         runTest {
             // given

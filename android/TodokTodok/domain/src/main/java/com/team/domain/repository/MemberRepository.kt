@@ -42,4 +42,6 @@ interface MemberRepository {
     suspend fun getBlockedMembers(): NetworkResult<List<BlockedMember>>
 
     suspend fun unblock(id: Long): NetworkResult<Unit>
+
+    suspend fun withdraw(): NetworkResult<Unit>
 }

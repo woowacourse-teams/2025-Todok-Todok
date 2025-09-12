@@ -2,6 +2,9 @@ package com.team.todoktodok.data.datasource.member
 
 import com.team.domain.model.Support
 import com.team.domain.model.exception.NetworkResult
+import com.team.domain.model.exception.TodokTodokExceptions
+import com.team.domain.model.exception.onFailure
+import com.team.domain.model.exception.onSuccessSuspend
 import com.team.domain.model.exception.toDomain
 import com.team.domain.model.member.MemberDiscussionType
 import com.team.domain.model.member.MemberId
@@ -11,6 +14,7 @@ import com.team.todoktodok.data.core.ext.extractTokens
 import com.team.todoktodok.data.datasource.token.TokenDataSource
 import com.team.todoktodok.data.network.request.LoginRequest
 import com.team.todoktodok.data.network.request.ModifyProfileRequest
+import com.team.todoktodok.data.network.request.RefreshRequest
 import com.team.todoktodok.data.network.request.ReportRequest
 import com.team.todoktodok.data.network.request.SignUpRequest
 import com.team.todoktodok.data.network.response.BlockedMemberResponse
@@ -31,8 +35,13 @@ class DefaultMemberRemoteDataSource(
                 val memberType = parser.parseToMemberType()
 
                 when (memberType) {
-                    MemberType.USER -> saveMemberSetting(parser, accessToken, refreshToken)
-                    MemberType.TEMP_USER -> tokenLocalDataSource.saveToken(accessToken, refreshToken)
+                    MemberType.USER -> {
+                        requireNotNull(refreshToken) { TodokTodokExceptions.RefreshTokenNotReceivedException }
+                        saveMemberSetting(parser, accessToken, refreshToken)
+                    }
+
+                    MemberType.TEMP_USER ->
+                        tokenLocalDataSource.saveAccessToken(accessToken)
                 }
                 memberType
             }
@@ -46,6 +55,10 @@ class DefaultMemberRemoteDataSource(
                 .signUp(request.email, request)
                 .extractTokens { accessToken, refreshToken ->
                     val parser = JwtParser(accessToken)
+
+                    requireNotNull(refreshToken) {
+                        TodokTodokExceptions.RefreshTokenNotReceivedException
+                    }
                     saveMemberSetting(parser, accessToken, refreshToken)
                 }
         }.getOrElse { throwable ->
@@ -100,4 +113,14 @@ class DefaultMemberRemoteDataSource(
     override suspend fun fetchBlockedMembers(): NetworkResult<List<BlockedMemberResponse>> = memberService.fetchBlockedMembers()
 
     override suspend fun unblock(request: Long) = memberService.unblock(request)
+
+    override suspend fun withdraw(): NetworkResult<Unit> {
+        val refreshToken = tokenLocalDataSource.getRefreshToken()
+
+        return memberService
+            .withdraw(RefreshRequest(refreshToken))
+            .onSuccessSuspend {
+                tokenLocalDataSource.clear()
+            }.onFailure { it }
+    }
 }

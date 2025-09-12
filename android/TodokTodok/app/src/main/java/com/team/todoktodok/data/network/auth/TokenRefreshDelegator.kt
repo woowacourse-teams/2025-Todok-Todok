@@ -1,6 +1,7 @@
 package com.team.todoktodok.data.network.auth
 
 import com.team.domain.model.exception.NetworkResult
+import com.team.domain.model.exception.TodokTodokExceptions
 import com.team.todoktodok.data.core.ext.extractTokens
 import com.team.todoktodok.data.datasource.token.TokenDataSource
 import com.team.todoktodok.data.network.request.RefreshRequest
@@ -19,6 +20,7 @@ class TokenRefreshDelegator(
         return when (
             val result =
                 response.extractTokens { accessToken, refreshToken ->
+                    requireNotNull(refreshToken) { TodokTodokExceptions.RefreshTokenNotReceivedException }
                     tokenLocalDataSource.saveToken(accessToken, refreshToken)
                     accessToken
                 }
