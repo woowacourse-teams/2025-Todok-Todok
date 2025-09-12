@@ -35,4 +35,4 @@ cloud:
 
 firebase:
   account:
-    path: todoktodok-firebase-adminsdk.json
+    path: classpath:submodule/security/todoktodok-firebase-adminsdk.json
