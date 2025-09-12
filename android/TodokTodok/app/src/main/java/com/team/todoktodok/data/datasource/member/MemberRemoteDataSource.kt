@@ -37,4 +37,6 @@ interface MemberRemoteDataSource {
     suspend fun fetchBlockedMembers(): NetworkResult<List<BlockedMemberResponse>>
 
     suspend fun unblock(request: Long): NetworkResult<Unit>
+
+    suspend fun withdraw(): NetworkResult<Unit>
 }

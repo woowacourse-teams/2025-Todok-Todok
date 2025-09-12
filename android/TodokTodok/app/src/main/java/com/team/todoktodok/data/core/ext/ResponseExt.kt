@@ -10,7 +10,7 @@ import java.net.HttpURLConnection.HTTP_CREATED
 import java.net.HttpURLConnection.HTTP_NO_CONTENT
 
 suspend fun <R> Response<LoginResponse>.extractTokens(
-    onTokenReceived: suspend (accessToken: String, refreshToken: String) -> R,
+    onTokenReceived: suspend (accessToken: String, refreshToken: String?) -> R,
 ): NetworkResult<R> {
     if (!isSuccessful) {
         return NetworkResult.Failure(TodokTodokExceptions.from(code(), message()))
@@ -22,9 +22,6 @@ suspend fun <R> Response<LoginResponse>.extractTokens(
 
     val refreshToken = body()?.refreshToken
 
-    if (refreshToken.isNullOrBlank()) {
-        return NetworkResult.Failure(TodokTodokExceptions.RefreshTokenNotReceivedException)
-    }
     return runCatching {
         NetworkResult.Success(onTokenReceived(accessToken, refreshToken))
     }.getOrElse {

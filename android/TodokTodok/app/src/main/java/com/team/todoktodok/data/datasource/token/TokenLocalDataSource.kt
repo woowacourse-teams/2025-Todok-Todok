@@ -18,6 +18,10 @@ class TokenLocalDataSource(
 
     override suspend fun getMemberId(): Long = dataStore.data.first().memberId
 
+    override suspend fun saveAccessToken(accessToken: String) {
+        dataStore.updateData { it.copy(accessToken = accessToken) }
+    }
+
     override suspend fun saveToken(
         accessToken: String,
         refreshToken: String,
@@ -42,5 +46,9 @@ class TokenLocalDataSource(
                 memberId,
             )
         }
+    }
+
+    override suspend fun clear() {
+        dataStore.updateData { UserSetting() }
     }
 }
