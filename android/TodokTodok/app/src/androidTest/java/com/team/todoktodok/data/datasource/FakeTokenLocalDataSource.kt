@@ -8,13 +8,12 @@ class FakeTokenLocalDataSource : TokenDataSource {
     override suspend fun getRefreshToken(): String = "Bearer fake_refresh_token"
 
     override suspend fun getMemberId(): Long = 0L
+    override suspend fun saveAccessToken(accessToken: String) {}
 
     override suspend fun saveToken(
         accessToken: String,
         refreshToken: String,
-    ) {
-        TODO("Not yet implemented")
-    }
+    ) {}
 
     override suspend fun saveSetting(
         accessToken: String,
@@ -22,4 +21,6 @@ class FakeTokenLocalDataSource : TokenDataSource {
         memberId: Long,
     ) {
     }
+
+    override suspend fun clear() {}
 }
