@@ -16,6 +16,7 @@ import com.team.todoktodok.presentation.view.setting.manage.ManageBlockedMembers
 import com.team.todoktodok.presentation.view.setting.modify.ModifyProfileFragment
 import com.team.todoktodok.presentation.view.setting.vm.SettingViewModel
 import com.team.todoktodok.presentation.view.setting.vm.SettingViewModelFactory
+import com.team.todoktodok.presentation.view.setting.withdraw.WithdrawFragment
 import kotlin.getValue
 
 class SettingActivity : AppCompatActivity() {
@@ -61,22 +62,9 @@ class SettingActivity : AppCompatActivity() {
 
     private fun setUpUiState(binding: ActivitySettingBinding) {
         viewModel.uiState.observe(this) { value ->
-            when (val screen = value.screen) {
-                SettingScreen.SETTING_MAIN -> {
-                    changeToolbarTitle(binding, screen.toolbarTitle)
-                    changeFragment(screen)
-                }
-
-                SettingScreen.MODIFY_PROFILE -> {
-                    changeToolbarTitle(binding, screen.toolbarTitle)
-                    changeFragment(screen)
-                }
-
-                SettingScreen.MANAGE_BLOCKED_USERS -> {
-                    changeToolbarTitle(binding, screen.toolbarTitle)
-                    changeFragment(screen)
-                }
-            }
+            val screen = value.screen
+            changeToolbarTitle(binding, screen.toolbarTitle)
+            changeFragment(screen)
         }
     }
 
@@ -93,6 +81,7 @@ class SettingActivity : AppCompatActivity() {
                 SettingScreen.SETTING_MAIN -> SettingFragment()
                 SettingScreen.MODIFY_PROFILE -> ModifyProfileFragment()
                 SettingScreen.MANAGE_BLOCKED_USERS -> ManageBlockedMembersFragment()
+                SettingScreen.WITHDRAW -> WithdrawFragment.newInstance()
             }
 
         supportFragmentManager.commit {

@@ -38,6 +38,10 @@ class SettingFragment : Fragment(R.layout.fragment_setting) {
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(BuildConfig.FEEDBACK_URL))
                 startActivity(intent)
             }
+
+            llWithdraw.setOnClickListener {
+                viewModel.changeScreen(SettingScreen.WITHDRAW)
+            }
         }
     }
 }

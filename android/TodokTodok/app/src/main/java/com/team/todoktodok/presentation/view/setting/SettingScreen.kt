@@ -9,4 +9,5 @@ enum class SettingScreen(
     SETTING_MAIN(R.string.profile_setting),
     MODIFY_PROFILE(R.string.setting_modify_profile),
     MANAGE_BLOCKED_USERS(R.string.setting_block_members),
+    WITHDRAW(R.string.setting_withdraw),
 }

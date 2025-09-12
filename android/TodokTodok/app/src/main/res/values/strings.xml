@@ -160,6 +160,12 @@
     <string name="setting_modify_profile_complete">프로필 수정이 완료 되었습니다.</string>
     <string name="setting_member_message_et_hint">상태 메시지를 입력해주세요</string>
 
+    <!-- 탈퇴 화면 -->
+    <string name="setting_withdraw">회원 탈퇴</string>
+    <string name="text_do_withdraw">탈퇴하기</string>
+    <string name="text_ask_really_withdraw">정말 탈퇴하시겠어요 ?</string>
+    <string name="withdraw_farewell">토독이와 함께해준 시간을 소중히 기억할게요</string>
+
     <string name="setting_unblock_content">해당 유저를 차단 해제하시겠습니까?</string>
     <string name="setting_unblock">해제하기</string>
     <string name="setting_send_feedback">의견 보내기</string>
