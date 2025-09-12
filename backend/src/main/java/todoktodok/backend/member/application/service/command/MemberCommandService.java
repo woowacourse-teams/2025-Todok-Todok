@@ -1,42 +1,67 @@
 package todoktodok.backend.member.application.service.command;
 
+import java.util.ConcurrentModificationException;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+
 import lombok.AllArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import todoktodok.backend.global.jwt.JwtTokenProvider;
+import todoktodok.backend.global.jwt.TokenInfo;
+import todoktodok.backend.member.application.ImageType;
 import todoktodok.backend.member.application.dto.request.LoginRequest;
 import todoktodok.backend.member.application.dto.request.ProfileUpdateRequest;
+import todoktodok.backend.member.application.dto.request.RefreshTokenRequest;
 import todoktodok.backend.member.application.dto.request.SignupRequest;
+import todoktodok.backend.member.application.dto.response.ProfileImageUpdateResponse;
 import todoktodok.backend.member.application.dto.response.ProfileUpdateResponse;
+import todoktodok.backend.member.application.dto.response.TokenResponse;
 import todoktodok.backend.member.domain.Block;
 import todoktodok.backend.member.domain.Member;
 import todoktodok.backend.member.domain.MemberReport;
 import todoktodok.backend.member.domain.MemberReportReason;
+import todoktodok.backend.member.domain.RefreshToken;
 import todoktodok.backend.member.domain.repository.BlockRepository;
 import todoktodok.backend.member.domain.repository.MemberReportRepository;
 import todoktodok.backend.member.domain.repository.MemberRepository;
+import todoktodok.backend.member.domain.repository.RefreshTokenRepository;
+import todoktodok.backend.member.infrastructure.ProfileImageResponse;
+import todoktodok.backend.member.infrastructure.S3ImageUploadClient;
 
 @Service
 @Transactional
 @AllArgsConstructor
 public class MemberCommandService {
 
+    private static final long MAX_FILE_SIZE = 5 * 1024 * 1024;
+
     private final MemberRepository memberRepository;
     private final BlockRepository blockRepository;
     private final MemberReportRepository memberReportRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
     private final JwtTokenProvider jwtTokenProvider;
+    private final S3ImageUploadClient s3ImageUploadClient;
 
-    public String login(final LoginRequest loginRequest) {
-        final Optional<Member> member = memberRepository.findByEmail(loginRequest.email());
-        if (member.isPresent()) {
-            return jwtTokenProvider.createToken(member.get());
+    public TokenResponse login(final LoginRequest loginRequest) {
+        final Optional<Member> memberOrEmpty = memberRepository.findByEmail(loginRequest.email());
+        if (memberOrEmpty.isPresent()) {
+            final String accessToken = jwtTokenProvider.createAccessToken(memberOrEmpty.get());
+            final String refreshToken = jwtTokenProvider.createRefreshToken(memberOrEmpty.get());
+
+            final RefreshToken savedRefreshToken = RefreshToken.create(refreshToken);
+            saveRefreshTokenIfUnique(savedRefreshToken, memberOrEmpty.get().getId());
+
+            return new TokenResponse(accessToken, refreshToken);
         }
-        return jwtTokenProvider.createTempToken(loginRequest.email());
+
+        final String tempToken = jwtTokenProvider.createTempToken(loginRequest.email());
+        return new TokenResponse(tempToken, null);
     }
 
-    public String signup(
+    public TokenResponse signup(
             final SignupRequest signupRequest,
             final String memberEmail
     ) {
@@ -51,7 +76,29 @@ public class MemberCommandService {
                 .build();
 
         final Member savedMember = memberRepository.save(member);
-        return jwtTokenProvider.createToken(savedMember);
+        final String accessToken = jwtTokenProvider.createAccessToken(savedMember);
+        final String refreshToken = jwtTokenProvider.createRefreshToken(savedMember);
+        refreshTokenRepository.save(RefreshToken.create(refreshToken));
+
+        return new TokenResponse(accessToken, refreshToken);
+    }
+
+    public TokenResponse refresh(final RefreshTokenRequest refreshTokenRequest) {
+        final String oldRefreshTokenRequest = refreshTokenRequest.refreshToken();
+        final TokenInfo tokenInfo = jwtTokenProvider.getInfoByRefreshToken(oldRefreshTokenRequest);
+        final Long memberId = tokenInfo.id();
+        final Member member = findMember(memberId);
+
+        final String accessToken = jwtTokenProvider.createAccessToken(member);
+        final RefreshToken oldRefreshToken = findRefreshToken(oldRefreshTokenRequest);
+
+        refreshTokenRepository.delete(oldRefreshToken);
+
+        final RefreshToken newRefreshToken = RefreshToken.create(jwtTokenProvider.createRefreshToken(member));
+
+        saveRefreshTokenIfUnique(newRefreshToken, memberId);
+
+        return new TokenResponse(accessToken, newRefreshToken.getToken());
     }
 
     public void block(
@@ -106,6 +153,37 @@ public class MemberCommandService {
         return new ProfileUpdateResponse(member);
     }
 
+    public ProfileImageUpdateResponse updateProfileImage(
+            final Long memberId,
+            final MultipartFile profileImage
+    ) {
+        final Member member = findMember(memberId);
+
+        validateUpdateProfileImage(member, profileImage);
+
+        final ProfileImageResponse profileImageResponse = s3ImageUploadClient.uploadImage(profileImage);
+
+        final String downloadUrl = profileImageResponse.downloadUrl();
+        member.updateProfileImage(downloadUrl);
+
+        return new ProfileImageUpdateResponse(downloadUrl);
+    }
+
+    public void deleteMember(
+            final Long accessTokenMemberId,
+            final RefreshTokenRequest refreshTokenRequest
+    ) {
+        final TokenInfo tokenInfo = jwtTokenProvider.getInfoByRefreshToken(refreshTokenRequest.refreshToken());
+        final Long refreshTokenMemberId = tokenInfo.id();
+        validateTokenMemberId(accessTokenMemberId, refreshTokenMemberId);
+
+        final Member member = findMember(accessTokenMemberId);
+        final RefreshToken refreshToken = findRefreshToken(refreshTokenRequest.refreshToken());
+
+        memberRepository.delete(member);
+        refreshTokenRepository.delete(refreshToken);
+    }
+
     public void deleteBlock(
             final Long memberId,
             final Long targetId
@@ -128,7 +206,8 @@ public class MemberCommandService {
 
     private void validateDuplicatedEmail(final SignupRequest signupRequest) {
         if (memberRepository.existsByEmail(signupRequest.email())) {
-            throw new IllegalArgumentException(String.format("이미 가입된 이메일입니다: email = %s", maskEmail(signupRequest.email())));
+            throw new IllegalArgumentException(
+                    String.format("이미 가입된 이메일입니다: email = %s", maskEmail(signupRequest.email())));
         }
     }
 
@@ -137,13 +216,50 @@ public class MemberCommandService {
             final String tokenEmail
     ) {
         if (!tokenEmail.equals(signupRequest.email())) {
-            throw new IllegalArgumentException(String.format("소셜 로그인을 하지 않은 이메일입니다: email = %s", maskEmail(signupRequest.email())));
+            throw new IllegalArgumentException(
+                    String.format("소셜 로그인을 하지 않은 이메일입니다: email = %s", maskEmail(signupRequest.email())));
         }
     }
 
     private Member findMember(final Long memberId) {
         return memberRepository.findById(memberId)
-                .orElseThrow(() -> new NoSuchElementException(String.format("해당 회원을 찾을 수 없습니다: memberId = %s", memberId)));
+                .orElseThrow(
+                        () -> new NoSuchElementException(String.format("해당 회원을 찾을 수 없습니다: memberId = %s", memberId)));
+    }
+
+    private void saveRefreshTokenIfUnique(
+            final RefreshToken refreshToken,
+            final Long memberId
+    ) {
+        try {
+            validateDuplicatedRefreshToken(refreshToken, memberId);
+
+            refreshTokenRepository.save(refreshToken);
+        } catch (final DataIntegrityViolationException e) {
+            throw new ConcurrentModificationException(
+                    String.format("중복된 리프레시 토큰 발급 요청입니다: memberId = %d", memberId));
+        }
+    }
+
+    private void validateDuplicatedRefreshToken(
+            final RefreshToken refreshToken,
+            final Long memberId
+    ) {
+        if (refreshTokenRepository.existsByToken(refreshToken.getToken())) {
+            throw new ConcurrentModificationException(String.format("중복된 리프레시 토큰 발급 요청입니다: memberId = %d", memberId));
+        }
+    }
+
+    private static void validateTokenMemberId(
+            final Long accessTokenMemberId,
+            final Long refreshTokenMemberId
+    ) {
+        if (!refreshTokenMemberId.equals(accessTokenMemberId)) {
+            throw new IllegalArgumentException(
+                    String.format("리프레시 토큰과 액세스 토큰의 회원 정보가 일치하지 않습니다: accessToken memberId = %d, refreshToken memberId = %d",
+                            accessTokenMemberId, refreshTokenMemberId)
+            );
+        }
     }
 
     private void validateDuplicatedBlock(
@@ -151,7 +267,8 @@ public class MemberCommandService {
             final Member target
     ) {
         if (blockRepository.existsByMemberAndTarget(member, target)) {
-            throw new IllegalArgumentException(String.format("이미 차단한 회원입니다: memberId = %s -> targetId = %s", member.getId(), target.getId()));
+            throw new IllegalArgumentException(
+                    String.format("이미 차단한 회원입니다: memberId = %s -> targetId = %s", member.getId(), target.getId()));
         }
     }
 
@@ -160,7 +277,8 @@ public class MemberCommandService {
             final Member target
     ) {
         if (memberReportRepository.existsByMemberAndTarget(member, target)) {
-            throw new IllegalArgumentException(String.format("이미 신고한 회원입니다: memberId = %s -> targetId = %s", member.getId(), target.getId()));
+            throw new IllegalArgumentException(
+                    String.format("이미 신고한 회원입니다: memberId = %s -> targetId = %s", member.getId(), target.getId()));
         }
     }
 
@@ -179,7 +297,8 @@ public class MemberCommandService {
             final Member target
     ) {
         if (!blockRepository.existsByMemberAndTarget(member, target)) {
-            throw new IllegalArgumentException(String.format("차단한 회원이 아닙니다: memberId = %s -> targetId = %s", member.getId(), target.getId()));
+            throw new IllegalArgumentException(
+                    String.format("차단한 회원이 아닙니다: memberId = %s -> targetId = %s", member.getId(), target.getId()));
         }
     }
 
@@ -187,5 +306,56 @@ public class MemberCommandService {
         final String visiblePart = email.substring(0, 4);
         final String maskedPart = "*".repeat(email.length() - 4);
         return visiblePart + maskedPart;
+    }
+
+    private RefreshToken findRefreshToken(final String oldRefreshToken) {
+        return refreshTokenRepository.findByToken(oldRefreshToken)
+                .orElseThrow(() -> new NoSuchElementException(
+                        String.format("해당 리프레시 토큰을 찾을 수 없습니다: refreshToken = %s", oldRefreshToken)));
+    }
+
+    private void validateUpdateProfileImage(
+            final Member member,
+            final MultipartFile profileImage
+    ) {
+        validateIsProfileImageEmpty(member, profileImage);
+        validateProfileImageSize(member, profileImage);
+        validateProfileImageType(member, profileImage);
+
+    }
+
+    private void validateIsProfileImageEmpty(
+            final Member member,
+            final MultipartFile profileImage
+    ) {
+        if (profileImage.isEmpty()) {
+            throw new IllegalArgumentException(
+                    String.format("파일이 비어있습니다: memberId = %s", member.getId())
+            );
+        }
+    }
+
+    private void validateProfileImageSize(
+            final Member member,
+            final MultipartFile profileImage
+    ) {
+        final long imageSize = profileImage.getSize();
+        if (imageSize > MAX_FILE_SIZE) {
+            throw new IllegalArgumentException(
+                    String.format("파일 크기가 5MB 초과입니다: memberId = %s, imageSize = %d", member.getId(), imageSize)
+            );
+        }
+    }
+
+    private void validateProfileImageType(
+            final Member member,
+            final MultipartFile profileImage
+    ) {
+        final String contentType = profileImage.getContentType();
+        if (!ImageType.contains(contentType)) {
+            throw new IllegalArgumentException(
+                    String.format("이미지 파일이 아닙니다: memberId = %s, contentType = %s", member.getId(), contentType)
+            );
+        }
     }
 }

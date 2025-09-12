@@ -5,6 +5,11 @@ spring:
     import:
       - submodule/security/aladin.yml
       - submodule/security/jwt.yml
+      - submodule/security/aws.yml
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
 
 aladin:
   base-url: ${aladin.base-url}
@@ -16,5 +21,14 @@ jwt:
   secret-key: ${jwt.secret-key}
   access-token:
     expire-mills: ${jwt.access-token.expire-mills}
+  refresh-token:
+    expire-mills: ${jwt.refresh-token.expire-mills}
   temp-token:
     expire-mills: ${jwt.temp-token.expire-mills}
+
+cloud:
+  aws:
+    s3:
+      bucket: ${cloud.aws.s3.bucket}
+      key-prefix: ${cloud.aws.s3.key-prefix}
+      region: ${cloud.aws.s3.region}
