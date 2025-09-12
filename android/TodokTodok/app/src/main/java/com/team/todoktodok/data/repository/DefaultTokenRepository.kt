@@ -1,10 +1,10 @@
 package com.team.todoktodok.data.repository
 
 import com.team.domain.repository.TokenRepository
-import com.team.todoktodok.data.datasource.token.TokenDataSource
+import com.team.todoktodok.data.datasource.token.TokenLocalDataSource
 
 class DefaultTokenRepository(
-    private val tokenDataSource: TokenDataSource,
+    private val tokenLocalDataSource: TokenLocalDataSource,
 ) : TokenRepository {
-    override suspend fun getMemberId(): Long = tokenDataSource.getMemberId()
+    override suspend fun getMemberId(): Long = tokenLocalDataSource.getMemberId()
 }

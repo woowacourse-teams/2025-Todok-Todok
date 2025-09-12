@@ -37,9 +37,6 @@ class ExceptionMessageConverter {
             is TodokTodokExceptions.SignUpException.ProfileImageNotExistException ->
                 R.string.error_profile_image_not_exist
 
-            is TodokTodokExceptions.HttpExceptions.AuthenticationException ->
-                R.string.error_authentication
-
             is TodokTodokExceptions.HttpExceptions.AuthorizationException ->
                 R.string.error_authorization
 
@@ -66,6 +63,9 @@ class ExceptionMessageConverter {
 
             is TodokTodokExceptions.ConnectException ->
                 R.string.error_no_internet
+
+            TodokTodokExceptions.RefreshTokenNotReceivedException ->
+                R.string.error_refresh_token_not_received
 
             is TodokTodokExceptions.IOException ->
                 R.string.error_io_exception

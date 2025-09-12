@@ -16,6 +16,7 @@ androidx-recyclerview = "1.4.0"
 androidx-datastore = "1.1.1"
 androidx-credentials = "1.5.0"
 androidx-swiperefreshlayout = "1.1.0"
+androidx-lifecycle-process = "2.9.3"
 
 # Network
 retrofit = "3.0.0"
@@ -60,7 +61,6 @@ mannodermaus-junit5 = "1.7.0"
 junit-jupiter = "5.12.0"
 kotest-runner-junit5 = "5.9.1"
 mockk = "1.13.8"
-junit = "4.12"
 
 [libraries]
 # AndroidX
@@ -75,6 +75,7 @@ androidx-swiperefreshlayout = { group = "androidx.swiperefreshlayout", name = "s
 androidx-datastore = { module = "androidx.datastore:datastore-preferences", version.ref = "androidx-datastore" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room-runtime" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room-runtime" }
+androidx-lifecycle-process = { module = "androidx.lifecycle:lifecycle-process", version.ref = "androidx-lifecycle-process" }
 
 # Kotlin
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization-json" }
@@ -116,7 +117,6 @@ mannodermaus-junit5-core = { group = "de.mannodermaus.junit5", name = "android-t
 mannodermaus-junit5-runner = { group = "de.mannodermaus.junit5", name = "android-test-runner", version.ref = "mannodermaus-junit5" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 mockk-android = { module = "io.mockk:mockk-android", version.ref = "mockk" }
-junit = { group = "junit", name = "junit", version.ref = "junit" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines-core" }
 
 [bundles]
@@ -130,7 +130,8 @@ androidx = [
     "androidx-credentials",
     "androidx-credentials-play-services-auth",
     "androidx-room-runtime",
-    "androidx-swiperefreshlayout"
+    "androidx-swiperefreshlayout",
+    "androidx-lifecycle-process"
 ]
 
 kotlin = [
@@ -168,7 +169,6 @@ logging = [
 test = [
     "assertj-core",
     "junit-jupiter",
-    "junit",
     "mockk",
     "kotest-runner-junit5",
     "kotlinx-coroutines-test"

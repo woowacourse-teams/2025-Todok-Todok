@@ -8,12 +8,12 @@ import com.team.domain.model.member.MemberId
 import com.team.domain.model.member.MemberType
 import com.team.todoktodok.data.core.JwtParser
 import com.team.todoktodok.data.datasource.member.DefaultMemberRemoteDataSource
-import com.team.todoktodok.data.datasource.token.TokenDataSource
-import com.team.todoktodok.data.network.auth.AuthInterceptor.Companion.AUTHORIZATION_NAME
+import com.team.todoktodok.data.datasource.token.TokenLocalDataSource
 import com.team.todoktodok.data.network.request.LoginRequest
 import com.team.todoktodok.data.network.request.ModifyProfileRequest
 import com.team.todoktodok.data.network.request.ReportRequest
 import com.team.todoktodok.data.network.response.BlockedMemberResponse
+import com.team.todoktodok.data.network.response.LoginResponse
 import com.team.todoktodok.data.network.response.ProfileResponse
 import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
 import com.team.todoktodok.data.network.service.MemberService
@@ -32,27 +32,31 @@ import retrofit2.Response
 
 class DefaultMemberRemoteDataSourceTest {
     private lateinit var memberService: MemberService
-    private lateinit var tokenDataSource: TokenDataSource
+    private lateinit var tokenLocalDataSource: TokenLocalDataSource
     private lateinit var dataSource: DefaultMemberRemoteDataSource
 
     @BeforeEach
     fun setUp() {
         memberService = mockk()
-        tokenDataSource = mockk(relaxed = true)
-        dataSource = DefaultMemberRemoteDataSource(memberService, tokenDataSource)
+        tokenLocalDataSource = mockk(relaxed = true)
+        dataSource = DefaultMemberRemoteDataSource(memberService, tokenLocalDataSource)
     }
 
     @Test
     fun `로그인시 액세스 토큰을 저장하고 멤버 타입을 반환한다`() =
         runTest {
             val email = "test@example.com"
-            val rawToken = "test.jwt.token"
-            val accessToken = "Bearer $rawToken"
+            val rawAccessToken = "test.jwt.accessToken"
+            val rawRefreshToken = "test.jwt.refreshToken"
+            val accessToken = "Bearer $rawAccessToken"
+            val refreshToken = "Bearer $rawRefreshToken"
+            val loginResponse = LoginResponse(refreshToken)
             val memberId = 1L
 
-            val mockResponse = mockk<Response<Unit>>()
+            val mockResponse = mockk<Response<LoginResponse>>()
             every { mockResponse.isSuccessful } returns true
-            every { mockResponse.headers() } returns mapOf(AUTHORIZATION_NAME to accessToken).toHeaders()
+            every { mockResponse.headers() } returns mapOf("Authorization" to accessToken).toHeaders()
+            every { mockResponse.body() } returns loginResponse
 
             coEvery { memberService.login(LoginRequest(email)) } returns mockResponse
 
@@ -66,14 +70,14 @@ class DefaultMemberRemoteDataSourceTest {
             // then
             assertTrue(result is NetworkResult.Success)
             assertEquals(MemberType.USER, (result as NetworkResult.Success).data)
-            coVerify { tokenDataSource.saveToken(accessToken, "", memberId) }
+            coVerify { tokenLocalDataSource.saveSetting(accessToken, refreshToken, memberId) }
         }
 
     @Test
-    fun `로그인 실패 시 토큰을 담은 헤더가 없으면 MissingLocationHeaderException을 반환한다`() =
+    fun `액세스_토큰을 담은 헤더가 없으면 MissingLocationHeaderException을 반환한다`() =
         runTest {
             val email = "test@example.com"
-            val mockResponse = mockk<Response<Unit>>()
+            val mockResponse = mockk<Response<LoginResponse>>()
 
             every { mockResponse.isSuccessful } returns true
             every { mockResponse.headers() } returns emptyMap<String, String>().toHeaders()
@@ -87,6 +91,40 @@ class DefaultMemberRemoteDataSourceTest {
 
             val failure = result as NetworkResult.Failure
             assertTrue(failure.exception is TodokTodokExceptions.MissingLocationHeaderException)
+        }
+
+    @Test
+    fun `리프레시_토큰을_담은_바디가_없으면 RefreshTokenNotReceivedException을 반환한다`() =
+        runTest {
+            val email = "test@example.com"
+            val rawAccessToken = "test.jwt.accessToken"
+            val accessToken = "Bearer $rawAccessToken"
+
+            val mockResponse: Response<LoginResponse> =
+                Response.success(
+                    null,
+                    okhttp3.Response
+                        .Builder()
+                        .code(200)
+                        .message("OK")
+                        .protocol(okhttp3.Protocol.HTTP_1_1)
+                        .request(
+                            okhttp3.Request
+                                .Builder()
+                                .url("http://localhost/")
+                                .build(),
+                        ).addHeader("Authorization", accessToken)
+                        .build(),
+                )
+
+            coEvery { memberService.login(LoginRequest(email)) } returns mockResponse
+
+            // when
+            val result = dataSource.login(email)
+
+            // then
+            assertTrue(result is NetworkResult.Failure)
+            assertTrue((result as NetworkResult.Failure).exception is TodokTodokExceptions.RefreshTokenNotReceivedException)
         }
 
     @Test
@@ -114,7 +152,7 @@ class DefaultMemberRemoteDataSourceTest {
             // given
             val memberId = 2L
             val exception = TodokTodokExceptions.UnknownException(null)
-            coEvery { tokenDataSource.getMemberId() } returns memberId
+            coEvery { tokenLocalDataSource.getMemberId() } returns memberId
             coEvery { memberService.fetchProfile(memberId) } returns NetworkResult.Failure(exception)
 
             // when
@@ -130,7 +168,7 @@ class DefaultMemberRemoteDataSourceTest {
             // given
             val memberId = 2L
             val profileResponse = mockk<ProfileResponse>()
-            coEvery { tokenDataSource.getMemberId() } returns memberId
+            coEvery { tokenLocalDataSource.getMemberId() } returns memberId
             coEvery { memberService.fetchProfile(memberId) } returns
                 NetworkResult.Success(
                     profileResponse,
@@ -169,7 +207,7 @@ class DefaultMemberRemoteDataSourceTest {
             val type = MemberDiscussionType.PARTICIPATED
             val response = NetworkResult.Success(mockk<List<DiscussionResponse>>())
 
-            coEvery { tokenDataSource.getMemberId() } returns memberId
+            coEvery { tokenLocalDataSource.getMemberId() } returns memberId
             coEvery {
                 memberService.fetchMemberDiscussionRooms(
                     memberId,

@@ -175,9 +175,9 @@
     <string name="error_invalid_token">유효하지 않은 소셜 로그인 이메일입니다.</string>
     <string name="error_invalid_email_format">올바른 이메일 형식을 입력해주세요.</string>
     <string name="error_profile_image_not_exist">프로필 이미지를 등록해주세요.</string>
+    <string name="error_refresh_token_not_received">리프레시 토큰이 전달되지 않았습니다</string>
 
     <!-- HTTP 예외 -->
-    <string name="error_authentication">로그인이 필요한 서비스입니다.</string>
     <string name="error_authorization">권한이 없는 요청입니다.</string>
     <string name="error_not_found">요청한 정보를 찾을 수 없습니다.</string>
     <string name="error_server">서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.</string>

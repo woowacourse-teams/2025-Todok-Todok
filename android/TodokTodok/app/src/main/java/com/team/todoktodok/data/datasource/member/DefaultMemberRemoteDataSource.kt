@@ -7,7 +7,7 @@ import com.team.domain.model.member.MemberDiscussionType
 import com.team.domain.model.member.MemberId
 import com.team.domain.model.member.MemberType
 import com.team.todoktodok.data.core.JwtParser
-import com.team.todoktodok.data.core.ext.extractAccessToken
+import com.team.todoktodok.data.core.ext.extractTokens
 import com.team.todoktodok.data.datasource.token.TokenDataSource
 import com.team.todoktodok.data.network.request.LoginRequest
 import com.team.todoktodok.data.network.request.ModifyProfileRequest
@@ -21,22 +21,21 @@ import com.team.todoktodok.data.network.service.MemberService
 
 class DefaultMemberRemoteDataSource(
     private val memberService: MemberService,
-    private val tokenDataSource: TokenDataSource,
+    private val tokenLocalDataSource: TokenDataSource,
 ) : MemberRemoteDataSource {
     override suspend fun login(request: String): NetworkResult<MemberType> =
         runCatching {
-            memberService
-                .login(LoginRequest(request))
-                .extractAccessToken { token ->
-                    val parser = JwtParser(token)
-                    val memberType = parser.parseToMemberType()
+            val response = memberService.login(LoginRequest(request))
+            response.extractTokens { accessToken, refreshToken ->
+                val parser = JwtParser(accessToken)
+                val memberType = parser.parseToMemberType()
 
-                    when (memberType) {
-                        MemberType.USER -> saveMemberSetting(parser, token)
-                        MemberType.TEMP_USER -> tokenDataSource.saveToken(token)
-                    }
-                    memberType
+                when (memberType) {
+                    MemberType.USER -> saveMemberSetting(parser, accessToken, refreshToken)
+                    MemberType.TEMP_USER -> tokenLocalDataSource.saveToken(accessToken, refreshToken)
                 }
+                memberType
+            }
         }.getOrElse { throwable ->
             NetworkResult.Failure(throwable.toDomain())
         }
@@ -45,9 +44,9 @@ class DefaultMemberRemoteDataSource(
         runCatching {
             memberService
                 .signUp(request.email, request)
-                .extractAccessToken { token ->
-                    val parser = JwtParser(token)
-                    saveMemberSetting(parser, token)
+                .extractTokens { accessToken, refreshToken ->
+                    val parser = JwtParser(accessToken)
+                    saveMemberSetting(parser, accessToken, refreshToken)
                 }
         }.getOrElse { throwable ->
             NetworkResult.Failure(throwable.toDomain())
@@ -56,9 +55,10 @@ class DefaultMemberRemoteDataSource(
     private suspend fun saveMemberSetting(
         parser: JwtParser,
         accessToken: String,
+        refreshToken: String,
     ) {
         val memberId = parser.parseToMemberId()
-        tokenDataSource.saveToken(accessToken = accessToken, memberId = memberId)
+        tokenLocalDataSource.saveSetting(accessToken, refreshToken, memberId)
     }
 
     override suspend fun fetchProfile(request: MemberId): NetworkResult<ProfileResponse> {
@@ -91,7 +91,7 @@ class DefaultMemberRemoteDataSource(
 
     private suspend fun adjustMemberType(request: MemberId): Long =
         when (request) {
-            MemberId.Mine -> tokenDataSource.getMemberId()
+            MemberId.Mine -> tokenLocalDataSource.getMemberId()
             is MemberId.OtherUser -> request.id
         }
 
