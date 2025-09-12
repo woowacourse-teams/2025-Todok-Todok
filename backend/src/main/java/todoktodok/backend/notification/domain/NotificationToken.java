@@ -34,6 +34,9 @@ public class NotificationToken extends TimeStamp {
     @Column(nullable = false)
     private String token;
 
+    @Column(nullable = false)
+    private String fid;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private Member member;
@@ -41,8 +44,9 @@ public class NotificationToken extends TimeStamp {
     @Builder
     public static NotificationToken create(
             final String token,
+            final String fid,
             final Member member
     ) {
-        return new NotificationToken(null, token, member);
+        return new NotificationToken(null, token, fid, member);
     }
 }

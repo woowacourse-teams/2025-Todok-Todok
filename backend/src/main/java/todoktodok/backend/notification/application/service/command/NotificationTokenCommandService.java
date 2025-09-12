@@ -24,11 +24,13 @@ public class NotificationTokenCommandService {
     ) {
         final Member member = findMember(memberId);
         final String token = notificationTokenRequest.token();
+        final String fid = notificationTokenRequest.fid();
 
         validateDuplicatedNotificationToken(token, memberId);
 
         final NotificationToken notificationToken = NotificationToken.builder()
                 .token(token)
+                .fid(fid)
                 .member(member)
                 .build();
 
