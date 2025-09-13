@@ -1,5 +1,7 @@
 package com.team.todoktodok.presentation.view.auth
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -17,5 +19,9 @@ class AuthActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0)
             insets
         }
+    }
+
+    companion object {
+        fun Intent(context: Context): Intent = Intent(context, AuthActivity::class.java)
     }
 }

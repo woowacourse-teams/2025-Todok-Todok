@@ -54,6 +54,7 @@
     <string name="content_description_discussion_detail_user_profile">토론방 유저 이미지 버튼</string>
     <string name="comment_input_hint">댓글 입력</string>
     <string name="content_description_add_comment">댓글을 추가합니다</string>
+    <string name="reply_input_hint">대댓글 입력</string>
 
     <!-- 내 서재 페이지 -->
     <string name="content_description_navigate_to_book_search">도서 검색 화면으로 이동합니다</string>
@@ -159,6 +160,13 @@
     <string name="setting_modify_profile_complete">프로필 수정이 완료 되었습니다.</string>
     <string name="setting_member_message_et_hint">상태 메시지를 입력해주세요</string>
 
+    <!-- 탈퇴 화면 -->
+    <string name="setting_withdraw">회원 탈퇴</string>
+    <string name="text_do_withdraw">탈퇴하기</string>
+    <string name="text_ask_really_withdraw">정말 탈퇴하시겠어요 ?</string>
+    <string name="text_guide_withdraw_policy">회원을 탈퇴하더라도 작성하신 토론은 유지돼요\n가입 정보는 탈퇴일로부터 7일간 보관됩니다.</string>
+    <string name="withdraw_farewell">토독이와 함께해준 시간을 소중히 기억할게요</string>
+
     <string name="setting_unblock_content">해당 유저를 차단 해제하시겠습니까?</string>
     <string name="setting_unblock">해제하기</string>
     <string name="setting_send_feedback">의견 보내기</string>
@@ -175,9 +183,9 @@
     <string name="error_invalid_token">유효하지 않은 소셜 로그인 이메일입니다.</string>
     <string name="error_invalid_email_format">올바른 이메일 형식을 입력해주세요.</string>
     <string name="error_profile_image_not_exist">프로필 이미지를 등록해주세요.</string>
+    <string name="error_refresh_token_not_received">리프레시 토큰이 전달되지 않았습니다</string>
 
     <!-- HTTP 예외 -->
-    <string name="error_authentication">로그인이 필요한 서비스입니다.</string>
     <string name="error_authorization">권한이 없는 요청입니다.</string>
     <string name="error_not_found">요청한 정보를 찾을 수 없습니다.</string>
     <string name="error_server">서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.</string>

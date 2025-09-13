@@ -28,6 +28,8 @@ sealed class TodokTodokExceptions : Throwable() {
 
     data object CancellationException : TodokTodokExceptions()
 
+    data object RefreshTokenNotReceivedException : TodokTodokExceptions()
+
     /** 알 수 없는 예외 발생 */
     data class UnknownException(
         val e: Throwable?,
@@ -52,9 +54,6 @@ sealed class TodokTodokExceptions : Throwable() {
     sealed class HttpExceptions : TodokTodokExceptions() {
         /** 400 Bad Request */
         data object BadRequestException : HttpExceptions()
-
-        /** 401 Unauthorized */
-        data object AuthenticationException : HttpExceptions()
 
         /** 403 Forbidden */
         data object AuthorizationException : HttpExceptions()
@@ -117,7 +116,7 @@ sealed class TodokTodokExceptions : Throwable() {
         /**
          * 서버 HTTP 상태 코드와 메시지를 기반으로 [TodokTodokExceptions] 객체를 생성
          *
-         * @param statusCode HTTP 상태 코드 (e.g., 400, 401, 500)
+         * @param statusCode HTTP 상태 코드
          * @param message 서버에서 내려준 에러 메시지
          * @return 대응되는 [TodokTodokExceptions] 객체
          */
@@ -127,7 +126,6 @@ sealed class TodokTodokExceptions : Throwable() {
         ): TodokTodokExceptions =
             when (statusCode) {
                 400 -> fromTokdokTodokExceptions(message) // 400 Bad Request: 서버 메시지에 따라 도메인 예외 매핑
-                401 -> HttpExceptions.AuthenticationException // 401 Unauthorized
                 403 -> HttpExceptions.AuthorizationException // 403 Forbidden
                 404 -> HttpExceptions.NotFoundException // 404 Not Found
                 in 500..599 -> HttpExceptions.ServerException // 서버 5xx 에러

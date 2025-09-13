@@ -1,6 +1,6 @@
 [versions]
 # Build Tools
-agp = "8.9.0"
+agp = "8.13.0"
 
 # Kotlin
 kotlin = "2.2.0"
@@ -20,6 +20,7 @@ junitVersion = "1.3.0"
 lifecycleRuntimeKtx = "2.9.3"
 activityCompose = "1.10.1"
 composeBom = "2024.09.00"
+androidx-lifecycle-process = "2.9.3"
 
 # Network
 retrofit = "3.0.0"
@@ -64,7 +65,6 @@ mannodermaus-junit5 = "1.7.0"
 junit-jupiter = "5.12.0"
 kotest-runner-junit5 = "5.9.1"
 mockk = "1.13.8"
-junit = "4.12"
 
 [libraries]
 # AndroidX
@@ -90,6 +90,7 @@ androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+androidx-lifecycle-process = { module = "androidx.lifecycle:lifecycle-process", version.ref = "androidx-lifecycle-process" }
 
 # Kotlin
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization-json" }
@@ -131,7 +132,6 @@ mannodermaus-junit5-core = { group = "de.mannodermaus.junit5", name = "android-t
 mannodermaus-junit5-runner = { group = "de.mannodermaus.junit5", name = "android-test-runner", version.ref = "mannodermaus-junit5" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 mockk-android = { module = "io.mockk:mockk-android", version.ref = "mockk" }
-junit = { group = "junit", name = "junit", version.ref = "junit" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines-core" }
 
 [bundles]
@@ -157,6 +157,7 @@ androidx = [
     "androidx-ui-test-manifest",
     "androidx-ui-test-junit4",
     "androidx-material3"
+    "androidx-lifecycle-process"
 ]
 
 kotlin = [
@@ -194,7 +195,6 @@ logging = [
 test = [
     "assertj-core",
     "junit-jupiter",
-    "junit",
     "mockk",
     "kotest-runner-junit5",
     "kotlinx-coroutines-test"

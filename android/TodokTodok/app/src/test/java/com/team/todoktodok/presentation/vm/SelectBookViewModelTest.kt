@@ -37,6 +37,7 @@ class SelectBookViewModelTest {
     fun setUp() {
         bookRepository = mockk()
         viewModel = SelectBookViewModel(bookRepository)
+        coEvery { bookRepository.fetchBooks(any()) } returns NetworkResult.Success(AladinBooks(emptyList()))
     }
 
     @Test

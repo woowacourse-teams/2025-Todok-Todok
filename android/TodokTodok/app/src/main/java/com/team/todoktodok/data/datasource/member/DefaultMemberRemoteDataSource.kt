@@ -2,15 +2,19 @@ package com.team.todoktodok.data.datasource.member
 
 import com.team.domain.model.Support
 import com.team.domain.model.exception.NetworkResult
+import com.team.domain.model.exception.TodokTodokExceptions
+import com.team.domain.model.exception.onFailure
+import com.team.domain.model.exception.onSuccessSuspend
 import com.team.domain.model.exception.toDomain
 import com.team.domain.model.member.MemberDiscussionType
 import com.team.domain.model.member.MemberId
 import com.team.domain.model.member.MemberType
 import com.team.todoktodok.data.core.JwtParser
-import com.team.todoktodok.data.core.ext.extractAccessToken
+import com.team.todoktodok.data.core.ext.extractTokens
 import com.team.todoktodok.data.datasource.token.TokenDataSource
 import com.team.todoktodok.data.network.request.LoginRequest
 import com.team.todoktodok.data.network.request.ModifyProfileRequest
+import com.team.todoktodok.data.network.request.RefreshRequest
 import com.team.todoktodok.data.network.request.ReportRequest
 import com.team.todoktodok.data.network.request.SignUpRequest
 import com.team.todoktodok.data.network.response.BlockedMemberResponse
@@ -21,22 +25,26 @@ import com.team.todoktodok.data.network.service.MemberService
 
 class DefaultMemberRemoteDataSource(
     private val memberService: MemberService,
-    private val tokenDataSource: TokenDataSource,
+    private val tokenLocalDataSource: TokenDataSource,
 ) : MemberRemoteDataSource {
     override suspend fun login(request: String): NetworkResult<MemberType> =
         runCatching {
-            memberService
-                .login(LoginRequest(request))
-                .extractAccessToken { token ->
-                    val parser = JwtParser(token)
-                    val memberType = parser.parseToMemberType()
+            val response = memberService.login(LoginRequest(request))
+            response.extractTokens { accessToken, refreshToken ->
+                val parser = JwtParser(accessToken)
+                val memberType = parser.parseToMemberType()
 
-                    when (memberType) {
-                        MemberType.USER -> saveMemberSetting(parser, token)
-                        MemberType.TEMP_USER -> tokenDataSource.saveToken(token)
+                when (memberType) {
+                    MemberType.USER -> {
+                        requireNotNull(refreshToken) { TodokTodokExceptions.RefreshTokenNotReceivedException }
+                        saveMemberSetting(parser, accessToken, refreshToken)
                     }
-                    memberType
+
+                    MemberType.TEMP_USER ->
+                        tokenLocalDataSource.saveAccessToken(accessToken)
                 }
+                memberType
+            }
         }.getOrElse { throwable ->
             NetworkResult.Failure(throwable.toDomain())
         }
@@ -45,9 +53,13 @@ class DefaultMemberRemoteDataSource(
         runCatching {
             memberService
                 .signUp(request.email, request)
-                .extractAccessToken { token ->
-                    val parser = JwtParser(token)
-                    saveMemberSetting(parser, token)
+                .extractTokens { accessToken, refreshToken ->
+                    val parser = JwtParser(accessToken)
+
+                    requireNotNull(refreshToken) {
+                        TodokTodokExceptions.RefreshTokenNotReceivedException
+                    }
+                    saveMemberSetting(parser, accessToken, refreshToken)
                 }
         }.getOrElse { throwable ->
             NetworkResult.Failure(throwable.toDomain())
@@ -56,9 +68,10 @@ class DefaultMemberRemoteDataSource(
     private suspend fun saveMemberSetting(
         parser: JwtParser,
         accessToken: String,
+        refreshToken: String,
     ) {
         val memberId = parser.parseToMemberId()
-        tokenDataSource.saveToken(accessToken = accessToken, memberId = memberId)
+        tokenLocalDataSource.saveSetting(accessToken, refreshToken, memberId)
     }
 
     override suspend fun fetchProfile(request: MemberId): NetworkResult<ProfileResponse> {
@@ -91,7 +104,7 @@ class DefaultMemberRemoteDataSource(
 
     private suspend fun adjustMemberType(request: MemberId): Long =
         when (request) {
-            MemberId.Mine -> tokenDataSource.getMemberId()
+            MemberId.Mine -> tokenLocalDataSource.getMemberId()
             is MemberId.OtherUser -> request.id
         }
 
@@ -100,4 +113,14 @@ class DefaultMemberRemoteDataSource(
     override suspend fun fetchBlockedMembers(): NetworkResult<List<BlockedMemberResponse>> = memberService.fetchBlockedMembers()
 
     override suspend fun unblock(request: Long) = memberService.unblock(request)
+
+    override suspend fun withdraw(): NetworkResult<Unit> {
+        val refreshToken = tokenLocalDataSource.getRefreshToken()
+
+        return memberService
+            .withdraw(RefreshRequest(refreshToken))
+            .onSuccessSuspend {
+                tokenLocalDataSource.clear()
+            }.onFailure { it }
+    }
 }

@@ -29,7 +29,6 @@ class JwtParserTest {
                 .withoutPadding()
                 .encodeToString(payloadJson.toByteArray())
 
-        // signature는 테스트에 필요 없으니 dummy 값 사용
         val signature = "signature"
 
         return "$header.$payload.$signature"

@@ -68,7 +68,7 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
         setOnNavigateUp(binding)
         initAdapter(binding)
         initView(binding)
-        setupOnClickAddReply(binding)
+        setupOnClick(binding)
         setupObserve(binding)
         setupFragmentResultListener()
     }
@@ -89,9 +89,10 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
         }
     }
 
-    private fun setupOnClickAddReply(binding: FragmentCommentDetailBinding) {
+    private fun setupOnClick(binding: FragmentCommentDetailBinding) {
         with(binding) {
-            tvInputComment.setOnClickListener { viewModel.showReplyCreate() }
+            tvInputReply.setOnClickListener { viewModel.showReplyCreate() }
+            ivAddReply.setOnClickListener { viewModel.createReply() }
         }
     }
 
@@ -102,8 +103,10 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
             } else {
                 binding.progressBar.hide()
                 adapter.submitList(value.getCommentDetailItems())
-                val currentContent = value.content
-                if (currentContent.isNotBlank()) binding.tvInputComment.text = currentContent
+                val hasContent = value.content.isNotBlank()
+                binding.ivAddReply.isEnabled = hasContent
+                binding.tvInputReply.text =
+                    if (hasContent) value.content else getString(R.string.reply_input_hint)
             }
         }
         viewModel.uiEvent.observe(viewLifecycleOwner) { value ->
@@ -417,12 +420,12 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
     private fun getBottomSheetVisibilityListener(binding: FragmentCommentDetailBinding) =
         object : BottomSheetVisibilityListener {
             override fun onBottomSheetShown() {
-                binding.tvInputComment.visibility = View.GONE
+                binding.tvInputReply.visibility = View.GONE
                 popupWindow?.dismiss()
             }
 
             override fun onBottomSheetDismissed() {
-                binding.tvInputComment.visibility = View.VISIBLE
+                binding.tvInputReply.visibility = View.VISIBLE
                 popupWindow?.dismiss()
             }
         }

@@ -8,6 +8,7 @@ import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
 
+@OptIn(ExperimentalSerializationApi::class)
 class RetrofitModule(
     okHttpClient: OkhttpModule,
 ) {
@@ -15,13 +16,24 @@ class RetrofitModule(
     private val json = Json { ignoreUnknownKeys = true }
     private val contentType = "application/json".toMediaType()
 
-    @OptIn(ExperimentalSerializationApi::class)
-    val instance: Retrofit =
+    private val defaultRetrofit: Retrofit.Builder =
         Retrofit
             .Builder()
             .baseUrl(baseUrl)
-            .client(okHttpClient.instance)
             .addCallAdapterFactory(TodokTodokCallAdapterFactory())
             .addConverterFactory(json.asConverterFactory(contentType))
+
+    val authRetrofit: Retrofit =
+        defaultRetrofit
+            .client(okHttpClient.authClient)
             .build()
+
+    val retrofit: Retrofit =
+        defaultRetrofit
+            .client(okHttpClient.client)
+            .build()
+
+    fun <T> createAuthService(serviceClass: Class<T>): T = authRetrofit.create(serviceClass)
+
+    fun <T> createService(serviceClass: Class<T>): T = retrofit.create(serviceClass)
 }

@@ -72,4 +72,6 @@ class DefaultMemberRepository(
             .map { members -> members.map { it.toDomain() } }
 
     override suspend fun unblock(id: Long): NetworkResult<Unit> = remoteMemberRemoteDataSource.unblock(id)
+
+    override suspend fun withdraw(): NetworkResult<Unit> = remoteMemberRemoteDataSource.withdraw()
 }
