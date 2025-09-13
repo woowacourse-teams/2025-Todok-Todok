@@ -66,9 +66,10 @@ class UserInformationViewHolder private constructor(
         val content = item.value
         with(binding) {
             val reportButtonVisibility = if (item.isMyProfile) View.GONE else View.VISIBLE
-
+            val profileUpdateClickable = item.isMyProfile
             ivReport.visibility = reportButtonVisibility
             ivProfile.loadImage(item.value.profileImage)
+            ivProfile.isClickable = profileUpdateClickable
             tvNickname.text = content.nickname
 
             val message =

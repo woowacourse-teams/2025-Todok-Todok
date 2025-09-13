@@ -1,5 +1,7 @@
 package com.team.todoktodok.presentation.view.profile.vm
 
+import android.content.ContentResolver
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -15,10 +17,12 @@ import com.team.domain.model.member.MemberId
 import com.team.domain.model.member.MemberId.Companion.MemberId
 import com.team.domain.model.member.Profile
 import com.team.domain.repository.MemberRepository
+import com.team.todoktodok.presentation.core.ImagePayloadMapper
 import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
 import com.team.todoktodok.presentation.core.event.SingleLiveData
 import com.team.todoktodok.presentation.view.profile.ProfileUiEvent
 import com.team.todoktodok.presentation.view.profile.ProfileUiState
+import com.team.todoktodok.presentation.view.profile.adapter.ProfileItems
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -153,6 +157,45 @@ class ProfileViewModel(
                 )
         }
     }
+
+    fun updateProfile(
+        imageUri: Uri?,
+        contentResolver: ContentResolver,
+    ) {
+        imageUri ?: return
+        viewModelScope.launch {
+            when (
+                val result =
+                    memberRepository.modifyProfileImage(
+                        ImagePayloadMapper(contentResolver).from(imageUri),
+                    )
+            ) {
+                is NetworkResult.Failure -> onUiEvent(ProfileUiEvent.ShowErrorMessage(result.exception))
+                is NetworkResult.Success -> {
+                    _uiState.value =
+                        _uiState.value?.copy(
+                            items =
+                                _uiState.value?.items?.updateProfileImage(result.data)
+                                    ?: return@launch,
+                        )
+                }
+            }
+        }
+    }
+
+    private fun List<ProfileItems>.updateProfileImage(newImage: String): List<ProfileItems> =
+        map { item ->
+            when (item) {
+                is ProfileItems.HeaderItem -> item
+                is ProfileItems.InformationItem ->
+                    ProfileItems.InformationItem(
+                        item.value.copy(profileImage = newImage),
+                        item.isMyProfile,
+                    )
+
+                is ProfileItems.TabItem -> item
+            }
+        }
 
     private fun withLoading(action: suspend () -> Unit) {
         viewModelScope.launch {
