@@ -1,0 +1,49 @@
+package com.team.todoktodok.data.repository
+
+import com.team.domain.model.exception.NetworkResult
+import com.team.domain.repository.NotificationRepository
+import com.team.todoktodok.data.datasource.firebase.FirebaseRemoteDataSource
+import com.team.todoktodok.data.datasource.notification.NotificationLocalDataSource
+import com.team.todoktodok.data.datasource.notification.NotificationRemoteDataSource
+
+class DefaultNotificationRepository(
+    private val notificationRemoteDataSource: NotificationRemoteDataSource,
+    private val notificationLocalDataSource: NotificationLocalDataSource,
+    private val firebaseRemoteDataSource: FirebaseRemoteDataSource,
+) : NotificationRepository {
+    override suspend fun registerPushNotification(): NetworkResult<Unit> {
+        val storedFcmToken = notificationLocalDataSource.getFcmToken()
+        val storedFcmFId = notificationLocalDataSource.getFId()
+
+        val freshFcmToken = firebaseRemoteDataSource.getFcmToken()
+        val freshFcmFId = firebaseRemoteDataSource.getFId()
+
+        val isNeedRegister: Boolean =
+            isNeedRegister(storedFcmToken, storedFcmFId, freshFcmToken, freshFcmFId)
+
+        if (isNeedRegister) {
+            saveNewPushNotificationToLocal(freshFcmToken, freshFcmFId)
+            return notificationRemoteDataSource.saveFcmToken(freshFcmToken, freshFcmFId)
+        }
+        return NetworkResult.Success(Unit)
+    }
+
+    private suspend fun saveNewPushNotificationToLocal(
+        fcmToken: String,
+        fId: String,
+    ) {
+        notificationLocalDataSource.saveFcmToken(fcmToken)
+        notificationLocalDataSource.saveFId(fId)
+    }
+
+    private fun isNeedRegister(
+        storedFcmToken: String?,
+        storedFcmFId: String?,
+        freshFcmToken: String,
+        freshFcmFId: String,
+    ): Boolean {
+        if (storedFcmToken == null || storedFcmFId == null) return true
+        if (storedFcmToken != freshFcmToken || storedFcmFId != freshFcmFId) return true
+        return false
+    }
+}
