@@ -4,6 +4,7 @@ import com.team.todoktodok.data.network.service.BookService
 import com.team.todoktodok.data.network.service.CommentService
 import com.team.todoktodok.data.network.service.DiscussionService
 import com.team.todoktodok.data.network.service.MemberService
+import com.team.todoktodok.data.network.service.NotificationService
 import com.team.todoktodok.data.network.service.RefreshService
 import com.team.todoktodok.data.network.service.ReplyService
 
@@ -32,5 +33,9 @@ class ServiceModule(
 
     val refreshService: RefreshService by lazy {
         retrofit.createService(RefreshService::class.java)
+    }
+
+    val notificationService: NotificationService by lazy {
+        retrofit.createService(NotificationService::class.java)
     }
 }
