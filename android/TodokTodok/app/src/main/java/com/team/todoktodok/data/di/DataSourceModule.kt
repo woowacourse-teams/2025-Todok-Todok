@@ -22,6 +22,7 @@ import com.team.todoktodok.data.datasource.reply.DefaultReplyRemoteDataSource
 import com.team.todoktodok.data.datasource.reply.ReplyRemoteDataSource
 import com.team.todoktodok.data.datasource.token.TokenLocalDataSource
 import com.team.todoktodok.data.local.discussion.DiscussionDatabase
+import com.team.todoktodok.data.network.service.FirebaseService
 
 class DataSourceModule(
     serviceModule: ServiceModule,
@@ -84,7 +85,7 @@ class DataSourceModule(
     }
 
     val firebaseRemoteDataSource: FirebaseRemoteDataSource by lazy {
-        DefaultFirebaseRemoteDataSource()
+        DefaultFirebaseRemoteDataSource(FirebaseService())
     }
 
     companion object {

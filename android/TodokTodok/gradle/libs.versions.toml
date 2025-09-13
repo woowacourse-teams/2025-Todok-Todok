@@ -40,6 +40,8 @@ google-firebase-analytics-ktx = "22.5.0"
 google-firebase-crashlytics-ktx = "19.4.4"
 google-firebase-crashlytics-plugin = "3.0.5"
 google-firebase-bom = "34.0.0"
+google-firebase-installations = "19.0.0"
+google-firebase-messaging = "25.0.0"
 
 # Ktlint
 ktlint = "13.0.0"
@@ -112,6 +114,8 @@ googleid = { group = "com.google.android.libraries.identity.googleid", name = "g
 google-firebase-analytics-ktx = { module = "com.google.firebase:firebase-analytics-ktx", version.ref = "google-firebase-analytics-ktx" }
 google-firebase-crashlytics-ktx = { module = "com.google.firebase:firebase-crashlytics-ktx", version.ref = "google-firebase-crashlytics-ktx" }
 google-firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "google-firebase-bom" }
+google-firebase-installations = { module = "com.google.firebase:firebase-installations", version.ref = "google-firebase-installations" }
+google-firebase-messaging = { module = "com.google.firebase:firebase-messaging", version.ref = "google-firebase-messaging" }
 
 # Glide
 glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
@@ -177,7 +181,9 @@ google = [
     "googleid",
     "google-firebase-analytics-ktx",
     "google-firebase-crashlytics-ktx",
-    "google-firebase-bom"
+    "google-firebase-bom",
+    "google-firebase-installations",
+    "google-firebase-messaging"
 ]
 
 glide = [

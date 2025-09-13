@@ -1,11 +1,11 @@
 package com.team.todoktodok.data.datasource.firebase
 
-class DefaultFirebaseRemoteDataSource : FirebaseRemoteDataSource {
-    override fun getFcmToken(): String {
-        TODO("Not yet implemented")
-    }
+import com.team.todoktodok.data.network.service.FirebaseService
 
-    override fun getFId(): String {
-        TODO("Not yet implemented")
-    }
+class DefaultFirebaseRemoteDataSource(
+    private val firebaseService: FirebaseService,
+) : FirebaseRemoteDataSource {
+    override fun getFcmToken(): String = firebaseService.getFcmToken()
+
+    override fun getFId(): String = firebaseService.getFId()
 }
