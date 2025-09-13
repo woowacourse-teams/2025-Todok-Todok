@@ -42,14 +42,14 @@ class SignUpViewModel(
             memberRepository
                 .signUp(nickname.value)
                 .onSuccessSuspend {
-                    registerPUshNotification()
+                    registerPushNotification()
                     _uiEvent.setValue(SignUpUiEvent.NavigateToMain)
                 }.onFailure { _uiEvent.setValue(SignUpUiEvent.ShowErrorMessage(it)) }
             _isLoading.value = false
         }
     }
 
-    private suspend fun registerPUshNotification() {
+    private suspend fun registerPushNotification() {
         notificationRepository.registerPushNotification().onSuccess { }.onFailure { }
     }
 }
