@@ -1,6 +1,6 @@
 package com.team.todoktodok.data.datasource.firebase
 
-import com.team.todoktodok.data.network.service.FirebaseService
+import com.team.todoktodok.data.FirebaseService
 
 class DefaultFirebaseRemoteDataSource(
     private val firebaseService: FirebaseService,
