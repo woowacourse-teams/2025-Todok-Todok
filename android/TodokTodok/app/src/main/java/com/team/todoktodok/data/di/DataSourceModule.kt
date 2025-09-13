@@ -2,6 +2,7 @@ package com.team.todoktodok.data.di
 
 import android.content.Context
 import androidx.room.Room
+import com.team.todoktodok.data.FirebaseService
 import com.team.todoktodok.data.datasource.book.BookRemoteDataSource
 import com.team.todoktodok.data.datasource.book.DefaultBookRemoteDataSource
 import com.team.todoktodok.data.datasource.comment.CommentRemoteDataSource
@@ -22,7 +23,6 @@ import com.team.todoktodok.data.datasource.reply.DefaultReplyRemoteDataSource
 import com.team.todoktodok.data.datasource.reply.ReplyRemoteDataSource
 import com.team.todoktodok.data.datasource.token.TokenLocalDataSource
 import com.team.todoktodok.data.local.discussion.DiscussionDatabase
-import com.team.todoktodok.data.network.service.FirebaseService
 
 class DataSourceModule(
     serviceModule: ServiceModule,

@@ -1,5 +1,6 @@
 package com.team.todoktodok.data.repository
 
+import android.util.Log
 import com.team.domain.model.exception.NetworkResult
 import com.team.domain.repository.NotificationRepository
 import com.team.todoktodok.data.datasource.firebase.FirebaseRemoteDataSource
@@ -12,19 +13,21 @@ class DefaultNotificationRepository(
     private val firebaseRemoteDataSource: FirebaseRemoteDataSource,
 ) : NotificationRepository {
     override suspend fun registerPushNotification(): NetworkResult<Unit> {
-        val storedFcmToken = notificationLocalDataSource.getFcmToken()
-        val storedFcmFId = notificationLocalDataSource.getFId()
+        notificationLocalDataSource.getFcmToken()
+        notificationLocalDataSource.getFId()
 
         val freshFcmToken = firebaseRemoteDataSource.getFcmToken()
         val freshFcmFId = firebaseRemoteDataSource.getFId()
 
-        val isNeedRegister: Boolean =
-            isNeedRegister(storedFcmToken, storedFcmFId, freshFcmToken, freshFcmFId)
-
-        if (isNeedRegister) {
-            saveNewPushNotificationToLocal(freshFcmToken, freshFcmFId)
-            return notificationRemoteDataSource.saveFcmToken(freshFcmToken, freshFcmFId)
-        }
+        Log.d("test", "freshFcmToken: $freshFcmToken")
+        Log.d("test", "freshFcmToken: $freshFcmFId")
+//        val isNeedRegister =
+//            isNeedRegister(storedFcmToken, storedFcmFId, freshFcmToken, freshFcmFId)
+//
+//        if (isNeedRegister) {
+//            saveNewPushNotificationToLocal(freshFcmToken, freshFcmFId)
+//            return notificationRemoteDataSource.saveFcmToken(freshFcmToken, freshFcmFId)
+//        }
         return NetworkResult.Success(Unit)
     }
 
