@@ -156,7 +156,7 @@ androidx = [
     "androidx-ui-tooling-preview",
     "androidx-ui-test-manifest",
     "androidx-ui-test-junit4",
-    "androidx-material3"
+    "androidx-material3",
     "androidx-lifecycle-process"
 ]
 
