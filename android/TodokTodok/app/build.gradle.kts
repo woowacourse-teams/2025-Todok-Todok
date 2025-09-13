@@ -102,6 +102,7 @@ dependencies {
     implementation(libs.bundles.google)
     implementation(libs.bundles.glide)
     implementation(libs.bundles.logging)
+
     testImplementation(libs.bundles.test)
     testImplementation(libs.androidx.core.testing)
     ksp(libs.androidx.room.compiler)
