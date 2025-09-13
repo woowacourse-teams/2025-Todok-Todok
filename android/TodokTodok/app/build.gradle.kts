@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.serialization)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.kotlin.compose)
     id("kotlin-parcelize")
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
@@ -70,9 +71,6 @@ android {
         }
     }
 
-    buildFeatures {
-        buildConfig = true
-    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
@@ -91,12 +89,14 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
+        compose = true
     }
 }
 
 dependencies {
     implementation(project(":domain"))
-
+    implementation(platform(libs.androidx.compose.bom))
     implementation(libs.bundles.androidx)
     implementation(libs.bundles.kotlin)
     implementation(libs.bundles.network)
@@ -107,6 +107,7 @@ dependencies {
     testImplementation(libs.androidx.core.testing)
     ksp(libs.androidx.room.compiler)
 
+    androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.bundles.android.test)
     androidTestRuntimeOnly(libs.mannodermaus.junit5.runner)
 }
