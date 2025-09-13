@@ -8,6 +8,7 @@ import com.team.todoktodok.connectivity.NetworkConnectivityObserver
 import com.team.todoktodok.data.datasource.token.TokenDataSource
 import com.team.todoktodok.data.datasource.token.TokenLocalDataSource
 import com.team.todoktodok.data.di.DataSourceModule
+import com.team.todoktodok.data.di.LocalDatabaseModule
 import com.team.todoktodok.data.di.OkhttpModule
 import com.team.todoktodok.data.di.RepositoryModule
 import com.team.todoktodok.data.di.RetrofitModule
@@ -58,9 +59,11 @@ class AppContainer(
     private val serviceModule: ServiceModule by lazy {
         ServiceModule(retrofitModule)
     }
-
+    private val localDatabaseModule: LocalDatabaseModule by lazy {
+        LocalDatabaseModule(context)
+    }
     private val dataSourceModule: DataSourceModule by lazy {
-        DataSourceModule(serviceModule, context)
+        DataSourceModule(serviceModule, localDatabaseModule, context)
     }
 
     private val okHttpModule: OkhttpModule by lazy {
