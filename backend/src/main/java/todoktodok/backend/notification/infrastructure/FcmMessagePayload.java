@@ -27,14 +27,21 @@ public record FcmMessagePayload(
         this(
                 title,
                 body,
-                String.valueOf(discussionId),
-                String.valueOf(commentId),
-                String.valueOf(replyId),
+                safeStringValue(discussionId),
+                safeStringValue(commentId),
+                safeStringValue(replyId),
                 memberNickname,
                 discussionTitle,
                 content,
                 type,
                 target
         );
+    }
+
+    private static String safeStringValue(final Long id) {
+        if (id == null) {
+            return null;
+        }
+        return String.valueOf(id);
     }
 }
