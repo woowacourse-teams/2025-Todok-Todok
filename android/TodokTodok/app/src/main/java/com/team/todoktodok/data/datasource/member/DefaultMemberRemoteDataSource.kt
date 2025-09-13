@@ -110,6 +110,9 @@ class DefaultMemberRemoteDataSource(
 
     override suspend fun modifyProfile(request: ModifyProfileRequest): NetworkResult<Unit> = memberService.modifyProfile(request)
 
+    override suspend fun modifyProfileImage(request: ProfileImageRequest): NetworkResult<ProfileImageResponse> =
+        memberService.modifyProfileImage(request.profileImage)
+
     override suspend fun fetchBlockedMembers(): NetworkResult<List<BlockedMemberResponse>> = memberService.fetchBlockedMembers()
 
     override suspend fun unblock(request: Long) = memberService.unblock(request)

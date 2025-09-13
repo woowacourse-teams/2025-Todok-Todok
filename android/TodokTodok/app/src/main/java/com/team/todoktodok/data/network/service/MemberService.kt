@@ -8,16 +8,21 @@ import com.team.todoktodok.data.network.request.ReportRequest
 import com.team.todoktodok.data.network.request.SignUpRequest
 import com.team.todoktodok.data.network.response.BlockedMemberResponse
 import com.team.todoktodok.data.network.response.LoginResponse
+import com.team.todoktodok.data.network.response.ProfileImageResponse
 import com.team.todoktodok.data.network.response.ProfileResponse
 import com.team.todoktodok.data.network.response.discussion.BookResponse
 import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
+import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.Multipart
+import retrofit2.http.PATCH
 import retrofit2.http.HTTP
 import retrofit2.http.POST
 import retrofit2.http.PUT
+import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -64,6 +69,12 @@ interface MemberService {
     suspend fun modifyProfile(
         @Body requestBody: ModifyProfileRequest,
     ): NetworkResult<Unit>
+
+    @Multipart
+    @PATCH("v1/members/profile/image")
+    suspend fun modifyProfileImage(
+        @Part photo: MultipartBody.Part,
+    ): NetworkResult<ProfileImageResponse>
 
     @GET("v1/members/block")
     suspend fun fetchBlockedMembers(): NetworkResult<List<BlockedMemberResponse>>

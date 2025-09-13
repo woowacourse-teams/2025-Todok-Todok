@@ -6,8 +6,10 @@ import com.team.domain.model.member.MemberDiscussionType
 import com.team.domain.model.member.MemberId
 import com.team.domain.model.member.MemberType
 import com.team.todoktodok.data.network.request.ModifyProfileRequest
+import com.team.todoktodok.data.network.request.ProfileImageRequest
 import com.team.todoktodok.data.network.request.SignUpRequest
 import com.team.todoktodok.data.network.response.BlockedMemberResponse
+import com.team.todoktodok.data.network.response.ProfileImageResponse
 import com.team.todoktodok.data.network.response.ProfileResponse
 import com.team.todoktodok.data.network.response.discussion.BookResponse
 import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
@@ -33,6 +35,8 @@ interface MemberRemoteDataSource {
     suspend fun fetchMemberBooks(request: MemberId): NetworkResult<List<BookResponse>>
 
     suspend fun modifyProfile(request: ModifyProfileRequest): NetworkResult<Unit>
+
+    suspend fun modifyProfileImage(request: ProfileImageRequest): NetworkResult<ProfileImageResponse>
 
     suspend fun fetchBlockedMembers(): NetworkResult<List<BlockedMemberResponse>>
 
