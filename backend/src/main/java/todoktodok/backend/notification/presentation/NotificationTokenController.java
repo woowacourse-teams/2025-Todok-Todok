@@ -17,7 +17,7 @@ import todoktodok.backend.notification.application.service.command.NotificationT
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/v1/notificationTokens")
-public class NotificationTokenController {
+public class NotificationTokenController implements NotificationTokenApiDocs {
 
     private final NotificationTokenCommandService notificationTokenCommandService;
 
