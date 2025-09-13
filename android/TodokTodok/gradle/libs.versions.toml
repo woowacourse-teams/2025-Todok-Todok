@@ -146,7 +146,6 @@ androidx = [
     "androidx-credentials-play-services-auth",
     "androidx-room-runtime",
     "androidx-swiperefreshlayout",
-    "androidx-junit",
     "androidx-lifecycle-runtime-ktx",
     "androidx-activity-compose",
     "androidx-compose-bom",
@@ -154,8 +153,6 @@ androidx = [
     "androidx-ui-graphics",
     "androidx-ui-tooling",
     "androidx-ui-tooling-preview",
-    "androidx-ui-test-manifest",
-    "androidx-ui-test-junit4",
     "androidx-material3",
     "androidx-lifecycle-process"
 ]
@@ -210,6 +207,9 @@ android-test = [
     "junit-jupiter",
     "kotest-runner-junit5",
     "mannodermaus-junit5-core",
+    "androidx-junit",
+    "androidx-ui-test-manifest",
+    "androidx-ui-test-junit4",
 ]
 
 [plugins]
