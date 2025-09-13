@@ -10,7 +10,6 @@ import com.team.domain.model.member.MemberDiscussionType
 import com.team.domain.model.member.MemberId
 import com.team.domain.model.member.MemberType
 import com.team.domain.model.member.Profile
-import java.io.InputStream
 
 interface MemberRepository {
     suspend fun login(
