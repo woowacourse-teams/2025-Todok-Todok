@@ -38,9 +38,9 @@ class AuthViewModel(
             val memberId = tokenRepository.getMemberId()
             when (MemberType(memberId)) {
                 MemberType.USER -> {
+                    registerPushNotification()
                     delay(SPLASH_DURATION)
                     onUiEvent(LoginUiEvent.NavigateToMain)
-                    registerPushNotification()
                 }
 
                 MemberType.TEMP_USER -> onUiEvent(LoginUiEvent.ShowLoginButton)
@@ -63,8 +63,8 @@ class AuthViewModel(
                 ).onSuccessSuspend { type: MemberType ->
                     when (type) {
                         MemberType.USER -> {
-                            onUiEvent(LoginUiEvent.NavigateToMain)
                             registerPushNotification()
+                            onUiEvent(LoginUiEvent.NavigateToMain)
                         }
 
                         MemberType.TEMP_USER -> onUiEvent(LoginUiEvent.NavigateToSignUp)
