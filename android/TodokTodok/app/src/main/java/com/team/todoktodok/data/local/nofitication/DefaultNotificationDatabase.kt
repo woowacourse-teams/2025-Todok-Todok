@@ -33,6 +33,12 @@ class DefaultNotificationDatabase(
 
     override suspend fun getFId(): String? = dataStore.data.first()[KEY_F_ID]
 
+    override suspend fun deletePushNotification() {
+        dataStore.edit { preferences ->
+            preferences.clear()
+        }
+    }
+
     companion object {
         private const val DATABASE_NAME: String = "notification"
         private val KEY_FCM_TOKEN = stringPreferencesKey("fcm_token")
