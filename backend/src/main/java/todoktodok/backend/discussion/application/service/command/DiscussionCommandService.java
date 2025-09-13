@@ -3,6 +3,7 @@ package todoktodok.backend.discussion.application.service.command;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.book.domain.Book;
@@ -31,6 +32,8 @@ public class DiscussionCommandService {
     private final MemberRepository memberRepository;
     private final BookRepository bookRepository;
     private final CommentRepository commentRepository;
+
+    private final ApplicationEventPublisher publisher;
 
     public Long createDiscussion(
             final Long memberId,
@@ -119,7 +122,9 @@ public class DiscussionCommandService {
                 .member(member)
                 .build();
 
-        discussionLikeRepository.save(discussionLike);
+        DiscussionLike savedDiscussionLike = discussionLikeRepository.save(discussionLike);
+        publisher.publishEvent(new DiscussionLikeCreated(savedDiscussionLike));
+
         return true;
     }
 
