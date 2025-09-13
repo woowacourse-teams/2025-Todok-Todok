@@ -2,7 +2,6 @@ package com.team.todoktodok.presentation.view.profile.vm
 
 import android.content.ContentResolver
 import android.net.Uri
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
