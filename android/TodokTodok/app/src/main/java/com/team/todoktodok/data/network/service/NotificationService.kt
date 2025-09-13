@@ -6,7 +6,7 @@ import retrofit2.http.Body
 import retrofit2.http.PUT
 
 interface NotificationService {
-    @PUT
+    @PUT("v1/notifications")
     suspend fun saveFcmToken(
         @Body fcmTokenRequest: FcmTokenRequest,
     ): NetworkResult<Unit>
