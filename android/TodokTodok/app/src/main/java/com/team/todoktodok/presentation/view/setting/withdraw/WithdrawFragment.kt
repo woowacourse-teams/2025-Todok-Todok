@@ -14,7 +14,10 @@ import com.team.todoktodok.presentation.view.setting.withdraw.vm.WithdrawViewMod
 class WithdrawFragment : Fragment(R.layout.fragment_withdraw) {
     private val viewModel: WithdrawViewModel by lazy {
         val repositoryModule = (requireActivity().application as App).container.repositoryModule
-        WithdrawViewModel(repositoryModule.memberRepository)
+        WithdrawViewModel(
+            repositoryModule.memberRepository,
+            repositoryModule.notificationRepository,
+        )
     }
 
     override fun onViewCreated(

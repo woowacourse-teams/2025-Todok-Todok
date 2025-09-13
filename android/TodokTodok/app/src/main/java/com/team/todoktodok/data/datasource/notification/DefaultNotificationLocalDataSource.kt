@@ -12,4 +12,6 @@ class DefaultNotificationLocalDataSource(
     override suspend fun saveFcmToken(token: String) = database.saveFcmToken(token)
 
     override suspend fun saveFId(id: String) = database.saveFId(id)
+
+    override suspend fun deletePushNotification() = database.deletePushNotification()
 }

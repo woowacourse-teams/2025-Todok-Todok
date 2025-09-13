@@ -28,6 +28,10 @@ class DefaultNotificationRepository(
         return NetworkResult.Success(Unit)
     }
 
+    override suspend fun deletePushNotification() {
+        notificationLocalDataSource.deletePushNotification()
+    }
+
     private suspend fun saveNewPushNotificationToLocal(
         fcmToken: String,
         fId: String,

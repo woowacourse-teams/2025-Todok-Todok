@@ -8,4 +8,6 @@ interface NotificationLocalDataSource {
     suspend fun saveFcmToken(token: String)
 
     suspend fun saveFId(id: String)
+
+    suspend fun deletePushNotification()
 }
