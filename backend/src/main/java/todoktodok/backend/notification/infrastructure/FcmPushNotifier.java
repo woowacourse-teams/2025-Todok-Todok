@@ -1,19 +1,35 @@
 package todoktodok.backend.notification.infrastructure;
 
-import com.google.firebase.messaging.*;
+import com.google.firebase.messaging.BatchResponse;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.FirebaseMessagingException;
+import com.google.firebase.messaging.MessagingErrorCode;
+import com.google.firebase.messaging.MulticastMessage;
+import com.google.firebase.messaging.Notification;
+import com.google.firebase.messaging.SendResponse;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import todoktodok.backend.member.domain.Member;
 import todoktodok.backend.notification.domain.NotificationToken;
 import todoktodok.backend.notification.domain.repository.NotificationTokenRepository;
 
-import java.util.List;
-
 @Slf4j
 @AllArgsConstructor
 public class FcmPushNotifier {
 
     private static final String TODOKTODOK_LOGO_URL = "https://techcourse-project-2025.s3.ap-northeast-2.amazonaws.com/todoktodok-images/profile/todoki.png";
+    private static final Set<MessagingErrorCode> DELETABLE_ERRORS = Set.of(
+            MessagingErrorCode.UNREGISTERED,
+            MessagingErrorCode.INVALID_ARGUMENT
+    );
+    private static final Set<MessagingErrorCode> RETRYABLE_ERRORS = Set.of(
+            MessagingErrorCode.UNAVAILABLE,
+            MessagingErrorCode.QUOTA_EXCEEDED,
+            MessagingErrorCode.INTERNAL
+    );
 
     private final NotificationTokenRepository notificationTokenRepository;
 
@@ -47,9 +63,43 @@ public class FcmPushNotifier {
             final BatchResponse batchResponse = FirebaseMessaging.getInstance()
                     .sendEachForMulticast(multicastMessage);
 
-            // TODO 에러 핸들링
+            handleError(batchResponse, tokens);
         } catch (final FirebaseMessagingException e) {
             log.error("Fail sending message to FCM");
         }
+    }
+
+    public void handleError(
+            final BatchResponse batchResponse,
+            final List<String> tokens
+    ) {
+        final List<SendResponse> responses = batchResponse.getResponses();
+        final List<String> deletedTokens = new ArrayList<>();
+
+        for (int i = 0; i < responses.size(); i++) {
+            final String token = tokens.get(i);
+            final SendResponse sendResponse = responses.get(i);
+
+            if (sendResponse.isSuccessful()) {
+                log.info(
+                        String.format("푸시 요청을 성공적으로 보냈습니다: token= %s", token)
+                );
+                continue;
+            }
+
+            final MessagingErrorCode errorCode = sendResponse.getException().getMessagingErrorCode();
+            if (DELETABLE_ERRORS.contains(errorCode)) {
+                deletedTokens.add(token);
+                log.info(
+                        String.format("푸시 요청 전송에 실패해 토큰을 삭제했습니다: token= %s, errorCode= $s", token, errorCode.name())
+                );
+            }
+
+            if (RETRYABLE_ERRORS.contains(errorCode)) {
+                // TODO 재시도 처리 구현 예정
+            }
+        }
+
+        notificationTokenRepository.deleteAllByTokenIn(deletedTokens);
     }
 }
