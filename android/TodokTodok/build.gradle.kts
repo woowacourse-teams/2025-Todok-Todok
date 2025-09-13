@@ -14,6 +14,7 @@ plugins {
     alias(libs.plugins.ktlint) apply false
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.firebase.crashlytics) apply false
+    alias(libs.plugins.kotlin.compose) apply false
 }
 
 allprojects {
