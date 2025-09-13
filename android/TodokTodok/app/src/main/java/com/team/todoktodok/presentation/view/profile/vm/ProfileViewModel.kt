@@ -2,6 +2,7 @@ package com.team.todoktodok.presentation.view.profile.vm
 
 import android.content.ContentResolver
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -17,6 +18,7 @@ import com.team.domain.model.member.MemberId
 import com.team.domain.model.member.MemberId.Companion.MemberId
 import com.team.domain.model.member.Profile
 import com.team.domain.repository.MemberRepository
+import com.team.domain.repository.TokenRepository
 import com.team.todoktodok.presentation.core.ImagePayloadMapper
 import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
 import com.team.todoktodok.presentation.core.event.SingleLiveData
@@ -30,6 +32,7 @@ import kotlinx.coroutines.launch
 
 class ProfileViewModel(
     private val memberRepository: MemberRepository,
+    private val tokenRepository: TokenRepository,
 ) : ViewModel() {
     private val _uiState = MutableLiveData(ProfileUiState())
     val uiState: LiveData<ProfileUiState> get() = _uiState
@@ -37,31 +40,30 @@ class ProfileViewModel(
     private val _uiEvent = MutableSingleLiveData<ProfileUiEvent>()
     val uiEvent: SingleLiveData<ProfileUiEvent> get() = _uiEvent
 
-    fun setMemberId(id: Long) {
-        val memberID = MemberId(id)
-        _uiState.value = _uiState.value?.copy(memberId = memberID)
-    }
-
     @Suppress("UNCHECKED_CAST")
-    fun loadProfile() {
-        val memberId = _uiState.value?.memberId ?: return
-        withLoading {
-            val (profile, books, participatedDiscussions, createdDiscussions) =
-                listOf(
-                    loadProfile(memberId),
-                    loadActivatedBooks(memberId),
-                    loadParticipatedDiscussions(memberId),
-                    loadCreatedDiscussions(memberId),
-                ).awaitAll()
+    fun loadProfile(id: Long) {
+        viewModelScope.launch {
+            val memberID = MemberId(id, tokenRepository.getMemberId())
+            _uiState.value = _uiState.value?.copy(memberId = memberID)
+            val memberId = _uiState.value?.memberId ?: return@launch
+            withLoading {
+                val (profile, books, participatedDiscussions, createdDiscussions) =
+                    listOf(
+                        loadProfile(memberId),
+                        loadActivatedBooks(memberId),
+                        loadParticipatedDiscussions(memberId),
+                        loadCreatedDiscussions(memberId),
+                    ).awaitAll()
 
-            _uiState.value =
-                ProfileUiState.initial(
-                    memberId,
-                    profile as Profile,
-                    books as List<Book>,
-                    participatedDiscussions as List<Discussion>,
-                    createdDiscussions as List<Discussion>,
-                )
+                _uiState.value =
+                    ProfileUiState.initial(
+                        memberId,
+                        profile as Profile,
+                        books as List<Book>,
+                        participatedDiscussions as List<Discussion>,
+                        createdDiscussions as List<Discussion>,
+                    )
+            }
         }
     }
 
