@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-fun navigateToBack() {
+fun NavigateToBack() {
     Icon(
         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
         contentDescription = "뒤로가기",
@@ -16,6 +16,6 @@ fun navigateToBack() {
 
 @Preview(name = "뒤로가기 버튼", showBackground = true)
 @Composable
-fun navigateToBackPreview() {
-    navigateToBack()
+fun NavigateToBackPreview() {
+    NavigateToBack()
 }
