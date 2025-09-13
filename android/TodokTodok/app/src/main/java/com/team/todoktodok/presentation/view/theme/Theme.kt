@@ -25,7 +25,7 @@ private val LightColorScheme =
     )
 
 @Composable
-fun TodoktodokTheme(
+fun todoktodokTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
