@@ -12,11 +12,13 @@ import java.util.List;
 import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import todoktodok.backend.member.domain.Member;
 import todoktodok.backend.notification.domain.NotificationToken;
 import todoktodok.backend.notification.domain.repository.NotificationTokenRepository;
 
 @Slf4j
+@Component
 @AllArgsConstructor
 public class FcmPushNotifier {
 
@@ -34,10 +36,10 @@ public class FcmPushNotifier {
     private final NotificationTokenRepository notificationTokenRepository;
 
     public void sendPush(
-            final Member member,
+            final Member recipient,
             final FcmMessagePayload fcmMessagePayload
     ) {
-        final List<NotificationToken> notificationTokens = notificationTokenRepository.findAllByMember(member);
+        final List<NotificationToken> notificationTokens = notificationTokenRepository.findAllByMember(recipient);
         final List<String> tokens = notificationTokens.stream()
                 .map(NotificationToken::getToken)
                 .toList();
