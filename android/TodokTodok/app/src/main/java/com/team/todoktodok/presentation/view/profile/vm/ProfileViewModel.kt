@@ -172,12 +172,9 @@ class ProfileViewModel(
             ) {
                 is NetworkResult.Failure -> onUiEvent(ProfileUiEvent.ShowErrorMessage(result.exception))
                 is NetworkResult.Success -> {
-                    _uiState.value =
-                        _uiState.value?.copy(
-                            items =
-                                _uiState.value?.items?.updateProfileImage(result.data)
-                                    ?: return@launch,
-                        )
+                    val updatedState =
+                        _uiState.value?.items?.updateProfileImage(result.data) ?: return@launch
+                    _uiState.value = _uiState.value?.copy(items = updatedState)
                 }
             }
         }
