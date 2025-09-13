@@ -1,6 +1,7 @@
 package todoktodok.backend.notification.application.service.command;
 
 import java.util.NoSuchElementException;
+
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,11 +25,15 @@ public class NotificationTokenCommandService {
     ) {
         final Member member = findMember(memberId);
         final String token = notificationTokenRequest.token();
+        final String fid = notificationTokenRequest.fid();
 
         validateDuplicatedNotificationToken(token, memberId);
 
+        notificationTokenRepository.deleteByFidAndMember(fid, member);
+
         final NotificationToken notificationToken = NotificationToken.builder()
                 .token(token)
+                .fid(fid)
                 .member(member)
                 .build();
 
