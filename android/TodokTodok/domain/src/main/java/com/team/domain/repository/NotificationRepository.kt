@@ -4,6 +4,8 @@ import com.team.domain.model.exception.NetworkResult
 import com.team.domain.model.notification.Notification
 
 interface NotificationRepository {
+    suspend fun registerPushNotification(): NetworkResult<Unit>
+
     suspend fun registerPushNotification(
         token: String,
         fId: String,

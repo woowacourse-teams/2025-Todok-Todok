@@ -61,6 +61,7 @@ class AuthViewModel(
                 ).onSuccessSuspend { type: MemberType ->
                     when (type) {
                         MemberType.USER -> {
+                            notificationRepository.registerPushNotification()
                             onUiEvent(LoginUiEvent.NavigateToMain)
                         }
 

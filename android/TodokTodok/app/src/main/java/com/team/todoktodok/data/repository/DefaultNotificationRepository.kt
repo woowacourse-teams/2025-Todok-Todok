@@ -12,6 +12,12 @@ class DefaultNotificationRepository(
     private val notificationRemoteDataSource: NotificationRemoteDataSource,
     private val notificationLocalDataSource: NotificationLocalDataSource,
 ) : NotificationRepository {
+    override suspend fun registerPushNotification(): NetworkResult<Unit> {
+        val fcmToken = notificationLocalDataSource.getFcmToken() ?: ""
+        val fId = notificationLocalDataSource.getFId() ?: ""
+        return notificationRemoteDataSource.saveFcmToken(fcmToken, fId)
+    }
+
     override suspend fun registerPushNotification(
         token: String,
         fId: String,
@@ -21,7 +27,6 @@ class DefaultNotificationRepository(
 
         val isNeedRegister =
             isNeedRegister(storedFcmToken, storedFcmFId, token, fId)
-
         if (isNeedRegister) {
             saveNewPushNotificationToLocal(token, fId)
             return notificationRemoteDataSource.saveFcmToken(token, fId)
