@@ -1,4 +1,4 @@
-package com.team.todoktodok.presentation.xml.discussions
+package com.team.todoktodok.presentation.view.discussions
 
 import android.content.Context
 import android.content.Intent
@@ -26,6 +26,16 @@ import com.team.todoktodok.databinding.ActivityDiscussionsBinding
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
 import com.team.todoktodok.presentation.core.ext.getParcelableCompat
+import com.team.todoktodok.presentation.view.book.SelectBookActivity
+import com.team.todoktodok.presentation.view.discussiondetail.DiscussionDetailActivity
+import com.team.todoktodok.presentation.view.discussions.all.AllDiscussionFragment
+import com.team.todoktodok.presentation.view.discussions.hot.HotDiscussionFragment
+import com.team.todoktodok.presentation.view.discussions.my.MyDiscussionFragment
+import com.team.todoktodok.presentation.view.discussions.vm.DiscussionsViewModel
+import com.team.todoktodok.presentation.view.discussions.vm.DiscussionsViewModelFactory
+import com.team.todoktodok.presentation.view.profile.ProfileActivity
+import com.team.todoktodok.presentation.view.notification.NotificationActivity
+import com.team.todoktodok.presentation.view.profile.ProfileActivity
 import com.team.todoktodok.presentation.view.serialization.SerializationNotification
 import com.team.todoktodok.presentation.xml.book.SelectBookActivity
 import com.team.todoktodok.presentation.xml.discussiondetail.DiscussionDetailActivity
@@ -157,9 +167,17 @@ class DiscussionsActivity : AppCompatActivity() {
     }
 
     private fun initView() {
+        setupAppBar()
         setupSearchBar()
         setupTabLayout()
         setupNavigationButton()
+    }
+
+    private fun setupAppBar() {
+        binding.ivNotification.setOnClickListener {
+            val intent = NotificationActivity.Intent(this)
+            startActivity(intent)
+        }
     }
 
     private fun setupSearchBar() =
