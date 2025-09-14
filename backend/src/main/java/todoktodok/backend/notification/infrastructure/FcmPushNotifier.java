@@ -5,7 +5,6 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.MessagingErrorCode;
 import com.google.firebase.messaging.MulticastMessage;
-import com.google.firebase.messaging.Notification;
 import com.google.firebase.messaging.SendResponse;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,11 +45,9 @@ public class FcmPushNotifier {
 
         final MulticastMessage multicastMessage = MulticastMessage.builder()
                 .addAllTokens(tokens)
-                .setNotification(Notification.builder()
-                        .setTitle(fcmMessagePayload.title())
-                        .setBody(fcmMessagePayload.body())
-                        .setImage(TODOKTODOK_LOGO_URL)
-                        .build())
+                .putData("title", fcmMessagePayload.title())
+                .putData("body", fcmMessagePayload.body())
+                .putData("image", TODOKTODOK_LOGO_URL)
                 .putData("discussionId", fcmMessagePayload.discussionId())
                 .putData("commentId", fcmMessagePayload.commentId())
                 .putData("replyId", fcmMessagePayload.replyId())
