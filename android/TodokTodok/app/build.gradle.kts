@@ -103,6 +103,7 @@ dependencies {
     implementation(libs.bundles.google)
     implementation(libs.bundles.glide)
     implementation(libs.bundles.logging)
+    implementation(libs.kotlinx.coroutines.android)
 
     testImplementation(libs.bundles.test)
     testImplementation(libs.androidx.core.testing)
