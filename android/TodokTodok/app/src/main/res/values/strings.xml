@@ -257,6 +257,7 @@
     <string name="error_reply_only_owner_can_modify_or_delete">자기 자신의 대댓글만 수정/삭제 가능합니다</string>
     <string name="content_description_delete_keyword">입력한 키워드를 삭제합니다</string>
     <string name="discussions_content_description_notificition">알림 페이지로 이동합니다</string>
+    <string name="notification_icon">아이콘</string>
 
     <string name="network_try_connection">네트워크 연결을 재시도중입니다.</string>
 </resources>

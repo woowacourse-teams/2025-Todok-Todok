@@ -5,13 +5,14 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingHorizontal="@dimen/space_24"
+
     tools:context=".presentation.view.notification.NotificationActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/topBar_notification"
-        android:layout_width="match_parent"
+        android:layout_width=""
         android:layout_height="@dimen/space_56"
+        android:layout_marginHorizontal="@dimen/space_24"
         android:background="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -40,19 +41,31 @@
         app:layout_constraintStart_toStartOf="@id/topBar_notification"
         app:layout_constraintTop_toTopOf="@id/topBar_notification" />
 
+    <View
+        android:id="@+id/view_background"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/space_0"
+        android:background="@color/gray_ED"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/topBar_notification" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="@dimen/space_0"
+
         android:backgroundTint="@color/gray_9F"
         android:scrollbarFadeDuration="0"
         android:scrollbarStyle="insideOverlay"
         android:scrollbars="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/view_background"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.333"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/topBar_notification"
+        app:layout_constraintTop_toTopOf="@id/view_background"
+        app:layout_constraintVertical_bias="1.0"
         tools:listitem="@layout/item_notification" />
 
     <com.team.todoktodok.presentation.core.component.CloverProgressBar
@@ -61,8 +74,8 @@
         android:layout_height="@dimen/space_0"
         android:clickable="true"
         android:focusable="true"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/view_background"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/topBar_notification" />
+        app:layout_constraintTop_toTopOf="@id/view_background" />
 </androidx.constraintlayout.widget.ConstraintLayout>
