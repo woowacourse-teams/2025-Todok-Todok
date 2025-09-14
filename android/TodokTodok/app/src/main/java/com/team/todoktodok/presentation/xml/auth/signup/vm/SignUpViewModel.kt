@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.team.domain.model.exception.onFailure
-import com.team.domain.model.exception.onSuccess
 import com.team.domain.model.exception.onSuccessSuspend
 import com.team.domain.model.member.NickNameException
 import com.team.domain.model.member.Nickname
@@ -42,14 +41,9 @@ class SignUpViewModel(
             memberRepository
                 .signUp(nickname.value)
                 .onSuccessSuspend {
-                    registerPushNotification()
                     _uiEvent.setValue(SignUpUiEvent.NavigateToMain)
                 }.onFailure { _uiEvent.setValue(SignUpUiEvent.ShowErrorMessage(it)) }
             _isLoading.value = false
         }
-    }
-
-    private suspend fun registerPushNotification() {
-        notificationRepository.registerPushNotification().onSuccess { }.onFailure { }
     }
 }

@@ -39,7 +39,6 @@ class RepositoryModule(
         DefaultNotificationRepository(
             dataSourceModule.notificationRemoteDataSource,
             dataSourceModule.notificationLocalDataSource,
-            dataSourceModule.firebaseRemoteDataSource,
         )
     }
 }
