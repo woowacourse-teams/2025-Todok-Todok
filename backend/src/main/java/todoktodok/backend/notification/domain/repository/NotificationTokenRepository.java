@@ -1,7 +1,11 @@
 package todoktodok.backend.notification.domain.repository;
 
+import java.util.Collection;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.member.domain.Member;
 import todoktodok.backend.notification.domain.NotificationToken;
 
@@ -13,5 +17,6 @@ public interface NotificationTokenRepository extends JpaRepository<NotificationT
 
     List<NotificationToken> findAllByMember(final Member member);
 
-    void deleteAllByTokenIn(final List<String> tokens);
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    void deleteAllByTokenIn(@Param("tokens") Collection<String> tokens);
 }
