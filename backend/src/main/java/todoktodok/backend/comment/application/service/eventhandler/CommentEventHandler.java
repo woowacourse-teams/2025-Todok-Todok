@@ -25,8 +25,9 @@ public class CommentEventHandler {
         final Member recipient = discussion.getMember();
         final Comment comment = commentCreated.comment();
         final Member author = comment.getMember();
+        final String authorNickname = author.getNickname();
         final String discussionTitle = discussion.getTitle();
-        final String notificationBody = String.format("[%s님의 댓글 도착] %s", author, discussionTitle);
+        final String notificationBody = String.format("[%s님의 댓글 도착] %s", authorNickname, discussionTitle);
         final Long discussionId = discussion.getId();
         final Long commentId = comment.getId();
         final Long replyId = null;
@@ -55,13 +56,14 @@ public class CommentEventHandler {
         final Discussion discussion = comment.getDiscussion();
         final Member recipient = comment.getMember();
         final Member author = commentLike.getMember();
+        final String authorNickname = author.getNickname();
         final String discussionTitle = discussion.getTitle();
-        final String notificationBody = String.format("%s 님이 [%s] 토론방의 댓글에 ❤\uFE0F를 보냈습니다", author, discussionTitle);
+        final String notificationBody = String.format("%s 님이 [%s] 토론방의 댓글에 ❤\uFE0F를 보냈습니다", authorNickname, discussionTitle);
         final Long discussionId = discussion.getId();
         final Long commentId = comment.getId();
         final Long replyId = null;
         final String memberNickname = author.getNickname();
-        final String content = null;
+        final String content = "";
 
         final FcmMessagePayload fcmMessagePayload = new FcmMessagePayload(
                 "토독토독",

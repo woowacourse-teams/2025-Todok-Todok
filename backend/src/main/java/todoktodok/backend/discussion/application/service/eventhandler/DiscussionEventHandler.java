@@ -23,13 +23,14 @@ public class DiscussionEventHandler {
         final Discussion discussion = discussionLike.getDiscussion();
         final Member recipient = discussion.getMember();
         final Member author = discussionLike.getMember();
+        final String authorNickname = author.getNickname();
         final String discussionTitle = discussion.getTitle();
-        final String notificationBody = String.format("%s 님이 [%s] 토론방에 ❤\uFE0F를 보냈습니다", author, discussionTitle);
+        final String notificationBody = String.format("%s 님이 [%s] 토론방에 ❤\uFE0F를 보냈습니다", authorNickname, discussionTitle);
         final Long discussionId = discussion.getId();
         final Long commentId = null;
         final Long replyId = null;
         final String memberNickname = author.getNickname();
-        final String content = null;
+        final String content = "";
 
         final FcmMessagePayload fcmMessagePayload = new FcmMessagePayload(
                 "토독토독",

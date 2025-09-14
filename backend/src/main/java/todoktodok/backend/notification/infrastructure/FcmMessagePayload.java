@@ -40,7 +40,7 @@ public record FcmMessagePayload(
 
     private static String safeStringValue(final Long id) {
         if (id == null) {
-            return null;
+            return "null";
         }
         return String.valueOf(id);
     }
