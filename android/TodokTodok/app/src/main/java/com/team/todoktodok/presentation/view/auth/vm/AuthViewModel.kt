@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.team.domain.model.exception.onFailure
-import com.team.domain.model.exception.onSuccess
 import com.team.domain.model.exception.onSuccessSuspend
 import com.team.domain.model.member.MemberType
 import com.team.domain.model.member.MemberType.Companion.MemberType
@@ -38,7 +37,6 @@ class AuthViewModel(
             val memberId = tokenRepository.getMemberId()
             when (MemberType(memberId)) {
                 MemberType.USER -> {
-                    registerPushNotification()
                     delay(SPLASH_DURATION)
                     onUiEvent(LoginUiEvent.NavigateToMain)
                 }
@@ -63,7 +61,6 @@ class AuthViewModel(
                 ).onSuccessSuspend { type: MemberType ->
                     when (type) {
                         MemberType.USER -> {
-                            registerPushNotification()
                             onUiEvent(LoginUiEvent.NavigateToMain)
                         }
 
@@ -74,10 +71,6 @@ class AuthViewModel(
                 }
             _isLoading.value = false
         }
-    }
-
-    private suspend fun registerPushNotification() {
-        notificationRepository.registerPushNotification().onSuccess { }.onFailure { }
     }
 
     private fun onUiEvent(event: LoginUiEvent) {
