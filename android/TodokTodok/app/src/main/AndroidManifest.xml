@@ -17,8 +17,11 @@
         android:theme="@style/Theme.TodokTodok"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".presentation.view.notification.NotificationActivity"
+            android:exported="false" />
         <service
-            android:name=".data.FirebaseService"
+            android:name=".adapter.FirebaseService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
@@ -31,6 +34,11 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="com.team.todoktodok.OPEN_DISCUSSION" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
