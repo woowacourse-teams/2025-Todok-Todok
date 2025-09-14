@@ -3,6 +3,7 @@ package com.team.todoktodok.presentation.view.notification
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -10,12 +11,13 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.team.todoktodok.App
 import com.team.todoktodok.databinding.ActivityNotificationBinding
-import com.team.todoktodok.presentation.view.book.vm.SelectBookViewModel
 import com.team.todoktodok.presentation.view.notification.adapter.NotificationAdapter
+import com.team.todoktodok.presentation.view.notification.adapter.NotificationGroup
+import com.team.todoktodok.presentation.view.notification.vm.NotificationViewModel
 import com.team.todoktodok.presentation.view.notification.vm.NotificationViewModelFactory
 
 class NotificationActivity : AppCompatActivity() {
-    private val viewModel by viewModels<SelectBookViewModel> {
+    private val viewModel by viewModels<NotificationViewModel> {
         val repositoryModule = (application as App).container.repositoryModule
         NotificationViewModelFactory(
             repositoryModule.notificationRepository,
@@ -31,6 +33,30 @@ class NotificationActivity : AppCompatActivity() {
         setContentView(binding.root)
         initSystemBar(binding)
         initView(binding, adapter)
+        viewModel.uiState.observe(this) { event ->
+            observeIsLoading(event.isLoading, binding)
+            updateNotifications(event.notificationGroup, adapter)
+        }
+    }
+
+    private fun updateNotifications(
+        notifications: List<NotificationGroup>,
+        adapter: NotificationAdapter,
+    ) {
+        adapter.submitList(notifications)
+    }
+
+    private fun observeIsLoading(
+        isLoading: Boolean,
+        binding: ActivityNotificationBinding,
+    ) {
+        if (isLoading) {
+            binding.rvNotifications.visibility = View.GONE
+            binding.progressBar.visibility = View.VISIBLE
+        } else {
+            binding.rvNotifications.visibility = View.VISIBLE
+            binding.progressBar.visibility = View.GONE
+        }
     }
 
     private fun initView(
