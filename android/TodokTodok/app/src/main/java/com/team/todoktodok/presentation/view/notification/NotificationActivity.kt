@@ -11,6 +11,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.team.todoktodok.App
 import com.team.todoktodok.databinding.ActivityNotificationBinding
 import com.team.todoktodok.presentation.view.book.vm.SelectBookViewModel
+import com.team.todoktodok.presentation.view.notification.adapter.NotificationAdapter
 import com.team.todoktodok.presentation.view.notification.vm.NotificationViewModelFactory
 
 class NotificationActivity : AppCompatActivity() {
@@ -23,9 +24,27 @@ class NotificationActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+
         val binding = ActivityNotificationBinding.inflate(layoutInflater)
+        val adapter = NotificationAdapter()
+
         setContentView(binding.root)
+        initSystemBar(binding)
+        initView(binding, adapter)
+    }
+
+    private fun initView(
+        binding: ActivityNotificationBinding,
+        adapter: NotificationAdapter,
+    ) {
+        binding.apply {
+            btnBack.setOnClickListener { finish() }
+            rvNotifications.adapter = adapter
+        }
+    }
+
+    private fun initSystemBar(binding: ActivityNotificationBinding) {
+        enableEdgeToEdge()
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
