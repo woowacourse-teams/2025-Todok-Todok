@@ -90,7 +90,7 @@ public class FcmPushNotifier {
             if (DELETABLE_ERRORS.contains(errorCode)) {
                 deletedTokens.add(token);
                 log.info(
-                        String.format("푸시 요청 전송에 실패해 토큰을 삭제했습니다: token= %s, errorCode= $s", token, errorCode.name())
+                        String.format("푸시 요청 전송에 실패해 토큰을 삭제했습니다: token= %s, errorCode= %s", token, errorCode.name())
                 );
             }
 
