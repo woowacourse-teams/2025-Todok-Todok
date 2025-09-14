@@ -2,6 +2,7 @@ package com.team.todoktodok.presentation.vm
 
 import com.team.domain.model.exception.NetworkResult
 import com.team.domain.repository.MemberRepository
+import com.team.domain.repository.NotificationRepository
 import com.team.todoktodok.CoroutinesTestExtension
 import com.team.todoktodok.InstantTaskExecutorExtension
 import com.team.todoktodok.ext.getOrAwaitValue
@@ -21,19 +22,24 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(InstantTaskExecutorExtension::class)
 class WithdrawViewModelTest {
     private val memberRepository: MemberRepository = mockk()
+    private val notificationRepository: NotificationRepository = mockk()
 
     @Test
     fun `회원탈퇴가 완료되면 NavigateToLogin 이벤트가 발생한다`() =
         runTest {
             // given
             coEvery { memberRepository.withdraw() } returns NetworkResult.Success(Unit)
-            val viewModel = WithdrawViewModel(memberRepository)
+            coEvery { notificationRepository.deletePushNotification() } returns Unit
+            val viewModel = WithdrawViewModel(memberRepository, notificationRepository)
 
             // when
             viewModel.withdraw()
 
             // then
-            coVerify(exactly = 1) { memberRepository.withdraw() }
+            coVerify(exactly = 1) {
+                memberRepository.withdraw()
+                notificationRepository.deletePushNotification()
+            }
             assertEquals(false, viewModel.isLoading.getOrAwaitValue())
             assertEquals(viewModel.uiEvent.getOrAwaitValue(), (WithdrawUiEvent.NavigateToLogin))
         }
