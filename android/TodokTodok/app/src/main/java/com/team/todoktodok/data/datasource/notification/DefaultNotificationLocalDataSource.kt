@@ -1,17 +1,26 @@
 package com.team.todoktodok.data.datasource.notification
 
-import com.team.todoktodok.data.local.nofitication.NotificationDatabase
+import com.team.todoktodok.data.local.nofitication.NotificationDao
+import com.team.todoktodok.data.local.nofitication.NotificationDataStore
+import com.team.todoktodok.data.local.nofitication.NotificationEntity
 
 class DefaultNotificationLocalDataSource(
-    private val database: NotificationDatabase,
+    private val dataStore: NotificationDataStore,
+    private val dao: NotificationDao,
 ) : NotificationLocalDataSource {
-    override suspend fun getFcmToken(): String? = database.getFcmToken()
+    override suspend fun getFcmToken(): String? = dataStore.getFcmToken()
 
-    override suspend fun getFId(): String? = database.getFId()
+    override suspend fun getFId(): String? = dataStore.getFId()
 
-    override suspend fun saveFcmToken(token: String) = database.saveFcmToken(token)
+    override suspend fun saveFcmToken(token: String) = dataStore.saveFcmToken(token)
 
-    override suspend fun saveFId(id: String) = database.saveFId(id)
+    override suspend fun saveFId(id: String) = dataStore.saveFId(id)
 
-    override suspend fun deletePushNotification() = database.deletePushNotification()
+    override suspend fun deletePushNotification() = dataStore.deletePushNotification()
+
+    override suspend fun getNotifications(): List<NotificationEntity> = dao.getAllNotifications()
+
+    override suspend fun saveNotifications(notificationEntity: NotificationEntity): Long = dao.saveNotification(notificationEntity)
+
+    override suspend fun getNotificationCount(): Int = dao.getAllNotificationCount()
 }
