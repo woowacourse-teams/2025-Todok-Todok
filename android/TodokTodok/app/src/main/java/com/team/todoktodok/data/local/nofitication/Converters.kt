@@ -3,6 +3,7 @@ package com.team.todoktodok.data.local.nofitication
 import androidx.room.TypeConverter
 import com.team.domain.model.notification.NotificationTarget
 import com.team.domain.model.notification.NotificationType
+import java.time.LocalDateTime
 
 class Converters {
     @TypeConverter
@@ -38,4 +39,10 @@ class Converters {
             "REPLY" -> NotificationTarget.Reply
             else -> throw IllegalArgumentException("Unknown NotificationTarget: $value")
         }
+
+    @TypeConverter
+    fun fromNotificationReceivedAt(receivedAt: LocalDateTime): String = receivedAt.toString()
+
+    @TypeConverter
+    fun toNotificationReceivedAt(value: String): LocalDateTime = LocalDateTime.parse(value)
 }

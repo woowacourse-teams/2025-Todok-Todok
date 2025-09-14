@@ -1,6 +1,7 @@
 package com.team.domain.model.notification
 
 import com.team.domain.model.member.Nickname
+import java.time.LocalDateTime
 
 data class Notification(
     val id: Long,
@@ -12,7 +13,7 @@ data class Notification(
     val content: String,
     val type: NotificationType,
     val target: NotificationTarget,
-    val receivedAt: Long = System.currentTimeMillis(),
+    val receivedAt: LocalDateTime = LocalDateTime.now(),
 ) {
     companion object {
         fun Notification(data: Map<String, String>): Notification =

@@ -7,6 +7,7 @@ import com.team.domain.model.member.Nickname
 import com.team.domain.model.notification.Notification
 import com.team.domain.model.notification.NotificationTarget
 import com.team.domain.model.notification.NotificationType
+import java.time.LocalDateTime
 
 @Entity(tableName = "notifications")
 data class NotificationEntity(
@@ -20,7 +21,7 @@ data class NotificationEntity(
     @ColumnInfo(name = "content") val content: String,
     @ColumnInfo(name = "type") val type: NotificationType,
     @ColumnInfo(name = "target") val target: NotificationTarget,
-    @ColumnInfo(name = "received_at") val receivedAt: Long,
+    @ColumnInfo(name = "received_at") val receivedAt: LocalDateTime,
 )
 
 fun Notification.toEntity() =
