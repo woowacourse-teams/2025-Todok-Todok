@@ -79,7 +79,10 @@ class DiscussionsActivity : AppCompatActivity() {
         setUpLoadingState()
         setupUiEvent()
         initView()
-        handleNotificationDeepLink(intent)
+        val fromNotification = intent.getBooleanExtra("from_notification", true)
+        if (fromNotification) {
+            handleNotificationDeepLink(intent)
+        }
     }
 
     override fun onNewIntent(intent: Intent) {

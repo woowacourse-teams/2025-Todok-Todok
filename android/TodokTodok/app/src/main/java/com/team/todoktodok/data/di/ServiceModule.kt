@@ -36,6 +36,6 @@ class ServiceModule(
     }
 
     val notificationService: NotificationService by lazy {
-        retrofit.createService(NotificationService::class.java)
+        retrofit.createAuthService(NotificationService::class.java)
     }
 }

@@ -20,8 +20,18 @@ data class Notification(
             Notification(
                 id = data["id"]?.toLong() ?: 0L,
                 discussionId = data["discussionId"]?.toLong() ?: 0L,
-                commentId = data["commentId"]?.toLong(),
-                replyId = data["replyId"]?.toLong(),
+                commentId =
+                    if (data["commentId"] == "null") {
+                        null
+                    } else {
+                        data["commentId"]?.toLong()
+                    },
+                replyId =
+                    if (data["replyId"] == "null") {
+                        null
+                    } else {
+                        data["replyId"]?.toLong()
+                    },
                 nickname = Nickname(data["memberNickname"] ?: ""),
                 discussionTitle = data["discussionTitle"] ?: "",
                 content = data["content"] ?: "",
