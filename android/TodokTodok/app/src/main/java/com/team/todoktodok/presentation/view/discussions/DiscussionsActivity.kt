@@ -18,18 +18,23 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import com.google.android.material.tabs.TabLayout
 import com.team.domain.model.DiscussionFilter
+import com.team.domain.model.notification.Notification
+import com.team.domain.model.notification.NotificationType
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivityDiscussionsBinding
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
+import com.team.todoktodok.presentation.core.ext.getParcelableCompat
 import com.team.todoktodok.presentation.view.book.SelectBookActivity
+import com.team.todoktodok.presentation.view.discussiondetail.DiscussionDetailActivity
 import com.team.todoktodok.presentation.view.discussions.all.AllDiscussionFragment
 import com.team.todoktodok.presentation.view.discussions.hot.HotDiscussionFragment
 import com.team.todoktodok.presentation.view.discussions.my.MyDiscussionFragment
 import com.team.todoktodok.presentation.view.discussions.vm.DiscussionsViewModel
 import com.team.todoktodok.presentation.view.discussions.vm.DiscussionsViewModelFactory
 import com.team.todoktodok.presentation.view.profile.ProfileActivity
+import com.team.todoktodok.presentation.view.serialization.SerializationNotification
 
 class DiscussionsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDiscussionsBinding
@@ -62,6 +67,13 @@ class DiscussionsActivity : AppCompatActivity() {
         setUpLoadingState()
         setupUiEvent()
         initView()
+        handleNotificationDeepLink(intent)
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        handleNotificationDeepLink(intent)
     }
 
     private fun setupSystemBars() {
@@ -122,6 +134,7 @@ class DiscussionsActivity : AppCompatActivity() {
                 is DiscussionsUiEvent.ShowErrorMessage -> {
                     AlertSnackBar(binding.root, messageConverter(event.exception)).show()
                 }
+
                 DiscussionsUiEvent.ShowSearchResult -> {
                     moveToLatestDiscussionTab()
                     allDiscussionFragment.showSearchResults()
@@ -266,6 +279,45 @@ class DiscussionsActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         binding.etSearchDiscussion.clearFocus()
+    }
+
+    private fun handleNotificationDeepLink(intent: Intent) {
+        val notification: Notification? =
+            intent.getParcelableCompat<SerializationNotification>("notification")?.toDomain()
+        triggerToMoveDiscussionDetail(notification)
+    }
+
+    private fun DiscussionsActivity.triggerToMoveDiscussionDetail(notification: Notification?) {
+        if (notification != null) {
+            when (notification.type) {
+                is NotificationType.Like -> {
+                    val detailIntent =
+                        DiscussionDetailActivity.Intent(
+                            this,
+                            notification.discussionId,
+                        )
+                    startActivity(detailIntent)
+                }
+
+                is NotificationType.Comment -> {
+                    val detailIntent =
+                        DiscussionDetailActivity.Intent(
+                            this,
+                            notification.discussionId,
+                        )
+                    startActivity(detailIntent)
+                }
+
+                is NotificationType.Reply -> {
+                    val detailIntent =
+                        DiscussionDetailActivity.Intent(
+                            this,
+                            notification.discussionId,
+                        )
+                    startActivity(detailIntent)
+                }
+            }
+        }
     }
 
     companion object {
