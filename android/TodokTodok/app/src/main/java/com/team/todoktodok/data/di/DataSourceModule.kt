@@ -2,7 +2,6 @@ package com.team.todoktodok.data.di
 
 import android.content.Context
 import androidx.room.Room
-import com.team.todoktodok.data.FirebaseService
 import com.team.todoktodok.data.datasource.book.BookRemoteDataSource
 import com.team.todoktodok.data.datasource.book.DefaultBookRemoteDataSource
 import com.team.todoktodok.data.datasource.comment.CommentRemoteDataSource
@@ -11,8 +10,6 @@ import com.team.todoktodok.data.datasource.discussion.DefaultDiscussionLocalData
 import com.team.todoktodok.data.datasource.discussion.DefaultDiscussionRemoteDataSource
 import com.team.todoktodok.data.datasource.discussion.DiscussionLocalDataSource
 import com.team.todoktodok.data.datasource.discussion.DiscussionRemoteDataSource
-import com.team.todoktodok.data.datasource.firebase.DefaultFirebaseRemoteDataSource
-import com.team.todoktodok.data.datasource.firebase.FirebaseRemoteDataSource
 import com.team.todoktodok.data.datasource.member.DefaultMemberRemoteDataSource
 import com.team.todoktodok.data.datasource.member.MemberRemoteDataSource
 import com.team.todoktodok.data.datasource.notification.DefaultNotificationLocalDataSource
@@ -81,11 +78,10 @@ class DataSourceModule(
     }
 
     val notificationLocalDataSource: NotificationLocalDataSource by lazy {
-        DefaultNotificationLocalDataSource(localDataSourceModule.notificationDatabase)
-    }
-
-    val firebaseRemoteDataSource: FirebaseRemoteDataSource by lazy {
-        DefaultFirebaseRemoteDataSource(FirebaseService())
+        DefaultNotificationLocalDataSource(
+            localDataSourceModule.notificationDataStore,
+            localDataSourceModule.notificationDatabase,
+        )
     }
 
     companion object {

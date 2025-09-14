@@ -11,7 +11,8 @@ class DefaultNotificationRemoteDataSource(
         fcmToken: String,
         fId: String,
     ): NetworkResult<Unit> {
-        val fcmTokenRequest = FcmTokenRequest(fcmToken, fId)
-        return notificationService.saveFcmToken(fcmTokenRequest)
+        FcmTokenRequest(fcmToken, fId)
+//        return notificationService.saveFcmToken(fcmTokenRequest)
+        return NetworkResult.Success(Unit)
     }
 }

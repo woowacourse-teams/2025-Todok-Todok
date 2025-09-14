@@ -1,6 +1,6 @@
 package com.team.todoktodok.data.local.nofitication
 
-interface NotificationDatabase {
+interface NotificationDataStore {
     suspend fun saveFcmToken(token: String)
 
     suspend fun saveFId(id: String)

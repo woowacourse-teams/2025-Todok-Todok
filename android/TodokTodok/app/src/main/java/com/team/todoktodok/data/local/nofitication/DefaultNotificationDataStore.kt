@@ -9,9 +9,9 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStoreFile
 import kotlinx.coroutines.flow.first
 
-class DefaultNotificationDatabase(
+class DefaultNotificationDataStore(
     private val context: Context,
-) : NotificationDatabase {
+) : NotificationDataStore {
     private val dataStore: DataStore<Preferences> =
         PreferenceDataStoreFactory.create {
             context.preferencesDataStoreFile(DATABASE_NAME)
