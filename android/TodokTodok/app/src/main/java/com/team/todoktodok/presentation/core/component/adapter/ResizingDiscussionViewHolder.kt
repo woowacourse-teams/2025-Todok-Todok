@@ -14,21 +14,16 @@ class ResizingDiscussionViewHolder private constructor(
             tvDiscussionOpinion.text = item.discussionOpinion
             tvDiscussionOpinion.maxLines = 2
             tvDiscussionOpinion.minLines = 2
-            adjustItemSize(item.opinionVisibility)
+            adjustItemSize()
         }
 
-    private fun adjustItemSize(showOpinion: Boolean) {
+    private fun adjustItemSize() {
         val resource = itemView.context.resources
         val displayMetrics = resource.displayMetrics
         val screenWidth = displayMetrics.widthPixels
 
         val params = itemView.layoutParams
-        params.width =
-            if (showOpinion) {
-                (screenWidth * 0.7).toInt()
-            } else {
-                ViewGroup.LayoutParams.MATCH_PARENT
-            }
+        params.width = (screenWidth * 0.7).toInt()
         itemView.layoutParams = params
     }
 
