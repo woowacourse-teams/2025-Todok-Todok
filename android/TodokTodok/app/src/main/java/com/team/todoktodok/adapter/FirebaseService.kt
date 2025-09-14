@@ -52,7 +52,6 @@ class FirebaseService : FirebaseMessagingService() {
             val intent =
                 DiscussionsActivity.Intent(this).apply {
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                    putExtra("from_notification", true)
                     putExtra("notification", notification.toSerialization())
                 }
 
