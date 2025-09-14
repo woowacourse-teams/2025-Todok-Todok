@@ -33,6 +33,7 @@ import com.team.todoktodok.presentation.view.discussions.hot.HotDiscussionFragme
 import com.team.todoktodok.presentation.view.discussions.my.MyDiscussionFragment
 import com.team.todoktodok.presentation.view.discussions.vm.DiscussionsViewModel
 import com.team.todoktodok.presentation.view.discussions.vm.DiscussionsViewModelFactory
+import com.team.todoktodok.presentation.view.notification.NotificationActivity
 import com.team.todoktodok.presentation.view.profile.ProfileActivity
 import com.team.todoktodok.presentation.view.serialization.SerializationNotification
 
@@ -148,9 +149,17 @@ class DiscussionsActivity : AppCompatActivity() {
     }
 
     private fun initView() {
+        setupAppBar()
         setupSearchBar()
         setupTabLayout()
         setupNavigationButton()
+    }
+
+    private fun setupAppBar() {
+        binding.ivNotification.setOnClickListener {
+            val intent = NotificationActivity.Intent(this)
+            startActivity(intent)
+        }
     }
 
     private fun setupSearchBar() =
