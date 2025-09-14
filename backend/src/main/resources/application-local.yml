@@ -11,7 +11,7 @@ spring:
       schema-locations: classpath:db/local/schema.sql
       data-locations: classpath:db/local/data.sql
   jpa:
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
         format_sql: true
