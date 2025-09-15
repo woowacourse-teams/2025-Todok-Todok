@@ -5,8 +5,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+
 import java.util.Objects;
 import java.util.regex.Pattern;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -74,7 +76,7 @@ public class Member extends TimeStamp {
     }
 
     public void resignUp() {
-        if (isDeleted()){
+        if (isDeleted()) {
             cancelDeletion();
             return;
         }
