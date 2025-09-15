@@ -22,9 +22,15 @@ public class CommentEventHandler {
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void sendPushOn(final CommentCreated commentCreated) {
         final Discussion discussion = commentCreated.discussion();
-        final Member recipient = discussion.getMember();
         final Comment comment = commentCreated.comment();
+
+        final Member recipient = discussion.getMember();
         final Member author = comment.getMember();
+
+        if (recipient.equals(author)) {
+            return;
+        }
+
         final String authorNickname = author.getNickname();
         final String discussionTitle = discussion.getTitle();
         final String notificationBody = String.format("[%s님의 댓글 도착] %s", authorNickname, discussionTitle);
@@ -54,8 +60,14 @@ public class CommentEventHandler {
         final CommentLike commentLike = commentLikeCreated.commentLike();
         final Comment comment = commentLike.getComment();
         final Discussion discussion = comment.getDiscussion();
+
         final Member recipient = comment.getMember();
         final Member author = commentLike.getMember();
+
+        if (recipient.equals(author)) {
+            return;
+        }
+
         final String authorNickname = author.getNickname();
         final String discussionTitle = discussion.getTitle();
         final String notificationBody = String.format("%s 님이 [%s] 토론방의 댓글에 ❤\uFE0F를 보냈습니다", authorNickname, discussionTitle);

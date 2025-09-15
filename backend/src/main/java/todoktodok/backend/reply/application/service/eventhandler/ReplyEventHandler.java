@@ -23,10 +23,16 @@ public class ReplyEventHandler {
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void sendPushOn(final ReplyCreated replyCreated) {
         final Discussion discussion = replyCreated.discussion();
-        final Member recipient = discussion.getMember();
         final Comment comment = replyCreated.comment();
         final Reply reply = replyCreated.reply();
+
+        final Member recipient = discussion.getMember();
         final Member author = reply.getMember();
+
+        if (recipient.equals(author)) {
+            return;
+        }
+
         final String authorNickname = author.getNickname();
         final String discussionTitle = discussion.getTitle();
         final String notificationBody = String.format("[%s님의 대댓글 도착] %s", authorNickname, discussionTitle);
@@ -57,8 +63,14 @@ public class ReplyEventHandler {
         final Reply reply = replyLike.getReply();
         final Comment comment = reply.getComment();
         final Discussion discussion = comment.getDiscussion();
+
         final Member recipient = reply.getMember();
         final Member author = replyLike.getMember();
+
+        if (recipient.equals(author)) {
+            return;
+        }
+
         final String authorNickname = author.getNickname();
         final String discussionTitle = discussion.getTitle();
         final String notificationBody = String.format("%s 님이 [%s] 토론방의 대댓글에 ❤\uFE0F를 보냈습니다", authorNickname, discussionTitle);

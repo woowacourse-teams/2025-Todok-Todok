@@ -21,8 +21,14 @@ public class DiscussionEventHandler {
     public void sendPushOn(final DiscussionLikeCreated discussionLikeCreated) {
         final DiscussionLike discussionLike = discussionLikeCreated.discussionLike();
         final Discussion discussion = discussionLike.getDiscussion();
+
         final Member recipient = discussion.getMember();
         final Member author = discussionLike.getMember();
+
+        if (recipient.equals(author)) {
+            return;
+        }
+
         final String authorNickname = author.getNickname();
         final String discussionTitle = discussion.getTitle();
         final String notificationBody = String.format("%s 님이 [%s] 토론방에 ❤\uFE0F를 보냈습니다", authorNickname, discussionTitle);
