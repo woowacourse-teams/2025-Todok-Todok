@@ -6,6 +6,8 @@ import todoktodok.backend.member.domain.Member;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
+    Optional<Member> findByEmail(final String email);
+
     Optional<Member> findByIdAndDeletedAtIsNull(final Long id);
 
     Optional<Member> findByEmailAndDeletedAtIsNull(final String email);

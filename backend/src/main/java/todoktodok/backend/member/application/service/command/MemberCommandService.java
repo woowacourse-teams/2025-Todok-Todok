@@ -46,13 +46,17 @@ public class MemberCommandService {
     private final S3ImageUploadClient s3ImageUploadClient;
 
     public TokenResponse login(final LoginRequest loginRequest) {
-        final Optional<Member> memberOrEmpty = memberRepository.findByEmailAndDeletedAtIsNull(loginRequest.email());
+        final Optional<Member> memberOrEmpty = memberRepository.findByEmail(loginRequest.email());
         if (memberOrEmpty.isPresent()) {
-            final String accessToken = jwtTokenProvider.createAccessToken(memberOrEmpty.get());
-            final String refreshToken = jwtTokenProvider.createRefreshToken(memberOrEmpty.get());
+            final Member member = memberOrEmpty.get();
+
+            resignUpIfDeleted(member);
+
+            final String accessToken = jwtTokenProvider.createAccessToken(member);
+            final String refreshToken = jwtTokenProvider.createRefreshToken(member);
 
             final RefreshToken savedRefreshToken = RefreshToken.create(refreshToken);
-            saveRefreshTokenIfUnique(savedRefreshToken, memberOrEmpty.get().getId());
+            saveRefreshTokenIfUnique(savedRefreshToken, member.getId());
 
             return new TokenResponse(accessToken, refreshToken);
         }
@@ -196,6 +200,12 @@ public class MemberCommandService {
         final Block block = blockRepository.findByMemberAndTarget(member, target);
 
         blockRepository.delete(block);
+    }
+
+    private void resignUpIfDeleted(final Member member) {
+        if (member.isDeleted()) {
+            member.cancelDeletion();
+        }
     }
 
     private void validateDuplicatedNickname(final String nickname) {
