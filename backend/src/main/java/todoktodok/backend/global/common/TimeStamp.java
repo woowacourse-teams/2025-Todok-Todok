@@ -23,7 +23,7 @@ public abstract class TimeStamp {
 
     private LocalDateTime deletedAt;
 
-    protected boolean isDeleted() {
+    public boolean isDeleted() {
         return deletedAt != null;
     }
 

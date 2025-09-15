@@ -204,7 +204,7 @@ public class MemberCommandService {
 
     private void resignUpIfDeleted(final Member member) {
         if (member.isDeleted()) {
-            member.cancelDeletion();
+            member.resignUp();
         }
     }
 

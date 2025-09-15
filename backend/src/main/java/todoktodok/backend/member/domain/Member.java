@@ -73,6 +73,11 @@ public class Member extends TimeStamp {
         this.profileImage = profileImage;
     }
 
+    public void resignUp() {
+        if (isDeleted()){ cancelDeletion();}
+        throw new IllegalArgumentException(String.format("탈퇴한 회원이 아닙니다: memberId = %s", this.id));
+    }
+
     public boolean isMyNickname(final String nickname) {
         return this.nickname.equals(nickname);
     }
