@@ -23,11 +23,11 @@ public abstract class TimeStamp {
 
     private LocalDateTime deletedAt;
 
-    public boolean isDeleted() {
+    protected boolean isDeleted() {
         return deletedAt != null;
     }
 
-    public void cancelDeletion() {
+    protected void cancelDeletion() {
         this.deletedAt = null;
     }
 }
