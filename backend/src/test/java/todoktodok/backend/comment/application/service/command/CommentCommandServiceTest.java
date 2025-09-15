@@ -2,6 +2,8 @@ package todoktodok.backend.comment.application.service.command;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 import java.util.NoSuchElementException;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,14 +14,18 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.DatabaseInitializer;
 import todoktodok.backend.InitializerTimer;
 import todoktodok.backend.comment.application.dto.request.CommentRequest;
+import todoktodok.backend.comment.application.service.eventhandler.CommentEventHandler;
+import todoktodok.backend.notification.infrastructure.FcmPushNotifier;
 
 @ActiveProfiles("test")
 @Transactional
-@SpringBootTest(webEnvironment = WebEnvironment.NONE)
+@SpringBootTest(webEnvironment = WebEnvironment.NONE, properties = "firebase.enabled=false")
 @ContextConfiguration(initializers = InitializerTimer.class)
 public class CommentCommandServiceTest {
 
@@ -28,6 +34,9 @@ public class CommentCommandServiceTest {
 
     @Autowired
     private CommentCommandService commentCommandService;
+
+    @MockitoBean
+    private FcmPushNotifier fcmPushNotifier;
 
     @BeforeEach
     void setUp() {
@@ -63,6 +72,29 @@ public class CommentCommandServiceTest {
         assertThatThrownBy(() -> commentCommandService.createComment(2L, 1L, commentRequest))
                 .isInstanceOf(NoSuchElementException.class)
                 .hasMessageContaining("해당 회원을 찾을 수 없습니다");
+    }
+
+    @Test
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
+    @DisplayName("댓글을 작성하면 댓글 알람이 토론방 작성자에게 가는 이벤트가 발생한다")
+    void commentCreatedNotificationTest() {
+        // given
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setUserInfo("user1@gmail.com", "user1", "", "");
+        databaseInitializer.setUserInfo("user2@gmail.com", "user2", "", "");
+
+        final Long recipientId = 1L;
+
+        databaseInitializer.setDiscussionInfo("캡슐화 왜 하나요?", "진짜 왜해요? 의견 공유!", recipientId, 1L);
+
+        final Long authorId = 2L;
+        final Long discussionId = 1L;
+
+        // when
+        commentCommandService.createComment(authorId, discussionId, new CommentRequest("저도 궁금합니다"));
+
+        // then
+        verify(fcmPushNotifier, times(1)).sendPush(any(), any());
     }
 
     @Test
@@ -126,6 +158,56 @@ public class CommentCommandServiceTest {
         assertThatThrownBy(() -> commentCommandService.toggleLike(memberId, discussionId, commentId))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("해당 토론방에 있는 댓글이 아닙니다");
+    }
+
+    @Test
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
+    @DisplayName("댓글 좋아요를 생성하면 알람이 댓글 작성자에게 가는 이벤트가 발생한다")
+    void commentLikeCreatedNotificationTest() {
+        // given
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setUserInfo("user1@gmail.com", "user1", "", "");
+        databaseInitializer.setUserInfo("user2@gmail.com", "user2", "", "");
+        databaseInitializer.setDefaultDiscussionInfo();
+
+        final Long discussionId = 1L;
+        final Long recipientId = 1L;
+
+        databaseInitializer.setCommentInfo("저도 궁금해요", recipientId, discussionId);
+
+        final Long authorId = 2L;
+        final Long commentId = 1L;
+
+        // when
+        commentCommandService.toggleLike(authorId, discussionId, commentId);
+
+        // then
+        verify(fcmPushNotifier, times(1)).sendPush(any(), any());
+    }
+
+    @Test
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
+    @DisplayName("댓글 좋아요를 취소하면 알람이 댓글 작성자에게 가는 이벤트가 발생하지 않는다")
+    void commentLikeCreatedNotificationTest_notCreated() {
+        // given
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setUserInfo("user1@gmail.com", "user1", "", "");
+        databaseInitializer.setUserInfo("user2@gmail.com", "user2", "", "");
+        databaseInitializer.setDefaultDiscussionInfo();
+
+        final Long discussionId = 1L;
+        final Long recipientId = 1L;
+        final Long authorId = 2L;
+        final Long commentId = 1L;
+
+        databaseInitializer.setCommentInfo("저도 궁금해요", recipientId, discussionId);
+        databaseInitializer.setCommentLikeInfo(authorId, commentId);
+
+        // when
+        commentCommandService.toggleLike(authorId, discussionId, commentId);
+
+        // then
+        verifyNoInteractions(fcmPushNotifier);
     }
 
     @Test
