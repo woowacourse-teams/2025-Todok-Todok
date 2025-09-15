@@ -21,7 +21,6 @@ import todoktodok.backend.global.common.TimeStamp;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 
 @Entity
-@SQLRestriction("deleted_at is NULL")
 @SQLDelete(sql = "UPDATE member SET deleted_at = NOW() WHERE id = ?")
 public class Member extends TimeStamp {
 
