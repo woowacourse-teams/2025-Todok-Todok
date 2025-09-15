@@ -74,7 +74,10 @@ public class Member extends TimeStamp {
     }
 
     public void resignUp() {
-        if (isDeleted()){ cancelDeletion();}
+        if (isDeleted()){
+            cancelDeletion();
+            return;
+        }
         throw new IllegalArgumentException(String.format("탈퇴한 회원이 아닙니다: memberId = %s", this.id));
     }
 
