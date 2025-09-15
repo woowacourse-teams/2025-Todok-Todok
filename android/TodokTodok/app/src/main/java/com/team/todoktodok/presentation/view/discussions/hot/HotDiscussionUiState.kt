@@ -15,7 +15,7 @@ data class HotDiscussionUiState(
         hotDiscussions: List<Discussion>,
         activatedDiscussion: ActivatedDiscussionPage,
     ): HotDiscussionUiState {
-        val popularItems = hotDiscussions.map { DiscussionUiState(it, true) }
+        val popularItems = hotDiscussions.map { DiscussionUiState(it) }
         val activatedItems = activatedDiscussion.data.map { it.toUiState() }
 
         val hotDiscussion =
