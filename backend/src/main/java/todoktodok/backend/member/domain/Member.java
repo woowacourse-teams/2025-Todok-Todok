@@ -78,7 +78,7 @@ public class Member extends TimeStamp {
             cancelDeletion();
             return;
         }
-        throw new IllegalArgumentException(String.format("탈퇴한 회원이 아닙니다: memberId = %s", this.id));
+        throw new IllegalStateException(String.format("탈퇴한 회원이 아닙니다: memberId = %s", this.id));
     }
 
     public boolean isMyNickname(final String nickname) {
