@@ -46,7 +46,7 @@ public class MemberCommandService {
     private final S3ImageUploadClient s3ImageUploadClient;
 
     public TokenResponse login(final LoginRequest loginRequest) {
-        final Optional<Member> memberOrEmpty = memberRepository.findByEmail(loginRequest.email());
+        final Optional<Member> memberOrEmpty = memberRepository.findByEmailAndDeletedAtIsNull(loginRequest.email());
         if (memberOrEmpty.isPresent()) {
             final String accessToken = jwtTokenProvider.createAccessToken(memberOrEmpty.get());
             final String refreshToken = jwtTokenProvider.createRefreshToken(memberOrEmpty.get());
@@ -199,13 +199,13 @@ public class MemberCommandService {
     }
 
     private void validateDuplicatedNickname(final String nickname) {
-        if (memberRepository.existsByNickname(nickname)) {
+        if (memberRepository.existsByNicknameAndDeletedAtIsNull(nickname)) {
             throw new IllegalArgumentException(String.format("이미 존재하는 닉네임입니다: nickname = %s", nickname));
         }
     }
 
     private void validateDuplicatedEmail(final SignupRequest signupRequest) {
-        if (memberRepository.existsByEmail(signupRequest.email())) {
+        if (memberRepository.existsByEmailAndDeletedAtIsNull(signupRequest.email())) {
             throw new IllegalArgumentException(
                     String.format("이미 가입된 이메일입니다: email = %s", maskEmail(signupRequest.email())));
         }
@@ -222,7 +222,7 @@ public class MemberCommandService {
     }
 
     private Member findMember(final Long memberId) {
-        return memberRepository.findById(memberId)
+        return memberRepository.findByIdAndDeletedAtIsNull(memberId)
                 .orElseThrow(
                         () -> new NoSuchElementException(String.format("해당 회원을 찾을 수 없습니다: memberId = %s", memberId)));
     }
