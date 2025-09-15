@@ -12,6 +12,7 @@ import java.util.NoSuchElementException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import todoktodok.backend.DatabaseInitializer;
 import todoktodok.backend.InitializerTimer;
+import todoktodok.backend.discussion.application.dto.response.DiscussionResponse;
+import todoktodok.backend.discussion.application.service.query.DiscussionQueryService;
 import todoktodok.backend.global.auth.Role;
 import todoktodok.backend.global.jwt.JwtTokenProvider;
 import todoktodok.backend.global.jwt.TokenInfo;
@@ -30,6 +33,7 @@ import todoktodok.backend.member.application.dto.request.LoginRequest;
 import todoktodok.backend.member.application.dto.request.ProfileUpdateRequest;
 import todoktodok.backend.member.application.dto.request.RefreshTokenRequest;
 import todoktodok.backend.member.application.dto.request.SignupRequest;
+import todoktodok.backend.member.application.dto.response.MemberResponse;
 import todoktodok.backend.member.application.dto.response.ProfileUpdateResponse;
 import todoktodok.backend.member.application.dto.response.TokenResponse;
 import todoktodok.backend.member.domain.repository.RefreshTokenRepository;
@@ -53,7 +57,7 @@ class MemberCommandServiceTest {
     private RefreshTokenRepository refreshTokenRepository;
 
     @Autowired
-    private EntityManager entityManager;
+    private DiscussionQueryService discussionQueryService;
 
     @BeforeEach
     void setUp() {
@@ -376,50 +380,6 @@ class MemberCommandServiceTest {
     }
 
     @Test
-    @DisplayName("회원을 탈퇴하면 회원과 리프레시 토큰이 삭제되고 회원 서비스를 사용할 수 없다")
-    void deleteMemberTest() {
-        // given
-        final String email = "user@gmail.com";
-
-        databaseInitializer.setUserInfo(email, "user", "https://user.png", "");
-        databaseInitializer.setUserInfo("user2@gmail.com", "user2", "https://user.png", "");
-
-        final TokenResponse tokenResponse = memberCommandService.login(new LoginRequest(email));
-        final Long memberId = 1L;
-        final String refreshToken = tokenResponse.refreshToken();
-
-        // when
-        memberCommandService.deleteMember(memberId, new RefreshTokenRequest(tokenResponse.refreshToken()));
-
-        // then
-        assertAll(
-                () -> assertThatThrownBy(() -> memberCommandService.deleteBlock(memberId, 2L))
-                        .isInstanceOf(NoSuchElementException.class)
-                        .hasMessageContaining("해당 회원을 찾을 수 없습니다"),
-                () -> assertThatThrownBy(() -> memberCommandService.refresh(new RefreshTokenRequest(refreshToken)))
-                        .isInstanceOf(NoSuchElementException.class)
-                        .hasMessageContaining("해당 회원을 찾을 수 없습니다")
-        );
-    }
-
-    @Test
-    @DisplayName("회원 탈퇴 시 리프레시 토큰과 액세스 토큰의 memberId가 불일치하면 예외가 발생한다")
-    void deleteMemberTest_notFoundMember_fail() {
-        // given
-        final String email = "user@gmail.com";
-
-        databaseInitializer.setUserInfo(email, "user", "https://user.png", "");
-
-        final TokenResponse tokenResponse = memberCommandService.login(new LoginRequest(email));
-        final Long wrongMemberId = 999L;
-
-        // when - then
-        assertThatThrownBy(() -> memberCommandService.deleteMember(wrongMemberId, new RefreshTokenRequest(tokenResponse.refreshToken())))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("리프레시 토큰과 액세스 토큰의 회원 정보가 일치하지 않습니다");
-    }
-
-    @Test
     @DisplayName("존재하지 않는 회원이 차단해제를 하면 예외가 발생한다")
     void deleteBlockTest_notFoundMember_fail() {
         // given
@@ -461,5 +421,107 @@ class MemberCommandServiceTest {
         assertThatThrownBy(() -> memberCommandService.deleteBlock(memberId, targetId))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("차단한 회원이 아닙니다");
+    }
+
+    @Nested
+    @DisplayName("탈퇴한 회원 테스트")
+    class DeletedMemberTest {
+
+        @Test
+        @DisplayName("회원을 탈퇴하면 회원과 리프레시 토큰이 삭제되고 회원 서비스를 사용할 수 없다")
+        void deleteMemberTest() {
+            // given
+            final String email = "user@gmail.com";
+
+            databaseInitializer.setUserInfo(email, "user", "https://user.png", "");
+            databaseInitializer.setUserInfo("user2@gmail.com", "user2", "https://user.png", "");
+
+            final TokenResponse tokenResponse = memberCommandService.login(new LoginRequest(email));
+            final Long memberId = 1L;
+            final String refreshToken = tokenResponse.refreshToken();
+
+            // when
+            memberCommandService.deleteMember(memberId, new RefreshTokenRequest(tokenResponse.refreshToken()));
+
+            // then
+            assertAll(
+                    () -> assertThatThrownBy(() -> memberCommandService.deleteBlock(memberId, 2L))
+                            .isInstanceOf(NoSuchElementException.class)
+                            .hasMessageContaining("해당 회원을 찾을 수 없습니다"),
+                    () -> assertThatThrownBy(() -> memberCommandService.refresh(new RefreshTokenRequest(refreshToken)))
+                            .isInstanceOf(NoSuchElementException.class)
+                            .hasMessageContaining("해당 회원을 찾을 수 없습니다")
+            );
+        }
+
+        @Test
+        @DisplayName("탈퇴한 회원 로그인 시 재가입 후 액세스 토큰과 리프레시 토큰을 발급한다")
+        void loginDeletedUserTest() {
+            // given
+            final String email = "user@gmail.com";
+
+            databaseInitializer.setUserInfo(email, "user", "", "");
+            databaseInitializer.deleteUserInfo(email);
+
+            final LoginRequest loginRequest = new LoginRequest(email);
+
+            // when
+            final TokenResponse tokenResponse = memberCommandService.login(loginRequest);
+            final TokenInfo accessTokenInfo = jwtTokenProvider.getInfoByAccessToken(tokenResponse.accessToken());
+            final TokenInfo refreshTokenInfo = jwtTokenProvider.getInfoByRefreshToken(tokenResponse.refreshToken());
+
+            // then
+            assertAll(
+                    () -> assertThat(accessTokenInfo.role()).isEqualTo(Role.USER),
+                    () -> assertThat(refreshTokenInfo.role()).isEqualTo(Role.USER)
+            );
+        }
+
+        @Test
+        @DisplayName("회원 탈퇴 시 리프레시 토큰과 액세스 토큰의 memberId가 불일치하면 예외가 발생한다")
+        void deleteMemberTest_notFoundMember_fail() {
+            // given
+            final String email = "user@gmail.com";
+
+            databaseInitializer.setUserInfo(email, "user", "https://user.png", "");
+
+            final TokenResponse tokenResponse = memberCommandService.login(new LoginRequest(email));
+            final Long wrongMemberId = 999L;
+
+            // when - then
+            assertThatThrownBy(() -> memberCommandService.deleteMember(wrongMemberId, new RefreshTokenRequest(tokenResponse.refreshToken())))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessageContaining("리프레시 토큰과 액세스 토큰의 회원 정보가 일치하지 않습니다");
+        }
+
+        @Test
+        @DisplayName("특정 토론방을 조회할 때 탈퇴한 회원의 토론방도 조회한다")
+        void getDiscussion_includeDeletedMember() {
+            // given
+            final Long deletedUserId = 1L;
+            final String deletedUserEmail = "user1@gmail.com";
+
+            databaseInitializer.setDefaultBookInfo();
+            databaseInitializer.setUserInfo(deletedUserEmail, "user1", "", "");
+            databaseInitializer.setUserInfo("user2@gmail.com", "user2", "", "");
+            databaseInitializer.setDiscussionInfo("user1의 토론방", "토론방 내용입니다", deletedUserId, 1L);
+
+            databaseInitializer.deleteUserInfo(deletedUserEmail);
+
+            final Long discussionId = 1L;
+            final Long existingMemberId = 2L;
+
+            // when
+            final DiscussionResponse discussionResponse = discussionQueryService.getDiscussion(existingMemberId, discussionId);
+            final MemberResponse memberResponse = discussionResponse.member();
+
+            // then
+            assertAll(
+                    () -> assertThat(discussionResponse.discussionId()).isEqualTo(discussionId),
+                    () -> assertThat(memberResponse.memberId()).isEqualTo(deletedUserId),
+                    () -> assertThat(memberResponse.nickname()).isEqualTo("(알수없음)"),
+                    () -> assertThat(memberResponse.profileImage()).isEqualTo("https://techcourse-project-2025.s3.ap-northeast-2.amazonaws.com/todoktodok-images/profile/todoki.png")
+            );
+        }
     }
 }
