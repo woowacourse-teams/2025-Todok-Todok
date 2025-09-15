@@ -5,6 +5,7 @@ import android.content.ContentResolver
 import android.net.Uri
 import android.provider.OpenableColumns
 import com.team.domain.model.ImagePayload
+import com.team.domain.model.exception.ImageLoadExceptions
 
 class ImagePayloadMapper(
     private val contentResolver: ContentResolver,
@@ -14,7 +15,10 @@ class ImagePayloadMapper(
         ImagePayload(
             fileName = queryName(contentResolver, uri) ?: "upload.bin",
             mediaType = contentResolver.getType(uri) ?: "application/octet-stream",
-            openStream = { contentResolver.openInputStream(uri)!! },
+            openStream = {
+                contentResolver.openInputStream(uri)
+                    ?: throw ImageLoadExceptions.UriInputStreamNotFoundException
+            },
         )
 
     private fun queryName(

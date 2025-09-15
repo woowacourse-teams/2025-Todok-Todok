@@ -8,6 +8,7 @@ import com.team.domain.model.exception.BooksExceptions
 import com.team.domain.model.exception.CommentExceptions
 import com.team.domain.model.exception.DiscussionExceptions
 import com.team.domain.model.exception.ISBNException
+import com.team.domain.model.exception.ImageLoadExceptions
 import com.team.domain.model.exception.KeywordException
 import com.team.domain.model.exception.ReplyExceptions
 import com.team.domain.model.exception.TodokTodokExceptions
@@ -125,5 +126,7 @@ class ExceptionMessageConverter {
 
             KeywordException.BlankKeyword -> R.string.select_book_error_blank_keyword
             KeywordException.EmptyKeyword -> R.string.select_book_error_empty_keyword
+
+            ImageLoadExceptions.UriInputStreamNotFoundException -> R.string.error_uri_input_stream_not_found
         }
 }

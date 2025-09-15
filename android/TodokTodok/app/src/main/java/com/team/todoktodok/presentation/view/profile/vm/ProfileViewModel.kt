@@ -9,7 +9,9 @@ import androidx.lifecycle.viewModelScope
 import com.team.domain.model.Book
 import com.team.domain.model.Discussion
 import com.team.domain.model.Support
+import com.team.domain.model.exception.ImageLoadExceptions
 import com.team.domain.model.exception.NetworkResult
+import com.team.domain.model.exception.TodokTodokExceptions
 import com.team.domain.model.exception.onFailure
 import com.team.domain.model.exception.onSuccess
 import com.team.domain.model.member.MemberDiscussionType
@@ -163,14 +165,14 @@ class ProfileViewModel(
         imageUri: Uri?,
         contentResolver: ContentResolver,
     ) {
-        imageUri ?: return
+        if (imageUri == null || _uiState.value?.memberId is MemberId.OtherUser) return
+        val imagePayload =
+            runCatching { ImagePayloadMapper(contentResolver).from(imageUri) }.getOrElse { exception ->
+                onImagePayloadErrorMessageEvent(exception)
+                return
+            }
         viewModelScope.launch {
-            when (
-                val result =
-                    memberRepository.modifyProfileImage(
-                        ImagePayloadMapper(contentResolver).from(imageUri),
-                    )
-            ) {
+            when (val result = memberRepository.modifyProfileImage(imagePayload)) {
                 is NetworkResult.Failure -> onUiEvent(ProfileUiEvent.ShowErrorMessage(result.exception))
                 is NetworkResult.Success -> {
                     val updatedState =
@@ -178,6 +180,16 @@ class ProfileViewModel(
                     _uiState.value = _uiState.value?.copy(items = updatedState)
                 }
             }
+        }
+    }
+
+    private fun onImagePayloadErrorMessageEvent(exception: Throwable) {
+        if (exception !is ImageLoadExceptions.UriInputStreamNotFoundException) {
+            onUiEvent(
+                ProfileUiEvent.ShowErrorMessage(TodokTodokExceptions.UnknownException(exception)),
+            )
+        } else {
+            onUiEvent(ProfileUiEvent.ShowErrorMessage(exception))
         }
     }
 
