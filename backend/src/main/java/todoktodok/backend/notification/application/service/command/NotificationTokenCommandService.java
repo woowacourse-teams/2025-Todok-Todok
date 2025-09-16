@@ -1,8 +1,10 @@
 package todoktodok.backend.notification.application.service.command;
 
+import java.util.ConcurrentModificationException;
 import java.util.NoSuchElementException;
 
 import lombok.AllArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.member.domain.Member;
@@ -27,7 +29,7 @@ public class NotificationTokenCommandService {
         final String token = notificationTokenRequest.token();
         final String fid = notificationTokenRequest.fid();
 
-        validateDuplicatedNotificationToken(token, memberId);
+        validateDuplicatedNotificationToken(token, member);
 
         notificationTokenRepository.deleteByFidAndMember(fid, member);
 
@@ -37,16 +39,32 @@ public class NotificationTokenCommandService {
                 .member(member)
                 .build();
 
-        notificationTokenRepository.save(notificationToken);
+        saveNotificationTokenIfUnique(memberId, notificationToken);
+    }
+
+    private void saveNotificationTokenIfUnique(
+            final Long memberId,
+            final NotificationToken notificationToken
+    ) {
+        try {
+            notificationTokenRepository.save(notificationToken);
+        } catch (DataIntegrityViolationException e) {
+            throw new ConcurrentModificationException(
+                    String.format("중복된 알람 토큰 발급 요청입니다: memberId = %d", memberId)
+            );
+        }
     }
 
     private void validateDuplicatedNotificationToken(
             final String token,
-            final Long memberId
+            final Member member
     ) {
+        if (notificationTokenRepository.existsByTokenAndMember(token, member)) {
+            return;
+        }
         if (notificationTokenRepository.existsByToken(token)) {
             throw new IllegalArgumentException(
-                    String.format("해당 토큰은 중복된 토큰입니다: memberId= %d", memberId)
+                    String.format("다른 계정에 등록된 토큰입니다: memberId= %d", member.getId())
             );
         }
     }

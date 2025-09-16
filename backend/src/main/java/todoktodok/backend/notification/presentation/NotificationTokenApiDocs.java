@@ -31,7 +31,7 @@ public interface NotificationTokenApiDocs {
                             examples = {
                                     @ExampleObject(
                                             name = "중복된 토큰 저장",
-                                            value = "{\"code\":400, \"message\":\"해당 토큰은 중복된 토큰입니다\"}"
+                                            value = "{\"code\":400, \"message\":\"중복된 알람 토큰 발급 요청입니다\"}"
                                     ),
                                     @ExampleObject(
                                             name = "토큰 입력 안함",
@@ -40,6 +40,10 @@ public interface NotificationTokenApiDocs {
                                     @ExampleObject(
                                             name = "FID 입력 안함",
                                             value = "{\"code\":400, \"message\":\"Firebase Installation Id를 입력해주세요\"}"
+                                    ),
+                                    @ExampleObject(
+                                            name = "다른 회원의 토큰 저장",
+                                            value = "{\"code\":400, \"message\":\"다른 계정에 등록된 토큰입니다\"}"
                                     )
                             }
                     )),

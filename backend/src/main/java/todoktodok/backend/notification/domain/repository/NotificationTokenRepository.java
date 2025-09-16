@@ -11,12 +11,14 @@ import todoktodok.backend.notification.domain.NotificationToken;
 
 public interface NotificationTokenRepository extends JpaRepository<NotificationToken, Long> {
 
-    boolean existsByToken(final String token);
-
-    void deleteByFidAndMember(final String fid, final Member member);
-
     List<NotificationToken> findAllByMember(final Member member);
 
+    boolean existsByToken(final String token);
+
+    boolean existsByTokenAndMember(final String token, final Member member);
+
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    void deleteAllByTokenIn(@Param("tokens") Collection<String> tokens);
+    void deleteAllByTokenIn(@Param("tokens") final Collection<String> tokens);
+
+    void deleteByFidAndMember(final String fid, final Member member);
 }
