@@ -26,7 +26,7 @@ public class ReplyEventHandler {
         final Comment comment = replyCreated.comment();
         final Reply reply = replyCreated.reply();
 
-        final Member recipient = discussion.getMember();
+        final Member recipient = comment.getMember();
         final Member author = reply.getMember();
 
         if (recipient.equals(author)) {
