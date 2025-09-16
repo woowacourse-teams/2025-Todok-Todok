@@ -51,6 +51,17 @@ public class AladinRestClient {
         );
     }
 
+    public AladinItemResponses searchBooksByKeywordWithPaging(
+            final String searchBookKeyword,
+            final int page,
+            final int size
+    ) {
+        return getAladinItemResponses(
+            createSearchBooksUriByPaging(searchBookKeyword, page, size),
+            String.format("searchBookKeyword= %s, page= %d, size= %d", searchBookKeyword, page, size)
+        );
+    }
+
     private Function<UriBuilder, URI> createSearchBooksUri(final String searchBookKeyword) {
         return uriBuilder -> uriBuilder
                 .path(aladinItemSearchUri)
@@ -69,6 +80,23 @@ public class AladinRestClient {
                 .queryParam("ttbkey", aladinApiKey)
                 .queryParam("ItemIdType", SEARCH_TYPE)
                 .queryParam("ItemId", isbn)
+                .queryParam("Output", OUTPUT)
+                .queryParam("Version", LATEST_VERSION)
+                .build();
+    }
+
+    private Function<UriBuilder, URI> createSearchBooksUriByPaging(
+            final String searchBookKeyword,
+            final int page,
+            final int size
+    ) {
+        return uriBuilder -> uriBuilder
+                .path(aladinItemSearchUri)
+                .queryParam("ttbkey", aladinApiKey)
+                .queryParam("Query", searchBookKeyword)
+                .queryParam("Start", page)
+                .queryParam("MaxResults", size)
+                .queryParam("CategoryId", DOMESTIC_COMPUTER_CATEGORY_ID)
                 .queryParam("Output", OUTPUT)
                 .queryParam("Version", LATEST_VERSION)
                 .build();
