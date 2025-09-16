@@ -6,9 +6,11 @@ import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.MessagingErrorCode;
 import com.google.firebase.messaging.MulticastMessage;
 import com.google.firebase.messaging.SendResponse;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -62,13 +64,13 @@ public class FcmPushNotifier {
             final BatchResponse batchResponse = FirebaseMessaging.getInstance()
                     .sendEachForMulticast(multicastMessage);
 
-            handleResponse(batchResponse, tokens);
+            handleResponses(batchResponse, tokens);
         } catch (final FirebaseMessagingException e) {
             log.error("Fail sending message to FCM");
         }
     }
 
-    public void handleResponse(
+    public void handleResponses(
             final BatchResponse batchResponse,
             final List<String> tokens
     ) {
@@ -90,7 +92,7 @@ public class FcmPushNotifier {
             if (DELETABLE_ERRORS.contains(errorCode)) {
                 deletedTokens.add(token);
                 log.info(
-                        String.format("푸시 요청 전송에 실패해 토큰을 삭제했습니다: token= %s, errorCode= %s", token, errorCode.name())
+                        String.format("푸시 요청 전송에 실패해 토큰을 삭제했습니다: token= %s, errorCode= %s", maskToken(token), errorCode.name())
                 );
             }
 
@@ -100,5 +102,12 @@ public class FcmPushNotifier {
         }
 
         notificationTokenRepository.deleteAllByTokenIn(deletedTokens);
+    }
+
+    private String maskToken(final String token) {
+        if (token == null || token.length() < 8) {
+            return "****";
+        }
+        return token.substring(0, 4) + "****" + token.substring(token.length() - 4);
     }
 }

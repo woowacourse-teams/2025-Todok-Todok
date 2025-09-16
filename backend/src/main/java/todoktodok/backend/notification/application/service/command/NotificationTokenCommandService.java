@@ -42,19 +42,6 @@ public class NotificationTokenCommandService {
         saveNotificationTokenIfUnique(memberId, notificationToken);
     }
 
-    private void saveNotificationTokenIfUnique(
-            final Long memberId,
-            final NotificationToken notificationToken
-    ) {
-        try {
-            notificationTokenRepository.save(notificationToken);
-        } catch (DataIntegrityViolationException e) {
-            throw new ConcurrentModificationException(
-                    String.format("중복된 알람 토큰 발급 요청입니다: memberId = %d", memberId)
-            );
-        }
-    }
-
     private void validateDuplicatedNotificationToken(
             final String token,
             final Member member
@@ -64,7 +51,20 @@ public class NotificationTokenCommandService {
         }
         if (notificationTokenRepository.existsByToken(token)) {
             throw new IllegalArgumentException(
-                    String.format("다른 계정에 등록된 토큰입니다: memberId= %d", member.getId())
+                    String.format("다른 계정에 등록된 토큰입니다: memberId= %d, token= %s", member.getId(), maskToken(token))
+            );
+        }
+    }
+
+    private void saveNotificationTokenIfUnique(
+            final Long memberId,
+            final NotificationToken notificationToken
+    ) {
+        try {
+            notificationTokenRepository.save(notificationToken);
+        } catch (DataIntegrityViolationException e) {
+            throw new ConcurrentModificationException(
+                    String.format("중복된 알람 토큰 발급 요청입니다: memberId = %d, token= %s", memberId, notificationToken.getToken())
             );
         }
     }
@@ -75,5 +75,12 @@ public class NotificationTokenCommandService {
                                 String.format("해당 회원을 찾을 수 없습니다: memberId= %s", memberId)
                         )
                 );
+    }
+
+    private String maskToken(final String token) {
+        if (token == null || token.length() < 8) {
+            return "****";
+        }
+        return token.substring(0, 4) + "****" + token.substring(token.length() - 4);
     }
 }
