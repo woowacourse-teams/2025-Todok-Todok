@@ -37,10 +37,10 @@ public class FcmPushNotifier {
     private final NotificationTokenRepository notificationTokenRepository;
 
     public void sendPush(
-            final Member recipient,
+            final Long recipientId,
             final FcmMessagePayload fcmMessagePayload
     ) {
-        final List<NotificationToken> notificationTokens = notificationTokenRepository.findAllByMember(recipient);
+        final List<NotificationToken> notificationTokens = notificationTokenRepository.findAllByMemberId(recipientId);
         final List<String> tokens = notificationTokens.stream()
                 .map(NotificationToken::getToken)
                 .toList();

@@ -54,7 +54,7 @@ public class ReplyCommandService {
                 .build();
 
         final Reply savedReply = replyRepository.save(reply);
-        publisher.publishEvent(new ReplyCreated(discussion, comment, savedReply));
+        publisher.publishEvent(new ReplyCreated(discussion, comment, savedReply, member));
 
         return savedReply.getId();
     }
@@ -149,8 +149,9 @@ public class ReplyCommandService {
                 .member(member)
                 .build();
 
-        final ReplyLike savedReplyLike = replyLikeRepository.save(replyLike);
-        publisher.publishEvent(new ReplyLikeCreated(savedReplyLike));
+        replyLikeRepository.save(replyLike);
+        publisher.publishEvent(new ReplyLikeCreated(member, discussion, comment, reply));
+
         return true;
     }
 

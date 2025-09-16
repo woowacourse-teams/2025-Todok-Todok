@@ -25,7 +25,7 @@ import todoktodok.backend.notification.infrastructure.FcmPushNotifier;
 
 @ActiveProfiles("test")
 @Transactional
-@SpringBootTest(webEnvironment = WebEnvironment.NONE, properties = "firebase.enabled=false")
+@SpringBootTest(webEnvironment = WebEnvironment.NONE)
 @ContextConfiguration(initializers = InitializerTimer.class)
 public class CommentCommandServiceTest {
 

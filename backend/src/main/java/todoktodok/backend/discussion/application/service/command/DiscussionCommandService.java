@@ -122,8 +122,8 @@ public class DiscussionCommandService {
                 .member(member)
                 .build();
 
-        DiscussionLike savedDiscussionLike = discussionLikeRepository.save(discussionLike);
-        publisher.publishEvent(new DiscussionLikeCreated(savedDiscussionLike));
+        discussionLikeRepository.save(discussionLike);
+        publisher.publishEvent(new DiscussionLikeCreated(discussion, member));
 
         return true;
     }

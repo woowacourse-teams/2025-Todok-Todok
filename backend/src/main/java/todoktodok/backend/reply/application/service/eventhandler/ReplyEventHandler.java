@@ -4,15 +4,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
-import todoktodok.backend.comment.domain.Comment;
-import todoktodok.backend.discussion.domain.Discussion;
-import todoktodok.backend.member.domain.Member;
 import todoktodok.backend.notification.infrastructure.FcmMessagePayload;
 import todoktodok.backend.notification.infrastructure.FcmPushNotifier;
 import todoktodok.backend.reply.application.service.command.ReplyCreated;
 import todoktodok.backend.reply.application.service.command.ReplyLikeCreated;
-import todoktodok.backend.reply.domain.Reply;
-import todoktodok.backend.reply.domain.ReplyLike;
 
 @Component
 @AllArgsConstructor
@@ -22,76 +17,60 @@ public class ReplyEventHandler {
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void sendPushOn(final ReplyCreated replyCreated) {
-        final Discussion discussion = replyCreated.discussion();
-        final Comment comment = replyCreated.comment();
-        final Reply reply = replyCreated.reply();
+        final Long recipientId = replyCreated.commentMemberId();
+        final Long authorId = replyCreated.authorId();
 
-        final Member recipient = comment.getMember();
-        final Member author = reply.getMember();
-
-        if (recipient.equals(author)) {
+        if (recipientId.equals(authorId)) {
             return;
         }
 
-        final String authorNickname = author.getNickname();
-        final String discussionTitle = discussion.getTitle();
-        final String notificationBody = String.format("[%s님의 대댓글 도착] %s", authorNickname, discussionTitle);
-        final Long discussionId = discussion.getId();
-        final Long commentId = comment.getId();
-        final Long replyId = reply.getId();
-        final String memberNickname = author.getNickname();
-        final String content = reply.getContent();
+        final String notificationBody = String.format("[%s님의 대댓글 도착] %s",
+                replyCreated.authorNickname(),
+                replyCreated.discussionTitle()
+        );
 
         final FcmMessagePayload fcmMessagePayload = new FcmMessagePayload(
                 "토독토독",
                 notificationBody,
-                discussionId,
-                commentId,
-                replyId,
-                memberNickname,
-                discussionTitle,
-                content,
+                replyCreated.discussionId(),
+                replyCreated.commentId(),
+                replyCreated.replyId(),
+                replyCreated.authorNickname(),
+                replyCreated.discussionTitle(),
+                replyCreated.content(),
                 "REPLY",
                 "REPLY"
         );
-        fcmPushNotifier.sendPush(recipient, fcmMessagePayload);
+        fcmPushNotifier.sendPush(recipientId, fcmMessagePayload);
     }
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void sendPushOn(final ReplyLikeCreated replyLikeCreated) {
-        final ReplyLike replyLike = replyLikeCreated.replyLike();
-        final Reply reply = replyLike.getReply();
-        final Comment comment = reply.getComment();
-        final Discussion discussion = comment.getDiscussion();
+        final Long recipientId = replyLikeCreated.replyMemberId();
+        final Long authorId = replyLikeCreated.authorId();
 
-        final Member recipient = reply.getMember();
-        final Member author = replyLike.getMember();
-
-        if (recipient.equals(author)) {
+        if (recipientId.equals(authorId)) {
             return;
         }
 
-        final String authorNickname = author.getNickname();
-        final String discussionTitle = discussion.getTitle();
-        final String notificationBody = String.format("%s 님이 [%s] 토론방의 대댓글에 ❤\uFE0F를 보냈습니다", authorNickname, discussionTitle);
-        final Long discussionId = discussion.getId();
-        final Long commentId = comment.getId();
-        final Long replyId = reply.getId();
-        final String memberNickname = author.getNickname();
+        final String notificationBody = String.format("%s 님이 [%s] 토론방의 대댓글에 ❤\uFE0F를 보냈습니다",
+                replyLikeCreated.authorNickname(),
+                replyLikeCreated.discussionTitle()
+        );
         final String content = "";
 
         final FcmMessagePayload fcmMessagePayload = new FcmMessagePayload(
                 "토독토독",
                 notificationBody,
-                discussionId,
-                commentId,
-                replyId,
-                memberNickname,
-                discussionTitle,
+                replyLikeCreated.discussionId(),
+                replyLikeCreated.commentId(),
+                replyLikeCreated.replyId(),
+                replyLikeCreated.authorNickname(),
+                replyLikeCreated.discussionTitle(),
                 content,
                 "LIKE",
                 "REPLY"
         );
-        fcmPushNotifier.sendPush(recipient, fcmMessagePayload);
+        fcmPushNotifier.sendPush(recipientId, fcmMessagePayload);
     }
 }

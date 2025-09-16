@@ -11,7 +11,7 @@ import todoktodok.backend.notification.domain.NotificationToken;
 
 public interface NotificationTokenRepository extends JpaRepository<NotificationToken, Long> {
 
-    List<NotificationToken> findAllByMember(final Member member);
+    List<NotificationToken> findAllByMemberId(final Long memberId);
 
     boolean existsByToken(final String token);
 

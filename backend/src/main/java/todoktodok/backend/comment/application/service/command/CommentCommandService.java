@@ -49,7 +49,7 @@ public class CommentCommandService {
                 .build();
 
         final Comment savedComment = commentRepository.save(comment);
-        publisher.publishEvent(new CommentCreated(discussion, savedComment));
+        publisher.publishEvent(new CommentCreated(discussion, savedComment, member));
 
         return savedComment.getId();
     }
@@ -76,8 +76,9 @@ public class CommentCommandService {
                 .member(member)
                 .build();
 
-        final CommentLike savedCommentLike = commentLikeRepository.save(commentLike);
-        publisher.publishEvent(new CommentLikeCreated(savedCommentLike));
+        commentLikeRepository.save(commentLike);
+        publisher.publishEvent(new CommentLikeCreated(discussion, comment, member));
+
         return true;
     }
 
