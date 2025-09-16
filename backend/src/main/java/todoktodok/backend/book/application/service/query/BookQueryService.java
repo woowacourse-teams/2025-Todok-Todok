@@ -104,6 +104,11 @@ public class BookQueryService {
             return new PageInfo(false, null);
         }
 
+        if (page > MAX_TOTAL_SIZE / PAGE_SIZE) {
+            final String nextCursor = encodeCursorId(2);
+            return new PageInfo(true, nextCursor);
+        }
+
         final String nextCursor = encodeCursorId(page + 1);
         return new PageInfo(true, nextCursor);
     }

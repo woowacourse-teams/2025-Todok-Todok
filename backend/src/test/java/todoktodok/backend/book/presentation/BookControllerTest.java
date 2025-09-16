@@ -4,6 +4,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.lessThan;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 
 import io.restassured.RestAssured;
@@ -216,7 +217,35 @@ public class BookControllerTest {
                     .then().log().all()
                     .statusCode(HttpStatus.OK.value())
                     .body("items.size()", greaterThanOrEqualTo(1))
-                    .body("nextCursor", nullValue());
+                    .body("pageInfo.nextCursor", nullValue());
+        }
+
+        @Test
+        @DisplayName("검색어로 도서를 검색한다 - cursor가 20보다 클 때 첫 페이지 응답")
+        void searchByPagingTest_upperTwentyPage() {
+            // given
+            databaseInitializer.setDefaultUserInfo();
+            databaseInitializer.setDefaultBookInfo();
+
+            final String token = MemberFixture.getAccessToken("user@gmail.com");
+            final String keyword = "자바";
+
+            final String cursorMeaningTwentyOne = "MjE=";
+            final String cursorMeaningTwo = "Mg==";
+
+            // when - then
+            RestAssured.given().log().all()
+                    .contentType(ContentType.JSON)
+                    .header("Authorization", token)
+                    .param("size", 10)
+                    .param("keyword", keyword)
+                    .param("cursor", cursorMeaningTwentyOne)
+                    .when().get("/api/v1/books/searchByPaging")
+                    .then().log().all()
+                    .statusCode(HttpStatus.OK.value())
+                    .body("items.size()", greaterThanOrEqualTo(1))
+                    .body("pageInfo.hasNext", is(true))
+                    .body("pageInfo.nextCursor", is(cursorMeaningTwo));
         }
     }
 
