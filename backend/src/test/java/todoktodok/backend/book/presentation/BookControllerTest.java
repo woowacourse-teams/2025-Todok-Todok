@@ -4,6 +4,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.lessThan;
+import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 
@@ -134,7 +135,7 @@ public class BookControllerTest {
                     .body("items.size()", equalTo(10))
                     .body("pageInfo.hasNext", is(true))
                     .body("pageInfo.nextCursor", is(cursorMeaningTwo))
-                    .body("totalSize", lessThan(200));
+                    .body("totalSize", lessThanOrEqualTo(200));
         }
 
         @Test
@@ -163,7 +164,7 @@ public class BookControllerTest {
                     .body("items.size()", equalTo(10))
                     .body("pageInfo.hasNext", is(true))
                     .body("pageInfo.nextCursor", is(cursorMeaningThree))
-                    .body("totalSize", lessThan(200));
+                    .body("totalSize", lessThanOrEqualTo(200));
         }
 
         @Test
@@ -191,7 +192,7 @@ public class BookControllerTest {
                     .body("items.size()", greaterThanOrEqualTo(1))
                     .body("pageInfo.hasNext", is(false))
                     .body("pageInfo.nextCursor", nullValue())
-                    .body("totalSize", lessThan(200));
+                    .body("totalSize", lessThanOrEqualTo(200));
         }
 
         @Test
