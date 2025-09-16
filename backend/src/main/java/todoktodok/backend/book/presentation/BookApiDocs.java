@@ -213,7 +213,7 @@ public interface BookApiDocs {
                     description = "도서 검색 성공",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = AladinBookResponse.class),
+                            schema = @Schema(implementation = LatestAladinBookPageResponse.class),
                             examples = {
                                 @ExampleObject(
                                         name = "첫 번째 ~ 중간 페이지",
