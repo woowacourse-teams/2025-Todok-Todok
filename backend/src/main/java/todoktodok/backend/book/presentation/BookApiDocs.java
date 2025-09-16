@@ -13,6 +13,7 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import todoktodok.backend.book.application.dto.request.BookRequest;
 import todoktodok.backend.book.application.dto.response.AladinBookResponse;
+import todoktodok.backend.book.application.dto.response.LatestAladinBookPageResponse;
 import todoktodok.backend.global.exception.ErrorResponse;
 
 @Tag(name = "도서 API")
@@ -196,6 +197,149 @@ public interface BookApiDocs {
                     ))
     })
     ResponseEntity<List<AladinBookResponse>> search(
+            @Parameter(
+                    description = "조회할 도서 제목 혹은 저자",
+                    content = @Content(
+                            schema = @Schema(implementation = String.class),
+                            examples = @ExampleObject(value = "오브젝트")
+                    )
+            ) final String keyword
+    );
+
+    @Operation(summary = "도서 검색 API(페이지네이션 적용)")
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "도서 검색 성공",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = AladinBookResponse.class),
+                            examples = {
+                                @ExampleObject(
+                                        name = "첫 번째 ~ 중간 페이지",
+                                        value = """
+                                                {
+                                                  "items": [
+                                                    {
+                                                      "bookId": "1",
+                                                      "bookTitle": "오브젝트",
+                                                      "bookAuthor": "조영호",
+                                                      "bookImage": "https://image.png"
+                                                    },
+                                                    {
+                                                      "bookId": "2",
+                                                      "bookTitle": "오브젝트 디자인",
+                                                      "bookAuthor": "마티아스 노박",
+                                                      "bookImage": "https://image2.png"
+                                                    }
+                                                  ],
+                                                  "pageInfo": {
+                                                    "hasNext": true,
+                                                    "nextCursor": "Mg=="
+                                                  },
+                                                  "totalSize": 200
+                                                }
+                                                """
+                                ),
+                                @ExampleObject(
+                                        name = "마지막 페이지",
+                                        value = """
+                                                {
+                                                  "items": [
+                                                    {
+                                                      "bookId": "1",
+                                                      "bookTitle": "오브젝트",
+                                                      "bookAuthor": "조영호",
+                                                      "bookImage": "https://image.png"
+                                                    },
+                                                    {
+                                                      "bookId": "2",
+                                                      "bookTitle": "오브젝트 디자인",
+                                                      "bookAuthor": "마티아스 노박",
+                                                      "bookImage": "https://image2.png"
+                                                    }
+                                                  ],
+                                                  "pageInfo": {
+                                                    "hasNext": false,
+                                                    "nextCursor": null
+                                                  },
+                                                  "totalSize": 200
+                                                }
+                                                """
+                                    )
+                            }
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "잘못된 요청",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = {
+                                    @ExampleObject(
+                                            name = "최소 글자수 오류",
+                                            value = "{\"code\":400, \"message\":\"[ERROR] 검색어는 1자 이상이어야 합니다\"}"
+                                    ),
+                                    @ExampleObject(
+                                            name = "페이지 사이즈 오류",
+                                            value = "{\"code\":400, \"message\":\"[ERROR] 유효하지 않은 페이지 사이즈입니다\"}"
+                                    ),
+                                    @ExampleObject(
+                                            name = "커서 오류",
+                                            value = "{\"code\":400, \"message\":\"[ERROR] Base64로 디코드할 수 없는 cursor 값입니다\"}"
+                                    )
+                            }
+                    )),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "토큰 인증 오류",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "JWT 오류",
+                                    value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
+                            )
+                    )),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "액세스 토큰 만료 오류",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "액세스 토큰 만료 오류",
+                                    value = "{\"code\":401, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
+                            )
+                    )),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "서버 오류",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "서버 오류",
+                                    value = "{\"code\":500, \"message\":\"[ERROR] 서버 내부 오류가 발생했습니다\"}"
+                            )
+                    ))
+    })
+    ResponseEntity<LatestAladinBookPageResponse> searchByPaging(
+            @Parameter(
+                    description = "페이지 사이즈(요청 한 번에 가져올 책의 개수, 10 고정)",
+                    content = @Content(
+                            schema = @Schema(implementation = Integer.class),
+                            examples = @ExampleObject(value = "10")
+                    )
+            ) final int size,
+            @Parameter(
+                    description = "직전 응답의 nextCursor(첫 요청에는 보내지 않음)",
+                    content = @Content(
+                            schema = @Schema(implementation = String.class),
+                            examples = @ExampleObject(value = "Mg==")
+                    )
+            ) final String cursor,
             @Parameter(
                     description = "조회할 도서 제목 혹은 저자",
                     content = @Content(
