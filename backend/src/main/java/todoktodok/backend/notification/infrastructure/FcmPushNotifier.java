@@ -62,13 +62,13 @@ public class FcmPushNotifier {
             final BatchResponse batchResponse = FirebaseMessaging.getInstance()
                     .sendEachForMulticast(multicastMessage);
 
-            handleError(batchResponse, tokens);
+            handleResponse(batchResponse, tokens);
         } catch (final FirebaseMessagingException e) {
             log.error("Fail sending message to FCM");
         }
     }
 
-    public void handleError(
+    public void handleResponse(
             final BatchResponse batchResponse,
             final List<String> tokens
     ) {
