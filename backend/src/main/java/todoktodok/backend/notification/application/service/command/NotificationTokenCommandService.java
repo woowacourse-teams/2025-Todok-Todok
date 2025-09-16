@@ -29,7 +29,9 @@ public class NotificationTokenCommandService {
         final String token = notificationTokenRequest.token();
         final String fid = notificationTokenRequest.fid();
 
-        validateDuplicatedNotificationToken(token, member);
+        if (isTokenAlreadySaved(token, member)) {
+            return;
+        }
 
         notificationTokenRepository.deleteByFidAndMember(fid, member);
 
@@ -42,18 +44,19 @@ public class NotificationTokenCommandService {
         saveNotificationTokenIfUnique(memberId, notificationToken);
     }
 
-    private void validateDuplicatedNotificationToken(
+    private boolean isTokenAlreadySaved(
             final String token,
             final Member member
     ) {
         if (notificationTokenRepository.existsByTokenAndMember(token, member)) {
-            return;
+            return true;
         }
         if (notificationTokenRepository.existsByToken(token)) {
             throw new IllegalArgumentException(
                     String.format("다른 계정에 등록된 토큰입니다: memberId= %d, token= %s", member.getId(), maskToken(token))
             );
         }
+        return false;
     }
 
     private void saveNotificationTokenIfUnique(
