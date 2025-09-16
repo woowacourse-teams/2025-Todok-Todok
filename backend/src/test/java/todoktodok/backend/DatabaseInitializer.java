@@ -4,8 +4,10 @@ import static java.time.temporal.ChronoUnit.MICROS;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+
 import java.time.LocalDateTime;
 import java.util.List;
+
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -71,6 +73,24 @@ public class DatabaseInitializer {
                 .setParameter("profileMessage", profileMessage)
                 .setParameter("createdAt", now)
                 .setParameter("modifiedAt", now)
+                .executeUpdate();
+    }
+
+    @Transactional
+    public void deleteUserInfo(
+            final String email
+    ) {
+        final LocalDateTime now = LocalDateTime.now().truncatedTo(MICROS);
+
+        em.createNativeQuery(
+                        """
+                                UPDATE Member m 
+                                SET m.deleted_at = :deletedAt
+                                WHERE m.email = :email
+                                """
+                )
+                .setParameter("email", email)
+                .setParameter("deletedAt", now)
                 .executeUpdate();
     }
 

@@ -85,6 +85,24 @@ class MemberControllerTest {
     }
 
     @Test
+    @DisplayName("탈퇴한 회원이 로그인하여 재가입한다")
+    void loginTest_deletedMember() {
+        // given
+        final String email = "user@gmail.com";
+
+        databaseInitializer.setUserInfo(email, "user1", "", "");
+        databaseInitializer.deleteUserInfo(email);
+
+        // when - then
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new LoginRequest(email))
+                .when().post("/api/v1/members/login")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
+    }
+
+    @Test
     @DisplayName("회원가입을 한다")
     void signUpTest() {
         // given

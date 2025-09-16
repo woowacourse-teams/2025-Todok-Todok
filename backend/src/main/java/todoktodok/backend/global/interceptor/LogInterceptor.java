@@ -22,7 +22,7 @@ public class LogInterceptor implements HandlerInterceptor {
             final HttpServletResponse response,
             final Object handler
     ) {
-        final String requestURI = request.getRequestURI();
+        final String requestURI = getRequestURI(request);
         final String clientIp = getClientIp(request);
         request.setAttribute("clientIp", clientIp);
 
@@ -37,7 +37,7 @@ public class LogInterceptor implements HandlerInterceptor {
             final Object handler,
             final Exception ex
     ) {
-        final String requestURI = request.getRequestURI();
+        final String requestURI = getRequestURI(request);
         final String method = request.getMethod();
         final int status = response.getStatus();
         final String clientIp = (String) request.getAttribute("clientIp");
@@ -49,6 +49,14 @@ public class LogInterceptor implements HandlerInterceptor {
         } else {
             log.error("[API RESPONSE] [{}] {} -> {}: {}", clientIp, method, requestURI, status);
         }
+    }
+
+    private String getRequestURI(final HttpServletRequest request) {
+        final String requestQueryParam = request.getQueryString();
+        if (requestQueryParam == null || requestQueryParam.isBlank()) {
+            return request.getRequestURI();
+        }
+        return String.format("%s?%s", request.getRequestURI(), requestQueryParam);
     }
 
     private String getClientIp(final HttpServletRequest request) {
