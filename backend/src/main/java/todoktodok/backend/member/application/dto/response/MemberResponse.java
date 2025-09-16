@@ -8,11 +8,22 @@ public record MemberResponse(
         String profileImage
 ) {
 
+    private static final String DELETED_MEMBER_PROFILE_IMAGE = "https://techcourse-project-2025.s3.ap-northeast-2.amazonaws.com/todoktodok-images/profile/todoki.png";
+    private static final String DELETED_MEMBER_NICKNAME = "(알수없음)";
+
     public MemberResponse(final Member member) {
         this(
                 member.getId(),
-                member.getNickname(),
-                member.getProfileImage()
+                getNickname(member),
+                getProfileImage(member)
         );
+    }
+
+    public static String getNickname(final Member member) {
+        return member.isDeleted() ? DELETED_MEMBER_NICKNAME : member.getNickname();
+    }
+
+    public static String getProfileImage(final Member member) {
+        return member.isDeleted() ? DELETED_MEMBER_PROFILE_IMAGE : member.getProfileImage();
     }
 }

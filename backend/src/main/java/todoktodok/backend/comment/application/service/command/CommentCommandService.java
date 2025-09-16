@@ -133,7 +133,7 @@ public class CommentCommandService {
     }
 
     private Member findMember(final Long memberId) {
-        return memberRepository.findById(memberId)
+        return memberRepository.findByIdAndDeletedAtIsNull(memberId)
                 .orElseThrow(() -> new NoSuchElementException(String.format("해당 회원을 찾을 수 없습니다: memberId = %s", memberId)));
     }
 

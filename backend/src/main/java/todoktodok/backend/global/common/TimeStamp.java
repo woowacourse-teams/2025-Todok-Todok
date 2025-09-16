@@ -22,4 +22,12 @@ public abstract class TimeStamp {
     private LocalDateTime modifiedAt;
 
     private LocalDateTime deletedAt;
+
+    public boolean isDeleted() {
+        return deletedAt != null;
+    }
+
+    protected void cancelDeletion() {
+        this.deletedAt = null;
+    }
 }
