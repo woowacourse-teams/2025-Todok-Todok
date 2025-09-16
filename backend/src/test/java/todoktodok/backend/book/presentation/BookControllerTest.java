@@ -1,12 +1,16 @@
 package todoktodok.backend.book.presentation;
 
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.lessThan;
+import static org.hamcrest.Matchers.nullValue;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -37,63 +41,183 @@ public class BookControllerTest {
         databaseInitializer.clear();
     }
 
-    @Test
-    @DisplayName("검색어로 도서를 검색한다")
-    void searchTest() {
-        // given
-        databaseInitializer.setDefaultUserInfo();
-        databaseInitializer.setDefaultBookInfo();
+    @Nested
+    @DisplayName("도서 검색 테스트")
+    class SearchTest {
 
-        final String token = MemberFixture.getAccessToken("user@gmail.com");
-        final String keyword = "오브젝트";
+        @Test
+        @DisplayName("검색어로 도서를 검색한다")
+        void searchTest() {
+            // given
+            databaseInitializer.setDefaultUserInfo();
+            databaseInitializer.setDefaultBookInfo();
 
-        // when - then
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .header("Authorization", token)
-                .param("keyword", keyword)
-                .when().get("/api/v1/books/search")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .body("size()", greaterThanOrEqualTo(1));
+            final String token = MemberFixture.getAccessToken("user@gmail.com");
+            final String keyword = "오브젝트";
+
+            // when - then
+            RestAssured.given().log().all()
+                    .contentType(ContentType.JSON)
+                    .header("Authorization", token)
+                    .param("keyword", keyword)
+                    .when().get("/api/v1/books/search")
+                    .then().log().all()
+                    .statusCode(HttpStatus.OK.value())
+                    .body("size()", greaterThanOrEqualTo(1));
+        }
+
+        @Test
+        @DisplayName("검색어가 1자 미만이면 예외가 발생한다")
+        void searchTestFailUnder1Char() {
+            // given
+            databaseInitializer.setDefaultUserInfo();
+            databaseInitializer.setDefaultBookInfo();
+
+            final String token = MemberFixture.getAccessToken("user@gmail.com");
+            final String keyword = "";
+
+            // when - then
+            RestAssured.given().log().all()
+                    .contentType(ContentType.JSON)
+                    .header("Authorization", token)
+                    .param("keyword", keyword)
+                    .when().get("/api/v1/books/search")
+                    .then().log().all()
+                    .statusCode(HttpStatus.BAD_REQUEST.value());
+        }
+
+        @Test
+        @DisplayName("검색어 파라미터가 없으면 예외가 발생한다")
+        void searchTestFailEmptyParam() {
+            // given
+            databaseInitializer.setDefaultUserInfo();
+            databaseInitializer.setDefaultBookInfo();
+
+            final String token = MemberFixture.getAccessToken("user@gmail.com");
+
+            // when - then
+            RestAssured.given().log().all()
+                    .contentType(ContentType.JSON)
+                    .header("Authorization", token)
+                    .when().get("/api/v1/books/search")
+                    .then().log().all()
+                    .statusCode(HttpStatus.BAD_REQUEST.value());
+        }
     }
 
-    @Test
-    @DisplayName("검색어가 1자 미만이면 예외가 발생한다")
-    void searchTestFailUnder1Char() {
-        // given
-        databaseInitializer.setDefaultUserInfo();
-        databaseInitializer.setDefaultBookInfo();
+    @Nested
+    @DisplayName("도서 검색 테스트 - 페이지네이션 적용")
+    class SearchByPagingTest {
 
-        final String token = MemberFixture.getAccessToken("user@gmail.com");
-        final String keyword = "";
+        @Test
+        @DisplayName("검색어로 도서를 검색한다 - 첫 페이지 조회")
+        void searchByPagingTest_firstPage() {
+            // given
+            databaseInitializer.setDefaultUserInfo();
+            databaseInitializer.setDefaultBookInfo();
 
-        // when - then
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .header("Authorization", token)
-                .param("keyword", keyword)
-                .when().get("/api/v1/books/search")
-                .then().log().all()
-                .statusCode(HttpStatus.BAD_REQUEST.value());
-    }
+            final String token = MemberFixture.getAccessToken("user@gmail.com");
+            final String keyword = "클린";
 
-    @Test
-    @DisplayName("검색어 파라미터가 없으면 예외가 발생한다")
-    void searchTestFailEmptyParam() {
-        // given
-        databaseInitializer.setDefaultUserInfo();
-        databaseInitializer.setDefaultBookInfo();
+            final String cursorMeaningTwo = "Mg==";
 
-        final String token = MemberFixture.getAccessToken("user@gmail.com");
+            // when - then
+            RestAssured.given().log().all()
+                    .contentType(ContentType.JSON)
+                    .header("Authorization", token)
+                    .param("size", 10)
+                    .param("keyword", keyword)
+                    .when().get("/api/v1/books/searchByPaging")
+                    .then().log().all()
+                    .statusCode(HttpStatus.OK.value())
+                    .body("items.size()", equalTo(10))
+                    .body("pageInfo.hasNext", is(true))
+                    .body("pageInfo.nextCursor", is(cursorMeaningTwo))
+                    .body("totalSize", lessThan(200));
+        }
 
-        // when - then
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .header("Authorization", token)
-                .when().get("/api/v1/books/search")
-                .then().log().all()
-                .statusCode(HttpStatus.BAD_REQUEST.value());
+        @Test
+        @DisplayName("검색어로 도서를 검색한다 - 두 번째 페이지 조회")
+        void searchByPagingTest_secondPage() {
+            // given
+            databaseInitializer.setDefaultUserInfo();
+            databaseInitializer.setDefaultBookInfo();
+
+            final String token = MemberFixture.getAccessToken("user@gmail.com");
+            final String keyword = "클린";
+
+            final String cursorMeaningTwo = "Mg==";
+            final String cursorMeaningThree = "Mw==";
+
+            // when - then
+            RestAssured.given().log().all()
+                    .contentType(ContentType.JSON)
+                    .header("Authorization", token)
+                    .param("size", 10)
+                    .param("keyword", keyword)
+                    .param("cursor", cursorMeaningTwo)
+                    .when().get("/api/v1/books/searchByPaging")
+                    .then().log().all()
+                    .statusCode(HttpStatus.OK.value())
+                    .body("items.size()", equalTo(10))
+                    .body("pageInfo.hasNext", is(true))
+                    .body("pageInfo.nextCursor", is(cursorMeaningThree))
+                    .body("totalSize", lessThan(200));
+        }
+
+        @Test
+        @DisplayName("검색어로 도서를 검색한다 - 마지막 페이지 조회(여섯번째가 마지막일 때)")
+        void searchByPagingTest_lastPage() {
+            // given
+            databaseInitializer.setDefaultUserInfo();
+            databaseInitializer.setDefaultBookInfo();
+
+            final String token = MemberFixture.getAccessToken("user@gmail.com");
+            final String keyword = "클린";
+
+            final String cursorMeaningSix = "Ng==";
+
+            // when - then
+            RestAssured.given().log().all()
+                    .contentType(ContentType.JSON)
+                    .header("Authorization", token)
+                    .param("size", 10)
+                    .param("keyword", keyword)
+                    .param("cursor", cursorMeaningSix)
+                    .when().get("/api/v1/books/searchByPaging")
+                    .then().log().all()
+                    .statusCode(HttpStatus.OK.value())
+                    .body("items.size()", greaterThanOrEqualTo(1))
+                    .body("pageInfo.hasNext", is(false))
+                    .body("pageInfo.nextCursor", nullValue())
+                    .body("totalSize", lessThan(200));
+        }
+
+        @Test
+        @DisplayName("검색어로 도서를 검색한다 - 마지막 페이지 조회(최대 20번째)")
+        void searchByPagingTest_lastTwentyPage() {
+            // given
+            databaseInitializer.setDefaultUserInfo();
+            databaseInitializer.setDefaultBookInfo();
+
+            final String token = MemberFixture.getAccessToken("user@gmail.com");
+            final String keyword = "자바";
+
+            final String cursorMeaningTwenty = "MjA=";
+
+            // when - then
+            RestAssured.given().log().all()
+                    .contentType(ContentType.JSON)
+                    .header("Authorization", token)
+                    .param("size", 10)
+                    .param("keyword", keyword)
+                    .param("cursor", cursorMeaningTwenty)
+                    .when().get("/api/v1/books/searchByPaging")
+                    .then().log().all()
+                    .statusCode(HttpStatus.OK.value())
+                    .body("items.size()", greaterThanOrEqualTo(1))
+                    .body("nextCursor", nullValue());
+        }
     }
 
     @Test
