@@ -31,6 +31,7 @@ import todoktodok.backend.discussion.application.dto.response.ActiveDiscussionRe
 import todoktodok.backend.discussion.application.dto.response.DiscussionResponse;
 import todoktodok.backend.discussion.application.dto.response.LatestDiscussionPageResponse;
 import todoktodok.backend.discussion.application.dto.response.PageInfo;
+import todoktodok.backend.member.application.dto.response.MemberResponse;
 
 @ActiveProfiles("test")
 @Transactional
