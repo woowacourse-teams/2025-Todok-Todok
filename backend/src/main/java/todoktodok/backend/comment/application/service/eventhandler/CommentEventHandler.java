@@ -13,6 +13,9 @@ import todoktodok.backend.notification.infrastructure.FcmPushNotifier;
 @AllArgsConstructor
 public class CommentEventHandler {
 
+    public static final String HEART = "❤\uFE0F";
+    public static final String TODOKTODOK_TITLE = "토독토독";
+
     private final FcmPushNotifier fcmPushNotifier;
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
@@ -31,7 +34,7 @@ public class CommentEventHandler {
         final Long replyId = null;
 
         final FcmMessagePayload fcmMessagePayload = new FcmMessagePayload(
-                "토독토독",
+                TODOKTODOK_TITLE,
                 notificationBody,
                 commentCreated.discussionId(),
                 commentCreated.commentId(),
@@ -54,15 +57,16 @@ public class CommentEventHandler {
             return;
         }
 
-        final String notificationBody = String.format("%s 님이 [%s] 토론방의 댓글에 ❤\uFE0F를 보냈습니다",
+        final String notificationBody = String.format("%s 님이 [%s] 토론방의 댓글에 %s를 보냈습니다",
                 commentLikeCreated.commentMemberId(),
-                commentLikeCreated, commentLikeCreated.discussionTitle()
+                commentLikeCreated, commentLikeCreated.discussionTitle(),
+                HEART
         );
         final Long replyId = null;
         final String content = "";
 
         final FcmMessagePayload fcmMessagePayload = new FcmMessagePayload(
-                "토독토독",
+                TODOKTODOK_TITLE,
                 notificationBody,
                 commentLikeCreated.discussionId(),
                 commentLikeCreated.commentId(),

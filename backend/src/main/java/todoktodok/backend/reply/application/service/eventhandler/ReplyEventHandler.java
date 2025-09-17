@@ -13,6 +13,9 @@ import todoktodok.backend.reply.application.service.command.ReplyLikeCreated;
 @AllArgsConstructor
 public class ReplyEventHandler {
 
+    public static final String HEART = "❤\uFE0F";
+    public static final String TODOKTODOK_TITLE = "토독토독";
+
     private final FcmPushNotifier fcmPushNotifier;
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
@@ -30,7 +33,7 @@ public class ReplyEventHandler {
         );
 
         final FcmMessagePayload fcmMessagePayload = new FcmMessagePayload(
-                "토독토독",
+                TODOKTODOK_TITLE,
                 notificationBody,
                 replyCreated.discussionId(),
                 replyCreated.commentId(),
@@ -53,9 +56,10 @@ public class ReplyEventHandler {
             return;
         }
 
-        final String notificationBody = String.format("%s 님이 [%s] 토론방의 대댓글에 ❤\uFE0F를 보냈습니다",
+        final String notificationBody = String.format("%s 님이 [%s] 토론방의 대댓글에 %s를 보냈습니다",
                 replyLikeCreated.authorNickname(),
-                replyLikeCreated.discussionTitle()
+                replyLikeCreated.discussionTitle(),
+                HEART
         );
         final String content = "";
 
