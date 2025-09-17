@@ -45,15 +45,18 @@ public class BookQueryService {
 
         final int page = decodeCursor(cursor);
         final String cleanKeyword = keyword.trim();
+
         final AladinItemResponses aladinItemResponses =
                 aladinRestClient.searchBooksByKeywordWithPaging(cleanKeyword, page, size);
+        final PageInfo pageInfo = createNextCursor(aladinItemResponses, page, size);
+
         final int totalSize = getTotalSize(aladinItemResponses);
+
         final List<AladinBookResponse> searchedBooks = aladinItemResponses.item().stream()
                 .filter(book -> book.isbn13() != null && !book.isbn13().isEmpty())
                 .filter(book -> book.isbn13().matches(ISBN13_PATTERN))
                 .map(AladinBookResponse::new)
                 .toList();
-        final PageInfo pageInfo = createNextCursor(searchedBooks, page, size);
 
         return new LatestAladinBookPageResponse(searchedBooks, pageInfo, totalSize);
     }
@@ -90,11 +93,11 @@ public class BookQueryService {
     }
 
     private PageInfo createNextCursor(
-            final List<AladinBookResponse> searchedBooks,
+            final AladinItemResponses aladinItemResponses,
             final int page,
             final int size
     ) {
-        if (searchedBooks.size() < size || page == MAX_TOTAL_SIZE / PAGE_SIZE) {
+        if (aladinItemResponses.item().size() < size || page == MAX_TOTAL_SIZE / PAGE_SIZE) {
             return new PageInfo(false, null);
         }
 
