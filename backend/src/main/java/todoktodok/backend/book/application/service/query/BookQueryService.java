@@ -86,12 +86,7 @@ public class BookQueryService {
 
     private int getTotalSize(final AladinItemResponses aladinItemResponses) {
         final int totalResultsFromAladin = aladinItemResponses.totalResults();
-
-        if (totalResultsFromAladin > MAX_TOTAL_SIZE) {
-            return MAX_TOTAL_SIZE;
-        }
-
-        return totalResultsFromAladin;
+        return Math.min(totalResultsFromAladin, MAX_TOTAL_SIZE);
     }
 
     private PageInfo createNextCursor(
