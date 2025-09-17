@@ -33,7 +33,3 @@ cloud:
       bucket: ${cloud.aws.s3.bucket}
       key-prefix: ${cloud.aws.s3.key-prefix}
       region: ${cloud.aws.s3.region}
-
-firebase:
-  account:
-    path: ${firebase.account.path}
