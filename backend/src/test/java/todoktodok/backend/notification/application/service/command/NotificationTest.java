@@ -1,5 +1,9 @@
 package todoktodok.backend.notification.application.service.command;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,10 +19,6 @@ import todoktodok.backend.InitializerTimer;
 import todoktodok.backend.comment.application.dto.request.CommentRequest;
 import todoktodok.backend.comment.application.service.command.CommentCommandService;
 import todoktodok.backend.notification.infrastructure.FcmPushNotifier;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
@@ -41,7 +41,7 @@ public class NotificationTest {
 
     @Test
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
-    @DisplayName("댓글을 작성하면 댓글 알람이 토론방 작성자에게 가는 이벤트가 발생한다.")
+    @DisplayName("댓글을 작성하면 댓글 알림이 토론방 작성자에게 가는 이벤트가 발생한다.")
     void commentCreatedNotificationTest() {
         databaseInitializer.setDefaultBookInfo();
         databaseInitializer.setUserInfo("user1@gmail.com", "user1", "", "");

@@ -3,7 +3,9 @@ package todoktodok.backend.comment.application.service.command;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 
 import java.util.NoSuchElementException;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.DatabaseInitializer;
 import todoktodok.backend.InitializerTimer;
 import todoktodok.backend.comment.application.dto.request.CommentRequest;
-import todoktodok.backend.comment.application.service.eventhandler.CommentEventHandler;
 import todoktodok.backend.notification.infrastructure.FcmPushNotifier;
 
 @ActiveProfiles("test")
@@ -76,7 +77,7 @@ public class CommentCommandServiceTest {
 
     @Test
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
-    @DisplayName("댓글을 작성하면 댓글 알람이 토론방 작성자에게 가는 이벤트가 발생한다")
+    @DisplayName("댓글을 작성하면 댓글 알이 토론방 작성자에게 가는 이벤트가 발생한다")
     void commentCreatedNotificationTest() {
         // given
         databaseInitializer.setDefaultBookInfo();
@@ -162,7 +163,7 @@ public class CommentCommandServiceTest {
 
     @Test
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
-    @DisplayName("댓글 좋아요를 생성하면 알람이 댓글 작성자에게 가는 이벤트가 발생한다")
+    @DisplayName("댓글 좋아요를 생성하면 알이 댓글 작성자에게 가는 이벤트가 발생한다")
     void commentLikeCreatedNotificationTest() {
         // given
         databaseInitializer.setDefaultBookInfo();
@@ -187,7 +188,7 @@ public class CommentCommandServiceTest {
 
     @Test
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
-    @DisplayName("댓글 좋아요를 취소하면 알람이 댓글 작성자에게 가는 이벤트가 발생하지 않는다")
+    @DisplayName("댓글 좋아요를 취소하면 알림이 댓글 작성자에게 가는 이벤트가 발생하지 않는다")
     void commentLikeCreatedNotificationTest_notCreated() {
         // given
         databaseInitializer.setDefaultBookInfo();

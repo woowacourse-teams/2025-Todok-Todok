@@ -3,7 +3,9 @@ package todoktodok.backend.reply.application.service.command;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 
 import java.util.NoSuchElementException;
 import org.junit.jupiter.api.BeforeEach;
@@ -92,7 +94,7 @@ public class ReplyCommandServiceTest {
 
     @Test
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
-    @DisplayName("대댓글을 생성하면 알람이 댓글 작성자에게 가는 이벤트가 발생한다")
+    @DisplayName("대댓글을 생성하면 알림이 댓글 작성자에게 가는 이벤트가 발생한다")
     void replyCreatedNotificationTest() {
         // given
         databaseInitializer.setDefaultBookInfo();
@@ -477,7 +479,7 @@ public class ReplyCommandServiceTest {
 
     @Test
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
-    @DisplayName("대댓글 좋아요를 생성하면 알람이 대댓글 작성자에게 가는 이벤트가 발생한다")
+    @DisplayName("대댓글 좋아요를 생성하면 알림이 대댓글 작성자에게 가는 이벤트가 발생한다")
     void replyLikeCreatedNotificationTest() {
         // given
         databaseInitializer.setDefaultBookInfo();
@@ -504,7 +506,7 @@ public class ReplyCommandServiceTest {
 
     @Test
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
-    @DisplayName("대댓글 좋아요를 취소하면 알람이 대댓글 작성자에게 가는 이벤트가 발생하지 않는다")
+    @DisplayName("대댓글 좋아요를 취소하면 알림이 대댓글 작성자에게 가는 이벤트가 발생하지 않는다")
     void replyLikeCreatedNotificationTest_notCreated() {
         // given
         databaseInitializer.setDefaultBookInfo();

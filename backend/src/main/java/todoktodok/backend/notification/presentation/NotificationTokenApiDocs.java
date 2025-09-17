@@ -31,7 +31,7 @@ public interface NotificationTokenApiDocs {
                             examples = {
                                     @ExampleObject(
                                             name = "중복된 토큰 저장",
-                                            value = "{\"code\":400, \"message\":\"중복된 알람 토큰 발급 요청입니다\"}"
+                                            value = "{\"code\":400, \"message\":\"중복된 알림 토큰 발급 요청입니다\"}"
                                     ),
                                     @ExampleObject(
                                             name = "토큰 입력 안함",

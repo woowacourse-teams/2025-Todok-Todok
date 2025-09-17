@@ -2,7 +2,6 @@ package todoktodok.backend.notification.application.service.command;
 
 import java.util.ConcurrentModificationException;
 import java.util.NoSuchElementException;
-
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -67,7 +66,7 @@ public class NotificationTokenCommandService {
             notificationTokenRepository.save(notificationToken);
         } catch (DataIntegrityViolationException e) {
             throw new ConcurrentModificationException(
-                    String.format("중복된 알람 토큰 발급 요청입니다: memberId = %d, token= %s", memberId, maskToken(notificationToken.getToken())
+                    String.format("중복된 알림 토큰 발급 요청입니다: memberId = %d, token= %s", memberId, maskToken(notificationToken.getToken())
                     ));
         }
     }

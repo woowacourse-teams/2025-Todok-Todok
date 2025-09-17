@@ -3,7 +3,9 @@ package todoktodok.backend.discussion.application.service.command;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 
 import java.util.NoSuchElementException;
 import org.junit.jupiter.api.BeforeEach;
@@ -231,7 +233,7 @@ class DiscussionCommandServiceTest {
 
     @Test
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
-    @DisplayName("토론방 좋아요를 생성하면 알람이 토론방 작성자에게 가는 이벤트가 발생한다")
+    @DisplayName("토론방 좋아요를 생성하면 알이 토론방 작성자에게 가는 이벤트가 발생한다")
     void discussionLikeCreatedNotificationTest() {
         // given
         databaseInitializer.setDefaultBookInfo();
@@ -254,7 +256,7 @@ class DiscussionCommandServiceTest {
 
     @Test
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
-    @DisplayName("토론방 좋아요를 취소하면 알람이 토론방 작성자에게 가는 이벤트가 발생하지 않는다")
+    @DisplayName("토론방 좋아요를 취소하면 알림이 토론방 작성자에게 가는 이벤트가 발생하지 않는다")
     void discussionLikeCreatedNotificationTest_notCreated() {
         // given
         databaseInitializer.setDefaultBookInfo();
