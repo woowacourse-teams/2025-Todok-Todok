@@ -67,8 +67,8 @@ public class NotificationTokenCommandService {
             notificationTokenRepository.save(notificationToken);
         } catch (DataIntegrityViolationException e) {
             throw new ConcurrentModificationException(
-                    String.format("중복된 알람 토큰 발급 요청입니다: memberId = %d, token= %s", memberId, notificationToken.getToken())
-            );
+                    String.format("중복된 알람 토큰 발급 요청입니다: memberId = %d, token= %s", memberId, maskToken(notificationToken.getToken())
+                    ));
         }
     }
 
