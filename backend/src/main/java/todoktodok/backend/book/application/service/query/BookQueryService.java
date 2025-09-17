@@ -1,6 +1,5 @@
 package todoktodok.backend.book.application.service.query;
 
-import jakarta.annotation.Nullable;
 import java.util.Base64;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -38,7 +37,7 @@ public class BookQueryService {
 
     public LatestAladinBookPageResponse searchByPaging(
             final int size,
-            @Nullable final String cursor,
+            final String cursor,
             final String keyword
     ) {
         validatePageSize(size);
