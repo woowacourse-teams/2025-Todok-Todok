@@ -22,7 +22,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class FirebaseService : FirebaseMessagingService() {
+class FirebaseAdapter : FirebaseMessagingService() {
     private val notificationRepository by lazy { (application as App).container.repositoryModule.notificationRepository }
 
     override fun onNewToken(token: String) {
