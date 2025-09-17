@@ -35,6 +35,7 @@ spring:
       on-profile: dev
     import:
       - submodule/security/database.yml
+      - submodule/security/firebase.yml
 
 management:
   endpoints:
@@ -51,3 +52,8 @@ management:
         http:
           server:
             requests: true
+
+firebase:
+  enabled: true
+  account:
+    path: ${firebase.account.path}

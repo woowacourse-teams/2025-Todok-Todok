@@ -2,6 +2,10 @@ package todoktodok.backend.reply.application.service.command;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 
 import java.util.NoSuchElementException;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,9 +16,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.DatabaseInitializer;
 import todoktodok.backend.InitializerTimer;
+import todoktodok.backend.notification.infrastructure.FcmPushNotifier;
 import todoktodok.backend.reply.application.dto.request.ReplyRequest;
 
 @ActiveProfiles("test")
@@ -28,6 +35,9 @@ public class ReplyCommandServiceTest {
 
     @Autowired
     private ReplyCommandService replyCommandService;
+
+    @MockitoBean
+    private FcmPushNotifier fcmPushNotifier;
 
     @BeforeEach
     void setUp() {
@@ -80,6 +90,31 @@ public class ReplyCommandServiceTest {
         assertThatThrownBy(() -> replyCommandService.createReply(2L, 1L, 1L, replyRequest))
                 .isInstanceOf(NoSuchElementException.class)
                 .hasMessageContaining("해당 회원을 찾을 수 없습니다");
+    }
+
+    @Test
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
+    @DisplayName("대댓글을 생성하면 알림이 댓글 작성자에게 가는 이벤트가 발생한다")
+    void replyCreatedNotificationTest() {
+        // given
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setUserInfo("user1@gmail.com", "user1", "", "");
+        databaseInitializer.setUserInfo("user2@gmail.com", "user2", "", "");
+        databaseInitializer.setDefaultDiscussionInfo();
+
+        final Long recipientId = 1L;
+        final Long discussionId= 1L;
+
+        databaseInitializer.setCommentInfo("저도 궁금해요", recipientId, discussionId);
+
+        final Long authorId = 2L;
+        final Long commentId = 1L;
+
+        // when
+        replyCommandService.createReply(authorId, discussionId, commentId, new ReplyRequest("전 안궁금해요"));
+
+        // then
+        verify(fcmPushNotifier, times(1)).sendPush(any(), any());
     }
 
     @Test
@@ -440,5 +475,59 @@ public class ReplyCommandServiceTest {
         assertThatThrownBy(() -> replyCommandService.toggleLike(memberId, discussionId, commentId, nonExistentReplyId))
                 .isInstanceOf(NoSuchElementException.class)
                 .hasMessageContaining("해당 대댓글을 찾을 수 없습니다");
+    }
+
+    @Test
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
+    @DisplayName("대댓글 좋아요를 생성하면 알림이 대댓글 작성자에게 가는 이벤트가 발생한다")
+    void replyLikeCreatedNotificationTest() {
+        // given
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setUserInfo("user1@gmail.com", "user1", "", "");
+        databaseInitializer.setUserInfo("user2@gmail.com", "user2", "", "");
+        databaseInitializer.setDefaultDiscussionInfo();
+        databaseInitializer.setDefaultCommentInfo();
+
+        final Long recipientId = 1L;
+        final Long discussionId= 1L;
+        final Long commentId = 1L;
+
+        databaseInitializer.setReplyInfo("대댓글입니다", recipientId, commentId);
+
+        final Long authorId = 2L;
+        final Long replyId = 1L;
+
+        // when
+        replyCommandService.toggleLike(authorId, discussionId, commentId, replyId);
+
+        // then
+        verify(fcmPushNotifier, times(1)).sendPush(any(), any());
+    }
+
+    @Test
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
+    @DisplayName("대댓글 좋아요를 취소하면 알림이 대댓글 작성자에게 가는 이벤트가 발생하지 않는다")
+    void replyLikeCreatedNotificationTest_notCreated() {
+        // given
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setUserInfo("user1@gmail.com", "user1", "", "");
+        databaseInitializer.setUserInfo("user2@gmail.com", "user2", "", "");
+        databaseInitializer.setDefaultDiscussionInfo();
+        databaseInitializer.setDefaultCommentInfo();
+
+        final Long recipientId = 1L;
+        final Long discussionId= 1L;
+        final Long commentId = 1L;
+        final Long authorId = 2L;
+        final Long replyId = 1L;
+
+        databaseInitializer.setReplyInfo("대댓글입니다", recipientId, commentId);
+        databaseInitializer.setReplyLikeInfo(authorId, replyId);
+
+        // when
+        replyCommandService.toggleLike(authorId, discussionId, commentId, replyId);
+
+        // then
+        verifyNoInteractions(fcmPushNotifier);
     }
 }

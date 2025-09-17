@@ -435,4 +435,27 @@ public class DatabaseInitializer {
                 .setParameter("modifiedAt", now)
                 .executeUpdate();
     }
+
+    @Transactional
+    public void setNotificationTokenInfo(
+            final String token,
+            final String fid,
+            final Long memberId
+    ) {
+        final LocalDateTime now = LocalDateTime.now().truncatedTo(MICROS);
+
+        em.createNativeQuery(
+                        """
+                                INSERT INTO NOTIFICATION_TOKEN (token, fid, member_id, created_at, modified_at)
+                                VALUES 
+                                (:token, :fid, :memberId, :createdAt, :modifiedAt)
+                                """
+                )
+                .setParameter("token", token)
+                .setParameter("fid", fid)
+                .setParameter("memberId", memberId)
+                .setParameter("createdAt", now)
+                .setParameter("modifiedAt", now)
+                .executeUpdate();
+    }
 }

@@ -2,6 +2,10 @@ package todoktodok.backend.discussion.application.service.command;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 
 import java.util.NoSuchElementException;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,11 +16,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.DatabaseInitializer;
 import todoktodok.backend.InitializerTimer;
 import todoktodok.backend.discussion.application.dto.request.DiscussionRequest;
 import todoktodok.backend.discussion.application.dto.request.DiscussionUpdateRequest;
+import todoktodok.backend.notification.infrastructure.FcmPushNotifier;
 
 @ActiveProfiles("test")
 @Transactional
@@ -29,6 +36,9 @@ class DiscussionCommandServiceTest {
 
     @Autowired
     private DiscussionCommandService discussionCommandService;
+
+    @MockitoBean
+    private FcmPushNotifier fcmPushNotifier;
 
     @BeforeEach
     void setUp() {
@@ -219,5 +229,51 @@ class DiscussionCommandServiceTest {
 
         // then
         assertThat(isLiked).isFalse();
+    }
+
+    @Test
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
+    @DisplayName("토론방 좋아요를 생성하면 알이 토론방 작성자에게 가는 이벤트가 발생한다")
+    void discussionLikeCreatedNotificationTest() {
+        // given
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setUserInfo("user1@gmail.com", "user1", "", "");
+        databaseInitializer.setUserInfo("user2@gmail.com", "user2", "", "");
+
+        final Long recipientId = 1L;
+
+        databaseInitializer.setDiscussionInfo("캡슐화 왜 해요?", "진짜 궁금해요", recipientId, 1L);
+
+        final Long discussionId = 1L;
+        final Long authorId = 2L;
+
+        // when
+        discussionCommandService.toggleLike(authorId, discussionId);
+
+        // then
+        verify(fcmPushNotifier, times(1)).sendPush(any(), any());
+    }
+
+    @Test
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
+    @DisplayName("토론방 좋아요를 취소하면 알림이 토론방 작성자에게 가는 이벤트가 발생하지 않는다")
+    void discussionLikeCreatedNotificationTest_notCreated() {
+        // given
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setUserInfo("user1@gmail.com", "user1", "", "");
+        databaseInitializer.setUserInfo("user2@gmail.com", "user2", "", "");
+
+        final Long recipientId = 1L;
+        final Long discussionId = 1L;
+        final Long authorId = 2L;
+
+        databaseInitializer.setDiscussionInfo("캡슐화 왜 해요?", "진짜 궁금해요", recipientId, 1L);
+        databaseInitializer.setDiscussionLikeInfo(authorId, discussionId);
+
+        // when
+        discussionCommandService.toggleLike(authorId, discussionId);
+
+        // then
+        verifyNoInteractions(fcmPushNotifier);
     }
 }

@@ -24,3 +24,10 @@ spring:
   config:
     activate:
       on-profile: local
+    import:
+      - submodule/security/firebase.yml
+
+firebase:
+  enabled: false
+  account:
+    path: ${firebase.account.path}
