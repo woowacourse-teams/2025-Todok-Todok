@@ -12,51 +12,64 @@
         android:id="@+id/iv_profile"
         android:layout_width="88dp"
         android:layout_height="88dp"
-        android:src="@drawable/img_mascort"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:shapeAppearanceOverlay="@style/circleImageView"
         android:padding="1dp"
-        app:strokeWidth="1dp"
-        app:strokeColor="@color/black_18" />
+        android:src="@drawable/img_mascort"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/circleImageView" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/iv_profile_edit"
+        android:layout_width="@dimen/space_24"
+        android:layout_height="@dimen/space_24"
+        android:background="@color/gray_80"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_user_profile_edit"
+        app:layout_constraintBottom_toBottomOf="@id/iv_profile"
+        app:layout_constraintEnd_toEndOf="@id/iv_profile"
+        app:shapeAppearanceOverlay="@style/circleImageView"
+        app:strokeColor="@color/white"
+        android:elevation="1dp"
+        app:strokeWidth="1dp" />
 
     <TextView
         android:id="@+id/tv_nickname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/font_size_large"
-        android:textColor="@color/black_18"
-        android:fontFamily="@font/pretendard_bold"
-        android:layout_marginTop="@dimen/space_20"
         android:layout_marginStart="@dimen/space_20"
-        app:layout_constraintTop_toBottomOf="@id/iv_profile"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="@dimen/space_20"
+        android:fontFamily="@font/pretendard_bold"
+        android:textColor="@color/black_18"
+        android:textSize="@dimen/font_size_large"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0"
-        tools:text="토독이"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_profile"
+        tools:text="토독이" />
 
     <TextView
         android:id="@+id/tv_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/font_size_large"
-        android:textColor="@color/gray_66"
-        android:fontFamily="@font/pretendard_regular"
         android:layout_marginStart="@dimen/space_18"
-        app:layout_constraintTop_toBottomOf="@id/tv_nickname"
-        app:layout_constraintStart_toStartOf="parent"
+        android:fontFamily="@font/pretendard_regular"
+        android:textColor="@color/gray_66"
+        android:textSize="@dimen/font_size_large"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0"
-        tools:text="토론 좋아 독서 좋아 ~"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_nickname"
+        tools:text="토론 좋아 독서 좋아 ~" />
 
     <View
         android:id="@+id/view_anchor"
         android:layout_width="10dp"
         android:layout_height="10dp"
         android:layout_marginTop="32dp"
-        app:layout_constraintStart_toEndOf="@id/tv_description"
         app:layout_constraintEnd_toStartOf="@id/iv_report"
+        app:layout_constraintStart_toEndOf="@id/tv_description"
         app:layout_constraintTop_toBottomOf="@id/iv_profile" />
 
     <ImageView
@@ -64,10 +77,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/space_32"
+        android:src="@drawable/btn_option"
         android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/tv_nickname"
         app:layout_constraintBottom_toBottomOf="@id/tv_nickname"
-        android:src="@drawable/btn_option" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_nickname" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

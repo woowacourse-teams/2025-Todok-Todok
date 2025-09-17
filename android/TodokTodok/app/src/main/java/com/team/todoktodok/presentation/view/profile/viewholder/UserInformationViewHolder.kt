@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupWindow
 import androidx.core.graphics.drawable.toDrawable
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.team.domain.model.Support
 import com.team.todoktodok.R
@@ -66,10 +67,10 @@ class UserInformationViewHolder private constructor(
         val content = item.value
         with(binding) {
             val reportButtonVisibility = if (item.isMyProfile) View.GONE else View.VISIBLE
-            val profileUpdateClickable = item.isMyProfile
             ivReport.visibility = reportButtonVisibility
             ivProfile.loadImage(item.value.profileImage)
-            ivProfile.isClickable = profileUpdateClickable
+            ivProfile.isEnabled = item.isMyProfile
+            ivProfileEdit.isVisible = item.isMyProfile
             tvNickname.text = content.nickname
 
             val message =
