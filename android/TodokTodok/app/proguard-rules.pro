@@ -1,3 +1,7 @@
+# ==============================================
+# 기본 / 사용자 정의 ProGuard 규칙 파일
+# ==============================================
+
 # Add project specific ProGuard rules here.
 # You can control the set of applied configuration files using the
 # proguardFiles setting in build.gradle.
@@ -67,5 +71,36 @@
 ############################################
 # 이들은 보통 consumer-proguard-rules가 제공되어 추가 규칙 불필요.
 # Crashlytics는 매핑 업로드만 잘 되면 OK.
-# (특이한 리플렉션/폴리모픽 등록을 쓰면 그 부분만 선택적으로 keep)
+# (특이한 리플렉션/폴리픽 등록을 쓰면 그 부분만 선택적으로 keep)
 
+############################################
+# ======== 보완 룰: Retrofit / CallAdapter / 제네릭 유지 ========
+############################################
+
+# 제네릭 Signature 정보 유지
+-keepattributes Signature, InnerClasses, EnclosingMethod
+
+# 어노테이션 관련 속성 유지
+-keepattributes RuntimeVisibleAnnotations, RuntimeVisibleParameterAnnotations, AnnotationDefault
+
+# Retrofit 기본 클래스 및 핵심 타입 유지
+-keep class retrofit2.** { *; }
+-keep class kotlin.coroutines.Continuation { *; }
+-keep class retrofit2.Response { *; }
+
+# 네 커스텀 CallAdapterFactory 및 어댑터 & NetworkResult 타입 유지
+-keep class com.team.todoktodok.data.network.adapter.TodokTodokCallAdapterFactory { *; }
+-keep class com.team.todoktodok.data.network.adapter.TodokTodokAdapter { *; }
+-keep class com.team.todoktodok.data.network.adapter.ResponseCall { *; }
+-keep class com.team.todoktodok.data.network.adapter.ExceptionResponse { *; }
+
+-keep class com.team.domain.model.exception.NetworkResult { *; }
+-keep class com.team.domain.model.exception.TodokTodokExceptions { *; }
+
+# HTTP 어노테이션 붙은 서비스 메서드 유지
+-keepclassmembers,allowshrinking,allowobfuscation interface * {
+    @retrofit2.http.* <methods>;
+}
+
+# 서비스 인터페이스도 보존
+-keep interface com.team.todoktodok.data.network.service.** { *; }
