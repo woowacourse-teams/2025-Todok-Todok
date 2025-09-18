@@ -95,8 +95,8 @@ public class BookQueryServiceTest {
 
         @ParameterizedTest
         @ValueSource(strings = {"오브젝트", " 오브젝트", "오브젝트 ", "오", "오브", "오브젝"})
-        @DisplayName("검색어로 도서를 검색한다")
-        void searchByPagingTest(final String keyword) {
+        @DisplayName("검색어로 도서를 검색한다 - size : 10")
+        void searchByPagingTest_sizeIsTen(final String keyword) {
             // given
             final int size = 10;
             final String cursor = null;
@@ -109,6 +109,28 @@ public class BookQueryServiceTest {
                     () -> assertThat(searchedBooks.items()).hasSizeGreaterThan(1),
                     () -> assertThat(searchedBooks.pageInfo().hasNext()).isTrue(),
                     () -> assertThat(searchedBooks.pageInfo().nextCursor()).isNotNull(),
+                    () -> assertThat(searchedBooks.pageInfo().currentSize()).isLessThanOrEqualTo(size),
+                    () -> assertThat(searchedBooks.totalSize()).isGreaterThan(1)
+            );
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = {"클린코드", " 클린코드", "클린코드 ", "클린", "클린코"})
+        @DisplayName("검색어로 도서를 검색한다 - size : 5")
+        void searchByPagingTest_sizeIsFive(final String keyword) {
+            // given
+            final int size = 5;
+            final String cursor = null;
+
+            // when
+            final LatestAladinBookPageResponse searchedBooks = bookQueryService.searchByPaging(size, cursor, keyword);
+
+            // then
+            assertAll(
+                    () -> assertThat(searchedBooks.items()).hasSizeGreaterThan(1),
+                    () -> assertThat(searchedBooks.pageInfo().hasNext()).isTrue(),
+                    () -> assertThat(searchedBooks.pageInfo().nextCursor()).isNotNull(),
+                    () -> assertThat(searchedBooks.pageInfo().currentSize()).isLessThanOrEqualTo(size),
                     () -> assertThat(searchedBooks.totalSize()).isGreaterThan(1)
             );
         }
@@ -161,16 +183,16 @@ public class BookQueryServiceTest {
                     .hasMessageContaining("검색어는 1자 이상이어야 합니다");
         }
 
-        @ParameterizedTest
-        @ValueSource(ints = {1, 11, 12, 20})
+        @Test
         @DisplayName("도서 검색 시 유효하지 않은 페이지 사이즈가 입력되면 예외가 발생한다")
-        void searchByPagingTest_sizeIsNotValidate(final int size) {
+        void searchByPagingTest_sizeIsNotValidate() {
             // given
+            final int overMaxSize = 201;
             final String cursor = null;
             final String keyword = "오브젝트";
 
             // when - then
-            assertThatThrownBy(() -> bookQueryService.searchByPaging(size, cursor, keyword))
+            assertThatThrownBy(() -> bookQueryService.searchByPaging(overMaxSize, cursor, keyword))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessageContaining("유효하지 않은 페이지 사이즈입니다");
         }
