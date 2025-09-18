@@ -155,12 +155,11 @@ class CommentDetailViewModelTest {
 
             loadViewModel(DISCUSSION_ID, COMMENT_ID)
 
-            commentDetailViewModel.reloadComment()
+            commentDetailViewModel.reloadReplies()
             advanceUntilIdle()
             val event = commentDetailViewModel.uiEvent.getOrAwaitValue()
 
             // then
-            coVerify(exactly = 2) { commentRepository.getComment(DISCUSSION_ID, COMMENT_ID) }
             coVerify(exactly = 2) { replyRepository.getReplies(DISCUSSION_ID, COMMENT_ID) }
             assertEquals(CommentDetailUiEvent.ShowNewReply, event)
         }
