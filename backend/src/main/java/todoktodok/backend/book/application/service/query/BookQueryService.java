@@ -17,8 +17,7 @@ import todoktodok.backend.book.infrastructure.aladin.AladinRestClient;
 public class BookQueryService {
 
     private static final String ISBN13_PATTERN = "\\d{13}";
-    private static final int PAGE_SIZE = 10;
-    private static final int MAX_TOTAL_SIZE = 200;
+    private static final int MAX_SIZE = 200;
 
     private final AladinRestClient aladinRestClient;
 
@@ -48,15 +47,14 @@ public class BookQueryService {
 
         final AladinItemResponses aladinItemResponses =
                 aladinRestClient.searchBooksByKeywordWithPaging(cleanKeyword, page, size);
-        final PageInfo pageInfo = createNextCursor(aladinItemResponses, page, size);
-
-        final int totalSize = getTotalSize(aladinItemResponses);
 
         final List<AladinBookResponse> searchedBooks = aladinItemResponses.item().stream()
                 .filter(book -> book.isbn13() != null && !book.isbn13().isEmpty())
                 .filter(book -> book.isbn13().matches(ISBN13_PATTERN))
                 .map(AladinBookResponse::new)
                 .toList();
+        final PageInfo pageInfo = createNextCursor(aladinItemResponses, searchedBooks, page, size);
+        final int totalSize = getTotalSize(aladinItemResponses);
 
         return new LatestAladinBookPageResponse(searchedBooks, pageInfo, totalSize);
     }
@@ -68,7 +66,7 @@ public class BookQueryService {
     }
 
     private void validatePageSize(final int size) {
-        if (size != PAGE_SIZE) {
+        if (size > MAX_SIZE) {
             throw new IllegalArgumentException(
                     String.format("유효하지 않은 페이지 사이즈입니다: size = %d", size));
         }
@@ -89,25 +87,28 @@ public class BookQueryService {
 
     private int getTotalSize(final AladinItemResponses aladinItemResponses) {
         final int totalResultsFromAladin = aladinItemResponses.totalResults();
-        return Math.min(totalResultsFromAladin, MAX_TOTAL_SIZE);
+        return Math.min(totalResultsFromAladin, MAX_SIZE);
     }
 
     private PageInfo createNextCursor(
             final AladinItemResponses aladinItemResponses,
+            final List<AladinBookResponse> searchedBooks,
             final int page,
             final int size
     ) {
-        if (aladinItemResponses.item().size() < size || page == MAX_TOTAL_SIZE / PAGE_SIZE) {
-            return new PageInfo(false, null);
+        final int currentSize = searchedBooks.size();
+
+        if (aladinItemResponses.item().size() < size || page == MAX_SIZE / size) {
+            return new PageInfo(false, null, currentSize);
         }
 
-        if (page > MAX_TOTAL_SIZE / PAGE_SIZE) {
+        if (page > MAX_SIZE / size) {
             final String nextCursor = encodeCursorId(2);
-            return new PageInfo(true, nextCursor);
+            return new PageInfo(true, nextCursor, currentSize);
         }
 
         final String nextCursor = encodeCursorId(page + 1);
-        return new PageInfo(true, nextCursor);
+        return new PageInfo(true, nextCursor, currentSize);
     }
 
     private String encodeCursorId(final Integer id) {
