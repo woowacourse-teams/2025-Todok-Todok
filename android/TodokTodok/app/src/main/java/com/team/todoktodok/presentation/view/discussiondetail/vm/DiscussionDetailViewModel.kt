@@ -70,6 +70,7 @@ class DiscussionDetailViewModel(
     fun reloadDiscussion() {
         viewModelScope.launch {
             loadDiscussionRoom()
+            onUiEvent(DiscussionDetailUiEvent.ReloadedDiscussion)
         }
     }
 
