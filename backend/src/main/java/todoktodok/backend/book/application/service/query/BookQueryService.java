@@ -94,15 +94,16 @@ public class BookQueryService {
             final AladinItemResponses aladinItemResponses,
             final List<AladinBookResponse> searchedBooks,
             final int page,
-            final int size
+            final int requestedSize
     ) {
         final int currentSize = searchedBooks.size();
+        final int fetchedItemSize = aladinItemResponses.item().size();
 
-        if (aladinItemResponses.item().size() < size || page == MAX_SIZE / size) {
+        if (fetchedItemSize < requestedSize || page == MAX_SIZE / requestedSize) {
             return new PageInfo(false, null, currentSize);
         }
 
-        if (page > MAX_SIZE / size) {
+        if (page > MAX_SIZE / requestedSize) {
             final String nextCursor = encodeCursorId(2);
             return new PageInfo(true, nextCursor, currentSize);
         }
