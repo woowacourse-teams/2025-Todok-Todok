@@ -43,9 +43,15 @@ class CommentDetailViewModel(
         }
     }
 
-    fun reloadComment() {
+    fun reloadContents() {
         viewModelScope.launch {
             loadComment()
+            loadReplies()
+        }
+    }
+
+    fun reloadReplies() {
+        viewModelScope.launch {
             loadReplies()
             showNewReply()
         }
