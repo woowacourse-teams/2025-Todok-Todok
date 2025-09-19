@@ -3,6 +3,8 @@ package com.team.todoktodok
 import android.content.Context
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.lifecycleScope
+import com.team.domain.ConnectivityObserver
+import com.team.todoktodok.connectivity.NetworkConnectivityObserver
 import com.team.todoktodok.data.datasource.token.TokenDataSource
 import com.team.todoktodok.data.datasource.token.TokenLocalDataSource
 import com.team.todoktodok.data.di.DataSourceModule
@@ -19,6 +21,10 @@ import kotlin.getValue
 class AppContainer(
     context: Context,
 ) {
+    val connectivityObserver: ConnectivityObserver by lazy {
+        NetworkConnectivityObserver(context)
+    }
+
     val tokenAuthenticator: TokenAuthenticator by lazy {
         TokenAuthenticator(
             tokenRefreshDelegate = { refreshTokenHandler },
