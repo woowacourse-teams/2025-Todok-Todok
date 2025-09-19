@@ -80,7 +80,6 @@ class DataSourceModule(
     val notificationLocalDataSource: NotificationLocalDataSource by lazy {
         DefaultNotificationLocalDataSource(
             localDataSourceModule.notificationDataStore,
-            localDataSourceModule.notificationDatabase,
         )
     }
 
