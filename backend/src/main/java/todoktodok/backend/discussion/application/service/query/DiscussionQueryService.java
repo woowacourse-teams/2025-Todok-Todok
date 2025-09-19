@@ -20,9 +20,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.comment.domain.repository.CommentRepository;
-import todoktodok.backend.discussion.application.dto.DiscussionCursor;
+import todoktodok.backend.discussion.application.dto.ActiveDiscussionCursor;
 import todoktodok.backend.discussion.application.dto.response.ActiveDiscussionPageResponse;
-import todoktodok.backend.discussion.application.dto.response.ActiveDiscussionResponse;
 import todoktodok.backend.discussion.application.dto.response.DiscussionResponse;
 import todoktodok.backend.discussion.application.dto.response.LatestDiscussionPageResponse;
 import todoktodok.backend.discussion.application.dto.response.PageInfo;
@@ -130,7 +129,8 @@ public class DiscussionQueryService {
         final Map<Long, Integer> likesByDiscussionId = getLikeCountsByDiscussionId(likeSinceCounts);
         final Map<Long, Integer> commentsByDiscussionId = getTotalCommentCountsByDiscussionId(commentSinceCounts);
 
-        final List<Discussion> hotDiscussions = findHotDiscussions(count, likesByDiscussionId, commentsByDiscussionId, discussions);
+        final List<Discussion> hotDiscussions = findHotDiscussions(count, likesByDiscussionId, commentsByDiscussionId,
+                discussions);
 
         final List<Long> likedDiscussionIds = getLikedDiscussionIdsFromHot(hotDiscussions, member);
 
@@ -140,42 +140,43 @@ public class DiscussionQueryService {
     public ActiveDiscussionPageResponse getActiveDiscussions(
             final Long memberId,
             final int period,
-            final int size,
+            final int requestedSize,
             @Nullable final String cursor
     ) {
-        validatePageSize(size);
+        validatePageSize(requestedSize);
 
         final Member member = findMember(memberId);
         final LocalDateTime periodStart = LocalDateTime.now().minusDays(period);
 
-        final DiscussionCursor discussionCursor = Optional.ofNullable(cursor)
-                .map(DiscussionCursor::fromEncoded)
-                .orElse(DiscussionCursor.empty());
+        final ActiveDiscussionCursor activeDiscussionCursor = Optional.ofNullable(cursor)
+                .map(ActiveDiscussionCursor::fromEncoded)
+                .orElse(ActiveDiscussionCursor.empty());
 
-        final Pageable pageable = Pageable.ofSize(size + 1);
+        final Pageable pageable = Pageable.ofSize(requestedSize + 1);
 
-        final List<ActiveDiscussionResponse> discussions = discussionRepository.findActiveDiscussionsByCursor(
-                member,
-                periodStart,
-                discussionCursor.lastCommentedAt(),
-                discussionCursor.cursorId(),
-                pageable
+        final List<Discussion> discussions = discussionRepository.findActiveDiscussionsByCursor(
+                periodStart, activeDiscussionCursor.cursorId(), pageable
         );
 
         if (discussions.isEmpty()) {
             return new ActiveDiscussionPageResponse(Collections.emptyList(), new PageInfo(false, null));
         }
 
-        final boolean hasNext = discussions.size() > size;
+        final boolean hasNext = discussions.size() > requestedSize;
         if (hasNext) {
             discussions.removeLast();
         }
 
-        final ActiveDiscussionResponse last = hasNext ? discussions.getLast() : null;
-        final String nextCursor = getNextCursor(hasNext, last, discussionCursor);
+        final Discussion lastDiscussion = hasNext ? discussions.getLast() : null;
+        final Long latestCommentIdByDiscussion = commentRepository.findLatestCommentIdByDiscussion(lastDiscussion,
+                        periodStart)
+                .orElse(null);
+        final String nextCursor = getNextCursor(hasNext, latestCommentIdByDiscussion);
+
+        final List<DiscussionResponse> discussionResponses = getDiscussionsResponses(discussions, member);
 
         return new ActiveDiscussionPageResponse(
-                discussions,
+                discussionResponses,
                 new PageInfo(hasNext, nextCursor)
         );
     }
@@ -264,7 +265,8 @@ public class DiscussionQueryService {
                 discussionIds);
         final Map<Long, Integer> likesByDiscussionId = getLikeCountsByDiscussionId(likeCounts);
         final Map<Long, Integer> commentsByDiscussionId = getTotalCommentCountsByDiscussionId(commentCounts);
-        final List<Long> likedDiscussionIds = discussionLikeRepository.findLikedDiscussionIdsByMember(member, discussionIds);
+        final List<Long> likedDiscussionIds = discussionLikeRepository.findLikedDiscussionIdsByMember(member,
+                discussionIds);
 
         return makeResponsesFrom(discussions, likesByDiscussionId, commentsByDiscussionId, likedDiscussionIds);
     }
@@ -287,7 +289,8 @@ public class DiscussionQueryService {
     }
 
 
-    private Map<Long, Integer> getTotalCommentCountsByDiscussionId(final List<DiscussionCommentCountDto> commentCounts) {
+    private Map<Long, Integer> getTotalCommentCountsByDiscussionId(
+            final List<DiscussionCommentCountDto> commentCounts) {
         return commentCounts.stream()
                 .collect(Collectors.toMap(
                         DiscussionCommentCountDto::discussionId,
@@ -311,7 +314,8 @@ public class DiscussionQueryService {
 
     private static void validateHotDiscussionPeriod(final int period) {
         if (period < MIN_HOT_DISCUSSION_PERIOD || period > MAX_HOT_DISCUSSION_PERIOD) {
-            throw new IllegalArgumentException(String.format("유효하지 않은 기간 값입니다. 0일 ~ 365일 이내로 조회해주세요: period = %d", period));
+            throw new IllegalArgumentException(
+                    String.format("유효하지 않은 기간 값입니다. 0일 ~ 365일 이내로 조회해주세요: period = %d", period));
         }
     }
 
@@ -346,13 +350,14 @@ public class DiscussionQueryService {
 
     private String getNextCursor(
             final boolean hasNext,
-            final ActiveDiscussionResponse last,
-            final DiscussionCursor discussionCursor
+            final Long lastCommentId
     ) {
-        if (!hasNext || last == null) {
+        if (!hasNext || lastCommentId == null) {
             return null;
         }
-        return discussionCursor.toEncoded(last.lastCommentedAt(), last.discussionId());
+
+        final ActiveDiscussionCursor activeDiscussionCursor = new ActiveDiscussionCursor(lastCommentId);
+        return activeDiscussionCursor.toEncoded();
     }
 
     private void validateKeywordNotBlank(final String keyword) {
