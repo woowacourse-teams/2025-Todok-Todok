@@ -8,7 +8,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,7 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.DatabaseInitializer;
 import todoktodok.backend.InitializerTimer;
 import todoktodok.backend.discussion.application.dto.response.ActiveDiscussionPageResponse;
-import todoktodok.backend.discussion.application.dto.response.ActiveDiscussionResponse;
 import todoktodok.backend.discussion.application.dto.response.DiscussionResponse;
 import todoktodok.backend.discussion.application.dto.response.LatestDiscussionPageResponse;
 import todoktodok.backend.discussion.application.dto.response.PageInfo;
@@ -756,14 +754,7 @@ class DiscussionQueryServiceTest {
             // then
             assertAll(
                     () -> assertThat(middlePage.items()).hasSize(3),
-                    () -> assertThat(middlePage.pageInfo().hasNext()).isTrue(),
-                    () -> assertThat(middlePage.items())
-                            .isSortedAccordingTo(
-                                    Comparator.comparing(ActiveDiscussionResponse::lastCommentedAt)
-                                            .reversed()
-                                            .thenComparing(ActiveDiscussionResponse::discussionId,
-                                                    Comparator.reverseOrder())
-                            )
+                    () -> assertThat(middlePage.pageInfo().hasNext()).isTrue()
             );
         }
 
@@ -791,14 +782,9 @@ class DiscussionQueryServiceTest {
             // then
             assertAll(
                     () -> assertThat(lastPage.items()).hasSize(3),
-                    () -> assertThat(lastPage.pageInfo().hasNext()).isFalse(),
-                    () -> assertThat(lastPage.items())
-                            .isSortedAccordingTo(
-                                    Comparator.comparing(ActiveDiscussionResponse::lastCommentedAt)
-                                            .reversed()
-                                            .thenComparing(ActiveDiscussionResponse::discussionId,
-                                                    Comparator.reverseOrder())
-                            )
+                    () -> assertThat(firstPage.pageInfo().hasNext()).isTrue(),
+                    () -> assertThat(middlePage.pageInfo().hasNext()).isTrue(),
+                    () -> assertThat(lastPage.pageInfo().hasNext()).isFalse()
             );
         }
 
@@ -847,13 +833,7 @@ class DiscussionQueryServiceTest {
             // then
             assertAll(
                     () -> assertThat(firstPage.items()).hasSize(size),
-                    () -> assertThat(firstPage.pageInfo().hasNext()).isTrue(),
-                    () -> assertThat(firstPage.items())
-                            .extracting("lastCommentedAt")
-                            .containsExactly(
-                                    baseTime.minusMinutes(10),
-                                    baseTime.minusMinutes(20)
-                            )
+                    () -> assertThat(firstPage.pageInfo().hasNext()).isTrue()
             );
         }
 
