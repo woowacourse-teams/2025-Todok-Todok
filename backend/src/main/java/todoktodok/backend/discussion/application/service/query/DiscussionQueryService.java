@@ -211,7 +211,7 @@ public class DiscussionQueryService {
 
     private String processBlankCursor(String cursor) {
         if (cursor == null || cursor.isBlank()) {
-            cursor = null;
+            return null;
         }
         return cursor;
     }
