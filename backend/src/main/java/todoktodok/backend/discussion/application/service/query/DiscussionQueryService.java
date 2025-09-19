@@ -144,16 +144,14 @@ public class DiscussionQueryService {
             @Nullable final String cursor
     ) {
         validatePageSize(requestedSize);
-
         final Member member = findMember(memberId);
         final LocalDateTime periodStart = LocalDateTime.now().minusDays(period);
+        final String normalizedCursor = processBlankCursor(cursor);
 
-        final ActiveDiscussionCursor activeDiscussionCursor = Optional.ofNullable(cursor)
+        final ActiveDiscussionCursor activeDiscussionCursor = Optional.ofNullable(normalizedCursor)
                 .map(ActiveDiscussionCursor::fromEncoded)
                 .orElse(ActiveDiscussionCursor.empty());
-
         final Pageable pageable = Pageable.ofSize(requestedSize + 1);
-
         final List<Discussion> discussions = discussionRepository.findActiveDiscussionsByCursor(
                 periodStart, activeDiscussionCursor.cursorId(), pageable
         );
@@ -171,9 +169,9 @@ public class DiscussionQueryService {
         final Long latestCommentIdByDiscussion = commentRepository.findLatestCommentIdByDiscussion(lastDiscussion,
                         periodStart)
                 .orElse(null);
-        final String nextCursor = getNextCursor(hasNext, latestCommentIdByDiscussion);
 
         final List<DiscussionResponse> discussionResponses = getDiscussionsResponses(discussions, member);
+        final String nextCursor = getNextCursor(hasNext, latestCommentIdByDiscussion);
 
         return new ActiveDiscussionPageResponse(
                 discussionResponses,
@@ -209,6 +207,13 @@ public class DiscussionQueryService {
 
         final Long cursorId = decodeCursor(cursor);
         return discussionRepository.findByIdLessThan(cursorId, pageable);
+    }
+
+    private String processBlankCursor(String cursor) {
+        if (cursor == null || cursor.isBlank()) {
+            cursor = null;
+        }
+        return cursor;
     }
 
     private String findNextCursor(
