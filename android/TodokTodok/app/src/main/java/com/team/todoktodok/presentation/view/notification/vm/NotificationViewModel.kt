@@ -22,9 +22,9 @@ class NotificationViewModel(
     private fun initNotifications() {
         viewModelScope.launch {
             _uiState.value = _uiState.value?.copy(isLoading = true)
-            val notifications = notificationRepository.getNotifications()
-            _uiState.value =
-                _uiState.value?.copy(isLoading = false, notifications = notifications)
+//            val notifications = notificationRepository.getNotifications()
+//            _uiState.value =
+//                _uiState.value?.copy(isLoading = false, notifications = notifications)
         }
     }
 }

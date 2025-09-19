@@ -8,6 +8,4 @@ interface NotificationDataStore {
     suspend fun getFcmToken(): String?
 
     suspend fun getFId(): String?
-
-    suspend fun deletePushNotification()
 }
