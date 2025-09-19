@@ -94,7 +94,7 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
         WHERE c.createdAt >= :periodStart
          AND (:cursorId IS NULL OR c.id > :cursorId)
         GROUP BY d
-        ORDER BY MAX(c.createdAt) DESC
+        ORDER BY MAX(c.id) ASC
    """)
     List<Discussion> findActiveDiscussionsByCursor(
             @Param("periodStart") final LocalDateTime periodStart,
