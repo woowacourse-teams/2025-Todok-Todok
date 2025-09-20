@@ -92,13 +92,18 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
         FROM Discussion d
         JOIN Comment c ON c.discussion = d
         WHERE c.createdAt >= :periodStart
-         AND (:cursorId IS NULL OR c.id > :cursorId)
         GROUP BY d
-        ORDER BY MAX(c.id) ASC
+        HAVING (
+           :lastDiscussionLatestCommentId IS NULL
+               OR MAX(c.id) < :lastDiscussionLatestCommentId
+               OR (MAX(c.id) = :lastDiscussionLatestCommentId AND d.id > :lastDiscussionId)
+        )
+        ORDER BY MAX(c.id) DESC, d.id ASC
    """)
     List<Discussion> findActiveDiscussionsByCursor(
             @Param("periodStart") final LocalDateTime periodStart,
-            @Param("cursorId") final Long cursorId,
+            @Param("lastDiscussionLatestCommentId") final Long lastDiscussionLatestCommentId,
+            @Param("lastDiscussionId") final Long lastDiscussionId,
             final Pageable pageable
     );
 }

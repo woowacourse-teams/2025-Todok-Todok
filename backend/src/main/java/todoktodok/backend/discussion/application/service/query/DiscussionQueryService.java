@@ -153,7 +153,10 @@ public class DiscussionQueryService {
                 .orElse(ActiveDiscussionCursor.empty());
         final Pageable pageable = Pageable.ofSize(requestedSize + 1);
         final List<Discussion> discussions = discussionRepository.findActiveDiscussionsByCursor(
-                periodStart, activeDiscussionCursor.cursorId(), pageable
+                periodStart,
+                activeDiscussionCursor.lastDiscussionLatestCommentId(),
+                activeDiscussionCursor.lastDiscussionId(),
+                pageable
         );
 
         if (discussions.isEmpty()) {
@@ -166,12 +169,13 @@ public class DiscussionQueryService {
         }
 
         final Discussion lastDiscussion = hasNext ? discussions.getLast() : null;
+        final Long lastDiscussionId = lastDiscussion != null ? lastDiscussion.getId() : null;
         final Long latestCommentIdByDiscussion = commentRepository.findLatestCommentIdByDiscussion(lastDiscussion,
                         periodStart)
                 .orElse(null);
 
         final List<DiscussionResponse> discussionResponses = getDiscussionsResponses(discussions, member);
-        final String nextCursor = getNextCursor(hasNext, latestCommentIdByDiscussion);
+        final String nextCursor = getNextCursor(hasNext, latestCommentIdByDiscussion, lastDiscussionId);
 
         return new ActiveDiscussionPageResponse(
                 discussionResponses,
@@ -355,13 +359,14 @@ public class DiscussionQueryService {
 
     private String getNextCursor(
             final boolean hasNext,
-            final Long lastCommentId
+            final Long lastDiscussionLatestCommentId,
+            final Long lastDiscussionId
     ) {
-        if (!hasNext || lastCommentId == null) {
+        if (!hasNext || lastDiscussionLatestCommentId == null || lastDiscussionId == null) {
             return null;
         }
 
-        final ActiveDiscussionCursor activeDiscussionCursor = new ActiveDiscussionCursor(lastCommentId);
+        final ActiveDiscussionCursor activeDiscussionCursor = new ActiveDiscussionCursor(lastDiscussionLatestCommentId, lastDiscussionId);
         return activeDiscussionCursor.toEncoded();
     }
 
