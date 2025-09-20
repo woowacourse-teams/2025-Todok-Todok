@@ -59,7 +59,7 @@ class SelectBookViewModel(
         ) {
             return
         }
-
+        setState { copy(status = SearchedBookStatus.Loading) }
         viewModelScope.launch {
             _uiState.value?.keyword?.let { keyword ->
                 bookRepository
