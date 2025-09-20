@@ -187,6 +187,9 @@ sealed class TodokTodokExceptions : Throwable() {
                 KeywordException.BlankKeyword.message -> KeywordException.BlankKeyword
                 KeywordException.EmptyKeyword.message -> KeywordException.EmptyKeyword
 
+                // 책 검색 사이즈 예외
+                SearchedBooksTotalSizeException.InvalidSize.message -> SearchedBooksTotalSizeException.InvalidSize
+
                 // 댓글 관련 예외
                 CommentExceptions.EmptyContent.message -> CommentExceptions.EmptyContent
                 CommentExceptions.InvalidContentLength.message -> CommentExceptions.InvalidContentLength

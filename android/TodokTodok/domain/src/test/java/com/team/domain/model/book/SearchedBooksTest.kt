@@ -1,6 +1,6 @@
 package com.team.domain.model.book
 
-import com.team.domain.model.fixture.AladinBookFixtures
+import com.team.domain.model.fixture.SearchedBooksFixtures
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -8,11 +8,11 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.assertThrows
 
-class AladinBooksTest {
+class SearchedBooksTest {
     @Test
-    fun `AladinBooks의 크기를 알 수 있다`() {
+    fun `SearchedBooks의 크기를 알 수 있다`() {
         // given
-        val books = AladinBookFixtures.books
+        val books = SearchedBooksFixtures.books
 
         // when
         val actual = books.size
@@ -23,33 +23,33 @@ class AladinBooksTest {
     }
 
     @Test
-    fun `AladinBooks의 요소가 비어있으면 isEmpty() 실행시, true를 반환한다`() {
+    fun `SearchedBooks의 요소가 비어있으면 isEmpty() 실행시, true를 반환한다`() {
         // given
-        val books = AladinBooks(emptyList())
+        val books = SearchedBooks(emptyList())
 
         // when & then
         assertTrue(books.isEmpty())
     }
 
     @Test
-    fun `AladinBooks의 요소가 비어있지 않으면 isEmpty() 실행시, false를 반환한다`() {
+    fun `SearchedBooks의 요소가 비어있지 않으면 isEmpty() 실행시, false를 반환한다`() {
         // given
-        val books = AladinBookFixtures.books
+        val books = SearchedBooksFixtures.books
 
         // when & then
         assertFalse(books.isEmpty())
     }
 
     @Test
-    fun `AladinBooks의 요소가 16개가 있고 get(0)을 실행하면 해당 객체를 반환한다`() {
+    fun `SearchedBooks의 요소가 16개가 있고 get(0)을 실행하면 해당 객체를 반환한다`() {
         // given
-        val books = AladinBookFixtures.books
+        val books = SearchedBooksFixtures.books
         val position = 0
 
         // when
         val actual = books.get(position)
         val expected =
-            AladinBook(
+            SearchedBook(
                 ISBN(9791158391409L),
                 BookTitle("오브젝트 - 코드로 이해하는 객체지향 설계"),
                 BookAuthor("조영호 (지은이)"),
@@ -61,9 +61,9 @@ class AladinBooksTest {
     }
 
     @Test
-    fun `AladinBooks의 요소가 16개가 있고 get(-1)과 get(17)을 실행하면 IndexOutOfBoundsException을 발생시킨다`() {
+    fun `SearchedBooks의 요소가 16개가 있고 get(-1)과 get(17)을 실행하면 IndexOutOfBoundsException을 발생시킨다`() {
         // given
-        val books = AladinBookFixtures.books
+        val books = SearchedBooksFixtures.books
 
         // when & then
         assertAll(
@@ -73,9 +73,9 @@ class AladinBooksTest {
     }
 
     @Test
-    fun `AladinBooks의 요소가 16개가 있고 contains(0)을 실행하면 true를 반환한다`() {
+    fun `SearchedBooks의 요소가 16개가 있고 contains(0)을 실행하면 true를 반환한다`() {
         // given
-        val books = AladinBookFixtures.books
+        val books = SearchedBooksFixtures.books
         val position = 0
 
         // when
@@ -87,9 +87,9 @@ class AladinBooksTest {
     }
 
     @Test
-    fun `AladinBooks의 요소가 16개가 있고 contains(17)을 실행하면 false를 반환한다`() {
+    fun `SearchedBooks의 요소가 16개가 있고 contains(17)을 실행하면 false를 반환한다`() {
         // given
-        val books = AladinBookFixtures.books
+        val books = SearchedBooksFixtures.books
         val position = 17
 
         // when
@@ -101,9 +101,9 @@ class AladinBooksTest {
     }
 
     @Test
-    fun `map은 AladinBooks의 요소 크기를 보장한다`() {
+    fun `map은 SearchedBooks의 요소 크기를 보장한다`() {
         // given
-        val books = AladinBookFixtures.books
+        val books = SearchedBooksFixtures.books
 
         // when
         val actual = books.map { it }.size

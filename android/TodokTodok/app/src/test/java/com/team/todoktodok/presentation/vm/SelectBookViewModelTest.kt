@@ -1,15 +1,15 @@
 package com.team.todoktodok.presentation.vm
 
-import com.team.domain.model.book.AladinBook.Companion.AladinBook
-import com.team.domain.model.book.AladinBooks
 import com.team.domain.model.book.Keyword
+import com.team.domain.model.book.SearchedBook.Companion.SearchedBook
+import com.team.domain.model.book.SearchedBooks
 import com.team.domain.model.exception.NetworkResult
 import com.team.domain.model.exception.TodokTodokExceptions
 import com.team.domain.repository.BookRepository
 import com.team.todoktodok.CoroutinesTestExtension
 import com.team.todoktodok.InstantTaskExecutorExtension
 import com.team.todoktodok.ext.getOrAwaitValue
-import com.team.todoktodok.fixture.AladinBookFixtures.books
+import com.team.todoktodok.fixture.SearchedBooksFixtures.books
 import com.team.todoktodok.presentation.view.book.SearchedBookStatus
 import com.team.todoktodok.presentation.view.book.SelectBookUiEvent
 import com.team.todoktodok.presentation.view.book.vm.SelectBookViewModel
@@ -37,7 +37,12 @@ class SelectBookViewModelTest {
     fun setUp() {
         bookRepository = mockk()
         viewModel = SelectBookViewModel(bookRepository)
-        coEvery { bookRepository.fetchBooks(any()) } returns NetworkResult.Success(AladinBooks(emptyList()))
+        coEvery { bookRepository.fetchBooks(any()) } returns
+            NetworkResult.Success(
+                SearchedBooks(
+                    emptyList(),
+                ),
+            )
     }
 
     @Test
@@ -116,14 +121,14 @@ class SelectBookViewModelTest {
             // given
             val keyword = "엘레강트 오브젝트"
             val book =
-                AladinBook(
+                SearchedBook(
                     9791187497219L,
                     "엘레강트 오브젝트 - 새로운 관점에서 바라본 객체지향",
                     "Yegor Bugayenko (지은이), 조영호 (옮긴이)",
                     "https://image.aladin.co.kr/product/25837/40/coversum/k762736538_1.jpg",
                 )
             val books =
-                AladinBooks(
+                SearchedBooks(
                     listOf(
                         book,
                     ),
@@ -176,7 +181,7 @@ class SelectBookViewModelTest {
             val keyword = "객체 지향의 사실과 오해"
             coEvery { bookRepository.fetchBooks(Keyword(keyword)) } returns
                 NetworkResult.Success(
-                    AladinBooks(
+                    SearchedBooks(
                         emptyList(),
                     ),
                 )

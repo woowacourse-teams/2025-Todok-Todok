@@ -14,8 +14,8 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.team.domain.model.book.AladinBook
 import com.team.domain.model.book.Keyword
+import com.team.domain.model.book.SearchedBook
 import com.team.domain.model.book.length
 import com.team.todoktodok.App
 import com.team.todoktodok.R
@@ -208,7 +208,7 @@ class SelectBookActivity : AppCompatActivity() {
         return spannableTitle
     }
 
-    private fun navigateToCreateDiscussionRoom(book: AladinBook) {
+    private fun navigateToCreateDiscussionRoom(book: SearchedBook) {
         val serializationBook: SerializationBook = book.toSerialization()
         val intent =
             CreateDiscussionRoomActivity.Intent(
@@ -221,7 +221,7 @@ class SelectBookActivity : AppCompatActivity() {
 
     private fun hideKeyBoard(view: View) {
         val inputMethodManager: InputMethodManager =
-            this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            this.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 

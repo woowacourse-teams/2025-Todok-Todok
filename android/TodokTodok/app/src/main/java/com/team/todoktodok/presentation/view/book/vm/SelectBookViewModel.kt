@@ -4,9 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.team.domain.model.book.AladinBook
-import com.team.domain.model.book.AladinBooks
 import com.team.domain.model.book.Keyword
+import com.team.domain.model.book.SearchedBook
+import com.team.domain.model.book.SearchedBooks
 import com.team.domain.model.exception.BookException
 import com.team.domain.model.exception.TodokTodokExceptions
 import com.team.domain.model.exception.onFailure
@@ -35,7 +35,7 @@ class SelectBookViewModel(
     }
 
     fun updateSelectedBook(position: Int) {
-        val selectedBook: AladinBook? = _uiState.value?.selectedBook(position)
+        val selectedBook: SearchedBook? = _uiState.value?.selectedBook(position)
         if (selectedBook == null) {
             _uiEvent.setValue(SelectBookUiEvent.ShowException(BookException.EmptySelectedBook))
             return
@@ -60,7 +60,7 @@ class SelectBookViewModel(
             _uiState.value?.keyword?.let {
                 bookRepository
                     .fetchBooks(it)
-                    .onSuccess { books: AladinBooks ->
+                    .onSuccess { books: SearchedBooks ->
                         if (books.isEmpty()) {
                             setState { copy(status = SearchedBookStatus.NotFound) }
                             return@onSuccess

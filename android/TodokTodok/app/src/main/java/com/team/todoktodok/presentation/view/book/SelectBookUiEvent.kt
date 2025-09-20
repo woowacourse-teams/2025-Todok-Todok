@@ -1,11 +1,11 @@
 package com.team.todoktodok.presentation.view.book
 
-import com.team.domain.model.book.AladinBook
+import com.team.domain.model.book.SearchedBook
 import com.team.domain.model.exception.TodokTodokExceptions
 
 sealed class SelectBookUiEvent {
     data class NavigateToCreateDiscussionRoom(
-        val book: AladinBook,
+        val book: SearchedBook,
     ) : SelectBookUiEvent()
 
     data class ShowException(

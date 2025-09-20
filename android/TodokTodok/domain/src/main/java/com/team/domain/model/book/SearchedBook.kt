@@ -1,6 +1,6 @@
 package com.team.domain.model.book
 
-data class AladinBook(
+data class SearchedBook(
     private val _isbn: ISBN,
     private val _title: BookTitle,
     private val _author: BookAuthor,
@@ -15,13 +15,13 @@ data class AladinBook(
     val image: String get() = _image.value
 
     companion object {
-        fun AladinBook(
+        fun SearchedBook(
             isbn: Long,
             title: String,
             author: String,
             image: String,
-        ): AladinBook =
-            AladinBook(
+        ): SearchedBook =
+            SearchedBook(
                 _isbn = ISBN(isbn),
                 _title = BookTitle(title),
                 _author = BookAuthor(author),

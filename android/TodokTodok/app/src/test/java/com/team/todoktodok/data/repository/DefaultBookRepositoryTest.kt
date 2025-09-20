@@ -1,8 +1,8 @@
 package com.team.todoktodok.data.repository
 
-import com.team.domain.model.book.AladinBook
-import com.team.domain.model.book.AladinBooks
 import com.team.domain.model.book.Keyword
+import com.team.domain.model.book.SearchedBook
+import com.team.domain.model.book.SearchedBooks
 import com.team.domain.model.exception.NetworkResult
 import com.team.todoktodok.fake.datasource.StubBookRemoteDataSource
 import kotlinx.coroutines.test.runTest
@@ -25,8 +25,8 @@ class DefaultBookRepositoryTest {
                 { assertEquals(1, bookRemoteDataSource.callCount) },
                 { assertTrue(result is NetworkResult.Success) },
                 { assertEquals(16, (result as NetworkResult.Success).data.size) },
-                { assertTrue((result as NetworkResult.Success).data is AladinBooks) },
-                { assertTrue((result as NetworkResult.Success).data[0] is AladinBook) },
+                { assertTrue((result as NetworkResult.Success).data is SearchedBooks) },
+                { assertTrue((result as NetworkResult.Success).data[0] is SearchedBook) },
             )
         }
 
