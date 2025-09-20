@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.team.domain.model.book.Keyword
 import com.team.domain.model.book.SearchedBook
-import com.team.domain.model.book.SearchedBooks
 import com.team.domain.model.exception.BookException
 import com.team.domain.model.exception.TodokTodokExceptions
 import com.team.domain.model.exception.onFailure
@@ -57,18 +56,18 @@ class SelectBookViewModel(
     private fun updateSearchedBooks(value: String) {
         setState { copy(status = SearchedBookStatus.Loading, keyword = Keyword(value)) }
         viewModelScope.launch {
-            _uiState.value?.keyword?.let {
+            _uiState.value?.keyword?.let { keyword ->
                 bookRepository
-                    .fetchBooks(it)
-                    .onSuccess { books: SearchedBooks ->
-                        if (books.isEmpty()) {
+                    .fetchBooks(size = 20, keyword = keyword)
+                    .onSuccess { searchedBooksResult ->
+                        if (searchedBooksResult.books.isEmpty()) {
                             setState { copy(status = SearchedBookStatus.NotFound) }
                             return@onSuccess
                         }
                         setState {
                             copy(
                                 status = SearchedBookStatus.Success,
-                                searchedBooks = books,
+                                searchedBooksResult = searchedBooksResult,
                             )
                         }
                     }.onFailure { exception: TodokTodokExceptions ->
