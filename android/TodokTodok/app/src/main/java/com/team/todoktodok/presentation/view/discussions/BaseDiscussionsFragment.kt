@@ -14,10 +14,12 @@ abstract class BaseDiscussionsFragment(
     @LayoutRes layoutId: Int,
 ) : Fragment(layoutId) {
     protected val viewModel: DiscussionsViewModel by activityViewModels {
-        val repositoryModule = (requireActivity().application as App).container.repositoryModule
+        val container = (requireActivity().application as App).container
+        val repositoryModule = container.repositoryModule
         DiscussionsViewModelFactory(
             repositoryModule.discussionRepository,
             repositoryModule.memberRepository,
+            container.connectivityObserver,
         )
     }
 

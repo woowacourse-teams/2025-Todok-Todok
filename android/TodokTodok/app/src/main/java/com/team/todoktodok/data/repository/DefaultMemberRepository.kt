@@ -5,7 +5,7 @@ import com.team.domain.model.Discussion
 import com.team.domain.model.ImagePayload
 import com.team.domain.model.Support
 import com.team.domain.model.exception.NetworkResult
-import com.team.domain.model.exception.TodokTodokExceptions
+import com.team.domain.model.exception.SignUpException
 import com.team.domain.model.exception.map
 import com.team.domain.model.member.BlockedMember
 import com.team.domain.model.member.Member
@@ -40,7 +40,7 @@ class DefaultMemberRepository(
         cachedMember?.let {
             val request = it.copy(nickName = nickname).toRequest()
             remoteMemberRemoteDataSource.signUp(request)
-        } ?: NetworkResult.Failure(TodokTodokExceptions.SignUpException.InvalidTokenException)
+        } ?: NetworkResult.Failure(SignUpException.InvalidTokenException)
 
     override suspend fun getProfile(id: MemberId): NetworkResult<Profile> =
         remoteMemberRemoteDataSource.fetchProfile(id).map { it.toDomain() }
