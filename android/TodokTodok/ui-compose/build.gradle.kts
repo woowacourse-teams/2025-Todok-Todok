@@ -42,6 +42,8 @@ android {
 }
 
 dependencies {
+    implementation(project(":domain"))
+
     implementation(platform(libs.compose.bom))
     implementation(libs.bundles.compose)
 
