@@ -51,7 +51,7 @@ android {
         applicationId = "com.team.todoktodok"
         minSdk = 30
         targetSdk = 35
-        versionCode = 4
+        versionCode = 5
         versionName = "1.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -103,6 +103,8 @@ dependencies {
     implementation(libs.bundles.google)
     implementation(libs.bundles.glide)
     implementation(libs.bundles.logging)
+    implementation(libs.kotlinx.coroutines.android)
+
     testImplementation(libs.bundles.test)
     testImplementation(libs.androidx.core.testing)
     ksp(libs.androidx.room.compiler)

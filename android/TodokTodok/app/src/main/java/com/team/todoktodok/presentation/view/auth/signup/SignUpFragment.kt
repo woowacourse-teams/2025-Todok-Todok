@@ -10,7 +10,6 @@ import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentSignupBinding
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
-import com.team.todoktodok.presentation.core.component.AlertSnackBar
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
 import com.team.todoktodok.presentation.view.auth.signup.vm.SignUpViewModel
 import com.team.todoktodok.presentation.view.auth.signup.vm.SignUpViewModelFactory
@@ -19,7 +18,10 @@ import com.team.todoktodok.presentation.view.discussions.DiscussionsActivity
 class SignUpFragment : Fragment(R.layout.fragment_signup) {
     private val viewModel: SignUpViewModel by viewModels {
         val repositoryModule = (requireActivity().application as App).container.repositoryModule
-        SignUpViewModelFactory(repositoryModule.memberRepository)
+        SignUpViewModelFactory(
+            repositoryModule.memberRepository,
+            repositoryModule.notificationRepository,
+        )
     }
 
     private lateinit var messageConverter: ExceptionMessageConverter
