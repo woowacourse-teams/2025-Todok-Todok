@@ -14,10 +14,12 @@ import com.team.todoktodok.data.core.ext.extractTokens
 import com.team.todoktodok.data.datasource.token.TokenDataSource
 import com.team.todoktodok.data.network.request.LoginRequest
 import com.team.todoktodok.data.network.request.ModifyProfileRequest
+import com.team.todoktodok.data.network.request.ProfileImageRequest
 import com.team.todoktodok.data.network.request.RefreshRequest
 import com.team.todoktodok.data.network.request.ReportRequest
 import com.team.todoktodok.data.network.request.SignUpRequest
 import com.team.todoktodok.data.network.response.BlockedMemberResponse
+import com.team.todoktodok.data.network.response.ProfileImageResponse
 import com.team.todoktodok.data.network.response.ProfileResponse
 import com.team.todoktodok.data.network.response.discussion.BookResponse
 import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
@@ -109,6 +111,9 @@ class DefaultMemberRemoteDataSource(
         }
 
     override suspend fun modifyProfile(request: ModifyProfileRequest): NetworkResult<Unit> = memberService.modifyProfile(request)
+
+    override suspend fun modifyProfileImage(request: ProfileImageRequest): NetworkResult<ProfileImageResponse> =
+        memberService.modifyProfileImage(request.profileImage)
 
     override suspend fun fetchBlockedMembers(): NetworkResult<List<BlockedMemberResponse>> = memberService.fetchBlockedMembers()
 

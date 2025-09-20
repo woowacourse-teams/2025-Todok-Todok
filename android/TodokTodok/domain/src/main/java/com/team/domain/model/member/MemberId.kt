@@ -8,8 +8,11 @@ sealed interface MemberId {
     ) : MemberId
 
     companion object {
-        fun MemberId(memberId: Long): MemberId {
-            if (memberId == DEFAULT_MEMBER_ID) return Mine
+        fun MemberId(
+            memberId: Long,
+            myId: Long,
+        ): MemberId {
+            if (memberId == myId || memberId == DEFAULT_MEMBER_ID) return Mine
             return OtherUser(memberId)
         }
 

@@ -2,6 +2,7 @@ package com.team.todoktodok.data.repository
 
 import com.team.domain.model.Book
 import com.team.domain.model.Discussion
+import com.team.domain.model.ImagePayload
 import com.team.domain.model.Support
 import com.team.domain.model.exception.NetworkResult
 import com.team.domain.model.exception.TodokTodokExceptions
@@ -13,8 +14,10 @@ import com.team.domain.model.member.MemberId
 import com.team.domain.model.member.MemberType
 import com.team.domain.model.member.Profile
 import com.team.domain.repository.MemberRepository
+import com.team.todoktodok.data.core.ext.toMultipartPart
 import com.team.todoktodok.data.datasource.member.MemberRemoteDataSource
 import com.team.todoktodok.data.network.request.ModifyProfileRequest
+import com.team.todoktodok.data.network.request.ProfileImageRequest
 import com.team.todoktodok.data.network.request.toRequest
 import com.team.todoktodok.data.network.response.discussion.toDomain
 
@@ -66,6 +69,16 @@ class DefaultMemberRepository(
         message: String,
     ): NetworkResult<Unit> = remoteMemberRemoteDataSource.modifyProfile(ModifyProfileRequest(nickname, message))
 
+    override suspend fun modifyProfileImage(imagePayload: ImagePayload): NetworkResult<String> =
+        remoteMemberRemoteDataSource
+            .modifyProfileImage(
+                ProfileImageRequest(
+                    imagePayload.toMultipartPart(
+                        PROFILE_IMAGE_PARAM_NAME,
+                    ),
+                ),
+            ).map { it.profileImage }
+
     override suspend fun getBlockedMembers(): NetworkResult<List<BlockedMember>> =
         remoteMemberRemoteDataSource
             .fetchBlockedMembers()
@@ -74,4 +87,8 @@ class DefaultMemberRepository(
     override suspend fun unblock(id: Long): NetworkResult<Unit> = remoteMemberRemoteDataSource.unblock(id)
 
     override suspend fun withdraw(): NetworkResult<Unit> = remoteMemberRemoteDataSource.withdraw()
+
+    companion object {
+        private const val PROFILE_IMAGE_PARAM_NAME = "profileImage"
+    }
 }

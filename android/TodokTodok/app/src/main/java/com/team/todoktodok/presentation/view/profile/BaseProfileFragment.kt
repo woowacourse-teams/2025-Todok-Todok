@@ -15,7 +15,7 @@ abstract class BaseProfileFragment(
 ) : Fragment(layoutId) {
     protected val viewModel: ProfileViewModel by activityViewModels {
         val repositoryModule = (requireActivity().application as App).container.repositoryModule
-        ProfileViewModelFactory(repositoryModule.memberRepository)
+        ProfileViewModelFactory(repositoryModule.memberRepository, repositoryModule.tokenRepository)
     }
 
     protected val discussionDetailLauncher =

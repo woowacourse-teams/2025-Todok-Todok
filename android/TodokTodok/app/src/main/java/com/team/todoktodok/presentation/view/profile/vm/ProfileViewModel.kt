@@ -1,5 +1,7 @@
 package com.team.todoktodok.presentation.view.profile.vm
 
+import android.content.ContentResolver
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -7,7 +9,9 @@ import androidx.lifecycle.viewModelScope
 import com.team.domain.model.Book
 import com.team.domain.model.Discussion
 import com.team.domain.model.Support
+import com.team.domain.model.exception.ImageLoadExceptions
 import com.team.domain.model.exception.NetworkResult
+import com.team.domain.model.exception.TodokTodokExceptions
 import com.team.domain.model.exception.onFailure
 import com.team.domain.model.exception.onSuccess
 import com.team.domain.model.member.MemberDiscussionType
@@ -15,10 +19,13 @@ import com.team.domain.model.member.MemberId
 import com.team.domain.model.member.MemberId.Companion.MemberId
 import com.team.domain.model.member.Profile
 import com.team.domain.repository.MemberRepository
+import com.team.domain.repository.TokenRepository
+import com.team.todoktodok.presentation.core.ImagePayloadMapper
 import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
 import com.team.todoktodok.presentation.core.event.SingleLiveData
 import com.team.todoktodok.presentation.view.profile.ProfileUiEvent
 import com.team.todoktodok.presentation.view.profile.ProfileUiState
+import com.team.todoktodok.presentation.view.profile.adapter.ProfileItems
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -26,6 +33,7 @@ import kotlinx.coroutines.launch
 
 class ProfileViewModel(
     private val memberRepository: MemberRepository,
+    private val tokenRepository: TokenRepository,
 ) : ViewModel() {
     private val _uiState = MutableLiveData(ProfileUiState())
     val uiState: LiveData<ProfileUiState> get() = _uiState
@@ -33,31 +41,30 @@ class ProfileViewModel(
     private val _uiEvent = MutableSingleLiveData<ProfileUiEvent>()
     val uiEvent: SingleLiveData<ProfileUiEvent> get() = _uiEvent
 
-    fun setMemberId(id: Long) {
-        val memberID = MemberId(id)
-        _uiState.value = _uiState.value?.copy(memberId = memberID)
-    }
-
     @Suppress("UNCHECKED_CAST")
-    fun loadProfile() {
-        val memberId = _uiState.value?.memberId ?: return
-        withLoading {
-            val (profile, books, participatedDiscussions, createdDiscussions) =
-                listOf(
-                    loadProfile(memberId),
-                    loadActivatedBooks(memberId),
-                    loadParticipatedDiscussions(memberId),
-                    loadCreatedDiscussions(memberId),
-                ).awaitAll()
+    fun loadProfile(id: Long) {
+        viewModelScope.launch {
+            val memberID = MemberId(id, tokenRepository.getMemberId())
+            _uiState.value = _uiState.value?.copy(memberId = memberID)
+            val memberId = _uiState.value?.memberId ?: return@launch
+            withLoading {
+                val (profile, books, participatedDiscussions, createdDiscussions) =
+                    listOf(
+                        loadProfile(memberId),
+                        loadActivatedBooks(memberId),
+                        loadParticipatedDiscussions(memberId),
+                        loadCreatedDiscussions(memberId),
+                    ).awaitAll()
 
-            _uiState.value =
-                ProfileUiState.initial(
-                    memberId,
-                    profile as Profile,
-                    books as List<Book>,
-                    participatedDiscussions as List<Discussion>,
-                    createdDiscussions as List<Discussion>,
-                )
+                _uiState.value =
+                    ProfileUiState.initial(
+                        memberId,
+                        profile as Profile,
+                        books as List<Book>,
+                        participatedDiscussions as List<Discussion>,
+                        createdDiscussions as List<Discussion>,
+                    )
+            }
         }
     }
 
@@ -153,6 +160,52 @@ class ProfileViewModel(
                 )
         }
     }
+
+    fun updateProfile(
+        imageUri: Uri?,
+        contentResolver: ContentResolver,
+    ) {
+        if (imageUri == null || _uiState.value?.memberId is MemberId.OtherUser) return
+        val imagePayload =
+            runCatching { ImagePayloadMapper(contentResolver).from(imageUri) }.getOrElse { exception ->
+                onImagePayloadErrorMessageEvent(exception)
+                return
+            }
+        viewModelScope.launch {
+            when (val result = memberRepository.modifyProfileImage(imagePayload)) {
+                is NetworkResult.Failure -> onUiEvent(ProfileUiEvent.ShowErrorMessage(result.exception))
+                is NetworkResult.Success -> {
+                    val updatedState =
+                        _uiState.value?.items?.updateProfileImage(result.data) ?: return@launch
+                    _uiState.value = _uiState.value?.copy(items = updatedState)
+                }
+            }
+        }
+    }
+
+    private fun onImagePayloadErrorMessageEvent(exception: Throwable) {
+        if (exception !is ImageLoadExceptions.UriInputStreamNotFoundException) {
+            onUiEvent(
+                ProfileUiEvent.ShowErrorMessage(TodokTodokExceptions.UnknownException(exception)),
+            )
+        } else {
+            onUiEvent(ProfileUiEvent.ShowErrorMessage(exception))
+        }
+    }
+
+    private fun List<ProfileItems>.updateProfileImage(newImage: String): List<ProfileItems> =
+        map { item ->
+            when (item) {
+                is ProfileItems.HeaderItem -> item
+                is ProfileItems.InformationItem ->
+                    ProfileItems.InformationItem(
+                        item.value.copy(profileImage = newImage),
+                        item.isMyProfile,
+                    )
+
+                is ProfileItems.TabItem -> item
+            }
+        }
 
     private fun withLoading(action: suspend () -> Unit) {
         viewModelScope.launch {
