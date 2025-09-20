@@ -155,7 +155,6 @@ public class DiscussionQueryService {
         final List<Discussion> discussions = discussionRepository.findActiveDiscussionsByCursor(
                 periodStart,
                 activeDiscussionCursor.lastDiscussionLatestCommentId(),
-                activeDiscussionCursor.lastDiscussionId(),
                 pageable
         );
 
@@ -169,13 +168,12 @@ public class DiscussionQueryService {
         }
 
         final Discussion lastDiscussion = hasNext ? discussions.getLast() : null;
-        final Long lastDiscussionId = lastDiscussion != null ? lastDiscussion.getId() : null;
         final Long latestCommentIdByDiscussion = commentRepository.findLatestCommentIdByDiscussion(lastDiscussion,
                         periodStart)
                 .orElse(null);
 
         final List<DiscussionResponse> discussionResponses = getDiscussionsResponses(discussions, member);
-        final String nextCursor = getNextCursor(hasNext, latestCommentIdByDiscussion, lastDiscussionId);
+        final String nextCursor = getNextCursor(hasNext, latestCommentIdByDiscussion);
 
         return new ActiveDiscussionPageResponse(
                 discussionResponses,
@@ -359,14 +357,13 @@ public class DiscussionQueryService {
 
     private String getNextCursor(
             final boolean hasNext,
-            final Long lastDiscussionLatestCommentId,
-            final Long lastDiscussionId
+            final Long lastDiscussionLatestCommentId
     ) {
-        if (!hasNext || lastDiscussionLatestCommentId == null || lastDiscussionId == null) {
+        if (!hasNext || lastDiscussionLatestCommentId == null) {
             return null;
         }
 
-        final ActiveDiscussionCursor activeDiscussionCursor = new ActiveDiscussionCursor(lastDiscussionLatestCommentId, lastDiscussionId);
+        final ActiveDiscussionCursor activeDiscussionCursor = new ActiveDiscussionCursor(lastDiscussionLatestCommentId);
         return activeDiscussionCursor.toEncoded();
     }
 

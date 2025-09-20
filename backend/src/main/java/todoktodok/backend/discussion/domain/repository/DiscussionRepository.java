@@ -95,15 +95,13 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
         GROUP BY d
         HAVING (
            :lastDiscussionLatestCommentId IS NULL
-               OR MAX(c.id) < :lastDiscussionLatestCommentId
-               OR (MAX(c.id) = :lastDiscussionLatestCommentId AND d.id > :lastDiscussionId)
+            OR MAX(c.id) < :lastDiscussionLatestCommentId
         )
-        ORDER BY MAX(c.id) DESC, d.id ASC
+        ORDER BY MAX(c.id) DESC
    """)
     List<Discussion> findActiveDiscussionsByCursor(
             @Param("periodStart") final LocalDateTime periodStart,
             @Param("lastDiscussionLatestCommentId") final Long lastDiscussionLatestCommentId,
-            @Param("lastDiscussionId") final Long lastDiscussionId,
             final Pageable pageable
     );
 }

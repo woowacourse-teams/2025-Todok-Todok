@@ -4,19 +4,15 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 public record ActiveDiscussionCursor(
-        Long lastDiscussionLatestCommentId,
-        Long lastDiscussionId
+        Long lastDiscussionLatestCommentId
 ) {
-    private static final String DELIMITER = "_";
-    private static final ActiveDiscussionCursor EMPTY = new ActiveDiscussionCursor(null, null);
+    private static final ActiveDiscussionCursor EMPTY = new ActiveDiscussionCursor(null);
 
     public static ActiveDiscussionCursor fromEncoded(final String cursor) {
         final String decoded = new String(Base64.getUrlDecoder().decode(cursor));
-        final String[] parts = decoded.split(DELIMITER);
-        final Long lastDiscussionLatestCommentId = Long.parseLong(parts[0]);
-        final Long discussionId = Long.parseLong(parts[1]);
+        final Long cursorId = Long.parseLong(decoded);
 
-        return new ActiveDiscussionCursor(lastDiscussionLatestCommentId, discussionId);
+        return new ActiveDiscussionCursor(cursorId);
     }
 
     public static ActiveDiscussionCursor empty() {
@@ -24,9 +20,9 @@ public record ActiveDiscussionCursor(
     }
 
     public String toEncoded() {
-        final String cursorPayload = lastDiscussionLatestCommentId + DELIMITER + lastDiscussionId;
+        if (lastDiscussionLatestCommentId == null) return null;
         return Base64.getUrlEncoder()
                 .withoutPadding()
-                .encodeToString(cursorPayload.getBytes(StandardCharsets.UTF_8));
+                .encodeToString(lastDiscussionLatestCommentId.toString().getBytes(StandardCharsets.UTF_8));
     }
 }
