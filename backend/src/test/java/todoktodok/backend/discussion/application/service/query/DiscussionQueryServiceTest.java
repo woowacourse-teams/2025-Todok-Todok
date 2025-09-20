@@ -666,21 +666,21 @@ class DiscussionQueryServiceTest {
             baseTime = LocalDateTime.now().truncatedTo(MICROS);
 
             // 활성화 된 토론방 순서: 게시글 1 ~ 9 순
-            databaseInitializer.setCommentInfo("댓글1-1", 1L, 1L, baseTime.minusMinutes(10));
-            databaseInitializer.setCommentInfo("댓글2-1", 1L, 2L, baseTime.minusMinutes(20));
-            databaseInitializer.setCommentInfo("댓글2-2", 1L, 2L, baseTime.minusMinutes(30));
-            databaseInitializer.setCommentInfo("댓글3-1", 1L, 3L, baseTime.minusMinutes(40));
-            databaseInitializer.setCommentInfo("댓글3-2", 1L, 3L, baseTime.minusMinutes(50));
-            databaseInitializer.setCommentInfo("댓글3-3", 1L, 3L, baseTime.minusMinutes(60));
-            databaseInitializer.setCommentInfo("댓글4-1", 1L, 4L, baseTime.minusMinutes(70));
-            databaseInitializer.setCommentInfo("댓글5-1", 1L, 5L, baseTime.minusMinutes(80));
-            databaseInitializer.setCommentInfo("댓글6-1", 1L, 6L, baseTime.minusMinutes(80));
-            databaseInitializer.setCommentInfo("댓글7-1", 1L, 7L, baseTime.minusMinutes(100));
-            databaseInitializer.setCommentInfo("댓글8-1", 1L, 8L, baseTime.minusMinutes(110));
             databaseInitializer.setCommentInfo("댓글9-1", 1L, 9L, baseTime.minusMinutes(110));
+            databaseInitializer.setCommentInfo("댓글8-1", 1L, 8L, baseTime.minusMinutes(110));
+            databaseInitializer.setCommentInfo("댓글7-1", 1L, 7L, baseTime.minusMinutes(100));
+            databaseInitializer.setCommentInfo("댓글6-1", 1L, 6L, baseTime.minusMinutes(80));
+            databaseInitializer.setCommentInfo("댓글5-1", 1L, 5L, baseTime.minusMinutes(80));
+            databaseInitializer.setCommentInfo("댓글4-1", 1L, 4L, baseTime.minusMinutes(70));
+            databaseInitializer.setCommentInfo("댓글3-1", 1L, 3L, baseTime.minusMinutes(60));
+            databaseInitializer.setCommentInfo("댓글3-2", 1L, 3L, baseTime.minusMinutes(50));
+            databaseInitializer.setCommentInfo("댓글3-3", 1L, 3L, baseTime.minusMinutes(40));
+            databaseInitializer.setCommentInfo("댓글2-1", 1L, 2L, baseTime.minusMinutes(30));
+            databaseInitializer.setCommentInfo("댓글2-2", 1L, 2L, baseTime.minusMinutes(20));
+            databaseInitializer.setCommentInfo("댓글1-1", 1L, 1L, baseTime.minusMinutes(10));
 
-            databaseInitializer.setReplyInfo("대댓글1-1-1", 1L, 1L);
-            databaseInitializer.setReplyInfo("대댓글1-2-1", 1L, 1L);
+            databaseInitializer.setReplyInfo("대댓글1-1-1", 1L, 12L);
+            databaseInitializer.setReplyInfo("대댓글1-2-1", 1L, 12L);
         }
 
         @Test
