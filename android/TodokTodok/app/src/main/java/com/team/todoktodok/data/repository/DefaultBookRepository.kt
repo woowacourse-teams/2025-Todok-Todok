@@ -14,7 +14,7 @@ class DefaultBookRepository(
     private val bookRemoteDataSource: BookRemoteDataSource,
 ) : BookRepository {
     private var cursor: String? = null
-    private var keyword: Keyword = Keyword("")
+    private var keyword: Keyword? = null
 
     override suspend fun fetchBooks(
         size: Int,
