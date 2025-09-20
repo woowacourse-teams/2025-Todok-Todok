@@ -15,11 +15,12 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.concurrent.ConcurrentHashMap
 
 abstract class BaseViewModel(
     private val connectivityObserver: ConnectivityObserver,
 ) : ViewModel() {
-    private val pendingActions = mutableListOf<suspend () -> Unit>()
+    private val pendingActions = ConcurrentHashMap<String, suspend () -> Unit>()
 
     private val _baseUiState = MutableLiveData(BaseUiState())
     val baseUiState: LiveData<BaseUiState> get() = _baseUiState
@@ -40,7 +41,8 @@ abstract class BaseViewModel(
             connectivityObserver.subscribe().collect { status ->
                 if (status == ConnectivityObserver.Status.Available && pendingActions.isNotEmpty()) {
                     _baseUiState.value = _baseUiState.value?.copy(isRestoring = true)
-                    val actionsToRetry = pendingActions.toList()
+
+                    val actionsToRetry = pendingActions.values.toList()
                     pendingActions.clear()
                     actionsToRetry.forEach { action ->
                         launch(recordExceptionHandler) { action() }
@@ -52,39 +54,51 @@ abstract class BaseViewModel(
     }
 
     protected fun <T> runAsync(
+        key: String,
         action: suspend () -> NetworkResult<T>,
         handleSuccess: (T) -> Unit,
         handleFailure: (TodokTodokExceptions) -> Unit,
     ) {
-        viewModelScope.launch(recordExceptionHandler) {
-            if (connectivityObserver.value() != ConnectivityObserver.Status.Available) {
-                pendingActions.add { runAsync(action, handleSuccess, handleFailure) }
-                handleFailure(TodokTodokExceptions.UnknownHostError)
-                return@launch
+        if (connectivityObserver.value() != ConnectivityObserver.Status.Available) {
+            pendingActions.putIfAbsent(key) {
+                runAsync(key, action, handleSuccess, handleFailure)
             }
+            handleFailure(TodokTodokExceptions.UnknownHostError)
+            return
+        }
 
+        viewModelScope.launch(recordExceptionHandler) {
             _baseUiState.value = _baseUiState.value?.copy(isLoading = true)
-
             action()
-                .onSuccess { handleSuccess(it) }
-                .onFailure { handleFailure(it) }
+                .onSuccess {
+                    pendingActions.remove(key)
+                    handleSuccess(it)
+                }.onFailure { handleFailure(it) }
             _baseUiState.value = _baseUiState.value?.copy(isLoading = false)
         }
     }
 
-    protected fun <T> runAsyncWithResult(action: suspend () -> NetworkResult<T>): Deferred<NetworkResult<T>> {
+    protected fun <T> runAsyncWithResult(
+        key: String,
+        action: suspend () -> NetworkResult<T>,
+    ): Deferred<NetworkResult<T>> {
         val deferred = CompletableDeferred<NetworkResult<T>>()
 
         viewModelScope.launch(recordExceptionHandler) {
-            val job =
-                suspend {
-                    _baseUiState.value = _baseUiState.value?.copy(isLoading = true)
-                    deferred.complete(action())
-                    _baseUiState.value = _baseUiState.value?.copy(isLoading = false)
+            val job: suspend () -> Unit = {
+                _baseUiState.value = _baseUiState.value?.copy(isLoading = true)
+                val result = action()
+                deferred.complete(result)
+
+                if (result is NetworkResult.Success) {
+                    pendingActions.remove(key)
                 }
 
+                _baseUiState.value = _baseUiState.value?.copy(isLoading = false)
+            }
+
             if (connectivityObserver.value() != ConnectivityObserver.Status.Available) {
-                pendingActions.add(job)
+                pendingActions[key] = job
             } else {
                 job()
             }

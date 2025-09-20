@@ -22,6 +22,7 @@ import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivityDiscussionsBinding
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
+import com.team.todoktodok.presentation.core.component.AlertSnackBar
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
 import com.team.todoktodok.presentation.view.book.SelectBookActivity
 import com.team.todoktodok.presentation.view.discussions.all.AllDiscussionFragment
@@ -35,10 +36,12 @@ class DiscussionsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDiscussionsBinding
 
     private val viewModel: DiscussionsViewModel by viewModels {
-        val repositoryModule = (application as App).container.repositoryModule
+        val container = (application as App).container
+        val repositoryModule = container.repositoryModule
         DiscussionsViewModelFactory(
             repositoryModule.discussionRepository,
             repositoryModule.memberRepository,
+            container.connectivityObserver,
         )
     }
 
@@ -107,11 +110,18 @@ class DiscussionsActivity : AppCompatActivity() {
     }
 
     private fun setUpLoadingState() {
-        viewModel.uiState.observe(this) {
-            if (it.isLoading) {
+        viewModel.baseUiState.observe(this) { value ->
+            if (value.isLoading) {
                 binding.progressBar.show()
             } else {
                 binding.progressBar.hide()
+            }
+
+            if (value.isRestoring) {
+                AlertSnackBar(
+                    binding.root,
+                    R.string.network_try_connection,
+                ).show()
             }
         }
     }
@@ -122,6 +132,7 @@ class DiscussionsActivity : AppCompatActivity() {
                 is DiscussionsUiEvent.ShowErrorMessage -> {
                     AlertSnackBar(binding.root, messageConverter(event.exception)).show()
                 }
+
                 DiscussionsUiEvent.ShowSearchResult -> {
                     moveToLatestDiscussionTab()
                     allDiscussionFragment.showSearchResults()

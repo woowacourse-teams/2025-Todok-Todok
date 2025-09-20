@@ -13,7 +13,6 @@ data class DiscussionsUiState(
     val myDiscussion: MyDiscussionUiState = MyDiscussionUiState(),
     val latestDiscussion: LatestDiscussionsUiState = LatestDiscussionsUiState(),
     val searchDiscussion: SearchDiscussionsUiState = SearchDiscussionsUiState(),
-    val isLoading: Boolean = false,
 ) {
     fun addSearchDiscussion(
         keyword: String,
@@ -60,6 +59,4 @@ data class DiscussionsUiState(
 
     val latestPageHasNext get() = latestDiscussion.hasNext
     val latestPageNextCursor get() = latestDiscussion.nextCursor
-
-    fun toggleLoading() = copy(isLoading = !isLoading)
 }
