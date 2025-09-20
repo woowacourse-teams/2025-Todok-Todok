@@ -10,6 +10,7 @@ import com.team.domain.model.exception.DiscussionExceptions
 import com.team.domain.model.exception.ISBNException
 import com.team.domain.model.exception.KeywordException
 import com.team.domain.model.exception.ReplyExceptions
+import com.team.domain.model.exception.SearchedBooksTotalSizeException
 import com.team.domain.model.exception.TodokTodokExceptions
 import com.team.todoktodok.R
 
@@ -120,10 +121,13 @@ class ExceptionMessageConverter {
             BookException.EmptySelectedBook -> R.string.select_book_error_no_selected_book
             BookImageException.InvalidUrl -> R.string.select_book_error_invalid_url
             BookTitleException.EmptyBookTitle -> R.string.select_book_error_empty_book_title
+
             ISBNException.InvalidFormat -> R.string.select_book_error_invalid_isbn_format
             ISBNException.InvalidLength -> R.string.select_book_error_invalid_isbn_length
 
             KeywordException.BlankKeyword -> R.string.select_book_error_blank_keyword
             KeywordException.EmptyKeyword -> R.string.select_book_error_empty_keyword
+
+            SearchedBooksTotalSizeException.InvalidSize -> R.string.select_book_error_searched_book_total_size
         }
 }
