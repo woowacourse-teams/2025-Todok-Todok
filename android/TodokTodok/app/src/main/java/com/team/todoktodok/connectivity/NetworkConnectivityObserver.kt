@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
 import com.team.domain.ConnectivityObserver
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.channels.awaitClose
@@ -17,6 +18,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(DelicateCoroutinesApi::class)
 class NetworkConnectivityObserver(
+    private val scope: CoroutineScope,
     context: Context,
 ) : ConnectivityObserver {
     private val connectivityManager =
@@ -24,7 +26,7 @@ class NetworkConnectivityObserver(
 
     override fun subscribe(): StateFlow<ConnectivityObserver.Status> =
         observe().stateIn(
-            GlobalScope,
+            scope,
             WhileSubscribed(5000),
             ConnectivityObserver.Status.Idle,
         )
