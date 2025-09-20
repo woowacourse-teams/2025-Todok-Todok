@@ -3,10 +3,10 @@ package com.team.todoktodok.connectivity
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
+import android.net.NetworkCapabilities
 import com.team.domain.ConnectivityObserver
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
@@ -34,11 +34,15 @@ class NetworkConnectivityObserver(
     override fun value(): ConnectivityObserver.Status {
         val network = connectivityManager.activeNetwork
         val capabilities = connectivityManager.getNetworkCapabilities(network)
-
-        val status =
-            capabilities?.let { ConnectivityObserver.Status.Available }
-                ?: ConnectivityObserver.Status.Lost
-        return status
+        val hasInternet =
+            capabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true
+        val isValidated =
+            capabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED) == true
+        return if (hasInternet && isValidated) {
+            ConnectivityObserver.Status.Available
+        } else {
+            ConnectivityObserver.Status.Lost
+        }
     }
 
     private fun observe(): Flow<ConnectivityObserver.Status> =
