@@ -1,7 +1,9 @@
 package com.team.todoktodok.data.datasource
 
 import com.team.domain.model.Support
+import com.team.domain.model.exception.BlockException
 import com.team.domain.model.exception.NetworkResult
+import com.team.domain.model.exception.ReportException
 import com.team.domain.model.exception.TodokTodokExceptions
 import com.team.domain.model.member.MemberDiscussionType
 import com.team.domain.model.member.MemberId
@@ -219,7 +221,7 @@ class DefaultMemberRemoteDataSourceTest {
             val request = MemberId.OtherUser(memberId)
             val type = Support.REPORT
 
-            val exception = TodokTodokExceptions.ReportException.AlreadyReportedException
+            val exception = ReportException.AlreadyReportedException
 
             coEvery {
                 memberService.report(
@@ -263,7 +265,7 @@ class DefaultMemberRemoteDataSourceTest {
             val request = MemberId.OtherUser(memberId)
             val type = Support.BLOCK
 
-            val exception = TodokTodokExceptions.BlockException.AlreadyBlockedException
+            val exception = BlockException.AlreadyBlockedException
 
             coEvery { memberService.block(memberId) } returns NetworkResult.Failure(exception)
 
