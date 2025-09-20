@@ -10,6 +10,8 @@ class SearchedBooks(
     operator fun get(position: Int): SearchedBook = value[position]
 
     operator fun contains(position: Int): Boolean = position in value.indices
+
+    operator fun plus(books: SearchedBooks): SearchedBooks = SearchedBooks(value + books.value)
 }
 
 inline fun <R> SearchedBooks.map(transform: (SearchedBook) -> R): List<R> = this.value.map(transform)

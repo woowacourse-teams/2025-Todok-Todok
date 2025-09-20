@@ -11,13 +11,19 @@ data class SelectBookUiState(
     val searchedBooksResult: SearchedBooksResult? = null,
     val status: SearchedBookStatus = SearchedBookStatus.NotStarted,
 ) {
-    val searchBookGroup: List<SearchBooksGroup> =
-        listOf(
-            SearchBooksGroup.Count(size),
-            *
-                searchedBooksResult?.books?.map { book -> SearchBooksGroup.Book(book) }?.toTypedArray()
-                    ?: emptyArray(),
-        )
+    val hasNextPage: Boolean
+        get() = searchedBooksResult?.hasNext ?: false
+    val searchBookGroup: List<SearchBooksGroup>
+        get() =
+            listOf(
+                SearchBooksGroup.Count(size),
+                *
+                    searchedBooksResult
+                        ?.books
+                        ?.map { book -> SearchBooksGroup.Book(book) }
+                        ?.toTypedArray()
+                        ?: emptyArray(),
+            )
 
     val size: Int get() = searchedBooksResult?.totalSize ?: 0
 

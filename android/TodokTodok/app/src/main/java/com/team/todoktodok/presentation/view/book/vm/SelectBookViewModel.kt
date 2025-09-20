@@ -50,6 +50,39 @@ class SelectBookViewModel(
         setState { copy(keyword = Keyword(value)) }
     }
 
+    fun addSearchedBooks() {
+        if (!(
+                _uiState.value?.hasNextPage
+                    ?: false
+            ) ||
+            _uiState.value?.status == SearchedBookStatus.Loading
+        ) {
+            return
+        }
+
+        viewModelScope.launch {
+            _uiState.value?.keyword?.let { keyword ->
+                bookRepository
+                    .fetchBooks(size = 20, keyword)
+                    .onSuccess { searchedBooksResult ->
+                        setState {
+                            copy(
+                                status = SearchedBookStatus.Success,
+                                searchedBooksResult =
+                                    _uiState.value?.searchedBooksResult?.addSearchedBooks(
+                                        searchedBooksResult.books,
+                                        searchedBooksResult.hasNext,
+                                    ),
+                            )
+                        }
+                    }.onFailure { exception ->
+                        setState { copy(status = SearchedBookStatus.NotStarted) }
+                        _uiEvent.setValue(SelectBookUiEvent.ShowException(exception))
+                    }
+            }
+        }
+    }
+
     private fun isPossibleSearchKeyword(keyword: String): Boolean =
         !(keyword.isBlank() || keyword.isEmpty() || _uiState.value?.isSameKeyword(keyword) == true)
 

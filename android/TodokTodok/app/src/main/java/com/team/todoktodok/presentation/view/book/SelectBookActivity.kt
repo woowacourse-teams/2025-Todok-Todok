@@ -14,6 +14,8 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.team.domain.model.book.Keyword
 import com.team.domain.model.book.SearchedBook
 import com.team.domain.model.book.length
@@ -91,6 +93,22 @@ class SelectBookActivity : AppCompatActivity() {
                 handleSearchAction(view, actionId)
             }
             rvSearchedBooks.adapter = adapter
+            rvSearchedBooks.addOnScrollListener(
+                object : RecyclerView.OnScrollListener() {
+                    override fun onScrolled(
+                        recyclerView: RecyclerView,
+                        dx: Int,
+                        dy: Int,
+                    ) {
+                        if (dy <= 0) return
+                        val lm = recyclerView.layoutManager as? LinearLayoutManager ?: return
+                        val lastVisible = lm.findLastVisibleItemPosition()
+                        if (lastVisible >= lm.itemCount - 3) {
+                            viewModel.addSearchedBooks()
+                        }
+                    }
+                },
+            )
         }
     }
 

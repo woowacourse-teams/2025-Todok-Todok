@@ -3,10 +3,22 @@ package com.team.domain.model.book
 data class SearchedBooksResult(
     val books: SearchedBooks,
     val hasNext: Boolean,
-    val _totalSize: SearchedBooksTotalSize,
+    private val _totalSize: SearchedBooksTotalSize,
 ) {
     val totalSize: Int
         get() = _totalSize.value
+
+    fun addSearchedBooks(
+        books: SearchedBooks,
+        hasNext: Boolean,
+    ): SearchedBooksResult {
+        val totalSearchedBooks = this.books + books
+        return SearchedBooksResult(
+            books = totalSearchedBooks,
+            hasNext = hasNext,
+            totalSize = totalSize,
+        )
+    }
 
     companion object {
         fun SearchedBooksResult(
