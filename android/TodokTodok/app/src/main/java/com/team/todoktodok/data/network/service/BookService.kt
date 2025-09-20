@@ -14,7 +14,7 @@ interface BookService {
         @Query("size") size: Int,
         @Query("cursor") cursor: String?,
         @Query("keyword") keyword: String,
-    ): NetworkResult<List<SearchedBookResultResponse>>
+    ): NetworkResult<SearchedBookResultResponse>
 
     @POST("v1/books")
     suspend fun saveBook(
