@@ -59,23 +59,23 @@ abstract class BaseViewModel(
         handleSuccess: (T) -> Unit,
         handleFailure: (TodokTodokExceptions) -> Unit,
     ) {
-        if (connectivityObserver.value() != ConnectivityObserver.Status.Available) {
-            pendingActions.putIfAbsent(key) {
-                runAsync(key, action, handleSuccess, handleFailure)
-            }
-            handleFailure(TodokTodokExceptions.UnknownHostError)
-            return
-        }
-
-        viewModelScope.launch(recordExceptionHandler) {
-            _baseUiState.value = _baseUiState.value?.copy(isLoading = true)
+        val job: suspend () -> Unit = {
+            _baseUiState.postValue(_baseUiState.value?.copy(isLoading = true))
             action()
                 .onSuccess {
                     pendingActions.remove(key)
                     handleSuccess(it)
                 }.onFailure { handleFailure(it) }
-            _baseUiState.value = _baseUiState.value?.copy(isLoading = false)
+            _baseUiState.postValue(_baseUiState.value?.copy(isLoading = false))
         }
+
+        if (connectivityObserver.value() != ConnectivityObserver.Status.Available) {
+            pendingActions[key] = job
+            handleFailure(TodokTodokExceptions.UnknownHostError)
+            return
+        }
+
+        viewModelScope.launch(recordExceptionHandler) { job() }
     }
 
     protected fun <T> runAsyncWithResult(
@@ -84,24 +84,20 @@ abstract class BaseViewModel(
     ): Deferred<NetworkResult<T>> {
         val deferred = CompletableDeferred<NetworkResult<T>>()
 
-        viewModelScope.launch(recordExceptionHandler) {
-            val job: suspend () -> Unit = {
-                _baseUiState.value = _baseUiState.value?.copy(isLoading = true)
-                val result = action()
-                deferred.complete(result)
-
-                if (result is NetworkResult.Success) {
-                    pendingActions.remove(key)
-                }
-
-                _baseUiState.value = _baseUiState.value?.copy(isLoading = false)
+        val job: suspend () -> Unit = {
+            _baseUiState.postValue(_baseUiState.value?.copy(isLoading = true))
+            val result = action()
+            deferred.complete(result)
+            if (result is NetworkResult.Success) {
+                pendingActions.remove(key)
+                _baseUiState.postValue(_baseUiState.value?.copy(isLoading = false))
             }
+        }
 
-            if (connectivityObserver.value() != ConnectivityObserver.Status.Available) {
-                pendingActions[key] = job
-            } else {
-                job()
-            }
+        if (connectivityObserver.value() != ConnectivityObserver.Status.Available) {
+            pendingActions[key] = job
+        } else {
+            viewModelScope.launch(recordExceptionHandler) { job() }
         }
 
         return deferred
