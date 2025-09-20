@@ -60,13 +60,13 @@ abstract class BaseViewModel(
         handleFailure: (TodokTodokExceptions) -> Unit,
     ) {
         val job: suspend () -> Unit = {
-            _baseUiState.postValue(_baseUiState.value?.copy(isLoading = true))
+            _baseUiState.value = _baseUiState.value?.copy(isLoading = true)
             action()
                 .onSuccess {
                     pendingActions.remove(key)
                     handleSuccess(it)
                 }.onFailure { handleFailure(it) }
-            _baseUiState.postValue(_baseUiState.value?.copy(isLoading = false))
+            _baseUiState.value = _baseUiState.value?.copy(isLoading = false)
         }
 
         if (connectivityObserver.value() != ConnectivityObserver.Status.Available) {
@@ -85,12 +85,12 @@ abstract class BaseViewModel(
         val deferred = CompletableDeferred<NetworkResult<T>>()
 
         val job: suspend () -> Unit = {
-            _baseUiState.postValue(_baseUiState.value?.copy(isLoading = true))
+            _baseUiState.value = _baseUiState.value?.copy(isLoading = true)
             val result = action()
             deferred.complete(result)
             if (result is NetworkResult.Success) {
                 pendingActions.remove(key)
-                _baseUiState.postValue(_baseUiState.value?.copy(isLoading = false))
+                _baseUiState.value = _baseUiState.value?.copy(isLoading = false)
             }
         }
 
