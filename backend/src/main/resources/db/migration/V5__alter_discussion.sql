@@ -1,0 +1,2 @@
+ALTER TABLE discussion
+    ADD COLUMN view BIGINT DEFAULT 0 NOT NULL;
