@@ -104,6 +104,7 @@
         android:id="@+id/nsv_empty_search_result"
         android:layout_width="match_parent"
         android:layout_height="@dimen/space_0"
+        android:layout_marginTop="@dimen/space_12"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
