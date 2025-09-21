@@ -14,8 +14,8 @@ class SearchedBooksTotalSizeTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = [-1, 0, 201])
-    fun `검색된 총 책의 개수가 1~200가 아니면 에러가 난다`(size: Int) {
+    @ValueSource(ints = [-1, 201])
+    fun `검색된 총 책의 개수가 0~200가 아니면 에러가 난다`(size: Int) {
         val exception =
             assertThrows<IllegalArgumentException> { SearchedBooksTotalSize(size) }
         assertEquals("[ERROR] 책 검색 요청시 총 책의 개수는 1에서 200까지만 가능합니다.", exception.message)
