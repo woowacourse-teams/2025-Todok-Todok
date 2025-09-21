@@ -70,7 +70,6 @@ class SelectBookViewModel(
         }
     }
 
-
     private fun updateSearchedBooks(value: String) {
         setState { copy(status = SearchedBookStatus.Loading, keyword = Keyword(value)) }
         viewModelScope.launch {

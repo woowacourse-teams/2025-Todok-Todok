@@ -15,7 +15,6 @@ import com.team.domain.model.exception.NicknameException
 import com.team.domain.model.exception.ReplyExceptions
 import com.team.domain.model.exception.ReportException
 import com.team.domain.model.exception.SearchedBooksTotalSizeException
-import com.team.domain.model.exception.ReportException
 import com.team.domain.model.exception.SignUpException
 import com.team.domain.model.exception.TodokTodokExceptions
 import com.team.todoktodok.R
