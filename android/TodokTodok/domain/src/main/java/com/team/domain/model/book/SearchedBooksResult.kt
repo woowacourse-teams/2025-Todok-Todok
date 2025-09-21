@@ -20,6 +20,15 @@ data class SearchedBooksResult(
         )
     }
 
+    operator fun plus(searchedBooksResult: SearchedBooksResult): SearchedBooksResult {
+        val totalSearchedBooks = this.books + books
+        return SearchedBooksResult(
+            books = totalSearchedBooks,
+            hasNext = searchedBooksResult.hasNext,
+            totalSize = searchedBooksResult.totalSize,
+        )
+    }
+
     companion object {
         fun SearchedBooksResult(
             books: SearchedBooks,
