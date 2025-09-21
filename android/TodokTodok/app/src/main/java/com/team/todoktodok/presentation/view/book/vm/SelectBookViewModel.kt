@@ -50,35 +50,26 @@ class SelectBookViewModel(
         setState { copy(keyword = Keyword(value)) }
     }
 
-    fun addSearchedBooks() {
-        if (!(
-                _uiState.value?.hasNextPage
-                    ?: false
-            ) ||
+    fun isNotPossibleAddSearchedBooks(): Boolean =
+        !(_uiState.value?.hasNextPage ?: false) ||
             _uiState.value?.status == SearchedBookStatus.Loading
-        ) {
-            return
-        }
+
+    fun addSearchedBooks() {
+        if (isNotPossibleAddSearchedBooks()) return
+
         setState { copy(status = SearchedBookStatus.Loading) }
         viewModelScope.launch {
             _uiState.value?.keyword?.let { keyword ->
-                bookRepository
-                    .fetchBooks(size = 20, keyword)
-                    .onSuccess { searchedBooksResult ->
-                        setState {
-                            copy(
-                                status = SearchedBookStatus.Success,
-                                searchedBooksResult =
-                                    _uiState.value?.searchedBooksResult?.addSearchedBooks(
-                                        searchedBooksResult.books,
-                                        searchedBooksResult.hasNext,
-                                    ),
-                            )
-                        }
-                    }.onFailure { exception ->
-                        setState { copy(status = SearchedBookStatus.NotStarted) }
-                        _uiEvent.setValue(SelectBookUiEvent.ShowException(exception))
-                    }
+                getSearchedBooksMore(keyword)
+            }
+        }
+    }
+
+    private fun updateSearchedBooks(value: String) {
+        setState { copy(status = SearchedBookStatus.Loading, keyword = Keyword(value)) }
+        viewModelScope.launch {
+            _uiState.value?.keyword?.let { keyword ->
+                getSearchedBooksFirst(keyword)
             }
         }
     }
@@ -86,29 +77,44 @@ class SelectBookViewModel(
     private fun isPossibleSearchKeyword(keyword: String): Boolean =
         !(keyword.isBlank() || keyword.isEmpty() || _uiState.value?.isSameKeyword(keyword) == true)
 
-    private fun updateSearchedBooks(value: String) {
-        setState { copy(status = SearchedBookStatus.Loading, keyword = Keyword(value)) }
-        viewModelScope.launch {
-            _uiState.value?.keyword?.let { keyword ->
-                bookRepository
-                    .fetchBooks(size = 20, keyword = keyword)
-                    .onSuccess { searchedBooksResult ->
-                        if (searchedBooksResult.books.isEmpty()) {
-                            setState { copy(status = SearchedBookStatus.NotFound) }
-                            return@onSuccess
-                        }
-                        setState {
-                            copy(
-                                status = SearchedBookStatus.Success,
-                                searchedBooksResult = searchedBooksResult,
-                            )
-                        }
-                    }.onFailure { exception: TodokTodokExceptions ->
-                        setState { copy(status = SearchedBookStatus.NotStarted) }
-                        _uiEvent.setValue(SelectBookUiEvent.ShowException(exception))
-                    }
+    private suspend fun getSearchedBooksFirst(keyword: Keyword) {
+        bookRepository
+            .fetchBooks(size = 20, keyword = keyword)
+            .onSuccess { searchedBooksResult ->
+                if (searchedBooksResult.books.isEmpty()) {
+                    setState { copy(status = SearchedBookStatus.NotFound) }
+                    return@onSuccess
+                }
+                setState {
+                    copy(
+                        status = SearchedBookStatus.Success,
+                        searchedBooksResult = searchedBooksResult,
+                    )
+                }
+            }.onFailure { exception: TodokTodokExceptions ->
+                setState { copy(status = SearchedBookStatus.NotStarted) }
+                _uiEvent.setValue(SelectBookUiEvent.ShowException(exception))
             }
-        }
+    }
+
+    private suspend fun getSearchedBooksMore(keyword: Keyword) {
+        bookRepository
+            .fetchBooks(size = 20, keyword)
+            .onSuccess { searchedBooksResult ->
+                setState {
+                    copy(
+                        status = SearchedBookStatus.Success,
+                        searchedBooksResult =
+                            _uiState.value?.searchedBooksResult?.addSearchedBooks(
+                                searchedBooksResult.books,
+                                searchedBooksResult.hasNext,
+                            ),
+                    )
+                }
+            }.onFailure { exception ->
+                setState { copy(status = SearchedBookStatus.NotStarted) }
+                _uiEvent.setValue(SelectBookUiEvent.ShowException(exception))
+            }
     }
 
     private inline fun setState(transform: SelectBookUiState.() -> SelectBookUiState) {
