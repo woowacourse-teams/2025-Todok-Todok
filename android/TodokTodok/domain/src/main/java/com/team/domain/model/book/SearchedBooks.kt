@@ -11,7 +11,10 @@ class SearchedBooks(
 
     operator fun contains(position: Int): Boolean = position in value.indices
 
-    operator fun plus(books: SearchedBooks): SearchedBooks = SearchedBooks(value + books.value)
+    operator fun plus(books: SearchedBooks): SearchedBooks {
+        val total = (value + books.value).distinctBy { it.isbn }
+        return SearchedBooks(total)
+    }
 }
 
 inline fun <R> SearchedBooks.map(transform: (SearchedBook) -> R): List<R> = this.value.map(transform)
