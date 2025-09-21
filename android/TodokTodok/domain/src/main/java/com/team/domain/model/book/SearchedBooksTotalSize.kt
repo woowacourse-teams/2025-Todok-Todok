@@ -11,7 +11,7 @@ value class SearchedBooksTotalSize(
     }
 
     companion object {
-        private const val MIN_SEARCHED_BOOKS_SIZE: Int = 1
+        private const val MIN_SEARCHED_BOOKS_SIZE: Int = 0
         private const val MAX_SEARCHED_BOOKS_SIZE: Int = 200
     }
 }

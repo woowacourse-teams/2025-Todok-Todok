@@ -9,15 +9,15 @@ import org.junit.jupiter.params.provider.ValueSource
 class SearchedBooksTotalSizeTest {
     @ParameterizedTest
     @ValueSource(ints = [1, 2, 3, 15, 100, 199, 200])
-    fun `한 페이지당 검색할 수 있는 책의 개수는 1에서 부터 200까지이다`(size: Int) {
+    fun `검색된 총 책의 개수는 0에서 부터 200까지이다`(size: Int) {
         assertDoesNotThrow { SearchedBooksTotalSize(size) }
     }
 
     @ParameterizedTest
     @ValueSource(ints = [-1, 0, 201])
-    fun `한 페이지당 검색할 수 있는 책의 개수가 1~200가 아니면 에러가 난다`(size: Int) {
+    fun `검색된 총 책의 개수가 1~200가 아니면 에러가 난다`(size: Int) {
         val exception =
             assertThrows<IllegalArgumentException> { SearchedBooksTotalSize(size) }
-        assertEquals("[ERROR] 책 검색 요청시 페이지 수는 1에서 200까지만 가능합니다.", exception.message)
+        assertEquals("[ERROR] 책 검색 요청시 총 책의 개수는 1에서 200까지만 가능합니다.", exception.message)
     }
 }
