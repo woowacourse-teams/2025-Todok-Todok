@@ -9,11 +9,7 @@ data class LatestDiscussionsUiState(
     val items: List<DiscussionUiState> = emptyList(),
     val latestPage: PageInfo = PageInfo.EMPTY,
 ) {
-    fun append(page: LatestDiscussionPage): LatestDiscussionsUiState {
-
-
-        return copy()
-    }
+    fun append(page: LatestDiscussionPage): LatestDiscussionsUiState = copy()
 
     fun modifyDiscussion(newDiscussion: Discussion): LatestDiscussionsUiState =
         copy(

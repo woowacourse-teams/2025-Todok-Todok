@@ -7,6 +7,4 @@ import com.team.todoktodok.presentation.compose.discussion.latest.vm.Discussions
 @Composable
 fun DiscussionsScreen(viewModel: DiscussionsViewModel) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
-
-
 }

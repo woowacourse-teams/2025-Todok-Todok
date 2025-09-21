@@ -7,9 +7,7 @@ import com.team.todoktodok.presentation.compose.discussion.latest.LatestDiscussi
 data class DiscussionsUiState(
     val latestDiscussion: LatestDiscussionsUiState = LatestDiscussionsUiState(),
 ) {
-
-    fun addLatestDiscussion(page: LatestDiscussionPage): DiscussionsUiState =
-        copy(latestDiscussion = latestDiscussion.append(page))
+    fun addLatestDiscussion(page: LatestDiscussionPage): DiscussionsUiState = copy(latestDiscussion = latestDiscussion.append(page))
 
     fun modifyDiscussion(discussion: Discussion): DiscussionsUiState {
         val newLatestDiscussion = latestDiscussion.modifyDiscussion(discussion)

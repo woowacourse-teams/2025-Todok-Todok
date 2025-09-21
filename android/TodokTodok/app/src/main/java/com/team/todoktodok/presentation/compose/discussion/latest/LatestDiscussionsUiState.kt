@@ -1,7 +1,6 @@
 package com.team.todoktodok.presentation.compose.discussion.latest
 
 import com.team.domain.model.Discussion
-import com.team.domain.model.latest.LatestDiscussion
 import com.team.domain.model.latest.LatestDiscussionPage
 import com.team.domain.model.latest.PageInfo
 

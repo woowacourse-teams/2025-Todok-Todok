@@ -1,9 +1,16 @@
 package com.team.todoktodok.presentation.compose.discussion.latest.vm
 
 import androidx.lifecycle.viewModelScope
+import com.team.domain.ConnectivityObserver
+import com.team.domain.model.Discussion
 import com.team.domain.model.exception.onFailure
 import com.team.domain.model.exception.onSuccess
+import com.team.domain.model.latest.LatestDiscussionPage
 import com.team.domain.repository.DiscussionRepository
+import com.team.domain.repository.MemberRepository
+import com.team.todoktodok.presentation.compose.discussion.DiscussionsUiEvent
+import com.team.todoktodok.presentation.compose.discussion.DiscussionsUiState
+import com.team.todoktodok.presentation.core.base.BaseViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -11,13 +18,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import com.team.domain.ConnectivityObserver
-import com.team.domain.model.Discussion
-import com.team.domain.model.latest.LatestDiscussionPage
-import com.team.domain.repository.MemberRepository
-import com.team.todoktodok.presentation.compose.discussion.DiscussionsUiEvent
-import com.team.todoktodok.presentation.compose.discussion.DiscussionsUiState
-import com.team.todoktodok.presentation.core.base.BaseViewModel
 
 class DiscussionsViewModel(
     private val discussionRepository: DiscussionRepository,
@@ -51,7 +51,6 @@ class DiscussionsViewModel(
         _uiState.update { it.clearLatestDiscussion() }
         loadLatestDiscussions()
     }
-
 
     fun removeDiscussion(discussionId: Long) {
         _uiState.update { it.removeDiscussion(discussionId) }

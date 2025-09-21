@@ -1,7 +1,6 @@
 package com.team.todoktodok.data.network.response.latest
 
 import com.team.domain.model.Discussion
-import com.team.domain.model.latest.LatestDiscussion
 import com.team.todoktodok.data.core.ext.toLocalDateTime
 import com.team.todoktodok.data.network.response.discussion.BookResponse
 import com.team.todoktodok.data.network.response.discussion.toDomain

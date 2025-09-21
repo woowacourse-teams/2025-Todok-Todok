@@ -23,7 +23,7 @@ fun DiscussionStats(
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
+        modifier = modifier,
     ) {
         icon()
 
@@ -50,4 +50,3 @@ fun DiscussionStatsPreview() {
         },
     )
 }
-

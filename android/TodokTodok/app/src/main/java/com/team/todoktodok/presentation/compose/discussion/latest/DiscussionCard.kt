@@ -42,34 +42,38 @@ fun DiscussionCard(
 ) {
     ElevatedCard(
         onClick = { onClick() },
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 5.dp
-        ),
-        modifier = modifier
-            .fillMaxWidth()
-            .wrapContentSize()
-
+        elevation =
+            CardDefaults.cardElevation(
+                defaultElevation = 5.dp,
+            ),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .wrapContentSize(),
     ) {
         Column(
-            modifier = Modifier
-                .padding(top = 19.dp, bottom = 10.dp)
-                .padding(start = 12.dp, end = 15.dp)
+            modifier =
+                Modifier
+                    .padding(top = 19.dp, bottom = 10.dp)
+                    .padding(start = 12.dp, end = 15.dp),
         ) {
             Row {
                 AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(discussion.bookImage)
-                        .crossfade(true)
-                        .build(),
+                    model =
+                        ImageRequest
+                            .Builder(LocalContext.current)
+                            .data(discussion.bookImage)
+                            .crossfade(true)
+                            .build(),
                     contentDescription = discussion.discussionTitle,
                     contentScale = ContentScale.Crop,
-                    modifier = Modifier.clip(RoundedCornerShape(10.dp))
+                    modifier = Modifier.clip(RoundedCornerShape(10.dp)),
                 )
 
                 Column {
                     Text(
                         text = discussion.getBookTitle(),
-                        style = MaterialTheme.typography.bodyLarge
+                        style = MaterialTheme.typography.bodyLarge,
                     )
 
                     Text(
@@ -87,17 +91,19 @@ fun DiscussionCard(
                 text = discussion.discussionTitle,
                 style = MaterialTheme.typography.bodyLarge,
                 maxLines = 1,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
             )
 
             Spacer(modifier = Modifier.height(10.dp))
 
             Column {
                 AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(discussion)
-                        .crossfade(true)
-                        .build(),
+                    model =
+                        ImageRequest
+                            .Builder(LocalContext.current)
+                            .data(discussion)
+                            .crossfade(true)
+                            .build(),
                     contentDescription = discussion.writerImage,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.clip(CircleShape),
@@ -109,7 +115,7 @@ fun DiscussionCard(
                     fontFamily = Pretendard,
                     fontWeight = FontWeight.SemiBold,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
                 )
             }
         }
@@ -130,6 +136,7 @@ fun DiscussionCardPreview() {
             likeCount = 0,
             commentCount = 0,
             isLikedByMe = false,
-        ), {}
+        ),
+        {},
     )
 }
