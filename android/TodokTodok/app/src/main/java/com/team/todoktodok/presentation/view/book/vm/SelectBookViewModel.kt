@@ -27,6 +27,10 @@ class SelectBookViewModel(
     private val _uiEvent: MutableSingleLiveData<SelectBookUiEvent> = MutableSingleLiveData()
     val uiEvent: SingleLiveData<SelectBookUiEvent> get() = _uiEvent
 
+    fun changePageSize(size: Int) {
+        setState { copy(pageSize = size) }
+    }
+
     fun searchWithCurrentKeyword(keyword: String) {
         val isPossibleSearchKeyword = isPossibleSearchKeyword(keyword)
         updateKeyword(keyword)
@@ -79,7 +83,7 @@ class SelectBookViewModel(
 
     private suspend fun getSearchedBooksFirst(keyword: Keyword) {
         bookRepository
-            .fetchBooks(size = 20, keyword = keyword)
+            .fetchBooks(size = _uiState.value?.pageSize ?: 1, keyword = keyword)
             .onSuccess { searchedBooksResult ->
                 if (searchedBooksResult.books.isEmpty()) {
                     setState { copy(status = SearchedBookStatus.NotFound) }
@@ -99,7 +103,7 @@ class SelectBookViewModel(
 
     private suspend fun getSearchedBooksMore(keyword: Keyword) {
         bookRepository
-            .fetchBooks(size = 20, keyword)
+            .fetchBooks(size = _uiState.value?.pageSize ?: 1, keyword)
             .onSuccess { searchedBooksResult ->
                 setState {
                     copy(

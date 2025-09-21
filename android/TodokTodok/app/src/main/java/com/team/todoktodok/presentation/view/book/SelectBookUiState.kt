@@ -7,6 +7,7 @@ import com.team.domain.model.book.map
 import com.team.todoktodok.presentation.view.book.adapter.SearchBooksGroup
 
 data class SelectBookUiState(
+    val pageSize: Int = 0,
     val keyword: Keyword? = null,
     val searchedBooksResult: SearchedBooksResult? = null,
     val status: SearchedBookStatus = SearchedBookStatus.NotStarted,

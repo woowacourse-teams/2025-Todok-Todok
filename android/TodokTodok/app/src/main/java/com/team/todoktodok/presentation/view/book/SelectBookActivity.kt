@@ -52,6 +52,19 @@ class SelectBookActivity : AppCompatActivity() {
         initView(binding, adapter)
         setUpUiState(binding, adapter)
         setUpUiEvent(binding)
+        calculateItemSize()
+    }
+
+    private fun calculateItemSize() {
+        val windowMetrics = windowManager.currentWindowMetrics
+        val bounds = windowMetrics.bounds
+        val screenHeightPx = bounds.height()
+        val metrics = this.resources.displayMetrics
+        val itemHeightPx = (120 * metrics.density).toInt()
+        val visibleCount = screenHeightPx / itemHeightPx
+        val pageSize = visibleCount + 2
+
+        viewModel.changePageSize(pageSize)
     }
 
     private fun initSystemBar(binding: ActivitySelectBookBinding) {
