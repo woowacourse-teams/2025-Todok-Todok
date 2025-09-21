@@ -7,8 +7,8 @@ import com.team.domain.repository.ReplyRepository
 import com.team.todoktodok.CoroutinesTestExtension
 import com.team.todoktodok.InstantTaskExecutorExtension
 import com.team.todoktodok.ext.getOrAwaitValue
-import com.team.todoktodok.presentation.view.discussiondetail.replycreate.ReplyCreateUiEvent
-import com.team.todoktodok.presentation.view.discussiondetail.replycreate.vm.ReplyCreateViewModel
+import com.team.todoktodok.presentation.xml.discussiondetail.replycreate.ReplyCreateUiEvent
+import com.team.todoktodok.presentation.xml.discussiondetail.replycreate.vm.ReplyCreateViewModel
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk

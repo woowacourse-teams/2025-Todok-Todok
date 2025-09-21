@@ -71,6 +71,7 @@ mannodermaus-junit5 = "1.7.0"
 junit-jupiter = "5.12.0"
 kotest-runner-junit5 = "5.9.1"
 mockk = "1.13.8"
+junit = "4.13.2"
 
 [libraries]
 # AndroidX
@@ -144,6 +145,7 @@ mannodermaus-junit5-runner = { group = "de.mannodermaus.junit5", name = "android
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 mockk-android = { module = "io.mockk:mockk-android", version.ref = "mockk" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines-core" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
 
 [bundles]
 androidx = [
@@ -179,6 +181,7 @@ compose-debug = [
 
 compose-test = [
     "compose-ui-test-junit4"
+
 ]
 
 kotlin = [

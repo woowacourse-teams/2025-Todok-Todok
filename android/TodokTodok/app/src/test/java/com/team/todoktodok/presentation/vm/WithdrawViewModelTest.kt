@@ -5,8 +5,8 @@ import com.team.domain.repository.MemberRepository
 import com.team.todoktodok.CoroutinesTestExtension
 import com.team.todoktodok.InstantTaskExecutorExtension
 import com.team.todoktodok.ext.getOrAwaitValue
-import com.team.todoktodok.presentation.view.setting.withdraw.WithdrawUiEvent
-import com.team.todoktodok.presentation.view.setting.withdraw.vm.WithdrawViewModel
+import com.team.todoktodok.presentation.xml.setting.withdraw.WithdrawUiEvent
+import com.team.todoktodok.presentation.xml.setting.withdraw.vm.WithdrawViewModel
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk

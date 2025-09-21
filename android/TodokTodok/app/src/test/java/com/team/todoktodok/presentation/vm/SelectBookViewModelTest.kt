@@ -10,9 +10,9 @@ import com.team.todoktodok.CoroutinesTestExtension
 import com.team.todoktodok.InstantTaskExecutorExtension
 import com.team.todoktodok.ext.getOrAwaitValue
 import com.team.todoktodok.fixture.AladinBookFixtures.books
-import com.team.todoktodok.presentation.view.book.SearchedBookStatus
-import com.team.todoktodok.presentation.view.book.SelectBookUiEvent
-import com.team.todoktodok.presentation.view.book.vm.SelectBookViewModel
+import com.team.todoktodok.presentation.xml.book.SearchedBookStatus
+import com.team.todoktodok.presentation.xml.book.SelectBookUiEvent
+import com.team.todoktodok.presentation.xml.book.vm.SelectBookViewModel
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi

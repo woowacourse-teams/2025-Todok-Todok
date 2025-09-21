@@ -12,10 +12,10 @@ import com.team.domain.repository.TokenRepository
 import com.team.todoktodok.CoroutinesTestExtension
 import com.team.todoktodok.InstantTaskExecutorExtension
 import com.team.todoktodok.ext.getOrAwaitValue
-import com.team.todoktodok.presentation.view.discussiondetail.commentdetail.CommentDetailUiEvent
-import com.team.todoktodok.presentation.view.discussiondetail.commentdetail.vm.CommentDetailViewModel
-import com.team.todoktodok.presentation.view.discussiondetail.commentdetail.vm.CommentDetailViewModel.Companion.KEY_COMMENT_ID
-import com.team.todoktodok.presentation.view.discussiondetail.commentdetail.vm.CommentDetailViewModel.Companion.KEY_DISCUSSION_ID
+import com.team.todoktodok.presentation.xml.discussiondetail.commentdetail.CommentDetailUiEvent
+import com.team.todoktodok.presentation.xml.discussiondetail.commentdetail.vm.CommentDetailViewModel
+import com.team.todoktodok.presentation.xml.discussiondetail.commentdetail.vm.CommentDetailViewModel.Companion.KEY_COMMENT_ID
+import com.team.todoktodok.presentation.xml.discussiondetail.commentdetail.vm.CommentDetailViewModel.Companion.KEY_DISCUSSION_ID
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every

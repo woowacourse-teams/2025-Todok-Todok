@@ -12,8 +12,8 @@ import com.team.domain.repository.TokenRepository
 import com.team.todoktodok.CoroutinesTestExtension
 import com.team.todoktodok.InstantTaskExecutorExtension
 import com.team.todoktodok.ext.getOrAwaitValue
-import com.team.todoktodok.presentation.view.profile.adapter.ProfileItems
-import com.team.todoktodok.presentation.view.profile.vm.ProfileViewModel
+import com.team.todoktodok.presentation.xml.profile.adapter.ProfileItems
+import com.team.todoktodok.presentation.xml.profile.vm.ProfileViewModel
 import io.kotest.matchers.shouldBe
 import io.mockk.coEvery
 import io.mockk.coVerify

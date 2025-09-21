@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/space_20"
     android:layout_marginHorizontal="@dimen/space_12"
-    tools:context=".presentation.view.profile.ProfileActivity">
+    tools:context=".presentation.xml.profile.ProfileActivity">
 
     <ImageView
         android:id="@+id/iv_back"

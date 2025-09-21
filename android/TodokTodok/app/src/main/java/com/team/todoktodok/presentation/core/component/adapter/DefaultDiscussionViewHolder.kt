@@ -3,7 +3,7 @@ package com.team.todoktodok.presentation.core.component.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.team.todoktodok.databinding.ItemDiscussionBinding
-import com.team.todoktodok.presentation.view.discussions.DiscussionUiState
+import com.team.todoktodok.presentation.xml.discussions.DiscussionUiState
 
 class DefaultDiscussionViewHolder private constructor(
     binding: ItemDiscussionBinding,
