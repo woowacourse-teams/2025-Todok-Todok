@@ -6,6 +6,7 @@ spring:
       - submodule/security/aladin.yml
       - submodule/security/jwt.yml
       - submodule/security/aws.yml
+      - submodule/security/firebase.yml
   servlet:
     multipart:
       max-file-size: 5MB

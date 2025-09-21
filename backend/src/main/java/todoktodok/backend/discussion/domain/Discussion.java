@@ -14,6 +14,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 import todoktodok.backend.book.domain.Book;
@@ -25,10 +27,12 @@ import todoktodok.backend.member.domain.Member;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 
 @Entity
+@DynamicInsert
 @SQLRestriction("deleted_at is NULL")
 @SQLDelete(sql = "UPDATE discussion SET deleted_at = NOW() WHERE id = ?")
 public class Discussion extends TimeStamp {
 
+    public static final Long DEFAULT_VIEW_COUNT = 0L;
     public static final int TITLE_MAX_LENGTH = 50;
     public static final int CONTENT_MAX_LENGTH = 2500;
 
@@ -41,6 +45,10 @@ public class Discussion extends TimeStamp {
 
     @Column(nullable = false, length = 2550)
     private String content;
+
+    @Column(nullable = false)
+    @ColumnDefault("0")
+    private Long viewCount;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
@@ -60,7 +68,7 @@ public class Discussion extends TimeStamp {
         validateTitle(title);
         validateContent(content);
 
-        return new Discussion(null, title, content, member, book);
+        return new Discussion(null, title, content, DEFAULT_VIEW_COUNT, member, book);
     }
 
     public boolean isOwnedBy(final Member member) {

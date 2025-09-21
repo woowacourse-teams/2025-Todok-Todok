@@ -46,6 +46,7 @@ CREATE TABLE discussion
     book_id     BIGINT        NOT NULL,
     title       VARCHAR(255)  NOT NULL,
     content     VARCHAR(2048) NOT NULL,
+    view_count        BIGINT DEFAULT 0 NOT NULL,
     FOREIGN KEY (member_id) REFERENCES member (id),
     FOREIGN KEY (book_id) REFERENCES book (id)
 );
@@ -171,4 +172,27 @@ CREATE TABLE refresh_token
     modified_at DATETIME(6) NOT NULL,
     deleted_at  DATETIME(6),
     token       VARCHAR(255) NOT NULL UNIQUE
+);
+
+CREATE TABLE notification_token
+(
+    id          BIGINT AUTO_INCREMENT PRIMARY KEY,
+    created_at  DATETIME(6) NOT NULL,
+    modified_at DATETIME(6) NOT NULL,
+    deleted_at  DATETIME(6),
+    token       VARCHAR(255) NOT NULL UNIQUE,
+    fid         VARCHAR(255) NOT NULL,
+    member_id   BIGINT      NOT NULL
+);
+
+CREATE TABLE discussion_member_view
+(
+    id                BIGINT AUTO_INCREMENT PRIMARY KEY,
+    created_at        DATETIME(6) NOT NULL,
+    modified_at       DATETIME(6) NOT NULL,
+    deleted_at        DATETIME(6),
+    discussion_id     BIGINT NOT NULL,
+    member_id         BIGINT NOT NULL,
+    FOREIGN KEY (discussion_id) REFERENCES discussion (id),
+    FOREIGN KEY (member_id) REFERENCES member (id)
 );
