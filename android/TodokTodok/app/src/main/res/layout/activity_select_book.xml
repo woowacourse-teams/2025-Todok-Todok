@@ -87,6 +87,7 @@
         android:id="@+id/rv_searched_books"
         android:layout_width="match_parent"
         android:layout_height="@dimen/space_0"
+        android:layout_marginTop="@dimen/space_8"
         android:paddingBottom="10dp"
         android:scrollbarFadeDuration="0"
         android:scrollbarStyle="insideOverlay"
