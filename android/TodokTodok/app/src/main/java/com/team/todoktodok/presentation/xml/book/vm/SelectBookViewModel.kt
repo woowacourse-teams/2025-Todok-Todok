@@ -39,6 +39,7 @@ class SelectBookViewModel(
 
     fun updateSelectedBook(position: Int) {
         val selectedBook: SearchedBook? = _uiState.value?.selectedBook(position)
+
         if (selectedBook == null) {
             _uiEvent.setValue(SelectBookUiEvent.ShowException(BookException.EmptySelectedBook))
             return
@@ -68,6 +69,7 @@ class SelectBookViewModel(
             }
         }
     }
+
 
     private fun updateSearchedBooks(value: String) {
         setState { copy(status = SearchedBookStatus.Loading, keyword = Keyword(value)) }

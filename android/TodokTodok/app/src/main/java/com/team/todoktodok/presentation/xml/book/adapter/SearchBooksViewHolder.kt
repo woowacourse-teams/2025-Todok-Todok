@@ -18,6 +18,7 @@ class SearchBooksViewHolder private constructor(
     }
 
     fun bind(book: SearchedBook) {
+
         binding.apply {
             tvBookTitle.text = book.mainTitle
             tvBookAuthor.text = book.author

@@ -72,6 +72,7 @@ class SelectBookActivity : AppCompatActivity() {
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             val imeBottom = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
+          
             initSystemBarPadding(v, binding, systemBars)
             initSystmeBarRvPadding(binding, imeBottom)
             initSystemBarEmptyViewPadding(binding, imeBottom)
@@ -115,7 +116,7 @@ class SelectBookActivity : AppCompatActivity() {
             systemBars.bottom,
         )
     }
-
+    
     private fun initView(
         binding: ActivitySelectBookBinding,
         adapter: SearchBooksAdapter,
@@ -273,6 +274,7 @@ class SelectBookActivity : AppCompatActivity() {
     }
 
     private fun navigateToCreateDiscussionRoom(book: SearchedBook) {
+
         val serializationBook: SerializationBook = book.toSerialization()
         val intent =
             CreateDiscussionRoomActivity.Intent(
