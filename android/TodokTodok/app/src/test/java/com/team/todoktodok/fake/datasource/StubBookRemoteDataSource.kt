@@ -7,6 +7,8 @@ import com.team.domain.model.exception.TodokTodokExceptions
 import com.team.todoktodok.data.datasource.book.BookRemoteDataSource
 import com.team.todoktodok.data.network.request.BookRequest
 import com.team.todoktodok.data.network.response.book.SearchedBookResponse
+import com.team.todoktodok.data.network.response.book.SearchedBookResultResponse
+import com.team.todoktodok.data.network.response.latest.PageInfoResponse
 import com.team.todoktodok.fixture.SearchedBooksFixtures
 
 class StubBookRemoteDataSource : BookRemoteDataSource {
@@ -24,12 +26,36 @@ class StubBookRemoteDataSource : BookRemoteDataSource {
     var shouldFailFetchBooks = false
     var isInvalidKeyword = false
 
-    override suspend fun fetchBooks(keyword: String): NetworkResult<List<SearchedBookResponse>> {
+    override suspend fun fetchBooks(
+        size: Int,
+        cursor: String?,
+        keyword: String,
+    ): NetworkResult<SearchedBookResultResponse> {
         callCount++
         if (shouldFailFetchBooks) return NetworkResult.Failure(TodokTodokExceptions.ConnectException)
-        if (isInvalidKeyword) return NetworkResult.Success(emptyList<SearchedBookResponse>())
+        if (isInvalidKeyword) {
+            return NetworkResult.Success(
+                SearchedBookResultResponse(
+                    items = emptyList<SearchedBookResponse>(),
+                    pageInfo =
+                        PageInfoResponse(
+                            hasNext = false,
+                            nextCursor = null,
+                        ),
+                    totalSize = 0,
+                ),
+            )
+        }
         return NetworkResult.Success(
-            books,
+            SearchedBookResultResponse(
+                items = books,
+                pageInfo =
+                    PageInfoResponse(
+                        hasNext = false,
+                        nextCursor = null,
+                    ),
+                totalSize = 10,
+            ),
         )
     }
 
