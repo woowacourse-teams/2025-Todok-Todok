@@ -47,8 +47,8 @@ public class Discussion extends TimeStamp {
     private String content;
 
     @Column(nullable = false)
-    @ColumnDefault("'0'")
-    private Long view;
+    @ColumnDefault("0")
+    private Long viewCount;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
