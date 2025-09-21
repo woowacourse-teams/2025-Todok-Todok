@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
-        tools:context=".presentation.view.discussiondetail.DiscussionDetailActivity">
+        tools:context=".presentation.xml.discussiondetail.DiscussionDetailActivity">
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/abl_discussion_detail"

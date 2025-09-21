@@ -9,7 +9,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withHint
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.team.todoktodok.R
-import com.team.todoktodok.presentation.view.book.SelectBookActivity
+import com.team.todoktodok.presentation.xml.book.SelectBookActivity
 import org.junit.Before
 import org.junit.Test
 

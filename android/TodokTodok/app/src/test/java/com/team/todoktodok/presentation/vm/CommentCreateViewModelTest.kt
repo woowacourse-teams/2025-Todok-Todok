@@ -8,8 +8,8 @@ import com.team.domain.repository.CommentRepository
 import com.team.todoktodok.CoroutinesTestExtension
 import com.team.todoktodok.InstantTaskExecutorExtension
 import com.team.todoktodok.ext.getOrAwaitValue
-import com.team.todoktodok.presentation.view.discussiondetail.commentcreate.CommentCreateUiEvent
-import com.team.todoktodok.presentation.view.discussiondetail.commentcreate.vm.CommentCreateViewModel
+import com.team.todoktodok.presentation.xml.discussiondetail.commentcreate.CommentCreateUiEvent
+import com.team.todoktodok.presentation.xml.discussiondetail.commentcreate.vm.CommentCreateViewModel
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every

@@ -1,5 +1,6 @@
 package com.team.todoktodok.presentation.core
 
+import com.team.domain.model.exception.BlockException
 import com.team.domain.model.exception.BookAuthorException
 import com.team.domain.model.exception.BookException
 import com.team.domain.model.exception.BookImageException
@@ -8,34 +9,39 @@ import com.team.domain.model.exception.BooksExceptions
 import com.team.domain.model.exception.CommentExceptions
 import com.team.domain.model.exception.DiscussionExceptions
 import com.team.domain.model.exception.ISBNException
+import com.team.domain.model.exception.ImageLoadExceptions
 import com.team.domain.model.exception.KeywordException
+import com.team.domain.model.exception.NicknameException
 import com.team.domain.model.exception.ReplyExceptions
+import com.team.domain.model.exception.ReportException
 import com.team.domain.model.exception.SearchedBooksTotalSizeException
+import com.team.domain.model.exception.ReportException
+import com.team.domain.model.exception.SignUpException
 import com.team.domain.model.exception.TodokTodokExceptions
 import com.team.todoktodok.R
 
 class ExceptionMessageConverter {
     operator fun invoke(exception: TodokTodokExceptions): Int =
         when (exception) {
-            is TodokTodokExceptions.NicknameException.DuplicateNicknameException ->
+            is NicknameException.DuplicateNicknameException ->
                 R.string.error_duplicate_nickname
 
-            is TodokTodokExceptions.NicknameException.InvalidNicknameLengthException ->
+            is NicknameException.InvalidNicknameLengthException ->
                 R.string.error_invalid_nickname_length
 
-            is TodokTodokExceptions.NicknameException.EmptyNicknameLengthException ->
+            is NicknameException.EmptyNicknameLengthException ->
                 R.string.error_empty_nickname
 
-            is TodokTodokExceptions.SignUpException.DuplicateEmailException ->
+            is SignUpException.DuplicateEmailException ->
                 R.string.error_duplicate_email
 
-            is TodokTodokExceptions.SignUpException.InvalidTokenException ->
+            is SignUpException.InvalidTokenException ->
                 R.string.error_invalid_token
 
-            is TodokTodokExceptions.SignUpException.InvalidFormatEmailException ->
+            is SignUpException.InvalidFormatEmailException ->
                 R.string.error_invalid_email_format
 
-            is TodokTodokExceptions.SignUpException.ProfileImageNotExistException ->
+            is SignUpException.ProfileImageNotExistException ->
                 R.string.error_profile_image_not_exist
 
             is TodokTodokExceptions.HttpExceptions.AuthorizationException ->
@@ -83,10 +89,10 @@ class ExceptionMessageConverter {
             TodokTodokExceptions.EmptyBodyException ->
                 R.string.error_empty_body
 
-            TodokTodokExceptions.BlockException.AlreadyBlockedException ->
+            BlockException.AlreadyBlockedException ->
                 R.string.error_already_blocked
 
-            TodokTodokExceptions.ReportException.AlreadyReportedException ->
+            ReportException.AlreadyReportedException ->
                 R.string.error_already_reported
 
             DiscussionExceptions.AlreadyReported -> R.string.error_already_reported
@@ -129,5 +135,7 @@ class ExceptionMessageConverter {
             KeywordException.EmptyKeyword -> R.string.select_book_error_empty_keyword
 
             SearchedBooksTotalSizeException.InvalidSize -> R.string.select_book_error_searched_book_total_size
+
+            ImageLoadExceptions.UriInputStreamNotFoundException -> R.string.error_uri_input_stream_not_found
         }
 }

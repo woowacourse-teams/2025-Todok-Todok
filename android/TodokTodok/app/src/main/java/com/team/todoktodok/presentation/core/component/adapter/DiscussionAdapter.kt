@@ -6,7 +6,7 @@ import com.team.todoktodok.presentation.core.component.adapter.DefaultDiscussion
 import com.team.todoktodok.presentation.core.component.adapter.QueryHighlightingViewHolder.Companion.QueryHighlightingViewHolder
 import com.team.todoktodok.presentation.core.component.adapter.ResizingDiscussionViewHolder.Companion.ResizingDiscussionViewHolder
 import com.team.todoktodok.presentation.core.component.adapter.WriterHiddenDiscussionViewHolder.Companion.WriterHiddenDiscussionViewHolder
-import com.team.todoktodok.presentation.view.discussions.DiscussionUiState
+import com.team.todoktodok.presentation.xml.discussions.DiscussionUiState
 
 class DiscussionAdapter(
     private val handler: Handler,

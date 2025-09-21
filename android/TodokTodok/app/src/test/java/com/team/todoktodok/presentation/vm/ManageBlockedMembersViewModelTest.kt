@@ -7,7 +7,7 @@ import com.team.todoktodok.CoroutinesTestExtension
 import com.team.todoktodok.InstantTaskExecutorExtension
 import com.team.todoktodok.data.core.ext.toLocalDate
 import com.team.todoktodok.ext.getOrAwaitValue
-import com.team.todoktodok.presentation.view.setting.manage.vm.ManageBlockedMembersViewModel
+import com.team.todoktodok.presentation.xml.setting.manage.vm.ManageBlockedMembersViewModel
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk

@@ -6,7 +6,7 @@ import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ItemDiscussionBinding
 import com.team.todoktodok.presentation.core.ext.loadCircleImage
 import com.team.todoktodok.presentation.core.ext.loadImage
-import com.team.todoktodok.presentation.view.discussions.DiscussionUiState
+import com.team.todoktodok.presentation.xml.discussions.DiscussionUiState
 
 abstract class BaseDiscussionViewHolder(
     protected val binding: ItemDiscussionBinding,

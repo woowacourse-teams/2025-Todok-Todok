@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:paddingLeft="@dimen/space_24"
     android:paddingRight="@dimen/space_24"
-    tools:context=".presentation.view.discussion.create.CreateDiscussionRoomActivity">
+    tools:context=".presentation.xml.discussion.create.CreateDiscussionRoomActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/topBar_create_discussion_room"

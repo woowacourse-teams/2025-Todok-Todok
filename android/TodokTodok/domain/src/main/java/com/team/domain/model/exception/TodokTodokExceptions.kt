@@ -1,12 +1,5 @@
 package com.team.domain.model.exception
 
-import com.team.domain.model.exception.TodokTodokExceptions.NicknameException.DuplicateNicknameException
-import com.team.domain.model.exception.TodokTodokExceptions.NicknameException.EmptyNicknameLengthException
-import com.team.domain.model.exception.TodokTodokExceptions.NicknameException.InvalidNicknameLengthException
-import com.team.domain.model.exception.TodokTodokExceptions.SignUpException.DuplicateEmailException
-import com.team.domain.model.exception.TodokTodokExceptions.SignUpException.InvalidFormatEmailException
-import com.team.domain.model.exception.TodokTodokExceptions.SignUpException.InvalidTokenException
-import com.team.domain.model.exception.TodokTodokExceptions.SignUpException.ProfileImageNotExistException
 import kotlinx.serialization.ExperimentalSerializationApi
 
 /**
@@ -65,53 +58,6 @@ sealed class TodokTodokExceptions : Throwable() {
         data object ServerException : HttpExceptions()
     }
 
-    /**
-     * 닉네임 관련 도메인 예외
-     */
-    sealed class NicknameException(
-        override val message: String,
-    ) : TodokTodokExceptions() {
-        data object DuplicateNicknameException : NicknameException("[ERROR] 이미 존재하는 닉네임입니다")
-
-        data object InvalidNicknameLengthException :
-            NicknameException("[ERROR] 닉네임은 1자 이상, 8자 이하여야 합니다")
-
-        data object EmptyNicknameLengthException : NicknameException("[ERROR] 닉네임을 입력해주세요")
-    }
-
-    /**
-     * 회원가입 관련 도메인 예외
-     */
-    sealed class SignUpException(
-        override val message: String,
-    ) : TodokTodokExceptions() {
-        data object DuplicateEmailException : SignUpException("[ERROR] 이미 가입된 이메일입니다")
-
-        data object InvalidTokenException : SignUpException("[ERROR] 소셜 로그인을 하지 않은 이메일입니다")
-
-        data object InvalidFormatEmailException : SignUpException("[ERROR] 올바른 이메일 형식을 입력해주세요")
-
-        data object ProfileImageNotExistException : SignUpException("[ERROR] 프로필 이미지를 입력해주세요")
-    }
-
-    /**
-     * 신고 관련 도메인 예외
-     */
-    sealed class ReportException(
-        override val message: String,
-    ) : TodokTodokExceptions() {
-        data object AlreadyReportedException : ReportException("[ERROR] 이미 신고한 회원입니다")
-    }
-
-    /**
-     * 차단 관련 도메인 예외
-     */
-    sealed class BlockException(
-        override val message: String,
-    ) : TodokTodokExceptions() {
-        data object AlreadyBlockedException : BlockException("[ERROR] 이미 차단한 회원입니다")
-    }
-
     companion object {
         /**
          * 서버 HTTP 상태 코드와 메시지를 기반으로 [TodokTodokExceptions] 객체를 생성
@@ -141,15 +87,15 @@ sealed class TodokTodokExceptions : Throwable() {
         private fun fromTokdokTodokExceptions(message: String?): TodokTodokExceptions =
             when (message) {
                 // 닉네임 관련 예외
-                DuplicateNicknameException.message -> DuplicateNicknameException
-                InvalidNicknameLengthException.message -> InvalidNicknameLengthException
-                EmptyNicknameLengthException.message -> EmptyNicknameLengthException
+                NicknameException.DuplicateNicknameException.message -> NicknameException.DuplicateNicknameException
+                NicknameException.InvalidNicknameLengthException.message -> NicknameException.InvalidNicknameLengthException
+                NicknameException.EmptyNicknameLengthException.message -> NicknameException.EmptyNicknameLengthException
 
                 // 회원가입 관련 예외
-                DuplicateEmailException.message -> DuplicateEmailException
-                InvalidTokenException.message -> InvalidTokenException
-                InvalidFormatEmailException.message -> InvalidFormatEmailException
-                ProfileImageNotExistException.message -> ProfileImageNotExistException
+                SignUpException.DuplicateEmailException.message -> SignUpException.DuplicateEmailException
+                SignUpException.InvalidTokenException.message -> SignUpException.InvalidTokenException
+                SignUpException.InvalidFormatEmailException.message -> SignUpException.InvalidFormatEmailException
+                SignUpException.ProfileImageNotExistException.message -> SignUpException.ProfileImageNotExistException
 
                 // 신고 관련 예외
                 ReportException.AlreadyReportedException.message -> ReportException.AlreadyReportedException

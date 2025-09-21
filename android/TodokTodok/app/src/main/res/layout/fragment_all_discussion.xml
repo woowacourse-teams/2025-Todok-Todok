@@ -8,6 +8,6 @@
         android:id="@+id/fcv_all_discussion"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:name="com.team.todoktodok.presentation.view.discussions.latest.LatestDiscussionsFragment"/>
+        tools:name="com.team.todoktodok.presentation.xml.discussions.latest.LatestDiscussionsFragment"/>
 </FrameLayout>
 

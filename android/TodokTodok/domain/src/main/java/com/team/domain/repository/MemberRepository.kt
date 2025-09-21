@@ -2,6 +2,7 @@ package com.team.domain.repository
 
 import com.team.domain.model.Book
 import com.team.domain.model.Discussion
+import com.team.domain.model.ImagePayload
 import com.team.domain.model.Support
 import com.team.domain.model.exception.NetworkResult
 import com.team.domain.model.member.BlockedMember
@@ -38,6 +39,8 @@ interface MemberRepository {
         nickname: String,
         message: String,
     ): NetworkResult<Unit>
+
+    suspend fun modifyProfileImage(imagePayload: ImagePayload): NetworkResult<String>
 
     suspend fun getBlockedMembers(): NetworkResult<List<BlockedMember>>
 

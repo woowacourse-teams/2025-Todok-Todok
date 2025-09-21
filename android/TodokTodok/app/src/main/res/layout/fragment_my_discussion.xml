@@ -5,7 +5,7 @@
     android:id="@+id/fl_my_discussion"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation.view.discussions.my.MyDiscussionFragment">
+    tools:context=".presentation.xml.discussions.my.MyDiscussionFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_discussions"

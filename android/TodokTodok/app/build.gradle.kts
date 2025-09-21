@@ -90,13 +90,12 @@ android {
     buildFeatures {
         viewBinding = true
         buildConfig = true
-        compose = true
     }
 }
 
 dependencies {
     implementation(project(":domain"))
-    implementation(platform(libs.androidx.compose.bom))
+
     implementation(libs.bundles.androidx)
     implementation(libs.bundles.kotlin)
     implementation(libs.bundles.network)
@@ -107,7 +106,13 @@ dependencies {
     testImplementation(libs.androidx.core.testing)
     ksp(libs.androidx.room.compiler)
 
-    androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.bundles.android.test)
     androidTestRuntimeOnly(libs.mannodermaus.junit5.runner)
+
+    implementation(platform(libs.compose.bom))
+    implementation(libs.bundles.compose)
+
+    androidTestImplementation(platform(libs.compose.bom))
+    androidTestImplementation(libs.bundles.compose.test)
+    debugImplementation(libs.bundles.compose.debug)
 }

@@ -2,3 +2,6 @@ root = true
 
 [*]
 ktlint_function_naming_ignore_when_annotated_with = Composable
+
+[{*.kt,*.kts}]
+ktlint_standard_package-name = disabled

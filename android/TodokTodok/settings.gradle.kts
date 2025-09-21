@@ -22,3 +22,5 @@ dependencyResolutionManagement {
 rootProject.name = "TodokTodok"
 include(":app")
 include(":domain")
+include(":ui-compose")
+include(":core")
