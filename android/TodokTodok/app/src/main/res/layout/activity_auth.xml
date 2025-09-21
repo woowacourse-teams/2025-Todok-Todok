@@ -6,11 +6,11 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation.view.auth.AuthActivity">
+    tools:context=".presentation.xml.auth.AuthActivity">
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fcv_container_auth"
-        android:name="com.team.todoktodok.presentation.view.auth.login.LoginFragment"
+        android:name="com.team.todoktodok.presentation.xml.auth.login.LoginFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"

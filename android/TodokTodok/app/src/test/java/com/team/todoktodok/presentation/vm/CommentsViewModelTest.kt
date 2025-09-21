@@ -10,8 +10,8 @@ import com.team.todoktodok.CoroutinesTestExtension
 import com.team.todoktodok.InstantTaskExecutorExtension
 import com.team.todoktodok.ext.getOrAwaitValue
 import com.team.todoktodok.fixture.COMMENTS
-import com.team.todoktodok.presentation.view.discussiondetail.comments.CommentsUiEvent
-import com.team.todoktodok.presentation.view.discussiondetail.comments.vm.CommentsViewModel
+import com.team.todoktodok.presentation.xml.discussiondetail.comments.CommentsUiEvent
+import com.team.todoktodok.presentation.xml.discussiondetail.comments.vm.CommentsViewModel
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi

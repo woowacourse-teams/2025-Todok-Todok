@@ -9,9 +9,9 @@ import com.team.todoktodok.CoroutinesTestExtension
 import com.team.todoktodok.InstantTaskExecutorExtension
 import com.team.todoktodok.ext.getOrAwaitValue
 import com.team.todoktodok.fixture.DISCUSSIONS
-import com.team.todoktodok.presentation.view.discussiondetail.DiscussionDetailUiEvent
-import com.team.todoktodok.presentation.view.discussiondetail.vm.DiscussionDetailViewModel
-import com.team.todoktodok.presentation.view.discussiondetail.vm.DiscussionDetailViewModel.Companion.KEY_DISCUSSION_ID
+import com.team.todoktodok.presentation.xml.discussiondetail.DiscussionDetailUiEvent
+import com.team.todoktodok.presentation.xml.discussiondetail.vm.DiscussionDetailViewModel
+import com.team.todoktodok.presentation.xml.discussiondetail.vm.DiscussionDetailViewModel.Companion.KEY_DISCUSSION_ID
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi

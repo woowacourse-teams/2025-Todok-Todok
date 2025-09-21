@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.serialization)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.kotlin.compose)
     id("kotlin-parcelize")
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
@@ -94,7 +95,6 @@ android {
 
 dependencies {
     implementation(project(":domain"))
-    implementation(project(":ui-compose"))
 
     implementation(libs.bundles.androidx)
     implementation(libs.bundles.kotlin)
@@ -108,4 +108,11 @@ dependencies {
 
     androidTestImplementation(libs.bundles.android.test)
     androidTestRuntimeOnly(libs.mannodermaus.junit5.runner)
+
+    implementation(platform(libs.compose.bom))
+    implementation(libs.bundles.compose)
+
+    androidTestImplementation(platform(libs.compose.bom))
+    androidTestImplementation(libs.bundles.compose.test)
+    debugImplementation(libs.bundles.compose.debug)
 }

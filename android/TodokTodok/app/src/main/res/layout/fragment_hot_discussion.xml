@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:paddingTop="@dimen/space_12"
     android:paddingHorizontal="@dimen/space_12"
-    tools:context=".presentation.view.discussions.hot.HotDiscussionFragment">
+    tools:context=".presentation.xml.discussions.hot.HotDiscussionFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_discussions"

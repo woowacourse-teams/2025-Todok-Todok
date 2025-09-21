@@ -1,5 +1,6 @@
 package com.team.todoktodok.data.network.response.latest
 
+import com.team.domain.model.Discussion
 import com.team.domain.model.latest.LatestDiscussion
 import com.team.domain.model.latest.LatestDiscussionPage
 import com.team.todoktodok.data.core.ext.toLocalDateTime
@@ -14,16 +15,16 @@ data class LatestDiscussionsResponse(
     fun toDomain(): LatestDiscussionPage {
         val discussion =
             items.map {
-                LatestDiscussion(
-                    author = it.member.toDomain(),
+                Discussion(
+                    id = it.discussionId,
+                    writer = it.member.toDomain(),
                     book = it.book.toDomain(),
                     commentCount = it.commentCount,
-                    content = it.discussionOpinion,
-                    createdAt = it.createdAt.toLocalDateTime(),
-                    discussionId = it.discussionId,
+                    discussionOpinion = it.discussionOpinion,
+                    discussionTitle = it.discussionTitle,
+                    createAt = it.createdAt.toLocalDateTime(),
                     isLikedByMe = it.isLikedByMe,
                     likeCount = it.likeCount,
-                    title = it.discussionTitle,
                 )
             }
 
