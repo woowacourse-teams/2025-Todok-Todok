@@ -90,6 +90,10 @@ public class Discussion extends TimeStamp {
         return this.id.equals(discussionId);
     }
 
+    public void updateViewCount() {
+        this.viewCount++;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
