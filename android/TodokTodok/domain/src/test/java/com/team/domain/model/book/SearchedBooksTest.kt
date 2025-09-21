@@ -112,4 +112,18 @@ class SearchedBooksTest {
         // then
         assertEquals(actual, expected)
     }
+
+    @Test
+    fun `plus는 서로 다른 SearchedBooks의 요소를 순서를 보장하면서 더한다`() {
+        // given
+        val books = SearchedBooksFixtures.booksExceptOne
+        val book = SearchedBooksFixtures.book
+
+        // when
+        val actual = books.plus(book)
+        val expected = SearchedBooksFixtures.books
+
+        // then
+        assertEquals(expected.map { it }, actual.map { it })
+    }
 }
