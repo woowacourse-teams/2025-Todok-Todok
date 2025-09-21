@@ -12,6 +12,7 @@ import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.graphics.Insets
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -58,26 +59,48 @@ class SelectBookActivity : AppCompatActivity() {
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             val imeBottom = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
-            v.setPadding(
-                binding.main.paddingLeft,
-                systemBars.top,
-                binding.main.paddingRight,
-                systemBars.bottom,
-            )
-            binding.rvSearchedBooks.setPadding(
-                binding.rvSearchedBooks.paddingLeft,
-                binding.rvSearchedBooks.paddingTop,
-                binding.rvSearchedBooks.paddingRight,
-                imeBottom,
-            )
-            binding.nsvEmptySearchResult.setPadding(
-                binding.nsvEmptySearchResult.paddingLeft,
-                binding.nsvEmptySearchResult.paddingTop,
-                binding.nsvEmptySearchResult.paddingRight,
-                imeBottom,
-            )
+            initSystemBarPadding(v, binding, systemBars)
+            initSystmeBarRvPadding(binding, imeBottom)
+            initSystemBarEmptyViewPadding(binding, imeBottom)
             insets
         }
+    }
+
+    private fun initSystemBarEmptyViewPadding(
+        binding: ActivitySelectBookBinding,
+        imeBottom: Int,
+    ) {
+        binding.nsvEmptySearchResult.setPadding(
+            binding.nsvEmptySearchResult.paddingLeft,
+            binding.nsvEmptySearchResult.paddingTop,
+            binding.nsvEmptySearchResult.paddingRight,
+            imeBottom,
+        )
+    }
+
+    private fun initSystmeBarRvPadding(
+        binding: ActivitySelectBookBinding,
+        imeBottom: Int,
+    ) {
+        binding.rvSearchedBooks.setPadding(
+            binding.rvSearchedBooks.paddingLeft,
+            binding.rvSearchedBooks.paddingTop,
+            binding.rvSearchedBooks.paddingRight,
+            imeBottom,
+        )
+    }
+
+    private fun initSystemBarPadding(
+        v: View,
+        binding: ActivitySelectBookBinding,
+        systemBars: Insets,
+    ) {
+        v.setPadding(
+            binding.main.paddingLeft,
+            systemBars.top,
+            binding.main.paddingRight,
+            systemBars.bottom,
+        )
     }
 
     private fun initView(
@@ -92,24 +115,34 @@ class SelectBookActivity : AppCompatActivity() {
             etSearchKeyword.setOnEditorActionListener { view, actionId, _ ->
                 handleSearchAction(view, actionId)
             }
-            rvSearchedBooks.adapter = adapter
-            rvSearchedBooks.addOnScrollListener(
-                object : RecyclerView.OnScrollListener() {
-                    override fun onScrolled(
-                        recyclerView: RecyclerView,
-                        dx: Int,
-                        dy: Int,
-                    ) {
-                        if (dy <= 0) return
-                        val lm = recyclerView.layoutManager as? LinearLayoutManager ?: return
-                        val lastVisible = lm.findLastVisibleItemPosition()
-                        if (lastVisible >= lm.itemCount - 3) {
-                            viewModel.addSearchedBooks()
-                        }
-                    }
-                },
-            )
+            initRvView(adapter)
         }
+    }
+
+    private fun ActivitySelectBookBinding.initRvView(adapter: SearchBooksAdapter) {
+        rvSearchedBooks.apply {
+            this.adapter = adapter
+            addOnScrollListener()
+        }
+    }
+
+    private fun RecyclerView.addOnScrollListener() {
+        addOnScrollListener(
+            object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(
+                    recyclerView: RecyclerView,
+                    dx: Int,
+                    dy: Int,
+                ) {
+                    if (dy <= 0) return
+                    val lm = recyclerView.layoutManager as? LinearLayoutManager ?: return
+                    val lastVisible = lm.findLastVisibleItemPosition()
+                    if (lastVisible >= lm.itemCount - 3) {
+                        viewModel.addSearchedBooks()
+                    }
+                }
+            },
+        )
     }
 
     private fun handleSearchAction(
