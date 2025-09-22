@@ -11,9 +11,9 @@ import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentSignupBinding
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
+import com.team.todoktodok.presentation.view.discussions.DiscussionsActivity
 import com.team.todoktodok.presentation.xml.auth.signup.vm.SignUpViewModel
 import com.team.todoktodok.presentation.xml.auth.signup.vm.SignUpViewModelFactory
-import com.team.todoktodok.presentation.xml.discussions.DiscussionsActivity
 
 class SignUpFragment : Fragment(R.layout.fragment_signup) {
     private val viewModel: SignUpViewModel by viewModels {
