@@ -15,8 +15,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.Insets
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.team.domain.model.book.Keyword
 import com.team.domain.model.book.SearchedBook
 import com.team.domain.model.book.length
@@ -25,6 +23,7 @@ import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivitySelectBookBinding
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
+import com.team.todoktodok.presentation.core.ext.addOnScrollEndListener
 import com.team.todoktodok.presentation.xml.book.adapter.SearchBooksAdapter
 import com.team.todoktodok.presentation.xml.book.vm.SelectBookViewModel
 import com.team.todoktodok.presentation.xml.book.vm.SelectBookViewModelFactory
@@ -136,27 +135,10 @@ class SelectBookActivity : AppCompatActivity() {
     private fun ActivitySelectBookBinding.initRvView(adapter: SearchBooksAdapter) {
         rvSearchedBooks.apply {
             this.adapter = adapter
-            addOnScrollListener()
+            addOnScrollEndListener(
+                callback = { viewModel.addSearchedBooks() }
+            )
         }
-    }
-
-    private fun RecyclerView.addOnScrollListener() {
-        addOnScrollListener(
-            object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(
-                    recyclerView: RecyclerView,
-                    dx: Int,
-                    dy: Int,
-                ) {
-                    if (dy <= 0) return
-                    val lm = recyclerView.layoutManager as? LinearLayoutManager ?: return
-                    val lastVisible = lm.findLastVisibleItemPosition()
-                    if (lastVisible >= lm.itemCount - 3) {
-                        viewModel.addSearchedBooks()
-                    }
-                }
-            },
-        )
     }
 
     private fun handleSearchAction(
