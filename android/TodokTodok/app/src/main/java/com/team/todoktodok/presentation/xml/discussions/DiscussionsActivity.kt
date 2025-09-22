@@ -311,12 +311,12 @@ class DiscussionsActivity : AppCompatActivity() {
 
     private fun DiscussionsActivity.triggerToMoveDiscussionDetail(notification: Notification?) {
         if (notification != null) {
-            when (notification.type) {
+            when (notification.notificationContent.type) {
                 is NotificationType.Like -> {
                     val detailIntent =
                         DiscussionDetailActivity.Intent(
                             this,
-                            notification.discussionId,
+                            notification.notificationContent.discussionId,
                         )
                     startActivity(detailIntent)
                 }
@@ -325,7 +325,7 @@ class DiscussionsActivity : AppCompatActivity() {
                     val detailIntent =
                         DiscussionDetailActivity.Intent(
                             this,
-                            notification.discussionId,
+                            notification.notificationContent.discussionId,
                         )
                     startActivity(detailIntent)
                 }
@@ -334,7 +334,7 @@ class DiscussionsActivity : AppCompatActivity() {
                     val detailIntent =
                         DiscussionDetailActivity.Intent(
                             this,
-                            notification.discussionId,
+                            notification.notificationContent.discussionId,
                         )
                     startActivity(detailIntent)
                 }
