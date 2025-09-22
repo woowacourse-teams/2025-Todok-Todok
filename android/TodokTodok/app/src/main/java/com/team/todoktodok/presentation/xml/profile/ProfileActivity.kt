@@ -22,7 +22,7 @@ import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.A
 import com.team.todoktodok.presentation.core.component.ReportUserDialog
 import com.team.todoktodok.presentation.core.ext.getSerializableCompat
 import com.team.todoktodok.presentation.core.ext.registerReportResultListener
-import com.team.todoktodok.presentation.xml.discussions.DiscussionsActivity
+import com.team.todoktodok.presentation.view.discussions.DiscussionsActivity
 import com.team.todoktodok.presentation.xml.profile.adapter.ContentPagerAdapter
 import com.team.todoktodok.presentation.xml.profile.adapter.ProfileAdapter
 import com.team.todoktodok.presentation.xml.profile.vm.ProfileViewModel
