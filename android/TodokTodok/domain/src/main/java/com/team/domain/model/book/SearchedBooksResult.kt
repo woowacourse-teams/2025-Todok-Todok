@@ -21,7 +21,7 @@ data class SearchedBooksResult(
     }
 
     operator fun plus(searchedBooksResult: SearchedBooksResult): SearchedBooksResult {
-        val totalSearchedBooks = this.books + books
+        val totalSearchedBooks = this.books + searchedBooksResult.books
         return SearchedBooksResult(
             books = totalSearchedBooks,
             hasNext = searchedBooksResult.hasNext,
