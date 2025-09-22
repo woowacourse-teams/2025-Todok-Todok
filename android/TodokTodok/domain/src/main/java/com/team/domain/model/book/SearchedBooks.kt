@@ -1,6 +1,6 @@
 package com.team.domain.model.book
 
-class SearchedBooks(
+data class SearchedBooks(
     val value: List<SearchedBook>,
 ) {
     val size get() = value.size
@@ -17,4 +17,5 @@ class SearchedBooks(
     }
 }
 
-inline fun <R> SearchedBooks.map(transform: (SearchedBook) -> R): List<R> = this.value.map(transform)
+inline fun <R> SearchedBooks.map(transform: (SearchedBook) -> R): List<R> =
+    this.value.map(transform)
