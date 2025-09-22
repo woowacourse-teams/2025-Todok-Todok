@@ -1,12 +1,11 @@
 package com.team.todoktodok.presentation.view.serialization
 
 import android.os.Parcelable
-import com.team.domain.model.notification.Notification
+import com.team.domain.model.notification.NotificationContent
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-class SerializationNotification(
-    val id: Long,
+class SerializationNotificationContent(
     val discussionId: Long,
     val commentId: Long?,
     val replyId: Long?,
@@ -15,11 +14,10 @@ class SerializationNotification(
     val content: String,
     val type: SerializationNotificationType,
     val target: SerializationNotificationTarget,
-    val receivedAt: Long = System.currentTimeMillis(),
+    val createAt: Long = System.currentTimeMillis(),
 ) : Parcelable {
-    fun toDomain(): Notification =
-        Notification(
-            id = id,
+    fun toDomain(): NotificationContent =
+        NotificationContent(
             discussionId = discussionId,
             commentId = commentId,
             replyId = replyId,
@@ -31,9 +29,8 @@ class SerializationNotification(
         )
 }
 
-fun Notification.toSerialization(): SerializationNotification =
-    SerializationNotification(
-        id = id,
+fun NotificationContent.toSerialization(): SerializationNotificationContent =
+    SerializationNotificationContent(
         discussionId = discussionId,
         commentId = commentId,
         replyId = replyId,

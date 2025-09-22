@@ -15,12 +15,12 @@ class NotificationViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(notification: Notification) {
         binding.apply {
-            tvNickname.text = notification.nickname.value
-            tvDiscussionTitle.text = notification.discussionTitle
-            tvContent.text = notification.content
-            tvDate.text = notification.receivedAt.formatKorean()
+            tvNickname.text = notification.notificationContent.nickname.value
+            tvNickname.text = notification.notificationContent.discussionTitle
+            tvContent.text = notification.notificationContent.content
+            tvDate.text = notification.createdAt.formatKorean()
         }
-        when (notification.type) {
+        when (notification.notificationContent.type) {
             is NotificationType.Like -> {
                 binding.apply {
                     tvType.text = "좋아요"
