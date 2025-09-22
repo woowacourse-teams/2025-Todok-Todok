@@ -52,10 +52,6 @@ class FirebaseAdapter : FirebaseMessagingService() {
                     putExtra("notification", notification.toSerialization())
                 }
 
-            CoroutineScope(Dispatchers.IO).launch {
-                notificationRepository.saveNotification(notification)
-            }
-
             val pendingIntent =
                 PendingIntent.getActivity(
                     this,
@@ -78,12 +74,12 @@ class FirebaseAdapter : FirebaseMessagingService() {
 
             if (NotificationManagerCompat.from(this).areNotificationsEnabled() &&
                 (
-                    Build.VERSION.SDK_INT < 33 ||
-                        ActivityCompat.checkSelfPermission(
-                            this,
-                            Manifest.permission.POST_NOTIFICATIONS,
-                        ) == PackageManager.PERMISSION_GRANTED
-                )
+                        Build.VERSION.SDK_INT < 33 ||
+                                ActivityCompat.checkSelfPermission(
+                                    this,
+                                    Manifest.permission.POST_NOTIFICATIONS,
+                                ) == PackageManager.PERMISSION_GRANTED
+                        )
             ) {
                 NotificationManagerCompat
                     .from(this)
