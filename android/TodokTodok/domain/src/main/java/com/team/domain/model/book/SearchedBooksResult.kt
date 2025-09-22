@@ -16,7 +16,7 @@ data class SearchedBooksResult(
         return SearchedBooksResult(
             books = totalSearchedBooks,
             hasNext = hasNext,
-            totalSize = _totalSize.value,
+            _totalSize = SearchedBooksTotalSize(_totalSize.value),
         )
     }
 
@@ -25,7 +25,7 @@ data class SearchedBooksResult(
         return SearchedBooksResult(
             books = totalSearchedBooks,
             hasNext = searchedBooksResult.hasNext,
-            totalSize = searchedBooksResult.totalSize,
+            _totalSize = SearchedBooksTotalSize(searchedBooksResult.totalSize),
         )
     }
 
