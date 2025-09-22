@@ -30,5 +30,5 @@ interface NotificationService {
     ): NetworkResult<Unit>
 
     @GET("v1/notifications/exists")
-    suspend fun getUnreadNotificationsCount(): NetworkResult<Unit>
+    suspend fun getUnreadNotificationsCount(): NetworkResult<Boolean>
 }

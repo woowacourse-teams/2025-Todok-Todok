@@ -12,7 +12,7 @@ interface NotificationRemoteDataSource {
     suspend fun getNotification(
     ): NetworkResult<NotificationResponse>
 
-    suspend fun getUnreadNotificationsCount(): NetworkResult<Unit>
+    suspend fun getUnreadNotificationsCount(): NetworkResult<Boolean>
 
     suspend fun deleteNotification(
         notificationId: Long

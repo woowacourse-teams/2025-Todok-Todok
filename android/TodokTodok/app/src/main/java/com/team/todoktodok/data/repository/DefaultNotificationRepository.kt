@@ -38,7 +38,7 @@ class DefaultNotificationRepository(
         notificationRemoteDataSource.getNotification()
             .map { it.notReadCount to it.notifications.map { it.toDomain() } }
 
-    override suspend fun getUnreadNotificationsCount(): NetworkResult<Unit> =
+    override suspend fun getUnreadNotificationsCount(): NetworkResult<Boolean> =
         notificationRemoteDataSource.getUnreadNotificationsCount()
 
     override suspend fun deleteNotification(notificationId: Long): NetworkResult<Unit> =

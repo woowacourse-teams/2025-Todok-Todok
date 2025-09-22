@@ -13,7 +13,7 @@ interface NotificationRepository {
 
     suspend fun getNotifications(): NetworkResult<Pair<Int, List<Notification>>>
 
-    suspend fun getUnreadNotificationsCount(): NetworkResult<Unit>
+    suspend fun getUnreadNotificationsCount(): NetworkResult<Boolean>
 
     suspend fun deleteNotification(
         notificationId: Long

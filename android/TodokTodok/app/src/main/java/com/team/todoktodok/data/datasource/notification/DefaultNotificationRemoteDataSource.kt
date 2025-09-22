@@ -19,7 +19,7 @@ class DefaultNotificationRemoteDataSource(
     override suspend fun getNotification(): NetworkResult<NotificationResponse> =
         notificationService.getNotifications()
 
-    override suspend fun getUnreadNotificationsCount(): NetworkResult<Unit> =
+    override suspend fun getUnreadNotificationsCount(): NetworkResult<Boolean> =
         notificationService.getUnreadNotificationsCount()
 
     override suspend fun deleteNotification(notificationId: Long): NetworkResult<Unit> =
