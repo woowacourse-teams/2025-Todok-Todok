@@ -19,6 +19,7 @@ abstract class BaseDiscussionsFragment(
         DiscussionsViewModelFactory(
             repositoryModule.discussionRepository,
             repositoryModule.memberRepository,
+            repositoryModule.notificationRepository,
             container.connectivityObserver,
         )
     }
