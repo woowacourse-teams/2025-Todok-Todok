@@ -27,6 +27,8 @@ sealed interface DiscussionDetailUiEvent {
 
     data object ShowReportDiscussionSuccessMessage : DiscussionDetailUiEvent
 
+    data object ReloadedDiscussion : DiscussionDetailUiEvent
+
     data class ShowErrorMessage(
         val exceptions: TodokTodokExceptions,
     ) : DiscussionDetailUiEvent

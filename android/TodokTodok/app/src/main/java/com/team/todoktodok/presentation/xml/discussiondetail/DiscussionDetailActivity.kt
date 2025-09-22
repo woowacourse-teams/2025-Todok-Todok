@@ -70,6 +70,7 @@ class DiscussionDetailActivity : AppCompatActivity() {
         setContentView(binding.root)
         setupOnClick()
         setupObserve()
+        setUpRefresh()
         setUpDialogResultListener()
     }
 
@@ -98,6 +99,12 @@ class DiscussionDetailActivity : AppCompatActivity() {
                 }
             }
         onBackPressedDispatcher.addCallback(this, callback)
+    }
+
+    private fun setUpRefresh() {
+        binding.srlDiscussionContainer.setOnRefreshListener {
+            viewModel.reloadDiscussion()
+        }
     }
 
     private fun setupOnClick() {
@@ -240,6 +247,10 @@ class DiscussionDetailActivity : AppCompatActivity() {
 
             is DiscussionDetailUiEvent.NavigateToDiscussionsWithResult -> {
                 moveToDiscussionsWithResult(event.mode, event.discussionId)
+            }
+
+            DiscussionDetailUiEvent.ReloadedDiscussion -> {
+                binding.srlDiscussionContainer.isRefreshing = false
             }
         }
     }

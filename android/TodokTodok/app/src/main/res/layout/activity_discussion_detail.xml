@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/scroll_container"
+    android:id="@+id/srl_discussion_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
     android:layout_marginTop="@dimen/space_0"
+    android:fillViewport="true"
     android:paddingHorizontal="@dimen/space_24">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main"
@@ -16,153 +20,153 @@
         android:fitsSystemWindows="true"
         tools:context=".presentation.xml.discussiondetail.DiscussionDetailActivity">
 
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/abl_discussion_detail"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/toolbar_height"
-            android:background="@color/white"
-            app:layout_constraintTop_toTopOf="parent" />
+            <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/abl_discussion_detail"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/toolbar_height"
+                android:background="@color/white"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/iv_discussion_detail_back"
-            android:layout_width="@dimen/space_28"
-            android:layout_height="@dimen/space_28"
-            android:contentDescription="@string/content_description_discussion_detail_back"
-            android:src="@drawable/btn_back"
-            app:layout_constraintBottom_toBottomOf="@id/abl_discussion_detail"
-            app:layout_constraintStart_toStartOf="@id/abl_discussion_detail"
-            app:layout_constraintTop_toTopOf="@id/abl_discussion_detail" />
+            <ImageView
+                android:id="@+id/iv_discussion_detail_back"
+                android:layout_width="@dimen/space_28"
+                android:layout_height="@dimen/space_28"
+                android:contentDescription="@string/content_description_discussion_detail_back"
+                android:src="@drawable/btn_back"
+                app:layout_constraintBottom_toBottomOf="@id/abl_discussion_detail"
+                app:layout_constraintStart_toStartOf="@id/abl_discussion_detail"
+                app:layout_constraintTop_toTopOf="@id/abl_discussion_detail" />
 
-        <TextView
-            style="@style/HeaderTitleText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/space_8"
-            android:text="@string/all_discussion_room"
-            app:layout_constraintBottom_toBottomOf="@id/abl_discussion_detail"
-            app:layout_constraintEnd_toEndOf="@id/abl_discussion_detail"
-            app:layout_constraintStart_toStartOf="@id/abl_discussion_detail"
-            app:layout_constraintTop_toTopOf="@id/abl_discussion_detail" />
+            <TextView
+                style="@style/HeaderTitleText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/space_8"
+                android:text="@string/all_discussion_room"
+                app:layout_constraintBottom_toBottomOf="@id/abl_discussion_detail"
+                app:layout_constraintEnd_toEndOf="@id/abl_discussion_detail"
+                app:layout_constraintStart_toStartOf="@id/abl_discussion_detail"
+                app:layout_constraintTop_toTopOf="@id/abl_discussion_detail" />
 
-        <ImageView
-            android:id="@+id/iv_book_image"
-            android:layout_width="@dimen/space_16"
-            android:layout_height="@dimen/space_0"
-            android:contentDescription="@string/content_description_discussion_detail_book_profile"
-            app:layout_constraintBottom_toBottomOf="@id/tv_book_title"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tv_book_title" />
+            <ImageView
+                android:id="@+id/iv_book_image"
+                android:layout_width="@dimen/space_16"
+                android:layout_height="@dimen/space_0"
+                android:contentDescription="@string/content_description_discussion_detail_book_profile"
+                app:layout_constraintBottom_toBottomOf="@id/tv_book_title"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tv_book_title" />
 
-        <TextView
-            android:id="@+id/tv_book_title"
-            style="@style/BaseTextStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/space_20"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="@dimen/space_8"
-            android:ellipsize="end"
-            android:fontFamily="@font/pretendard_medium"
-            android:maxLines="1"
-            android:textColor="@color/gray_66"
-            android:textSize="@dimen/font_size_large"
-            app:layout_constraintStart_toEndOf="@id/iv_book_image"
-            app:layout_constraintTop_toBottomOf="@id/abl_discussion_detail"
-            tools:text="오브젝트" />
+            <TextView
+                android:id="@+id/tv_book_title"
+                style="@style/BaseTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/space_20"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="@dimen/space_8"
+                android:ellipsize="end"
+                android:fontFamily="@font/pretendard_medium"
+                android:maxLines="1"
+                android:textColor="@color/gray_66"
+                android:textSize="@dimen/font_size_large"
+                app:layout_constraintStart_toEndOf="@id/iv_book_image"
+                app:layout_constraintTop_toBottomOf="@id/abl_discussion_detail"
+                tools:text="오브젝트" />
 
-        <TextView
-            android:id="@+id/tv_discussion_title"
-            android:layout_width="@dimen/space_0"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_8"
-            android:fontFamily="@font/pretendard_bold"
-            android:textSize="@dimen/font_size_2x_large"
-            app:layout_constraintEnd_toStartOf="@id/iv_discussion_option"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_book_title"
-            tools:text="캡슐화 왜함?캡슐화 왜함?캡슐화 왜함?캡슐화 왜함?캡슐화 왜함?캡슐화 왜함?캡슐화 왜함?캡슐화 왜함?" />
+            <TextView
+                android:id="@+id/tv_discussion_title"
+                android:layout_width="@dimen/space_0"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_8"
+                android:fontFamily="@font/pretendard_bold"
+                android:textSize="@dimen/font_size_2x_large"
+                app:layout_constraintEnd_toStartOf="@id/iv_discussion_option"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_book_title"
+                tools:text="캡슐화 왜함?캡슐화 왜함?캡슐화 왜함?캡슐화 왜함?캡슐화 왜함?캡슐화 왜함?캡슐화 왜함?캡슐화 왜함?" />
 
-        <ImageView
-            android:id="@+id/iv_discussion_option"
-            android:layout_width="36dp"
-            android:layout_height="48dp"
-            android:contentDescription="@string/content_description_discussion_detail_option"
-            android:focusable="true"
-            android:paddingHorizontal="6dp"
-            android:paddingVertical="@dimen/space_12"
-            android:src="@drawable/btn_option"
-            app:layout_constraintBottom_toBottomOf="@id/tv_discussion_title"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tv_discussion_title" />
+            <ImageView
+                android:id="@+id/iv_discussion_option"
+                android:layout_width="36dp"
+                android:layout_height="48dp"
+                android:contentDescription="@string/content_description_discussion_detail_option"
+                android:focusable="true"
+                android:paddingHorizontal="6dp"
+                android:paddingVertical="@dimen/space_12"
+                android:src="@drawable/btn_option"
+                app:layout_constraintBottom_toBottomOf="@id/tv_discussion_title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tv_discussion_title" />
 
-        <ImageView
-            android:id="@+id/iv_userProfile"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:contentDescription="@string/content_description_discussion_detail_user_profile"
-            android:paddingEnd="@dimen/space_8"
-            app:layout_constraintBottom_toBottomOf="@id/tv_user_nickname"
-            app:layout_constraintEnd_toStartOf="@id/tv_user_nickname"
-            app:layout_constraintTop_toTopOf="@id/tv_user_nickname"
-            tools:src="@drawable/img_mascort_outline" />
+            <ImageView
+                android:id="@+id/iv_userProfile"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:contentDescription="@string/content_description_discussion_detail_user_profile"
+                android:paddingEnd="@dimen/space_8"
+                app:layout_constraintBottom_toBottomOf="@id/tv_user_nickname"
+                app:layout_constraintEnd_toStartOf="@id/tv_user_nickname"
+                app:layout_constraintTop_toTopOf="@id/tv_user_nickname"
+                tools:src="@drawable/img_mascort_outline" />
 
-        <TextView
-            android:id="@+id/tv_user_nickname"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_16"
-            android:fontFamily="@font/pretendard_bold"
-            android:gravity="center"
-            android:textSize="@dimen/font_size_large"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_discussion_title"
-            tools:text="코드마스터" />
+            <TextView
+                android:id="@+id/tv_user_nickname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_16"
+                android:fontFamily="@font/pretendard_bold"
+                android:gravity="center"
+                android:textSize="@dimen/font_size_large"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_discussion_title"
+                tools:text="코드마스터" />
 
-        <TextView
-            android:id="@+id/tv_discussion_create_at"
-            style="@style/BaseTextStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_16"
-            android:fontFamily="@font/pretendard_regular"
-            android:gravity="center"
-            android:textColor="@color/gray_76"
-            android:textSize="@dimen/font_size_large"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_discussion_title"
-            tools:text="2024년 7월 20일" />
+            <TextView
+                android:id="@+id/tv_discussion_create_at"
+                style="@style/BaseTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_16"
+                android:fontFamily="@font/pretendard_regular"
+                android:gravity="center"
+                android:textColor="@color/gray_76"
+                android:textSize="@dimen/font_size_large"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_discussion_title"
+                tools:text="2024년 7월 20일" />
 
-        <TextView
-            android:id="@+id/tv_discussion_opinion"
-            style="@style/BaseTextStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_24"
-            android:letterSpacing="0.005"
-            android:textSize="@dimen/font_size_large"
-            app:layout_constraintTop_toBottomOf="@id/tv_discussion_create_at"
-            tools:text="캡슐화를 하면 데이터를 보호할 수 있다는 것에는 동의하는데, 실제로 완벽히 캡슐화가 되는 지는 의문입니다.getter/setter 메서드를 통해 객체 내부의 데이터가 외부로 드러나는 것은 캡슐화가 잘 된 것이 맞을까요?" />
+            <TextView
+                android:id="@+id/tv_discussion_opinion"
+                style="@style/BaseTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_24"
+                android:letterSpacing="0.005"
+                android:textSize="@dimen/font_size_large"
+                app:layout_constraintTop_toBottomOf="@id/tv_discussion_create_at"
+                tools:text="캡슐화를 하면 데이터를 보호할 수 있다는 것에는 동의하는데, 실제로 완벽히 캡슐화가 되는 지는 의문입니다.getter/setter 메서드를 통해 객체 내부의 데이터가 외부로 드러나는 것은 캡슐화가 잘 된 것이 맞을까요?" />
 
-        <ImageView
-            android:id="@+id/iv_like"
-            android:layout_width="@dimen/space_24"
-            android:layout_height="@dimen/space_24"
-            android:layout_marginTop="@dimen/space_24"
-            android:background="@drawable/btn_heart_background"
-            android:contentDescription="@null"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_discussion_opinion" />
+            <ImageView
+                android:id="@+id/iv_like"
+                android:layout_width="@dimen/space_24"
+                android:layout_height="@dimen/space_24"
+                android:layout_marginTop="@dimen/space_24"
+                android:background="@drawable/btn_heart_background"
+                android:contentDescription="@null"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_discussion_opinion" />
 
-        <TextView
-            android:id="@+id/tv_like_count"
-            style="@style/BaseTextStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:paddingStart="8dp"
-            android:textSize="@dimen/font_size_large"
-            app:layout_constraintBottom_toBottomOf="@id/iv_like"
-            app:layout_constraintStart_toEndOf="@id/iv_like"
-            app:layout_constraintTop_toTopOf="@id/iv_like"
-            tools:text="13" />
+            <TextView
+                android:id="@+id/tv_like_count"
+                style="@style/BaseTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:paddingStart="8dp"
+                android:textSize="@dimen/font_size_large"
+                app:layout_constraintBottom_toBottomOf="@id/iv_like"
+                app:layout_constraintStart_toEndOf="@id/iv_like"
+                app:layout_constraintTop_toTopOf="@id/iv_like"
+                tools:text="13" />
 
         <ImageView
             android:id="@+id/iv_comment"
@@ -176,25 +180,26 @@
             app:layout_constraintStart_toEndOf="@id/tv_like_count"
             app:layout_constraintTop_toBottomOf="@id/tv_discussion_opinion" />
 
-        <TextView
-            android:id="@+id/tv_comment_count"
-            style="@style/BaseTextStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:paddingStart="@dimen/space_8"
-            android:textSize="@dimen/font_size_large"
-            app:layout_constraintBottom_toBottomOf="@id/iv_comment"
-            app:layout_constraintStart_toEndOf="@id/iv_comment"
-            app:layout_constraintTop_toTopOf="@id/iv_comment"
-            tools:text="23333" />
+            <TextView
+                android:id="@+id/tv_comment_count"
+                style="@style/BaseTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:paddingStart="@dimen/space_8"
+                android:textSize="@dimen/font_size_large"
+                app:layout_constraintBottom_toBottomOf="@id/iv_comment"
+                app:layout_constraintStart_toEndOf="@id/iv_comment"
+                app:layout_constraintTop_toTopOf="@id/iv_comment"
+                tools:text="23333" />
 
-        <com.team.todoktodok.presentation.core.component.CloverProgressBar
-            android:id="@+id/progress_bar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.core.widget.NestedScrollView>
+            <com.team.todoktodok.presentation.core.component.CloverProgressBar
+                android:id="@+id/progress_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

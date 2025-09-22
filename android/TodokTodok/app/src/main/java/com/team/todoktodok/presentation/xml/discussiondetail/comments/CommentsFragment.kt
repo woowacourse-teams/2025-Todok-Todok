@@ -119,6 +119,7 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
         with(binding) {
             tvInputComment.setOnClickListener { viewModel.showCommentCreate() }
             ivAddComment.setOnClickListener { viewModel.createComment() }
+            ivReload.setOnClickListener { viewModel.reloadComments() }
         }
     }
 
