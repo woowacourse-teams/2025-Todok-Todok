@@ -19,11 +19,11 @@ data class SelectBookUiState(
             listOf(
                 SearchBooksGroup.Count(size),
                 *
-                    searchedBooksResult
-                        ?.books
-                        ?.map { book -> SearchBooksGroup.Book(book) }
-                        ?.toTypedArray()
-                        ?: emptyArray(),
+                searchedBooksResult
+                    ?.books
+                    ?.map { book -> SearchBooksGroup.Book(book) }
+                    ?.toTypedArray()
+                    ?: emptyArray(),
             )
 
     val size: Int get() = searchedBooksResult?.totalSize ?: 0
@@ -35,5 +35,6 @@ data class SelectBookUiState(
 
     fun isSameKeyword(value: String): Boolean = this.keyword == Keyword(value)
 
-    private fun isExist(position: Int): Boolean = searchedBooksResult?.books?.contains(position) ?: false
+    private fun isExist(position: Int): Boolean =
+        searchedBooksResult?.books?.value?.getOrNull(position) != null
 }
