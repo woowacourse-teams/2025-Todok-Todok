@@ -220,7 +220,7 @@ class SelectBookActivity : AppCompatActivity() {
     private fun updateLoadingStatus(binding: ActivitySelectBookBinding) {
         binding.progressBar.visibility = View.VISIBLE
         binding.nsvEmptySearchResult.visibility = View.GONE
-        binding.rvSearchedBooks.visibility = View.GONE
+        binding.rvSearchedBooks.visibility = View.VISIBLE
     }
 
     private fun setUpUiEvent(binding: ActivitySelectBookBinding) {
