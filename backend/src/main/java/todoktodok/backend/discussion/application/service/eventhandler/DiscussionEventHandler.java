@@ -5,6 +5,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 import todoktodok.backend.discussion.application.service.command.DiscussionLikeCreated;
+import todoktodok.backend.notification.application.service.command.CreateNotificationRequest;
+import todoktodok.backend.notification.application.service.command.NotificationCommandService;
+import todoktodok.backend.notification.domain.NotificationTarget;
+import todoktodok.backend.notification.domain.NotificationType;
 import todoktodok.backend.notification.infrastructure.FcmMessagePayload;
 import todoktodok.backend.notification.infrastructure.FcmPushNotifier;
 
@@ -16,6 +20,7 @@ public class DiscussionEventHandler {
     public static final String HEART = "❤\uFE0F";
 
     private final FcmPushNotifier fcmPushNotifier;
+    private final NotificationCommandService notificationCommandService;
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void sendPushOn(final DiscussionLikeCreated discussionLikeCreated) {
@@ -34,6 +39,8 @@ public class DiscussionEventHandler {
         final Long commentId = null;
         final Long replyId = null;
         final String content = "";
+        final NotificationType notificationType = NotificationType.LIKE;
+        final NotificationTarget notificationTarget = NotificationTarget.DISCUSSION;
 
         final FcmMessagePayload fcmMessagePayload = new FcmMessagePayload(
                 TODOKTODOK_TITLE,
@@ -44,9 +51,22 @@ public class DiscussionEventHandler {
                 discussionLikeCreated.authorNickname(),
                 discussionLikeCreated.discussionTitle(),
                 content,
-                "LIKE",
-                "DISCUSSION"
+                notificationType.name(),
+                notificationTarget.name()
         );
         fcmPushNotifier.sendPush(recipientId, fcmMessagePayload);
+
+        final CreateNotificationRequest createNotificationRequest = new CreateNotificationRequest(
+                discussionLikeCreated.discussionMemberId(),
+                discussionLikeCreated.discussionId(),
+                commentId,
+                replyId,
+                discussionLikeCreated.authorNickname(),
+                discussionLikeCreated.discussionTitle(),
+                content,
+                notificationType,
+                notificationTarget
+        );
+        notificationCommandService.createNotification(createNotificationRequest);
     }
 }

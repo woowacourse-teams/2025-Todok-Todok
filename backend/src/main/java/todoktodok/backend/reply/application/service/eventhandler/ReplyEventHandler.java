@@ -4,6 +4,11 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
+import todoktodok.backend.notification.application.service.command.CreateNotificationRequest;
+import todoktodok.backend.notification.application.service.command.NotificationCommandService;
+import todoktodok.backend.notification.domain.Notification;
+import todoktodok.backend.notification.domain.NotificationTarget;
+import todoktodok.backend.notification.domain.NotificationType;
 import todoktodok.backend.notification.infrastructure.FcmMessagePayload;
 import todoktodok.backend.notification.infrastructure.FcmPushNotifier;
 import todoktodok.backend.reply.application.service.command.ReplyCreated;
@@ -17,6 +22,7 @@ public class ReplyEventHandler {
     public static final String TODOKTODOK_TITLE = "토독토독";
 
     private final FcmPushNotifier fcmPushNotifier;
+    private final NotificationCommandService notificationCommandService;
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void sendPushOn(final ReplyCreated replyCreated) {
@@ -32,6 +38,9 @@ public class ReplyEventHandler {
                 replyCreated.discussionTitle()
         );
 
+        NotificationType notificationType = NotificationType.REPLY;
+        NotificationTarget notificationTarget = NotificationTarget.REPLY;
+
         final FcmMessagePayload fcmMessagePayload = new FcmMessagePayload(
                 TODOKTODOK_TITLE,
                 notificationBody,
@@ -41,10 +50,23 @@ public class ReplyEventHandler {
                 replyCreated.authorNickname(),
                 replyCreated.discussionTitle(),
                 replyCreated.content(),
-                "REPLY",
-                "REPLY"
+                notificationType.name(),
+                notificationTarget.name()
         );
         fcmPushNotifier.sendPush(recipientId, fcmMessagePayload);
+
+        final CreateNotificationRequest createNotificationRequest = new CreateNotificationRequest(
+                replyCreated.commentMemberId(),
+                replyCreated.discussionId(),
+                replyCreated.commentId(),
+                replyCreated.replyId(),
+                replyCreated.authorNickname(),
+                replyCreated.discussionTitle(),
+                replyCreated.content(),
+                notificationType,
+                notificationTarget
+        );
+        notificationCommandService.createNotification(createNotificationRequest);
     }
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
@@ -63,6 +85,9 @@ public class ReplyEventHandler {
         );
         final String content = "";
 
+        NotificationType notificationType = NotificationType.LIKE;
+        NotificationTarget notificationTarget = NotificationTarget.REPLY;
+
         final FcmMessagePayload fcmMessagePayload = new FcmMessagePayload(
                 "토독토독",
                 notificationBody,
@@ -72,9 +97,22 @@ public class ReplyEventHandler {
                 replyLikeCreated.authorNickname(),
                 replyLikeCreated.discussionTitle(),
                 content,
-                "LIKE",
-                "REPLY"
+                notificationType.name(),
+                notificationTarget.name()
         );
         fcmPushNotifier.sendPush(recipientId, fcmMessagePayload);
+
+        final CreateNotificationRequest createNotificationRequest = new CreateNotificationRequest(
+                replyLikeCreated.replyMemberId(),
+                replyLikeCreated.discussionId(),
+                replyLikeCreated.commentId(),
+                replyLikeCreated.replyId(),
+                replyLikeCreated.authorNickname(),
+                replyLikeCreated.discussionTitle(),
+                content,
+                notificationType,
+                notificationTarget
+        );
+        notificationCommandService.createNotification(createNotificationRequest);
     }
 }

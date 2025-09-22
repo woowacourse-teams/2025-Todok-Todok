@@ -14,7 +14,6 @@ import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import todoktodok.backend.member.domain.Member;
 import todoktodok.backend.notification.domain.NotificationToken;
 import todoktodok.backend.notification.domain.repository.NotificationTokenRepository;
 
@@ -70,7 +69,7 @@ public class FcmPushNotifier {
         }
     }
 
-    public void handleResponses(
+    private void handleResponses(
             final BatchResponse batchResponse,
             final List<String> tokens
     ) {
