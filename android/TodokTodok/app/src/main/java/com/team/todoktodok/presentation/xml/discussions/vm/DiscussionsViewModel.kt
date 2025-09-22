@@ -7,10 +7,12 @@ import com.team.domain.ConnectivityObserver
 import com.team.domain.model.Discussion
 import com.team.domain.model.active.ActivatedDiscussionPage
 import com.team.domain.model.exception.NetworkResult
+import com.team.domain.model.exception.onSuccess
 import com.team.domain.model.member.MemberDiscussionType
 import com.team.domain.model.member.MemberId
 import com.team.domain.repository.DiscussionRepository
 import com.team.domain.repository.MemberRepository
+import com.team.domain.repository.NotificationRepository
 import com.team.todoktodok.presentation.core.base.BaseViewModel
 import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
 import com.team.todoktodok.presentation.core.event.SingleLiveData
@@ -23,6 +25,7 @@ import kotlinx.coroutines.launch
 class DiscussionsViewModel(
     private val discussionRepository: DiscussionRepository,
     private val memberRepository: MemberRepository,
+    private val notificationRepository: NotificationRepository,
     networkConnectivityObserver: ConnectivityObserver,
 ) : BaseViewModel(networkConnectivityObserver) {
     private val _uiState = MutableLiveData(DiscussionsUiState())
@@ -30,6 +33,18 @@ class DiscussionsViewModel(
 
     private val _uiEvent = MutableSingleLiveData<DiscussionsUiEvent>()
     val uiEvent: SingleLiveData<DiscussionsUiEvent> get() = _uiEvent
+
+    init {
+        loadIsUnReadNotification()
+    }
+
+    fun loadIsUnReadNotification() {
+        viewModelScope.launch {
+            notificationRepository.getUnreadNotificationsCount().onSuccess { isExist ->
+                _uiState.value = _uiState.value?.changeUnreadNotification(isExist)
+            }
+        }
+    }
 
     fun loadSearchedDiscussions(keyword: String) =
         runAsync(

@@ -31,6 +31,7 @@ import com.team.todoktodok.presentation.core.ext.loadImage
 import com.team.todoktodok.presentation.core.ext.registerPositiveResultListener
 import com.team.todoktodok.presentation.core.ext.registerReportResultListener
 import com.team.todoktodok.presentation.core.ext.toRelativeString
+import com.team.todoktodok.presentation.view.discussions.DiscussionsActivity
 import com.team.todoktodok.presentation.xml.discussion.create.CreateDiscussionRoomActivity
 import com.team.todoktodok.presentation.xml.discussion.create.SerializationCreateDiscussionRoomMode
 import com.team.todoktodok.presentation.xml.discussiondetail.comment.CommentBottomSheet
@@ -41,7 +42,6 @@ import com.team.todoktodok.presentation.xml.discussiondetail.vm.DiscussionDetail
 import com.team.todoktodok.presentation.xml.discussiondetail.vm.DiscussionDetailViewModelFactory
 import com.team.todoktodok.presentation.xml.discussions.BaseDiscussionsFragment.Companion.EXTRA_DELETE_DISCUSSION
 import com.team.todoktodok.presentation.xml.discussions.BaseDiscussionsFragment.Companion.EXTRA_WATCHED_DISCUSSION_ID
-import com.team.todoktodok.presentation.xml.discussions.DiscussionsActivity
 import com.team.todoktodok.presentation.xml.profile.ProfileActivity
 
 class DiscussionDetailActivity : AppCompatActivity() {

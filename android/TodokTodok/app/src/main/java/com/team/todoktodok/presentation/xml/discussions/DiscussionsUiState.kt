@@ -13,7 +13,11 @@ data class DiscussionsUiState(
     val myDiscussion: MyDiscussionUiState = MyDiscussionUiState(),
     val latestDiscussion: LatestDiscussionsUiState = LatestDiscussionsUiState(),
     val searchDiscussion: SearchDiscussionsUiState = SearchDiscussionsUiState(),
+    val isUnreadNotification: Boolean = false,
 ) {
+    fun changeUnreadNotification(isExist: Boolean): DiscussionsUiState =
+        copy(isUnreadNotification = isExist)
+
     fun addSearchDiscussion(
         keyword: String,
         newDiscussions: List<Discussion>,
@@ -30,9 +34,11 @@ data class DiscussionsUiState(
     fun addMyDiscussion(
         createdDiscussion: List<Discussion>,
         participatedDiscussion: List<Discussion>,
-    ): DiscussionsUiState = copy(myDiscussion = myDiscussion.add(createdDiscussion, participatedDiscussion))
+    ): DiscussionsUiState =
+        copy(myDiscussion = myDiscussion.add(createdDiscussion, participatedDiscussion))
 
-    fun addLatestDiscussion(page: LatestDiscussionPage): DiscussionsUiState = copy(latestDiscussion = latestDiscussion.append(page))
+    fun addLatestDiscussion(page: LatestDiscussionPage): DiscussionsUiState =
+        copy(latestDiscussion = latestDiscussion.append(page))
 
     fun modifyDiscussion(discussion: Discussion): DiscussionsUiState {
         val newHotDiscussion = hotDiscussion.modifyDiscussion(discussion)

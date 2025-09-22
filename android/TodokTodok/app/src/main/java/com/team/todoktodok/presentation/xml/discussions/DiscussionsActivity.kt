@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.enableEdgeToEdge
@@ -18,8 +19,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import com.google.android.material.tabs.TabLayout
 import com.team.domain.model.DiscussionFilter
-import com.team.domain.model.notification.Notification
-import com.team.domain.model.notification.NotificationType
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivityDiscussionsBinding
@@ -27,7 +26,8 @@ import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
 import com.team.todoktodok.presentation.core.ext.getParcelableCompat
 import com.team.todoktodok.presentation.view.notification.NotificationActivity
-import com.team.todoktodok.presentation.view.serialization.SerializationNotification
+import com.team.todoktodok.presentation.view.serialization.SerializationNotificationContent
+import com.team.todoktodok.presentation.view.serialization.SerializationNotificationType
 import com.team.todoktodok.presentation.xml.book.SelectBookActivity
 import com.team.todoktodok.presentation.xml.discussiondetail.DiscussionDetailActivity
 import com.team.todoktodok.presentation.xml.discussions.DiscussionsUiEvent
@@ -47,6 +47,7 @@ class DiscussionsActivity : AppCompatActivity() {
         DiscussionsViewModelFactory(
             repositoryModule.discussionRepository,
             repositoryModule.memberRepository,
+            repositoryModule.notificationRepository,
             container.connectivityObserver,
         )
     }
@@ -138,6 +139,11 @@ class DiscussionsActivity : AppCompatActivity() {
                     binding.root,
                     R.string.network_try_connection,
                 ).show()
+            }
+        }
+        viewModel.uiState.observe(this) { value ->
+            if (!value.isUnreadNotification) {
+                binding.viewIsExist.visibility = View.GONE
             }
         }
     }
@@ -304,37 +310,38 @@ class DiscussionsActivity : AppCompatActivity() {
     }
 
     private fun handleNotificationDeepLink(intent: Intent) {
-        val notification: Notification? =
-            intent.getParcelableCompat<SerializationNotification>("notification")?.toDomain()
+        val notification: SerializationNotificationContent? =
+            intent.getParcelableCompat<SerializationNotificationContent>("notification")
+                ?.toDomain() as SerializationNotificationContent?
         triggerToMoveDiscussionDetail(notification)
     }
 
-    private fun DiscussionsActivity.triggerToMoveDiscussionDetail(notification: Notification?) {
+    private fun DiscussionsActivity.triggerToMoveDiscussionDetail(notification: SerializationNotificationContent?) {
         if (notification != null) {
-            when (notification.notificationContent.type) {
-                is NotificationType.Like -> {
+            when (notification.type) {
+                SerializationNotificationType.LIKE -> {
                     val detailIntent =
                         DiscussionDetailActivity.Intent(
                             this,
-                            notification.notificationContent.discussionId,
+                            notification.discussionId,
                         )
                     startActivity(detailIntent)
                 }
 
-                is NotificationType.Comment -> {
+                SerializationNotificationType.COMMENT -> {
                     val detailIntent =
                         DiscussionDetailActivity.Intent(
                             this,
-                            notification.notificationContent.discussionId,
+                            notification.discussionId,
                         )
                     startActivity(detailIntent)
                 }
 
-                is NotificationType.Reply -> {
+                SerializationNotificationType.REPLY -> {
                     val detailIntent =
                         DiscussionDetailActivity.Intent(
                             this,
-                            notification.notificationContent.discussionId,
+                            notification.discussionId,
                         )
                     startActivity(detailIntent)
                 }
