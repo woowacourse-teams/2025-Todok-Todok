@@ -17,5 +17,4 @@ data class SearchedBooks(
     }
 }
 
-inline fun <R> SearchedBooks.map(transform: (SearchedBook) -> R): List<R> =
-    this.value.map(transform)
+inline fun <R> SearchedBooks.map(transform: (SearchedBook) -> R): List<R> = this.value.map(transform)
