@@ -55,11 +55,30 @@ public class NotificationCommandService {
         final Member member = findMember(memberId);
         final Notification notification = findNotification(notificationId);
 
-        if (!notification.equalsRecipient(member)) {
-            throw new NotificationForbiddenException("본인 알림이 아닙니다.");
-        }
+        validateNotificationOwnership(notification, member);
 
         notification.update(true);
+    }
+
+    public void deleteNotification(
+            final Long memberId,
+            final Long notificationId
+    ) {
+        final Member member = findMember(memberId);
+        final Notification notification = findNotification(notificationId);
+
+        validateNotificationOwnership(notification, member);
+
+        notificationRepository.delete(notification);
+    }
+
+    private void validateNotificationOwnership(
+            final Notification notification,
+            final Member member
+    ) {
+        if (!notification.isOwnedBy(member)) {
+            throw new NotificationForbiddenException("본인 알림이 아닙니다.");
+        }
     }
 
     private Member findMember(final Long memberId) {

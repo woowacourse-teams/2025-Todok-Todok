@@ -4,6 +4,7 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,6 +40,18 @@ public class NotificationController {
     ) {
         notificationCommandService.markNotificationAsRead(memberId, notificationId);
         return ResponseEntity.status(HttpStatus.OK)
+                .build();
+    }
+
+    @Auth(value = Role.USER)
+    @DeleteMapping("/{notificationId}")
+    public ResponseEntity<Void> deleteNotification(
+            @LoginMember final Long memberId,
+            @PathVariable final Long notificationId
+    ) {
+        notificationCommandService.deleteNotification(memberId, notificationId);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
                 .build();
     }
 }

@@ -93,7 +93,7 @@ public class Notification extends TimeStamp {
         );
     }
 
-    public boolean equalsRecipient(final Member recipient) {
+    public boolean isOwnedBy(final Member recipient) {
         return this.recipient == recipient;
     }
 
