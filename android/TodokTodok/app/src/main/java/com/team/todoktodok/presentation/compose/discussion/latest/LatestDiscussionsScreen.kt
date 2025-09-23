@@ -18,7 +18,6 @@ import com.team.todoktodok.presentation.compose.component.InfinityLazyColumn
 import com.team.todoktodok.presentation.compose.preview.LatestDiscussionsPreviewParameterProvider
 import com.team.todoktodok.presentation.compose.theme.Green1A
 import com.team.todoktodok.presentation.compose.theme.White
-import com.team.todoktodok.presentation.xml.discussions.latest.LatestDiscussionsUiState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
