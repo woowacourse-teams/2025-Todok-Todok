@@ -22,8 +22,7 @@ class DiscussionDetailViewModel(
     private val discussionRepository: DiscussionRepository,
     private val tokenRepository: TokenRepository,
 ) : ViewModel() {
-    private val discussionId =
-        savedStateHandle.get<Long>(KEY_DISCUSSION_ID) ?: throw IllegalStateException()
+    private var discussionId: Long? = savedStateHandle.get<Long>(KEY_DISCUSSION_ID)
 
     var mode = savedStateHandle.get<SerializationCreateDiscussionRoomMode>(KEY_MODE)
         private set
@@ -33,12 +32,6 @@ class DiscussionDetailViewModel(
 
     private val _uiEvent = MutableSingleLiveData<DiscussionDetailUiEvent>()
     val uiEvent: SingleLiveData<DiscussionDetailUiEvent> = _uiEvent
-
-    init {
-        viewModelScope.launch {
-            loadDiscussionRoom()
-        }
-    }
 
     fun onFinishEvent() {
         val currentState = _uiState.value ?: return
@@ -50,18 +43,31 @@ class DiscussionDetailViewModel(
         )
     }
 
+    fun initLoadDiscission(id: Long) {
+        discussionId = id
+        savedStateHandle[KEY_DISCUSSION_ID] = id
+        viewModelScope.launch {
+            loadDiscussionRoom()
+        }
+    }
+
     fun fetchMode(mode: SerializationCreateDiscussionRoomMode) {
         this.mode = mode
         savedStateHandle[KEY_MODE] = mode
     }
 
     fun showComments() {
-        onUiEvent(DiscussionDetailUiEvent.ShowComments(discussionId))
+        onUiEvent(DiscussionDetailUiEvent.ShowComments(discussionId ?: THROW_DISCUSSION_ID))
     }
 
     fun reportDiscussion(reason: String) {
         viewModelScope.launch {
-            handleResult(discussionRepository.reportDiscussion(discussionId, reason)) {
+            handleResult(
+                discussionRepository.reportDiscussion(
+                    discussionId ?: THROW_DISCUSSION_ID,
+                    reason,
+                ),
+            ) {
                 onUiEvent(DiscussionDetailUiEvent.ShowReportDiscussionSuccessMessage)
             }
         }
@@ -75,15 +81,19 @@ class DiscussionDetailViewModel(
     }
 
     fun updateDiscussion() {
-        onUiEvent(DiscussionDetailUiEvent.UpdateDiscussion(discussionId))
+        onUiEvent(DiscussionDetailUiEvent.UpdateDiscussion(discussionId ?: THROW_DISCUSSION_ID))
     }
 
     fun deleteDiscussion() {
         viewModelScope.launch {
-            handleResult(discussionRepository.deleteDiscussion(discussionId)) {
+            handleResult(
+                discussionRepository.deleteDiscussion(
+                    discussionId ?: THROW_DISCUSSION_ID,
+                ),
+            ) {
                 onUiEvent(
                     DiscussionDetailUiEvent.DeleteDiscussion(
-                        discussionId,
+                        discussionId ?: THROW_DISCUSSION_ID,
                     ),
                 )
             }
@@ -113,7 +123,7 @@ class DiscussionDetailViewModel(
                 val isToggle =
                     currentDiscussion.likeCount != _uiState.value?.discussion?.likeCount
                 if (!isToggle) return@launch
-                handleResult(discussionRepository.toggleLike(discussionId)) {
+                handleResult(discussionRepository.toggleLike(discussionId ?: THROW_DISCUSSION_ID)) {
                     loadDiscussionRoom()
                 }
             }
@@ -129,7 +139,11 @@ class DiscussionDetailViewModel(
     }
 
     private suspend fun loadDiscussionRoom() {
-        handleResult(discussionRepository.getDiscussion(discussionId)) { discussion ->
+        handleResult(
+            discussionRepository.getDiscussion(
+                discussionId ?: THROW_DISCUSSION_ID,
+            ),
+        ) { discussion ->
             _uiState.value =
                 DiscussionDetailUiState(
                     discussion = discussion,
@@ -163,5 +177,7 @@ class DiscussionDetailViewModel(
     companion object {
         const val KEY_DISCUSSION_ID = "discussionId"
         const val KEY_MODE = "mode"
+
+        private const val THROW_DISCUSSION_ID = -1L
     }
 }
