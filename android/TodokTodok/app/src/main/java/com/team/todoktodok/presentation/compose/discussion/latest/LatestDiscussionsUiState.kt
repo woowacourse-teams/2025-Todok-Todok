@@ -1,4 +1,4 @@
-package com.team.todoktodok.presentation.xml.discussions.latest
+package com.team.todoktodok.presentation.compose.discussion.latest
 
 import com.team.domain.model.Discussion
 import com.team.domain.model.latest.LatestDiscussionPage
@@ -8,9 +8,9 @@ import com.team.todoktodok.presentation.xml.discussions.DiscussionUiState
 data class LatestDiscussionsUiState(
     val items: List<DiscussionUiState> = emptyList(),
     val isRefreshing: Boolean = false,
-    val latestPage: PageInfo = PageInfo.EMPTY,
+    val latestPage: PageInfo = PageInfo.Companion.EMPTY,
 ) {
-    fun refresh() = copy(items = emptyList(), latestPage = PageInfo.EMPTY, isRefreshing = true)
+    fun refresh() = copy(items = emptyList(), latestPage = PageInfo.Companion.EMPTY, isRefreshing = true)
 
     fun append(page: LatestDiscussionPage): LatestDiscussionsUiState {
         val newDiscussion = items.toMutableList()
