@@ -1,57 +1,48 @@
 package com.team.todoktodok.presentation.xml.discussions.latest
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentLatestDiscussionsBinding
-import com.team.todoktodok.presentation.core.component.adapter.BaseDiscussionViewHolder
-import com.team.todoktodok.presentation.core.component.adapter.DiscussionAdapter
-import com.team.todoktodok.presentation.core.ext.addOnScrollEndListener
+import com.team.todoktodok.presentation.compose.discussion.latest.LatestDiscussionsScreen
+import com.team.todoktodok.presentation.compose.theme.TodoktodokTheme
 import com.team.todoktodok.presentation.xml.discussions.BaseDiscussionsFragment
 
 class LatestDiscussionsFragment : BaseDiscussionsFragment(R.layout.fragment_latest_discussions) {
-    private val discussionAdapter: DiscussionAdapter by lazy {
-        DiscussionAdapter(adapterHandler, BaseDiscussionViewHolder.ViewHolderType.DEFAULT)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View? {
+        val binding = FragmentLatestDiscussionsBinding.inflate(inflater, container, false)
+        binding.composeView.apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            binding.composeView.setContent {
+                TodoktodokTheme {
+                    val state by viewModel.uiState.collectAsStateWithLifecycle()
+                    LatestDiscussionsScreen(
+                        latestDiscussionsUiState = state.latestDiscussion,
+                        onClick = { discussionId ->
+                            moveToDiscussionDetail(discussionId)
+                        },
+                    )
+                }
+            }
+        }
+        return binding.root
     }
 
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
     ) {
-        val binding = FragmentLatestDiscussionsBinding.bind(view)
-        initView(binding)
-        setUpUiState()
         viewModel.loadLatestDiscussions()
     }
-
-    private fun initView(binding: FragmentLatestDiscussionsBinding) {
-        with(binding) {
-            rvRefresh.setOnRefreshListener {
-                viewModel.refreshLatestDiscussions()
-                rvRefresh.isRefreshing = false
-            }
-
-            rvDiscussions.adapter = discussionAdapter
-            rvDiscussions.setHasFixedSize(true)
-            rvDiscussions.addOnScrollEndListener {
-                viewModel.loadLatestDiscussions()
-            }
-        }
-    }
-
-    private fun setUpUiState() {
-        viewModel.uiState.observe(viewLifecycleOwner) { value ->
-            discussionAdapter.submitList(value.latestDiscussion.items)
-        }
-    }
-
-    private val adapterHandler =
-        object : DiscussionAdapter.Handler {
-            override fun onItemClick(index: Int) {
-                val discussionId = discussionAdapter.currentList.getOrNull(index)?.discussionId ?: return
-                moveToDiscussionDetail(discussionId)
-            }
-        }
 
     companion object {
         const val TAG = "LatestDiscussionsFragment"

@@ -9,7 +9,24 @@ data class LatestDiscussionsUiState(
     val items: List<DiscussionUiState> = emptyList(),
     val latestPage: PageInfo = PageInfo.EMPTY,
 ) {
-    fun append(page: LatestDiscussionPage): LatestDiscussionsUiState = copy()
+    fun append(page: LatestDiscussionPage): LatestDiscussionsUiState {
+        val newDiscussion = items.toMutableList()
+
+        val discussion =
+            page
+                .discussions
+                .map { discussionItem ->
+                    val keyword = items.firstOrNull()?.searchKeyword ?: ""
+                    DiscussionUiState(discussionItem, keyword)
+                }
+        val pageInfo = page.pageInfo
+
+        newDiscussion.addAll(discussion)
+
+        val newLatestPage = latestPage.copy(pageInfo.hasNext, pageInfo.nextCursor)
+
+        return copy(newDiscussion, newLatestPage)
+    }
 
     fun modifyDiscussion(newDiscussion: Discussion): LatestDiscussionsUiState =
         copy(

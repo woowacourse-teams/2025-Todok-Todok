@@ -8,12 +8,16 @@ import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentSearchDiscussionsBinding
 import com.team.todoktodok.presentation.core.component.adapter.BaseDiscussionViewHolder
 import com.team.todoktodok.presentation.core.component.adapter.DiscussionAdapter
+import com.team.todoktodok.presentation.core.ext.repeatOnViewStarted
 import com.team.todoktodok.presentation.xml.discussions.BaseDiscussionsFragment
 import com.team.todoktodok.presentation.xml.discussions.DiscussionUiState
 
 class SearchDiscussionsFragment : BaseDiscussionsFragment(R.layout.fragment_search_discussions) {
     private val discussionAdapter: DiscussionAdapter by lazy {
-        DiscussionAdapter(adapterHandler, BaseDiscussionViewHolder.ViewHolderType.QUERY_HIGHLIGHTING)
+        DiscussionAdapter(
+            adapterHandler,
+            BaseDiscussionViewHolder.ViewHolderType.QUERY_HIGHLIGHTING,
+        )
     }
 
     override fun onViewCreated(
@@ -35,16 +39,18 @@ class SearchDiscussionsFragment : BaseDiscussionsFragment(R.layout.fragment_sear
 
     private fun setUpUiState(binding: FragmentSearchDiscussionsBinding) =
         with(binding) {
-            viewModel.uiState.observe(viewLifecycleOwner) { value ->
-                val searchKeyword = value.searchDiscussion.searchKeyword
+            repeatOnViewStarted {
+                viewModel.uiState.collect { value ->
+                    val searchKeyword = value.searchDiscussion.searchKeyword
 
-                if (value.searchDiscussion.items.isEmpty()) {
-                    displayNotHasSearchResultView(binding, searchKeyword)
-                } else {
-                    displaySearchResult(
-                        binding,
-                        value.searchDiscussion.items,
-                    )
+                    if (value.searchDiscussion.items.isEmpty()) {
+                        displayNotHasSearchResultView(binding, searchKeyword)
+                    } else {
+                        displaySearchResult(
+                            binding,
+                            value.searchDiscussion.items,
+                        )
+                    }
                 }
             }
         }
@@ -89,7 +95,8 @@ class SearchDiscussionsFragment : BaseDiscussionsFragment(R.layout.fragment_sear
     private val adapterHandler =
         object : DiscussionAdapter.Handler {
             override fun onItemClick(index: Int) {
-                val discussionId = discussionAdapter.currentList.getOrNull(index)?.discussionId ?: return
+                val discussionId =
+                    discussionAdapter.currentList.getOrNull(index)?.discussionId ?: return
                 moveToDiscussionDetail(discussionId)
             }
         }
