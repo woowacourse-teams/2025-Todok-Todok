@@ -16,6 +16,6 @@ fun LifecycleOwner.repeatOnStarted(block: suspend CoroutineScope.() -> Unit) {
 
 fun Fragment.repeatOnViewStarted(block: suspend CoroutineScope.() -> Unit) {
     viewLifecycleOwner.lifecycleScope.launch {
-        repeatOnLifecycle(Lifecycle.State.STARTED, block)
+        viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED, block)
     }
 }
