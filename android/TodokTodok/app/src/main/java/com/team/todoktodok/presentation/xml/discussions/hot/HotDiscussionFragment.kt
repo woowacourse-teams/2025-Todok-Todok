@@ -5,6 +5,7 @@ import android.view.View
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentHotDiscussionBinding
 import com.team.todoktodok.presentation.core.ext.addOnScrollEndListener
+import com.team.todoktodok.presentation.core.ext.repeatOnViewStarted
 import com.team.todoktodok.presentation.xml.discussions.BaseDiscussionsFragment
 import com.team.todoktodok.presentation.xml.discussions.hot.adapter.HotDiscussionAdapter
 
@@ -33,8 +34,10 @@ class HotDiscussionFragment : BaseDiscussionsFragment(R.layout.fragment_hot_disc
     }
 
     private fun setupUiState() {
-        viewModel.uiState.observe(viewLifecycleOwner) { value ->
-            hotDiscussionAdapter.submitList(value.hotDiscussion.items)
+        repeatOnViewStarted {
+            viewModel.uiState.collect { value ->
+                hotDiscussionAdapter.submitList(value.hotDiscussion.items)
+            }
         }
     }
 

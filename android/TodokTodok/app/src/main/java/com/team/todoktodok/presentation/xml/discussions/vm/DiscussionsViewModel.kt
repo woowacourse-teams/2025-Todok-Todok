@@ -1,7 +1,5 @@
 package com.team.todoktodok.presentation.xml.discussions.vm
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.team.domain.ConnectivityObserver
 import com.team.domain.model.Discussion
@@ -18,6 +16,10 @@ import com.team.todoktodok.presentation.xml.discussions.DiscussionsUiEvent
 import com.team.todoktodok.presentation.xml.discussions.DiscussionsUiState
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class DiscussionsViewModel(
@@ -25,8 +27,8 @@ class DiscussionsViewModel(
     private val memberRepository: MemberRepository,
     networkConnectivityObserver: ConnectivityObserver,
 ) : BaseViewModel(networkConnectivityObserver) {
-    private val _uiState = MutableLiveData(DiscussionsUiState())
-    val uiState: LiveData<DiscussionsUiState> get() = _uiState
+    private val _uiState = MutableStateFlow(DiscussionsUiState())
+    val uiState: StateFlow<DiscussionsUiState> get() = _uiState.asStateFlow()
 
     private val _uiEvent = MutableSingleLiveData<DiscussionsUiEvent>()
     val uiEvent: SingleLiveData<DiscussionsUiEvent> get() = _uiEvent
@@ -35,7 +37,9 @@ class DiscussionsViewModel(
         runAsync(
             key = KEY_SEARCH_DISCUSSIONS,
             action = { discussionRepository.getSearchDiscussion(keyword) },
-            handleSuccess = { _uiState.value = _uiState.value?.addSearchDiscussion(keyword, it) },
+            handleSuccess = { result ->
+                _uiState.update { it.addSearchDiscussion(keyword, result) }
+            },
             handleFailure = { onUiEvent(DiscussionsUiEvent.ShowErrorMessage(it)) },
         )
 
@@ -55,7 +59,7 @@ class DiscussionsViewModel(
                 else -> {
                     val hot = (hotResult as NetworkResult.Success).data
                     val activated = (activatedResult as NetworkResult.Success).data
-                    _uiState.value = _uiState.value?.addHotDiscussion(hot, activated)
+                    _uiState.update { it.addHotDiscussion(hot, activated) }
                 }
             }
         }
@@ -74,14 +78,16 @@ class DiscussionsViewModel(
         )
 
     fun loadLatestDiscussions() {
-        val currentState = _uiState.value ?: DiscussionsUiState()
+        val currentState = _uiState.value
         if (!currentState.latestPageHasNext) return
         val cursor = currentState.latestPageNextCursor
 
         runAsync(
             key = KEY_LATEST_DISCUSSIONS,
             action = { discussionRepository.getLatestDiscussions(cursor = cursor) },
-            handleSuccess = { _uiState.value = _uiState.value?.addLatestDiscussion(it) },
+            handleSuccess = { result ->
+                _uiState.update { it.addLatestDiscussion(result) }
+            },
             handleFailure = { onUiEvent(DiscussionsUiEvent.ShowErrorMessage(it)) },
         )
     }
@@ -107,8 +113,7 @@ class DiscussionsViewModel(
                     else -> {
                         val created = (createdResult as NetworkResult.Success).data
                         val participated = (participatedResult as NetworkResult.Success).data
-                        _uiState.value =
-                            _uiState.value?.addMyDiscussion(created, participated)
+                        _uiState.update { it.addMyDiscussion(created, participated) }
                     }
                 }
             }
@@ -145,7 +150,7 @@ class DiscussionsViewModel(
         runAsync(
             key = KEY_ACTIVATED_DISCUSSIONS,
             action = { discussionRepository.getActivatedDiscussion(cursor = cursor) },
-            handleSuccess = { _uiState.value = _uiState.value?.appendActivatedDiscussion(it) },
+            handleSuccess = { result -> _uiState.update { it.appendActivatedDiscussion(result) } },
             handleFailure = { onUiEvent(DiscussionsUiEvent.ShowErrorMessage(it)) },
         )
     }
@@ -154,7 +159,7 @@ class DiscussionsViewModel(
         runAsync(
             key = KEY_MODIFY_DISCUSSION,
             action = { discussionRepository.getDiscussion(discussionId) },
-            handleSuccess = { _uiState.value = _uiState.value?.modifyDiscussion(it) },
+            handleSuccess = { result -> _uiState.update { it.modifyDiscussion(result) } },
             handleFailure = { onUiEvent(DiscussionsUiEvent.ShowErrorMessage(it)) },
         )
         clearSearchResult()
@@ -162,16 +167,16 @@ class DiscussionsViewModel(
     }
 
     fun refreshLatestDiscussions() {
-        _uiState.value = _uiState.value?.clearLatestDiscussion()
+        _uiState.update { it.clearLatestDiscussion() }
         loadLatestDiscussions()
     }
 
     fun clearSearchResult() {
-        _uiState.value = _uiState.value?.clearSearchDiscussion()
+        _uiState.update { it.clearSearchDiscussion() }
     }
 
     fun removeDiscussion(discussionId: Long) {
-        _uiState.value = _uiState.value?.removeDiscussion(discussionId)
+        _uiState.update { it.removeDiscussion(discussionId) }
     }
 
     private fun onUiEvent(event: DiscussionsUiEvent) {

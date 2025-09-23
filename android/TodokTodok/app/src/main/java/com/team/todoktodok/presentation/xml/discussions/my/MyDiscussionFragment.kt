@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentMyDiscussionBinding
+import com.team.todoktodok.presentation.core.ext.repeatOnViewStarted
 import com.team.todoktodok.presentation.xml.discussions.BaseDiscussionsFragment
 import com.team.todoktodok.presentation.xml.discussions.my.adapter.MyDiscussionAdapter
 import com.team.todoktodok.presentation.xml.profile.ProfileActivity
@@ -32,12 +33,14 @@ class MyDiscussionFragment : BaseDiscussionsFragment(R.layout.fragment_my_discus
     }
 
     private fun setUpUiState(binding: FragmentMyDiscussionBinding) {
-        viewModel.uiState.observe(viewLifecycleOwner) { value ->
-            if (value.myDiscussion.isEmpty()) {
-                displayNoResultsView(binding)
-            } else {
-                displayResultsView(binding)
-                discussionAdapter.submitList(value.myDiscussion.items)
+        repeatOnViewStarted {
+            viewModel.uiState.collect { value ->
+                if (value.myDiscussion.isEmpty()) {
+                    displayNoResultsView(binding)
+                } else {
+                    displayResultsView(binding)
+                    discussionAdapter.submitList(value.myDiscussion.items)
+                }
             }
         }
     }

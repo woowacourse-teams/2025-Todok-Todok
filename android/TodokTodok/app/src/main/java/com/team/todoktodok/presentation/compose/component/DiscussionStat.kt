@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import com.team.todoktodok.presentation.compose.theme.RedFF
 
 @Composable
-fun DiscussionStats(
+fun DiscussionStat(
     content: String,
     modifier: Modifier = Modifier,
     icon: @Composable () -> Unit,
@@ -39,7 +39,7 @@ fun DiscussionStats(
 @Preview(showBackground = true)
 @Composable
 fun DiscussionStatsPreview() {
-    DiscussionStats(
+    DiscussionStat(
         content = "100",
         icon = {
             Icon(
