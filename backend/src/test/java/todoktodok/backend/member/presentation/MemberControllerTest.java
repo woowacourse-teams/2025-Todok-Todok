@@ -3,6 +3,8 @@ package todoktodok.backend.member.presentation;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.given;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -18,6 +20,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import todoktodok.backend.DatabaseInitializer;
 import todoktodok.backend.InitializerTimer;
 import todoktodok.backend.global.jwt.JwtTokenProvider;
@@ -26,12 +29,21 @@ import todoktodok.backend.member.application.dto.request.ProfileUpdateRequest;
 import todoktodok.backend.member.application.dto.request.RefreshTokenRequest;
 import todoktodok.backend.member.application.dto.request.SignupRequest;
 import todoktodok.backend.member.application.dto.response.TokenResponse;
+import todoktodok.backend.member.infrastructure.GoogleAuthClient;
 import todoktodok.backend.member.presentation.fixture.MemberFixture;
 
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(initializers = InitializerTimer.class)
 class MemberControllerTest {
+
+    private static String DEFAULT_EMAIL = "user@gmail.com";
+
+    @MockitoBean
+    private GoogleAuthClient googleAuthClient;
+
+    @Autowired
+    private MemberFixture memberFixture;
 
     @Autowired
     private DatabaseInitializer databaseInitializer;
@@ -52,16 +64,17 @@ class MemberControllerTest {
     @DisplayName("회원가입을 한다")
     void signUpTest() {
         // given
-        final String email = "email@gmail.com";
         final String nickname = "test";
         final String profileImage = "https://www.image.com";
-        final String tempToken = jwtTokenProvider.createTempToken(email);
+        final String tempToken = jwtTokenProvider.createTempToken(DEFAULT_EMAIL);
+
+        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
 
         // when - then
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .header("Authorization", tempToken)
-                .body(new SignupRequest(nickname, profileImage, email))
+                .body(new SignupRequest(nickname, profileImage, DEFAULT_EMAIL))
                 .when().post("/api/v1/members/signup")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value())
@@ -72,8 +85,10 @@ class MemberControllerTest {
     @DisplayName("토큰을 재발급한다")
     void refreshTest() {
         // given
+        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+
         databaseInitializer.setDefaultUserInfo();
-        final TokenResponse tokens = MemberFixture.getAccessAndRefreshToken("user@gmail.com");
+        final TokenResponse tokens = memberFixture.getAccessAndRefreshToken(DEFAULT_EMAIL);
 
         // when - then
         RestAssured.given().log().all()
@@ -89,10 +104,12 @@ class MemberControllerTest {
     @DisplayName("회원을 차단한다")
     void blockTest() {
         // given
+        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setUserInfo("user2@gmail.com", "user2", "https://user2.png", "user");
 
-        final String token = MemberFixture.getAccessToken("user@gmail.com");
+        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
 
         // when - then
         RestAssured.given().log().all()
@@ -107,10 +124,12 @@ class MemberControllerTest {
     @DisplayName("회원을 신고한다")
     void reportTest() {
         // given
+        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setUserInfo("user2@gmail.com", "user2", "https://user2.png", "user");
 
-        final String token = MemberFixture.getAccessToken("user@gmail.com");
+        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
         final MemberReportRequest memberReportRequest = new MemberReportRequest("욕설/인신공격");
 
         // when - then
@@ -128,10 +147,12 @@ class MemberControllerTest {
     @DisplayName("프로필을 조회한다")
     void getProfileTest(final Long memberId) {
         // given
-        databaseInitializer.setUserInfo("user@gmail.com", "user", "https://user.png", "user");
+        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+
+        databaseInitializer.setUserInfo(DEFAULT_EMAIL, "user", "https://user.png", "user");
         databaseInitializer.setUserInfo("user2@gmail.com", "user2", "https://user2.png", "user2");
 
-        final String token = MemberFixture.getAccessToken("user@gmail.com");
+        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
 
         // when
         final String uri = String.format("/api/v1/members/%d/profile", memberId);
@@ -149,9 +170,11 @@ class MemberControllerTest {
     @DisplayName("닉네임을 수정한다")
     void updateProfileTest_nickname() {
         // given
-        databaseInitializer.setUserInfo("user@gmail.com", "user", "https://user.png", "user");
+        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
 
-        final String token = MemberFixture.getAccessToken("user@gmail.com");
+        databaseInitializer.setUserInfo(DEFAULT_EMAIL, "user", "https://user.png", "user");
+
+        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
         final String newNickname = "newUser";
         final String profileMessage = "user";
 
@@ -170,9 +193,11 @@ class MemberControllerTest {
     @DisplayName("상태메세지를 수정한다")
     void updateProfileTest_profileMessage() {
         // given
-        databaseInitializer.setUserInfo("user@gmail.com", "user", "https://user.png", "user");
+        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
 
-        final String token = MemberFixture.getAccessToken("user@gmail.com");
+        databaseInitializer.setUserInfo(DEFAULT_EMAIL, "user", "https://user.png", "user");
+
+        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
         final String nickname = "user";
         final String newProfileMessage = "newProfileMessage";
 
@@ -191,6 +216,8 @@ class MemberControllerTest {
     @DisplayName("활동도서를 조회한다")
     void getActiveBooksTest() {
         // given
+        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setUserInfo("user2@gmail.com", "user2", "https://user2.png", "user2");
 
@@ -209,7 +236,7 @@ class MemberControllerTest {
         databaseInitializer.setCommentInfo("user2가 user2에 단 댓글", 2L, 3L);
         databaseInitializer.setReplyInfo("저도 자바좋아해요", 1L, 2L);
 
-        final String token = MemberFixture.getAccessToken("user@gmail.com");
+        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
 
         // when - then
         RestAssured.given().log().all()
@@ -225,11 +252,13 @@ class MemberControllerTest {
     @DisplayName("회원이 생성한 토론방을 조회한다")
     void getMemberDiscussionsByTypeTest_created() {
         // given
+        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
         databaseInitializer.setDefaultDiscussionInfo();
 
-        final String token = MemberFixture.getAccessToken("user@gmail.com");
+        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
 
         // when - then
         RestAssured.given().log().all()
@@ -245,6 +274,8 @@ class MemberControllerTest {
     @DisplayName("회원이 참여한 토론방을 조회한다")
     void getMemberDiscussionsByTypeTest_participated() {
         // given
+        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setUserInfo("user2@gmail.com", "user2", "https://user2.png", "user2");
 
@@ -264,7 +295,7 @@ class MemberControllerTest {
         databaseInitializer.setCommentInfo("user2가 user2에 단 댓글", 2L, 3L);
         databaseInitializer.setReplyInfo("저도 자바좋아해요", 1L, 2L);
 
-        final String token = MemberFixture.getAccessToken("user@gmail.com");
+        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
 
         // when - then
         RestAssured.given().log().all()
@@ -280,11 +311,13 @@ class MemberControllerTest {
     @DisplayName("회원의 토론방을 필터링할 때 type을 명시하지 않으면 예외가 발생한다")
     void getMemberDiscussionsByTypeTest_noType_fail() {
         // given
+        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
         databaseInitializer.setDefaultDiscussionInfo();
 
-        final String token = MemberFixture.getAccessToken("user@gmail.com");
+        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
         final String uri = "/api/v1/members/1/discussions";
 
         // when - then
@@ -300,11 +333,13 @@ class MemberControllerTest {
     @DisplayName("회원의 토론방을 필터링할 때 type에 정해지지 않는 값을 추가하면 예외가 발생한다")
     void getMemberDiscussionsByTypeTest_invalidType_fail() {
         // given
+        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
         databaseInitializer.setDefaultDiscussionInfo();
 
-        final String token = MemberFixture.getAccessToken("user@gmail.com");
+        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
         final String uri = "/api/v1/members/1/discussions?type=HELLO";
 
         // when - then
@@ -320,9 +355,11 @@ class MemberControllerTest {
     @DisplayName("회원이 탈퇴한다")
     void deleteMemberTest() {
         // given
-        databaseInitializer.setUserInfo("user@gmail.com", "user", "https://image.png", "user");
+        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
 
-        final TokenResponse tokenResponse = MemberFixture.getAccessAndRefreshToken("user@gmail.com");
+        databaseInitializer.setUserInfo(DEFAULT_EMAIL, "user", "https://image.png", "user");
+
+        final TokenResponse tokenResponse = memberFixture.getAccessAndRefreshToken(DEFAULT_EMAIL);
 
         // when - then
         RestAssured.given().log().all()
@@ -338,14 +375,16 @@ class MemberControllerTest {
     @DisplayName("차단한 회원 전체를 조회한다")
     void getBlockMembersTest() {
         // given
-        databaseInitializer.setUserInfo("user@gmail.com", "user", "https://image.png", "user");
+        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+
+        databaseInitializer.setUserInfo(DEFAULT_EMAIL, "user", "https://image.png", "user");
         databaseInitializer.setUserInfo("user2@gmail.com", "user2", "https://image2.png", "user2");
         databaseInitializer.setUserInfo("user3@gmail.com", "user3", "https://image3.png", "user3");
 
         databaseInitializer.setBlockInfo(1L, 2L);
         databaseInitializer.setBlockInfo(1L, 3L);
 
-        final String token = MemberFixture.getAccessToken("user@gmail.com");
+        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
 
         // when - then
         RestAssured.given().log().all()
@@ -361,12 +400,14 @@ class MemberControllerTest {
     @DisplayName("차단한 회원을 차단해제한다")
     void deleteBlockTest() {
         // given
-        databaseInitializer.setUserInfo("user@gmail.com", "user", "https://image.png", "user");
+        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+
+        databaseInitializer.setUserInfo(DEFAULT_EMAIL, "user", "https://image.png", "user");
         databaseInitializer.setUserInfo("user2@gmail.com", "user2", "https://image2.png", "user2");
 
         databaseInitializer.setBlockInfo(1L, 2L);
 
-        final String token = MemberFixture.getAccessToken("user@gmail.com");
+        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
 
         // when - then
         RestAssured.given().log().all()

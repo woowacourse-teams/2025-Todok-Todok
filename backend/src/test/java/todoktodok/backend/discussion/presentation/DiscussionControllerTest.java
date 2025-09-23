@@ -5,6 +5,8 @@ import static org.hamcrest.Matchers.nullValue;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.given;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -21,11 +23,13 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import todoktodok.backend.DatabaseInitializer;
 import todoktodok.backend.InitializerTimer;
 import todoktodok.backend.discussion.application.dto.request.DiscussionReportRequest;
 import todoktodok.backend.discussion.application.dto.request.DiscussionRequest;
 import todoktodok.backend.discussion.application.dto.request.DiscussionUpdateRequest;
+import todoktodok.backend.member.infrastructure.GoogleAuthClient;
 import todoktodok.backend.member.presentation.fixture.MemberFixture;
 
 @ActiveProfiles("test")
@@ -33,6 +37,14 @@ import todoktodok.backend.member.presentation.fixture.MemberFixture;
 @ContextConfiguration(initializers = InitializerTimer.class)
 class DiscussionControllerTest {
 
+    private static String DEFAULT_EMAIL = "user@gmail.com";
+
+    @MockitoBean
+    private GoogleAuthClient googleAuthClient;
+
+    @Autowired
+    private MemberFixture memberFixture;
+    
     @Autowired
     private DatabaseInitializer databaseInitializer;
 
@@ -49,10 +61,12 @@ class DiscussionControllerTest {
     @DisplayName("토론방을 생성한다")
     void createDiscussion() {
         // given
+        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
 
-        final String token = MemberFixture.getAccessToken("user@gmail.com");
+        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
 
         final DiscussionRequest discussionRequest = new DiscussionRequest(
                 1L,
@@ -74,12 +88,14 @@ class DiscussionControllerTest {
     @DisplayName("특정 토론방을 조회한다")
     void getDiscussion() {
         // given
+        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
 
         databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
 
-        final String token = MemberFixture.getAccessToken("user@gmail.com");
+        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
 
         // when - then
         RestAssured.given().log().all()
@@ -94,6 +110,8 @@ class DiscussionControllerTest {
     @DisplayName("토론방을 최신순 조회한다 - 첫 페이지 조회")
     void getSlicedDiscussions_firstPage() {
         // given
+        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
 
@@ -103,7 +121,7 @@ class DiscussionControllerTest {
         databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
         databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
 
-        final String token = MemberFixture.getAccessToken("user@gmail.com");
+        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
         final String cursorMeaningThree = "Mw==";
 
         // when - then
@@ -122,6 +140,8 @@ class DiscussionControllerTest {
     @DisplayName("토론방을 최신순 조회한다 - 중간 페이지 조회")
     void getSlicedDiscussions_middlePage() {
         // given
+        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
 
@@ -131,7 +151,7 @@ class DiscussionControllerTest {
         databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
         databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
 
-        final String token = MemberFixture.getAccessToken("user@gmail.com");
+        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
         final String cursorMeaningFive = "NQ==";
         final String cursorMeaningTwo = "Mg==";
 
@@ -151,6 +171,8 @@ class DiscussionControllerTest {
     @DisplayName("토론방을 최신순 조회한다 - 마지막 페이지 조회")
     void getSlicedDiscussions_lastPage() {
         // given
+        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
 
@@ -160,7 +182,7 @@ class DiscussionControllerTest {
         databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
         databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
 
-        final String token = MemberFixture.getAccessToken("user@gmail.com");
+        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
         final String cursorMeaningFour = "NA==";
 
         // when - then
@@ -179,12 +201,14 @@ class DiscussionControllerTest {
     @DisplayName("토론방을 필터링한다")
     void filterDiscussions() {
         // given
+        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
 
         databaseInitializer.setDiscussionInfo("오브젝트", "오브젝트 토론입니다", 1L, 1L);
 
-        final String token = MemberFixture.getAccessToken("user@gmail.com");
+        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
 
         // when - then
         RestAssured.given().log().all()
@@ -199,13 +223,15 @@ class DiscussionControllerTest {
     @DisplayName("토론방을 신고한다")
     void report() {
         // given
+        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setUserInfo("user123@gmail.com", "user123", "https://image.png", "message");
         databaseInitializer.setDefaultBookInfo();
 
         databaseInitializer.setDiscussionInfo("토론방1", "토론방 내용", 2L, 1L);
 
-        final String token = MemberFixture.getAccessToken("user@gmail.com");
+        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
         final DiscussionReportRequest discussionReportRequest = new DiscussionReportRequest("토론 주제와 무관한 내용");
 
         // when - then
@@ -222,6 +248,8 @@ class DiscussionControllerTest {
     @DisplayName("토론방을 수정한다")
     void updateDiscussionTest() {
         // given
+        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
 
@@ -234,7 +262,7 @@ class DiscussionControllerTest {
                 updatedContent
         );
 
-        final String token = MemberFixture.getAccessToken("user@gmail.com");
+        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
 
         // when - then
         RestAssured.given().log().all()
@@ -250,13 +278,17 @@ class DiscussionControllerTest {
     @DisplayName("다른 사용자의 토론방 수정 시 에러가 발생한다")
     void updateDiscussion_unauthorized() {
         // given
+        final String loginUserEmail = "user2@gmail.com";
+
+        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(loginUserEmail);
+
         databaseInitializer.setDefaultUserInfo();
-        databaseInitializer.setUserInfo("user2@gmail.com", "user2", "https://image.png", "message");
+        databaseInitializer.setUserInfo(loginUserEmail, "user2", "https://image.png", "message");
         databaseInitializer.setDefaultBookInfo();
 
         databaseInitializer.setDefaultDiscussionInfo();
 
-        final String token = MemberFixture.getAccessToken("user2@gmail.com");
+        final String token = memberFixture.getAccessToken(loginUserEmail);
 
         // when - then
         RestAssured.given().log().all()
@@ -272,12 +304,14 @@ class DiscussionControllerTest {
     @DisplayName("토론방을 삭제한다")
     void deleteDiscussionTest() {
         // given
+        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
 
         databaseInitializer.setDefaultDiscussionInfo();
 
-        final String token = MemberFixture.getAccessToken("user@gmail.com");
+        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
 
         // when - then
         RestAssured.given().log().all()
@@ -292,13 +326,15 @@ class DiscussionControllerTest {
     @DisplayName("댓글이 있는 토론방 삭제 시 에러가 발생한다")
     void deleteDiscussion_hasComments() {
         // given
+        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
 
         databaseInitializer.setDefaultDiscussionInfo();
         databaseInitializer.setDefaultCommentInfo();
 
-        final String token = MemberFixture.getAccessToken("user@gmail.com");
+        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
 
         // when - then
         RestAssured.given().log().all()
@@ -313,12 +349,14 @@ class DiscussionControllerTest {
     @DisplayName("토론방 좋아요를 생성한다")
     void createDiscussionToggleLikeTest() {
         // given
+        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
 
         databaseInitializer.setDefaultDiscussionInfo();
 
-        final String token = MemberFixture.getAccessToken("user@gmail.com");
+        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
 
         // when - then
         RestAssured.given().log().all()
@@ -333,13 +371,15 @@ class DiscussionControllerTest {
     @DisplayName("토론방 좋아요를 삭제한다")
     void deleteDiscussionToggleLikeTest() {
         // given
+        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
 
         databaseInitializer.setDefaultDiscussionInfo();
         databaseInitializer.setDiscussionLikeInfo(1L, 1L);
 
-        final String token = MemberFixture.getAccessToken("user@gmail.com");
+        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
 
         // when - then
         RestAssured.given().log().all()
@@ -354,6 +394,8 @@ class DiscussionControllerTest {
     @DisplayName("활성화된 토론방을 조회한다")
     void getActiveDiscussions() {
         // given
+        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
 
@@ -375,7 +417,7 @@ class DiscussionControllerTest {
         databaseInitializer.setCommentInfo("3-3", memberId, 3L, base.minusMinutes(60));
         databaseInitializer.setCommentInfo("4-1", memberId, 4L, base.minusMinutes(70));
 
-        final String token = MemberFixture.getAccessToken("user@gmail.com");
+        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
         final int size = 3;
 
         // when - then
