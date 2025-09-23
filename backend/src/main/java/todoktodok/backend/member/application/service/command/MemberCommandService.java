@@ -25,7 +25,7 @@ import todoktodok.backend.member.domain.repository.BlockRepository;
 import todoktodok.backend.member.domain.repository.MemberReportRepository;
 import todoktodok.backend.member.domain.repository.MemberRepository;
 import todoktodok.backend.member.domain.repository.RefreshTokenRepository;
-import todoktodok.backend.member.infrastructure.GoogleAuthClient;
+import todoktodok.backend.member.infrastructure.AuthClient;
 import todoktodok.backend.member.infrastructure.ProfileImageResponse;
 import todoktodok.backend.member.infrastructure.S3ImageUploadClient;
 
@@ -42,10 +42,10 @@ public class MemberCommandService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final S3ImageUploadClient s3ImageUploadClient;
-    private final GoogleAuthClient googleAuthClient;
+    private final AuthClient authclient;
 
     public TokenResponse login(final LoginRequest loginRequest) {
-        final String email = googleAuthClient.resolveVerifiedEmailFrom(loginRequest.googleIdToken());
+        final String email = authclient.resolveVerifiedEmailFrom(loginRequest.googleIdToken());
         final Optional<Member> memberOrEmpty = memberRepository.findByEmail(email);
 
         if (memberOrEmpty.isPresent()) {
@@ -91,7 +91,7 @@ public class MemberCommandService {
             final String memberEmail
     ) {
         final String idToken = signupRequest.googleIdToken();
-        final GoogleAuthMemberDto requestMemberDto = googleAuthClient.resolveVerifiedEmailAndNicknameFrom(idToken);
+        final GoogleAuthMemberDto requestMemberDto = authclient.resolveVerifiedEmailAndNicknameFrom(idToken);
         final String requestEmail = requestMemberDto.email();
         final String requestProfileImage = requestMemberDto.profileImage();
 

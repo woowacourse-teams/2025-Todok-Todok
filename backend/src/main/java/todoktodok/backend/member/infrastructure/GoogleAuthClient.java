@@ -3,6 +3,7 @@ package todoktodok.backend.member.infrastructure;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import lombok.AllArgsConstructor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import todoktodok.backend.member.application.service.command.GoogleAuthMemberDto;
 
@@ -10,7 +11,8 @@ import java.security.GeneralSecurityException;
 
 @Component
 @AllArgsConstructor
-public class GoogleAuthClient {
+@ConditionalOnProperty(name = "auth.mode", havingValue = "google", matchIfMissing = true)
+public class GoogleAuthClient implements AuthClient{
 
     private final GoogleIdTokenVerifier googleIdTokenVerifier;
 

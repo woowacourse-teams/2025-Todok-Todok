@@ -36,6 +36,9 @@ spring:
       - submodule/security/database.yml
       - submodule/security/firebase.yml
 
+auth:
+  mode: google
+
 management:
   endpoints:
     web:
