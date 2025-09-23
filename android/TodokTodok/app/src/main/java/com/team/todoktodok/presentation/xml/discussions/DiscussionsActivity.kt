@@ -138,7 +138,7 @@ class DiscussionsActivity : AppCompatActivity() {
                 }
 
                 DiscussionsUiEvent.ClearSearchResult -> {
-                    binding.etSearchDiscussion.text = null
+                    allDiscussionFragment.showLatestDiscussions()
                 }
             }
         }
@@ -180,10 +180,7 @@ class DiscussionsActivity : AppCompatActivity() {
     private fun triggerSearch() =
         with(binding) {
             val newKeyword = etSearchDiscussion.text?.toString()?.trim()
-            val latestKeyword =
-                viewModel.uiState.value
-                    ?.searchDiscussion
-                    ?.searchKeyword
+            val latestKeyword = viewModel.uiState.value.searchDiscussion.searchKeyword
             val isSameKeyword = newKeyword == latestKeyword
 
             if (!newKeyword.isNullOrEmpty()) {
