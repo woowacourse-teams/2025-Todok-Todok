@@ -1,4 +1,4 @@
-name: Backend CI/CD
+name: Backend Practice CI/CD
 
 on:
   push:
