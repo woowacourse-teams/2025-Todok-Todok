@@ -9,12 +9,12 @@ import todoktodok.backend.member.application.service.command.GoogleAuthMemberDto
 public class LocalBypassAuthClient implements AuthClient{
 
     @Override
-    public String resolveVerifiedEmailFrom(String idTokenRequest) {
+    public String resolveVerifiedEmailFrom(final String idTokenRequest) {
         return idTokenRequest;
     }
 
     @Override
-    public GoogleAuthMemberDto resolveVerifiedEmailAndNicknameFrom(String idTokenRequest) {
+    public GoogleAuthMemberDto resolveVerifiedEmailAndNicknameFrom(final String idTokenRequest) {
         return new GoogleAuthMemberDto(idTokenRequest, "");
     }
 }
