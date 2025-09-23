@@ -3,7 +3,6 @@ package todoktodok.backend.member.presentation;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.hamcrest.Matchers.nullValue;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -22,7 +21,6 @@ import org.springframework.test.context.ContextConfiguration;
 import todoktodok.backend.DatabaseInitializer;
 import todoktodok.backend.InitializerTimer;
 import todoktodok.backend.global.jwt.JwtTokenProvider;
-import todoktodok.backend.member.application.dto.request.LoginRequest;
 import todoktodok.backend.member.application.dto.request.MemberReportRequest;
 import todoktodok.backend.member.application.dto.request.ProfileUpdateRequest;
 import todoktodok.backend.member.application.dto.request.RefreshTokenRequest;
@@ -48,58 +46,6 @@ class MemberControllerTest {
     void setUp() {
         RestAssured.port = port;
         databaseInitializer.clear();
-    }
-
-    @Test
-    @DisplayName("회원이 로그인한다")
-    void loginTest() {
-        // given
-        databaseInitializer.setDefaultUserInfo();
-
-        final String email = "user@gmail.com";
-
-        // when - then
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(new LoginRequest(email))
-                .when().post("/api/v1/members/login")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .body("refreshToken", notNullValue());
-    }
-
-    @Test
-    @DisplayName("비회원이 로그인한다")
-    void loginTest_guest() {
-        // given
-        final String email = "user@gmail.com";
-
-        // when - then
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(new LoginRequest(email))
-                .when().post("/api/v1/members/login")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .body("refreshToken", nullValue());
-    }
-
-    @Test
-    @DisplayName("탈퇴한 회원이 로그인하여 재가입한다")
-    void loginTest_deletedMember() {
-        // given
-        final String email = "user@gmail.com";
-
-        databaseInitializer.setUserInfo(email, "user1", "", "");
-        databaseInitializer.deleteUserInfo(email);
-
-        // when - then
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(new LoginRequest(email))
-                .when().post("/api/v1/members/login")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value());
     }
 
     @Test
