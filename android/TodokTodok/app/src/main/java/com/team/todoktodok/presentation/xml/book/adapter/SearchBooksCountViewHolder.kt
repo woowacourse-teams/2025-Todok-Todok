@@ -27,14 +27,14 @@ class SearchBooksCountViewHolder private constructor(
             ForegroundColorSpan(ContextCompat.getColor(context, R.color.green_1A)),
             start,
             end,
-            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE,
         )
 
         spannable.setSpan(
             StyleSpan(android.graphics.Typeface.BOLD),
             start,
             end,
-            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE,
         )
 
         binding.tvSearchedBooksCount.text = spannable
