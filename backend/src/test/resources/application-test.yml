@@ -22,3 +22,6 @@ spring:
 
   flyway:
     enabled: false
+
+auth:
+  mode: google
