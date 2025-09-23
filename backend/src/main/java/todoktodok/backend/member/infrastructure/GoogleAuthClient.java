@@ -32,10 +32,12 @@ public class GoogleAuthClient implements AuthClient{
     private GoogleIdToken.Payload getVerifiedPayload(final String idTokenRequest) {
         try {
             final GoogleIdToken idToken = googleIdTokenVerifier.verify(idTokenRequest);
-
             validateResolvedIdToken(idToken, idTokenRequest);
 
-            return idToken.getPayload();
+            GoogleIdToken.Payload payload = idToken.getPayload();
+            validateEmailValidity(payload);
+
+            return payload;
         } catch (final GeneralSecurityException e) {
             throw new IllegalArgumentException(String.format("유효하지 않은 토큰입니다 : idToken = %s", maskToken(idTokenRequest)));
         } catch (final Exception e) {
@@ -49,6 +51,12 @@ public class GoogleAuthClient implements AuthClient{
     ) {
         if (idToken == null) {
             throw new IllegalArgumentException(String.format("유효하지 않은 토큰입니다 : idToken = %s", maskToken(idTokenRequest)));
+        }
+    }
+
+    private void validateEmailValidity(final GoogleIdToken.Payload payload) {
+        if (!Boolean.TRUE.equals(payload.getEmailVerified())) {
+            throw new IllegalArgumentException(String.format("검증되지 않은 이메일입니다 : email = %s", payload.getEmail()));
         }
     }
 

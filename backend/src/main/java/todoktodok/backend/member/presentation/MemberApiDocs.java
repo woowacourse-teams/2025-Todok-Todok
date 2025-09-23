@@ -67,6 +67,10 @@ public interface MemberApiDocs {
                                     @ExampleObject(
                                             name = "유효하지 않은 idToken 오류",
                                             value = "{\"code\":400, \"message\":\"[ERROR] 유효하지 않은 토큰입니다\"}"
+                                    ),
+                                    @ExampleObject(
+                                            name = "검증되지 않은 이메일 오류",
+                                            value = "{\"code\":400, \"message\":\"[ERROR] 검증되지 않은 이메일입니다\"}"
                                     )
                             }
                     )),
@@ -207,6 +211,10 @@ public interface MemberApiDocs {
                                     @ExampleObject(
                                             name = "유효하지 않은 idToken 오류",
                                             value = "{\"code\":400, \"message\":\"[ERROR] 유효하지 않은 토큰입니다\"}"
+                                    ),
+                                    @ExampleObject(
+                                            name = "검증되지 않은 이메일 오류",
+                                            value = "{\"code\":400, \"message\":\"[ERROR] 검증되지 않은 이메일입니다\"}"
                                     )
                             }
                     )),
