@@ -164,11 +164,10 @@ class DiscussionsViewModel(
             handleFailure = { onUiEvent(DiscussionsUiEvent.ShowErrorMessage(it)) },
         )
         clearSearchResult()
-        onUiEvent(DiscussionsUiEvent.ClearSearchResult)
     }
 
     fun refreshLatestDiscussions() {
-        _uiState.update { it.clearLatestDiscussion() }
+        _uiState.update { it.refreshLatestDiscussion() }
         loadLatestDiscussions()
     }
 

@@ -28,6 +28,8 @@ class LatestDiscussionsFragment : BaseDiscussionsFragment(R.layout.fragment_late
                     LatestDiscussionsScreen(
                         onLoadMore = { viewModel.loadLatestDiscussions() },
                         latestDiscussionsUiState = state.latestDiscussion,
+                        isRefreshing = state.latestDiscussion.isRefreshing,
+                        onRefresh = { viewModel.refreshLatestDiscussions() },
                         onClick = { discussionId ->
                             moveToDiscussionDetail(discussionId)
                         },
