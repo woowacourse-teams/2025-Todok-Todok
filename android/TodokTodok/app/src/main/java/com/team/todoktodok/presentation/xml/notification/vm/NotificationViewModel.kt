@@ -1,11 +1,11 @@
-package com.team.todoktodok.presentation.view.notification.vm
+package com.team.todoktodok.presentation.xml.notification.vm
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.team.domain.repository.NotificationRepository
-import com.team.todoktodok.presentation.view.notification.NotificationUiState
+import com.team.todoktodok.presentation.xml.notification.NotificationUiState
 import kotlinx.coroutines.launch
 
 class NotificationViewModel(

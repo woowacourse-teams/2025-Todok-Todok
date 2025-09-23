@@ -1,13 +1,15 @@
-package com.team.todoktodok.presentation.view.notification.adapter
+package com.team.todoktodok.presentation.xml.notification.adapter
 
 import android.view.ViewGroup
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.team.todoktodok.R
-import com.team.todoktodok.presentation.view.notification.adapter.NotificationInformationViewHolder.Companion.NotificationInformationViewHolder
-import com.team.todoktodok.presentation.view.notification.adapter.NotificationViewHolder.Companion.NotificationViewHolder
+import com.team.todoktodok.presentation.xml.notification.adapter.NotificationInformationViewHolder.Companion.NotificationInformationViewHolder
+import com.team.todoktodok.presentation.xml.notification.adapter.NotificationViewHolder.Companion.NotificationViewHolder
 
-class NotificationAdapter : ListAdapter<NotificationGroup, RecyclerView.ViewHolder>(NotificationDiffUtil()) {
+class NotificationAdapter :
+    androidx.recyclerview.widget.ListAdapter<NotificationGroup, RecyclerView.ViewHolder>(
+        NotificationDiffUtil()
+    ) {
     override fun getItemViewType(position: Int): Int =
         when (getItem(position)) {
             is NotificationGroup.Information -> R.layout.item_notification_information

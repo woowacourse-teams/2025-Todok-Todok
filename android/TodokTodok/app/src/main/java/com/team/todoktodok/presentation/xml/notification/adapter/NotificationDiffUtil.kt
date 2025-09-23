@@ -1,4 +1,4 @@
-package com.team.todoktodok.presentation.view.notification.adapter
+package com.team.todoktodok.presentation.xml.notification.adapter
 
 import androidx.recyclerview.widget.DiffUtil
 
@@ -11,7 +11,7 @@ class NotificationDiffUtil : DiffUtil.ItemCallback<NotificationGroup>() {
             oldItem is NotificationGroup.Information && newItem is NotificationGroup.Information -> true
             oldItem is NotificationGroup.Notification && newItem is NotificationGroup.Notification ->
                 oldItem.notification.id ==
-                    newItem.notification.id
+                        newItem.notification.id
 
             else -> false
         }
@@ -24,7 +24,7 @@ class NotificationDiffUtil : DiffUtil.ItemCallback<NotificationGroup>() {
             oldItem is NotificationGroup.Information && newItem is NotificationGroup.Information -> oldItem == newItem
             oldItem is NotificationGroup.Notification && newItem is NotificationGroup.Notification ->
                 oldItem.notification ==
-                    newItem.notification
+                        newItem.notification
 
             else -> false
         }

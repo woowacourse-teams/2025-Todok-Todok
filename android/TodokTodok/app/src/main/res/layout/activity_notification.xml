@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
-    tools:context=".presentation.view.notification.NotificationActivity">
+    tools:context=".presentation.xml.notification.NotificationActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/topBar_notification"

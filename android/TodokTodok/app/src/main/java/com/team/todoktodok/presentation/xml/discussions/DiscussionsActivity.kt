@@ -25,7 +25,6 @@ import com.team.todoktodok.databinding.ActivityDiscussionsBinding
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
 import com.team.todoktodok.presentation.core.ext.getParcelableCompat
-import com.team.todoktodok.presentation.view.notification.NotificationActivity
 import com.team.todoktodok.presentation.view.serialization.SerializationNotificationContent
 import com.team.todoktodok.presentation.view.serialization.SerializationNotificationType
 import com.team.todoktodok.presentation.xml.book.SelectBookActivity
@@ -36,6 +35,7 @@ import com.team.todoktodok.presentation.xml.discussions.hot.HotDiscussionFragmen
 import com.team.todoktodok.presentation.xml.discussions.my.MyDiscussionFragment
 import com.team.todoktodok.presentation.xml.discussions.vm.DiscussionsViewModel
 import com.team.todoktodok.presentation.xml.discussions.vm.DiscussionsViewModelFactory
+import com.team.todoktodok.presentation.xml.notification.NotificationActivity
 import com.team.todoktodok.presentation.xml.profile.ProfileActivity
 
 class DiscussionsActivity : AppCompatActivity() {

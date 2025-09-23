@@ -1,4 +1,4 @@
-package com.team.todoktodok.presentation.view.notification
+package com.team.todoktodok.presentation.xml.notification
 
 import android.content.Context
 import android.content.Intent
@@ -11,10 +11,10 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.team.todoktodok.App
 import com.team.todoktodok.databinding.ActivityNotificationBinding
-import com.team.todoktodok.presentation.view.notification.adapter.NotificationAdapter
-import com.team.todoktodok.presentation.view.notification.adapter.NotificationGroup
-import com.team.todoktodok.presentation.view.notification.vm.NotificationViewModel
-import com.team.todoktodok.presentation.view.notification.vm.NotificationViewModelFactory
+import com.team.todoktodok.presentation.xml.notification.adapter.NotificationAdapter
+import com.team.todoktodok.presentation.xml.notification.adapter.NotificationGroup
+import com.team.todoktodok.presentation.xml.notification.vm.NotificationViewModel
+import com.team.todoktodok.presentation.xml.notification.vm.NotificationViewModelFactory
 
 class NotificationActivity : AppCompatActivity() {
     private val viewModel by viewModels<NotificationViewModel> {

@@ -1,4 +1,4 @@
-package com.team.todoktodok.presentation.view.notification.vm
+package com.team.todoktodok.presentation.xml.notification.vm
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

@@ -1,4 +1,4 @@
-package com.team.todoktodok.presentation.view.notification.adapter
+package com.team.todoktodok.presentation.xml.notification.adapter
 
 import com.team.todoktodok.R
 
