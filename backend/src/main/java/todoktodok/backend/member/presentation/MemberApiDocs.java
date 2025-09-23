@@ -204,6 +204,10 @@ public interface MemberApiDocs {
                                             name = "입력한 이메일과 토큰 이메일 불일치",
                                             value = "{\"code\":400, \"message\":\"[ERROR] 소셜 로그인을 하지 않은 이메일입니다\"}"
                                     ),
+                                    @ExampleObject(
+                                            name = "유효하지 않은 idToken 오류",
+                                            value = "{\"code\":400, \"message\":\"[ERROR] 유효하지 않은 토큰입니다\"}"
+                                    )
                             }
                     )),
             @ApiResponse(
@@ -240,13 +244,108 @@ public interface MemberApiDocs {
                                     value = """
                                             {
                                               "nickname":"동전",
+                                              "googleIdToken":"{googleIdToken}"
+                                            }
+                                            """
+                            )
+                    )
+            ) final SignupRequest signupRequest
+    );
+
+    @Operation(summary = "[DEPRECATED] 회원가입 API")
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "회원가입 성공",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = RefreshTokenResponse.class),
+                            examples = {
+                                    @ExampleObject(
+                                            name = "리프레시 토큰",
+                                            value = "{\"refreshToken\":\"eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJleHAiOjE3 NTU2MTgxNjZ9._-0qTNmPyO1m6LnpEAwkGAB92Es0yBwxNBtmsq_VrGk\"}"
+                                    )
+                            }
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "잘못된 요청",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = {
+                                    @ExampleObject(
+                                            name = "닉네임 없음",
+                                            value = "{\"code\":400, \"message\":\"[ERROR] 닉네임을 입력해주세요\"}"
+                                    ),
+                                    @ExampleObject(
+                                            name = "닉네임 길이 조건 부적합",
+                                            value = "{\"code\":400, \"message\":\"[ERROR] 닉네임은 1자 이상, 8자 이하여야 합니다\"}"
+                                    ),
+                                    @ExampleObject(
+                                            name = "프로필 이미지 없음",
+                                            value = "{\"code\":400, \"message\":\"[ERROR] 프로필 이미지를 입력해주세요\"}"
+                                    ),
+                                    @ExampleObject(
+                                            name = "이메일 형식 오류",
+                                            value = "{\"code\":400, \"message\":\"[ERROR] 올바른 이메일 형식을 입력해주세요\"}"
+                                    ),
+                                    @ExampleObject(
+                                            name = "닉네임 중복",
+                                            value = "{\"code\":400, \"message\":\"[ERROR] 이미 존재하는 닉네임입니다\"}"
+                                    ),
+                                    @ExampleObject(
+                                            name = "이메일 중복",
+                                            value = "{\"code\":400, \"message\":\"[ERROR] 이미 가입된 이메일입니다\"}"
+                                    ),
+                                    @ExampleObject(
+                                            name = "입력한 이메일과 토큰 이메일 불일치",
+                                            value = "{\"code\":400, \"message\":\"[ERROR] 소셜 로그인을 하지 않은 이메일입니다\"}"
+                                    ),
+                            }
+                    )),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "토큰 인증 오류",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "JWT 오류",
+                                    value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
+                            )
+                    )),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "서버 오류",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "서버 오류",
+                                    value = "{\"code\":500, \"message\":\"[ERROR] 서버 내부 오류가 발생했습니다\"}"
+                            )
+                    ))
+    })
+    ResponseEntity<RefreshTokenResponse> signupLegacy(
+            @Parameter(hidden = true) final String memberEmail,
+            @RequestBody(
+                    description = "회원가입 정보",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = SignupRequestLegacy.class),
+                            examples = @ExampleObject(
+                                    value = """
+                                            {
+                                              "nickname":"동전",
                                               "profileImage":"https://image.png",
                                               "email":"user@example.com"
                                             }
                                             """
                             )
                     )
-            ) final SignupRequest signupRequest
+            ) final SignupRequestLegacy signupRequest
     );
 
     @Operation(summary = "토큰 재발급 API")
