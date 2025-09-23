@@ -91,7 +91,7 @@ public class MemberController implements MemberApiDocs {
 
     @Deprecated
     @Auth(value = Role.TEMP_USER)
-    @PostMapping("/signup-legacy")
+    @PostMapping("/signup/legacy")
     public ResponseEntity<RefreshTokenResponse> signupLegacy(
             @TempMember final String memberEmail,
             @RequestBody @Valid final SignupRequestLegacy signupRequest
