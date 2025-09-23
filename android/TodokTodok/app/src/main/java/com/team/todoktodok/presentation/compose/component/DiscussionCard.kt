@@ -29,21 +29,18 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
-import com.team.domain.model.Book
-import com.team.domain.model.Discussion
-import com.team.domain.model.member.Nickname
-import com.team.domain.model.member.User
+import com.team.todoktodok.presentation.compose.preview.DiscussionUiStatePreviewParameterProvider
 import com.team.todoktodok.presentation.compose.theme.Gray75
 import com.team.todoktodok.presentation.compose.theme.Pretendard
 import com.team.todoktodok.presentation.compose.theme.RedFF
 import com.team.todoktodok.presentation.compose.theme.White
 import com.team.todoktodok.presentation.xml.discussions.DiscussionUiState
-import java.time.LocalDateTime
 
 @Composable
 fun DiscussionCard(
@@ -247,38 +244,11 @@ private fun DiscussionStats(
 
 @Preview(showBackground = true)
 @Composable
-fun DiscussionCardPreview() {
-    Column(
-        modifier = Modifier.padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-    ) {
-        DiscussionCard(
-            DiscussionUiState(
-                item =
-                    Discussion(
-                        id = 1L,
-                        discussionTitle = "JPA 성능 최적화",
-                        book =
-                            Book(
-                                1L,
-                                "자바 ORM 표준 JPA 프로그래밍",
-                                "김영한",
-                                "https://img.ridicdn.net/cover/3746001000/xlarge",
-                            ),
-                        writer =
-                            User(
-                                1L,
-                                Nickname("홍길동"),
-                                "https://avatars.githubusercontent.com/u/49257640?v=4",
-                            ),
-                        createAt = LocalDateTime.of(2025, 7, 12, 12, 0),
-                        discussionOpinion = "fetch join을 남발하면 안됩니다.",
-                        likeCount = 0,
-                        commentCount = 0,
-                        isLikedByMe = false,
-                    ),
-            ),
-            {},
-        )
-    }
+fun DiscussionCardPreview(
+    @PreviewParameter(DiscussionUiStatePreviewParameterProvider::class) uiState: List<DiscussionUiState>,
+) {
+    DiscussionCard(
+        uiState.first(),
+        {},
+    )
 }
