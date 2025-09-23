@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.member.domain.Member;
 import todoktodok.backend.member.domain.repository.MemberRepository;
+import todoktodok.backend.notification.application.dto.response.NotificationCheckResponse;
 import todoktodok.backend.notification.application.dto.response.NotificationResponse;
 import todoktodok.backend.notification.domain.Notification;
 import todoktodok.backend.notification.domain.repository.NotificationRepository;
@@ -70,6 +71,15 @@ public class NotificationCommandService {
         validateNotificationOwnership(notification, member);
 
         notificationRepository.delete(notification);
+    }
+
+    public NotificationCheckResponse existsNonReadNotification(
+            final Long memberId
+    ) {
+        final Member member = findMember(memberId);
+        boolean existsNonReadNotification = notificationRepository.existsByRecipientAndIsReadFalse(member);
+
+        return new NotificationCheckResponse(existsNonReadNotification);
     }
 
     private void validateNotificationOwnership(

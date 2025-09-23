@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import todoktodok.backend.global.auth.Auth;
 import todoktodok.backend.global.auth.Role;
 import todoktodok.backend.global.resolver.LoginMember;
+import todoktodok.backend.notification.application.dto.response.NotificationCheckResponse;
 import todoktodok.backend.notification.application.dto.response.NotificationResponse;
 import todoktodok.backend.notification.application.service.command.NotificationCommandService;
 
@@ -33,7 +34,7 @@ public class NotificationController {
     }
 
     @Auth(value = Role.USER)
-    @PatchMapping("/{notificationId}")
+    @PatchMapping("/{notificationId}/read")
     public ResponseEntity<Void> updateNotificationReadStatus(
             @LoginMember final Long memberId,
             @PathVariable final Long notificationId
@@ -53,5 +54,17 @@ public class NotificationController {
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
                 .build();
+    }
+
+    @Auth(value = Role.USER)
+    @GetMapping("/exists")
+    public ResponseEntity<NotificationCheckResponse> existsNonReadNotification(
+            @LoginMember final Long memberId
+    ) {
+        NotificationCheckResponse notificationCheckResponse = notificationCommandService.existsNonReadNotification(
+                memberId);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(notificationCheckResponse);
     }
 }
