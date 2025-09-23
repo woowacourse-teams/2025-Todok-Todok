@@ -108,7 +108,7 @@ public class MemberCommandService {
         final Member savedMember = memberRepository.save(member);
         final String accessToken = jwtTokenProvider.createAccessToken(savedMember);
         final String refreshToken = jwtTokenProvider.createRefreshToken(savedMember);
-        refreshTokenRepository.save(RefreshToken.create(refreshToken));
+        saveRefreshTokenIfUnique(RefreshToken.create(refreshToken), savedMember.getId());
 
         return new TokenResponse(accessToken, refreshToken);
     }
