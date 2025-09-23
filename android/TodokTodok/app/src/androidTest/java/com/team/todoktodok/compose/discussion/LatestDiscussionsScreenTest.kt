@@ -48,6 +48,8 @@ class LatestDiscussionsScreenTest {
             LatestDiscussionsScreen(
                 onLoadMore = {},
                 onClick = {},
+                isRefreshing = false,
+                onRefresh = {},
                 latestDiscussionsUiState = discussion,
             )
         }
@@ -65,6 +67,8 @@ class LatestDiscussionsScreenTest {
             LatestDiscussionsScreen(
                 onLoadMore = {},
                 onClick = { id -> clickedId = id },
+                isRefreshing = false,
+                onRefresh = {},
                 latestDiscussionsUiState = previewData,
             )
         }
