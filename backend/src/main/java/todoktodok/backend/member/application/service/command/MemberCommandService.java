@@ -90,9 +90,36 @@ public class MemberCommandService {
             final SignupRequest signupRequest,
             final String memberEmail
     ) {
+        final String idToken = signupRequest.googleIdToken();
+        final GoogleAuthMemberDto requestMemberDto = googleAuthClient.resolveVerifiedEmailAndNicknameFrom(idToken);
+        final String requestEmail = requestMemberDto.email();
+        final String requestProfileImage = requestMemberDto.profileImage();
+
         validateDuplicatedNickname(signupRequest.nickname());
-        validateDuplicatedEmail(signupRequest);
-        validateEmailWithTokenEmail(signupRequest, memberEmail);
+        validateDuplicatedEmail(requestEmail);
+        validateEmailWithTokenEmail(requestEmail, memberEmail);
+
+        final Member member = Member.builder()
+                .nickname(signupRequest.nickname())
+                .email(requestEmail)
+                .profileImage(requestProfileImage)
+                .build();
+
+        final Member savedMember = memberRepository.save(member);
+        final String accessToken = jwtTokenProvider.createAccessToken(savedMember);
+        final String refreshToken = jwtTokenProvider.createRefreshToken(savedMember);
+        refreshTokenRepository.save(RefreshToken.create(refreshToken));
+
+        return new TokenResponse(accessToken, refreshToken);
+    }
+
+    public TokenResponse signupLegacy(
+            final SignupRequestLegacy signupRequest,
+            final String memberEmail
+    ) {
+        validateDuplicatedNickname(signupRequest.nickname());
+        validateDuplicatedEmail(signupRequest.email());
+        validateEmailWithTokenEmail(signupRequest.email(), memberEmail);
 
         final Member member = Member.builder()
                 .nickname(signupRequest.nickname())
@@ -235,20 +262,20 @@ public class MemberCommandService {
         }
     }
 
-    private void validateDuplicatedEmail(final SignupRequest signupRequest) {
-        if (memberRepository.existsByEmailAndDeletedAtIsNull(signupRequest.email())) {
+    private void validateDuplicatedEmail(final String email) {
+        if (memberRepository.existsByEmailAndDeletedAtIsNull(email)) {
             throw new IllegalArgumentException(
-                    String.format("이미 가입된 이메일입니다: email = %s", maskEmail(signupRequest.email())));
+                    String.format("이미 가입된 이메일입니다: email = %s", maskEmail(email)));
         }
     }
 
     private void validateEmailWithTokenEmail(
-            final SignupRequest signupRequest,
+            final String requestEmail,
             final String tokenEmail
     ) {
-        if (!tokenEmail.equals(signupRequest.email())) {
+        if (!tokenEmail.equals(requestEmail)) {
             throw new IllegalArgumentException(
-                    String.format("소셜 로그인을 하지 않은 이메일입니다: email = %s", maskEmail(signupRequest.email())));
+                    String.format("소셜 로그인을 하지 않은 이메일입니다: email = %s", maskEmail(requestEmail)));
         }
     }
 

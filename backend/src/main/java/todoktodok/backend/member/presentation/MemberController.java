@@ -89,6 +89,22 @@ public class MemberController implements MemberApiDocs {
                 .body(new RefreshTokenResponse(tokenResponse.refreshToken()));
     }
 
+    @Deprecated
+    @Auth(value = Role.TEMP_USER)
+    @PostMapping("/signup-legacy")
+    public ResponseEntity<RefreshTokenResponse> signupLegacy(
+            @TempMember final String memberEmail,
+            @RequestBody @Valid final SignupRequestLegacy signupRequest
+    ) {
+        final TokenResponse tokenResponse = memberCommandService.signupLegacy(signupRequest, memberEmail);
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .header("Authorization", tokenResponse.accessToken())
+                .header("Cache-Control", "no-store")
+                .header("Pragma", "no-cache")
+                .body(new RefreshTokenResponse(tokenResponse.refreshToken()));
+    }
+
     @Auth(value = Role.EXPIRED_USER)
     @PostMapping("/refresh")
     public ResponseEntity<RefreshTokenResponse> refresh(

@@ -4,6 +4,7 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
+import todoktodok.backend.member.application.service.command.GoogleAuthMemberDto;
 
 import java.security.GeneralSecurityException;
 
@@ -21,6 +22,24 @@ public class GoogleAuthClient {
 
             final GoogleIdToken.Payload payload = idToken.getPayload();
             return payload.getEmail();
+        } catch (final GeneralSecurityException e) {
+            throw new IllegalArgumentException(String.format("유효하지 않은 토큰입니다 : idToken = %s", maskToken(idTokenRequest)));
+        } catch (final Exception e) {
+            throw new IllegalStateException(String.format("토큰 검증 중 오류가 발생했습니다 : idToken = %s", maskToken(idTokenRequest)));
+        }
+    }
+
+    public GoogleAuthMemberDto resolveVerifiedEmailAndNicknameFrom(final String idTokenRequest) {
+        try {
+            final GoogleIdToken idToken = googleIdTokenVerifier.verify(idTokenRequest);
+
+            validateResolvedIdToken(idToken, idTokenRequest);
+
+            final GoogleIdToken.Payload payload = idToken.getPayload();
+            return new GoogleAuthMemberDto(
+                    payload.getEmail(),
+                    (String) payload.get("picture")
+            );
         } catch (final GeneralSecurityException e) {
             throw new IllegalArgumentException(String.format("유효하지 않은 토큰입니다 : idToken = %s", maskToken(idTokenRequest)));
         } catch (final Exception e) {
