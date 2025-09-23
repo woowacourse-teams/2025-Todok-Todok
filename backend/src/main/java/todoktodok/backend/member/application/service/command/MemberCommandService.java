@@ -12,10 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import todoktodok.backend.global.jwt.JwtTokenProvider;
 import todoktodok.backend.global.jwt.TokenInfo;
 import todoktodok.backend.member.application.ImageType;
-import todoktodok.backend.member.application.dto.request.LoginRequest;
-import todoktodok.backend.member.application.dto.request.ProfileUpdateRequest;
-import todoktodok.backend.member.application.dto.request.RefreshTokenRequest;
-import todoktodok.backend.member.application.dto.request.SignupRequest;
+import todoktodok.backend.member.application.dto.request.*;
 import todoktodok.backend.member.application.dto.response.ProfileImageUpdateResponse;
 import todoktodok.backend.member.application.dto.response.ProfileUpdateResponse;
 import todoktodok.backend.member.application.dto.response.TokenResponse;
@@ -28,6 +25,7 @@ import todoktodok.backend.member.domain.repository.BlockRepository;
 import todoktodok.backend.member.domain.repository.MemberReportRepository;
 import todoktodok.backend.member.domain.repository.MemberRepository;
 import todoktodok.backend.member.domain.repository.RefreshTokenRepository;
+import todoktodok.backend.member.infrastructure.GoogleAuthClient;
 import todoktodok.backend.member.infrastructure.ProfileImageResponse;
 import todoktodok.backend.member.infrastructure.S3ImageUploadClient;
 
@@ -44,8 +42,31 @@ public class MemberCommandService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final S3ImageUploadClient s3ImageUploadClient;
+    private final GoogleAuthClient googleAuthClient;
 
     public TokenResponse login(final LoginRequest loginRequest) {
+        final String email = googleAuthClient.resolveVerifiedEmailFrom(loginRequest.googleIdToken());
+        final Optional<Member> memberOrEmpty = memberRepository.findByEmail(email);
+
+        if (memberOrEmpty.isPresent()) {
+            final Member member = memberOrEmpty.get();
+
+            resignUpIfDeleted(member);
+
+            final String accessToken = jwtTokenProvider.createAccessToken(member);
+            final String refreshToken = jwtTokenProvider.createRefreshToken(member);
+
+            final RefreshToken savedRefreshToken = RefreshToken.create(refreshToken);
+            saveRefreshTokenIfUnique(savedRefreshToken, member.getId());
+
+            return new TokenResponse(accessToken, refreshToken);
+        }
+
+        final String tempToken = jwtTokenProvider.createTempToken(email);
+        return new TokenResponse(tempToken, null);
+    }
+
+    public TokenResponse loginLegacy(final LoginRequestLegacy loginRequest) {
         final Optional<Member> memberOrEmpty = memberRepository.findByEmail(loginRequest.email());
         if (memberOrEmpty.isPresent()) {
             final Member member = memberOrEmpty.get();

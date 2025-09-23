@@ -26,11 +26,7 @@ import todoktodok.backend.global.auth.Auth;
 import todoktodok.backend.global.auth.Role;
 import todoktodok.backend.global.resolver.LoginMember;
 import todoktodok.backend.global.resolver.TempMember;
-import todoktodok.backend.member.application.dto.request.LoginRequest;
-import todoktodok.backend.member.application.dto.request.MemberReportRequest;
-import todoktodok.backend.member.application.dto.request.ProfileUpdateRequest;
-import todoktodok.backend.member.application.dto.request.RefreshTokenRequest;
-import todoktodok.backend.member.application.dto.request.SignupRequest;
+import todoktodok.backend.member.application.dto.request.*;
 import todoktodok.backend.member.application.dto.response.BlockMemberResponse;
 import todoktodok.backend.member.application.dto.response.ProfileImageUpdateResponse;
 import todoktodok.backend.member.application.dto.response.ProfileResponse;
@@ -55,6 +51,21 @@ public class MemberController implements MemberApiDocs {
             @RequestBody @Valid final LoginRequest loginRequest
     ) {
         final TokenResponse tokenResponse = memberCommandService.login(loginRequest);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .header("Authorization", tokenResponse.accessToken())
+                .header("Cache-Control", "no-store")
+                .header("Pragma", "no-cache")
+                .body(new RefreshTokenResponse(tokenResponse.refreshToken()));
+    }
+
+    @Deprecated
+    @Auth(value = Role.GUEST)
+    @PostMapping("/login/legacy")
+    public ResponseEntity<RefreshTokenResponse> loginLegacy(
+            @RequestBody @Valid final LoginRequestLegacy loginRequest
+    ) {
+        final TokenResponse tokenResponse = memberCommandService.loginLegacy(loginRequest);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .header("Authorization", tokenResponse.accessToken())
