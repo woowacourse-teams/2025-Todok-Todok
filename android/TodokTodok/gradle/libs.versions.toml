@@ -29,6 +29,8 @@ compose-navigation = "2.9.4"
 compose-ui-test = "1.6.0"
 
 # Network
+material = "1.9.1"
+material-icons-extended = "1.7.8"
 retrofit = "3.0.0"
 retrofit-kotlinx-serialization-converter = "0.8.0"
 okhttp = "5.1.0"
@@ -71,7 +73,6 @@ mannodermaus-junit5 = "1.7.0"
 junit-jupiter = "5.12.0"
 kotest-runner-junit5 = "5.9.1"
 mockk = "1.13.8"
-junit = "4.13.2"
 
 [libraries]
 # AndroidX
@@ -94,11 +95,14 @@ compose-activity = { group = "androidx.activity", name = "activity-compose", ver
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
 compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 compose-navigtion = { module = "androidx.navigation:navigation-compose", version.ref = "compose-navigation" }
+compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "material-icons-extended" }
+compose-material = { module = "androidx.compose.material:material", version.ref = "material" }
 compose-ui = { group = "androidx.compose.ui", name = "ui" }
 compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 compose-coil = { module = "io.coil-kt.coil3:coil-compose", version.ref = "compose-coil" }
+compose-coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "compose-coil" }
 
 # compose-test
 compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest", version.ref = "compose-ui-test" }
@@ -145,7 +149,6 @@ mannodermaus-junit5-runner = { group = "de.mannodermaus.junit5", name = "android
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 mockk-android = { module = "io.mockk:mockk-android", version.ref = "mockk" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines-core" }
-junit = { group = "junit", name = "junit", version.ref = "junit" }
 
 [bundles]
 androidx = [
@@ -170,7 +173,10 @@ compose = [
     "compose-ui-graphics",
     "compose-ui-tooling-preview",
     "compose-material3",
+    "compose-material-icons-extended",
+    "compose-material",
     "compose-coil",
+    "compose-coil-network-okhttp",
     "compose-navigtion"
 ]
 
