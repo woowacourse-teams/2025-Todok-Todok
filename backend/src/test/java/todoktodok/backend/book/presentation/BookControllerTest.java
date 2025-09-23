@@ -25,7 +25,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import todoktodok.backend.DatabaseInitializer;
 import todoktodok.backend.InitializerTimer;
 import todoktodok.backend.book.application.dto.request.BookRequest;
-import todoktodok.backend.member.infrastructure.GoogleAuthClient;
+import todoktodok.backend.member.infrastructure.AuthClient;
 import todoktodok.backend.member.presentation.fixture.MemberFixture;
 
 @ActiveProfiles("test")
@@ -36,7 +36,7 @@ public class BookControllerTest {
     private static String DEFAULT_EMAIL = "user@gmail.com";
 
     @MockitoBean
-    private GoogleAuthClient googleAuthClient;
+    private AuthClient authClient;
 
     @Autowired
     private MemberFixture memberFixture;
@@ -61,7 +61,7 @@ public class BookControllerTest {
         @DisplayName("검색어로 도서를 검색한다")
         void searchTest() {
             // given
-            given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+            given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
 
             databaseInitializer.setDefaultUserInfo();
             databaseInitializer.setDefaultBookInfo();
@@ -84,7 +84,7 @@ public class BookControllerTest {
         @DisplayName("검색어가 1자 미만이면 예외가 발생한다")
         void searchTestFailUnder1Char() {
             // given
-            given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+            given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
 
             databaseInitializer.setDefaultUserInfo();
             databaseInitializer.setDefaultBookInfo();
@@ -106,7 +106,7 @@ public class BookControllerTest {
         @DisplayName("검색어 파라미터가 없으면 예외가 발생한다")
         void searchTestFailEmptyParam() {
             // given
-            given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+            given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
 
             databaseInitializer.setDefaultUserInfo();
             databaseInitializer.setDefaultBookInfo();
@@ -131,7 +131,7 @@ public class BookControllerTest {
         @DisplayName("검색어로 도서를 검색한다 - 첫 페이지 조회")
         void searchByPagingTest_firstPage() {
             // given
-            given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+            given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
 
             databaseInitializer.setDefaultUserInfo();
             databaseInitializer.setDefaultBookInfo();
@@ -160,7 +160,7 @@ public class BookControllerTest {
         @DisplayName("검색어로 도서를 검색한다 - 두 번째 페이지 조회")
         void searchByPagingTest_secondPage() {
             // given
-            given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+            given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
 
             databaseInitializer.setDefaultUserInfo();
             databaseInitializer.setDefaultBookInfo();
@@ -191,7 +191,7 @@ public class BookControllerTest {
         @DisplayName("검색어로 도서를 검색한다 - 마지막 페이지 조회(여섯번째가 마지막일 때)")
         void searchByPagingTest_lastPage() {
             // given
-            given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+            given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
 
             databaseInitializer.setDefaultUserInfo();
             databaseInitializer.setDefaultBookInfo();
@@ -221,7 +221,7 @@ public class BookControllerTest {
         @DisplayName("검색어로 도서를 검색한다 - 마지막 페이지 조회(최대 20번째)")
         void searchByPagingTest_lastTwentyPage() {
             // given
-            given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+            given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
 
             databaseInitializer.setDefaultUserInfo();
             databaseInitializer.setDefaultBookInfo();
@@ -249,7 +249,7 @@ public class BookControllerTest {
         @DisplayName("검색어로 도서를 검색한다 - cursor가 20보다 클 때 첫 페이지 응답")
         void searchByPagingTest_upperTwentyPage() {
             // given
-            given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+            given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
 
             databaseInitializer.setDefaultUserInfo();
             databaseInitializer.setDefaultBookInfo();
@@ -280,7 +280,7 @@ public class BookControllerTest {
     @DisplayName("도서를 생성한다")
     void createBook() {
         // given
-        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
 
         databaseInitializer.setDefaultUserInfo();
 

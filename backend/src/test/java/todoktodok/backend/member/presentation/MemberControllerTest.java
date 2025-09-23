@@ -27,9 +27,8 @@ import todoktodok.backend.global.jwt.JwtTokenProvider;
 import todoktodok.backend.member.application.dto.request.MemberReportRequest;
 import todoktodok.backend.member.application.dto.request.ProfileUpdateRequest;
 import todoktodok.backend.member.application.dto.request.RefreshTokenRequest;
-import todoktodok.backend.member.application.dto.request.SignupRequestLegacy;
 import todoktodok.backend.member.application.dto.response.TokenResponse;
-import todoktodok.backend.member.infrastructure.GoogleAuthClient;
+import todoktodok.backend.member.infrastructure.AuthClient;
 import todoktodok.backend.member.presentation.fixture.MemberFixture;
 
 @ActiveProfiles("test")
@@ -40,7 +39,7 @@ class MemberControllerTest {
     private static String DEFAULT_EMAIL = "user@gmail.com";
 
     @MockitoBean
-    private GoogleAuthClient googleAuthClient;
+    private AuthClient authClient;
 
     @Autowired
     private MemberFixture memberFixture;
@@ -64,7 +63,7 @@ class MemberControllerTest {
     @DisplayName("토큰을 재발급한다")
     void refreshTest() {
         // given
-        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
 
         databaseInitializer.setDefaultUserInfo();
         final TokenResponse tokens = memberFixture.getAccessAndRefreshToken(DEFAULT_EMAIL);
@@ -83,7 +82,7 @@ class MemberControllerTest {
     @DisplayName("회원을 차단한다")
     void blockTest() {
         // given
-        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
 
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setUserInfo("user2@gmail.com", "user2", "https://user2.png", "user");
@@ -103,7 +102,7 @@ class MemberControllerTest {
     @DisplayName("회원을 신고한다")
     void reportTest() {
         // given
-        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
 
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setUserInfo("user2@gmail.com", "user2", "https://user2.png", "user");
@@ -126,7 +125,7 @@ class MemberControllerTest {
     @DisplayName("프로필을 조회한다")
     void getProfileTest(final Long memberId) {
         // given
-        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
 
         databaseInitializer.setUserInfo(DEFAULT_EMAIL, "user", "https://user.png", "user");
         databaseInitializer.setUserInfo("user2@gmail.com", "user2", "https://user2.png", "user2");
@@ -149,7 +148,7 @@ class MemberControllerTest {
     @DisplayName("닉네임을 수정한다")
     void updateProfileTest_nickname() {
         // given
-        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
 
         databaseInitializer.setUserInfo(DEFAULT_EMAIL, "user", "https://user.png", "user");
 
@@ -172,7 +171,7 @@ class MemberControllerTest {
     @DisplayName("상태메세지를 수정한다")
     void updateProfileTest_profileMessage() {
         // given
-        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
 
         databaseInitializer.setUserInfo(DEFAULT_EMAIL, "user", "https://user.png", "user");
 
@@ -195,7 +194,7 @@ class MemberControllerTest {
     @DisplayName("활동도서를 조회한다")
     void getActiveBooksTest() {
         // given
-        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
 
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setUserInfo("user2@gmail.com", "user2", "https://user2.png", "user2");
@@ -231,7 +230,7 @@ class MemberControllerTest {
     @DisplayName("회원이 생성한 토론방을 조회한다")
     void getMemberDiscussionsByTypeTest_created() {
         // given
-        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
 
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
@@ -253,7 +252,7 @@ class MemberControllerTest {
     @DisplayName("회원이 참여한 토론방을 조회한다")
     void getMemberDiscussionsByTypeTest_participated() {
         // given
-        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
 
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setUserInfo("user2@gmail.com", "user2", "https://user2.png", "user2");
@@ -290,7 +289,7 @@ class MemberControllerTest {
     @DisplayName("회원의 토론방을 필터링할 때 type을 명시하지 않으면 예외가 발생한다")
     void getMemberDiscussionsByTypeTest_noType_fail() {
         // given
-        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
 
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
@@ -312,7 +311,7 @@ class MemberControllerTest {
     @DisplayName("회원의 토론방을 필터링할 때 type에 정해지지 않는 값을 추가하면 예외가 발생한다")
     void getMemberDiscussionsByTypeTest_invalidType_fail() {
         // given
-        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
 
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
@@ -334,7 +333,7 @@ class MemberControllerTest {
     @DisplayName("회원이 탈퇴한다")
     void deleteMemberTest() {
         // given
-        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
 
         databaseInitializer.setUserInfo(DEFAULT_EMAIL, "user", "https://image.png", "user");
 
@@ -354,7 +353,7 @@ class MemberControllerTest {
     @DisplayName("차단한 회원 전체를 조회한다")
     void getBlockMembersTest() {
         // given
-        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
 
         databaseInitializer.setUserInfo(DEFAULT_EMAIL, "user", "https://image.png", "user");
         databaseInitializer.setUserInfo("user2@gmail.com", "user2", "https://image2.png", "user2");
@@ -379,7 +378,7 @@ class MemberControllerTest {
     @DisplayName("차단한 회원을 차단해제한다")
     void deleteBlockTest() {
         // given
-        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
 
         databaseInitializer.setUserInfo(DEFAULT_EMAIL, "user", "https://image.png", "user");
         databaseInitializer.setUserInfo("user2@gmail.com", "user2", "https://image2.png", "user2");

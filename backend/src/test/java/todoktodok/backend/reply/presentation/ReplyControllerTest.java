@@ -19,7 +19,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import todoktodok.backend.DatabaseInitializer;
 import todoktodok.backend.InitializerTimer;
-import todoktodok.backend.member.infrastructure.GoogleAuthClient;
+import todoktodok.backend.member.infrastructure.AuthClient;
 import todoktodok.backend.member.presentation.fixture.MemberFixture;
 import todoktodok.backend.reply.application.dto.request.ReplyReportRequest;
 import todoktodok.backend.reply.application.dto.request.ReplyRequest;
@@ -32,7 +32,7 @@ public class ReplyControllerTest {
     private static String DEFAULT_EMAIL = "user@gmail.com";
 
     @MockitoBean
-    private GoogleAuthClient googleAuthClient;
+    private AuthClient authClient;
 
     @Autowired
     private MemberFixture memberFixture;
@@ -53,7 +53,7 @@ public class ReplyControllerTest {
     @DisplayName("대댓글을 생성한다")
     void createReplyTest() {
         // given
-        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
 
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
@@ -78,7 +78,7 @@ public class ReplyControllerTest {
     @DisplayName("대댓글을 신고한다")
     void reportTest() {
         // given
-        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
 
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setUserInfo("user2@gmail.com", "user2", "https://user2.png", "user");
@@ -106,7 +106,7 @@ public class ReplyControllerTest {
     @DisplayName("댓글별 대댓글 목록을 조회한다")
     void getRepliesTest() {
         // given
-        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
 
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
@@ -133,7 +133,7 @@ public class ReplyControllerTest {
     @DisplayName("대댓글을 수정한다")
     void updateReplyTest() {
         // given
-        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
 
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
@@ -163,7 +163,7 @@ public class ReplyControllerTest {
     @DisplayName("대댓글을 삭제한다")
     void deleteReplyTest() {
         // given
-        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
 
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
@@ -186,7 +186,7 @@ public class ReplyControllerTest {
     @DisplayName("대댓글 좋아요를 생성한다")
     void createReplyToggleLikeTest() {
         // given
-        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
 
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
@@ -209,7 +209,7 @@ public class ReplyControllerTest {
     @DisplayName("대댓글 좋아요를 삭제한다")
     void deleteReplyToggleLikeTest() {
         // given
-        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
 
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();

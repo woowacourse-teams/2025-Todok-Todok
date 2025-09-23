@@ -21,7 +21,7 @@ import todoktodok.backend.DatabaseInitializer;
 import todoktodok.backend.InitializerTimer;
 import todoktodok.backend.comment.application.dto.request.CommentReportRequest;
 import todoktodok.backend.comment.application.dto.request.CommentRequest;
-import todoktodok.backend.member.infrastructure.GoogleAuthClient;
+import todoktodok.backend.member.infrastructure.AuthClient;
 import todoktodok.backend.member.presentation.fixture.MemberFixture;
 
 @ActiveProfiles("test")
@@ -32,7 +32,7 @@ public class CommentControllerTest {
     private static String DEFAULT_EMAIL = "user@gmail.com";
 
     @MockitoBean
-    private GoogleAuthClient googleAuthClient;
+    private AuthClient authClient;
 
     @Autowired
     private MemberFixture memberFixture;
@@ -53,7 +53,7 @@ public class CommentControllerTest {
     @DisplayName("댓글을 생성한다")
     void createCommentTest() {
         // given
-        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
 
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
@@ -77,7 +77,7 @@ public class CommentControllerTest {
     @DisplayName("댓글 좋아요를 생성한다")
     void createCommentToggleLikeTest() {
         // given
-        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
 
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
@@ -99,7 +99,7 @@ public class CommentControllerTest {
     @DisplayName("댓글 좋아요를 삭제한다")
     void deleteCommentToggleLikeTest() {
         // given
-        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
 
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
@@ -122,7 +122,7 @@ public class CommentControllerTest {
     @DisplayName("댓글을 신고한다")
     void reportTest() {
         // given
-        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
 
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setUserInfo("user2@gmail.com", "user2", "https://user2.png", "user");
@@ -148,7 +148,7 @@ public class CommentControllerTest {
     @DisplayName("댓글을 단일 조회한다")
     void getCommentTest() {
         // given
-        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
 
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
@@ -171,7 +171,7 @@ public class CommentControllerTest {
     @DisplayName("토론방별 댓글을 조회한다")
     void getCommentsTest() {
         // given
-        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
 
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
@@ -196,7 +196,7 @@ public class CommentControllerTest {
     @DisplayName("댓글을 수정한다")
     void updateCommentTest() {
         // given
-        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
 
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
@@ -225,7 +225,7 @@ public class CommentControllerTest {
     @DisplayName("댓글을 삭제한다")
     void deleteCommentTest() {
         // given
-        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
 
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
