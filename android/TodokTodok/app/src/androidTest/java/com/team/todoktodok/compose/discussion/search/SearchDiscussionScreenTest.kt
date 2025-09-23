@@ -5,6 +5,7 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import com.team.todoktodok.presentation.compose.discussion.search.SearchDiscussionScreen
+import com.team.todoktodok.presentation.compose.discussion.search.SearchDiscussionsUiState
 import com.team.todoktodok.presentation.compose.preview.SearchDiscussionsUiStatePreviewParameterProvider
 import org.junit.Assert.assertEquals
 import org.junit.Rule
@@ -52,5 +53,22 @@ class SearchDiscussionScreenTest {
 
         // then
         assertEquals(clickedId, firstItem.discussionId)
+    }
+
+    @Test
+    fun `검색화면_검색결과_없을_때_빈화면이_표시된다`() {
+        // given
+        val emptyState = SearchDiscussionsUiState(searchKeyword = "토론")
+
+        // when
+        composeTestRule.setContent {
+            SearchDiscussionScreen(
+                searchDiscussion = emptyState,
+                onClick = {},
+            )
+        }
+
+        // then
+        composeTestRule.onNodeWithText("토론에 대한 검색결과가 없어요").assertIsDisplayed()
     }
 }
