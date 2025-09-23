@@ -7,6 +7,7 @@ spring:
       - submodule/security/jwt.yml
       - submodule/security/aws.yml
       - submodule/security/firebase.yml
+      - submodule/security/google.yml
   servlet:
     multipart:
       max-file-size: 5MB
@@ -33,3 +34,6 @@ cloud:
       bucket: ${cloud.aws.s3.bucket}
       key-prefix: ${cloud.aws.s3.key-prefix}
       region: ${cloud.aws.s3.region}
+
+google:
+  client-id: ${google.client-id}
