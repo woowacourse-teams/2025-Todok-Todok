@@ -3,23 +3,28 @@ package com.team.todoktodok.presentation.xml.discussions
 import com.team.domain.model.Discussion
 import com.team.domain.model.active.ActivatedDiscussionPage
 import com.team.domain.model.latest.LatestDiscussionPage
+import com.team.todoktodok.presentation.xml.discussions.all.AllDiscussionsUiState
 import com.team.todoktodok.presentation.xml.discussions.hot.HotDiscussionUiState
-import com.team.todoktodok.presentation.xml.discussions.latest.LatestDiscussionsUiState
 import com.team.todoktodok.presentation.xml.discussions.my.MyDiscussionUiState
-import com.team.todoktodok.presentation.xml.discussions.search.SearchDiscussionsUiState
 
 data class DiscussionsUiState(
     val hotDiscussion: HotDiscussionUiState = HotDiscussionUiState(),
     val myDiscussion: MyDiscussionUiState = MyDiscussionUiState(),
-    val latestDiscussion: LatestDiscussionsUiState = LatestDiscussionsUiState(),
-    val searchDiscussion: SearchDiscussionsUiState = SearchDiscussionsUiState(),
+    val allDiscussionsUiState: AllDiscussionsUiState = AllDiscussionsUiState(),
 ) {
-    fun refreshLatestDiscussion(): DiscussionsUiState = copy(latestDiscussion = latestDiscussion.refresh())
+    fun refreshLatestDiscussion(): DiscussionsUiState = copy(allDiscussionsUiState = allDiscussionsUiState.refreshLatestDiscussion())
 
     fun addSearchDiscussion(
         keyword: String,
         newDiscussions: List<Discussion>,
-    ): DiscussionsUiState = copy(searchDiscussion = searchDiscussion.add(keyword, newDiscussions))
+    ): DiscussionsUiState =
+        copy(
+            allDiscussionsUiState =
+                allDiscussionsUiState.addSearchDiscussion(
+                    keyword,
+                    newDiscussions,
+                ),
+        )
 
     fun addHotDiscussion(
         newItems: List<Discussion>,
@@ -34,29 +39,27 @@ data class DiscussionsUiState(
         participatedDiscussion: List<Discussion>,
     ): DiscussionsUiState = copy(myDiscussion = myDiscussion.add(createdDiscussion, participatedDiscussion))
 
-    fun addLatestDiscussion(page: LatestDiscussionPage): DiscussionsUiState = copy(latestDiscussion = latestDiscussion.append(page))
+    fun addLatestDiscussion(page: LatestDiscussionPage): DiscussionsUiState =
+        copy(allDiscussionsUiState = allDiscussionsUiState.addLatestDiscussion(page))
 
     fun modifyDiscussion(discussion: Discussion): DiscussionsUiState {
         val newHotDiscussion = hotDiscussion.modifyDiscussion(discussion)
-        val newLatestDiscussion = latestDiscussion.modifyDiscussion(discussion)
-        val newSearchDiscussion = searchDiscussion.modifyDiscussion(discussion)
+        val newAllDiscussionsUiState = allDiscussionsUiState.modifyAllDiscussion(discussion)
         return copy(
             hotDiscussion = newHotDiscussion,
-            latestDiscussion = newLatestDiscussion,
-            searchDiscussion = newSearchDiscussion,
+            allDiscussionsUiState = newAllDiscussionsUiState,
         )
     }
 
-    fun clearSearchDiscussion() = copy(searchDiscussion = searchDiscussion.clear())
+    fun clearSearchDiscussion() = copy(allDiscussionsUiState = allDiscussionsUiState.clearSearchDiscussion())
 
     fun removeDiscussion(discussionId: Long): DiscussionsUiState {
         val newHotDiscussion = hotDiscussion.removeDiscussion(discussionId)
         val newMyDiscussion = myDiscussion.removeDiscussion(discussionId)
-        val newLatestDiscussion = latestDiscussion.removeDiscussion(discussionId)
-        val newSearchDiscussion = searchDiscussion.removeDiscussion(discussionId)
-        return copy(newHotDiscussion, newMyDiscussion, newLatestDiscussion, newSearchDiscussion)
+        val newAllDiscussionsUiState = allDiscussionsUiState.removeAllDiscussion(discussionId)
+        return copy(newHotDiscussion, newMyDiscussion, newAllDiscussionsUiState)
     }
 
-    val latestPageHasNext get() = latestDiscussion.hasNext
-    val latestPageNextCursor get() = latestDiscussion.nextCursor
+    val latestPageHasNext get() = allDiscussionsUiState.latestPageHasNext
+    val latestPageNextCursor get() = allDiscussionsUiState.latestPageNextCursor
 }

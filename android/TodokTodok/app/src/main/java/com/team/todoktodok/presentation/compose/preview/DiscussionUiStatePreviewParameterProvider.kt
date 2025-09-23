@@ -26,6 +26,7 @@ class DiscussionUiStatePreviewParameterProvider : PreviewParameterProvider<List<
                                 commentCount = 0,
                                 isLikedByMe = false,
                             ),
+                        searchKeyword = "JPA",
                     ),
                     DiscussionUiState(
                         item =
