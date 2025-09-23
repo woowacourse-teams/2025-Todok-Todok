@@ -17,31 +17,25 @@ public class GoogleAuthClient implements AuthClient{
     private final GoogleIdTokenVerifier googleIdTokenVerifier;
 
     public String resolveVerifiedEmailFrom(final String idTokenRequest) {
-        try {
-            final GoogleIdToken idToken = googleIdTokenVerifier.verify(idTokenRequest);
-
-            validateResolvedIdToken(idToken, idTokenRequest);
-
-            final GoogleIdToken.Payload payload = idToken.getPayload();
-            return payload.getEmail();
-        } catch (final GeneralSecurityException e) {
-            throw new IllegalArgumentException(String.format("유효하지 않은 토큰입니다 : idToken = %s", maskToken(idTokenRequest)));
-        } catch (final Exception e) {
-            throw new IllegalStateException(String.format("토큰 검증 중 오류가 발생했습니다 : idToken = %s", maskToken(idTokenRequest)));
-        }
+        final GoogleIdToken.Payload payload = getVerifiedPayload(idTokenRequest);
+        return payload.getEmail();
     }
 
     public GoogleAuthMemberDto resolveVerifiedEmailAndNicknameFrom(final String idTokenRequest) {
+        final GoogleIdToken.Payload payload = getVerifiedPayload(idTokenRequest);
+        return new GoogleAuthMemberDto(
+                payload.getEmail(),
+                (String) payload.get("picture")
+        );
+    }
+
+    private GoogleIdToken.Payload getVerifiedPayload(final String idTokenRequest) {
         try {
             final GoogleIdToken idToken = googleIdTokenVerifier.verify(idTokenRequest);
 
             validateResolvedIdToken(idToken, idTokenRequest);
 
-            final GoogleIdToken.Payload payload = idToken.getPayload();
-            return new GoogleAuthMemberDto(
-                    payload.getEmail(),
-                    (String) payload.get("picture")
-            );
+            return idToken.getPayload();
         } catch (final GeneralSecurityException e) {
             throw new IllegalArgumentException(String.format("유효하지 않은 토큰입니다 : idToken = %s", maskToken(idTokenRequest)));
         } catch (final Exception e) {
