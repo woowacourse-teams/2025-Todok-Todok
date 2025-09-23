@@ -38,6 +38,7 @@ class AuthViewModel(
             when (MemberType(memberId)) {
                 MemberType.USER -> {
                     delay(SPLASH_DURATION)
+                    notificationRepository.registerPushNotification()
                     onUiEvent(LoginUiEvent.NavigateToMain)
                 }
 
