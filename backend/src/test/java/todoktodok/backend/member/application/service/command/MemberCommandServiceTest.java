@@ -51,9 +51,6 @@ class MemberCommandServiceTest {
     private JwtTokenProvider jwtTokenProvider;
 
     @Autowired
-    private RefreshTokenRepository refreshTokenRepository;
-
-    @Autowired
     private DiscussionQueryService discussionQueryService;
 
     @MockitoBean
@@ -66,7 +63,6 @@ class MemberCommandServiceTest {
     void setUp() {
         databaseInitializer.clear();
     }
-
 
     @Test
     @DisplayName("기존 회원 로그인 시 엑세스 토큰과 리프레시 토큰을 발급한다")
@@ -96,8 +92,6 @@ class MemberCommandServiceTest {
     @DisplayName("신규 회원 로그인 시 임시 토큰을 발급한다")
     void loginTempUserTest() {
         // given
-        final LoginRequestLegacy loginRequest = new LoginRequestLegacy("user@gmail.com");
-
         final String email = "user@gmail.com";
         given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(email);
 

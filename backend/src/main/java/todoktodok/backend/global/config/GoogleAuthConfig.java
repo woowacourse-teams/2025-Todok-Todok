@@ -19,8 +19,8 @@ public class GoogleAuthConfig {
 
     @Bean
     public GoogleIdTokenVerifier googleIdTokenVerifier(
-            HttpTransport transport,
-            JsonFactory jsonFactory) {
+            final HttpTransport transport,
+            final JsonFactory jsonFactory) {
 
         return new GoogleIdTokenVerifier.Builder(transport, jsonFactory)
                 .setAudience(Collections.singletonList(googleClientId))

@@ -29,7 +29,7 @@ import todoktodok.backend.member.presentation.fixture.MemberFixture;
 @ContextConfiguration(initializers = InitializerTimer.class)
 public class CommentControllerTest {
 
-    private static String DEFAULT_EMAIL = "user@gmail.com";
+    private static final String DEFAULT_EMAIL = "user@gmail.com";
 
     @MockitoBean
     private AuthClient authClient;

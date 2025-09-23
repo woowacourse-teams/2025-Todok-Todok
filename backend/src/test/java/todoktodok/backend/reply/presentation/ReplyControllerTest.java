@@ -29,7 +29,7 @@ import todoktodok.backend.reply.application.dto.request.ReplyRequest;
 @ContextConfiguration(initializers = InitializerTimer.class)
 public class ReplyControllerTest {
 
-    private static String DEFAULT_EMAIL = "user@gmail.com";
+    private static final String DEFAULT_EMAIL = "user@gmail.com";
 
     @MockitoBean
     private AuthClient authClient;
