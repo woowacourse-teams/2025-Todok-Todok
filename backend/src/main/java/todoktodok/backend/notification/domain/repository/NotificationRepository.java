@@ -7,7 +7,11 @@ import todoktodok.backend.notification.domain.Notification;
 
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
 
-    Long countNotificationByRecipientAndIsReadFalse(Member recipient);
+    Long countNotificationByRecipientAndIsReadFalse(final Member recipient);
 
-    List<Notification> findNotificationsByRecipient(Member recipient);
+    List<Notification> findNotificationsByRecipient(final Member recipient);
+
+    Notification findNotificationById(final Long id);
+
+    Notification findByIdAndMember(final Long id, final Member recipient);
 }

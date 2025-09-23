@@ -1,6 +1,7 @@
 package todoktodok.backend.notification.application.service.command;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,6 +10,7 @@ import todoktodok.backend.member.domain.repository.MemberRepository;
 import todoktodok.backend.notification.application.dto.response.NotificationResponse;
 import todoktodok.backend.notification.domain.Notification;
 import todoktodok.backend.notification.domain.repository.NotificationRepository;
+import todoktodok.backend.notification.exception.NotificationForbiddenException;
 
 @Service
 @Transactional
@@ -46,8 +48,33 @@ public class NotificationCommandService {
                 .toList();
     }
 
+    public void markNotificationAsRead(
+            final Long memberId,
+            final Long notificationId
+    ) {
+        final Member member = findMember(memberId);
+        final Notification notification = findNotification(notificationId);
+
+        if (!notification.equalsRecipient(member)) {
+            throw new NotificationForbiddenException("본인 알림이 아닙니다.");
+        }
+
+        notification.update(true);
+    }
+
     private Member findMember(final Long memberId) {
         return memberRepository.findByIdAndDeletedAtIsNull(memberId)
-                .orElseThrow(() -> new IllegalStateException(String.format("해당하는 회원을 찾을 수 없습니다 : recipientId = %d", memberId)));
+                .orElseThrow(() -> new NoSuchElementException(
+                                String.format("해당하는 회원을 찾을 수 없습니다 : recipientId = %d", memberId)
+                        )
+                );
+    }
+
+    private Notification findNotification(final Long notificationId) {
+        return notificationRepository.findById(notificationId)
+                .orElseThrow(() -> new NoSuchElementException(
+                                String.format("해당하는 알림을 찾을 수 없습니다 : notificationId = %d", notificationId)
+                        )
+                );
     }
 }

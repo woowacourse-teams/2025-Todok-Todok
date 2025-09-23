@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import todoktodok.backend.global.auth.Auth;
@@ -27,5 +29,16 @@ public class NotificationController {
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(notifications);
+    }
+
+    @Auth(value = Role.USER)
+    @PatchMapping("/{notificationId}")
+    public ResponseEntity<Void> updateNotificationReadStatus(
+            @LoginMember final Long memberId,
+            @PathVariable final Long notificationId
+    ) {
+        notificationCommandService.markNotificationAsRead(memberId, notificationId);
+        return ResponseEntity.status(HttpStatus.OK)
+                .build();
     }
 }
