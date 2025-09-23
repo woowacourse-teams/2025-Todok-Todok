@@ -45,9 +45,6 @@ import todoktodok.backend.member.infrastructure.GoogleAuthClient;
 class MemberCommandServiceTest {
 
     @Autowired
-    private DatabaseInitializer databaseInitializer;
-
-    @Autowired
     private MemberCommandService memberCommandService;
 
     @Autowired
@@ -61,6 +58,9 @@ class MemberCommandServiceTest {
 
     @MockitoBean
     private GoogleAuthClient googleAuthClient;
+
+    @Autowired
+    private DatabaseInitializer databaseInitializer;
 
     @BeforeEach
     void setUp() {
@@ -120,7 +120,11 @@ class MemberCommandServiceTest {
     void signUpTest() {
         // given
         final String email = "user@gmail.com";
-        final SignupRequest signupRequest = new SignupRequest("user", "https://user.png", email);
+        final String fakeIdToken = "fakeIdToken_willNotUse";
+        final SignupRequest signupRequest = new SignupRequest("user", fakeIdToken);
+
+        given(googleAuthClient.resolveVerifiedEmailAndNicknameFrom(anyString()))
+                .willReturn(new GoogleAuthMemberDto(email, ""));
 
         // when
         final TokenResponse tokenResponse = memberCommandService.signup(signupRequest, email);
@@ -189,13 +193,19 @@ class MemberCommandServiceTest {
     @DisplayName("회원가입 시 중복된 닉네임을 입력하면 예외가 발생한다")
     void validateDuplicatedNicknameTest() {
         // given
-        databaseInitializer.setDefaultUserInfo();
-
         final String nickname = "user";
-        final SignupRequest signupRequest = new SignupRequest(nickname, "https://user.png", "user22@gmail.com");
+
+        databaseInitializer.setUserInfo("user@gmail.com", nickname, "", "");
+
+        final String loginMemberEmail = "user22@gmail.com";
+        final String fakeIdToken = "fakeIdToken_willNotUse";
+        final SignupRequest signupRequest = new SignupRequest(nickname, fakeIdToken);
+
+        given(googleAuthClient.resolveVerifiedEmailAndNicknameFrom(anyString()))
+                .willReturn(new GoogleAuthMemberDto(loginMemberEmail, ""));
 
         // when - then
-        assertThatThrownBy(() -> memberCommandService.signup(signupRequest, "user22@gmail.com"))
+        assertThatThrownBy(() -> memberCommandService.signup(signupRequest, loginMemberEmail))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("이미 존재하는 닉네임입니다");
     }
@@ -204,10 +214,15 @@ class MemberCommandServiceTest {
     @DisplayName("회원가입 시 중복된 이메일을 입력하면 예외가 발생한다")
     void validateDuplicatedEmailTest() {
         // given
-        databaseInitializer.setDefaultUserInfo();
-
         final String email = "user@gmail.com";
-        final SignupRequest signupRequest = new SignupRequest("user22", "https://user.png", email);
+
+        databaseInitializer.setUserInfo(email, "user", "", "");
+
+        final String fakeIdToken = "fakeIdToken_willNotUse";
+        final SignupRequest signupRequest = new SignupRequest("user22", fakeIdToken);
+
+        given(googleAuthClient.resolveVerifiedEmailAndNicknameFrom(anyString()))
+                .willReturn(new GoogleAuthMemberDto(email, ""));
 
         // when - then
         assertThatThrownBy(() -> memberCommandService.signup(signupRequest, email))
@@ -219,13 +234,16 @@ class MemberCommandServiceTest {
     @DisplayName("소셜 로그인을 하지 않은 유저가 회원가입을 시도할 경우 예외가 발생한다")
     void validateEmailWithTokenEmailTest() {
         // given
-        final String email = "user@gmail.com";
-        final SignupRequest signupRequest = new SignupRequest("user", "https://user.png", email);
+        final String fakeIdToken = "fakeIdToken_willNotUse";
+        final SignupRequest signupRequest = new SignupRequest("user", fakeIdToken);
+
+        given(googleAuthClient.resolveVerifiedEmailAndNicknameFrom(anyString()))
+                .willThrow(new IllegalArgumentException("유효하지 않은 토큰입니다"));
 
         // when - then
         assertThatThrownBy(() -> memberCommandService.signup(signupRequest, "notLoginUser@gmail.com"))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("소셜 로그인을 하지 않은 이메일입니다");
+                .hasMessageContaining("유효하지 않은 토큰입니다");
     }
 
     @Test

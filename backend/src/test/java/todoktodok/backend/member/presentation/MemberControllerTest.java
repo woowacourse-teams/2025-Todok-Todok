@@ -27,7 +27,7 @@ import todoktodok.backend.global.jwt.JwtTokenProvider;
 import todoktodok.backend.member.application.dto.request.MemberReportRequest;
 import todoktodok.backend.member.application.dto.request.ProfileUpdateRequest;
 import todoktodok.backend.member.application.dto.request.RefreshTokenRequest;
-import todoktodok.backend.member.application.dto.request.SignupRequest;
+import todoktodok.backend.member.application.dto.request.SignupRequestLegacy;
 import todoktodok.backend.member.application.dto.response.TokenResponse;
 import todoktodok.backend.member.infrastructure.GoogleAuthClient;
 import todoktodok.backend.member.presentation.fixture.MemberFixture;
@@ -58,27 +58,6 @@ class MemberControllerTest {
     void setUp() {
         RestAssured.port = port;
         databaseInitializer.clear();
-    }
-
-    @Test
-    @DisplayName("회원가입을 한다")
-    void signUpTest() {
-        // given
-        final String nickname = "test";
-        final String profileImage = "https://www.image.com";
-        final String tempToken = jwtTokenProvider.createTempToken(DEFAULT_EMAIL);
-
-        given(googleAuthClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
-
-        // when - then
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .header("Authorization", tempToken)
-                .body(new SignupRequest(nickname, profileImage, DEFAULT_EMAIL))
-                .when().post("/api/v1/members/signup")
-                .then().log().all()
-                .statusCode(HttpStatus.CREATED.value())
-                .body("refreshToken", notNullValue());
     }
 
     @Test
