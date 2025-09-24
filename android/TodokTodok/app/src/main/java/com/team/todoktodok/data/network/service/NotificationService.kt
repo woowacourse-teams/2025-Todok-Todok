@@ -19,7 +19,7 @@ interface NotificationService {
     @GET("v1/notifications")
     suspend fun getNotifications(): NetworkResult<NotificationResponse>
 
-    @PATCH("v1/notifications")
+    @PATCH("v1/notifications/{notificationId}/read")
     suspend fun patchNotifications(
         @Path(value = "notificationId") notificationId: Long
     ): NetworkResult<Unit>
@@ -29,6 +29,6 @@ interface NotificationService {
         @Path(value = "notificationId") notificationId: Long
     ): NetworkResult<Unit>
 
-    @GET("v1/notifications/exists")
+    @GET("v1/notifications/unread/exists")
     suspend fun getUnreadNotificationsCount(): NetworkResult<Boolean>
 }
