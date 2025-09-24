@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import todoktodok.backend.global.auth.Auth;
 import todoktodok.backend.global.auth.Role;
 import todoktodok.backend.global.resolver.LoginMember;
-import todoktodok.backend.notification.application.dto.response.NotificationCheckResponse;
 import todoktodok.backend.notification.application.dto.response.NotificationResponse;
+import todoktodok.backend.notification.application.dto.response.UnreadNotificationResponse;
 import todoktodok.backend.notification.application.service.command.NotificationCommandService;
 import todoktodok.backend.notification.application.service.query.NotificationQueryService;
 
@@ -60,13 +60,13 @@ public class NotificationController implements NotificationApiDocs{
 
     @Auth(value = Role.USER)
     @GetMapping("/unread/exists")
-    public ResponseEntity<NotificationCheckResponse> hasUnreadNotifications(
+    public ResponseEntity<UnreadNotificationResponse> hasUnreadNotifications(
             @LoginMember final Long memberId
     ) {
-        NotificationCheckResponse notificationCheckResponse = notificationQueryService.checkUnReadNotification(
+        UnreadNotificationResponse unreadNotificationResponse = notificationQueryService.checkUnReadNotification(
                 memberId);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(notificationCheckResponse);
+                .body(unreadNotificationResponse);
     }
 }

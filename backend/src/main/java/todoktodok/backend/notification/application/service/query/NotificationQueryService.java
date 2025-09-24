@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.member.domain.Member;
 import todoktodok.backend.member.domain.repository.MemberRepository;
-import todoktodok.backend.notification.application.dto.response.NotificationCheckResponse;
 import todoktodok.backend.notification.application.dto.response.NotificationResponse;
+import todoktodok.backend.notification.application.dto.response.UnreadNotificationResponse;
 import todoktodok.backend.notification.domain.Notification;
 import todoktodok.backend.notification.domain.repository.NotificationRepository;
 
@@ -30,13 +30,13 @@ public class NotificationQueryService {
                 .toList();
     }
 
-    public NotificationCheckResponse checkUnReadNotification(
+    public UnreadNotificationResponse checkUnReadNotification(
             final Long memberId
     ) {
         final Member member = findMember(memberId);
         boolean existsNonReadNotification = notificationRepository.existsByRecipientAndIsReadFalse(member);
 
-        return new NotificationCheckResponse(existsNonReadNotification);
+        return new UnreadNotificationResponse(existsNonReadNotification);
     }
 
     private Member findMember(final Long memberId) {
