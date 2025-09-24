@@ -1,6 +1,7 @@
 package todoktodok.backend.discussion.application.service.query;
 
 import jakarta.annotation.Nullable;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Base64;
@@ -119,19 +120,17 @@ public class DiscussionQueryService {
             return Collections.emptyList();
         }
 
-        final List<DiscussionLikeCountDto> likeSinceCounts = discussionLikeRepository.findLikeCountsByDiscussionIdsSinceDate(
-                discussionIds, sinceDate);
+        final List<DiscussionLikeSummaryDto> likeSinceCounts = discussionLikeRepository.findLikeSummariesByDiscussionIdsSinceDate(
+                member, discussionIds, sinceDate);
         final List<DiscussionCommentCountDto> commentSinceCounts = commentRepository.findCommentCountsByDiscussionIdsSinceDate(
                 discussionIds, sinceDate);
 
-        final Map<Long, Integer> likesByDiscussionId = getLikeCountsByDiscussionId(likeSinceCounts);
-        final Map<Long, Integer> commentsByDiscussionId = getTotalCommentCountsByDiscussionId(commentSinceCounts);
+        final Map<Long, LikeCountAndIsLikedByMeDto> likesByDiscussionId = mapLikeSummariesByDiscussionId(likeSinceCounts);
+        final Map<Long, Integer> commentsByDiscussionId = mapTotalCommentCountsByDiscussionId(commentSinceCounts);
 
         final List<Long> hotDiscussionIds = findHotDiscussions(count, likesByDiscussionId, commentsByDiscussionId, discussionIds);
 
-        final List<Long> likedDiscussionIds = getLikedDiscussionIdsFromHot(hotDiscussionIds, member);
-
-        return makeResponsesFrom(hotDiscussionIds, likesByDiscussionId, commentsByDiscussionId, likedDiscussionIds);
+        return makeResponsesFrom(hotDiscussionIds, likesByDiscussionId, commentsByDiscussionId);
     }
 
     public ActiveDiscussionPageResponse getActiveDiscussions(
@@ -252,22 +251,19 @@ public class DiscussionQueryService {
             return List.of();
         }
 
-        final List<DiscussionLikeCountDto> likeCounts = discussionLikeRepository.findLikeCountsByDiscussionIds(discussionIds);
+        final List<DiscussionLikeSummaryDto> likeSummaries = discussionLikeRepository.findLikeSummaryByDiscussionIds(member, discussionIds);
         final List<DiscussionCommentCountDto> commentCounts = commentRepository.findCommentCountsByDiscussionIds(discussionIds);
 
-        final Map<Long, Integer> likesByDiscussionId = getLikeCountsByDiscussionId(likeCounts);
-        final Map<Long, Integer> commentsByDiscussionId = getTotalCommentCountsByDiscussionId(commentCounts);
+        final Map<Long, LikeCountAndIsLikedByMeDto> likesByDiscussionId = mapLikeSummariesByDiscussionId(likeSummaries);
+        final Map<Long, Integer> commentsByDiscussionId = mapTotalCommentCountsByDiscussionId(commentCounts);
 
-        final List<Long> likedDiscussionIds = discussionLikeRepository.findLikedDiscussionIdsByMember(member, discussionIds);
-
-        return makeResponsesFrom(discussionIds, likesByDiscussionId, commentsByDiscussionId, likedDiscussionIds);
+        return makeResponsesFrom(discussionIds, likesByDiscussionId, commentsByDiscussionId);
     }
 
     private List<DiscussionResponse> makeResponsesFrom(
             final List<Long> discussionIds,
-            final Map<Long, Integer> likeCountsByDiscussionId,
-            final Map<Long, Integer> commentCountsByDiscussionId,
-            final List<Long> likedDiscussionIds
+            final Map<Long, LikeCountAndIsLikedByMeDto> likeSummaryByDiscussionId,
+            final Map<Long, Integer> commentCountsByDiscussionId
     ) {
         final Map<Long, Discussion> discussions = discussionRepository.findDiscussionsInIds(discussionIds).stream()
                 .collect(Collectors.toMap(Discussion::getId, discussion -> discussion));
@@ -275,16 +271,16 @@ public class DiscussionQueryService {
         return discussionIds.stream()
                 .map(discussionId -> {
                     final Discussion discussion = discussions.get(discussionId);
-                    final int likeCount = likeCountsByDiscussionId.getOrDefault(discussionId, 0);
+                    final int likeCount = likeSummaryByDiscussionId.get(discussionId).likeCount();
                     final int commentCount = commentCountsByDiscussionId.getOrDefault(discussionId, 0);
-                    final boolean isLikedByMe = likedDiscussionIds.contains(discussionId);
+                    final boolean isLikedByMe = likeSummaryByDiscussionId.get(discussionId).isLikedByMe();
                     return new DiscussionResponse(discussion, likeCount, commentCount, isLikedByMe);
                 })
                 .toList();
     }
 
 
-    private Map<Long, Integer> getTotalCommentCountsByDiscussionId(final List<DiscussionCommentCountDto> commentCounts) {
+    private Map<Long, Integer> mapTotalCommentCountsByDiscussionId(final List<DiscussionCommentCountDto> commentCounts) {
         return commentCounts.stream()
                 .collect(Collectors.toMap(
                         DiscussionCommentCountDto::discussionId,
@@ -292,11 +288,15 @@ public class DiscussionQueryService {
                 ));
     }
 
-    private Map<Long, Integer> getLikeCountsByDiscussionId(final List<DiscussionLikeCountDto> likeCounts) {
+    private Map<Long, LikeCountAndIsLikedByMeDto> mapLikeSummariesByDiscussionId(final List<DiscussionLikeSummaryDto> likeCounts) {
         return likeCounts.stream()
                 .collect(Collectors.toMap(
-                        DiscussionLikeCountDto::discussionId,
-                        DiscussionLikeCountDto::likeCount
+                        DiscussionLikeSummaryDto::discussionId,
+                        discussionLikeSummaryDto ->
+                                new LikeCountAndIsLikedByMeDto(
+                                        discussionLikeSummaryDto.likeCount(),
+                                        discussionLikeSummaryDto.isLikedByMe()
+                                )
                 ));
     }
 
@@ -314,13 +314,13 @@ public class DiscussionQueryService {
 
     private static List<Long> findHotDiscussions(
             final int count,
-            final Map<Long, Integer> likesByDiscussionId,
+            final Map<Long, LikeCountAndIsLikedByMeDto> likesByDiscussionId,
             final Map<Long, Integer> commentsByDiscussionId,
             final List<Long> discussionIds
     ) {
         final ToIntFunction<Long> totalCountByDiscussion =
                 discussionId ->
-                        likesByDiscussionId.getOrDefault(discussionId, 0)
+                        likesByDiscussionId.get(discussionId).likeCount()
                                 + commentsByDiscussionId.getOrDefault(discussionId, 0);
 
         return discussionIds.stream()
@@ -331,13 +331,6 @@ public class DiscussionQueryService {
                 )
                 .limit(count)
                 .toList();
-    }
-
-    private List<Long> getLikedDiscussionIdsFromHot(
-            final List<Long> hotDiscussionIds,
-            final Member member
-    ) {
-        return discussionLikeRepository.findLikedDiscussionIdsByMember(member, hotDiscussionIds);
     }
 
     private String getNextCursor(
