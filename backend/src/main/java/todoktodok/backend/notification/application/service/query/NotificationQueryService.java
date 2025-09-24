@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.member.domain.Member;
 import todoktodok.backend.member.domain.repository.MemberRepository;
+import todoktodok.backend.notification.application.dto.response.NotificationCheckResponse;
 import todoktodok.backend.notification.application.dto.response.NotificationResponse;
 import todoktodok.backend.notification.domain.Notification;
 import todoktodok.backend.notification.domain.repository.NotificationRepository;
@@ -29,10 +30,19 @@ public class NotificationQueryService {
                 .toList();
     }
 
+    public NotificationCheckResponse existsUnReadNotification(
+            final Long memberId
+    ) {
+        final Member member = findMember(memberId);
+        boolean existsNonReadNotification = notificationRepository.existsByRecipientAndIsReadFalse(member);
+
+        return new NotificationCheckResponse(existsNonReadNotification);
+    }
+
     private Member findMember(final Long memberId) {
         return memberRepository.findByIdAndDeletedAtIsNull(memberId)
                 .orElseThrow(() -> new NoSuchElementException(
-                                String.format("해당하는 회원을 찾을 수 없습니다 : recipientId = %d", memberId)
+                                String.format("해당 회원을 찾을 수 없습니다 : recipientId = %d", memberId)
                         )
                 );
     }

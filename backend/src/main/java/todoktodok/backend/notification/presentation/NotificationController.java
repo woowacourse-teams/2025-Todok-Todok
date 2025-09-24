@@ -21,7 +21,7 @@ import todoktodok.backend.notification.application.service.query.NotificationQue
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/v1/notifications")
-public class NotificationController {
+public class NotificationController implements NotificationApiDocs{
 
     private final NotificationCommandService notificationCommandService;
     private final NotificationQueryService notificationQueryService;
@@ -59,11 +59,11 @@ public class NotificationController {
     }
 
     @Auth(value = Role.USER)
-    @GetMapping("/exists")
-    public ResponseEntity<NotificationCheckResponse> existsNonReadNotification(
+    @GetMapping("/unread/exists")
+    public ResponseEntity<NotificationCheckResponse> hasUnreadNotifications(
             @LoginMember final Long memberId
     ) {
-        NotificationCheckResponse notificationCheckResponse = notificationCommandService.existsNonReadNotification(
+        NotificationCheckResponse notificationCheckResponse = notificationQueryService.existsUnReadNotification(
                 memberId);
 
         return ResponseEntity.status(HttpStatus.OK)

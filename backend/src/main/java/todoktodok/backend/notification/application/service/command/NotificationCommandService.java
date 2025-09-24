@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.member.domain.Member;
 import todoktodok.backend.member.domain.repository.MemberRepository;
-import todoktodok.backend.notification.application.dto.response.NotificationCheckResponse;
 import todoktodok.backend.notification.domain.Notification;
 import todoktodok.backend.notification.domain.repository.NotificationRepository;
 import todoktodok.backend.notification.exception.NotificationForbiddenException;
@@ -61,15 +60,6 @@ public class NotificationCommandService {
         notificationRepository.delete(notification);
     }
 
-    public NotificationCheckResponse existsNonReadNotification(
-            final Long memberId
-    ) {
-        final Member member = findMember(memberId);
-        boolean existsNonReadNotification = notificationRepository.existsByRecipientAndIsReadFalse(member);
-
-        return new NotificationCheckResponse(existsNonReadNotification);
-    }
-
     private void validateNotificationOwnership(
             final Notification notification,
             final Member member
@@ -82,7 +72,7 @@ public class NotificationCommandService {
     private Member findMember(final Long memberId) {
         return memberRepository.findByIdAndDeletedAtIsNull(memberId)
                 .orElseThrow(() -> new NoSuchElementException(
-                                String.format("해당하는 회원을 찾을 수 없습니다 : recipientId = %d", memberId)
+                                String.format("해당 회원을 찾을 수 없습니다 : recipientId = %d", memberId)
                         )
                 );
     }
@@ -90,7 +80,7 @@ public class NotificationCommandService {
     private Notification findNotification(final Long notificationId) {
         return notificationRepository.findById(notificationId)
                 .orElseThrow(() -> new NoSuchElementException(
-                                String.format("해당하는 알림을 찾을 수 없습니다 : notificationId = %d", notificationId)
+                                String.format("해당 알림을 찾을 수 없습니다 : notificationId = %d", notificationId)
                         )
                 );
     }
