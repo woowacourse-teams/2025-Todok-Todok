@@ -39,6 +39,7 @@ class DiscussionsViewModel(
             action = { discussionRepository.getSearchDiscussion(keyword) },
             handleSuccess = { result ->
                 _uiState.update { it.addSearchDiscussion(keyword, result) }
+                _uiEvent.setValue(DiscussionsUiEvent.ShowSearchResult)
             },
             handleFailure = { onUiEvent(DiscussionsUiEvent.ShowErrorMessage(it)) },
         )
@@ -163,16 +164,16 @@ class DiscussionsViewModel(
             handleFailure = { onUiEvent(DiscussionsUiEvent.ShowErrorMessage(it)) },
         )
         clearSearchResult()
-        onUiEvent(DiscussionsUiEvent.ClearSearchResult)
     }
 
     fun refreshLatestDiscussions() {
-        _uiState.update { it.clearLatestDiscussion() }
+        _uiState.update { it.refreshLatestDiscussion() }
         loadLatestDiscussions()
     }
 
     fun clearSearchResult() {
         _uiState.update { it.clearSearchDiscussion() }
+        onUiEvent(DiscussionsUiEvent.ClearSearchResult)
     }
 
     fun removeDiscussion(discussionId: Long) {

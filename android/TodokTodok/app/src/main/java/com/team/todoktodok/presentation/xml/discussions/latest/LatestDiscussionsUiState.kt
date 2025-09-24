@@ -7,8 +7,11 @@ import com.team.todoktodok.presentation.xml.discussions.DiscussionUiState
 
 data class LatestDiscussionsUiState(
     val items: List<DiscussionUiState> = emptyList(),
+    val isRefreshing: Boolean = false,
     val latestPage: PageInfo = PageInfo.EMPTY,
 ) {
+    fun refresh() = copy(items = emptyList(), latestPage = PageInfo.EMPTY, isRefreshing = true)
+
     fun append(page: LatestDiscussionPage): LatestDiscussionsUiState {
         val newDiscussion = items.toMutableList()
 
@@ -25,7 +28,7 @@ data class LatestDiscussionsUiState(
 
         val newLatestPage = latestPage.copy(pageInfo.hasNext, pageInfo.nextCursor)
 
-        return copy(newDiscussion, newLatestPage)
+        return copy(items = newDiscussion, isRefreshing = false, latestPage = newLatestPage)
     }
 
     fun modifyDiscussion(newDiscussion: Discussion): LatestDiscussionsUiState =
@@ -40,8 +43,6 @@ data class LatestDiscussionsUiState(
         val newItems = items.filter { it.discussionId != discussionId }
         return copy(items = newItems)
     }
-
-    fun clear() = copy(items = emptyList(), latestPage = PageInfo.EMPTY)
 
     val hasNext get() = latestPage.hasNext
     val nextCursor get() = latestPage.nextCursor

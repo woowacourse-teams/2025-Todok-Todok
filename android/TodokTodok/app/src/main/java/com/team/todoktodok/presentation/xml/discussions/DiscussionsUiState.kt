@@ -14,6 +14,8 @@ data class DiscussionsUiState(
     val latestDiscussion: LatestDiscussionsUiState = LatestDiscussionsUiState(),
     val searchDiscussion: SearchDiscussionsUiState = SearchDiscussionsUiState(),
 ) {
+    fun refreshLatestDiscussion(): DiscussionsUiState = copy(latestDiscussion = latestDiscussion.refresh())
+
     fun addSearchDiscussion(
         keyword: String,
         newDiscussions: List<Discussion>,
@@ -46,8 +48,6 @@ data class DiscussionsUiState(
     }
 
     fun clearSearchDiscussion() = copy(searchDiscussion = searchDiscussion.clear())
-
-    fun clearLatestDiscussion() = copy(latestDiscussion = latestDiscussion.clear())
 
     fun removeDiscussion(discussionId: Long): DiscussionsUiState {
         val newHotDiscussion = hotDiscussion.removeDiscussion(discussionId)
