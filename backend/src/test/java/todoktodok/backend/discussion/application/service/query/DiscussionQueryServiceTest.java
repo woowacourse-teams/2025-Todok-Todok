@@ -76,7 +76,7 @@ class DiscussionQueryServiceTest {
                 () -> assertThat(discussionResponse.discussionId()).isEqualTo(discussionId),
                 () -> assertThat(discussionResponse.discussionTitle()).isEqualTo("클린코드에 대해 논의해볼까요"),
                 () -> assertThat(discussionResponse.discussionOpinion()).isEqualTo("클린코드만세"),
-                () -> assertThat(discussionResponse.viewCount()).isEqualTo(0)
+                () -> assertThat(discussionResponse.viewCount()).isEqualTo(1)
         );
     }
 
@@ -104,7 +104,7 @@ class DiscussionQueryServiceTest {
         final DiscussionResponse discussionResponse = discussionQueryService.getDiscussion(memberId, discussionId);
 
         // then
-        assertThat(discussionResponse.viewCount()).isEqualTo(1);
+        assertThat(discussionResponse.viewCount()).isEqualTo(2);
     }
 
     @Test
@@ -131,7 +131,7 @@ class DiscussionQueryServiceTest {
         final DiscussionResponse discussionResponse = discussionQueryService.getDiscussion(memberId, discussionId);
 
         // then
-        assertThat(discussionResponse.viewCount()).isEqualTo(0);
+        assertThat(discussionResponse.viewCount()).isEqualTo(1);
     }
 
     @Test

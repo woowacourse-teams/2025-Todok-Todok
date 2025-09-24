@@ -72,23 +72,22 @@ public class DiscussionQueryService {
                 member, discussion);
 
         if (discussionMemberView.isEmpty()) {
-            discussionMemberView = Optional.ofNullable(DiscussionMemberView.builder()
+            discussionMemberView = java.util.Optional.ofNullable(DiscussionMemberView.builder()
                     .discussion(discussion)
                     .member(member)
                     .build());
             discussionMemberViewRepository.save(discussionMemberView.get());
         }
 
+        if (discussion.isFirstView()) {
+            discussion.updateViewCount();
+        }
+
         if (discussionMemberView.get().isModifiedDatePassedFrom(VIEW_THRESHOLD)) {
             discussion.updateViewCount();
         }
 
-        return new DiscussionResponse(
-                discussion,
-                likeCount,
-                commentCount,
-                isLikedByMe
-        );
+        return new DiscussionResponse(discussion, likeCount, commentCount, isLikedByMe);
     }
 
     public LatestDiscussionPageResponse getDiscussions(
