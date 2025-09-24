@@ -68,7 +68,7 @@ public class NotificationCommandService {
             final Member member
     ) {
         if (!notification.isOwnedBy(member)) {
-            throw new NotificationForbiddenException("본인 알림이 아닙니다.");
+            throw new NotificationForbiddenException("본인 알림이 아닙니다");
         }
     }
 

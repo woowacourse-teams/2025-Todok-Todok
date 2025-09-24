@@ -37,9 +37,9 @@ public class NotificationQueryService {
             final Long memberId
     ) {
         final Member member = findMember(memberId);
-        boolean existsNonReadNotification = notificationRepository.existsByRecipientAndIsReadFalse(member);
+        boolean existsUnreadNotification = notificationRepository.existsByRecipientAndIsReadFalse(member);
 
-        return new UnreadNotificationResponse(existsNonReadNotification);
+        return new UnreadNotificationResponse(existsUnreadNotification);
     }
 
     private Member findMember(final Long memberId) {

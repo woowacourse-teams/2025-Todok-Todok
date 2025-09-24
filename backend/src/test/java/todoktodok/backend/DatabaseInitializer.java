@@ -4,12 +4,13 @@ import static java.time.temporal.ChronoUnit.MICROS;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-
 import java.time.LocalDateTime;
 import java.util.List;
-
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import todoktodok.backend.member.domain.Member;
+import todoktodok.backend.notification.domain.NotificationTarget;
+import todoktodok.backend.notification.domain.NotificationType;
 
 @Component
 public class DatabaseInitializer {
@@ -456,6 +457,77 @@ public class DatabaseInitializer {
                 .setParameter("memberId", memberId)
                 .setParameter("createdAt", now)
                 .setParameter("modifiedAt", now)
+                .executeUpdate();
+    }
+
+    @Transactional
+    public void setDefaultCommentNotification(
+    ) {
+        final LocalDateTime now = LocalDateTime.now().truncatedTo(MICROS);
+
+        em.createNativeQuery(
+                        """
+                                INSERT INTO NOTIFICATION (is_read, recipient_id, discussion_id, comment_id, reply_id, member_nickname, discussion_title, content, notification_type, notification_target, created_at, modified_at)
+                                VALUES 
+                                (false, 1L, 1L, 1L, null, 'user', 'discussionTitle', 'content', 'COMMENT', 'COMMENT', :created_at, :modified_at)
+                                """
+                )
+                .setParameter("created_at", now)
+                .setParameter("modified_at", now)
+                .executeUpdate();
+    }
+
+    @Transactional
+    public void setDefaultReplyNotification(
+    ) {
+        final LocalDateTime now = LocalDateTime.now().truncatedTo(MICROS);
+
+        em.createNativeQuery(
+                        """
+                                INSERT INTO NOTIFICATION (is_read, recipient_id, discussion_id, comment_id, reply_id, member_nickname, discussion_title, content, notification_type, notification_target, created_at, modified_at)
+                                VALUES 
+                                (false, 1L, 1L, 1L, 1L, 'user', 'discussionTitle', 'content', 'REPLY', 'REPLY', :created_at, :modified_at)
+                                """
+                )
+                .setParameter("created_at", now)
+                .setParameter("modified_at", now)
+                .executeUpdate();
+    }
+
+    @Transactional
+    public void setNotification(
+            final boolean isRead,
+            final Member recipient,
+            final Long discussionId,
+            final Long commentId,
+            final Long replyId,
+            final String memberNickname,
+            final String discussionTitle,
+            final String content,
+            final NotificationType notificationType,
+            final NotificationTarget notificationTarget
+    ) {
+        final LocalDateTime now = LocalDateTime.now().truncatedTo(MICROS);
+
+        em.createNativeQuery(
+                        """
+                                INSERT INTO NOTIFICATION (is_read, recipient_id, discussion_id, comment_id, reply_id, member_nickname, discussion_title, content, notification_type, notification_target, created_at, modified_at)
+                                VALUES 
+                                (:isRead, :recipient, :discussionId, :commentId, :replyId, :memberNickname, :discussionTitle, :content, :notificationTarget)
+                                """
+                )
+                .setParameter("isRead", isRead)
+                .setParameter("recipient", recipient)
+                .setParameter("discussionId", discussionId)
+                .setParameter("commentId", commentId)
+                .setParameter("replyId", replyId)
+                .setParameter("memberNickname", memberNickname)
+                .setParameter("discussionTitle", discussionTitle)
+                .setParameter("content", content)
+                .setParameter("notificationType", notificationType)
+                .setParameter("notificationTarget", notificationTarget)
+                .setParameter("created_at", now)
+                .setParameter("modified_at", now)
                 .executeUpdate();
     }
 }
