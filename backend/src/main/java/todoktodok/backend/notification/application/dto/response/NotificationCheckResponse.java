@@ -1,6 +1,6 @@
 package todoktodok.backend.notification.application.dto.response;
 
 public record NotificationCheckResponse(
-        boolean existsNonReadNotification
+        boolean existsUnReadNotification
 ) {
 }

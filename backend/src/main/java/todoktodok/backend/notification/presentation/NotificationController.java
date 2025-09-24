@@ -63,7 +63,7 @@ public class NotificationController implements NotificationApiDocs{
     public ResponseEntity<NotificationCheckResponse> hasUnreadNotifications(
             @LoginMember final Long memberId
     ) {
-        NotificationCheckResponse notificationCheckResponse = notificationQueryService.existsUnReadNotification(
+        NotificationCheckResponse notificationCheckResponse = notificationQueryService.checkUnReadNotification(
                 memberId);
 
         return ResponseEntity.status(HttpStatus.OK)

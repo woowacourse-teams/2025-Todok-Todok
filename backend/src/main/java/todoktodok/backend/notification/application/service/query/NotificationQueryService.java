@@ -30,7 +30,7 @@ public class NotificationQueryService {
                 .toList();
     }
 
-    public NotificationCheckResponse existsUnReadNotification(
+    public NotificationCheckResponse checkUnReadNotification(
             final Long memberId
     ) {
         final Member member = findMember(memberId);
