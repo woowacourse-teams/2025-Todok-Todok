@@ -26,51 +26,86 @@ public interface NotificationApiDocs {
                             schema = @Schema(implementation = NotificationResponse.class),
                             examples = @ExampleObject(
                                     value = """
-                                              "notReadCount": 10
-                                            [
-                                              "notificationItemResponse": {
-                                                "data": {
-                                                  "discussionId": 1,
-                                                  "commentId": 1,
-                                                  "replyId": null,
-                                                  "memberNickname": "모찌",
-                                                  "discussionTitle": "캡슐화 왜 함?",
-                                                  "content": "모찌가 적은 댓글 내용입니다.",
-                                                  "type": "COMMENT",
-                                                  "target": "COMMENT"
-                                                },
-                                                "isRead": false,
-                                                "createdAt": "2025-09-19T12:00:00"
-                                              },
-                                              "notificationItemResponse": {
-                                                "data": {
-                                                  "discussionId": 1,
-                                                  "commentId": 1,
-                                                  "replyId": 1,
-                                                  "memberNickname": "모찌",
-                                                  "discussionTitle": "캡슐화 왜 함?",
-                                                  "content": "모찌가 적은 대댓글 내용입니다.",
-                                                  "type": "REPLY",
-                                                  "target": "REPLY"
-                                                },
-                                                "isRead": true,
-                                                "createdAt": "2025-09-18T12:00:00"
-                                              },
-                                              "notificationItemResponse": {
-                                                "data": {
-                                                  "discussionId": 1,
-                                                  "commentId": null,
-                                                  "replyId": null,
-                                                  "memberNickname": "모찌",
-                                                  "discussionTitle": "캡슐화 왜 함?",
-                                                  "content": "",
-                                                  "type": "LIKE",
-                                                  "target": "DISCUSSION"
-                                                },
-                                                "isRead": true,
-                                                "createdAt": "2025-09-17T12:00:00"
+                                              {
+                                                "notReadCount": 10,
+                                                "notifications": [
+                                                  {
+                                                    "data": {
+                                                      "notificationId": 1,
+                                                      "discussionId": 1,
+                                                      "commentId": 1,
+                                                      "replyId": null,
+                                                      "memberNickname": "모찌",
+                                                      "discussionTitle": "캡슐화 왜 함?",
+                                                      "content": "모찌가 적은 댓글 내용입니다.",
+                                                      "type": "COMMENT",
+                                                      "target": "COMMENT"
+                                                    },
+                                                    "isRead": false,
+                                                    "createdAt": "2025-09-19T12:00:00"
+                                                  },
+                                                  {
+                                                    "data": {
+                                                      "notificationId": 2,
+                                                      "discussionId": 1,
+                                                      "commentId": 1,
+                                                      "replyId": 1,
+                                                      "memberNickname": "모찌",
+                                                      "discussionTitle": "캡슐화 왜 함?",
+                                                      "content": "모찌가 적은 대댓글 내용입니다.",
+                                                      "type": "REPLY",
+                                                      "target": "REPLY"
+                                                    },
+                                                    "isRead": true,
+                                                    "createdAt": "2025-09-18T12:00:00"
+                                                  },
+                                                  {
+                                                    "data": {
+                                                      "notificationId": 2,
+                                                      "discussionId": 1,
+                                                      "commentId": null,
+                                                      "replyId": null,
+                                                      "memberNickname": "모찌",
+                                                      "discussionTitle": "캡슐화 왜 함?",
+                                                      "content": "",
+                                                      "type": "LIKE",
+                                                      "target": "DISCUSSION"
+                                                    },
+                                                    "isRead": true,
+                                                    "createdAt": "2025-09-17T12:00:00"
+                                                  },
+                                                  {
+                                                    "data": {
+                                                      "notificationId": 7,
+                                                      "discussionId": 1,
+                                                      "commentId": 1,
+                                                      "replyId": null,
+                                                      "memberNickname": "모찌",
+                                                      "discussionTitle": "캡슐화 왜 함?",
+                                                      "content": "",
+                                                      "type": "LIKE",
+                                                      "target": "COMMENT"
+                                                    },
+                                                    "isRead": false,
+                                                    "createdAt": "2025-09-16T12:00:00"
+                                                  },
+                                                  {
+                                                    "data": {
+                                                      "notificationId": 8
+                                                      "discussionId": 1,
+                                                      "commentId": 1,
+                                                      "replyId": 1,
+                                                      "memberNickname": "모찌",
+                                                      "discussionTitle": "캡슐화 왜 함?",
+                                                      "content": "",
+                                                      "type": "LIKE",
+                                                      "target": "REPLY"
+                                                    },
+                                                    "isRead": false,
+                                                    "createdAt": "2025-09-15T12:00:00"
+                                                  }
+                                                ]
                                               }
-                                            ]
                                             """
                             )
                     )),
