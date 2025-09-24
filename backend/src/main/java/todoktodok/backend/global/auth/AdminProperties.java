@@ -25,7 +25,7 @@ public class AdminProperties {
              BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
             this.emails = br.lines()
                     .map(String::trim)
-                    .filter(s -> !s.isEmpty() && !s.startsWith("#"))
+                    .filter(s -> !s.isEmpty())
                     .map(String::toLowerCase)
                     .collect(Collectors.toSet());
         }
