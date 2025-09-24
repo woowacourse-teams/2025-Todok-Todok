@@ -61,9 +61,9 @@ public class SwaggerConfig {
                 API 테스트 전, 회원가입/로그인 인증 방법은 아래와 같습니다.\n
                 
                 ---
-                1. 토독토독에서는 안드로이드가 구글에서 발급받은 토큰으로 로그인하고 있기 때문에, 서버에서 자체적으로 로그인을 할 수 없습니다. \n 따라서 **관리자에게 문의** 후 **테스트용 로그인 이메일을 받아**, 관리자용 로그인 방식을 사용해주세요.
+                1. 토독토독에서는 안드로이드가 구글에서 발급받은 토큰으로 로그인하고 있기 때문에, 서버에서 자체적으로 로그인을 할 수 없습니다. \n 따라서 **관리자에게 문의** 후 **테스트용 로그인 이메일과 비밀번호를 받아**, 관리자용 로그인 방식을 사용해주세요.
                 2. 우측 상단 **Select a definition** -> `unauthenticated` 선택
-                3. **[관리자 전용] 로그인 API**에서 email 입력 -> Execute\n
+                3. **[관리자 전용] 로그인 API**에서 email과 password 입력 -> Execute\n
                    -> 하단 `Response headers`에서 `authorization: Bearer` 뒤 토큰 **모두 복사** (공백 없이!)\n
                    (복사할 토큰 예시: eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJleHAiOjE3
                    NTU2MTgxNjZ9._-0qTNmPyO1m6LnpEAwkGAB92Es0yBwxNBtmsq_VrGk)

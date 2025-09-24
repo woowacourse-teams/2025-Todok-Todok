@@ -135,6 +135,10 @@ public interface MemberApiDocs {
                                     @ExampleObject(
                                             name = "관리자가 아닌 유저의 로그인 시도 오류",
                                             value = "{\"code\":400, \"message\":\"[ERROR] 올바르지 않은 로그인입니다. /login으로 로그인 해주세요\"}"
+                                    ),
+                                    @ExampleObject(
+                                            name = "잘못된 비밀번호 입력 오류",
+                                            value = "{\"code\":400, \"message\":\"[ERROR] 비밀번호가 올바르지 않습니다\"}"
                                     )
                             }
                     )),
@@ -156,7 +160,7 @@ public interface MemberApiDocs {
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = BypassLoginRequest.class),
-                            examples = @ExampleObject(value = "{\"email\":\"user@example.com\"}")
+                            examples = @ExampleObject(value = "{\"email\":\"user@example.com\", \"password\":\"password\"}")
                     )
             ) final BypassLoginRequest loginRequest
     );
