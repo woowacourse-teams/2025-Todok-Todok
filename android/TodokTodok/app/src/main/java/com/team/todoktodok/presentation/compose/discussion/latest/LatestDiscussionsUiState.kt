@@ -33,7 +33,7 @@ data class LatestDiscussionsUiState(
         return copy(items = newDiscussion, isRefreshing = false, latestPage = newLatestPage)
     }
 
-    fun modifyDiscussion(newDiscussion: Discussion): LatestDiscussionsUiState =
+    fun modify(newDiscussion: Discussion): LatestDiscussionsUiState =
         copy(
             items =
                 items.map {
@@ -41,7 +41,7 @@ data class LatestDiscussionsUiState(
                 },
         )
 
-    fun removeDiscussion(discussionId: Long): LatestDiscussionsUiState {
+    fun remove(discussionId: Long): LatestDiscussionsUiState {
         val newItems = items.filter { it.discussionId != discussionId }
         return copy(items = newItems)
     }

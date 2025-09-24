@@ -22,8 +22,8 @@ data class AllDiscussionsUiState(
         )
 
     fun modifyAllDiscussion(discussion: Discussion): AllDiscussionsUiState {
-        val newLatestDiscussion = latestDiscussion.modifyDiscussion(discussion)
-        val newSearchDiscussion = searchDiscussion.modifyDiscussion(discussion)
+        val newLatestDiscussion = latestDiscussion.modify(discussion)
+        val newSearchDiscussion = searchDiscussion.modify(discussion)
         return copy(latestDiscussion = newLatestDiscussion, searchDiscussion = newSearchDiscussion)
     }
 
@@ -32,8 +32,8 @@ data class AllDiscussionsUiState(
     fun refreshLatestDiscussion(): AllDiscussionsUiState = copy(latestDiscussion = latestDiscussion.refresh())
 
     fun removeAllDiscussion(discussionId: Long): AllDiscussionsUiState {
-        val newLatestDiscussion = latestDiscussion.removeDiscussion(discussionId)
-        val newSearchDiscussion = searchDiscussion.removeDiscussion(discussionId)
+        val newLatestDiscussion = latestDiscussion.remove(discussionId)
+        val newSearchDiscussion = searchDiscussion.remove(discussionId)
         return copy(latestDiscussion = newLatestDiscussion, searchDiscussion = newSearchDiscussion)
     }
 

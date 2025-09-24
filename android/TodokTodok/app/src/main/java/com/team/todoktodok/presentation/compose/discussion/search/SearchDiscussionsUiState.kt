@@ -22,7 +22,7 @@ data class SearchDiscussionsUiState(
 
     fun clear() = copy(items = emptyList(), searchKeyword = EMPTY_SEARCH_KEYWORD)
 
-    fun modifyDiscussion(newDiscussion: Discussion): SearchDiscussionsUiState =
+    fun modify(newDiscussion: Discussion): SearchDiscussionsUiState =
         copy(
             items =
                 items.map {
@@ -34,7 +34,7 @@ data class SearchDiscussionsUiState(
                 },
         )
 
-    fun removeDiscussion(discussionId: Long): SearchDiscussionsUiState = copy(items = items.filter { it.discussionId != discussionId })
+    fun remove(discussionId: Long): SearchDiscussionsUiState = copy(items = items.filter { it.discussionId != discussionId })
 
     companion object {
         private const val EMPTY_SEARCH_KEYWORD = ""
