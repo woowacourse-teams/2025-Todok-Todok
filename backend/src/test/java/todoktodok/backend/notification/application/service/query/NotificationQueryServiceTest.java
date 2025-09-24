@@ -4,17 +4,24 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 import java.util.NoSuchElementException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.DatabaseInitializer;
+import todoktodok.backend.InitializerTimer;
 import todoktodok.backend.notification.application.dto.response.NotificationResponse;
 import todoktodok.backend.notification.application.dto.response.UnreadNotificationResponse;
 
-@SpringBootTest
+@ActiveProfiles("test")
 @Transactional
+@SpringBootTest(webEnvironment = WebEnvironment.NONE)
+@ContextConfiguration(initializers = InitializerTimer.class)
 class NotificationQueryServiceTest {
 
     @Autowired
@@ -22,6 +29,11 @@ class NotificationQueryServiceTest {
 
     @Autowired
     private DatabaseInitializer databaseInitializer;
+
+    @BeforeEach
+    void setUp() {
+        databaseInitializer.clear();
+    }
 
     @Test
     @DisplayName("사용자는 자신의 알림 목록과 읽지 않은 알림 수를 조회할 수 있다")
