@@ -1,10 +1,6 @@
 package com.team.todoktodok.presentation.xml.discussions
 
 import com.team.domain.model.Discussion
-import com.team.domain.model.active.ActivatedDiscussion
-import com.team.domain.model.latest.LatestDiscussion
-import com.team.domain.model.member.Nickname
-import com.team.domain.model.member.User
 
 data class DiscussionUiState(
     private val item: Discussion,
@@ -28,36 +24,4 @@ data class DiscussionUiState(
     companion object {
         const val DEFAULT_SEARCH_KEYWORD = ""
     }
-}
-
-fun LatestDiscussion.toUiState(): DiscussionUiState {
-    val discussion =
-        Discussion(
-            id = discussionId,
-            book = book,
-            discussionTitle = title,
-            discussionOpinion = content,
-            writer = User(author.memberId, Nickname(author.nickname), author.profileImage),
-            createAt = createdAt,
-            likeCount = likeCount,
-            commentCount = commentCount,
-            isLikedByMe = isLikedByMe,
-        )
-    return DiscussionUiState(discussion)
-}
-
-fun ActivatedDiscussion.toUiState(): DiscussionUiState {
-    val discussion =
-        Discussion(
-            id = discussionId,
-            book = book,
-            discussionTitle = discussionTitle,
-            discussionOpinion = discussionOpinion,
-            writer = User(writer.id, writer.nickname, writer.profileImage),
-            createAt = createdAt,
-            likeCount = likeCount,
-            commentCount = commentCount,
-            isLikedByMe = isLikedByMe,
-        )
-    return DiscussionUiState(discussion)
 }
