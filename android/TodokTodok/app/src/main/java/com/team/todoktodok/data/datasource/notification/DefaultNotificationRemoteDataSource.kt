@@ -17,8 +17,7 @@ class DefaultNotificationRemoteDataSource(
         return notificationService.saveFcmToken(fcmTokenRequest)
     }
 
-    override suspend fun getNotification(): NetworkResult<NotificationResponse> =
-        notificationService.getNotifications()
+    override suspend fun getNotification(): NetworkResult<NotificationResponse> = notificationService.getNotifications()
 
     override suspend fun getUnreadNotificationsCount(): NetworkResult<ExistNotificationResponse> =
         notificationService.getUnreadNotificationsCount()

@@ -33,9 +33,9 @@ class NotificationActivity : AppCompatActivity() {
         setContentView(binding.root)
         initSystemBar(binding)
         initView(binding, adapter)
-        viewModel.uiState.observe(this) { event ->
-            observeIsLoading(event.isLoading, binding)
-            updateNotifications(event.notificationGroup, adapter)
+        viewModel.uiState.observe(this) { state ->
+            observeIsLoading(state.isLoading, binding)
+            updateNotifications(state.notificationGroup, adapter)
         }
     }
 

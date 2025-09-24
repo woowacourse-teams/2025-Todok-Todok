@@ -75,6 +75,7 @@
             app:layout_constraintTop_toTopOf="@id/iv_icon" />
 
         <View
+            android:id="@+id/view_unread"
             android:layout_width="12dp"
             android:layout_height="12dp"
             android:background="@drawable/bg_circle_green"

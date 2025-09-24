@@ -8,7 +8,7 @@ import com.team.todoktodok.presentation.xml.notification.adapter.NotificationVie
 
 class NotificationAdapter :
     androidx.recyclerview.widget.ListAdapter<NotificationGroup, RecyclerView.ViewHolder>(
-        NotificationDiffUtil()
+        NotificationDiffUtil(),
     ) {
     override fun getItemViewType(position: Int): Int =
         when (getItem(position)) {

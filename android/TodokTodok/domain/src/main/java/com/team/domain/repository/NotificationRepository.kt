@@ -15,11 +15,7 @@ interface NotificationRepository {
 
     suspend fun getUnreadNotificationsCount(): NetworkResult<Boolean>
 
-    suspend fun deleteNotification(
-        notificationId: Long
-    ): NetworkResult<Unit>
+    suspend fun deleteNotification(notificationId: Long): NetworkResult<Unit>
 
-    suspend fun readNotification(
-        notificationId: Long
-    ): NetworkResult<Unit>
+    suspend fun readNotification(notificationId: Long): NetworkResult<Unit>
 }

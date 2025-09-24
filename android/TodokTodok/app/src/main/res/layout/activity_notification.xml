@@ -45,7 +45,7 @@
         android:id="@+id/rv_notifications"
         android:layout_width="match_parent"
         android:layout_height="@dimen/space_0"
-        android:backgroundTint="@color/gray_9F"
+        android:background="@color/gray_ED"
         android:scrollbarFadeDuration="0"
         android:scrollbarStyle="insideOverlay"
         android:scrollbars="vertical"
@@ -61,10 +61,11 @@
         android:id="@+id/progress_bar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/space_0"
+        android:background="@color/gray_ED"
         android:clickable="true"
         android:focusable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/topBar_notification" />
+        app:layout_constraintTop_toBottomOf="@id/topBar_notification" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,6 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class NotificationResponse(
-    val notReadCount: Int,
+    val unreadCount: Int,
     val notifications: List<NotificationItemResponse>,
 )

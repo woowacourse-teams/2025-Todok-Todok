@@ -29,11 +29,12 @@ data class FcmNotification(
                     } else {
                         null
                     },
-                replyId = if (data["replyId"] != "null") {
-                    data["replyId"]?.toLong()
-                } else {
-                    null
-                },
+                replyId =
+                    if (data["replyId"] != "null") {
+                        data["replyId"]?.toLong()
+                    } else {
+                        null
+                    },
                 nickname = Nickname(data["memberNickname"] ?: ""),
                 discussionTitle = data["discussionTitle"] ?: "",
                 content = data["content"] ?: "",

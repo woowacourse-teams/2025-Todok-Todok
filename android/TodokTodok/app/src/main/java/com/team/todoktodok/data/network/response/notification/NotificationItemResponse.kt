@@ -6,16 +6,15 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class NotificationItemResponse(
-    val notificationId: Long,
     val data: NotificationContentResponse,
     val isRead: Boolean,
-    val createAt: String,
+    val createdAt: String,
 )
 
 fun NotificationItemResponse.toDomain(): Notification =
     Notification(
-        id = notificationId,
+        id = data.notificationId,
         notificationContent = data.toDomain(),
         isRead = isRead,
-        createdAt = createAt.toLocalDateTime(),
+        createdAt = createdAt.toLocalDateTime(),
     )

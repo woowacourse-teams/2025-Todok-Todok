@@ -313,7 +313,8 @@ class DiscussionsActivity : AppCompatActivity() {
 
     private fun handleNotificationDeepLink(intent: Intent) {
         val notification: SerializationNotificationContent? =
-            intent.getParcelableCompat<SerializationNotificationContent>("notification")
+            intent
+                .getParcelableCompat<SerializationNotificationContent>("notification")
                 ?.toDomain() as SerializationNotificationContent?
         triggerToMoveDiscussionDetail(notification)
     }

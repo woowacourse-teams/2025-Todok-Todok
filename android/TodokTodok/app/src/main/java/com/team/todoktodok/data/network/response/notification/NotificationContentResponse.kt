@@ -8,6 +8,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class NotificationContentResponse(
+    val notificationId: Long,
     val discussionId: Long,
     val commentId: Long,
     val replyId: Long?,
@@ -19,19 +20,21 @@ data class NotificationContentResponse(
 )
 
 fun NotificationContentResponse.toDomain(): NotificationContent {
-    val type: NotificationType = when (type) {
-        "COMMENT" -> NotificationType.Comment
-        "REPLY" -> NotificationType.Reply
-        "LIKE" -> NotificationType.Like
-        else -> throw IllegalArgumentException("Unknown type: ${type}")
-    }
+    val type: NotificationType =
+        when (type) {
+            "COMMENT" -> NotificationType.Comment
+            "REPLY" -> NotificationType.Reply
+            "LIKE" -> NotificationType.Like
+            else -> throw IllegalArgumentException("Unknown type: $type")
+        }
 
-    val target: NotificationTarget = when (target) {
-        "DISCUSSION" -> NotificationTarget.Discussion
-        "COMMENT" -> NotificationTarget.Comment
-        "REPLY" -> NotificationTarget.Reply
-        else -> throw IllegalArgumentException("Unknown target: ${target}")
-    }
+    val target: NotificationTarget =
+        when (target) {
+            "DISCUSSION" -> NotificationTarget.Discussion
+            "COMMENT" -> NotificationTarget.Comment
+            "REPLY" -> NotificationTarget.Reply
+            else -> throw IllegalArgumentException("Unknown target: $target")
+        }
 
     return NotificationContent(
         discussionId = discussionId,

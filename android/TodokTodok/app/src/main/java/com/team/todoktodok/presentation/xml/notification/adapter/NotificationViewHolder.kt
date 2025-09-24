@@ -1,6 +1,7 @@
 package com.team.todoktodok.presentation.xml.notification.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
@@ -15,6 +16,7 @@ class NotificationViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(notification: Notification) {
         binding.apply {
+            viewUnread.visibility = if (notification.isRead) View.GONE else View.VISIBLE
             tvNickname.text = notification.notificationContent.nickname.value
             tvNickname.text = notification.notificationContent.discussionTitle
             tvContent.text = notification.notificationContent.content
@@ -23,7 +25,7 @@ class NotificationViewHolder(
         when (notification.notificationContent.type) {
             is NotificationType.Like -> {
                 binding.apply {
-                    tvType.text = "좋아요"
+                    tvType.text = context.getString(R.string.notification_type_like)
                     tvContent.isVisible = false
                     ivIcon.setImageResource(R.drawable.ic_heart)
                 }
@@ -31,14 +33,14 @@ class NotificationViewHolder(
 
             is NotificationType.Comment -> {
                 binding.apply {
-                    tvType.text = "댓글"
+                    tvType.text = context.getString(R.string.notification_type_comment)
                     ivIcon.setImageResource(R.drawable.ic_comment)
                 }
             }
 
             is NotificationType.Reply -> {
                 binding.apply {
-                    tvType.text = "대댓글"
+                    tvType.text = context.getString(R.string.notification_type_reply)
                     ivIcon.setImageResource(R.drawable.ic_reply)
                 }
             }

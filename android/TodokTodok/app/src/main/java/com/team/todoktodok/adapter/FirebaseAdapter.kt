@@ -8,7 +8,6 @@ import android.app.PendingIntent
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
-import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -32,7 +31,6 @@ class FirebaseAdapter : FirebaseMessagingService() {
             if (task.isSuccessful) {
                 val fId = task.result
                 CoroutineScope(Dispatchers.IO).launch {
-                    Log.d("test", "${token}")
                     notificationRepository.registerPushNotification(token, fId)
                 }
             }
@@ -44,7 +42,6 @@ class FirebaseAdapter : FirebaseMessagingService() {
         val body = message.data["body"] ?: return
 
         if (message.data.isNotEmpty()) {
-
             val fcmNotification = FcmNotification(message.data)
 
             ensureChannel()
@@ -77,17 +74,19 @@ class FirebaseAdapter : FirebaseMessagingService() {
                     .build()
 
             if (NotificationManagerCompat.from(this).areNotificationsEnabled() &&
-                (Build.VERSION.SDK_INT < 33 || ActivityCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.POST_NOTIFICATIONS,
-                ) == PackageManager.PERMISSION_GRANTED
-                        )
+                (
+                    Build.VERSION.SDK_INT < 33 ||
+                        ActivityCompat.checkSelfPermission(
+                            this,
+                            Manifest.permission.POST_NOTIFICATIONS,
+                        ) == PackageManager.PERMISSION_GRANTED
+                )
             ) {
                 NotificationManagerCompat
                     .from(this)
                     .notify(
                         fcmNotification.discussionId.toInt(),
-                        alert
+                        alert,
                     )
             }
         }
@@ -95,11 +94,12 @@ class FirebaseAdapter : FirebaseMessagingService() {
 
     private fun ensureChannel() {
         val manager = getSystemService(NotificationManager::class.java)
-        val channel = NotificationChannel(
-            CHANNEL_ID,
-            APP_NAME,
-            NotificationManager.IMPORTANCE_HIGH
-        )
+        val channel =
+            NotificationChannel(
+                CHANNEL_ID,
+                APP_NAME,
+                NotificationManager.IMPORTANCE_HIGH,
+            )
         manager.createNotificationChannel(channel)
     }
 

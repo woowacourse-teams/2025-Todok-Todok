@@ -41,9 +41,11 @@ class DiscussionsViewModel(
 
     fun loadIsUnReadNotification() {
         viewModelScope.launch {
-            notificationRepository.getUnreadNotificationsCount().onSuccess { isExist ->
-                _uiState.value = _uiState.value?.changeUnreadNotification(isExist)
-            }.onFailure { onUiEvent(DiscussionsUiEvent.ShowErrorMessage(it)) }
+            notificationRepository
+                .getUnreadNotificationsCount()
+                .onSuccess { isExist ->
+                    _uiState.value = _uiState.value?.changeUnreadNotification(isExist)
+                }.onFailure { onUiEvent(DiscussionsUiEvent.ShowErrorMessage(it)) }
         }
     }
 

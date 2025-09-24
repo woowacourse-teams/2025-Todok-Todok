@@ -22,12 +22,12 @@ interface NotificationService {
 
     @PATCH("v1/notifications/{notificationId}/read")
     suspend fun patchNotifications(
-        @Path(value = "notificationId") notificationId: Long
+        @Path(value = "notificationId") notificationId: Long,
     ): NetworkResult<Unit>
 
     @DELETE("v1/notifications")
     suspend fun deleteNotifications(
-        @Path(value = "notificationId") notificationId: Long
+        @Path(value = "notificationId") notificationId: Long,
     ): NetworkResult<Unit>
 
     @GET("v1/notifications/unread/exists")

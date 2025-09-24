@@ -5,6 +5,7 @@ import com.team.todoktodok.presentation.xml.notification.adapter.NotificationGro
 
 data class NotificationUiState(
     val isLoading: Boolean = false,
+    val notificationCount: Int = 0,
     val notifications: List<Notification> = emptyList(),
 ) {
     val notificationGroup: List<NotificationGroup> =
