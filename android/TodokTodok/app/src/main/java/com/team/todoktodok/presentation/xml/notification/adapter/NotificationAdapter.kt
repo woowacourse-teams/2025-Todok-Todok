@@ -6,7 +6,9 @@ import com.team.todoktodok.R
 import com.team.todoktodok.presentation.xml.notification.adapter.NotificationInformationViewHolder.Companion.NotificationInformationViewHolder
 import com.team.todoktodok.presentation.xml.notification.adapter.NotificationViewHolder.Companion.NotificationViewHolder
 
-class NotificationAdapter :
+class NotificationAdapter(
+    val updateUnreadStatus: NotificationViewHolder.UpdateUnreadStatusClickListener,
+) :
     androidx.recyclerview.widget.ListAdapter<NotificationGroup, RecyclerView.ViewHolder>(
         NotificationDiffUtil(),
     ) {
@@ -22,7 +24,7 @@ class NotificationAdapter :
     ): RecyclerView.ViewHolder =
         when (viewType) {
             R.layout.item_notification_information -> NotificationInformationViewHolder(parent)
-            R.layout.item_notification -> NotificationViewHolder(parent)
+            R.layout.item_notification -> NotificationViewHolder(parent, updateUnreadStatus)
             else -> throw IllegalArgumentException("Invalid view type")
         }
 

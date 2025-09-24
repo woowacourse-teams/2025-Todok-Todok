@@ -13,7 +13,15 @@ import com.team.todoktodok.presentation.core.ext.formatKorean
 
 class NotificationViewHolder(
     private val binding: ItemNotificationBinding,
+    private val updateUnreadStatus: UpdateUnreadStatusClickListener
 ) : RecyclerView.ViewHolder(binding.root) {
+
+    init {
+        binding.root.setOnClickListener {
+            updateUnreadStatus.onClick(bindingAdapterPosition)
+        }
+    }
+
     fun bind(notification: Notification) {
         binding.apply {
             viewUnread.visibility = if (notification.isRead) View.GONE else View.VISIBLE
@@ -48,10 +56,17 @@ class NotificationViewHolder(
     }
 
     companion object {
-        fun NotificationViewHolder(parent: ViewGroup): NotificationViewHolder {
+        fun NotificationViewHolder(
+            parent: ViewGroup,
+            updateUnreadStatus: UpdateUnreadStatusClickListener
+        ): NotificationViewHolder {
             val layoutInflater = LayoutInflater.from(parent.context)
             val binding = ItemNotificationBinding.inflate(layoutInflater, parent, false)
-            return NotificationViewHolder(binding)
+            return NotificationViewHolder(binding, updateUnreadStatus)
         }
+    }
+
+    fun interface UpdateUnreadStatusClickListener {
+        fun onClick(position: Int)
     }
 }

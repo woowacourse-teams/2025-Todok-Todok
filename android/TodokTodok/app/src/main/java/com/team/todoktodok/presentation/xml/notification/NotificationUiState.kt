@@ -8,6 +8,8 @@ data class NotificationUiState(
     val notificationCount: Int = 0,
     val notifications: List<Notification> = emptyList(),
 ) {
+    fun notification(position: Int): Notification = notifications[position]
+
     val notificationGroup: List<NotificationGroup> =
         listOf(
             *notifications.map { NotificationGroup.Notification(it) }.toTypedArray(),

@@ -7,6 +7,9 @@ import androidx.lifecycle.viewModelScope
 import com.team.domain.model.exception.onFailure
 import com.team.domain.model.exception.onSuccess
 import com.team.domain.repository.NotificationRepository
+import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
+import com.team.todoktodok.presentation.core.event.SingleLiveData
+import com.team.todoktodok.presentation.xml.notification.NotificationUiEvent
 import com.team.todoktodok.presentation.xml.notification.NotificationUiState
 import kotlinx.coroutines.launch
 
@@ -16,6 +19,9 @@ class NotificationViewModel(
     private val _uiState: MutableLiveData<NotificationUiState> =
         MutableLiveData(NotificationUiState())
     val uiState: LiveData<NotificationUiState> get() = _uiState
+
+    private val _uiEvent: MutableSingleLiveData<NotificationUiEvent> = MutableSingleLiveData()
+    val uiEvent: SingleLiveData<NotificationUiEvent> get() = _uiEvent
 
     init {
         initNotifications()
@@ -35,8 +41,20 @@ class NotificationViewModel(
                             notificationCount = notificationCount,
                             notifications = notifications,
                         )
-                }.onFailure {
+                }.onFailure { exception ->
+                    _uiEvent.setValue(NotificationUiEvent.ShowException(exception))
                 }
+        }
+    }
+
+    fun updateUnReadStatus(position: Int) {
+        val readNotification = _uiState.value?.notification(position) ?: return
+        viewModelScope.launch {
+            notificationRepository.readNotification(readNotification.id).onSuccess {
+                _uiEvent.setValue(NotificationUiEvent.NavigateToDiscussionRoom(readNotification.notificationContent.discussionId))
+            }.onFailure { exceptions ->
+                _uiEvent.setValue(NotificationUiEvent.ShowException(exceptions))
+            }
         }
     }
 }

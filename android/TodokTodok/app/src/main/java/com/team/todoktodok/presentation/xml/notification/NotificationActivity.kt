@@ -11,6 +11,9 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.team.todoktodok.App
 import com.team.todoktodok.databinding.ActivityNotificationBinding
+import com.team.todoktodok.presentation.core.ExceptionMessageConverter
+import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
+import com.team.todoktodok.presentation.xml.discussiondetail.DiscussionDetailActivity
 import com.team.todoktodok.presentation.xml.notification.adapter.NotificationAdapter
 import com.team.todoktodok.presentation.xml.notification.adapter.NotificationGroup
 import com.team.todoktodok.presentation.xml.notification.vm.NotificationViewModel
@@ -28,14 +31,41 @@ class NotificationActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         val binding = ActivityNotificationBinding.inflate(layoutInflater)
-        val adapter = NotificationAdapter()
+        val adapter = NotificationAdapter { position ->
+            viewModel.updateUnReadStatus(position = position)
+        }
 
         setContentView(binding.root)
         initSystemBar(binding)
         initView(binding, adapter)
+        setUpUiState(binding, adapter)
+        setUpUiEvent(binding)
+    }
+
+    private fun setUpUiState(
+        binding: ActivityNotificationBinding,
+        adapter: NotificationAdapter
+    ) {
         viewModel.uiState.observe(this) { state ->
             observeIsLoading(state.isLoading, binding)
             updateNotifications(state.notificationGroup, adapter)
+        }
+    }
+
+    private fun setUpUiEvent(binding: ActivityNotificationBinding) {
+        viewModel.uiEvent.observe(this) { uiEvent ->
+            when (uiEvent) {
+                is NotificationUiEvent.NavigateToDiscussionRoom -> {
+                    val intent = DiscussionDetailActivity.Intent(this, uiEvent.discussionRoomId)
+                    startActivity(intent)
+                    finish()
+                }
+
+                is NotificationUiEvent.ShowException -> {
+                    val messageConverter = ExceptionMessageConverter()
+                    AlertSnackBar(binding.root, messageConverter(uiEvent.exception)).show()
+                }
+            }
         }
     }
 
