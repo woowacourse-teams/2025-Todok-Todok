@@ -46,11 +46,11 @@ class LatestDiscussionsScreenTest {
     fun `아이템이_화면에_보여진다`() {
         composeTestRule.setContent {
             LatestDiscussionsScreen(
+                uiState = discussion,
                 onLoadMore = {},
                 onClick = {},
                 isRefreshing = false,
                 onRefresh = {},
-                latestDiscussionsUiState = discussion,
             )
         }
 
@@ -65,11 +65,11 @@ class LatestDiscussionsScreenTest {
 
         composeTestRule.setContent {
             LatestDiscussionsScreen(
+                uiState = previewData,
                 onLoadMore = {},
                 onClick = { id -> clickedId = id },
                 isRefreshing = false,
                 onRefresh = {},
-                latestDiscussionsUiState = previewData,
             )
         }
 

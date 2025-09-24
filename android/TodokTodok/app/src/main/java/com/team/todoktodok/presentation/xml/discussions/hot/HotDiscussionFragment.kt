@@ -26,13 +26,13 @@ class HotDiscussionFragment : BaseDiscussionsFragment(R.layout.fragment_hot_disc
                 TodoktodokTheme {
                     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
                     HotDiscussionScreen(
+                        uiState = uiState.value.hotDiscussion,
                         onClick = { discussionId ->
                             moveToDiscussionDetail(discussionId)
                         },
                         onLoadMore = {
                             viewModel.loadActivatedDiscussions()
                         },
-                        hotDiscussions = uiState.value.hotDiscussion,
                     )
                 }
             }

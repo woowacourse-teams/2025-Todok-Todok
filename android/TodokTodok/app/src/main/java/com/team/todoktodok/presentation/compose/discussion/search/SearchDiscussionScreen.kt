@@ -31,11 +31,11 @@ import com.team.todoktodok.presentation.compose.theme.Pretendard
 
 @Composable
 fun SearchDiscussionScreen(
+    uiState: SearchDiscussionsUiState,
     onClick: (Long) -> Unit,
-    searchDiscussion: SearchDiscussionsUiState,
     modifier: Modifier = Modifier,
 ) {
-    if (searchDiscussion.discussions.isEmpty()) {
+    if (uiState.discussions.isEmpty()) {
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -52,12 +52,12 @@ fun SearchDiscussionScreen(
             val fullText =
                 stringResource(
                     R.string.discussion_no_search_title,
-                    searchDiscussion.searchKeyword,
+                    uiState.searchKeyword,
                 )
             Text(
                 text =
                     buildAnnotatedString {
-                        val keyword = searchDiscussion.searchKeyword
+                        val keyword = uiState.searchKeyword
                         val startIndex = fullText.indexOf(keyword)
                         if (startIndex >= 0) {
                             append(fullText.substring(0, startIndex))
@@ -82,12 +82,12 @@ fun SearchDiscussionScreen(
             modifier = modifier.padding(horizontal = 10.dp),
         ) {
             items(
-                items = searchDiscussion.discussions,
+                items = uiState.discussions,
                 key = { it.discussionId },
             ) { item ->
                 DiscussionCard(
                     uiState = item,
-                    discussionCardType = searchDiscussion.type,
+                    discussionCardType = uiState.type,
                     onClick = { onClick(item.discussionId) },
                 )
             }
@@ -103,7 +103,7 @@ fun SearchDiscussionScreenPreview(
 ) {
     SearchDiscussionScreen(
         onClick = {},
-        searchDiscussion = searchDiscussion,
+        uiState = searchDiscussion,
     )
 }
 
@@ -112,6 +112,6 @@ fun SearchDiscussionScreenPreview(
 fun EmptySearchDiscussionScreenPreview() {
     SearchDiscussionScreen(
         onClick = {},
-        searchDiscussion = SearchDiscussionsUiState(searchKeyword = "토론"),
+        uiState = SearchDiscussionsUiState(searchKeyword = "토론"),
     )
 }

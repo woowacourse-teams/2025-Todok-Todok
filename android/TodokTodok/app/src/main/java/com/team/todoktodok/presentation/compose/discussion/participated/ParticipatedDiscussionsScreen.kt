@@ -12,8 +12,8 @@ import com.team.todoktodok.presentation.compose.preview.ParticipatedDiscussionPr
 
 @Composable
 fun ParticipatedDiscussionsScreen(
-    onClick: (Long) -> Unit,
     uiState: ParticipatedDiscussionsUiState,
+    onClick: (Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.padding(10.dp)) {

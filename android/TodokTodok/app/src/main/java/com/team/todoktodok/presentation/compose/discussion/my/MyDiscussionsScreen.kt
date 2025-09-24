@@ -33,9 +33,9 @@ import com.team.todoktodok.presentation.xml.profile.UserProfileTab
 
 @Composable
 fun MyDiscussionsScreen(
+    uiState: MyDiscussionUiState,
     onClickHeader: (UserProfileTab) -> Unit,
     onClick: (Long) -> Unit,
-    uiState: MyDiscussionUiState,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn {
@@ -75,7 +75,7 @@ fun MyDiscussionsScreen(
         item {
             CreatedDiscussionScreen(
                 onClick = { onClick(it) },
-                createdDiscussions = uiState.createdDiscussionsUiState,
+                uiState = uiState.createdDiscussionsUiState,
             )
         }
     }

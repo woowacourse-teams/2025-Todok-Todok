@@ -17,9 +17,9 @@ import com.team.todoktodok.presentation.compose.preview.HotDiscussionPreviewPara
 
 @Composable
 fun HotDiscussionScreen(
+    uiState: HotDiscussionUiState,
     onLoadMore: () -> Unit,
     onClick: (Long) -> Unit,
-    hotDiscussions: HotDiscussionUiState,
 ) {
     InfinityLazyColumn(
         loadMore = { onLoadMore() },
@@ -30,20 +30,20 @@ fun HotDiscussionScreen(
         item {
             PopularDiscussionsScreen(
                 onClick = onClick,
-                uiState = hotDiscussions.popularDiscussions,
+                uiState = uiState.popularDiscussions,
             )
         }
 
         item { ActivatedDiscussionHeader() }
 
         items(
-            items = hotDiscussions.activatedDiscussions.discussions,
+            items = uiState.activatedDiscussions.discussions,
             key = { it.discussionId },
         ) { item ->
             DiscussionCard(
                 uiState = item,
                 onClick = { onClick(item.discussionId) },
-                discussionCardType = hotDiscussions.activatedDiscussions.type,
+                discussionCardType = uiState.activatedDiscussions.type,
                 modifier = Modifier.padding(horizontal = 5.dp),
             )
         }
@@ -59,6 +59,6 @@ fun HotDiscissionContent(
     HotDiscussionScreen(
         onLoadMore = {},
         onClick = {},
-        hotDiscussions = hotDiscussionUiState,
+        uiState = hotDiscussionUiState,
     )
 }

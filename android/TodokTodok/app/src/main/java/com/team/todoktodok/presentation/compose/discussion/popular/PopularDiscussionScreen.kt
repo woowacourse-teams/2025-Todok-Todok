@@ -27,8 +27,8 @@ import com.team.todoktodok.presentation.compose.theme.Pretendard
 
 @Composable
 fun PopularDiscussionsScreen(
-    onClick: (Long) -> Unit,
     uiState: PopularDiscussionsUiState,
+    onClick: (Long) -> Unit,
 ) {
     Column {
         PopularDiscussionsHeader()

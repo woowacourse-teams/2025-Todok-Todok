@@ -27,9 +27,9 @@ import com.team.todoktodok.presentation.compose.theme.Pretendard
 
 @Composable
 fun ActivatedDiscussionScreen(
+    uiState: ActivatedDiscussionsUiState,
     onLoadMore: () -> Unit,
     onClick: (Long) -> Unit,
-    uiState: ActivatedDiscussionsUiState,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {

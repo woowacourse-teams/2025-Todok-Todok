@@ -13,15 +13,15 @@ import com.team.todoktodok.presentation.compose.preview.CreatedDiscussionUiState
 @Composable
 fun CreatedDiscussionScreen(
     onClick: (Long) -> Unit,
-    createdDiscussions: CreatedDiscussionsUiState,
+    uiState: CreatedDiscussionsUiState,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.padding(vertical = 5.dp, horizontal = 10.dp)) {
-        createdDiscussions.discussions.forEach { discussion ->
+        uiState.discussions.forEach { discussion ->
             DiscussionCard(
                 discussion,
                 onClick = { onClick(discussion.discussionId) },
-                discussionCardType = createdDiscussions.type,
+                discussionCardType = uiState.type,
                 modifier = Modifier.padding(top = 10.dp),
             )
         }
@@ -36,6 +36,6 @@ fun CreatedDiscussionScreenPreview(
 ) {
     CreatedDiscussionScreen(
         onClick = {},
-        createdDiscussions = createdDiscussions,
+        uiState = createdDiscussions,
     )
 }

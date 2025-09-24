@@ -32,7 +32,7 @@ class AllDiscussionFragment : BaseDiscussionsFragment(R.layout.fragment_all_disc
                         AllDiscussionMode.LATEST -> {
                             LatestDiscussionsScreen(
                                 onLoadMore = { viewModel.loadLatestDiscussions() },
-                                latestDiscussionsUiState = allDiscussion.latestDiscussion,
+                                uiState = allDiscussion.latestDiscussion,
                                 isRefreshing = allDiscussion.latestDiscussion.isRefreshing,
                                 onRefresh = { viewModel.refreshLatestDiscussions() },
                                 onClick = { discussionId ->
@@ -43,7 +43,7 @@ class AllDiscussionFragment : BaseDiscussionsFragment(R.layout.fragment_all_disc
 
                         AllDiscussionMode.SEARCH -> {
                             SearchDiscussionScreen(
-                                searchDiscussion = allDiscussion.searchDiscussion,
+                                uiState = allDiscussion.searchDiscussion,
                                 onClick = { discussionId ->
                                     moveToDiscussionDetail(discussionId)
                                 },

@@ -18,18 +18,18 @@ class SearchDiscussionScreenTest {
     @Test
     fun `검색화면_아이템이_표시된다`() {
         // given
-        val sampleState = SearchDiscussionsUiStatePreviewParameterProvider().values.first()
+        val state = SearchDiscussionsUiStatePreviewParameterProvider().values.first()
 
         // when
         composeTestRule.setContent {
             SearchDiscussionScreen(
-                searchDiscussion = sampleState,
+                uiState = state,
                 onClick = {},
             )
         }
 
         // then
-        sampleState.discussions.forEach { item ->
+        state.discussions.forEach { item ->
             composeTestRule.onNodeWithText(item.discussionTitle).assertIsDisplayed()
         }
     }
@@ -43,7 +43,7 @@ class SearchDiscussionScreenTest {
         // when
         composeTestRule.setContent {
             SearchDiscussionScreen(
-                searchDiscussion = sampleState,
+                uiState = sampleState,
                 onClick = { clickedId = it },
             )
         }
@@ -63,7 +63,7 @@ class SearchDiscussionScreenTest {
         // when
         composeTestRule.setContent {
             SearchDiscussionScreen(
-                searchDiscussion = emptyState,
+                uiState = emptyState,
                 onClick = {},
             )
         }
