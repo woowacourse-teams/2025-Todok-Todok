@@ -9,21 +9,37 @@ import androidx.compose.ui.unit.sp
 
 val Typography =
     Typography(
-        bodyLarge =
+        titleMedium =
             TextStyle(
                 fontFamily = Pretendard,
                 fontWeight = FontWeight.SemiBold,
-                color = Black21,
                 fontSize = 16.sp,
-                lineHeight = 24.sp,
+                lineHeight = 20.sp,
+                color = Black21,
+            ),
+        bodyMedium =
+            TextStyle(
+                fontFamily = Pretendard,
+                fontWeight = FontWeight.Medium,
+                fontSize = 14.sp,
+                lineHeight = 20.sp,
+                color = Gray68,
+            ),
+        labelMedium =
+            TextStyle(
+                fontFamily = Pretendard,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 13.sp,
+                lineHeight = 18.sp,
+                color = Black21,
             ),
         labelSmall =
             TextStyle(
                 fontFamily = Pretendard,
-                fontWeight = FontWeight.Medium,
-                color = Black,
-                fontSize = 14.sp,
-                lineHeight = 24.sp,
+                fontWeight = FontWeight.Normal,
+                fontSize = 12.sp,
+                lineHeight = 16.sp,
+                color = Black42,
             ),
     )
 
