@@ -3,12 +3,14 @@ package com.team.todoktodok.presentation.compose.discussion.latest
 import com.team.domain.model.Discussion
 import com.team.domain.model.latest.LatestDiscussionPage
 import com.team.domain.model.latest.PageInfo
+import com.team.todoktodok.presentation.compose.component.DiscussionCardType
 import com.team.todoktodok.presentation.xml.discussions.DiscussionUiState
 
 data class LatestDiscussionsUiState(
     val items: List<DiscussionUiState> = emptyList(),
+    val type: DiscussionCardType = DiscussionCardType.Default,
     val isRefreshing: Boolean = false,
-    val latestPage: PageInfo = PageInfo.Companion.EMPTY,
+    val latestPage: PageInfo = PageInfo.EMPTY,
 ) {
     fun refresh() = copy(items = emptyList(), latestPage = PageInfo.Companion.EMPTY, isRefreshing = true)
 

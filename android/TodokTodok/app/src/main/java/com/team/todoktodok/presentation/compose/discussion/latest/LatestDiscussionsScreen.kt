@@ -58,6 +58,7 @@ fun LatestDiscussionsScreen(
                     DiscussionCard(
                         uiState = item,
                         onClick = { onClick(item.discussionId) },
+                        discussionCardType = latestDiscussionsUiState.type,
                     )
                 }
             },
