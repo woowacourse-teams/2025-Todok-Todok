@@ -1,4 +1,4 @@
-package com.team.todoktodok.presentation.xml.discussions.all
+package com.team.todoktodok.presentation.compose.discussion.all
 
 import com.team.domain.model.Discussion
 import com.team.domain.model.latest.LatestDiscussionPage

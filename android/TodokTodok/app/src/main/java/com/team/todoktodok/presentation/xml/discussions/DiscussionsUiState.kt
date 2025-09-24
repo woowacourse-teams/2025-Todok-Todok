@@ -3,9 +3,9 @@ package com.team.todoktodok.presentation.xml.discussions
 import com.team.domain.model.Discussion
 import com.team.domain.model.active.ActivatedDiscussionPage
 import com.team.domain.model.latest.LatestDiscussionPage
+import com.team.todoktodok.presentation.compose.discussion.all.AllDiscussionsUiState
 import com.team.todoktodok.presentation.compose.discussion.hot.HotDiscussionUiState
 import com.team.todoktodok.presentation.compose.discussion.my.MyDiscussionUiState
-import com.team.todoktodok.presentation.xml.discussions.all.AllDiscussionsUiState
 
 data class DiscussionsUiState(
     val hotDiscussion: HotDiscussionUiState = HotDiscussionUiState(),

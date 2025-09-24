@@ -9,8 +9,7 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentAllDiscussionBinding
-import com.team.todoktodok.presentation.compose.discussion.latest.LatestDiscussionsScreen
-import com.team.todoktodok.presentation.compose.discussion.search.SearchDiscussionScreen
+import com.team.todoktodok.presentation.compose.discussion.all.AllDiscussionsScreen
 import com.team.todoktodok.presentation.compose.theme.TodoktodokTheme
 import com.team.todoktodok.presentation.xml.discussions.BaseDiscussionsFragment
 
@@ -27,29 +26,12 @@ class AllDiscussionFragment : BaseDiscussionsFragment(R.layout.fragment_all_disc
             setContent {
                 TodoktodokTheme {
                     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-                    val allDiscussion = uiState.allDiscussionsUiState
-                    when (allDiscussion.mode) {
-                        AllDiscussionMode.LATEST -> {
-                            LatestDiscussionsScreen(
-                                onLoadMore = { viewModel.loadLatestDiscussions() },
-                                uiState = allDiscussion.latestDiscussion,
-                                isRefreshing = allDiscussion.latestDiscussion.isRefreshing,
-                                onRefresh = { viewModel.refreshLatestDiscussions() },
-                                onClick = { discussionId ->
-                                    moveToDiscussionDetail(discussionId)
-                                },
-                            )
-                        }
-
-                        AllDiscussionMode.SEARCH -> {
-                            SearchDiscussionScreen(
-                                uiState = allDiscussion.searchDiscussion,
-                                onClick = { discussionId ->
-                                    moveToDiscussionDetail(discussionId)
-                                },
-                            )
-                        }
-                    }
+                    AllDiscussionsScreen(
+                        uiState = uiState.allDiscussionsUiState,
+                        onLoadMore = { viewModel.loadLatestDiscussions() },
+                        onClick = { discussionId -> moveToDiscussionDetail(discussionId) },
+                        onRefresh = { viewModel.refreshLatestDiscussions() },
+                    )
                 }
             }
         }
