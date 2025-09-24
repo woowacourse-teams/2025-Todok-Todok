@@ -12,16 +12,18 @@ import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.graphics.Insets
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.team.domain.model.book.AladinBook
 import com.team.domain.model.book.Keyword
+import com.team.domain.model.book.SearchedBook
 import com.team.domain.model.book.length
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivitySelectBookBinding
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
+import com.team.todoktodok.presentation.core.ext.addOnScrollEndListener
 import com.team.todoktodok.presentation.xml.book.adapter.SearchBooksAdapter
 import com.team.todoktodok.presentation.xml.book.vm.SelectBookViewModel
 import com.team.todoktodok.presentation.xml.book.vm.SelectBookViewModelFactory
@@ -49,6 +51,19 @@ class SelectBookActivity : AppCompatActivity() {
         initView(binding, adapter)
         setUpUiState(binding, adapter)
         setUpUiEvent(binding)
+        calculateItemSize()
+    }
+
+    private fun calculateItemSize() {
+        val windowMetrics = windowManager.currentWindowMetrics
+        val bounds = windowMetrics.bounds
+        val screenHeightPx = bounds.height()
+        val metrics = this.resources.displayMetrics
+        val itemHeightPx = (120 * metrics.density).toInt()
+        val visibleCount = screenHeightPx / itemHeightPx
+        val pageSize = visibleCount + 2
+
+        viewModel.changePageSize(pageSize)
     }
 
     private fun initSystemBar(binding: ActivitySelectBookBinding) {
@@ -56,26 +71,49 @@ class SelectBookActivity : AppCompatActivity() {
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             val imeBottom = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
-            v.setPadding(
-                binding.main.paddingLeft,
-                systemBars.top,
-                binding.main.paddingRight,
-                systemBars.bottom,
-            )
-            binding.rvSearchedBooks.setPadding(
-                binding.rvSearchedBooks.paddingLeft,
-                binding.rvSearchedBooks.paddingTop,
-                binding.rvSearchedBooks.paddingRight,
-                imeBottom,
-            )
-            binding.nsvEmptySearchResult.setPadding(
-                binding.nsvEmptySearchResult.paddingLeft,
-                binding.nsvEmptySearchResult.paddingTop,
-                binding.nsvEmptySearchResult.paddingRight,
-                imeBottom,
-            )
+
+            initSystemBarPadding(v, binding, systemBars)
+            initSystmeBarRvPadding(binding, imeBottom)
+            initSystemBarEmptyViewPadding(binding, imeBottom)
             insets
         }
+    }
+
+    private fun initSystemBarEmptyViewPadding(
+        binding: ActivitySelectBookBinding,
+        imeBottom: Int,
+    ) {
+        binding.nsvEmptySearchResult.setPadding(
+            binding.nsvEmptySearchResult.paddingLeft,
+            binding.nsvEmptySearchResult.paddingTop,
+            binding.nsvEmptySearchResult.paddingRight,
+            imeBottom,
+        )
+    }
+
+    private fun initSystmeBarRvPadding(
+        binding: ActivitySelectBookBinding,
+        imeBottom: Int,
+    ) {
+        binding.rvSearchedBooks.setPadding(
+            binding.rvSearchedBooks.paddingLeft,
+            binding.rvSearchedBooks.paddingTop,
+            binding.rvSearchedBooks.paddingRight,
+            imeBottom,
+        )
+    }
+
+    private fun initSystemBarPadding(
+        v: View,
+        binding: ActivitySelectBookBinding,
+        systemBars: Insets,
+    ) {
+        v.setPadding(
+            binding.main.paddingLeft,
+            systemBars.top,
+            binding.main.paddingRight,
+            systemBars.bottom,
+        )
     }
 
     private fun initView(
@@ -90,7 +128,16 @@ class SelectBookActivity : AppCompatActivity() {
             etSearchKeyword.setOnEditorActionListener { view, actionId, _ ->
                 handleSearchAction(view, actionId)
             }
-            rvSearchedBooks.adapter = adapter
+            initRvView(adapter)
+        }
+    }
+
+    private fun ActivitySelectBookBinding.initRvView(adapter: SearchBooksAdapter) {
+        rvSearchedBooks.apply {
+            this.adapter = adapter
+            addOnScrollEndListener(
+                callback = { viewModel.addSearchedBooks() },
+            )
         }
     }
 
@@ -173,7 +220,7 @@ class SelectBookActivity : AppCompatActivity() {
     private fun updateLoadingStatus(binding: ActivitySelectBookBinding) {
         binding.progressBar.visibility = View.VISIBLE
         binding.nsvEmptySearchResult.visibility = View.GONE
-        binding.rvSearchedBooks.visibility = View.GONE
+        binding.rvSearchedBooks.visibility = View.VISIBLE
     }
 
     private fun setUpUiEvent(binding: ActivitySelectBookBinding) {
@@ -208,7 +255,7 @@ class SelectBookActivity : AppCompatActivity() {
         return spannableTitle
     }
 
-    private fun navigateToCreateDiscussionRoom(book: AladinBook) {
+    private fun navigateToCreateDiscussionRoom(book: SearchedBook) {
         val serializationBook: SerializationBook = book.toSerialization()
         val intent =
             CreateDiscussionRoomActivity.Intent(
@@ -221,7 +268,7 @@ class SelectBookActivity : AppCompatActivity() {
 
     private fun hideKeyBoard(view: View) {
         val inputMethodManager: InputMethodManager =
-            this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            this.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 

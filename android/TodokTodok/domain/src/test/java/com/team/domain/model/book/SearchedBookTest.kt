@@ -4,12 +4,12 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
 
-class AladinBookTest {
+class SearchedBookTest {
     @Test
-    fun `AladinBook은 내부의 값을 올바르게 노출한다`() {
+    fun `SearchedBook은 내부의 값을 올바르게 노출한다`() {
         // given
         val book =
-            AladinBook(
+            SearchedBook(
                 ISBN(9791158391409L),
                 BookTitle("오브젝트 - 코드로 이해하는 객체지향 설계"),
                 BookAuthor("조영호 (지은이)"),
@@ -37,10 +37,10 @@ class AladinBookTest {
     }
 
     @Test
-    fun `팩토리로 만든 AladinBook은 내부의 값을 올바르게 노출한다`() {
+    fun `팩토리로 만든 SearchedBook은 내부의 값을 올바르게 노출한다`() {
         // given
         val book =
-            AladinBook.AladinBook(
+            SearchedBook.SearchedBook(
                 9791158391409L,
                 "오브젝트 - 코드로 이해하는 객체지향 설계",
                 "조영호 (지은이)",

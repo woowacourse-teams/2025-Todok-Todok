@@ -3,7 +3,7 @@ package com.team.todoktodok.presentation.xml.book.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.team.domain.model.book.AladinBook
+import com.team.domain.model.book.SearchedBook
 import com.team.todoktodok.databinding.ItemBookBinding
 import com.team.todoktodok.presentation.core.ext.loadImage
 
@@ -17,7 +17,7 @@ class SearchBooksViewHolder private constructor(
         }
     }
 
-    fun bind(book: AladinBook) {
+    fun bind(book: SearchedBook) {
         binding.apply {
             tvBookTitle.text = book.mainTitle
             tvBookAuthor.text = book.author
