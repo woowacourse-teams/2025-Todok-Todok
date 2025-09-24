@@ -8,6 +8,7 @@ spring:
       - submodule/security/aws.yml
       - submodule/security/firebase.yml
       - submodule/security/google.yml
+      - submodule/security/admin.yml
   servlet:
     multipart:
       max-file-size: 5MB
@@ -37,3 +38,6 @@ cloud:
 
 google:
   client-id: ${google.client-id}
+
+admin:
+  email-path: ${admin.email-path}
