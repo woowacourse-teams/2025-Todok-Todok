@@ -94,7 +94,7 @@ public class Notification extends TimeStamp {
     }
 
     public boolean isOwnedBy(final Member recipient) {
-        return this.recipient == recipient;
+        return this.recipient.equals(recipient);
     }
 
     public void update(final boolean isRead) {
