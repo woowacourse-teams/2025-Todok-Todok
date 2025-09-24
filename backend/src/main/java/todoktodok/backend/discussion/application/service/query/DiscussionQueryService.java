@@ -72,7 +72,7 @@ public class DiscussionQueryService {
                 member, discussion);
 
         if (discussionMemberView.isEmpty()) {
-            discussionMemberView = java.util.Optional.ofNullable(DiscussionMemberView.builder()
+            discussionMemberView = Optional.ofNullable(DiscussionMemberView.builder()
                     .discussion(discussion)
                     .member(member)
                     .build());
