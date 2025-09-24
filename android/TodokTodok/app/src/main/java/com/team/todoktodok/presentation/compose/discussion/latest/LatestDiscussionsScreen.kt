@@ -49,7 +49,7 @@ fun LatestDiscussionsScreen(
         InfinityLazyColumn(
             loadMore = { onLoadMore() },
             verticalArrangement = Arrangement.spacedBy(15.dp),
-            modifier = modifier.padding(horizontal = 10.dp),
+            modifier = modifier.padding(horizontal = 10.dp, vertical = 10.dp),
             content = {
                 items(
                     items = latestDiscussionsUiState.items,
