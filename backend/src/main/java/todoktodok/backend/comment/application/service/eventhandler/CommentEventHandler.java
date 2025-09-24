@@ -8,6 +8,7 @@ import todoktodok.backend.comment.application.service.command.CommentCreated;
 import todoktodok.backend.comment.application.service.command.CommentLikeCreated;
 import todoktodok.backend.notification.application.service.command.CreateNotificationRequest;
 import todoktodok.backend.notification.application.service.command.NotificationCommandService;
+import todoktodok.backend.notification.domain.Notification;
 import todoktodok.backend.notification.domain.NotificationTarget;
 import todoktodok.backend.notification.domain.NotificationType;
 import todoktodok.backend.notification.infrastructure.FcmMessagePayload;
@@ -40,7 +41,21 @@ public class CommentEventHandler {
         NotificationType notificationType = NotificationType.COMMENT;
         NotificationTarget notificationTarget = NotificationTarget.COMMENT;
 
+        final CreateNotificationRequest createNotificationRequest = new CreateNotificationRequest(
+                commentCreated.discussionMemberId(),
+                commentCreated.discussionId(),
+                commentCreated.commentId(),
+                replyId,
+                commentCreated.authorNickname(),
+                commentCreated.discussionTitle(),
+                commentCreated.content(),
+                notificationType,
+                notificationTarget
+        );
+        Notification notification = notificationCommandService.createNotification(createNotificationRequest);
+
         final FcmMessagePayload fcmMessagePayload = new FcmMessagePayload(
+                notification.getId(),
                 TODOKTODOK_TITLE,
                 notificationBody,
                 commentCreated.discussionId(),
@@ -53,19 +68,6 @@ public class CommentEventHandler {
                 notificationTarget.name()
         );
         fcmPushNotifier.sendPush(recipientId, fcmMessagePayload);
-
-        final CreateNotificationRequest createNotificationRequest = new CreateNotificationRequest(
-                commentCreated.discussionMemberId(),
-                commentCreated.discussionId(),
-                commentCreated.commentId(),
-                replyId,
-                commentCreated.authorNickname(),
-                commentCreated.discussionTitle(),
-                commentCreated.content(),
-                notificationType,
-                notificationTarget
-        );
-        notificationCommandService.createNotification(createNotificationRequest);
     }
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
@@ -87,20 +89,6 @@ public class CommentEventHandler {
         NotificationType notificationType = NotificationType.LIKE;
         NotificationTarget notificationTarget = NotificationTarget.COMMENT;
 
-        final FcmMessagePayload fcmMessagePayload = new FcmMessagePayload(
-                TODOKTODOK_TITLE,
-                notificationBody,
-                commentLikeCreated.discussionId(),
-                commentLikeCreated.commentId(),
-                replyId,
-                commentLikeCreated.authorNickname(),
-                commentLikeCreated.discussionTitle(),
-                content,
-                notificationType.name(),
-                notificationTarget.name()
-        );
-        fcmPushNotifier.sendPush(recipientId, fcmMessagePayload);
-
         final CreateNotificationRequest createNotificationRequest = new CreateNotificationRequest(
                 commentLikeCreated.commentMemberId(),
                 commentLikeCreated.discussionId(),
@@ -112,6 +100,22 @@ public class CommentEventHandler {
                 notificationType,
                 notificationTarget
         );
-        notificationCommandService.createNotification(createNotificationRequest);
+        Notification notification = notificationCommandService.createNotification(createNotificationRequest);
+
+        final FcmMessagePayload fcmMessagePayload = new FcmMessagePayload(
+                notification.getId(),
+                TODOKTODOK_TITLE,
+                notificationBody,
+                commentLikeCreated.discussionId(),
+                commentLikeCreated.commentId(),
+                replyId,
+                commentLikeCreated.authorNickname(),
+                commentLikeCreated.discussionTitle(),
+                content,
+                notificationType.name(),
+                notificationTarget.name()
+        );
+
+        fcmPushNotifier.sendPush(recipientId, fcmMessagePayload);
     }
 }

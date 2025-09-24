@@ -41,20 +41,6 @@ public class ReplyEventHandler {
         NotificationType notificationType = NotificationType.REPLY;
         NotificationTarget notificationTarget = NotificationTarget.REPLY;
 
-        final FcmMessagePayload fcmMessagePayload = new FcmMessagePayload(
-                TODOKTODOK_TITLE,
-                notificationBody,
-                replyCreated.discussionId(),
-                replyCreated.commentId(),
-                replyCreated.replyId(),
-                replyCreated.authorNickname(),
-                replyCreated.discussionTitle(),
-                replyCreated.content(),
-                notificationType.name(),
-                notificationTarget.name()
-        );
-        fcmPushNotifier.sendPush(recipientId, fcmMessagePayload);
-
         final CreateNotificationRequest createNotificationRequest = new CreateNotificationRequest(
                 replyCreated.commentMemberId(),
                 replyCreated.discussionId(),
@@ -66,7 +52,23 @@ public class ReplyEventHandler {
                 notificationType,
                 notificationTarget
         );
-        notificationCommandService.createNotification(createNotificationRequest);
+        Notification notification = notificationCommandService.createNotification(createNotificationRequest);
+
+        final FcmMessagePayload fcmMessagePayload = new FcmMessagePayload(
+                notification.getId(),
+                TODOKTODOK_TITLE,
+                notificationBody,
+                replyCreated.discussionId(),
+                replyCreated.commentId(),
+                replyCreated.replyId(),
+                replyCreated.authorNickname(),
+                replyCreated.discussionTitle(),
+                replyCreated.content(),
+                notificationType.name(),
+                notificationTarget.name()
+        );
+
+        fcmPushNotifier.sendPush(recipientId, fcmMessagePayload);
     }
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
@@ -88,20 +90,6 @@ public class ReplyEventHandler {
         NotificationType notificationType = NotificationType.LIKE;
         NotificationTarget notificationTarget = NotificationTarget.REPLY;
 
-        final FcmMessagePayload fcmMessagePayload = new FcmMessagePayload(
-                "토독토독",
-                notificationBody,
-                replyLikeCreated.discussionId(),
-                replyLikeCreated.commentId(),
-                replyLikeCreated.replyId(),
-                replyLikeCreated.authorNickname(),
-                replyLikeCreated.discussionTitle(),
-                content,
-                notificationType.name(),
-                notificationTarget.name()
-        );
-        fcmPushNotifier.sendPush(recipientId, fcmMessagePayload);
-
         final CreateNotificationRequest createNotificationRequest = new CreateNotificationRequest(
                 replyLikeCreated.replyMemberId(),
                 replyLikeCreated.discussionId(),
@@ -113,6 +101,22 @@ public class ReplyEventHandler {
                 notificationType,
                 notificationTarget
         );
-        notificationCommandService.createNotification(createNotificationRequest);
+        Notification notification = notificationCommandService.createNotification(createNotificationRequest);
+
+        final FcmMessagePayload fcmMessagePayload = new FcmMessagePayload(
+                notification.getId(),
+                "토독토독",
+                notificationBody,
+                replyLikeCreated.discussionId(),
+                replyLikeCreated.commentId(),
+                replyLikeCreated.replyId(),
+                replyLikeCreated.authorNickname(),
+                replyLikeCreated.discussionTitle(),
+                content,
+                notificationType.name(),
+                notificationTarget.name()
+        );
+
+        fcmPushNotifier.sendPush(recipientId, fcmMessagePayload);
     }
 }

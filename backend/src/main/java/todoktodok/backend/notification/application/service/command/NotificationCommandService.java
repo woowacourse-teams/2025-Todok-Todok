@@ -18,7 +18,7 @@ public class NotificationCommandService {
     private final NotificationRepository notificationRepository;
     private final MemberRepository memberRepository;
 
-    public void createNotification(final CreateNotificationRequest request) {
+    public Notification createNotification(final CreateNotificationRequest request) {
         final Member recipient = findMember(request.recipientId());
 
         final Notification notification = Notification.builder()
@@ -33,7 +33,7 @@ public class NotificationCommandService {
                 .notificationTarget(request.target())
                 .build();
 
-        notificationRepository.save(notification);
+        return notificationRepository.save(notification);
     }
 
     public void markNotificationAsRead(

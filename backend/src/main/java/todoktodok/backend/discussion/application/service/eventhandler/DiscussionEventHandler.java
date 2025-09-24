@@ -7,6 +7,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 import todoktodok.backend.discussion.application.service.command.DiscussionLikeCreated;
 import todoktodok.backend.notification.application.service.command.CreateNotificationRequest;
 import todoktodok.backend.notification.application.service.command.NotificationCommandService;
+import todoktodok.backend.notification.domain.Notification;
 import todoktodok.backend.notification.domain.NotificationTarget;
 import todoktodok.backend.notification.domain.NotificationType;
 import todoktodok.backend.notification.infrastructure.FcmMessagePayload;
@@ -42,20 +43,6 @@ public class DiscussionEventHandler {
         final NotificationType notificationType = NotificationType.LIKE;
         final NotificationTarget notificationTarget = NotificationTarget.DISCUSSION;
 
-        final FcmMessagePayload fcmMessagePayload = new FcmMessagePayload(
-                TODOKTODOK_TITLE,
-                notificationBody,
-                discussionLikeCreated.discussionId(),
-                commentId,
-                replyId,
-                discussionLikeCreated.authorNickname(),
-                discussionLikeCreated.discussionTitle(),
-                content,
-                notificationType.name(),
-                notificationTarget.name()
-        );
-        fcmPushNotifier.sendPush(recipientId, fcmMessagePayload);
-
         final CreateNotificationRequest createNotificationRequest = new CreateNotificationRequest(
                 discussionLikeCreated.discussionMemberId(),
                 discussionLikeCreated.discussionId(),
@@ -67,6 +54,23 @@ public class DiscussionEventHandler {
                 notificationType,
                 notificationTarget
         );
-        notificationCommandService.createNotification(createNotificationRequest);
+
+        Notification notification = notificationCommandService.createNotification(createNotificationRequest);
+
+        final FcmMessagePayload fcmMessagePayload = new FcmMessagePayload(
+                notification.getId(),
+                TODOKTODOK_TITLE,
+                notificationBody,
+                discussionLikeCreated.discussionId(),
+                commentId,
+                replyId,
+                discussionLikeCreated.authorNickname(),
+                discussionLikeCreated.discussionTitle(),
+                content,
+                notificationType.name(),
+                notificationTarget.name()
+        );
+
+        fcmPushNotifier.sendPush(recipientId, fcmMessagePayload);
     }
 }

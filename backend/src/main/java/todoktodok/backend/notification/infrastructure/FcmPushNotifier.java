@@ -6,11 +6,9 @@ import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.MessagingErrorCode;
 import com.google.firebase.messaging.MulticastMessage;
 import com.google.firebase.messaging.SendResponse;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -46,6 +44,7 @@ public class FcmPushNotifier {
 
         final MulticastMessage multicastMessage = MulticastMessage.builder()
                 .addAllTokens(tokens)
+                .putData("notificationId", fcmMessagePayload.notificationId())
                 .putData("title", fcmMessagePayload.title())
                 .putData("body", fcmMessagePayload.body())
                 .putData("image", TODOKTODOK_LOGO_URL)
