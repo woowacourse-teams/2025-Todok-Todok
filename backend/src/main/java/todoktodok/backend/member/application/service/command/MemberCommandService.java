@@ -82,6 +82,10 @@ public class MemberCommandService {
             throw new IllegalArgumentException(
                     String.format("올바르지 않은 로그인입니다. /login으로 로그인 해주세요 : memberId = %d", member.getId()));
         }
+        if (!adminProperties.matchesPassword(loginRequest.password())) {
+            throw new IllegalArgumentException(
+                    String.format("비밀번호가 올바르지 않습니다 : memberId = %d", member.getId()));
+        }
 
         resignUpIfDeleted(member);
 
@@ -121,6 +125,7 @@ public class MemberCommandService {
         return new TokenResponse(accessToken, refreshToken);
     }
 
+    @Deprecated
     public TokenResponse signupLegacy(
             final SignupRequestLegacy signupRequest,
             final String memberEmail

@@ -41,3 +41,4 @@ google:
 
 admin:
   email-path: ${admin.email-path}
+  password: ${admin.password}

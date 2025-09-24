@@ -16,6 +16,9 @@ import java.util.stream.Collectors;
 @Component
 public class AdminProperties {
 
+    @Value("${admin.password}")
+    private String password;
+
     private final Set<String> emails;
 
     public AdminProperties(
@@ -33,5 +36,9 @@ public class AdminProperties {
 
     public boolean checkIsAdmin(final Member member) {
         return emails.contains(member.getEmail());
+    }
+
+    public boolean matchesPassword(final String password) {
+        return this.password.equals(password);
     }
 }
