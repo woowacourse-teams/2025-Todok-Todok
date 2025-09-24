@@ -1,4 +1,4 @@
-package com.team.todoktodok.presentation.xml.discussions.hot
+package com.team.todoktodok.presentation.compose.discussion.hot
 
 import com.team.domain.model.Discussion
 import com.team.domain.model.active.ActivatedDiscussionPage

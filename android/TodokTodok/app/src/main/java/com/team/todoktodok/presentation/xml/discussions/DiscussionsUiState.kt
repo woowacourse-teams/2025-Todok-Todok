@@ -4,7 +4,7 @@ import com.team.domain.model.Discussion
 import com.team.domain.model.active.ActivatedDiscussionPage
 import com.team.domain.model.latest.LatestDiscussionPage
 import com.team.todoktodok.presentation.xml.discussions.all.AllDiscussionsUiState
-import com.team.todoktodok.presentation.xml.discussions.hot.HotDiscussionUiState
+import com.team.todoktodok.presentation.compose.discussion.hot.HotDiscussionUiState
 import com.team.todoktodok.presentation.xml.discussions.my.MyDiscussionUiState
 
 data class DiscussionsUiState(
