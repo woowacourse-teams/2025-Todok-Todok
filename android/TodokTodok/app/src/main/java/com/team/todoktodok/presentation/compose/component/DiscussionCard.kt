@@ -9,13 +9,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.outlined.Favorite
-import androidx.compose.material.icons.outlined.FavoriteBorder
-import androidx.compose.material.icons.outlined.ModeComment
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
@@ -27,8 +23,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.font.FontWeight.Companion.SemiBold
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -37,9 +33,9 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
+import com.team.todoktodok.R
 import com.team.todoktodok.presentation.compose.preview.DiscussionUiStatePreviewParameterProvider
 import com.team.todoktodok.presentation.compose.theme.Gray75
-import com.team.todoktodok.presentation.compose.theme.Pretendard
 import com.team.todoktodok.presentation.compose.theme.RedFF
 import com.team.todoktodok.presentation.compose.theme.White
 import com.team.todoktodok.presentation.xml.discussions.DiscussionUiState
@@ -51,33 +47,28 @@ sealed interface DiscussionCardType {
 
     data object WriterHidden : DiscussionCardType
 
-    data object Resizing : DiscussionCardType
+    data object OpinionVisible : DiscussionCardType
 }
 
 @Composable
 fun DiscussionCard(
     uiState: DiscussionUiState,
     onClick: () -> Unit,
+    discussionCardType: DiscussionCardType,
     modifier: Modifier = Modifier,
-    discussionCardType: DiscussionCardType = DiscussionCardType.Default,
 ) {
-    BoxWithConstraints(
-        modifier = modifier.fillMaxWidth(),
-    ) {
-        val screenWidth = maxWidth
+    BoxWithConstraints(modifier = modifier.fillMaxWidth()) {
         val cardWidth =
-            when (discussionCardType) {
-                is DiscussionCardType.Resizing -> screenWidth * 0.7f
-                else -> screenWidth
+            if (discussionCardType is DiscussionCardType.OpinionVisible) {
+                maxWidth * 0.98f
+            } else {
+                maxWidth
             }
 
         ElevatedCard(
             onClick = onClick,
             elevation = CardDefaults.cardElevation(defaultElevation = 5.dp),
-            modifier =
-                Modifier
-                    .width(cardWidth)
-                    .padding(top = 10.dp),
+            modifier = Modifier.width(cardWidth),
         ) {
             Column(
                 modifier =
@@ -91,20 +82,21 @@ fun DiscussionCard(
                     bookImage = uiState.bookImage,
                 )
 
-                Spacer(modifier = Modifier.height(18.dp))
+                Spacer(Modifier.height(18.dp))
 
                 when (discussionCardType) {
-                    is DiscussionCardType.Default -> {
+                    DiscussionCardType.Default,
+                    DiscussionCardType.WriterHidden,
+                    -> {
                         Text(
                             text = uiState.discussionTitle,
-                            fontFamily = Pretendard,
+                            style = MaterialTheme.typography.titleMedium,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier.padding(top = 5.dp),
                         )
                     }
 
-                    is DiscussionCardType.QueryHighlighting -> {
+                    DiscussionCardType.QueryHighlighting -> {
                         val highlightedText =
                             highlightedText(
                                 uiState.discussionTitle,
@@ -113,36 +105,33 @@ fun DiscussionCard(
                             )
                         Text(
                             text = highlightedText,
-                            fontFamily = Pretendard,
-                            fontWeight = SemiBold,
+                            style = MaterialTheme.typography.titleMedium,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier.padding(top = 5.dp),
                         )
                     }
 
-                    is DiscussionCardType.WriterHidden -> {
-                        Text(
-                            text = uiState.discussionTitle,
-                            fontFamily = Pretendard,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier.padding(top = 5.dp),
-                        )
-                    }
-
-                    is DiscussionCardType.Resizing -> {
-                        Text(
-                            text = uiState.discussionTitle,
-                            fontFamily = Pretendard,
-                            maxLines = 2,
-                            overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier.padding(top = 5.dp),
-                        )
+                    DiscussionCardType.OpinionVisible -> {
+                        Column {
+                            Text(
+                                text = uiState.discussionTitle,
+                                style = MaterialTheme.typography.titleMedium,
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis,
+                            )
+                            Text(
+                                text = uiState.discussionOpinion,
+                                style = MaterialTheme.typography.bodyMedium,
+                                maxLines = 2,
+                                minLines = 2,
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier.padding(top = 10.dp),
+                            )
+                        }
                     }
                 }
 
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(Modifier.height(8.dp))
 
                 DiscussionBottom(
                     writerNickname = uiState.writerNickname,
@@ -152,7 +141,7 @@ fun DiscussionCard(
                     viewCount = uiState.viewCount,
                     commentCount = uiState.commentCount,
                     writerHidden = discussionCardType is DiscussionCardType.WriterHidden,
-                    modifier = Modifier.padding(top = 20.dp),
+                    modifier = Modifier.padding(top = 10.dp),
                 )
             }
         }
@@ -178,21 +167,17 @@ private fun DiscussionTop(
                     .crossfade(true)
                     .build(),
             contentDescription = bookTitle,
-            modifier =
-                Modifier
-                    .height(60.dp)
-                    .width(40.dp),
+            modifier = Modifier.size(width = 40.dp, height = 60.dp),
         )
 
         Column(modifier = Modifier.weight(0.75f)) {
             Text(
                 text = bookTitle,
-                style = MaterialTheme.typography.bodyLarge,
+                style = MaterialTheme.typography.titleMedium,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.padding(top = 5.dp),
             )
-
             Text(
                 text = bookAuthor,
                 fontSize = 14.sp,
@@ -216,16 +201,18 @@ private fun DiscussionBottom(
     modifier: Modifier = Modifier,
     writerHidden: Boolean = false,
 ) {
+    val horizontalArrangement = if (writerHidden) Arrangement.End else Arrangement.SpaceBetween
+
     Row(
-        horizontalArrangement = Arrangement.SpaceBetween,
+        horizontalArrangement = horizontalArrangement,
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier.fillMaxWidth(),
     ) {
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(6.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            if (!writerHidden) {
+        if (!writerHidden) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
                 AsyncImage(
                     model =
                         ImageRequest
@@ -234,17 +221,17 @@ private fun DiscussionBottom(
                             .crossfade(true)
                             .build(),
                     contentDescription = writerNickname,
+                    placeholder = painterResource(id = R.drawable.img_mascort),
+                    error = painterResource(id = R.drawable.img_mascort),
+                    fallback = painterResource(id = R.drawable.img_mascort),
                     modifier =
                         Modifier
                             .clip(CircleShape)
-                            .height(20.dp)
-                            .width(20.dp),
+                            .size(20.dp),
                 )
                 Text(
                     text = writerNickname,
-                    fontSize = 13.sp,
-                    fontFamily = Pretendard,
-                    fontWeight = FontWeight.SemiBold,
+                    style = MaterialTheme.typography.labelSmall,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
@@ -256,16 +243,19 @@ private fun DiscussionBottom(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
-                imageVector = if (isLikedByMe) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
+                painter =
+                    painterResource(
+                        id = if (isLikedByMe) R.drawable.btn_heart_filled else R.drawable.btn_heart_empty,
+                    ),
                 contentDescription = null,
                 tint = if (isLikedByMe) RedFF else Color.Unspecified,
             )
             Text(text = likeCount, fontSize = 12.sp)
 
-            Icon(imageVector = Icons.Filled.Visibility, contentDescription = null)
+            Icon(painter = painterResource(id = R.drawable.ic_views), contentDescription = null)
             Text(text = viewCount, fontSize = 12.sp)
 
-            Icon(imageVector = Icons.Outlined.ModeComment, contentDescription = null)
+            Icon(painter = painterResource(id = R.drawable.btn_comment), contentDescription = null)
             Text(text = commentCount, fontSize = 12.sp)
         }
     }
@@ -315,6 +305,6 @@ fun DiscussionCardPreviewResizing(
     DiscussionCard(
         uiState = uiState.first(),
         onClick = {},
-        discussionCardType = DiscussionCardType.Resizing,
+        discussionCardType = DiscussionCardType.OpinionVisible,
     )
 }
