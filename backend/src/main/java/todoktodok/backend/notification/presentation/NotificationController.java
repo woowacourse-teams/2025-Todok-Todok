@@ -16,6 +16,7 @@ import todoktodok.backend.global.resolver.LoginMember;
 import todoktodok.backend.notification.application.dto.response.NotificationCheckResponse;
 import todoktodok.backend.notification.application.dto.response.NotificationResponse;
 import todoktodok.backend.notification.application.service.command.NotificationCommandService;
+import todoktodok.backend.notification.application.service.query.NotificationQueryService;
 
 @RestController
 @AllArgsConstructor
@@ -23,11 +24,12 @@ import todoktodok.backend.notification.application.service.command.NotificationC
 public class NotificationController {
 
     private final NotificationCommandService notificationCommandService;
+    private final NotificationQueryService notificationQueryService;
 
     @Auth(value = Role.USER)
     @GetMapping
     public ResponseEntity<List<NotificationResponse>> getNotifications(@LoginMember final Long memberId) {
-        final List<NotificationResponse> notifications = notificationCommandService.getNotifications(memberId);
+        final List<NotificationResponse> notifications = notificationQueryService.getNotifications(memberId);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(notifications);
