@@ -1,4 +1,4 @@
-package com.team.todoktodok.compose.discussion
+package com.team.todoktodok.compose.discussion.latest
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -9,12 +9,12 @@ import com.team.domain.model.Discussion
 import com.team.domain.model.member.Nickname
 import com.team.domain.model.member.User
 import com.team.todoktodok.presentation.compose.discussion.latest.LatestDiscussionsScreen
+import com.team.todoktodok.presentation.compose.discussion.latest.LatestDiscussionsUiState
 import com.team.todoktodok.presentation.compose.preview.LatestDiscussionsPreviewParameterProvider
 import com.team.todoktodok.presentation.xml.discussions.DiscussionUiState
-import com.team.todoktodok.presentation.xml.discussions.latest.LatestDiscussionsUiState
 import org.junit.Rule
 import org.junit.Test
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Assertions
 import java.time.LocalDateTime
 
 class LatestDiscussionsScreenTest {
@@ -76,6 +76,6 @@ class LatestDiscussionsScreenTest {
         val firstItem = previewData.items.first()
         composeTestRule.onNodeWithText(previewData.items.first().bookTitle).performClick()
 
-        assertTrue(clickedId == firstItem.discussionId)
+        Assertions.assertTrue(clickedId == firstItem.discussionId)
     }
 }

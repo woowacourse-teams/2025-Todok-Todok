@@ -1,10 +1,12 @@
-package com.team.todoktodok.presentation.xml.discussions.search
+package com.team.todoktodok.presentation.compose.discussion.search
 
 import com.team.domain.model.Discussion
+import com.team.todoktodok.presentation.compose.component.DiscussionCardType
 import com.team.todoktodok.presentation.xml.discussions.DiscussionUiState
 
 data class SearchDiscussionsUiState(
     val items: List<DiscussionUiState> = emptyList(),
+    val type: DiscussionCardType = DiscussionCardType.QueryHighlighting,
     val searchKeyword: String = EMPTY_SEARCH_KEYWORD,
 ) {
     fun add(
@@ -15,7 +17,7 @@ data class SearchDiscussionsUiState(
         val discussion = newDiscussions.map { DiscussionUiState(it, searchKeyword = keyword) }
         updatedList.addAll(discussion)
 
-        return copy(updatedList, keyword)
+        return copy(items = updatedList, searchKeyword = keyword)
     }
 
     fun clear() = copy(items = emptyList(), searchKeyword = EMPTY_SEARCH_KEYWORD)

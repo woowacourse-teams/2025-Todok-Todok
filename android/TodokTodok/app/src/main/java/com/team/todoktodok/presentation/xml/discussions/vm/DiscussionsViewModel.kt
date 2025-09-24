@@ -144,7 +144,7 @@ class DiscussionsViewModel(
         )
 
     fun loadActivatedDiscussions() {
-        val activatedPage = _uiState.value?.hotDiscussion?.activatedPage ?: return
+        val activatedPage = _uiState.value.hotDiscussion.activatedPage
         if (!activatedPage.hasNext) return
         val cursor = activatedPage.nextCursor ?: return
 
@@ -173,7 +173,6 @@ class DiscussionsViewModel(
 
     fun clearSearchResult() {
         _uiState.update { it.clearSearchDiscussion() }
-        onUiEvent(DiscussionsUiEvent.ClearSearchResult)
     }
 
     fun removeDiscussion(discussionId: Long) {
