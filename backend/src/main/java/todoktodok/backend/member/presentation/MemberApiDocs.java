@@ -97,7 +97,7 @@ public interface MemberApiDocs {
             ) final LoginRequest loginRequest
     );
 
-    @Operation(summary = "[DEPRECATED] 로그인 API")
+    @Operation(summary = "[관리자 전용] 로그인 API")
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
@@ -131,6 +131,10 @@ public interface MemberApiDocs {
                                     @ExampleObject(
                                             name = "리프레시 토큰 중복 발급 오류",
                                             value = "{\"code\":400, \"message\":\"[ERROR] 중복된 리프레시 토큰 발급 요청입니다\"}"
+                                    ),
+                                    @ExampleObject(
+                                            name = "관리자가 아닌 유저의 로그인 시도 오류",
+                                            value = "{\"code\":400, \"message\":\"[ERROR] 올바르지 않은 로그인입니다. /login으로 로그인 해주세요\"}"
                                     )
                             }
                     )),
@@ -146,15 +150,15 @@ public interface MemberApiDocs {
                             )
                     ))
     })
-    ResponseEntity<RefreshTokenResponse> loginLegacy(
+    ResponseEntity<RefreshTokenResponse> loginBypass(
             @RequestBody(
                     description = "로그인 정보",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = LoginRequestLegacy.class),
+                            schema = @Schema(implementation = BypassLoginRequest.class),
                             examples = @ExampleObject(value = "{\"email\":\"user@example.com\"}")
                     )
-            ) final LoginRequestLegacy loginRequest
+            ) final BypassLoginRequest loginRequest
     );
 
     @Operation(summary = "회원가입 API")
