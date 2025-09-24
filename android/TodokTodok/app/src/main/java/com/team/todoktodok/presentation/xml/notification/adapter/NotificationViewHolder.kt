@@ -25,7 +25,7 @@ class NotificationViewHolder(
         when (notification.notificationContent.type) {
             is NotificationType.Like -> {
                 binding.apply {
-                    tvType.text = context.getString(R.string.notification_type_like)
+                    tvType.text = itemView.context.getString(R.string.notification_type_like)
                     tvContent.isVisible = false
                     ivIcon.setImageResource(R.drawable.ic_heart)
                 }
@@ -33,14 +33,14 @@ class NotificationViewHolder(
 
             is NotificationType.Comment -> {
                 binding.apply {
-                    tvType.text = context.getString(R.string.notification_type_comment)
+                    tvType.text = itemView.context.getString(R.string.notification_type_comment)
                     ivIcon.setImageResource(R.drawable.ic_comment)
                 }
             }
 
             is NotificationType.Reply -> {
                 binding.apply {
-                    tvType.text = context.getString(R.string.notification_type_reply)
+                    tvType.text = itemView.context.getString(R.string.notification_type_reply)
                     ivIcon.setImageResource(R.drawable.ic_reply)
                 }
             }
