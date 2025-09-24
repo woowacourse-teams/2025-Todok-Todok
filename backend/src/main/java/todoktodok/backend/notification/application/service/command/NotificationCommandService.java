@@ -33,7 +33,7 @@ public class NotificationCommandService {
                 .notificationTarget(request.target())
                 .build();
 
-        Notification savedNotification = notificationRepository.save(notification);
+        final Notification savedNotification = notificationRepository.save(notification);
         return savedNotification.getId();
     }
 

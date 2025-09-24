@@ -37,8 +37,8 @@ public class CommentEventHandler {
                 commentCreated.discussionTitle()
         );
         final Long replyId = null;
-        NotificationType notificationType = NotificationType.COMMENT;
-        NotificationTarget notificationTarget = NotificationTarget.COMMENT;
+        final NotificationType notificationType = NotificationType.COMMENT;
+        final NotificationTarget notificationTarget = NotificationTarget.COMMENT;
 
         final CreateNotificationRequest createNotificationRequest = new CreateNotificationRequest(
                 commentCreated.discussionMemberId(),
@@ -51,7 +51,7 @@ public class CommentEventHandler {
                 notificationType,
                 notificationTarget
         );
-        Long notificationId = notificationCommandService.createNotification(createNotificationRequest);
+        final Long notificationId = notificationCommandService.createNotification(createNotificationRequest);
 
         final FcmMessagePayload fcmMessagePayload = new FcmMessagePayload(
                 notificationId,
@@ -85,8 +85,8 @@ public class CommentEventHandler {
         );
         final Long replyId = null;
         final String content = "";
-        NotificationType notificationType = NotificationType.LIKE;
-        NotificationTarget notificationTarget = NotificationTarget.COMMENT;
+        final NotificationType notificationType = NotificationType.LIKE;
+        final NotificationTarget notificationTarget = NotificationTarget.COMMENT;
 
         final CreateNotificationRequest createNotificationRequest = new CreateNotificationRequest(
                 commentLikeCreated.commentMemberId(),
@@ -99,7 +99,7 @@ public class CommentEventHandler {
                 notificationType,
                 notificationTarget
         );
-        Long notificationId = notificationCommandService.createNotification(createNotificationRequest);
+        final Long notificationId = notificationCommandService.createNotification(createNotificationRequest);
 
         final FcmMessagePayload fcmMessagePayload = new FcmMessagePayload(
                 notificationId,

@@ -54,7 +54,7 @@ public class DiscussionEventHandler {
                 notificationTarget
         );
 
-        Long notificationId = notificationCommandService.createNotification(createNotificationRequest);
+        final Long notificationId = notificationCommandService.createNotification(createNotificationRequest);
 
         final FcmMessagePayload fcmMessagePayload = new FcmMessagePayload(
                 notificationId,

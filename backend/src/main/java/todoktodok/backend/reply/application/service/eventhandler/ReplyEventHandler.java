@@ -37,8 +37,8 @@ public class ReplyEventHandler {
                 replyCreated.discussionTitle()
         );
 
-        NotificationType notificationType = NotificationType.REPLY;
-        NotificationTarget notificationTarget = NotificationTarget.REPLY;
+        final NotificationType notificationType = NotificationType.REPLY;
+        final NotificationTarget notificationTarget = NotificationTarget.REPLY;
 
         final CreateNotificationRequest createNotificationRequest = new CreateNotificationRequest(
                 replyCreated.commentMemberId(),
@@ -51,7 +51,7 @@ public class ReplyEventHandler {
                 notificationType,
                 notificationTarget
         );
-        Long notificationId = notificationCommandService.createNotification(createNotificationRequest);
+        final Long notificationId = notificationCommandService.createNotification(createNotificationRequest);
 
         final FcmMessagePayload fcmMessagePayload = new FcmMessagePayload(
                 notificationId,
@@ -86,8 +86,8 @@ public class ReplyEventHandler {
         );
         final String content = "";
 
-        NotificationType notificationType = NotificationType.LIKE;
-        NotificationTarget notificationTarget = NotificationTarget.REPLY;
+        final NotificationType notificationType = NotificationType.LIKE;
+        final NotificationTarget notificationTarget = NotificationTarget.REPLY;
 
         final CreateNotificationRequest createNotificationRequest = new CreateNotificationRequest(
                 replyLikeCreated.replyMemberId(),
@@ -100,7 +100,7 @@ public class ReplyEventHandler {
                 notificationType,
                 notificationTarget
         );
-        Long notificationId = notificationCommandService.createNotification(createNotificationRequest);
+        final Long notificationId = notificationCommandService.createNotification(createNotificationRequest);
 
         final FcmMessagePayload fcmMessagePayload = new FcmMessagePayload(
                 notificationId,
