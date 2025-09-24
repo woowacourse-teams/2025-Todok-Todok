@@ -12,7 +12,7 @@ public record NotificationResponse(
             final List<NotificationItemResponse> notificationItemResponses
     ) {
         this(
-                unreadCount.intValue(),
+                Math.toIntExact(unreadCount),
                 notificationItemResponses
         );
     }
