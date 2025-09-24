@@ -9,6 +9,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import todoktodok.backend.global.auth.AdminProperties;
 import todoktodok.backend.global.jwt.JwtTokenProvider;
 import todoktodok.backend.global.jwt.TokenInfo;
 import todoktodok.backend.member.application.ImageType;
@@ -40,6 +41,7 @@ public class MemberCommandService {
     private final BlockRepository blockRepository;
     private final MemberReportRepository memberReportRepository;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final AdminProperties adminProperties;
     private final JwtTokenProvider jwtTokenProvider;
     private final S3ImageUploadClient s3ImageUploadClient;
     private final AuthClient authclient;
@@ -66,24 +68,30 @@ public class MemberCommandService {
         return new TokenResponse(tempToken, null);
     }
 
-    public TokenResponse loginLegacy(final LoginRequestLegacy loginRequest) {
+    public TokenResponse bypassLogin(final BypassLoginRequest loginRequest) {
         final Optional<Member> memberOrEmpty = memberRepository.findByEmail(loginRequest.email());
-        if (memberOrEmpty.isPresent()) {
-            final Member member = memberOrEmpty.get();
 
-            resignUpIfDeleted(member);
-
-            final String accessToken = jwtTokenProvider.createAccessToken(member);
-            final String refreshToken = jwtTokenProvider.createRefreshToken(member);
-
-            final RefreshToken savedRefreshToken = RefreshToken.create(refreshToken);
-            saveRefreshTokenIfUnique(savedRefreshToken, member.getId());
-
-            return new TokenResponse(accessToken, refreshToken);
+        if (memberOrEmpty.isEmpty()) {
+            throw new IllegalArgumentException(
+                    String.format("올바르지 않은 로그인입니다. /login으로 로그인 해주세요 : email = %s", loginRequest.email()));
         }
 
-        final String tempToken = jwtTokenProvider.createTempToken(loginRequest.email());
-        return new TokenResponse(tempToken, null);
+        final Member member = memberOrEmpty.get();
+
+        if (!adminProperties.checkIsAdmin(member)) {
+            throw new IllegalArgumentException(
+                    String.format("올바르지 않은 로그인입니다. /login으로 로그인 해주세요 : memberId = %d", member.getId()));
+        }
+
+        resignUpIfDeleted(member);
+
+        final String accessToken = jwtTokenProvider.createAccessToken(member);
+        final String refreshToken = jwtTokenProvider.createRefreshToken(member);
+
+        final RefreshToken savedRefreshToken = RefreshToken.create(refreshToken);
+        saveRefreshTokenIfUnique(savedRefreshToken, member.getId());
+
+        return new TokenResponse(accessToken, refreshToken);
     }
 
     public TokenResponse signup(

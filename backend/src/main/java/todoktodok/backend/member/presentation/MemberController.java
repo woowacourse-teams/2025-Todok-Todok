@@ -59,13 +59,12 @@ public class MemberController implements MemberApiDocs {
                 .body(new RefreshTokenResponse(tokenResponse.refreshToken()));
     }
 
-    @Deprecated
     @Auth(value = Role.GUEST)
-    @PostMapping("/login/legacy")
-    public ResponseEntity<RefreshTokenResponse> loginLegacy(
-            @RequestBody @Valid final LoginRequestLegacy loginRequest
+    @PostMapping("/login/bypass")
+    public ResponseEntity<RefreshTokenResponse> loginBypass(
+            @RequestBody @Valid final BypassLoginRequest loginRequest
     ) {
-        final TokenResponse tokenResponse = memberCommandService.loginLegacy(loginRequest);
+        final TokenResponse tokenResponse = memberCommandService.bypassLogin(loginRequest);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .header("Authorization", tokenResponse.accessToken())
