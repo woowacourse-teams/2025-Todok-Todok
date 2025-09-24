@@ -11,8 +11,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import todoktodok.backend.global.exception.ErrorResponse;
-import todoktodok.backend.notification.application.dto.response.NotificationCheckResponse;
 import todoktodok.backend.notification.application.dto.response.NotificationResponse;
+import todoktodok.backend.notification.application.dto.response.UnreadNotificationResponse;
 
 @Tag(name = "알림 API")
 public interface NotificationApiDocs {
@@ -28,88 +28,52 @@ public interface NotificationApiDocs {
                             examples = @ExampleObject(
                                     value = """
                                             [
-                                             		"notReadCount": 10,
-                                             		{
-                                             			  //댓글 작성 시 토론방 작성자에게 간 알림
-                                             			  "notificationId": 10,
-                                             		    "data" : {
-                                             			      "discussionId" : "1",
-                                             			      "commentId" : "1",
-                                             			      "replyId": null,
-                                             			      "memberNickname": "모찌",
-                                             			      "discussionTitle": "캡슐화 왜 함?",
-                                             			      "content": "모찌가 적은 댓글 내용입니다.",
-                                             			      "type": "COMMENT",
-                                             			      "target": "COMMENT"
-                                             		    },
-                                             		    "isRead": false,
-                                             		    "createdAt": "2025-09-19T12:00:00"
-                                             		},
-                                             	  {
-                                             			  //대댓글 작성 시 댓글 작성자에게 간 알림
-                                             			  "notificationId": 9,
-                                             		    "data" : {
-                                             			      "discussionId" : "1",
-                                             			      "commentId" : "1",
-                                             			      "replyId": "1",
-                                             			      "memberNickname": "모찌",
-                                             			      "discussionTitle": "캡슐화 왜 함?",
-                                             			      "content": "모찌가 적은 대댓글 내용입니다.",
-                                             			      "type": "REPLY",
-                                             			      "target": "REPLY"
-                                             		    },
-                                             		    "isRead": true,
-                                             		    "createdAt": "2025-09-18T12:00:00"
-                                             		},
-                                             	  {
-                                             			  //토론방에 좋아요 누를 시 토론방 작성자에게 간 알림
-                                             			  "notificationId": 8,
-                                             		    "data" : {
-                                             			      "discussionId" : "1",
-                                             			      "commentId" : "null",
-                                             			      "replyId": "null",
-                                             			      "memberNickname": "모찌",
-                                             			      "discussionTitle": "캡슐화 왜 함?",
-                                             			      "content": "",
-                                             			      "type": "LIKE",
-                                             			      "target": "DISCUSSION"
-                                             		    },
-                                             			  "isRead": true,
-                                             		    "createdAt": "2025-09-17T12:00:00"
-                                             	  },
-                                             	  {
-                                             			  //댓글에 좋아요 누를 시 토론방 작성자에게 간 알림
-                                             			  "notificationId": 7,
-                                             		    "data" : {
-                                             			      "discussionId" : "1",
-                                             			      "commentId" : "1",
-                                             			      "replyId": "null",
-                                             			      "memberNickname": "모찌",
-                                             			      "discussionTitle": "캡슐화 왜 함?",
-                                             			      "content": "",
-                                             			      "type": "LIKE",
-                                             			      "target": "COMMENT"
-                                             		    },
-                                             		    "isRead": false,
-                                             		    "createdAt": "2025-09-16T12:00:00"
-                                             		},
-                                             		{
-                                             			  //대댓글에 좋아요 누를 시 토론방 작성자에게 간 알림
-                                             			  "notificationId": 6,
-                                             		    "data" : {
-                                             			      "discussionId" : "1",
-                                             			      "commentId" : "1",
-                                             			      "replyId": "1",
-                                             			      "memberNickname": "모찌",
-                                             			      "discussionTitle": "캡슐화 왜 함?",
-                                             			      "content": "",
-                                             			      "type": "LIKE",
-                                             			      "target": "REPLY"
-                                             		    },
-                                             		    "isRead": false,
-                                             		    "createdAt": "2025-09-15T12:00:00"
-                                             		}
-                                             ]
+                                              {
+                                                "notReadCount": 10,
+                                                "data": {
+                                                  "discussionId": 1,
+                                                  "commentId": 1,
+                                                  "replyId": null,
+                                                  "memberNickname": "모찌",
+                                                  "discussionTitle": "캡슐화 왜 함?",
+                                                  "content": "모찌가 적은 댓글 내용입니다.",
+                                                  "type": "COMMENT",
+                                                  "target": "COMMENT"
+                                                },
+                                                "isRead": false,
+                                                "createdAt": "2025-09-19T12:00:00"
+                                              },
+                                              {
+                                                "notReadCount": 10,
+                                                "data": {
+                                                  "discussionId": 1,
+                                                  "commentId": 1,
+                                                  "replyId": 1,
+                                                  "memberNickname": "모찌",
+                                                  "discussionTitle": "캡슐화 왜 함?",
+                                                  "content": "모찌가 적은 대댓글 내용입니다.",
+                                                  "type": "REPLY",
+                                                  "target": "REPLY"
+                                                },
+                                                "isRead": true,
+                                                "createdAt": "2025-09-18T12:00:00"
+                                              },
+                                              {
+                                                "notReadCount": 10,
+                                                "data": {
+                                                  "discussionId": 1,
+                                                  "commentId": null,
+                                                  "replyId": null,
+                                                  "memberNickname": "모찌",
+                                                  "discussionTitle": "캡슐화 왜 함?",
+                                                  "content": "",
+                                                  "type": "LIKE",
+                                                  "target": "DISCUSSION"
+                                                },
+                                                "isRead": true,
+                                                "createdAt": "2025-09-17T12:00:00"
+                                              }
+                                            ]
                                             """
                             )
                     )),
@@ -306,13 +270,9 @@ public interface NotificationApiDocs {
                     description = "안 읽은 알림 유무 조회 성공",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = NotificationResponse.class),
+                            schema = @Schema(implementation = UnreadNotificationResponse.class),
                             examples = @ExampleObject(
-                                    value = """
-                                            {
-                                                  "existsNonReadNotification": true,
-                                            }
-                                            """
+                                    value = "{\"exist\":\"true\"}"
                             )
                     )
             ),
@@ -363,7 +323,7 @@ public interface NotificationApiDocs {
                             )
                     ))
     })
-    ResponseEntity<NotificationCheckResponse> hasUnreadNotifications(
+    ResponseEntity<UnreadNotificationResponse> hasUnreadNotifications(
             @Parameter(hidden = true) final Long memberId
     );
 }
