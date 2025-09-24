@@ -24,6 +24,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.team.todoktodok.R
+import com.team.todoktodok.presentation.compose.component.ResourceNotFoundView
 import com.team.todoktodok.presentation.compose.discussion.created.CreatedDiscussionScreen
 import com.team.todoktodok.presentation.compose.discussion.participated.ParticipatedDiscussionsScreen
 import com.team.todoktodok.presentation.compose.preview.MyDiscussionsUiStatePreviewParameterProvider
@@ -38,45 +39,60 @@ fun MyDiscussionsScreen(
     onClick: (Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    LazyColumn {
-        item {
-            MyDiscussionHeader(
-                titleResourceId = R.string.profile_participated_discussion_room,
-                onClickHeader = { onClickHeader(UserProfileTab.PARTICIPATED_DISCUSSIONS) },
-            )
+    if (uiState.isEmpty()) {
+        ResourceNotFoundView(
+            title = stringResource(R.string.profile_not_has_created_discussion_title),
+            subtitle = stringResource(R.string.profile_not_has_created_discussion_subtitle),
+            modifier = Modifier.padding(top = 100.dp),
+        )
+        return
+    }
+
+    val participated = uiState.participatedDiscussionsUiState
+    val created = uiState.createdDiscussionsUiState
+
+    LazyColumn(modifier = modifier) {
+        if (!participated.isEmpty()) {
+            item {
+                MyDiscussionHeader(
+                    titleResourceId = R.string.profile_participated_discussion_room,
+                    onClickHeader = { onClickHeader(UserProfileTab.PARTICIPATED_DISCUSSIONS) },
+                )
+            }
+            item {
+                ParticipatedDiscussionsScreen(
+                    onClick = onClick,
+                    uiState = participated,
+                )
+            }
         }
 
-        item {
-            ParticipatedDiscussionsScreen(
-                onClick = { onClick(it) },
-                uiState = uiState.participatedDiscussionsUiState,
-                modifier = modifier,
-            )
+        if (!participated.isEmpty() && !created.isEmpty()) {
+            item {
+                HorizontalDivider(
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(top = 10.dp),
+                    thickness = 3.dp,
+                    color = GrayE0,
+                )
+            }
         }
 
-        item {
-            HorizontalDivider(
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(top = 10.dp),
-                thickness = 3.dp,
-                color = GrayE0,
-            )
-        }
-
-        item {
-            MyDiscussionHeader(
-                titleResourceId = R.string.profile_created_discussion_room,
-                onClickHeader = { onClickHeader(UserProfileTab.CREATED_DISCUSSIONS) },
-            )
-        }
-
-        item {
-            CreatedDiscussionScreen(
-                onClick = { onClick(it) },
-                uiState = uiState.createdDiscussionsUiState,
-            )
+        if (!created.isEmpty()) {
+            item {
+                MyDiscussionHeader(
+                    titleResourceId = R.string.profile_created_discussion_room,
+                    onClickHeader = { onClickHeader(UserProfileTab.CREATED_DISCUSSIONS) },
+                )
+            }
+            item {
+                CreatedDiscussionScreen(
+                    onClick = onClick,
+                    uiState = created,
+                )
+            }
         }
     }
 }
@@ -95,7 +111,7 @@ fun MyDiscussionHeader(
                 .padding(horizontal = 20.dp)
                 .padding(top = 20.dp)
                 .fillMaxWidth()
-                .clickable(onClick = { onClickHeader() }),
+                .clickable(onClick = onClickHeader),
     ) {
         Text(
             text = stringResource(titleResourceId),
@@ -124,5 +140,15 @@ fun MyDiscussionsScreenPreview(
         onClick = {},
         onClickHeader = {},
         uiState = uiState,
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun EmptyMyDiscussionsScreenPreview() {
+    MyDiscussionsScreen(
+        onClick = {},
+        onClickHeader = {},
+        uiState = MyDiscussionUiState(),
     )
 }
