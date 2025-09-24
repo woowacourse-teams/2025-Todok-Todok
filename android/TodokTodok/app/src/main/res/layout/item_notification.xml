@@ -88,14 +88,15 @@
         <TextView
             android:id="@+id/tv_nickname"
             style="@style/BaseTextStyle"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/space_8"
-            android:text="모찌님이 캡슐화를 왜함?에 좋아요를 눌렀습니다."
             app:layout_constraintBottom_toTopOf="@id/tv_content"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/iv_icon"
             app:layout_constraintTop_toBottomOf="@id/iv_icon"
-            app:layout_constraintVertical_chainStyle="packed" />
+            app:layout_constraintVertical_chainStyle="packed"
+            tools:text="모찌님이 캡슐화를 왜함?에 좋아요를 눌렀습니다. 진짜로 눌렀는 지 궁금하죠???" />
 
         <TextView
             android:id="@+id/tv_connection"
@@ -115,13 +116,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/space_8"
             android:fontFamily="@font/pretendard_regular"
-            android:text="지나가던 안드로이드인데 백엔드 팀원들이 이책을 자주 읽더라구요."
             android:textColor="@color/gray_66"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/iv_icon"
             app:layout_constraintTop_toBottomOf="@id/tv_nickname"
-            app:layout_constraintVertical_chainStyle="packed" />
+            app:layout_constraintVertical_chainStyle="packed"
+            tools:text="지나가던 안드로이드인데 백엔드 팀원들이 이책을 자주 읽더라구요. 이제 정말정말" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
