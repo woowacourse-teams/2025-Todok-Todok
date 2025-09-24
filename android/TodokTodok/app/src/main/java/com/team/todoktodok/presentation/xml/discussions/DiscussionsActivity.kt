@@ -142,7 +142,9 @@ class DiscussionsActivity : AppCompatActivity() {
             }
         }
         viewModel.uiState.observe(this) { value ->
-            if (!value.isUnreadNotification) {
+            if (value.isUnreadNotification) {
+                binding.viewIsExist.visibility = View.VISIBLE
+            } else {
                 binding.viewIsExist.visibility = View.GONE
             }
         }

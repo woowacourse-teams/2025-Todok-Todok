@@ -2,6 +2,7 @@ package com.team.todoktodok.data.datasource.notification
 
 import com.team.domain.model.exception.NetworkResult
 import com.team.todoktodok.data.network.request.FcmTokenRequest
+import com.team.todoktodok.data.network.response.notification.ExistNotificationResponse
 import com.team.todoktodok.data.network.response.notification.NotificationResponse
 import com.team.todoktodok.data.network.service.NotificationService
 
@@ -19,7 +20,7 @@ class DefaultNotificationRemoteDataSource(
     override suspend fun getNotification(): NetworkResult<NotificationResponse> =
         notificationService.getNotifications()
 
-    override suspend fun getUnreadNotificationsCount(): NetworkResult<Boolean> =
+    override suspend fun getUnreadNotificationsCount(): NetworkResult<ExistNotificationResponse> =
         notificationService.getUnreadNotificationsCount()
 
     override suspend fun deleteNotification(notificationId: Long): NetworkResult<Unit> =

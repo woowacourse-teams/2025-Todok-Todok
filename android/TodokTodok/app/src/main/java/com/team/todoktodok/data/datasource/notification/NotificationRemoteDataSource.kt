@@ -1,6 +1,7 @@
 package com.team.todoktodok.data.datasource.notification
 
 import com.team.domain.model.exception.NetworkResult
+import com.team.todoktodok.data.network.response.notification.ExistNotificationResponse
 import com.team.todoktodok.data.network.response.notification.NotificationResponse
 
 interface NotificationRemoteDataSource {
@@ -12,7 +13,7 @@ interface NotificationRemoteDataSource {
     suspend fun getNotification(
     ): NetworkResult<NotificationResponse>
 
-    suspend fun getUnreadNotificationsCount(): NetworkResult<Boolean>
+    suspend fun getUnreadNotificationsCount(): NetworkResult<ExistNotificationResponse>
 
     suspend fun deleteNotification(
         notificationId: Long

@@ -7,6 +7,7 @@ import com.team.domain.ConnectivityObserver
 import com.team.domain.model.Discussion
 import com.team.domain.model.active.ActivatedDiscussionPage
 import com.team.domain.model.exception.NetworkResult
+import com.team.domain.model.exception.onFailure
 import com.team.domain.model.exception.onSuccess
 import com.team.domain.model.member.MemberDiscussionType
 import com.team.domain.model.member.MemberId
@@ -42,7 +43,7 @@ class DiscussionsViewModel(
         viewModelScope.launch {
             notificationRepository.getUnreadNotificationsCount().onSuccess { isExist ->
                 _uiState.value = _uiState.value?.changeUnreadNotification(isExist)
-            }
+            }.onFailure { onUiEvent(DiscussionsUiEvent.ShowErrorMessage(it)) }
         }
     }
 

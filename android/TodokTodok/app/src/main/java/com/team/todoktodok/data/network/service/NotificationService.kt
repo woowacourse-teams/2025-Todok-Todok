@@ -2,6 +2,7 @@ package com.team.todoktodok.data.network.service
 
 import com.team.domain.model.exception.NetworkResult
 import com.team.todoktodok.data.network.request.FcmTokenRequest
+import com.team.todoktodok.data.network.response.notification.ExistNotificationResponse
 import com.team.todoktodok.data.network.response.notification.NotificationResponse
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -30,5 +31,5 @@ interface NotificationService {
     ): NetworkResult<Unit>
 
     @GET("v1/notifications/unread/exists")
-    suspend fun getUnreadNotificationsCount(): NetworkResult<Boolean>
+    suspend fun getUnreadNotificationsCount(): NetworkResult<ExistNotificationResponse>
 }

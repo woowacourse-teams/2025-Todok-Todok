@@ -42,8 +42,9 @@ class FirebaseAdapter : FirebaseMessagingService() {
     override fun onMessageReceived(message: RemoteMessage) {
         val title = message.data["title"] ?: return
         val body = message.data["body"] ?: return
-        Log.d("test", "알람 왔음")
+
         if (message.data.isNotEmpty()) {
+
             val fcmNotification = FcmNotification(message.data)
 
             ensureChannel()
@@ -58,7 +59,7 @@ class FirebaseAdapter : FirebaseMessagingService() {
             val pendingIntent =
                 PendingIntent.getActivity(
                     this,
-                    fcmNotification.discussionId.toInt(),
+                    fcmNotification.notificationId?.toInt() ?: 0,
                     intent,
                     PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
                 )
