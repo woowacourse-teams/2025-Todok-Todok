@@ -33,7 +33,7 @@ public abstract class TimeStamp {
         this.deletedAt = null;
     }
 
-    public boolean isModifiedDatePassedFrom(int minute) {
+    public boolean isModifiedDatePassedFrom(final int minute) {
         if (LocalDateTime.now().isAfter(modifiedAt.plusMinutes(minute))) {
             modifiedAt = LocalDateTime.now();
             return true;
