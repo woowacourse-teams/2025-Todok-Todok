@@ -26,6 +26,7 @@ fun HotDiscussionScreen(
         loadMoreLimitCount = 3,
         contentPadding = PaddingValues(vertical = 10.dp),
         verticalArrangement = Arrangement.spacedBy(15.dp),
+        modifier = Modifier.padding(10.dp),
     ) {
         item {
             PopularDiscussionsScreen(
@@ -44,7 +45,6 @@ fun HotDiscussionScreen(
                 uiState = item,
                 onClick = { onClick(item.discussionId) },
                 discussionCardType = uiState.activatedDiscussions.type,
-                modifier = Modifier.padding(horizontal = 5.dp),
             )
         }
     }

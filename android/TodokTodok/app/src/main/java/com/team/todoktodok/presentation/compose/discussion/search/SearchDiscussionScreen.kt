@@ -3,7 +3,6 @@ package com.team.todoktodok.presentation.compose.discussion.search
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -78,7 +77,6 @@ fun SearchDiscussionScreen(
     } else {
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(15.dp),
-            contentPadding = PaddingValues(horizontal = 10.dp),
             modifier = modifier.padding(horizontal = 10.dp),
         ) {
             items(
@@ -89,6 +87,7 @@ fun SearchDiscussionScreen(
                     uiState = item,
                     discussionCardType = uiState.type,
                     onClick = { onClick(item.discussionId) },
+                    modifier = Modifier.padding(vertical = 5.dp),
                 )
             }
         }

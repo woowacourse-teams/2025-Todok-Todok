@@ -5,8 +5,6 @@
     android:id="@+id/fl_hot_discussion"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="@dimen/space_12"
-    android:paddingHorizontal="@dimen/space_12"
     tools:context=".presentation.xml.discussions.hot.HotDiscussionFragment">
 
     <androidx.compose.ui.platform.ComposeView
