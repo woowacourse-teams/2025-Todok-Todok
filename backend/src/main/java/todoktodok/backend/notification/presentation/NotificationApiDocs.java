@@ -27,7 +27,7 @@ public interface NotificationApiDocs {
                             examples = @ExampleObject(
                                     value = """
                                               {
-                                                "notReadCount": 10,
+                                                "unreadCount": 10,
                                                 "notifications": [
                                                   {
                                                     "data": {
