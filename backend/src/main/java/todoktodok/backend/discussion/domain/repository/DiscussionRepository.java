@@ -54,7 +54,6 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
                 SELECT d.id 
                 FROM Discussion d
                 WHERE UPPER(d.title) LIKE UPPER(CONCAT('%', :keyword, '%'))
-                AND d.deletedAt IS NULL
                 
                 UNION
                 
@@ -62,8 +61,6 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
                 FROM Discussion d
                 JOIN d.book b
                 WHERE UPPER(b.title) LIKE UPPER(CONCAT('%', :keyword, '%'))
-                AND d.deletedAt IS NULL
-                AND b.deletedAt IS NULL
             """)
     List<Long> searchIdsByKeyword(
             @Param("keyword") final String keyword
