@@ -144,16 +144,17 @@ class DiscussionsViewModel(
         )
 
     fun loadActivatedDiscussions() {
-        val activatedPage = _uiState.value.hotDiscussion.activatedPage
-        if (!activatedPage.hasNext) return
-        val cursor = activatedPage.nextCursor ?: return
+        _uiState.value.hotDiscussion.activatedDiscussions.pageInfo?.let {
+            if (!it.hasNext) return
+            val cursor = it.nextCursor ?: return
 
-        runAsync(
-            key = KEY_ACTIVATED_DISCUSSIONS,
-            action = { discussionRepository.getActivatedDiscussion(cursor = cursor) },
-            handleSuccess = { result -> _uiState.update { it.appendActivatedDiscussion(result) } },
-            handleFailure = { onUiEvent(DiscussionsUiEvent.ShowErrorMessage(it)) },
-        )
+            runAsync(
+                key = KEY_ACTIVATED_DISCUSSIONS,
+                action = { discussionRepository.getActivatedDiscussion(cursor = cursor) },
+                handleSuccess = { result -> _uiState.update { it.appendActivatedDiscussion(result) } },
+                handleFailure = { onUiEvent(DiscussionsUiEvent.ShowErrorMessage(it)) },
+            )
+        }
     }
 
     fun modifyDiscussion(discussionId: Long) {

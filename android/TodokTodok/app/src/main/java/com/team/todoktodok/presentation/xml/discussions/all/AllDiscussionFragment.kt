@@ -24,7 +24,7 @@ class AllDiscussionFragment : BaseDiscussionsFragment(R.layout.fragment_all_disc
 
         binding.composeView.apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-            binding.composeView.setContent {
+            setContent {
                 TodoktodokTheme {
                     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
                     val allDiscussion = uiState.allDiscussionsUiState

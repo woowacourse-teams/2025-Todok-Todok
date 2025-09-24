@@ -1,54 +1,51 @@
 package com.team.todoktodok.presentation.xml.discussions.hot
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentHotDiscussionBinding
-import com.team.todoktodok.presentation.core.ext.addOnScrollEndListener
-import com.team.todoktodok.presentation.core.ext.repeatOnViewStarted
+import com.team.todoktodok.presentation.compose.discussion.hot.HotDiscussionScreen
+import com.team.todoktodok.presentation.compose.theme.TodoktodokTheme
 import com.team.todoktodok.presentation.xml.discussions.BaseDiscussionsFragment
-import com.team.todoktodok.presentation.xml.discussions.hot.adapter.HotDiscussionAdapter
 
 class HotDiscussionFragment : BaseDiscussionsFragment(R.layout.fragment_hot_discussion) {
-    private lateinit var hotDiscussionAdapter: HotDiscussionAdapter
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View? {
+        val binding = FragmentHotDiscussionBinding.inflate(inflater, container, false)
+
+        binding.composeView.apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                TodoktodokTheme {
+                    val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+                    HotDiscussionScreen(
+                        onClick = { discussionId ->
+                            moveToDiscussionDetail(discussionId)
+                        },
+                        onLoadMore = {
+                            viewModel.loadActivatedDiscussions()
+                        },
+                        hotDiscussions = uiState.value.hotDiscussion,
+                    )
+                }
+            }
+        }
+
+        return binding.root
+    }
 
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
-        val binding = FragmentHotDiscussionBinding.bind(view)
-
         viewModel.loadHotDiscussions()
-        initView(binding)
-        setupUiState()
     }
-
-    private fun initView(binding: FragmentHotDiscussionBinding) {
-        hotDiscussionAdapter = HotDiscussionAdapter(discussionAdapterHandler)
-        with(binding.rvDiscussions) {
-            adapter = hotDiscussionAdapter
-            setHasFixedSize(true)
-            addOnScrollEndListener { viewModel.loadActivatedDiscussions() }
-        }
-    }
-
-    private fun setupUiState() {
-        repeatOnViewStarted {
-            viewModel.uiState.collect { value ->
-                hotDiscussionAdapter.submitList(value.hotDiscussion.items)
-            }
-        }
-    }
-
-    private val discussionAdapterHandler =
-        object : HotDiscussionAdapter.Handler {
-            override fun onClickHotPopularDiscussion(discussionId: Long) {
-                moveToDiscussionDetail(discussionId)
-            }
-
-            override fun onClickHotActivatedDiscussion(discussionId: Long) {
-                moveToDiscussionDetail(discussionId)
-            }
-        }
 }
