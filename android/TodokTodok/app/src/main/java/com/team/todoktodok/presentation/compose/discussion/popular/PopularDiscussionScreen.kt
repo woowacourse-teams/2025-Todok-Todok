@@ -26,24 +26,22 @@ import com.team.todoktodok.presentation.compose.theme.Black18
 import com.team.todoktodok.presentation.compose.theme.Pretendard
 
 @Composable
-fun PopularDiscussionScreen(
+fun PopularDiscussionsScreen(
     onClick: (Long) -> Unit,
-    popularDiscussions: PopularDiscussionsUiState,
+    uiState: PopularDiscussionsUiState,
 ) {
     Column {
-        PopularDiscussionHeader()
+        PopularDiscussionsHeader()
 
         LazyRow(
             contentPadding = PaddingValues(5.dp),
         ) {
-            items(items = popularDiscussions.discussions, key = { it.discussionId }) { item ->
+            items(items = uiState.discussions, key = { it.discussionId }) { item ->
                 DiscussionCard(
                     uiState = item,
                     onClick = { onClick(item.discussionId) },
                     discussionCardType = DiscussionCardType.OpinionVisible,
-                    modifier =
-                        Modifier
-                            .fillParentMaxWidth(0.9f),
+                    modifier = Modifier.fillParentMaxWidth(0.9f),
                 )
             }
         }
@@ -51,7 +49,7 @@ fun PopularDiscussionScreen(
 }
 
 @Composable
-fun PopularDiscussionHeader() {
+fun PopularDiscussionsHeader() {
     Row(
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -73,12 +71,12 @@ fun PopularDiscussionHeader() {
 
 @Preview(showBackground = true)
 @Composable
-fun PopularDiscussionScreenPreview(
+fun PopularDiscussionsScreenPreview(
     @PreviewParameter(PopularDiscussionsPreviewParameterProvider::class)
     popularDiscussions: PopularDiscussionsUiState,
 ) {
-    PopularDiscussionScreen(
+    PopularDiscussionsScreen(
         onClick = {},
-        popularDiscussions = popularDiscussions,
+        uiState = popularDiscussions,
     )
 }

@@ -67,7 +67,7 @@ fun DiscussionCard(
 
         ElevatedCard(
             onClick = onClick,
-            elevation = CardDefaults.cardElevation(defaultElevation = 5.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
             modifier = Modifier.width(cardWidth),
         ) {
             Column(

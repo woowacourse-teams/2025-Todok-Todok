@@ -1,23 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/fl_my_discussion"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".presentation.xml.discussions.my.MyDiscussionFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_discussions"
+    <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/compose_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-
-    <com.team.todoktodok.presentation.core.component.ResourceNotFoundView
-        android:id="@+id/view_resource_not_found"
-        android:visibility="gone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/space_56"
-        tools:visibility="visible"/>
+        android:layout_height="match_parent"/>
 </FrameLayout>

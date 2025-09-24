@@ -1,4 +1,4 @@
-package com.team.todoktodok.presentation.xml.discussions.my
+package com.team.todoktodok.presentation.compose.discussion.my
 
 import com.team.domain.model.Discussion
 import com.team.todoktodok.presentation.compose.discussion.created.CreatedDiscussionsUiState
