@@ -25,7 +25,6 @@ import com.team.todoktodok.databinding.ActivityDiscussionsBinding
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
 import com.team.todoktodok.presentation.core.ext.getParcelableCompat
-import com.team.todoktodok.presentation.view.serialization.SerializationNotificationContent
 import com.team.todoktodok.presentation.view.serialization.SerializationNotificationType
 import com.team.todoktodok.presentation.xml.book.SelectBookActivity
 import com.team.todoktodok.presentation.xml.discussiondetail.DiscussionDetailActivity
@@ -37,6 +36,7 @@ import com.team.todoktodok.presentation.xml.discussions.vm.DiscussionsViewModel
 import com.team.todoktodok.presentation.xml.discussions.vm.DiscussionsViewModelFactory
 import com.team.todoktodok.presentation.xml.notification.NotificationActivity
 import com.team.todoktodok.presentation.xml.profile.ProfileActivity
+import com.team.todoktodok.presentation.xml.serialization.SerializationFcmNotification
 
 class DiscussionsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDiscussionsBinding
@@ -72,10 +72,7 @@ class DiscussionsActivity : AppCompatActivity() {
         setUpLoadingState()
         setupUiEvent()
         initView()
-        val fromNotification = intent.getBooleanExtra("from_notification", true)
-        if (fromNotification) {
-            handleNotificationDeepLink(intent)
-        }
+        handleNotificationDeepLink(intent)
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -312,14 +309,20 @@ class DiscussionsActivity : AppCompatActivity() {
     }
 
     private fun handleNotificationDeepLink(intent: Intent) {
-        val notification: SerializationNotificationContent? =
-            intent
-                .getParcelableCompat<SerializationNotificationContent>("notification")
-                ?.toDomain() as SerializationNotificationContent?
-        triggerToMoveDiscussionDetail(notification)
+        val fromNotification = intent.getBooleanExtra("from_notification", false)
+        if (!fromNotification) return
+
+        val serialized: SerializationFcmNotification? =
+            intent.getParcelableCompat(
+                "notification"
+            )
+
+        if (serialized == null) return
+
+        triggerToMoveDiscussionDetail(serialized)
     }
 
-    private fun DiscussionsActivity.triggerToMoveDiscussionDetail(notification: SerializationNotificationContent?) {
+    private fun DiscussionsActivity.triggerToMoveDiscussionDetail(notification: SerializationFcmNotification?) {
         if (notification != null) {
             when (notification.type) {
                 SerializationNotificationType.LIKE -> {
