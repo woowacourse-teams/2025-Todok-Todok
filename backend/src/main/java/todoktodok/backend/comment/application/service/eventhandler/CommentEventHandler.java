@@ -8,7 +8,6 @@ import todoktodok.backend.comment.application.service.command.CommentCreated;
 import todoktodok.backend.comment.application.service.command.CommentLikeCreated;
 import todoktodok.backend.notification.application.service.command.CreateNotificationRequest;
 import todoktodok.backend.notification.application.service.command.NotificationCommandService;
-import todoktodok.backend.notification.domain.Notification;
 import todoktodok.backend.notification.domain.NotificationTarget;
 import todoktodok.backend.notification.domain.NotificationType;
 import todoktodok.backend.notification.infrastructure.FcmMessagePayload;
@@ -52,10 +51,10 @@ public class CommentEventHandler {
                 notificationType,
                 notificationTarget
         );
-        Notification notification = notificationCommandService.createNotification(createNotificationRequest);
+        Long notificationId = notificationCommandService.createNotification(createNotificationRequest);
 
         final FcmMessagePayload fcmMessagePayload = new FcmMessagePayload(
-                notification.getId(),
+                notificationId,
                 TODOKTODOK_TITLE,
                 notificationBody,
                 commentCreated.discussionId(),
@@ -100,10 +99,10 @@ public class CommentEventHandler {
                 notificationType,
                 notificationTarget
         );
-        Notification notification = notificationCommandService.createNotification(createNotificationRequest);
+        Long notificationId = notificationCommandService.createNotification(createNotificationRequest);
 
         final FcmMessagePayload fcmMessagePayload = new FcmMessagePayload(
-                notification.getId(),
+                notificationId,
                 TODOKTODOK_TITLE,
                 notificationBody,
                 commentLikeCreated.discussionId(),

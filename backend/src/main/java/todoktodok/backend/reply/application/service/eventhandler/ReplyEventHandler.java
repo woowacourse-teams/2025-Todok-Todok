@@ -6,7 +6,6 @@ import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 import todoktodok.backend.notification.application.service.command.CreateNotificationRequest;
 import todoktodok.backend.notification.application.service.command.NotificationCommandService;
-import todoktodok.backend.notification.domain.Notification;
 import todoktodok.backend.notification.domain.NotificationTarget;
 import todoktodok.backend.notification.domain.NotificationType;
 import todoktodok.backend.notification.infrastructure.FcmMessagePayload;
@@ -52,10 +51,10 @@ public class ReplyEventHandler {
                 notificationType,
                 notificationTarget
         );
-        Notification notification = notificationCommandService.createNotification(createNotificationRequest);
+        Long notificationId = notificationCommandService.createNotification(createNotificationRequest);
 
         final FcmMessagePayload fcmMessagePayload = new FcmMessagePayload(
-                notification.getId(),
+                notificationId,
                 TODOKTODOK_TITLE,
                 notificationBody,
                 replyCreated.discussionId(),
@@ -101,10 +100,10 @@ public class ReplyEventHandler {
                 notificationType,
                 notificationTarget
         );
-        Notification notification = notificationCommandService.createNotification(createNotificationRequest);
+        Long notificationId = notificationCommandService.createNotification(createNotificationRequest);
 
         final FcmMessagePayload fcmMessagePayload = new FcmMessagePayload(
-                notification.getId(),
+                notificationId,
                 "토독토독",
                 notificationBody,
                 replyLikeCreated.discussionId(),
