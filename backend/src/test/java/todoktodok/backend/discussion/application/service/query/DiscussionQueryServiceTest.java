@@ -265,8 +265,8 @@ class DiscussionQueryServiceTest {
             final String cursor = null;
 
             // when
-            final LatestDiscussionPageResponse firstSlicedDiscussions = discussionQueryService.getDiscussions(memberId,
-                    size, cursor);
+            final LatestDiscussionPageResponse firstSlicedDiscussions = discussionQueryService.getDiscussions(
+                    memberId, size, cursor);
             final List<DiscussionResponse> items = firstSlicedDiscussions.items();
 
             // then

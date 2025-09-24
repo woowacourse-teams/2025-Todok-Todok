@@ -16,36 +16,51 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
     List<Discussion> findDiscussionsByMember(final Member member);
 
     @Query("""
-                SELECT d FROM Discussion d
-                WHERE UPPER(d.title) LIKE UPPER(CONCAT('%', :keyword, '%'))
-                AND d.deletedAt IS NULL
-                UNION
-                SELECT d FROM Discussion d
-                JOIN d.book b
-                WHERE UPPER(b.title) LIKE UPPER(CONCAT('%', :keyword, '%'))
-                AND d.deletedAt IS NULL
-                AND b.deletedAt IS NULL
-            """)
-    List<Discussion> searchByKeyword(
-            @Param("keyword") final String keyword
+           SELECT d.id 
+           FROM Discussion d
+    """)
+    List<Long> findAllIdsBy();
+
+    @Query("""
+            SELECT d.id
+            FROM Discussion d
+    """)
+    Slice<Long> findAllIdsBy(final Pageable pageable);
+
+    @Query("""
+            SELECT d.id 
+            FROM Discussion d
+            WHERE :cursorId IS NULL OR d.id < :cursorId
+    """)
+    Slice<Long> findIdsLessThan(
+            @Param("cursorId") final Long cursorId,
+            final Pageable pageable
     );
 
     @Query("""
-                SELECT d FROM Discussion d
+           SELECT d
+           FROM Discussion d
+           WHERE d.id IN :discussionIds
+    """)
+    List<Discussion> findDiscussionsInIds(@Param("discussionIds") final List<Long> discussionIds);
+
+    @Query("""
+                SELECT d.id 
+                FROM Discussion d
                 WHERE UPPER(d.title) LIKE UPPER(CONCAT('%', :keyword, '%'))
                 AND d.deletedAt IS NULL
-                AND d.member = :member
+                
                 UNION
-                SELECT d FROM Discussion d
+                
+                SELECT d.id
+                FROM Discussion d
                 JOIN d.book b
                 WHERE UPPER(b.title) LIKE UPPER(CONCAT('%', :keyword, '%'))
                 AND d.deletedAt IS NULL
                 AND b.deletedAt IS NULL
-                AND d.member = :member
             """)
-    List<Discussion> searchByKeywordAndMember(
-            @Param("keyword") final String keyword,
-            @Param("member") final Member member
+    List<Long> searchIdsByKeyword(
+            @Param("keyword") final String keyword
     );
 
     @Query(value = """
@@ -75,18 +90,6 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
                 AND r.deleted_at IS NULL
             """, nativeQuery = true)
     List<Discussion> findParticipatedDiscussionsByMember(@Param("memberId") final Long memberId);
-
-    Slice<Discussion> findAllBy(final Pageable pageable);
-
-    @Query("""
-            SELECT d
-            FROM Discussion d
-            WHERE :cursorId IS NULL OR d.id < :cursorId
-            """)
-    Slice<Discussion> findByIdLessThan(
-            @Param("cursorId") final Long cursorId,
-            final Pageable pageable
-    );
 
     @Query("""
             SELECT new todoktodok.backend.discussion.application.dto.response.ActiveDiscussionResponse(

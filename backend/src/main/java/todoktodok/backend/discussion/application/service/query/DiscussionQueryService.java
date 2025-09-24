@@ -12,6 +12,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
+
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -39,8 +40,8 @@ import todoktodok.backend.reply.domain.repository.ReplyRepository;
 public class DiscussionQueryService {
 
     private static final int MIN_HOT_DISCUSSION_COUNT = 1;
-    private static final int MIN_HOT_DISCUSSION_PERIOD = 0;
-    private static final int MAX_HOT_DISCUSSION_PERIOD = 365;
+    private static final int MIN_DISCUSSION_PERIOD = 0;
+    private static final int MAX_DISCUSSION_PERIOD = 7;
     private static final int MAX_PAGE_SIZE = 50;
     private static final int MIN_PAGE_SIZE = 1;
 
@@ -80,14 +81,14 @@ public class DiscussionQueryService {
         validatePageSize(size);
         final Member member = findMember(memberId);
 
-        final Slice<Discussion> slicedDiscussions = sliceDiscussionsBy(cursor, size);
+        final Slice<Long> discussionIdsSlice = sliceDiscussionsBy(cursor, size);
 
-        final List<Discussion> discussions = slicedDiscussions.getContent();
-        final boolean hasNextPage = slicedDiscussions.hasNext();
-        final String nextCursor = findNextCursor(hasNextPage, discussions);
+        final List<Long> discussionIds = discussionIdsSlice.getContent();
+        final boolean hasNextPage = discussionIdsSlice.hasNext();
+        final String nextCursor = findNextCursor(hasNextPage, discussionIds);
 
         return new LatestDiscussionPageResponse(
-                getDiscussionsResponses(discussions, member),
+                getDiscussionsResponses(discussionIds, member),
                 new PageInfo(hasNextPage, nextCursor)
         );
     }
@@ -107,20 +108,16 @@ public class DiscussionQueryService {
             final int period,
             final int count
     ) {
-        validateHotDiscussionPeriod(period);
+        validateDiscussionPeriod(period);
         validateHotDiscussionCount(count);
 
         final Member member = findMember(memberId);
         final LocalDateTime sinceDate = LocalDate.now().minusDays(period).atStartOfDay();
-        final List<Discussion> discussions = discussionRepository.findAll();
+        final List<Long> discussionIds = discussionRepository.findAllIdsBy();
 
-        if (discussions.isEmpty()) {
+        if (discussionIds.isEmpty()) {
             return Collections.emptyList();
         }
-
-        final List<Long> discussionIds = discussions.stream()
-                .map(Discussion::getId)
-                .toList();
 
         final List<DiscussionLikeCountDto> likeSinceCounts = discussionLikeRepository.findLikeCountsByDiscussionIdsSinceDate(
                 discussionIds, sinceDate);
@@ -130,11 +127,11 @@ public class DiscussionQueryService {
         final Map<Long, Integer> likesByDiscussionId = getLikeCountsByDiscussionId(likeSinceCounts);
         final Map<Long, Integer> commentsByDiscussionId = getTotalCommentCountsByDiscussionId(commentSinceCounts);
 
-        final List<Discussion> hotDiscussions = findHotDiscussions(count, likesByDiscussionId, commentsByDiscussionId, discussions);
+        final List<Long> hotDiscussionIds = findHotDiscussions(count, likesByDiscussionId, commentsByDiscussionId, discussionIds);
 
-        final List<Long> likedDiscussionIds = getLikedDiscussionIdsFromHot(hotDiscussions, member);
+        final List<Long> likedDiscussionIds = getLikedDiscussionIdsFromHot(hotDiscussionIds, member);
 
-        return makeResponsesFrom(hotDiscussions, likesByDiscussionId, commentsByDiscussionId, likedDiscussionIds);
+        return makeResponsesFrom(hotDiscussionIds, likesByDiscussionId, commentsByDiscussionId, likedDiscussionIds);
     }
 
     public ActiveDiscussionPageResponse getActiveDiscussions(
@@ -143,6 +140,7 @@ public class DiscussionQueryService {
             final int size,
             @Nullable final String cursor
     ) {
+        validateDiscussionPeriod(period);
         validatePageSize(size);
 
         final Member member = findMember(memberId);
@@ -196,28 +194,28 @@ public class DiscussionQueryService {
                 );
     }
 
-    private Slice<Discussion> sliceDiscussionsBy(
+    private Slice<Long> sliceDiscussionsBy(
             final String cursor,
             final int size
     ) {
-        final Pageable pageable = PageRequest.of(0, size, Sort.Direction.DESC, "id");
+        Pageable pageable = PageRequest.of(0, size, Sort.Direction.DESC, "id");
 
         if (cursor == null || cursor.isBlank()) {
-            return discussionRepository.findAllBy(pageable);
+            return discussionRepository.findAllIdsBy(pageable);
         }
 
         final Long cursorId = decodeCursor(cursor);
-        return discussionRepository.findByIdLessThan(cursorId, pageable);
+        return discussionRepository.findIdsLessThan(cursorId, pageable);
     }
 
     private String findNextCursor(
             final boolean hasNextPage,
-            final List<Discussion> discussions
+            final List<Long> discussionIds
     ) {
-        if (!hasNextPage || discussions.isEmpty()) {
+        if (!hasNextPage || discussionIds.isEmpty()) {
             return null;
         }
-        return encodeCursorId(discussions.getLast().getId());
+        return encodeCursorId(discussionIds.getLast());
     }
 
     private Long decodeCursor(final String cursor) {
@@ -241,43 +239,42 @@ public class DiscussionQueryService {
             final String keyword,
             final Member member
     ) {
-        final List<Discussion> discussions = discussionRepository.searchByKeyword(keyword);
+        final List<Long> discussionIds = discussionRepository.searchIdsByKeyword(keyword);
 
-        return getDiscussionsResponses(discussions, member);
+        return getDiscussionsResponses(discussionIds, member);
     }
 
     private List<DiscussionResponse> getDiscussionsResponses(
-            final List<Discussion> discussions,
+            final List<Long> discussionIds,
             final Member member
     ) {
-        final List<Long> discussionIds = discussions.stream()
-                .map(Discussion::getId)
-                .toList();
-
         if (discussionIds.isEmpty()) {
             return List.of();
         }
 
-        final List<DiscussionLikeCountDto> likeCounts = discussionLikeRepository.findLikeCountsByDiscussionIds(
-                discussionIds);
-        final List<DiscussionCommentCountDto> commentCounts = commentRepository.findCommentCountsByDiscussionIds(
-                discussionIds);
+        final List<DiscussionLikeCountDto> likeCounts = discussionLikeRepository.findLikeCountsByDiscussionIds(discussionIds);
+        final List<DiscussionCommentCountDto> commentCounts = commentRepository.findCommentCountsByDiscussionIds(discussionIds);
+
         final Map<Long, Integer> likesByDiscussionId = getLikeCountsByDiscussionId(likeCounts);
         final Map<Long, Integer> commentsByDiscussionId = getTotalCommentCountsByDiscussionId(commentCounts);
+
         final List<Long> likedDiscussionIds = discussionLikeRepository.findLikedDiscussionIdsByMember(member, discussionIds);
 
-        return makeResponsesFrom(discussions, likesByDiscussionId, commentsByDiscussionId, likedDiscussionIds);
+        return makeResponsesFrom(discussionIds, likesByDiscussionId, commentsByDiscussionId, likedDiscussionIds);
     }
 
     private List<DiscussionResponse> makeResponsesFrom(
-            final List<Discussion> discussions,
+            final List<Long> discussionIds,
             final Map<Long, Integer> likeCountsByDiscussionId,
             final Map<Long, Integer> commentCountsByDiscussionId,
             final List<Long> likedDiscussionIds
     ) {
-        return discussions.stream()
-                .map(discussion -> {
-                    final long discussionId = discussion.getId();
+        final Map<Long, Discussion> discussions = discussionRepository.findDiscussionsInIds(discussionIds).stream()
+                .collect(Collectors.toMap(Discussion::getId, discussion -> discussion));
+
+        return discussionIds.stream()
+                .map(discussionId -> {
+                    final Discussion discussion = discussions.get(discussionId);
                     final int likeCount = likeCountsByDiscussionId.getOrDefault(discussionId, 0);
                     final int commentCount = commentCountsByDiscussionId.getOrDefault(discussionId, 0);
                     final boolean isLikedByMe = likedDiscussionIds.contains(discussionId);
@@ -309,38 +306,37 @@ public class DiscussionQueryService {
         }
     }
 
-    private static void validateHotDiscussionPeriod(final int period) {
-        if (period < MIN_HOT_DISCUSSION_PERIOD || period > MAX_HOT_DISCUSSION_PERIOD) {
-            throw new IllegalArgumentException(String.format("유효하지 않은 기간 값입니다. 0일 ~ 365일 이내로 조회해주세요: period = %d", period));
+    private static void validateDiscussionPeriod(final int period) {
+        if (period < MIN_DISCUSSION_PERIOD || period > MAX_DISCUSSION_PERIOD) {
+            throw new IllegalArgumentException(String.format("유효하지 않은 기간 값입니다. 0일 ~ 7일 이내로 조회해주세요: period = %d", period));
         }
     }
 
-    private static List<Discussion> findHotDiscussions(
+    private static List<Long> findHotDiscussions(
             final int count,
             final Map<Long, Integer> likesByDiscussionId,
             final Map<Long, Integer> commentsByDiscussionId,
-            final List<Discussion> discussions
+            final List<Long> discussionIds
     ) {
-        final ToIntFunction<Discussion> totalCountByDiscussion =
-                discussion ->
-                        likesByDiscussionId.getOrDefault(discussion.getId(), 0)
-                                + commentsByDiscussionId.getOrDefault(discussion.getId(), 0);
+        final ToIntFunction<Long> totalCountByDiscussion =
+                discussionId ->
+                        likesByDiscussionId.getOrDefault(discussionId, 0)
+                                + commentsByDiscussionId.getOrDefault(discussionId, 0);
 
-        return discussions.stream()
+        return discussionIds.stream()
                 .sorted(Comparator
                         .comparingInt(totalCountByDiscussion)
                         .reversed()
-                        .thenComparing(Discussion::getId, Comparator.reverseOrder())
+                        .thenComparing(discussionId -> discussionId, Comparator.reverseOrder())
                 )
                 .limit(count)
                 .toList();
     }
 
     private List<Long> getLikedDiscussionIdsFromHot(
-            final List<Discussion> hotDiscussions,
+            final List<Long> hotDiscussionIds,
             final Member member
     ) {
-        final List<Long> hotDiscussionIds = hotDiscussions.stream().map(Discussion::getId).toList();
         return discussionLikeRepository.findLikedDiscussionIdsByMember(member, hotDiscussionIds);
     }
 
