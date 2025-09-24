@@ -7,21 +7,21 @@ import com.team.todoktodok.presentation.compose.component.DiscussionCardType
 import com.team.todoktodok.presentation.xml.discussions.DiscussionUiState
 
 data class LatestDiscussionsUiState(
-    val items: List<DiscussionUiState> = emptyList(),
+    val discussions: List<DiscussionUiState> = emptyList(),
     val type: DiscussionCardType = DiscussionCardType.Default,
     val isRefreshing: Boolean = false,
     val latestPage: PageInfo = PageInfo.EMPTY,
 ) {
-    fun refresh() = copy(items = emptyList(), latestPage = PageInfo.Companion.EMPTY, isRefreshing = true)
+    fun refresh() = copy(discussions = emptyList(), latestPage = PageInfo.Companion.EMPTY, isRefreshing = true)
 
     fun append(page: LatestDiscussionPage): LatestDiscussionsUiState {
-        val newDiscussion = items.toMutableList()
+        val newDiscussion = discussions.toMutableList()
 
         val discussion =
             page
                 .discussions
                 .map { discussionItem ->
-                    val keyword = items.firstOrNull()?.searchKeyword ?: ""
+                    val keyword = discussions.firstOrNull()?.searchKeyword ?: ""
                     DiscussionUiState(discussionItem, keyword)
                 }
         val pageInfo = page.pageInfo
@@ -30,20 +30,20 @@ data class LatestDiscussionsUiState(
 
         val newLatestPage = latestPage.copy(pageInfo.hasNext, pageInfo.nextCursor)
 
-        return copy(items = newDiscussion, isRefreshing = false, latestPage = newLatestPage)
+        return copy(discussions = newDiscussion, isRefreshing = false, latestPage = newLatestPage)
     }
 
     fun modify(newDiscussion: Discussion): LatestDiscussionsUiState =
         copy(
-            items =
-                items.map {
+            discussions =
+                discussions.map {
                     if (it.discussionId == newDiscussion.id) DiscussionUiState(newDiscussion) else it
                 },
         )
 
     fun remove(discussionId: Long): LatestDiscussionsUiState {
-        val newItems = items.filter { it.discussionId != discussionId }
-        return copy(items = newItems)
+        val newItems = discussions.filter { it.discussionId != discussionId }
+        return copy(discussions = newItems)
     }
 
     val hasNext get() = latestPage.hasNext

@@ -52,7 +52,7 @@ fun LatestDiscussionsScreen(
             modifier = modifier.padding(horizontal = 10.dp, vertical = 10.dp),
             content = {
                 items(
-                    items = latestDiscussionsUiState.items,
+                    items = latestDiscussionsUiState.discussions,
                     key = { it.discussionId },
                 ) { item ->
                     DiscussionCard(

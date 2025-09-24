@@ -5,7 +5,7 @@ import com.team.todoktodok.presentation.compose.component.DiscussionCardType
 import com.team.todoktodok.presentation.xml.discussions.DiscussionUiState
 
 data class SearchDiscussionsUiState(
-    val items: List<DiscussionUiState> = emptyList(),
+    val discussions: List<DiscussionUiState> = emptyList(),
     val type: DiscussionCardType = DiscussionCardType.QueryHighlighting,
     val searchKeyword: String = EMPTY_SEARCH_KEYWORD,
 ) {
@@ -13,19 +13,19 @@ data class SearchDiscussionsUiState(
         keyword: String,
         newDiscussions: List<Discussion>,
     ): SearchDiscussionsUiState {
-        val updatedList = items.toMutableList()
+        val updatedList = discussions.toMutableList()
         val discussion = newDiscussions.map { DiscussionUiState(it, searchKeyword = keyword) }
         updatedList.addAll(discussion)
 
-        return copy(items = updatedList, searchKeyword = keyword)
+        return copy(discussions = updatedList, searchKeyword = keyword)
     }
 
-    fun clear() = copy(items = emptyList(), searchKeyword = EMPTY_SEARCH_KEYWORD)
+    fun clear() = copy(discussions = emptyList(), searchKeyword = EMPTY_SEARCH_KEYWORD)
 
     fun modify(newDiscussion: Discussion): SearchDiscussionsUiState =
         copy(
-            items =
-                items.map {
+            discussions =
+                discussions.map {
                     if (it.discussionId == newDiscussion.id) {
                         DiscussionUiState(newDiscussion)
                     } else {
@@ -34,7 +34,7 @@ data class SearchDiscussionsUiState(
                 },
         )
 
-    fun remove(discussionId: Long): SearchDiscussionsUiState = copy(items = items.filter { it.discussionId != discussionId })
+    fun remove(discussionId: Long): SearchDiscussionsUiState = copy(discussions = discussions.filter { it.discussionId != discussionId })
 
     companion object {
         private const val EMPTY_SEARCH_KEYWORD = ""

@@ -3,8 +3,8 @@ package com.team.todoktodok.presentation.xml.discussions
 import com.team.domain.model.Discussion
 import com.team.domain.model.active.ActivatedDiscussionPage
 import com.team.domain.model.latest.LatestDiscussionPage
-import com.team.todoktodok.presentation.xml.discussions.all.AllDiscussionsUiState
 import com.team.todoktodok.presentation.compose.discussion.hot.HotDiscussionUiState
+import com.team.todoktodok.presentation.xml.discussions.all.AllDiscussionsUiState
 import com.team.todoktodok.presentation.xml.discussions.my.MyDiscussionUiState
 
 data class DiscussionsUiState(
@@ -37,7 +37,7 @@ data class DiscussionsUiState(
     fun addMyDiscussion(
         createdDiscussion: List<Discussion>,
         participatedDiscussion: List<Discussion>,
-    ): DiscussionsUiState = copy(myDiscussion = myDiscussion.add(createdDiscussion, participatedDiscussion))
+    ): DiscussionsUiState = copy(myDiscussion = myDiscussion.addDiscussions(createdDiscussion, participatedDiscussion))
 
     fun addLatestDiscussion(page: LatestDiscussionPage): DiscussionsUiState =
         copy(allDiscussionsUiState = allDiscussionsUiState.addLatestDiscussion(page))

@@ -29,7 +29,7 @@ class SearchDiscussionScreenTest {
         }
 
         // then
-        sampleState.items.forEach { item ->
+        sampleState.discussions.forEach { item ->
             composeTestRule.onNodeWithText(item.discussionTitle).assertIsDisplayed()
         }
     }
@@ -48,7 +48,7 @@ class SearchDiscussionScreenTest {
             )
         }
 
-        val firstItem = sampleState.items.first()
+        val firstItem = sampleState.discussions.first()
         composeTestRule.onNodeWithText(firstItem.bookTitle).performClick()
 
         // then

@@ -1,10 +1,12 @@
 package com.team.todoktodok.presentation.compose.discussion.participated
 
 import com.team.domain.model.Discussion
+import com.team.todoktodok.presentation.compose.component.DiscussionCardType
 import com.team.todoktodok.presentation.xml.discussions.DiscussionUiState
 
 data class ParticipatedDiscussionsUiState(
-    val list: List<DiscussionUiState> = emptyList(),
+    val discussions: List<DiscussionUiState> = emptyList(),
+    val type: DiscussionCardType = DiscussionCardType.Default,
 ) {
     fun add(discussions: List<Discussion>): ParticipatedDiscussionsUiState {
         val newDiscussions =
@@ -12,12 +14,13 @@ data class ParticipatedDiscussionsUiState(
                 .takeLast(MY_DISCUSSION_SIZE)
                 .map { DiscussionUiState(it) }
                 .reversed()
-        return copy(list = newDiscussions)
+        return copy(discussions = newDiscussions)
     }
 
-    fun remove(discussionId: Long): ParticipatedDiscussionsUiState = copy(list = list.filter { it.discussionId != discussionId })
+    fun remove(discussionId: Long): ParticipatedDiscussionsUiState =
+        copy(discussions = discussions.filter { it.discussionId != discussionId })
 
-    fun isEmpty(): Boolean = list.isEmpty()
+    fun isEmpty(): Boolean = discussions.isEmpty()
 
     companion object {
         private const val MY_DISCUSSION_SIZE = 3

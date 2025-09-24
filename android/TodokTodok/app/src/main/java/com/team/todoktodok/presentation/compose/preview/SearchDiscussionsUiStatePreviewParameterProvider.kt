@@ -69,7 +69,7 @@ class SearchDiscussionsUiStatePreviewParameterProvider : PreviewParameterProvide
 
             return sequenceOf(
                 SearchDiscussionsUiState(
-                    items = listOf(dummyDiscussion1, dummyDiscussion2),
+                    discussions = listOf(dummyDiscussion1, dummyDiscussion2),
                     type = DiscussionCardType.QueryHighlighting,
                     searchKeyword = "코드",
                 ),

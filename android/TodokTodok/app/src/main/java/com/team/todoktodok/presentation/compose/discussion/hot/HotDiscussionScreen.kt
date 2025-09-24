@@ -16,7 +16,6 @@ import com.team.todoktodok.presentation.compose.component.InfinityLazyColumn
 import com.team.todoktodok.presentation.compose.discussion.activate.ActivatedDiscussionHeader
 import com.team.todoktodok.presentation.compose.discussion.popular.PopularDiscussionHeader
 import com.team.todoktodok.presentation.compose.preview.HotDiscussionPreviewParameterProvider
-import com.team.todoktodok.presentation.compose.discussion.hot.HotDiscussionUiState
 
 @Composable
 fun HotDiscussionScreen(

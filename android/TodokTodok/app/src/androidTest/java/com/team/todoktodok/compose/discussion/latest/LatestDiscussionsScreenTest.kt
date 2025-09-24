@@ -24,7 +24,7 @@ class LatestDiscussionsScreenTest {
     private val previewData = LatestDiscussionsPreviewParameterProvider().values.first()
     private val discussion =
         LatestDiscussionsUiState(
-            items =
+            discussions =
                 listOf(
                     DiscussionUiState(
                         Discussion(
@@ -55,7 +55,7 @@ class LatestDiscussionsScreenTest {
         }
 
         composeTestRule
-            .onNodeWithText(discussion.items.first().bookTitle)
+            .onNodeWithText(discussion.discussions.first().bookTitle)
             .assertIsDisplayed()
     }
 
@@ -73,8 +73,8 @@ class LatestDiscussionsScreenTest {
             )
         }
 
-        val firstItem = previewData.items.first()
-        composeTestRule.onNodeWithText(previewData.items.first().bookTitle).performClick()
+        val firstItem = previewData.discussions.first()
+        composeTestRule.onNodeWithText(previewData.discussions.first().bookTitle).performClick()
 
         Assertions.assertTrue(clickedId == firstItem.discussionId)
     }

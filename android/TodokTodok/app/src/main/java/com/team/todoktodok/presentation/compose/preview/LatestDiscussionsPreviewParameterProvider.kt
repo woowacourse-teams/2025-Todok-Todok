@@ -14,7 +14,7 @@ class LatestDiscussionsPreviewParameterProvider : PreviewParameterProvider<Lates
         get() =
             sequenceOf(
                 LatestDiscussionsUiState(
-                    items =
+                    discussions =
                         listOf(
                             DiscussionUiState(
                                 item =

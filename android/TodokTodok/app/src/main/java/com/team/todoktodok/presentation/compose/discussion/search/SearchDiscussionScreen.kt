@@ -32,7 +32,7 @@ fun SearchDiscussionScreen(
     searchDiscussion: SearchDiscussionsUiState,
     modifier: Modifier = Modifier,
 ) {
-    if (searchDiscussion.items.isEmpty()) {
+    if (searchDiscussion.discussions.isEmpty()) {
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -77,7 +77,7 @@ fun SearchDiscussionScreen(
             verticalArrangement = Arrangement.spacedBy(15.dp),
             modifier = modifier.padding(horizontal = 10.dp),
         ) {
-            searchDiscussion.items.forEach { item ->
+            searchDiscussion.discussions.forEach { item ->
                 DiscussionCard(
                     uiState = item,
                     discussionCardType = searchDiscussion.type,
