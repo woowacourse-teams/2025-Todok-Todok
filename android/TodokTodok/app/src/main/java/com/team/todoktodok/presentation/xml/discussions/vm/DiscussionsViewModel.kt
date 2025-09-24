@@ -144,17 +144,16 @@ class DiscussionsViewModel(
         )
 
     fun loadActivatedDiscussions() {
-        _uiState.value.hotDiscussion.activatedDiscussions.pageInfo?.let {
-            if (!it.hasNext) return
-            val cursor = it.nextCursor ?: return
+        val pageInfo = _uiState.value.hotDiscussion.activatedDiscussions.pageInfo ?: return
+        if (!pageInfo.hasNext) return
+        val cursor = pageInfo.nextCursor ?: return
 
-            runAsync(
-                key = KEY_ACTIVATED_DISCUSSIONS,
-                action = { discussionRepository.getActivatedDiscussion(cursor = cursor) },
-                handleSuccess = { result -> _uiState.update { it.appendActivatedDiscussion(result) } },
-                handleFailure = { onUiEvent(DiscussionsUiEvent.ShowErrorMessage(it)) },
-            )
-        }
+        runAsync(
+            key = KEY_ACTIVATED_DISCUSSIONS_LOAD_MORE,
+            action = { discussionRepository.getActivatedDiscussion(cursor = cursor) },
+            handleSuccess = { result -> _uiState.update { it.appendActivatedDiscussion(result) } },
+            handleFailure = { onUiEvent(DiscussionsUiEvent.ShowErrorMessage(it)) },
+        )
     }
 
     fun modifyDiscussion(discussionId: Long) {
@@ -188,6 +187,7 @@ class DiscussionsViewModel(
         private const val KEY_SEARCH_DISCUSSIONS = "SEARCH_DISCUSSIONS"
         private const val KEY_HOT_DISCUSSIONS = "HOT_DISCUSSIONS"
         private const val KEY_ACTIVATED_DISCUSSIONS = "ACTIVATED_DISCUSSIONS"
+        private const val KEY_ACTIVATED_DISCUSSIONS_LOAD_MORE = "ACTIVATED_DISCUSSIONS_LOAD_MORE"
         private const val KEY_LATEST_DISCUSSIONS = "LATEST_DISCUSSIONS"
         private const val KEY_MY_CREATED_DISCUSSIONS = "MY_CREATED_DISCUSSIONS"
         private const val KEY_MY_PARTICIPATED_DISCUSSIONS = "MY_PARTICIPATED_DISCUSSIONS"
