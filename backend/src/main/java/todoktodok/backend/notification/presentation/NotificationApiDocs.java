@@ -91,7 +91,7 @@ public interface NotificationApiDocs {
                                                   },
                                                   {
                                                     "data": {
-                                                      "notificationId": 8
+                                                      "notificationId": 8,
                                                       "discussionId": 1,
                                                       "commentId": 1,
                                                       "replyId": 1,
@@ -304,7 +304,7 @@ public interface NotificationApiDocs {
                             mediaType = "application/json",
                             schema = @Schema(implementation = UnreadNotificationResponse.class),
                             examples = @ExampleObject(
-                                    value = "{\"exist\":\"true\"}"
+                                    value = "{\"exist\":true}"
                             )
                     )
             ),
