@@ -8,7 +8,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.List;
 import org.springframework.http.ResponseEntity;
 import todoktodok.backend.global.exception.ErrorResponse;
 import todoktodok.backend.notification.application.dto.response.NotificationResponse;
@@ -27,9 +26,9 @@ public interface NotificationApiDocs {
                             schema = @Schema(implementation = NotificationResponse.class),
                             examples = @ExampleObject(
                                     value = """
+                                              "notReadCount": 10
                                             [
-                                              {
-                                                "notReadCount": 10,
+                                              "notificationItemResponse": {
                                                 "data": {
                                                   "discussionId": 1,
                                                   "commentId": 1,
@@ -43,8 +42,7 @@ public interface NotificationApiDocs {
                                                 "isRead": false,
                                                 "createdAt": "2025-09-19T12:00:00"
                                               },
-                                              {
-                                                "notReadCount": 10,
+                                              "notificationItemResponse": {
                                                 "data": {
                                                   "discussionId": 1,
                                                   "commentId": 1,
@@ -58,8 +56,7 @@ public interface NotificationApiDocs {
                                                 "isRead": true,
                                                 "createdAt": "2025-09-18T12:00:00"
                                               },
-                                              {
-                                                "notReadCount": 10,
+                                              "notificationItemResponse": {
                                                 "data": {
                                                   "discussionId": 1,
                                                   "commentId": null,
@@ -122,7 +119,7 @@ public interface NotificationApiDocs {
                             )
                     ))
     })
-    ResponseEntity<List<NotificationResponse>> getNotifications(
+    ResponseEntity<NotificationResponse> getNotifications(
             @Parameter(hidden = true) final Long memberId
     );
 

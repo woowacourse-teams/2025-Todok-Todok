@@ -1,24 +1,19 @@
 package todoktodok.backend.notification.application.dto.response;
 
-import java.time.LocalDateTime;
-import todoktodok.backend.notification.domain.Notification;
+import java.util.List;
 
 public record NotificationResponse(
-        int notReadCount,
-        NotificationData data,
-        boolean isRead,
-        LocalDateTime createdAt
+        int unreadCount,
+        List<NotificationItemResponse> notifications
 ) {
 
     public NotificationResponse(
-            final Long notReadCount,
-            final Notification notification
+            final Long unreadCount,
+            final List<NotificationItemResponse> notificationItemResponses
     ) {
         this(
-                notReadCount.intValue(),
-                new NotificationData(notification),
-                notification.isRead(),
-                notification.getCreatedAt()
+                unreadCount.intValue(),
+                notificationItemResponses
         );
     }
 }

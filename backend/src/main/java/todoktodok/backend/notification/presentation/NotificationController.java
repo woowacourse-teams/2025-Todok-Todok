@@ -1,6 +1,5 @@
 package todoktodok.backend.notification.presentation;
 
-import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,11 +27,11 @@ public class NotificationController implements NotificationApiDocs{
 
     @Auth(value = Role.USER)
     @GetMapping
-    public ResponseEntity<List<NotificationResponse>> getNotifications(@LoginMember final Long memberId) {
-        final List<NotificationResponse> notifications = notificationQueryService.getNotifications(memberId);
+    public ResponseEntity<NotificationResponse> getNotifications(@LoginMember final Long memberId) {
+        final NotificationResponse notificationResponse = notificationQueryService.getNotifications(memberId);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(notifications);
+                .body(notificationResponse);
     }
 
     @Auth(value = Role.USER)
