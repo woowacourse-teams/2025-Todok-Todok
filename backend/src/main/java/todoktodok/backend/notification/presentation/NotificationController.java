@@ -35,7 +35,7 @@ public class NotificationController {
 
     @Auth(value = Role.USER)
     @PatchMapping("/{notificationId}/read")
-    public ResponseEntity<Void> updateNotificationReadStatus(
+    public ResponseEntity<Void> readNotification(
             @LoginMember final Long memberId,
             @PathVariable final Long notificationId
     ) {
