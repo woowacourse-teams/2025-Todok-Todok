@@ -3,6 +3,7 @@ package todoktodok.backend.notification.application.service.command;
 import java.util.NoSuchElementException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.member.domain.Member;
 import todoktodok.backend.member.domain.repository.MemberRepository;
@@ -18,6 +19,7 @@ public class NotificationCommandService {
     private final NotificationRepository notificationRepository;
     private final MemberRepository memberRepository;
 
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Long createNotification(final CreateNotificationRequest request) {
         final Member recipient = findMember(request.recipientId());
 
