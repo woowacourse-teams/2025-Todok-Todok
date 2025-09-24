@@ -12,6 +12,7 @@ data class NotificationUiState(
 
     val notificationGroup: List<NotificationGroup> =
         listOf(
+            NotificationGroup.Count(notificationCount),
             *notifications.map { NotificationGroup.Notification(it) }.toTypedArray(),
             NotificationGroup.Information,
         )

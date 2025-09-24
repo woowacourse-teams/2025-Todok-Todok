@@ -16,6 +16,7 @@ class NotificationAdapter(
         when (getItem(position)) {
             is NotificationGroup.Information -> R.layout.item_notification_information
             is NotificationGroup.Notification -> R.layout.item_notification
+            is NotificationGroup.Count -> R.layout.item_notification_count
         }
 
     override fun onCreateViewHolder(
@@ -25,6 +26,10 @@ class NotificationAdapter(
         when (viewType) {
             R.layout.item_notification_information -> NotificationInformationViewHolder(parent)
             R.layout.item_notification -> NotificationViewHolder(parent, updateUnreadStatus)
+            R.layout.item_notification_count -> NotificationCountViewHolder.Companion.NotificationCountViewHolder(
+                parent
+            )
+
             else -> throw IllegalArgumentException("Invalid view type")
         }
 
@@ -37,6 +42,7 @@ class NotificationAdapter(
                 (holder as NotificationInformationViewHolder)
 
             is NotificationGroup.Notification -> (holder as NotificationViewHolder).bind(item.notification)
+            is NotificationGroup.Count -> (holder as NotificationCountViewHolder).bind(item.count)
         }
     }
 }
