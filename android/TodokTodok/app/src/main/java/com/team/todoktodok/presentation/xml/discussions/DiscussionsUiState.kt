@@ -29,7 +29,7 @@ data class DiscussionsUiState(
     fun addHotDiscussion(
         newItems: List<Discussion>,
         activatedDiscussion: ActivatedDiscussionPage,
-    ): DiscussionsUiState = copy(hotDiscussion = hotDiscussion.add(newItems, activatedDiscussion))
+    ): DiscussionsUiState = copy(hotDiscussion = hotDiscussion.addHotDiscussions(newItems, activatedDiscussion))
 
     fun appendActivatedDiscussion(page: ActivatedDiscussionPage): DiscussionsUiState =
         copy(hotDiscussion = hotDiscussion.appendActivatedDiscussion(page))
