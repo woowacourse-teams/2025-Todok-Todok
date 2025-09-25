@@ -5,7 +5,7 @@ import com.team.domain.model.Book
 import com.team.domain.model.Discussion
 import com.team.domain.model.member.Nickname
 import com.team.domain.model.member.User
-import com.team.todoktodok.presentation.xml.discussions.DiscussionUiState
+import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiState
 import java.time.LocalDateTime
 
 class DiscussionUiStatePreviewParameterProvider : PreviewParameterProvider<List<DiscussionUiState>> {
@@ -21,7 +21,10 @@ class DiscussionUiStatePreviewParameterProvider : PreviewParameterProvider<List<
                                 book = Book(1L, "자바 ORM 표준 JPA 프로그래밍", "김영한", ""),
                                 writer = User(1L, Nickname("홍길동"), ""),
                                 createAt = LocalDateTime.of(2025, 7, 12, 12, 0),
-                                discussionOpinion = "fetch join을 남발하면 안됩니다.",
+                                discussionOpinion =
+                                    "응집도와 결합도가 어떤 차이를 가지는 지에 대한 다른 분들의 생각이 궁금합니다." +
+                                        "응집도는 내부에 얼마나 비슷한 책임들이 모여있는가. 얼마나 연관있는 멤버들이 똘똘 뭉쳐있는가" +
+                                        "응집도는 내부에 얼마나 비슷한 책임들이 모여있는가. 얼마나 연관있는 멤버들이 똘똘 뭉쳐있는가",
                                 likeCount = 0,
                                 commentCount = 0,
                                 isLikedByMe = false,

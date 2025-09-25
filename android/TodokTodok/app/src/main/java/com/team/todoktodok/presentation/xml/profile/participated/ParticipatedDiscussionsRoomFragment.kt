@@ -6,10 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentParticipatedDiscussionsRoomBinding
+import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiState
 import com.team.todoktodok.presentation.core.component.adapter.BaseDiscussionViewHolder
 import com.team.todoktodok.presentation.core.component.adapter.DiscussionAdapter
 import com.team.todoktodok.presentation.xml.discussiondetail.DiscussionDetailActivity
-import com.team.todoktodok.presentation.xml.discussions.DiscussionUiState
 import com.team.todoktodok.presentation.xml.profile.BaseProfileFragment
 
 class ParticipatedDiscussionsRoomFragment : BaseProfileFragment(R.layout.fragment_participated_discussions_room) {

@@ -13,8 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import com.team.todoktodok.presentation.compose.component.DiscussionCard
-import com.team.todoktodok.presentation.compose.component.InfinityLazyColumn
+import com.team.todoktodok.presentation.compose.core.component.DiscussionCard
+import com.team.todoktodok.presentation.compose.core.component.InfinityLazyColumn
 import com.team.todoktodok.presentation.compose.preview.LatestDiscussionsPreviewParameterProvider
 import com.team.todoktodok.presentation.compose.theme.Green1A
 import com.team.todoktodok.presentation.compose.theme.White
@@ -22,11 +22,11 @@ import com.team.todoktodok.presentation.compose.theme.White
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LatestDiscussionsScreen(
+    uiState: LatestDiscussionsUiState,
+    isRefreshing: Boolean,
     onLoadMore: () -> Unit,
     onClick: (Long) -> Unit,
-    isRefreshing: Boolean,
     onRefresh: () -> Unit,
-    latestDiscussionsUiState: LatestDiscussionsUiState,
     modifier: Modifier = Modifier,
 ) {
     val state = rememberPullToRefreshState()
@@ -49,15 +49,17 @@ fun LatestDiscussionsScreen(
         InfinityLazyColumn(
             loadMore = { onLoadMore() },
             verticalArrangement = Arrangement.spacedBy(15.dp),
-            modifier = modifier.padding(horizontal = 10.dp),
+            modifier = modifier.padding(horizontal = 10.dp, vertical = 10.dp),
             content = {
                 items(
-                    items = latestDiscussionsUiState.items,
+                    items = uiState.discussions,
                     key = { it.discussionId },
                 ) { item ->
                     DiscussionCard(
                         uiState = item,
                         onClick = { onClick(item.discussionId) },
+                        discussionCardType = uiState.type,
+                        modifier = Modifier.padding(vertical = 2.dp),
                     )
                 }
             },
@@ -72,10 +74,10 @@ fun DiscussionsScreenPreview(
     latestDiscussionsUiState: LatestDiscussionsUiState,
 ) {
     LatestDiscussionsScreen(
+        uiState = latestDiscussionsUiState,
         onLoadMore = {},
         onClick = {},
         isRefreshing = false,
         onRefresh = {},
-        latestDiscussionsUiState = latestDiscussionsUiState,
     )
 }

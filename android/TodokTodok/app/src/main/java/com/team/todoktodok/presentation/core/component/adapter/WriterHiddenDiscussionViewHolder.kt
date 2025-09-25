@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import com.team.todoktodok.databinding.ItemDiscussionBinding
-import com.team.todoktodok.presentation.xml.discussions.DiscussionUiState
+import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiState
 
 class WriterHiddenDiscussionViewHolder private constructor(
     binding: ItemDiscussionBinding,

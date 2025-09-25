@@ -6,7 +6,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
-import com.team.todoktodok.presentation.compose.component.DiscussionStat
+import com.team.todoktodok.presentation.compose.core.component.DiscussionStat
 import com.team.todoktodok.presentation.compose.theme.RedFF
 import org.junit.Rule
 import org.junit.Test

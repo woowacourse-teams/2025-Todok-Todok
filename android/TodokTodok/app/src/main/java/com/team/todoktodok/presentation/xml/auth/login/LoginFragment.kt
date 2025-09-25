@@ -16,12 +16,12 @@ import com.google.android.material.snackbar.Snackbar
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentLoginBinding
+import com.team.todoktodok.presentation.compose.discussion.DiscussionsActivity
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
 import com.team.todoktodok.presentation.xml.auth.signup.SignUpFragment
 import com.team.todoktodok.presentation.xml.auth.vm.AuthViewModel
 import com.team.todoktodok.presentation.xml.auth.vm.AuthViewModelFactory
-import com.team.todoktodok.presentation.xml.discussions.DiscussionsActivity
 import kotlinx.coroutines.launch
 
 class LoginFragment : Fragment(R.layout.fragment_login) {

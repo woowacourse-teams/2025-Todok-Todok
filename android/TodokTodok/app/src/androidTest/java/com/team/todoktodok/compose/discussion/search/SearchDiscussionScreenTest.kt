@@ -5,6 +5,7 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import com.team.todoktodok.presentation.compose.discussion.search.SearchDiscussionScreen
+import com.team.todoktodok.presentation.compose.discussion.search.SearchDiscussionsUiState
 import com.team.todoktodok.presentation.compose.preview.SearchDiscussionsUiStatePreviewParameterProvider
 import org.junit.Assert.assertEquals
 import org.junit.Rule
@@ -17,18 +18,18 @@ class SearchDiscussionScreenTest {
     @Test
     fun `검색화면_아이템이_표시된다`() {
         // given
-        val sampleState = SearchDiscussionsUiStatePreviewParameterProvider().values.first()
+        val state = SearchDiscussionsUiStatePreviewParameterProvider().values.first()
 
         // when
         composeTestRule.setContent {
             SearchDiscussionScreen(
-                searchDiscussion = sampleState,
+                uiState = state,
                 onClick = {},
             )
         }
 
         // then
-        sampleState.items.forEach { item ->
+        state.discussions.forEach { item ->
             composeTestRule.onNodeWithText(item.discussionTitle).assertIsDisplayed()
         }
     }
@@ -42,15 +43,32 @@ class SearchDiscussionScreenTest {
         // when
         composeTestRule.setContent {
             SearchDiscussionScreen(
-                searchDiscussion = sampleState,
+                uiState = sampleState,
                 onClick = { clickedId = it },
             )
         }
 
-        val firstItem = sampleState.items.first()
+        val firstItem = sampleState.discussions.first()
         composeTestRule.onNodeWithText(firstItem.bookTitle).performClick()
 
         // then
         assertEquals(clickedId, firstItem.discussionId)
+    }
+
+    @Test
+    fun `검색화면_검색결과_없을_때_빈화면이_표시된다`() {
+        // given
+        val emptyState = SearchDiscussionsUiState(searchKeyword = "토론")
+
+        // when
+        composeTestRule.setContent {
+            SearchDiscussionScreen(
+                uiState = emptyState,
+                onClick = {},
+            )
+        }
+
+        // then
+        composeTestRule.onNodeWithText("토론에 대한 검색결과가 없어요").assertIsDisplayed()
     }
 }
