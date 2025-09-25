@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.team.todoktodok.databinding.ItemNotificationInformationBinding
 
-class NotificationInformationViewHolder(
+class NotificationInformationViewHolder private constructor(
     private val binding: ItemNotificationInformationBinding,
 ) : RecyclerView.ViewHolder(binding.root) {
     companion object {

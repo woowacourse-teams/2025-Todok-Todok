@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.team.todoktodok.databinding.ItemNotificationCountBinding
 
-class NotificationCountViewHolder(
+class NotificationCountViewHolder private constructor(
     private val binding: ItemNotificationCountBinding,
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(count: Int) {

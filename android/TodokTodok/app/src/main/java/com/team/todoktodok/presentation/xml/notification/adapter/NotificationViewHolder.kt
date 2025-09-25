@@ -11,7 +11,7 @@ import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ItemNotificationBinding
 import com.team.todoktodok.presentation.core.ext.formatKorean
 
-class NotificationViewHolder(
+class NotificationViewHolder private constructor(
     private val binding: ItemNotificationBinding,
     private val updateUnreadStatus: UpdateUnreadStatusClickListener,
 ) : RecyclerView.ViewHolder(binding.root) {
