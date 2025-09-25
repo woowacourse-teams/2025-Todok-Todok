@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material3.Icon
@@ -23,13 +24,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.team.todoktodok.R
 import com.team.todoktodok.presentation.compose.theme.Black18
+import com.team.todoktodok.presentation.compose.theme.Green64
 import com.team.todoktodok.presentation.compose.theme.Green73
+import com.team.todoktodok.presentation.compose.theme.GreenA8
 import com.team.todoktodok.presentation.compose.theme.GreenF0
 import com.team.todoktodok.presentation.compose.theme.Pretendard
 
 @Composable
 fun SearchDiscussionBar(
     searchKeyword: String,
+    previousKeyword: String,
     onKeywordChange: (String) -> Unit,
     onSearch: () -> Unit,
     modifier: Modifier = Modifier,
@@ -83,12 +87,27 @@ fun SearchDiscussionBar(
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
                 disabledIndicatorColor = Color.Transparent,
+                cursorColor = Black18,
+                errorCursorColor = Black18,
+                selectionColors =
+                    TextSelectionColors(
+                        handleColor = Green64,
+                        backgroundColor = GreenA8,
+                    ),
+                focusedLeadingIconColor = Black18,
+                unfocusedLeadingIconColor = Black18,
+                disabledLeadingIconColor = Black18,
+                focusedTrailingIconColor = Black18,
+                unfocusedTrailingIconColor = Black18,
+                disabledTrailingIconColor = Black18,
             ),
         keyboardActions =
             KeyboardActions(
                 onSearch = {
                     keyboardController?.hide()
-                    onSearch()
+                    if (searchKeyword.isNotBlank() && searchKeyword != previousKeyword) {
+                        onSearch()
+                    }
                 },
             ),
     )
@@ -100,11 +119,13 @@ fun SearchDiscussionBarPreview() {
     Column {
         SearchDiscussionBar(
             searchKeyword = "코틀린",
+            previousKeyword = "",
             onKeywordChange = {},
             onSearch = {},
         )
         SearchDiscussionBar(
             searchKeyword = "",
+            previousKeyword = "코틀린",
             onKeywordChange = {},
             onSearch = {},
         )
