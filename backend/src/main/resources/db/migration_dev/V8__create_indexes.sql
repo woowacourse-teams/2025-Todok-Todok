@@ -1,4 +1,4 @@
--- Member.nickname에 인덱스 추가
+-- Member.nickname, Member.id에 인덱스 추가
 -- 닉네임으로 회원 조회 시 인덱스 적용
 ALTER TABLE member ADD INDEX member_nickname_idx (nickname, id);
 
