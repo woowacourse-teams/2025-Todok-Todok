@@ -64,7 +64,6 @@ class ModifyProfileViewModel(
                 }.onSuccess {
                     val (newNickname, newMessage) = it
                     modifyProfile(newNickname, newMessage)
-                    onUiEvent(ModifyProfileUiEvent.OnCompleteModification)
                 }.onFailure {
                     onUiEvent(ModifyProfileUiEvent.ShowErrorMessage(it as TodokTodokExceptions))
                 }
