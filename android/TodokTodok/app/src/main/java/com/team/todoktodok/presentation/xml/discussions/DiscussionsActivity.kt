@@ -301,7 +301,7 @@ class DiscussionsActivity : AppCompatActivity() {
 
         val serialized: SerializationFcmNotification? =
             intent.getParcelableCompat(
-                "notification"
+                "notification",
             )
 
         if (serialized == null) return

@@ -13,9 +13,8 @@ import com.team.todoktodok.presentation.core.ext.formatKorean
 
 class NotificationViewHolder(
     private val binding: ItemNotificationBinding,
-    private val updateUnreadStatus: UpdateUnreadStatusClickListener
+    private val updateUnreadStatus: UpdateUnreadStatusClickListener,
 ) : RecyclerView.ViewHolder(binding.root) {
-
     init {
         binding.root.setOnClickListener {
             updateUnreadStatus.onClick(bindingAdapterPosition - NOTIFICATION_COUNT_SIZE)
@@ -57,9 +56,10 @@ class NotificationViewHolder(
 
     companion object {
         private const val NOTIFICATION_COUNT_SIZE: Int = 1
+
         fun NotificationViewHolder(
             parent: ViewGroup,
-            updateUnreadStatus: UpdateUnreadStatusClickListener
+            updateUnreadStatus: UpdateUnreadStatusClickListener,
         ): NotificationViewHolder {
             val layoutInflater = LayoutInflater.from(parent.context)
             val binding = ItemNotificationBinding.inflate(layoutInflater, parent, false)

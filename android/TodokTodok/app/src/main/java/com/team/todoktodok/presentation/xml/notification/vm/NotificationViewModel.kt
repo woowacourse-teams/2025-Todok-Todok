@@ -30,11 +30,13 @@ class NotificationViewModel(
     fun deleteNotification(position: Int) {
         val notification = _uiState.value?.notification(position - 1) ?: return
         viewModelScope.launch {
-            notificationRepository.deleteNotification(notification.id).onSuccess {
-                _uiState.value = _uiState.value?.deleteNotification(position - 1)
-            }.onFailure { exception ->
-                _uiEvent.setValue(NotificationUiEvent.ShowException(exception))
-            }
+            notificationRepository
+                .deleteNotification(notification.id)
+                .onSuccess {
+                    _uiState.value = _uiState.value?.deleteNotification(position - 1)
+                }.onFailure { exception ->
+                    _uiEvent.setValue(NotificationUiEvent.ShowException(exception))
+                }
         }
     }
 
@@ -61,11 +63,13 @@ class NotificationViewModel(
     fun updateUnReadStatus(position: Int) {
         val readNotification = _uiState.value?.notification(position) ?: return
         viewModelScope.launch {
-            notificationRepository.readNotification(readNotification.id).onSuccess {
-                _uiEvent.setValue(NotificationUiEvent.NavigateToDiscussionRoom(readNotification.notificationContent.discussionId))
-            }.onFailure { exceptions ->
-                _uiEvent.setValue(NotificationUiEvent.ShowException(exceptions))
-            }
+            notificationRepository
+                .readNotification(readNotification.id)
+                .onSuccess {
+                    _uiEvent.setValue(NotificationUiEvent.NavigateToDiscussionRoom(readNotification.notificationContent.discussionId))
+                }.onFailure { exceptions ->
+                    _uiEvent.setValue(NotificationUiEvent.ShowException(exceptions))
+                }
         }
     }
 }

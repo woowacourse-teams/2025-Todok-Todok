@@ -33,7 +33,7 @@ class FirebaseAdapter : FirebaseMessagingService() {
             if (task.isSuccessful) {
                 val fId = task.result
                 CoroutineScope(Dispatchers.IO).launch {
-                    Log.d("test", "${token}")
+                    Log.d("test", "$token")
                     notificationRepository.registerPushNotification(token, fId)
                 }
             }
@@ -56,12 +56,14 @@ class FirebaseAdapter : FirebaseMessagingService() {
                     putExtra(KEY_NOTIFICATION_DATA, fcmNotification.toSerialization())
                 }
 
-            val pendingIntent = TaskStackBuilder.create(this)
-                .addNextIntentWithParentStack(intent)
-                .getPendingIntent(
-                    (fcmNotification.discussionId ?: 0L).hashCode(),
-                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-                )
+            val pendingIntent =
+                TaskStackBuilder
+                    .create(this)
+                    .addNextIntentWithParentStack(intent)
+                    .getPendingIntent(
+                        (fcmNotification.discussionId ?: 0L).hashCode(),
+                        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+                    )
 
             val alert =
                 NotificationCompat
@@ -77,12 +79,12 @@ class FirebaseAdapter : FirebaseMessagingService() {
 
             if (NotificationManagerCompat.from(this).areNotificationsEnabled() &&
                 (
-                        Build.VERSION.SDK_INT < 33 ||
-                                ActivityCompat.checkSelfPermission(
-                                    this,
-                                    Manifest.permission.POST_NOTIFICATIONS,
-                                ) == PackageManager.PERMISSION_GRANTED
-                        )
+                    Build.VERSION.SDK_INT < 33 ||
+                        ActivityCompat.checkSelfPermission(
+                            this,
+                            Manifest.permission.POST_NOTIFICATIONS,
+                        ) == PackageManager.PERMISSION_GRANTED
+                )
             ) {
                 NotificationManagerCompat
                     .from(this)

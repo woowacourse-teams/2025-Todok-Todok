@@ -8,8 +8,7 @@ import com.team.todoktodok.presentation.xml.notification.adapter.NotificationVie
 
 class NotificationAdapter(
     val updateUnreadStatus: NotificationViewHolder.UpdateUnreadStatusClickListener,
-) :
-    androidx.recyclerview.widget.ListAdapter<NotificationGroup, RecyclerView.ViewHolder>(
+) : androidx.recyclerview.widget.ListAdapter<NotificationGroup, RecyclerView.ViewHolder>(
         NotificationDiffUtil(),
     ) {
     override fun getItemViewType(position: Int): Int =
@@ -24,9 +23,10 @@ class NotificationAdapter(
         viewType: Int,
     ): RecyclerView.ViewHolder =
         when (viewType) {
-            R.layout.item_notification_count -> NotificationCountViewHolder.Companion.NotificationCountViewHolder(
-                parent
-            )
+            R.layout.item_notification_count ->
+                NotificationCountViewHolder.Companion.NotificationCountViewHolder(
+                    parent,
+                )
 
             R.layout.item_notification -> NotificationViewHolder(parent, updateUnreadStatus)
             R.layout.item_notification_information -> NotificationInformationViewHolder(parent)

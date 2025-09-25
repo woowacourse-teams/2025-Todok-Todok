@@ -13,7 +13,8 @@ data class NotificationUiState(
     val notificationGroup: List<NotificationGroup> =
         listOf(
             NotificationGroup.Count(notificationCount),
-            *notifications.sortedByDescending { it.createdAt }
+            *notifications
+                .sortedByDescending { it.createdAt }
                 .map { NotificationGroup.Notification(it) }
                 .toTypedArray(),
             NotificationGroup.Information,
@@ -25,7 +26,7 @@ data class NotificationUiState(
         return NotificationUiState(
             isLoading = false,
             notificationCount = this.notificationCount - minus,
-            notifications = notifications.filterIndexed { index, notification -> index != position }
+            notifications = notifications.filterIndexed { index, notification -> index != position },
         )
     }
 }
