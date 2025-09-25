@@ -36,6 +36,7 @@ import kotlinx.coroutines.launch
 fun DiscussionsScreen(
     exceptionMessageConverter: ExceptionMessageConverter,
     viewModel: DiscussionsViewModel,
+    onClickNotification: () -> Unit,
     onClickProfile: () -> Unit,
     onDiscussionClick: (Long) -> Unit,
     onClickMyDiscussionHeader: (UserProfileTab) -> Unit,
@@ -68,6 +69,7 @@ fun DiscussionsScreen(
     }
 
     LaunchedEffect(Unit) {
+        viewModel.loadIsUnreadNotification()
         viewModel.loadHotDiscussions()
         viewModel.loadLatestDiscussions()
         viewModel.loadMyDiscussions()
@@ -80,6 +82,7 @@ fun DiscussionsScreen(
         onDiscussionClick = onDiscussionClick,
         onClickMyDiscussionHeader = onClickMyDiscussionHeader,
         onSearchKeywordChanged = viewModel::modifySearchKeyword,
+        onClickNotification = onClickNotification,
         onClickProfile = onClickProfile,
         onSearch = viewModel::loadSearchedDiscussions,
         onLatestDiscussionLoadMore = viewModel::loadLatestDiscussions,
@@ -97,6 +100,7 @@ fun DiscussionsScreen(
     onDiscussionClick: (Long) -> Unit,
     onClickMyDiscussionHeader: (UserProfileTab) -> Unit,
     onSearchKeywordChanged: (String) -> Unit,
+    onClickNotification: () -> Unit,
     onClickProfile: () -> Unit,
     onSearch: () -> Unit,
     onLatestDiscussionLoadMore: () -> Unit,
@@ -108,8 +112,10 @@ fun DiscussionsScreen(
         topBar = {
             DiscussionToolbar(
                 searchKeyword = uiState.allDiscussions.searchDiscussion.searchKeyword,
+                isExistNotification = uiState.isUnreadNotification,
                 onSearchKeywordChanged = { onSearchKeywordChanged(it) },
                 onSearch = { onSearch() },
+                onClickNotification = { onClickNotification() },
                 onClickProfile = { onClickProfile() },
                 modifier =
                     Modifier
@@ -155,6 +161,7 @@ fun DiscussionsScreenPreview() {
         onDiscussionClick = {},
         onClickMyDiscussionHeader = {},
         onSearchKeywordChanged = {},
+        onClickNotification = {},
         onClickProfile = {},
         onSearch = {},
         onLatestDiscussionLoadMore = {},

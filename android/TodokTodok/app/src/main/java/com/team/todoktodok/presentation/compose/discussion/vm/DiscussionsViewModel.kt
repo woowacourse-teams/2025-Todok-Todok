@@ -5,10 +5,13 @@ import com.team.domain.ConnectivityObserver
 import com.team.domain.model.Discussion
 import com.team.domain.model.active.ActivatedDiscussionPage
 import com.team.domain.model.exception.NetworkResult
+import com.team.domain.model.exception.onFailure
+import com.team.domain.model.exception.onSuccess
 import com.team.domain.model.member.MemberDiscussionType
 import com.team.domain.model.member.MemberId
 import com.team.domain.repository.DiscussionRepository
 import com.team.domain.repository.MemberRepository
+import com.team.domain.repository.NotificationRepository
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionsUiEvent
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionsUiState
 import com.team.todoktodok.presentation.core.base.BaseViewModel
@@ -25,6 +28,7 @@ import kotlinx.coroutines.launch
 class DiscussionsViewModel(
     private val discussionRepository: DiscussionRepository,
     private val memberRepository: MemberRepository,
+    private val notificationRepository: NotificationRepository,
     networkConnectivityObserver: ConnectivityObserver,
 ) : BaseViewModel(networkConnectivityObserver) {
     private val _uiState = MutableStateFlow(DiscussionsUiState())
@@ -32,6 +36,18 @@ class DiscussionsViewModel(
 
     private val _uiEvent = Channel<DiscussionsUiEvent>(Channel.BUFFERED)
     val uiEvent get() = _uiEvent.receiveAsFlow()
+
+    fun loadIsUnreadNotification() {
+        viewModelScope.launch {
+            notificationRepository
+                .getUnreadNotificationsCount()
+                .onSuccess { isExist ->
+                    _uiState.update { it.changeUnreadNotification(isExist) }
+                }.onFailure { exceptions ->
+                    onUiEvent(DiscussionsUiEvent.ShowErrorMessage(exceptions))
+                }
+        }
+    }
 
     fun loadSearchedDiscussions() {
         val keyword = _uiState.value.allDiscussions.searchDiscussion.searchKeyword

@@ -5,10 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.team.domain.model.exception.onFailure
-import com.team.domain.model.exception.onSuccess
+import com.team.domain.model.exception.onSuccessSuspend
 import com.team.domain.model.member.MemberType
 import com.team.domain.model.member.MemberType.Companion.MemberType
 import com.team.domain.repository.MemberRepository
+import com.team.domain.repository.NotificationRepository
 import com.team.domain.repository.TokenRepository
 import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
 import com.team.todoktodok.presentation.core.event.SingleLiveData
@@ -19,6 +20,7 @@ import kotlinx.coroutines.launch
 class AuthViewModel(
     private val memberRepository: MemberRepository,
     private val tokenRepository: TokenRepository,
+    private val notificationRepository: NotificationRepository,
 ) : ViewModel() {
     private val _isLoading: MutableLiveData<Boolean> = MutableLiveData(false)
     val isLoading: MutableLiveData<Boolean> get() = _isLoading
@@ -36,6 +38,7 @@ class AuthViewModel(
             when (MemberType(memberId)) {
                 MemberType.USER -> {
                     delay(SPLASH_DURATION)
+                    notificationRepository.registerPushNotification()
                     onUiEvent(LoginUiEvent.NavigateToMain)
                 }
 
@@ -56,9 +59,13 @@ class AuthViewModel(
                     email,
                     nickname ?: NOT_EXIST_NICKNAME,
                     profileImage?.toString() ?: NOT_EXIST_PROFILE_IMAGE,
-                ).onSuccess { type: MemberType ->
+                ).onSuccessSuspend { type: MemberType ->
                     when (type) {
-                        MemberType.USER -> onUiEvent(LoginUiEvent.NavigateToMain)
+                        MemberType.USER -> {
+                            notificationRepository.registerPushNotification()
+                            onUiEvent(LoginUiEvent.NavigateToMain)
+                        }
+
                         MemberType.TEMP_USER -> onUiEvent(LoginUiEvent.NavigateToSignUp)
                     }
                 }.onFailure {

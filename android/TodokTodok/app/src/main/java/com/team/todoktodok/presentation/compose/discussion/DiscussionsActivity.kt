@@ -13,9 +13,13 @@ import com.team.todoktodok.presentation.compose.discussion.vm.DiscussionsViewMod
 import com.team.todoktodok.presentation.compose.discussion.vm.DiscussionsViewModelFactory
 import com.team.todoktodok.presentation.compose.theme.TodoktodokTheme
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
+import com.team.todoktodok.presentation.core.ext.getParcelableCompat
+import com.team.todoktodok.presentation.view.serialization.SerializationNotificationType
 import com.team.todoktodok.presentation.xml.discussiondetail.DiscussionDetailActivity
+import com.team.todoktodok.presentation.xml.notification.NotificationActivity
 import com.team.todoktodok.presentation.xml.profile.ProfileActivity
 import com.team.todoktodok.presentation.xml.profile.UserProfileTab
+import com.team.todoktodok.presentation.xml.serialization.SerializationFcmNotification
 
 class DiscussionsActivity : ComponentActivity() {
     private val viewModel: DiscussionsViewModel by viewModels {
@@ -24,6 +28,7 @@ class DiscussionsActivity : ComponentActivity() {
         DiscussionsViewModelFactory(
             repositoryModule.discussionRepository,
             repositoryModule.memberRepository,
+            repositoryModule.notificationRepository,
             container.connectivityObserver,
         )
     }
@@ -70,15 +75,32 @@ class DiscussionsActivity : ComponentActivity() {
                     viewModel = viewModel,
                     exceptionMessageConverter = messageConverter,
                     onDiscussionClick = ::moveToDiscussionDetail,
+                    onClickNotification = ::moveToNotification,
                     onClickMyDiscussionHeader = ::moveToProfile,
                     onClickProfile = ::moveToProfile,
                 )
             }
         }
+        handleNotificationDeepLink(intent)
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        handleNotificationDeepLink(intent)
+    }
+
+    private fun moveToNotification() {
+        startActivity(NotificationActivity.Intent(this))
     }
 
     private fun moveToDiscussionDetail(discussionId: Long) {
-        discussionDetailLauncher.launch(DiscussionDetailActivity.Companion.Intent(this, discussionId))
+        discussionDetailLauncher.launch(
+            DiscussionDetailActivity.Companion.Intent(
+                this,
+                discussionId,
+            ),
+        )
     }
 
     private fun moveToProfile() {
@@ -108,6 +130,47 @@ class DiscussionsActivity : ComponentActivity() {
     override fun onResume() {
         super.onResume()
         viewModel.loadMyDiscussions()
+    }
+
+    private fun handleNotificationDeepLink(intent: Intent) {
+        val notification: SerializationFcmNotification? =
+            intent.getParcelableCompat<SerializationFcmNotification>("notification") as? SerializationFcmNotification
+                ?: null
+
+        triggerToMoveDiscussionDetail(notification)
+    }
+
+    private fun DiscussionsActivity.triggerToMoveDiscussionDetail(notification: SerializationFcmNotification?) {
+        if (notification != null) {
+            when (notification.type) {
+                SerializationNotificationType.LIKE -> {
+                    val detailIntent =
+                        DiscussionDetailActivity.Intent(
+                            this,
+                            notification.discussionId,
+                        )
+                    startActivity(detailIntent)
+                }
+
+                SerializationNotificationType.COMMENT -> {
+                    val detailIntent =
+                        DiscussionDetailActivity.Intent(
+                            this,
+                            notification.discussionId,
+                        )
+                    startActivity(detailIntent)
+                }
+
+                SerializationNotificationType.REPLY -> {
+                    val detailIntent =
+                        DiscussionDetailActivity.Intent(
+                            this,
+                            notification.discussionId,
+                        )
+                    startActivity(detailIntent)
+                }
+            }
+        }
     }
 
     companion object {

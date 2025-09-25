@@ -18,7 +18,10 @@ import com.team.todoktodok.presentation.xml.auth.signup.vm.SignUpViewModelFactor
 class SignUpFragment : Fragment(R.layout.fragment_signup) {
     private val viewModel: SignUpViewModel by viewModels {
         val repositoryModule = (requireActivity().application as App).container.repositoryModule
-        SignUpViewModelFactory(repositoryModule.memberRepository)
+        SignUpViewModelFactory(
+            repositoryModule.memberRepository,
+            repositoryModule.notificationRepository,
+        )
     }
 
     private lateinit var messageConverter: ExceptionMessageConverter
