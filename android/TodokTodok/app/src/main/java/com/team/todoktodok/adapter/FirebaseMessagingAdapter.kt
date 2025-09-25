@@ -25,7 +25,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class FirebaseAdapter : FirebaseMessagingService() {
+class FirebaseMessagingAdapter : FirebaseMessagingService() {
     private val notificationRepository by lazy { (application as App).container.repositoryModule.notificationRepository }
 
     override fun onNewToken(token: String) {
@@ -62,12 +62,12 @@ class FirebaseAdapter : FirebaseMessagingService() {
     ) {
         if (NotificationManagerCompat.from(this).areNotificationsEnabled() &&
             (
-                Build.VERSION.SDK_INT < 33 ||
-                    ActivityCompat.checkSelfPermission(
-                        this,
-                        Manifest.permission.POST_NOTIFICATIONS,
-                    ) == PackageManager.PERMISSION_GRANTED
-            )
+                    Build.VERSION.SDK_INT < 33 ||
+                            ActivityCompat.checkSelfPermission(
+                                this,
+                                Manifest.permission.POST_NOTIFICATIONS,
+                            ) == PackageManager.PERMISSION_GRANTED
+                    )
         ) {
             NotificationManagerCompat
                 .from(this)
