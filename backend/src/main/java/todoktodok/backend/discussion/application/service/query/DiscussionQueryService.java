@@ -26,7 +26,9 @@ import todoktodok.backend.discussion.application.dto.response.DiscussionResponse
 import todoktodok.backend.discussion.application.dto.response.LatestDiscussionPageResponse;
 import todoktodok.backend.discussion.application.dto.response.PageInfo;
 import todoktodok.backend.discussion.domain.Discussion;
+import todoktodok.backend.discussion.domain.DiscussionMemberView;
 import todoktodok.backend.discussion.domain.repository.DiscussionLikeRepository;
+import todoktodok.backend.discussion.domain.repository.DiscussionMemberViewRepository;
 import todoktodok.backend.discussion.domain.repository.DiscussionRepository;
 import todoktodok.backend.member.domain.Member;
 import todoktodok.backend.member.domain.repository.MemberRepository;
@@ -42,12 +44,14 @@ public class DiscussionQueryService {
     private static final int MAX_HOT_DISCUSSION_PERIOD = 365;
     private static final int MAX_PAGE_SIZE = 50;
     private static final int MIN_PAGE_SIZE = 1;
+    private static final int VIEW_THRESHOLD = 10;
 
     private final DiscussionRepository discussionRepository;
     private final DiscussionLikeRepository discussionLikeRepository;
     private final MemberRepository memberRepository;
     private final CommentRepository commentRepository;
     private final ReplyRepository replyRepository;
+    private final DiscussionMemberViewRepository discussionMemberViewRepository;
 
     public DiscussionResponse getDiscussion(
             final Long memberId,
@@ -63,12 +67,26 @@ public class DiscussionQueryService {
         );
         final boolean isLikedByMe = discussionLikeRepository.existsByMemberAndDiscussion(member, discussion);
 
-        return new DiscussionResponse(
-                discussion,
-                likeCount,
-                commentCount,
-                isLikedByMe
-        );
+        Optional<DiscussionMemberView> discussionMemberView = discussionMemberViewRepository.findByMemberAndDiscussion(
+                member, discussion);
+
+        if (discussionMemberView.isEmpty()) {
+            discussionMemberView = Optional.ofNullable(DiscussionMemberView.builder()
+                    .discussion(discussion)
+                    .member(member)
+                    .build());
+            discussionMemberViewRepository.save(discussionMemberView.get());
+        }
+
+        if (discussion.isFirstView()) {
+            discussion.updateViewCount();
+        }
+
+        if (discussionMemberView.get().isModifiedDatePassedFrom(VIEW_THRESHOLD)) {
+            discussion.updateViewCount();
+        }
+
+        return new DiscussionResponse(discussion, likeCount, commentCount, isLikedByMe);
     }
 
     public LatestDiscussionPageResponse getDiscussions(
@@ -190,7 +208,7 @@ public class DiscussionQueryService {
     }
 
     private Member findMember(final Long memberId) {
-        return memberRepository.findById(memberId)
+        return memberRepository.findByIdAndDeletedAtIsNull(memberId)
                 .orElseThrow(() -> new NoSuchElementException(
                                 String.format("해당 회원을 찾을 수 없습니다: memberId= %s", memberId)
                         )
@@ -294,7 +312,6 @@ public class DiscussionQueryService {
                 })
                 .toList();
     }
-
 
     private Map<Long, Integer> getTotalCommentCountsByDiscussionId(
             final List<DiscussionCommentCountDto> commentCounts) {

@@ -1,6 +1,7 @@
 package todoktodok.backend.global.exception;
 
 import io.jsonwebtoken.JwtException;
+import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import todoktodok.backend.book.infrastructure.aladin.exception.AladinApiException;
+import todoktodok.backend.member.infrastructure.exception.AwsApiException;
+import todoktodok.backend.notification.exception.NotificationForbiddenException;
 
 @Slf4j
 @RestControllerAdvice
@@ -23,6 +26,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(JwtException.class)
     public ResponseEntity<ErrorResponse> handleJwtException(final JwtException e) {
         final HttpStatus status = HttpStatus.UNAUTHORIZED;
+        log.warn(PREFIX + e.getMessage());
 
         return ResponseEntity.status(status)
                 .body(new ErrorResponse(status.value(), PREFIX + e.getMessage()));
@@ -44,6 +48,15 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(status)
                 .body(new ErrorResponse(status.value(), PREFIX + getSafeErrorMessage(e)));
+    }
+
+    @ExceptionHandler(NotificationForbiddenException.class)
+    public ResponseEntity<ErrorResponse> handleNotificationForbiddenException(final NotificationForbiddenException e) {
+        final HttpStatus status = HttpStatus.FORBIDDEN;
+        log.error(PREFIX + e.getMessage());
+
+        return ResponseEntity.status(status)
+                .body(new ErrorResponse(status.value(), PREFIX + e.getMessage()));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -95,6 +108,15 @@ public class GlobalExceptionHandler {
                 ));
     }
 
+    @ExceptionHandler(ConcurrentModificationException.class)
+    public ResponseEntity<ErrorResponse> handleConcurrentModificationException(final ConcurrentModificationException e) {
+        final HttpStatus status = HttpStatus.CONFLICT;
+        log.warn(PREFIX + e.getMessage());
+
+        return ResponseEntity.status(status)
+                .body(new ErrorResponse(status.value(), PREFIX + getSafeErrorMessage(e)));
+    }
+
     @ExceptionHandler(IllegalStateException.class)
     public ResponseEntity<ErrorResponse> handleIllegalStateException(final IllegalStateException e) {
         final HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
@@ -120,6 +142,15 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(status)
                 .body(new ErrorResponse(status.value(), PREFIX + getSafeErrorMessage(e)));
+    }
+
+    @ExceptionHandler(AwsApiException.class)
+    public ResponseEntity<ErrorResponse> handleAwsApiException(final AwsApiException e) {
+        final HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+        log.error(PREFIX + e.getMessage());
+
+        return ResponseEntity.status(status)
+                .body(new ErrorResponse(status.value(), PREFIX + "AWS 처리 중 오류가 발생했습니다"));
     }
 
     private String toSafeLogValue(

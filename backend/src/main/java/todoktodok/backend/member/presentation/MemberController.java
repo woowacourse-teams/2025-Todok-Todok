@@ -4,16 +4,20 @@ import jakarta.validation.Valid;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import todoktodok.backend.book.application.dto.response.BookResponse;
 import todoktodok.backend.discussion.application.dto.response.DiscussionResponse;
 import todoktodok.backend.global.auth.Auth;
@@ -23,10 +27,14 @@ import todoktodok.backend.global.resolver.TempMember;
 import todoktodok.backend.member.application.dto.request.LoginRequest;
 import todoktodok.backend.member.application.dto.request.MemberReportRequest;
 import todoktodok.backend.member.application.dto.request.ProfileUpdateRequest;
+import todoktodok.backend.member.application.dto.request.RefreshTokenRequest;
 import todoktodok.backend.member.application.dto.request.SignupRequest;
 import todoktodok.backend.member.application.dto.response.BlockMemberResponse;
+import todoktodok.backend.member.application.dto.response.ProfileImageUpdateResponse;
 import todoktodok.backend.member.application.dto.response.ProfileResponse;
 import todoktodok.backend.member.application.dto.response.ProfileUpdateResponse;
+import todoktodok.backend.member.application.dto.response.RefreshTokenResponse;
+import todoktodok.backend.member.application.dto.response.TokenResponse;
 import todoktodok.backend.member.application.service.command.MemberCommandService;
 import todoktodok.backend.member.application.service.query.MemberQueryService;
 import todoktodok.backend.member.domain.MemberDiscussionFilterType;
@@ -41,23 +49,45 @@ public class MemberController implements MemberApiDocs {
 
     @Auth(value = Role.GUEST)
     @PostMapping("/login")
-    public ResponseEntity<Void> login(
+    public ResponseEntity<RefreshTokenResponse> login(
             @RequestBody @Valid final LoginRequest loginRequest
     ) {
+        final TokenResponse tokenResponse = memberCommandService.login(loginRequest);
+
         return ResponseEntity.status(HttpStatus.OK)
-                .header("Authorization", memberCommandService.login(loginRequest))
-                .build();
+                .header("Authorization", tokenResponse.accessToken())
+                .header("Cache-Control", "no-store")
+                .header("Pragma", "no-cache")
+                .body(new RefreshTokenResponse(tokenResponse.refreshToken()));
     }
 
     @Auth(value = Role.TEMP_USER)
     @PostMapping("/signup")
-    public ResponseEntity<Void> signup(
+    public ResponseEntity<RefreshTokenResponse> signup(
             @TempMember final String memberEmail,
             @RequestBody @Valid final SignupRequest signupRequest
     ) {
+        final TokenResponse tokenResponse = memberCommandService.signup(signupRequest, memberEmail);
+
         return ResponseEntity.status(HttpStatus.CREATED)
-                .header("Authorization", memberCommandService.signup(signupRequest, memberEmail))
-                .build();
+                .header("Authorization", tokenResponse.accessToken())
+                .header("Cache-Control", "no-store")
+                .header("Pragma", "no-cache")
+                .body(new RefreshTokenResponse(tokenResponse.refreshToken()));
+    }
+
+    @Auth(value = Role.EXPIRED_USER)
+    @PostMapping("/refresh")
+    public ResponseEntity<RefreshTokenResponse> refresh(
+            @RequestBody @Valid final RefreshTokenRequest refreshTokenRequest
+    ) {
+        final TokenResponse tokenResponse = memberCommandService.refresh(refreshTokenRequest);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .header("Authorization", tokenResponse.accessToken())
+                .header("Cache-Control", "no-store")
+                .header("Pragma", "no-cache")
+                .body(new RefreshTokenResponse(tokenResponse.refreshToken()));
     }
 
     @Auth(value = Role.USER)
@@ -128,6 +158,27 @@ public class MemberController implements MemberApiDocs {
     ) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(memberCommandService.updateProfile(memberId, profileUpdateRequest));
+    }
+
+    @Auth(value = Role.USER)
+    @PatchMapping(value = "/profile/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ProfileImageUpdateResponse> updateProfileImage(
+            @LoginMember final Long memberId,
+            @RequestPart("profileImage") final MultipartFile profileImage
+    ) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(memberCommandService.updateProfileImage(memberId, profileImage));
+    }
+
+    @Auth(value = Role.USER)
+    @DeleteMapping
+    public ResponseEntity<Void> deleteMember(
+            @LoginMember final Long memberId,
+            @RequestBody @Valid final RefreshTokenRequest refreshTokenRequest
+    ) {
+        memberCommandService.deleteMember(memberId, refreshTokenRequest);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .build();
     }
 
     @Auth(value = Role.USER)

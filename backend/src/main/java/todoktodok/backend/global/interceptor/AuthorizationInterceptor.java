@@ -41,12 +41,12 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
         final Auth auth = method.getAnnotation(Auth.class);
         final Role requiredRole = auth.value();
 
-        if (requiredRole == Role.GUEST) {
+        if (requiredRole == Role.GUEST || requiredRole == Role.EXPIRED_USER) {
             return true;
         }
 
         final String token = request.getHeader("Authorization");
-        final TokenInfo tokenInfo = jwtTokenProvider.getInfo(token);
+        final TokenInfo tokenInfo = jwtTokenProvider.getInfoByAccessToken(token);
 
         if (tokenInfo.role() == requiredRole) {
             return true;

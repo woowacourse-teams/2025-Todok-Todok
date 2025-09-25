@@ -3,6 +3,7 @@ package todoktodok.backend.comment.application.service.command;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.comment.application.dto.request.CommentRequest;
@@ -31,6 +32,8 @@ public class CommentCommandService {
     private final CommentLikeRepository commentLikeRepository;
     private final ReplyRepository replyRepository;
 
+    private final ApplicationEventPublisher publisher;
+
     public Long createComment(
             final Long memberId,
             final Long discussionId,
@@ -46,6 +49,8 @@ public class CommentCommandService {
                 .build();
 
         final Comment savedComment = commentRepository.save(comment);
+        publisher.publishEvent(new CommentCreated(discussion, savedComment, member));
+
         return savedComment.getId();
     }
 
@@ -72,6 +77,8 @@ public class CommentCommandService {
                 .build();
 
         commentLikeRepository.save(commentLike);
+        publisher.publishEvent(new CommentLikeCreated(discussion, comment, member));
+
         return true;
     }
 
@@ -133,7 +140,7 @@ public class CommentCommandService {
     }
 
     private Member findMember(final Long memberId) {
-        return memberRepository.findById(memberId)
+        return memberRepository.findByIdAndDeletedAtIsNull(memberId)
                 .orElseThrow(() -> new NoSuchElementException(String.format("해당 회원을 찾을 수 없습니다: memberId = %s", memberId)));
     }
 

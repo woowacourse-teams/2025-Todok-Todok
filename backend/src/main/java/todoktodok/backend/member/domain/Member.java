@@ -13,7 +13,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.SQLRestriction;
 import todoktodok.backend.global.common.TimeStamp;
 
 @Getter
@@ -21,7 +20,6 @@ import todoktodok.backend.global.common.TimeStamp;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 
 @Entity
-@SQLRestriction("deleted_at is NULL")
 @SQLDelete(sql = "UPDATE member SET deleted_at = NOW() WHERE id = ?")
 public class Member extends TimeStamp {
 
@@ -69,6 +67,18 @@ public class Member extends TimeStamp {
 
         this.nickname = nickname;
         this.profileMessage = profileMessage;
+    }
+
+    public void updateProfileImage(final String profileImage) {
+        this.profileImage = profileImage;
+    }
+
+    public void resignUp() {
+        if (isDeleted()) {
+            cancelDeletion();
+            return;
+        }
+        throw new IllegalStateException(String.format("탈퇴한 회원이 아닙니다: memberId = %s", this.id));
     }
 
     public boolean isMyNickname(final String nickname) {

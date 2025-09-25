@@ -34,6 +34,7 @@ spring:
       on-profile: prod
     import:
       - submodule/security/database.yml
+      - submodule/security/firebase.yml
 
 management:
   endpoints:
@@ -49,4 +50,13 @@ management:
       percentiles-histogram:
         http:
           server:
-          requests: true
+            requests: true
+
+firebase:
+  enabled: true
+  account:
+    path: ${firebase.account.path}
+
+jwt:
+  access-token:
+    expire-mills: ${jwt.access-token.prod.expire-mills}

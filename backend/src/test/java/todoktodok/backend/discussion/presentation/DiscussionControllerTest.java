@@ -51,7 +51,7 @@ class DiscussionControllerTest {
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
 
-        final String token = MemberFixture.login("user@gmail.com");
+        final String token = MemberFixture.getAccessToken("user@gmail.com");
 
         final DiscussionRequest discussionRequest = new DiscussionRequest(
                 1L,
@@ -78,7 +78,7 @@ class DiscussionControllerTest {
 
         databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
 
-        final String token = MemberFixture.login("user@gmail.com");
+        final String token = MemberFixture.getAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -102,7 +102,7 @@ class DiscussionControllerTest {
         databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
         databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
 
-        final String token = MemberFixture.login("user@gmail.com");
+        final String token = MemberFixture.getAccessToken("user@gmail.com");
         final String cursorMeaningThree = "Mw==";
 
         // when - then
@@ -130,7 +130,7 @@ class DiscussionControllerTest {
         databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
         databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
 
-        final String token = MemberFixture.login("user@gmail.com");
+        final String token = MemberFixture.getAccessToken("user@gmail.com");
         final String cursorMeaningFive = "NQ==";
         final String cursorMeaningTwo = "Mg==";
 
@@ -159,7 +159,7 @@ class DiscussionControllerTest {
         databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
         databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
 
-        final String token = MemberFixture.login("user@gmail.com");
+        final String token = MemberFixture.getAccessToken("user@gmail.com");
         final String cursorMeaningFour = "NA==";
 
         // when - then
@@ -183,7 +183,7 @@ class DiscussionControllerTest {
 
         databaseInitializer.setDiscussionInfo("오브젝트", "오브젝트 토론입니다", 1L, 1L);
 
-        final String token = MemberFixture.login("user@gmail.com");
+        final String token = MemberFixture.getAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -204,7 +204,7 @@ class DiscussionControllerTest {
 
         databaseInitializer.setDiscussionInfo("토론방1", "토론방 내용", 2L, 1L);
 
-        final String token = MemberFixture.login("user@gmail.com");
+        final String token = MemberFixture.getAccessToken("user@gmail.com");
         final DiscussionReportRequest discussionReportRequest = new DiscussionReportRequest("토론 주제와 무관한 내용");
 
         // when - then
@@ -233,7 +233,7 @@ class DiscussionControllerTest {
                 updatedContent
         );
 
-        final String token = MemberFixture.login("user@gmail.com");
+        final String token = MemberFixture.getAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -255,7 +255,7 @@ class DiscussionControllerTest {
 
         databaseInitializer.setDefaultDiscussionInfo();
 
-        final String token = MemberFixture.login("user2@gmail.com");
+        final String token = MemberFixture.getAccessToken("user2@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -276,7 +276,7 @@ class DiscussionControllerTest {
 
         databaseInitializer.setDefaultDiscussionInfo();
 
-        final String token = MemberFixture.login("user@gmail.com");
+        final String token = MemberFixture.getAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -297,7 +297,7 @@ class DiscussionControllerTest {
         databaseInitializer.setDefaultDiscussionInfo();
         databaseInitializer.setDefaultCommentInfo();
 
-        final String token = MemberFixture.login("user@gmail.com");
+        final String token = MemberFixture.getAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -317,7 +317,7 @@ class DiscussionControllerTest {
 
         databaseInitializer.setDefaultDiscussionInfo();
 
-        final String token = MemberFixture.login("user@gmail.com");
+        final String token = MemberFixture.getAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -338,7 +338,7 @@ class DiscussionControllerTest {
         databaseInitializer.setDefaultDiscussionInfo();
         databaseInitializer.setDiscussionLikeInfo(1L, 1L);
 
-        final String token = MemberFixture.login("user@gmail.com");
+        final String token = MemberFixture.getAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -374,7 +374,7 @@ class DiscussionControllerTest {
         databaseInitializer.setCommentInfo("2-2", memberId, 2L, base.minusMinutes(20));
         databaseInitializer.setCommentInfo("1-1", memberId, 1L, base.minusMinutes(10)); // id = 4
 
-        final String token = MemberFixture.login("user@gmail.com");
+        final String token = MemberFixture.getAccessToken("user@gmail.com");
         final int size = 3;
 
         // when - then

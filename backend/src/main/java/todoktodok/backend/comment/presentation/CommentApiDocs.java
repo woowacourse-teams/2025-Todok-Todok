@@ -54,6 +54,17 @@ public interface CommentApiDocs {
                             )
             )),
             @ApiResponse(
+                    responseCode = "401",
+                    description = "액세스 토큰 만료 오류",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "액세스 토큰 만료 오류",
+                                    value = "{\"code\":401, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
+                            )
+                    )),
+            @ApiResponse(
                     responseCode = "404",
                     description = "존재하지 않는 리소스",
                     content = @Content(
@@ -133,6 +144,17 @@ public interface CommentApiDocs {
                                     value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
                             )
             )),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "액세스 토큰 만료 오류",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "액세스 토큰 만료 오류",
+                                    value = "{\"code\":401, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
+                            )
+                    )),
             @ApiResponse(
                     responseCode = "404",
                     description = "존재하지 않는 리소스",
@@ -222,6 +244,17 @@ public interface CommentApiDocs {
                                     value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
                             )
             )),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "액세스 토큰 만료 오류",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "액세스 토큰 만료 오류",
+                                    value = "{\"code\":401, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
+                            )
+                    )),
             @ApiResponse(
                     responseCode = "404",
                     description = "존재하지 않는 리소스",
@@ -338,6 +371,17 @@ public interface CommentApiDocs {
                             )
             )),
             @ApiResponse(
+                    responseCode = "401",
+                    description = "액세스 토큰 만료 오류",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "액세스 토큰 만료 오류",
+                                    value = "{\"code\":401, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
+                            )
+                    )),
+            @ApiResponse(
                     responseCode = "404",
                     description = "존재하지 않는 리소스",
                     content = @Content(
@@ -426,6 +470,17 @@ public interface CommentApiDocs {
                                     value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
                             )
             )),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "액세스 토큰 만료 오류",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "액세스 토큰 만료 오류",
+                                    value = "{\"code\":401, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
+                            )
+                    )),
             @ApiResponse(
                     responseCode = "404",
                     description = "존재하지 않는 리소스",
@@ -519,6 +574,17 @@ public interface CommentApiDocs {
                                     value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
                             )
             )),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "액세스 토큰 만료 오류",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "액세스 토큰 만료 오류",
+                                    value = "{\"code\":401, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
+                            )
+                    )),
             @ApiResponse(
                     responseCode = "404",
                     description = "존재하지 않는 리소스",
@@ -616,6 +682,17 @@ public interface CommentApiDocs {
                                     value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
                             )
             )),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "액세스 토큰 만료 오류",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "액세스 토큰 만료 오류",
+                                    value = "{\"code\":401, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
+                            )
+                    )),
             @ApiResponse(
                     responseCode = "404",
                     description = "존재하지 않는 리소스",
