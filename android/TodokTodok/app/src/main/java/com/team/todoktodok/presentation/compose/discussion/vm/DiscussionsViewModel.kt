@@ -9,6 +9,7 @@ import com.team.domain.model.member.MemberDiscussionType
 import com.team.domain.model.member.MemberId
 import com.team.domain.repository.DiscussionRepository
 import com.team.domain.repository.MemberRepository
+import com.team.domain.repository.NotificationRepository
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionsUiEvent
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionsUiState
 import com.team.todoktodok.presentation.core.base.BaseViewModel
@@ -25,6 +26,7 @@ import kotlinx.coroutines.launch
 class DiscussionsViewModel(
     private val discussionRepository: DiscussionRepository,
     private val memberRepository: MemberRepository,
+    private val notificationRepository: NotificationRepository,
     networkConnectivityObserver: ConnectivityObserver,
 ) : BaseViewModel(networkConnectivityObserver) {
     private val _uiState = MutableStateFlow(DiscussionsUiState())
