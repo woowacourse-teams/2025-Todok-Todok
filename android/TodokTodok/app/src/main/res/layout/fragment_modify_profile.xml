@@ -41,7 +41,6 @@
             android:layout_height="match_parent"
             android:imeOptions="actionNext"
             android:background="@drawable/bg_green_f0_radius_8dp"
-            android:maxLength="8"
             android:maxLines="1"
             android:textColor="@color/black_18" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -81,7 +80,6 @@
             android:layout_height="match_parent"
             android:imeOptions="actionDone"
             android:background="@drawable/bg_green_f0_radius_8dp"
-            android:maxLength="40"
             android:textColor="@color/black_18" />
     </com.google.android.material.textfield.TextInputLayout>
 

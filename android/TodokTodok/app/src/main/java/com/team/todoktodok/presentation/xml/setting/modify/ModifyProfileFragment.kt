@@ -8,6 +8,9 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.team.domain.model.member.NickNameException
+import com.team.domain.model.member.Nickname
+import com.team.domain.model.member.ProfileException
+import com.team.domain.model.member.ProfileMessage
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentModifyProfileBinding
@@ -51,6 +54,8 @@ class ModifyProfileFragment : Fragment(R.layout.fragment_modify_profile) {
                 binding.etNickname.text = null
             }
 
+            etNickname.maxLines = Nickname.MAX_LENGTH
+
             with(etNickname) {
                 onFocusChangeListener =
                     View.OnFocusChangeListener { v, hasFocus ->
@@ -58,7 +63,7 @@ class ModifyProfileFragment : Fragment(R.layout.fragment_modify_profile) {
                     }
 
                 doAfterTextChanged {
-                    binding.etNicknameLayout.error = null
+                    etNicknameLayout.error = null
                 }
 
                 setOnEditorActionListener { _, actionId, event ->
@@ -81,9 +86,14 @@ class ModifyProfileFragment : Fragment(R.layout.fragment_modify_profile) {
                 binding.etMessage.text = null
             }
 
+            etMessage.maxLines = ProfileMessage.MAX_LENGTH
+
             etMessage.setOnEditorActionListener { _, actionId, event ->
                 if (actionId == EditorInfo.IME_ACTION_DONE ||
-                    (event?.keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_DOWN)
+                    (
+                        event?.keyCode == KeyEvent.KEYCODE_ENTER &&
+                            event.action == KeyEvent.ACTION_DOWN
+                    )
                 ) {
                     btnModify.performClick()
                     true
