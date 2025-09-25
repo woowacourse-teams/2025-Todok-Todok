@@ -11,7 +11,7 @@ data class DiscussionsUiState(
     val hotDiscussion: HotDiscussionUiState = HotDiscussionUiState(),
     val myDiscussion: MyDiscussionUiState = MyDiscussionUiState(),
     val allDiscussions: AllDiscussionsUiState = AllDiscussionsUiState(),
-    val isUnreadNotification: Boolean = false,
+    val isUnreadNotification: Boolean = true,
 ) {
     fun refreshLatestDiscussion(): DiscussionsUiState =
         copy(allDiscussions = allDiscussions.refreshLatestDiscussion())

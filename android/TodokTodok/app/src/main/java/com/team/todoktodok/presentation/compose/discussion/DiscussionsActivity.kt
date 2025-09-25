@@ -13,10 +13,13 @@ import com.team.todoktodok.presentation.compose.discussion.vm.DiscussionsViewMod
 import com.team.todoktodok.presentation.compose.discussion.vm.DiscussionsViewModelFactory
 import com.team.todoktodok.presentation.compose.theme.TodoktodokTheme
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
+import com.team.todoktodok.presentation.core.ext.getParcelableCompat
+import com.team.todoktodok.presentation.view.serialization.SerializationNotificationType
 import com.team.todoktodok.presentation.xml.discussiondetail.DiscussionDetailActivity
 import com.team.todoktodok.presentation.xml.notification.NotificationActivity
 import com.team.todoktodok.presentation.xml.profile.ProfileActivity
 import com.team.todoktodok.presentation.xml.profile.UserProfileTab
+import com.team.todoktodok.presentation.xml.serialization.SerializationFcmNotification
 
 class DiscussionsActivity : ComponentActivity() {
     private val viewModel: DiscussionsViewModel by viewModels {
@@ -78,6 +81,13 @@ class DiscussionsActivity : ComponentActivity() {
                 )
             }
         }
+        handleNotificationDeepLink(intent)
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        handleNotificationDeepLink(intent)
     }
 
     private fun moveToNotification() {
@@ -121,6 +131,48 @@ class DiscussionsActivity : ComponentActivity() {
         super.onResume()
         viewModel.loadMyDiscussions()
     }
+
+    private fun handleNotificationDeepLink(intent: Intent) {
+        val notification: SerializationFcmNotification? =
+            intent.getParcelableCompat<SerializationFcmNotification>("notification") as? SerializationFcmNotification
+                ?: null
+
+        triggerToMoveDiscussionDetail(notification)
+    }
+
+    private fun DiscussionsActivity.triggerToMoveDiscussionDetail(notification: SerializationFcmNotification?) {
+        if (notification != null) {
+            when (notification.type) {
+                SerializationNotificationType.LIKE -> {
+                    val detailIntent =
+                        DiscussionDetailActivity.Intent(
+                            this,
+                            notification.discussionId,
+                        )
+                    startActivity(detailIntent)
+                }
+
+                SerializationNotificationType.COMMENT -> {
+                    val detailIntent =
+                        DiscussionDetailActivity.Intent(
+                            this,
+                            notification.discussionId,
+                        )
+                    startActivity(detailIntent)
+                }
+
+                SerializationNotificationType.REPLY -> {
+                    val detailIntent =
+                        DiscussionDetailActivity.Intent(
+                            this,
+                            notification.discussionId,
+                        )
+                    startActivity(detailIntent)
+                }
+            }
+        }
+    }
+
 
     companion object {
         const val EXTRA_DELETE_DISCUSSION = "delete_discussion"

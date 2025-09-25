@@ -30,6 +30,7 @@ import com.team.todoktodok.presentation.compose.theme.White
 @Composable
 fun DiscussionToolbar(
     searchKeyword: String,
+    isExistNotification: Boolean,
     onSearch: () -> Unit,
     onSearchKeywordChanged: (String) -> Unit,
     onClickNotification: () -> Unit,
@@ -72,7 +73,7 @@ fun DiscussionToolbar(
                             .background(color = White)
                             .noRippleClickable(onClick = { onClickNotification() })
                     )
-                    Box(
+                    if (isExistNotification) Box(
                         modifier = Modifier
                             .size(8.dp)
                             .background(color = Green1A, shape = CircleShape)
@@ -114,6 +115,21 @@ fun DiscussionToolbarPreview() {
     DiscussionToolbar(
         onSearch = {},
         searchKeyword = "코틀린",
+        isExistNotification = true,
+        onSearchKeywordChanged = {},
+        onClickNotification = {},
+        onClickProfile = {},
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview
+@Composable
+fun DiscussionToolbarPreview2() {
+    DiscussionToolbar(
+        onSearch = {},
+        searchKeyword = "코틀린",
+        isExistNotification = false,
         onSearchKeywordChanged = {},
         onClickNotification = {},
         onClickProfile = {},

@@ -112,6 +112,7 @@ fun DiscussionsScreen(
         topBar = {
             DiscussionToolbar(
                 searchKeyword = uiState.allDiscussions.searchDiscussion.searchKeyword,
+                isExistNotification = uiState.isUnreadNotification,
                 onSearchKeywordChanged = { onSearchKeywordChanged(it) },
                 onSearch = { onSearch() },
                 onClickNotification = { onClickNotification() },
