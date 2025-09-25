@@ -1,5 +1,6 @@
 package todoktodok.backend.notification.application.service.query;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import lombok.AllArgsConstructor;
@@ -24,7 +25,9 @@ public class NotificationQueryService {
     public NotificationResponse getNotifications(final Long memberId) {
         final Member recipient = findMember(memberId);
         final Long unreadCount = notificationRepository.countNotificationByRecipientAndIsReadFalse(recipient);
-        final List<Notification> notifications = notificationRepository.findNotificationsByRecipient(recipient);
+        final List<Notification> notifications = notificationRepository.findNotificationsByRecipient(recipient).stream()
+                .sorted(Comparator.comparing(Notification::getCreatedAt).reversed())
+                .toList();
 
         final List<NotificationItemResponse> notificationItemResponses = notifications.stream()
                 .map(NotificationItemResponse::new)
