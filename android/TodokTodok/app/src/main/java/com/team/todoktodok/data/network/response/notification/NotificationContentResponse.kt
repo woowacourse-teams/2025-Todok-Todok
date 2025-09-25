@@ -20,19 +20,24 @@ data class NotificationContentResponse(
 )
 
 fun NotificationContentResponse.toDomain(): NotificationContent {
+    val comment = "COMMENT"
+    val reply = "REPLY"
+    val discussion = "DISCUSSION"
+    val like = "LIKE"
+
     val type: NotificationType =
         when (type) {
-            "COMMENT" -> NotificationType.Comment
-            "REPLY" -> NotificationType.Reply
-            "LIKE" -> NotificationType.Like
+            comment -> NotificationType.Comment
+            reply -> NotificationType.Reply
+            like -> NotificationType.Like
             else -> throw IllegalArgumentException("Unknown type: $type")
         }
 
     val target: NotificationTarget =
         when (target) {
-            "DISCUSSION" -> NotificationTarget.Discussion
-            "COMMENT" -> NotificationTarget.Comment
-            "REPLY" -> NotificationTarget.Reply
+            comment -> NotificationTarget.Comment
+            discussion -> NotificationTarget.Discussion
+            reply -> NotificationTarget.Reply
             else -> throw IllegalArgumentException("Unknown target: $target")
         }
 
