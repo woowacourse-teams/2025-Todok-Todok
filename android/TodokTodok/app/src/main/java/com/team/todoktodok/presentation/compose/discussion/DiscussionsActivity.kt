@@ -14,6 +14,7 @@ import com.team.todoktodok.presentation.compose.discussion.vm.DiscussionsViewMod
 import com.team.todoktodok.presentation.compose.theme.TodoktodokTheme
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.xml.discussiondetail.DiscussionDetailActivity
+import com.team.todoktodok.presentation.xml.notification.NotificationActivity
 import com.team.todoktodok.presentation.xml.profile.ProfileActivity
 import com.team.todoktodok.presentation.xml.profile.UserProfileTab
 
@@ -70,6 +71,7 @@ class DiscussionsActivity : ComponentActivity() {
                     viewModel = viewModel,
                     exceptionMessageConverter = messageConverter,
                     onDiscussionClick = ::moveToDiscussionDetail,
+                    onClickNotification = ::moveToNotification,
                     onClickMyDiscussionHeader = ::moveToProfile,
                     onClickProfile = ::moveToProfile,
                 )
@@ -77,8 +79,17 @@ class DiscussionsActivity : ComponentActivity() {
         }
     }
 
+    private fun moveToNotification() {
+        startActivity(NotificationActivity.Intent(this))
+    }
+
     private fun moveToDiscussionDetail(discussionId: Long) {
-        discussionDetailLauncher.launch(DiscussionDetailActivity.Companion.Intent(this, discussionId))
+        discussionDetailLauncher.launch(
+            DiscussionDetailActivity.Companion.Intent(
+                this,
+                discussionId
+            )
+        )
     }
 
     private fun moveToProfile() {

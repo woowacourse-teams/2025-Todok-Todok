@@ -28,6 +28,7 @@ fun DiscussionToolbar(
     searchKeyword: String,
     onSearch: () -> Unit,
     onSearchKeywordChanged: (String) -> Unit,
+    onClickNotification: () -> Unit,
     onClickProfile: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -57,6 +58,14 @@ fun DiscussionToolbar(
                 }
             },
             actions = {
+                Icon(
+                    painter = painterResource(R.drawable.ic_notification),
+                    contentDescription = "notification",
+                    Modifier
+                        .background(color = White)
+                        .padding(20.dp)
+                        .noRippleClickable(onClick = { onClickNotification() })
+                )
                 Icon(
                     painter = painterResource(R.drawable.ic_profile),
                     contentDescription = "profile",
@@ -92,6 +101,7 @@ fun DiscussionToolbarPreview() {
         onSearch = {},
         searchKeyword = "코틀린",
         onSearchKeywordChanged = {},
+        onClickNotification = {},
         onClickProfile = {},
     )
 }

@@ -12,7 +12,6 @@ import com.team.todoktodok.databinding.FragmentSignupBinding
 import com.team.todoktodok.presentation.compose.discussion.DiscussionsActivity
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
-import com.team.todoktodok.presentation.view.discussions.DiscussionsActivity
 import com.team.todoktodok.presentation.xml.auth.signup.vm.SignUpViewModel
 import com.team.todoktodok.presentation.xml.auth.signup.vm.SignUpViewModelFactory
 

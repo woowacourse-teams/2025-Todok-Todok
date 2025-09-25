@@ -1,25 +1,15 @@
 package com.team.todoktodok.adapter
 
-import android.Manifest
 import android.R
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.app.PendingIntent
-import android.app.TaskStackBuilder
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.os.Build
 import android.util.Log
-import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.team.domain.model.notification.FcmNotification.Companion.FcmNotification
 import com.team.todoktodok.App
-import com.team.todoktodok.presentation.view.discussions.DiscussionsActivity
-import com.team.todoktodok.presentation.xml.serialization.toSerialization
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -45,54 +35,52 @@ class FirebaseAdapter : FirebaseMessagingService() {
         val body = message.data["body"] ?: return
 
         if (message.data.isNotEmpty()) {
-            val fcmNotification = FcmNotification(message.data)
+            FcmNotification(message.data)
 
             ensureChannel()
 
-            val intent =
-                DiscussionsActivity.Intent(this).apply {
-                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                    putExtra(KEY_NOTIFICATION, true)
-                    putExtra(KEY_NOTIFICATION_DATA, fcmNotification.toSerialization())
-                }
+//            val intent =
+//                DiscussionsActivity.Intent(this).apply {
+//                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+//                    putExtra(KEY_NOTIFICATION, true)
+//                    putExtra(KEY_NOTIFICATION_DATA, fcmNotification.toSerialization())
+//                }
+//
+//            val pendingIntent =
+//                TaskStackBuilder
+//                    .create(this)
+//                    .addNextIntentWithParentStack(intent)
+//                    .getPendingIntent(
+//                        (fcmNotification.discussionId ?: 0L).hashCode(),
+//                        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+//                    )
 
-            val pendingIntent =
-                TaskStackBuilder
-                    .create(this)
-                    .addNextIntentWithParentStack(intent)
-                    .getPendingIntent(
-                        (fcmNotification.discussionId ?: 0L).hashCode(),
-                        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
-                    )
+            NotificationCompat
+                .Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.btn_plus)
+                .setContentTitle(title)
+                .setContentText(body)
+                .setStyle(NotificationCompat.BigTextStyle().bigText(body))
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setAutoCancel(true)
+                .build()
 
-            val alert =
-                NotificationCompat
-                    .Builder(this, CHANNEL_ID)
-                    .setSmallIcon(R.drawable.btn_plus)
-                    .setContentTitle(title)
-                    .setContentText(body)
-                    .setStyle(NotificationCompat.BigTextStyle().bigText(body))
-                    .setPriority(NotificationCompat.PRIORITY_HIGH)
-                    .setAutoCancel(true)
-                    .setContentIntent(pendingIntent)
-                    .build()
-
-            if (NotificationManagerCompat.from(this).areNotificationsEnabled() &&
-                (
-                    Build.VERSION.SDK_INT < 33 ||
-                        ActivityCompat.checkSelfPermission(
-                            this,
-                            Manifest.permission.POST_NOTIFICATIONS,
-                        ) == PackageManager.PERMISSION_GRANTED
-                )
-            ) {
-                NotificationManagerCompat
-                    .from(this)
-                    .notify(
-                        fcmNotification.discussionId.toInt(),
-                        alert,
-                    )
-            }
+//            if (NotificationManagerCompat.from(this).areNotificationsEnabled() &&
+//                (
+//                        Build.VERSION.SDK_INT < 33 ||
+//                                ActivityCompat.checkSelfPermission(
+//                                    this,
+//                                    Manifest.permission.POST_NOTIFICATIONS,
+//                                ) == PackageManager.PERMISSION_GRANTED
+//                        )
+//            ) {
+//                NotificationManagerCompat
+//                    .from(this)
+//                    .notify(
+//                        fcmNotification.discussionId.toInt(),
+//                        alert,
+//                    )
+//            }
         }
     }
 
