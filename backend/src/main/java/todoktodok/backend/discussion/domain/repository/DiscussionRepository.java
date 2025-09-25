@@ -50,21 +50,22 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
             final Pageable pageable
     );
 
-    @Query("""
-                SELECT d.id 
-                FROM Discussion d
-                WHERE UPPER(d.title) LIKE UPPER(CONCAT('%', :keyword, '%'))
-                
-                UNION
-                
-                SELECT d.id
-                FROM Discussion d
-                JOIN d.book b
-                WHERE UPPER(b.title) LIKE UPPER(CONCAT('%', :keyword, '%'))
-            """)
-    List<Long> searchIdsByKeyword(
-            @Param("keyword") final String keyword
-    );
+    @Query(value = """
+            SELECT d.id
+            FROM discussion d
+            WHERE MATCH(d.title) AGAINST(:keyword IN BOOLEAN MODE)
+              AND d.deleted_at IS NULL
+              
+            UNION
+            
+            SELECT d.id
+            FROM discussion d
+            JOIN book b ON d.book_id = b.id
+            WHERE MATCH(b.title) AGAINST(:keyword IN BOOLEAN MODE)
+              AND d.deleted_at IS NULL
+              AND b.deleted_at IS NULL
+            """, nativeQuery = true)
+    List<Long> searchIdsByKeyword(@Param("keyword") final String keyword);
 
     @Query(value = """
                 SELECT d.id
