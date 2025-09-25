@@ -60,14 +60,14 @@ fun DiscussionCard(
     BoxWithConstraints(modifier = modifier.fillMaxWidth()) {
         val cardWidth =
             if (discussionCardType is DiscussionCardType.OpinionVisible) {
-                maxWidth * 0.98f
+                maxWidth * 0.95f
             } else {
                 maxWidth
             }
 
         ElevatedCard(
             onClick = onClick,
-            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
             modifier = Modifier.width(cardWidth),
         ) {
             Column(

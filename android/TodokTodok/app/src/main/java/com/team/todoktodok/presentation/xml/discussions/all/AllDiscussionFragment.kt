@@ -26,8 +26,9 @@ class AllDiscussionFragment : BaseDiscussionsFragment(R.layout.fragment_all_disc
             setContent {
                 TodoktodokTheme {
                     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
                     AllDiscussionsScreen(
-                        uiState = uiState.allDiscussionsUiState,
+                        uiState = uiState.allDiscussions,
                         onLoadMore = { viewModel.loadLatestDiscussions() },
                         onClick = { discussionId -> moveToDiscussionDetail(discussionId) },
                         onRefresh = { viewModel.refreshLatestDiscussions() },

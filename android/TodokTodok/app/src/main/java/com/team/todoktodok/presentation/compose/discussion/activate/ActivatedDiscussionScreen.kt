@@ -40,7 +40,7 @@ fun ActivatedDiscussionScreen(
             verticalArrangement = Arrangement.spacedBy(15.dp),
             modifier =
                 Modifier
-                    .padding(top = 10.dp)
+                    .padding(top = 5.dp)
                     .padding(horizontal = 10.dp),
             content = {
                 items(
