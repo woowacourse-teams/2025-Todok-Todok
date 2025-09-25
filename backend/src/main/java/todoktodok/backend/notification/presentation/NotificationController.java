@@ -20,18 +20,32 @@ import todoktodok.backend.notification.application.service.query.NotificationQue
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/v1/notifications")
-public class NotificationController implements NotificationApiDocs{
+public class NotificationController implements NotificationApiDocs {
 
     private final NotificationCommandService notificationCommandService;
     private final NotificationQueryService notificationQueryService;
 
     @Auth(value = Role.USER)
     @GetMapping
-    public ResponseEntity<NotificationResponse> getNotifications(@LoginMember final Long memberId) {
+    public ResponseEntity<NotificationResponse> getNotifications(
+            @LoginMember final Long memberId
+    ) {
         final NotificationResponse notificationResponse = notificationQueryService.getNotifications(memberId);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(notificationResponse);
+    }
+
+    @Auth(value = Role.USER)
+    @GetMapping("/unread/exists")
+    public ResponseEntity<UnreadNotificationResponse> hasUnreadNotifications(
+            @LoginMember final Long memberId
+    ) {
+        final UnreadNotificationResponse unreadNotificationResponse = notificationQueryService.hasUnreadNotifications(
+                memberId);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(unreadNotificationResponse);
     }
 
     @Auth(value = Role.USER)
@@ -41,6 +55,7 @@ public class NotificationController implements NotificationApiDocs{
             @PathVariable final Long notificationId
     ) {
         notificationCommandService.markNotificationAsRead(memberId, notificationId);
+
         return ResponseEntity.status(HttpStatus.OK)
                 .build();
     }
@@ -55,17 +70,5 @@ public class NotificationController implements NotificationApiDocs{
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
                 .build();
-    }
-
-    @Auth(value = Role.USER)
-    @GetMapping("/unread/exists")
-    public ResponseEntity<UnreadNotificationResponse> hasUnreadNotifications(
-            @LoginMember final Long memberId
-    ) {
-        UnreadNotificationResponse unreadNotificationResponse = notificationQueryService.checkUnReadNotification(
-                memberId);
-
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(unreadNotificationResponse);
     }
 }
