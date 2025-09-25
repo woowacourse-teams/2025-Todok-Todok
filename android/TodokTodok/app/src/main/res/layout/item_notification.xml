@@ -99,17 +99,6 @@
             tools:text="모찌님이 캡슐화를 왜함?에 좋아요를 눌렀습니다. 진짜로 눌렀는 지 궁금하죠???" />
 
         <TextView
-            android:id="@+id/tv_connection"
-            style="@style/BaseTextStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/pretendard_regular"
-            android:text=" "
-            app:layout_constraintBottom_toBottomOf="@id/tv_nickname"
-            app:layout_constraintStart_toEndOf="@id/tv_nickname"
-            app:layout_constraintTop_toTopOf="@id/tv_nickname" />
-
-        <TextView
             android:id="@+id/tv_content"
             style="@style/BaseTextStyle"
             android:layout_width="0dp"
