@@ -13,8 +13,11 @@ class DefaultNotificationRepository(
     private val notificationLocalDataSource: NotificationLocalDataSource,
 ) : NotificationRepository {
     override suspend fun registerPushNotification(): NetworkResult<Unit> {
-        val fcmToken = notificationLocalDataSource.getFcmToken() ?: ""
-        val fId = notificationLocalDataSource.getFId() ?: ""
+        val fcmToken = notificationLocalDataSource.getFcmToken()
+        val fId = notificationLocalDataSource.getFId()
+        if (fcmToken.isNullOrBlank() || fId.isNullOrBlank()) {
+            return NetworkResult.Success(Unit)
+        }
         return notificationRemoteDataSource.saveFcmToken(fcmToken, fId)
     }
 
