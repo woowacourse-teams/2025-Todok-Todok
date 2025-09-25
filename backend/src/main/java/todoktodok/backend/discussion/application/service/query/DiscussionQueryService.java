@@ -33,7 +33,6 @@ import todoktodok.backend.discussion.domain.repository.DiscussionLikeRepository;
 import todoktodok.backend.discussion.domain.repository.DiscussionRepository;
 import todoktodok.backend.member.domain.Member;
 import todoktodok.backend.member.domain.repository.MemberRepository;
-import todoktodok.backend.reply.domain.repository.ReplyRepository;
 
 @Service
 @Transactional(readOnly = true)
@@ -110,7 +109,7 @@ public class DiscussionQueryService {
 
         final Member member = findMember(memberId);
         final LocalDateTime sinceDate = LocalDate.now().minusDays(period).atStartOfDay();
-        final List<Long> discussionIds = discussionRepository.findAllIdsBy();
+        final List<Long> discussionIds = discussionRepository.findAllIds();
 
         if (discussionIds.isEmpty()) {
             return Collections.emptyList();
@@ -193,7 +192,7 @@ public class DiscussionQueryService {
             final String cursor,
             final int size
     ) {
-        Pageable pageable = PageRequest.of(0, size, Sort.Direction.DESC, "id");
+        final Pageable pageable = PageRequest.of(0, size, Sort.Direction.DESC, "id");
 
         if (cursor == null || cursor.isBlank()) {
             return discussionRepository.findAllIdsBy(pageable);

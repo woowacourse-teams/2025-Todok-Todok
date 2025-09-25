@@ -85,15 +85,15 @@ public class MemberQueryService {
     }
 
     private List<DiscussionResponse> getCreatedDiscussions(final Member member) {
-        final List<Long> createdDiscussions = discussionRepository.findIdsByMember(member);
+        final List<Long> createdDiscussionIds = discussionRepository.findIdsByMember(member);
 
-        return getDiscussionsResponses(createdDiscussions, member);
+        return getDiscussionsResponses(createdDiscussionIds, member);
     }
 
     private List<DiscussionResponse> getParticipatedDiscussions(final Member member) {
-        final List<Long> participatedDiscussions = discussionRepository.findParticipatedDiscussionsByMember(member.getId());
+        final List<Long> participatedDiscussionIds = discussionRepository.findParticipatedDiscussionIdsByMember(member.getId());
 
-        return getDiscussionsResponses(participatedDiscussions, member);
+        return getDiscussionsResponses(participatedDiscussionIds, member);
     }
 
     private List<DiscussionResponse> getDiscussionsResponses(
@@ -148,23 +148,6 @@ public class MemberQueryService {
                     final int likeCount = likeSummaryByDiscussionId.get(discussionId).likeCount();
                     final int commentCount = commentCountsByDiscussionId.getOrDefault(discussionId, 0);
                     final boolean isLikedByMe = likeSummaryByDiscussionId.get(discussionId).isLikedByMe();
-                    return new DiscussionResponse(discussion, likeCount, commentCount, isLikedByMe);
-                })
-                .toList();
-    }
-
-    private List<DiscussionResponse> makeResponsessFrom(
-            final List<Discussion> discussions,
-            final Map<Long, Integer> likeCountsByDiscussionId,
-            final Map<Long, Integer> commentCountsByDiscussionId,
-            final List<Long> likedDiscussionIds
-    ) {
-        return discussions.stream()
-                .map(discussion -> {
-                    final long discussionId = discussion.getId();
-                    final int likeCount = likeCountsByDiscussionId.getOrDefault(discussionId, 0);
-                    final int commentCount = commentCountsByDiscussionId.getOrDefault(discussionId, 0);
-                    final boolean isLikedByMe = likedDiscussionIds.contains(discussionId);
                     return new DiscussionResponse(discussion, likeCount, commentCount, isLikedByMe);
                 })
                 .toList();

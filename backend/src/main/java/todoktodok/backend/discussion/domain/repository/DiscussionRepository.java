@@ -32,7 +32,7 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
                    SELECT d.id 
                    FROM Discussion d
             """)
-    List<Long> findAllIdsBy();
+    List<Long> findAllIds();
 
     @Query("""
                     SELECT d.id
@@ -93,7 +93,7 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
                 AND c.deleted_at IS NULL
                 AND r.deleted_at IS NULL
             """, nativeQuery = true)
-    List<Long> findParticipatedDiscussionsByMember(@Param("memberId") final Long memberId);
+    List<Long> findParticipatedDiscussionIdsByMember(@Param("memberId") final Long memberId);
 
     @Query("""
                 SELECT new todoktodok.backend.discussion.application.dto.response.ActiveDiscussionResponse(
