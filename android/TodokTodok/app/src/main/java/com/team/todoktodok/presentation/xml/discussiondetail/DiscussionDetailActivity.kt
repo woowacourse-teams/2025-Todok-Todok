@@ -273,6 +273,7 @@ class DiscussionDetailActivity : AppCompatActivity() {
                     tvDiscussionOpinion.text = discussion.discussionOpinion
                     ivLike.isSelected = discussion.isLikedByMe
                     tvLikeCount.text = discussion.likeCount.toString()
+                    tvViewsCount.text = discussion.viewCount.toString()
                     tvCommentCount.text = discussion.commentCount.toString()
                 }
                 setupPopUpDiscussionClick(value.isMyDiscussion)
