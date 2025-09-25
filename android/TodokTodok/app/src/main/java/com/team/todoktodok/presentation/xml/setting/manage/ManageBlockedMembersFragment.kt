@@ -66,6 +66,7 @@ class ManageBlockedMembersFragment : Fragment(R.layout.fragment_manage_blocked_m
 
     private fun setUpUiState(binding: FragmentManageBlockedMembersBinding) {
         viewModel.uiState.observe(viewLifecycleOwner) { value ->
+            blockedMembersAdapter.submitList(value.members)
             displayResultView(binding, value.members)
             setUpLoading(value.isLoading, binding)
         }
@@ -79,7 +80,6 @@ class ManageBlockedMembersFragment : Fragment(R.layout.fragment_manage_blocked_m
             binding.viewResourceNotFound.show(getString(R.string.setting_manage_blocked_members_empty_message))
         } else {
             binding.viewResourceNotFound.hide()
-            blockedMembersAdapter.submitList(members)
         }
     }
 
