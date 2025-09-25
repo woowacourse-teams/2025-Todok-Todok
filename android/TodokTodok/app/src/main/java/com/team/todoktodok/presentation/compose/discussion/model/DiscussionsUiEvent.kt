@@ -1,4 +1,4 @@
-package com.team.todoktodok.presentation.xml.discussions
+package com.team.todoktodok.presentation.compose.discussion.model
 
 import com.team.domain.model.exception.TodokTodokExceptions
 
@@ -7,5 +7,5 @@ sealed interface DiscussionsUiEvent {
         val exception: TodokTodokExceptions,
     ) : DiscussionsUiEvent
 
-    data object ShowSearchResult : DiscussionsUiEvent
+    data object ScrollToAllDiscussion : DiscussionsUiEvent
 }

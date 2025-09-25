@@ -1,4 +1,4 @@
-package com.team.todoktodok.presentation.xml.discussions
+package com.team.todoktodok.presentation.compose.discussion.model
 
 import com.team.domain.model.Discussion
 import com.team.domain.model.active.ActivatedDiscussionPage
@@ -12,7 +12,7 @@ data class DiscussionsUiState(
     val myDiscussion: MyDiscussionUiState = MyDiscussionUiState(),
     val allDiscussions: AllDiscussionsUiState = AllDiscussionsUiState(),
 ) {
-    fun refreshLatestDiscussion(): DiscussionsUiState = copy(allDiscussionsUiState = allDiscussionsUiState.refreshLatestDiscussion())
+    fun refreshLatestDiscussion(): DiscussionsUiState = copy(allDiscussions = allDiscussions.refreshLatestDiscussion())
 
     fun addSearchDiscussion(
         keyword: String,
@@ -52,6 +52,8 @@ data class DiscussionsUiState(
     }
 
     fun clearSearchDiscussion() = copy(allDiscussions = allDiscussions.clearSearchDiscussion())
+
+    fun modifySearchKeyword(keyword: String) = copy(allDiscussions = allDiscussions.modifyKeyword(keyword))
 
     fun removeDiscussion(discussionId: Long): DiscussionsUiState {
         val newHotDiscussion = hotDiscussion.removeDiscussion(discussionId)

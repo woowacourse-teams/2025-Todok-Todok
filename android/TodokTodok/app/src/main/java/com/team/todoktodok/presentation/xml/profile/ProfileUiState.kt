@@ -4,7 +4,7 @@ import com.team.domain.model.Book
 import com.team.domain.model.Discussion
 import com.team.domain.model.member.MemberId
 import com.team.domain.model.member.Profile
-import com.team.todoktodok.presentation.xml.discussions.DiscussionUiState
+import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiState
 import com.team.todoktodok.presentation.xml.profile.adapter.ProfileItems
 
 data class ProfileUiState(

@@ -5,7 +5,7 @@ import com.team.domain.model.Book
 import com.team.domain.model.Discussion
 import com.team.domain.model.member.Nickname
 import com.team.domain.model.member.User
-import com.team.todoktodok.presentation.xml.discussions.DiscussionUiState
+import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiState
 import java.time.LocalDateTime
 
 class DiscussionUiStatePreviewParameterProvider : PreviewParameterProvider<List<DiscussionUiState>> {

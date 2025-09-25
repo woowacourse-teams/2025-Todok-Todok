@@ -9,7 +9,7 @@ import com.team.domain.model.member.Nickname
 import com.team.domain.model.member.User
 import com.team.todoktodok.presentation.compose.component.DiscussionCard
 import com.team.todoktodok.presentation.compose.component.DiscussionCardType
-import com.team.todoktodok.presentation.xml.discussions.DiscussionUiState
+import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiState
 import org.junit.Rule
 import org.junit.Test
 import java.time.LocalDateTime

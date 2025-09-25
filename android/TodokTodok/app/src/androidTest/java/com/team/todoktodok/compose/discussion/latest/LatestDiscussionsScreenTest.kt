@@ -10,8 +10,8 @@ import com.team.domain.model.member.Nickname
 import com.team.domain.model.member.User
 import com.team.todoktodok.presentation.compose.discussion.latest.LatestDiscussionsScreen
 import com.team.todoktodok.presentation.compose.discussion.latest.LatestDiscussionsUiState
+import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiState
 import com.team.todoktodok.presentation.compose.preview.LatestDiscussionsPreviewParameterProvider
-import com.team.todoktodok.presentation.xml.discussions.DiscussionUiState
 import org.junit.Rule
 import org.junit.Test
 import org.junit.jupiter.api.Assertions

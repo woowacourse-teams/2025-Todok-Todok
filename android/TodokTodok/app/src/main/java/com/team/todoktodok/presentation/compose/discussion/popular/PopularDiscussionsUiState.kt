@@ -2,7 +2,7 @@ package com.team.todoktodok.presentation.compose.discussion.popular
 
 import com.team.domain.model.Discussion
 import com.team.todoktodok.presentation.compose.component.DiscussionCardType
-import com.team.todoktodok.presentation.xml.discussions.DiscussionUiState
+import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiState
 
 data class PopularDiscussionsUiState(
     val discussions: List<DiscussionUiState> = emptyList(),

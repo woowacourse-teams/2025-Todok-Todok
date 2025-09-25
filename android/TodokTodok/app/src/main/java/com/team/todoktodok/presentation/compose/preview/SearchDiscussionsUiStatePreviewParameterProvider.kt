@@ -6,8 +6,8 @@ import com.team.domain.model.Discussion
 import com.team.domain.model.member.Nickname
 import com.team.domain.model.member.User
 import com.team.todoktodok.presentation.compose.component.DiscussionCardType
+import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiState
 import com.team.todoktodok.presentation.compose.discussion.search.SearchDiscussionsUiState
-import com.team.todoktodok.presentation.xml.discussions.DiscussionUiState
 import java.time.LocalDateTime
 
 class SearchDiscussionsUiStatePreviewParameterProvider : PreviewParameterProvider<SearchDiscussionsUiState> {

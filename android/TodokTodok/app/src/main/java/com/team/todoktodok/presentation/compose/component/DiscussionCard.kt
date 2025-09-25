@@ -34,11 +34,11 @@ import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.team.todoktodok.R
+import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiState
 import com.team.todoktodok.presentation.compose.preview.DiscussionUiStatePreviewParameterProvider
 import com.team.todoktodok.presentation.compose.theme.Gray75
 import com.team.todoktodok.presentation.compose.theme.RedFF
 import com.team.todoktodok.presentation.compose.theme.White
-import com.team.todoktodok.presentation.xml.discussions.DiscussionUiState
 
 sealed interface DiscussionCardType {
     data object Default : DiscussionCardType
