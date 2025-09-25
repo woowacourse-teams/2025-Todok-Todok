@@ -49,25 +49,25 @@ class ModifyProfileViewModel(
         nickname: String,
         message: String,
     ) {
-        runCatching {
-            val currentProfile = _uiState.value?.profile ?: return
-            val newNickname = Nickname(nickname)
-            val newMessage = ProfileMessage(message)
+        val currentState = _uiState.value ?: return
+        val newUiState = currentState.modifyProfile(nickname, message)
 
-            if (currentProfile.nickname == newNickname.value) {
-                throw NickNameException.SameNicknameModification
+        when {
+            !newUiState.isNicknameChange && !newUiState.isProfileMessageChange -> {
+                onUiEvent(ModifyProfileUiEvent.ShowInvalidMessageMessage(ProfileException.SameMessageModification))
+                onUiEvent(ModifyProfileUiEvent.ShowInvalidNickNameMessage(NickNameException.SameNicknameModification))
             }
-            if (message.isNotEmpty() && currentProfile.message == newMessage.value) {
-                throw ProfileException.SameMessageModification
-            }
-            newNickname to newMessage
-        }.onSuccess { (nickname, message) ->
-            modifyProfile(nickname, message)
-        }.onFailure { e ->
-            when (e) {
-                is ProfileException -> onUiEvent(ModifyProfileUiEvent.ShowInvalidMessageMessage(e))
-                is NickNameException -> onUiEvent(ModifyProfileUiEvent.ShowInvalidNickNameMessage(e))
-                else -> onUiEvent(ModifyProfileUiEvent.ShowErrorMessage((e as TodokTodokExceptions)))
+
+            else -> {
+                runCatching {
+                    Nickname(nickname) to ProfileMessage(message)
+                }.onSuccess {
+                    val (newNickname, newMessage) = it
+                    modifyProfile(newNickname, newMessage)
+                    onUiEvent(ModifyProfileUiEvent.OnCompleteModification)
+                }.onFailure {
+                    onUiEvent(ModifyProfileUiEvent.ShowErrorMessage(it as TodokTodokExceptions))
+                }
             }
         }
     }

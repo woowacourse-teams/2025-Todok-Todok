@@ -88,9 +88,14 @@ class ModifyProfileFragment : Fragment(R.layout.fragment_modify_profile) {
                 binding.etMessage.text = null
             }
 
+            etMessage.doAfterTextChanged {
+                etMessageLayout.error = null
+            }
+
             etMessage.maxLines = ProfileMessage.MAX_LENGTH
 
             etMessage.setOnEditorActionListener { _, actionId, event ->
+
                 if (actionId == EditorInfo.IME_ACTION_DONE ||
                     (
                         event?.keyCode == KeyEvent.KEYCODE_ENTER &&

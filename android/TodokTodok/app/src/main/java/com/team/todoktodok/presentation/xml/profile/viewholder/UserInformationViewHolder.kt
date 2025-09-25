@@ -81,7 +81,6 @@ class UserInformationViewHolder private constructor(
                 }
 
             tvDescription.text = message
-
         }
     }
 
