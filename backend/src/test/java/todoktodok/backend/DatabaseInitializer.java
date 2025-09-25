@@ -4,10 +4,8 @@ import static java.time.temporal.ChronoUnit.MICROS;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-
 import java.time.LocalDateTime;
 import java.util.List;
-
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -203,6 +201,47 @@ public class DatabaseInitializer {
                 .setParameter("bookId", bookId)
                 .setParameter("createdAt", createdAt)
                 .setParameter("modifiedAt", now)
+                .executeUpdate();
+    }
+
+    @Transactional
+    public void setDefaultDiscussionMemberViewInfo() {
+        final LocalDateTime now = LocalDateTime.now().truncatedTo(MICROS);
+
+        em.createNativeQuery(
+                        """
+                                INSERT INTO DISCUSSION_MEMBER_VIEW (discussion_id, member_id, created_at, modified_at)
+                                VALUES 
+                                (:discussionId, :memberId, :createdAt, :modifiedAt)
+                                """
+                )
+                .setParameter("discussionId", 1L)
+                .setParameter("memberId", 1L)
+                .setParameter("createdAt", now)
+                .setParameter("modifiedAt", now)
+                .executeUpdate();
+    }
+
+    @Transactional
+    public void setDiscussionMemberViewInfo(
+            final Long memberId,
+            final Long discussionId,
+            final int minusMinute
+    ) {
+        final LocalDateTime now = LocalDateTime.now().truncatedTo(MICROS);
+        final LocalDateTime before = now.minusMinutes(minusMinute);
+
+        em.createNativeQuery(
+                        """
+                                INSERT INTO DISCUSSION_MEMBER_VIEW (discussion_id, member_id, created_at, modified_at)
+                                VALUES 
+                                (:discussionId, :memberId, :createdAt, :modifiedAt)
+                                """
+                )
+                .setParameter("discussionId", discussionId)
+                .setParameter("memberId", memberId)
+                .setParameter("createdAt", now)
+                .setParameter("modifiedAt", before)
                 .executeUpdate();
     }
 

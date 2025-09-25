@@ -22,3 +22,7 @@ spring:
 
   flyway:
     enabled: false
+
+jwt:
+  access-token:
+    expire-mills: 60_000
