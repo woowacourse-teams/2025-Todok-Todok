@@ -1,7 +1,5 @@
 package com.team.todoktodok.presentation.core.base
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -14,6 +12,12 @@ import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.concurrent.ConcurrentHashMap
 
@@ -22,8 +26,11 @@ abstract class BaseViewModel(
 ) : ViewModel() {
     private val pendingActions = ConcurrentHashMap<String, suspend () -> Unit>()
 
-    private val _baseUiState = MutableLiveData(BaseUiState())
-    val baseUiState: LiveData<BaseUiState> get() = _baseUiState
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> get() = _isLoading.asStateFlow()
+
+    private val _isRestoring = Channel<Unit>(Channel.BUFFERED)
+    val isRestoring get() = _isRestoring.receiveAsFlow()
 
     protected val recordExceptionHandler =
         CoroutineExceptionHandler { _, throwable ->
@@ -40,14 +47,13 @@ abstract class BaseViewModel(
         viewModelScope.launch {
             connectivityObserver.subscribe().collect { status ->
                 if (status == ConnectivityObserver.Status.Available && pendingActions.isNotEmpty()) {
-                    _baseUiState.value = _baseUiState.value?.copy(isRestoring = true)
+                    _isRestoring.send(Unit)
 
                     val actionsToRetry = pendingActions.values.toList()
                     pendingActions.clear()
                     actionsToRetry.forEach { action ->
                         launch(recordExceptionHandler) { action() }
                     }
-                    _baseUiState.value = _baseUiState.value?.copy(isRestoring = false)
                 }
             }
         }
@@ -60,13 +66,13 @@ abstract class BaseViewModel(
         handleFailure: (TodokTodokExceptions) -> Unit,
     ) {
         val job: suspend () -> Unit = {
-            _baseUiState.value = _baseUiState.value?.copy(isLoading = true)
+            _isLoading.update { true }
             action()
                 .onSuccess {
                     pendingActions.remove(key)
                     handleSuccess(it)
                 }.onFailure { handleFailure(it) }
-            _baseUiState.value = _baseUiState.value?.copy(isLoading = false)
+            _isLoading.update { false }
         }
 
         if (connectivityObserver.value() != ConnectivityObserver.Status.Available) {
@@ -85,13 +91,13 @@ abstract class BaseViewModel(
         val deferred = CompletableDeferred<NetworkResult<T>>()
 
         val job: suspend () -> Unit = {
-            _baseUiState.value = _baseUiState.value?.copy(isLoading = true)
+            _isLoading.update { true }
             val result = action()
             deferred.complete(result)
             if (result is NetworkResult.Success) {
                 pendingActions.remove(key)
-                _baseUiState.value = _baseUiState.value?.copy(isLoading = false)
             }
+            _isLoading.update { false }
         }
 
         if (connectivityObserver.value() != ConnectivityObserver.Status.Available) {
