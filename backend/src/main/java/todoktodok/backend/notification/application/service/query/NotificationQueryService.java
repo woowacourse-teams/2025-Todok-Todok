@@ -26,18 +26,16 @@ public class NotificationQueryService {
         final Long unreadCount = notificationRepository.countNotificationByRecipientAndIsReadFalse(recipient);
         final List<Notification> notifications = notificationRepository.findNotificationsByRecipient(recipient);
 
-        List<NotificationItemResponse> notificationItemResponses = notifications.stream()
-                .map(notification -> new NotificationItemResponse(notification))
+        final List<NotificationItemResponse> notificationItemResponses = notifications.stream()
+                .map(NotificationItemResponse::new)
                 .toList();
 
         return new NotificationResponse(unreadCount, notificationItemResponses);
     }
 
-    public UnreadNotificationResponse checkUnReadNotification(
-            final Long memberId
-    ) {
+    public UnreadNotificationResponse hasUnreadNotifications(final Long memberId) {
         final Member member = findMember(memberId);
-        boolean existsUnreadNotification = notificationRepository.existsByRecipientAndIsReadFalse(member);
+        final boolean existsUnreadNotification = notificationRepository.existsByRecipientAndIsReadFalse(member);
 
         return new UnreadNotificationResponse(existsUnreadNotification);
     }
