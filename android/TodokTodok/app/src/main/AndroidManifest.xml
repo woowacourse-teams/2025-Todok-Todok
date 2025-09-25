@@ -39,7 +39,19 @@
             android:exported="false" />
         <activity
             android:name=".presentation.xml.discussiondetail.DiscussionDetailActivity"
-            android:exported="false" />
+            android:exported="true">
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="todoktodok.com"
+                    android:pathPrefix="/discussiondetail/"
+                    android:scheme="https" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".presentation.xml.book.SelectBookActivity"
             android:exported="false"

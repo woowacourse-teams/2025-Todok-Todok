@@ -33,7 +33,6 @@ class DiscussionDetailViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        // given
         val state = SavedStateHandle(mapOf(KEY_DISCUSSION_ID to DISCUSSION_ID))
         tokenRepository = mockk(relaxed = true)
         coEvery { tokenRepository.getMemberId() } returns WRITER_ID
@@ -41,7 +40,6 @@ class DiscussionDetailViewModelTest {
         coEvery { discussionRepository.getDiscussion(DISCUSSION_ID) } returns
             NetworkResult.Success(DISCUSSIONS.first())
 
-        // when
         discussionDetailViewModel =
             DiscussionDetailViewModel(
                 state,
@@ -49,7 +47,7 @@ class DiscussionDetailViewModelTest {
                 tokenRepository,
             )
 
-        // then (no-op: 생성 성공이 곧 준비 완료)
+        discussionDetailViewModel.initLoadDiscission(DISCUSSION_ID)
     }
 
     @Test
