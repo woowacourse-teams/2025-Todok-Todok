@@ -1,9 +1,11 @@
 package com.team.todoktodok.presentation.xml.setting.modify
 
+import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -142,10 +144,8 @@ class ModifyProfileFragment : Fragment(R.layout.fragment_modify_profile) {
         viewModel.uiEvent.observe(viewLifecycleOwner) { event ->
             when (event) {
                 ModifyProfileUiEvent.OnCompleteModification -> {
-                    AlertSnackBar(
-                        binding.root,
-                        R.string.setting_modify_profile_complete,
-                    ).show()
+                    AlertSnackBar(binding.root, R.string.setting_modify_profile_complete).show()
+                    hideKeyBoard(binding.root)
                 }
 
                 is ModifyProfileUiEvent.ShowInvalidNickNameMessage -> {
@@ -158,6 +158,10 @@ class ModifyProfileFragment : Fragment(R.layout.fragment_modify_profile) {
                         messageConverter(event.exception),
                     ).show()
                 }
+
+                is ModifyProfileUiEvent.ShowInvalidMessageMessage -> {
+                    handleProfileMessageErrorEvent(event.exception, binding)
+                }
             }
         }
     }
@@ -168,11 +172,30 @@ class ModifyProfileFragment : Fragment(R.layout.fragment_modify_profile) {
     ) {
         val resourceId =
             when (exception) {
-                is NickNameException.InvalidWhiteSpace -> R.string.signup_invalid_nickname_message_white_space
-                is NickNameException.InvalidCharacters -> R.string.signup_invalid_nickname_message_character
-                is NickNameException.InvalidLength -> R.string.signup_invalid_nickname_message_length
+                NickNameException.InvalidLength -> R.string.profile_invalid_nickname_length
+                NickNameException.InvalidWhiteSpace -> R.string.profile_invalid_nickname_white_space
+                NickNameException.InvalidCharacters -> R.string.profile_invalid_nickname_character
+                NickNameException.SameNicknameModification -> R.string.profile_invalid_nickname_same
             }
         val message = getString(resourceId)
         binding.etNicknameLayout.error = message
+    }
+
+    private fun handleProfileMessageErrorEvent(
+        exception: ProfileException,
+        binding: FragmentModifyProfileBinding,
+    ) {
+        val resourceId =
+            when (exception) {
+                ProfileException.SameMessageModification -> R.string.profile_invalid_profile_message_same
+            }
+        val message = getString(resourceId)
+        binding.etMessageLayout.error = message
+    }
+
+    private fun hideKeyBoard(view: View) {
+        val inputMethodManager: InputMethodManager =
+            requireContext().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 }

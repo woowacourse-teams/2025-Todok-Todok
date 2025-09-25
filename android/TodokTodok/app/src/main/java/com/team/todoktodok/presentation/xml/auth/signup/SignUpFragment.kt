@@ -98,6 +98,7 @@ class SignUpFragment : Fragment(R.layout.fragment_signup) {
                 is NickNameException.InvalidWhiteSpace -> R.string.signup_invalid_nickname_message_white_space
                 is NickNameException.InvalidCharacters -> R.string.signup_invalid_nickname_message_character
                 is NickNameException.InvalidLength -> R.string.signup_invalid_nickname_message_length
+                NickNameException.SameNicknameModification -> return
             }
         val message = getString(resourceId)
         binding.etNicknameLayout.error = message
