@@ -1,6 +1,8 @@
-package com.team.domain.model.notification
+package com.team.todoktodok.adapter.model
 
 import com.team.domain.model.member.Nickname
+import com.team.domain.model.notification.NotificationTarget
+import com.team.domain.model.notification.NotificationType
 
 data class FcmNotification(
     val notificationId: Int?,

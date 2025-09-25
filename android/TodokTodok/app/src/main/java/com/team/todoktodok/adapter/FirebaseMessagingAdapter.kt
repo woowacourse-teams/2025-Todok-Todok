@@ -16,9 +16,9 @@ import androidx.core.app.TaskStackBuilder
 import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import com.team.domain.model.notification.FcmNotification
-import com.team.domain.model.notification.FcmNotification.Companion.FcmNotification
 import com.team.todoktodok.App
+import com.team.todoktodok.adapter.model.FcmNotification
+import com.team.todoktodok.adapter.model.FcmNotification.Companion.FcmNotification
 import com.team.todoktodok.presentation.compose.discussion.DiscussionsActivity
 import com.team.todoktodok.presentation.xml.serialization.toSerialization
 import kotlinx.coroutines.CoroutineScope
@@ -62,12 +62,12 @@ class FirebaseMessagingAdapter : FirebaseMessagingService() {
     ) {
         if (NotificationManagerCompat.from(this).areNotificationsEnabled() &&
             (
-                Build.VERSION.SDK_INT < 33 ||
-                    ActivityCompat.checkSelfPermission(
-                        this,
-                        Manifest.permission.POST_NOTIFICATIONS,
-                    ) == PackageManager.PERMISSION_GRANTED
-            )
+                    Build.VERSION.SDK_INT < 33 ||
+                            ActivityCompat.checkSelfPermission(
+                                this,
+                                Manifest.permission.POST_NOTIFICATIONS,
+                            ) == PackageManager.PERMISSION_GRANTED
+                    )
         ) {
             NotificationManagerCompat
                 .from(this)
