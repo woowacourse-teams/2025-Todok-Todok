@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.enableEdgeToEdge
@@ -136,13 +135,6 @@ class DiscussionsActivity : AppCompatActivity() {
                     binding.root,
                     R.string.network_try_connection,
                 ).show()
-            }
-        }
-        viewModel.uiState.observe(this) { value ->
-            if (value.isUnreadNotification) {
-                binding.viewIsExist.visibility = View.VISIBLE
-            } else {
-                binding.viewIsExist.visibility = View.GONE
             }
         }
     }

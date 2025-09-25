@@ -10,16 +10,11 @@ import com.team.todoktodok.presentation.xml.discussions.my.MyDiscussionUiState
 data class DiscussionsUiState(
     val hotDiscussion: HotDiscussionUiState = HotDiscussionUiState(),
     val myDiscussion: MyDiscussionUiState = MyDiscussionUiState(),
-    val latestDiscussion: LatestDiscussionsUiState = LatestDiscussionsUiState(),
-    val searchDiscussion: SearchDiscussionsUiState = SearchDiscussionsUiState(),
-    val isUnreadNotification: Boolean = false,
-) {
-    fun changeUnreadNotification(isExist: Boolean): DiscussionsUiState = copy(isUnreadNotification = isExist)
     val allDiscussionsUiState: AllDiscussionsUiState = AllDiscussionsUiState(),
 ) {
     fun refreshLatestDiscussion(): DiscussionsUiState = copy(allDiscussionsUiState = allDiscussionsUiState.refreshLatestDiscussion())
-    
-  fun addSearchDiscussion(
+
+    fun addSearchDiscussion(
         keyword: String,
         newDiscussions: List<Discussion>,
     ): DiscussionsUiState =

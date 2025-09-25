@@ -5,8 +5,6 @@ import com.team.domain.ConnectivityObserver
 import com.team.domain.model.Discussion
 import com.team.domain.model.active.ActivatedDiscussionPage
 import com.team.domain.model.exception.NetworkResult
-import com.team.domain.model.exception.onFailure
-import com.team.domain.model.exception.onSuccess
 import com.team.domain.model.member.MemberDiscussionType
 import com.team.domain.model.member.MemberId
 import com.team.domain.repository.DiscussionRepository
@@ -37,23 +35,9 @@ class DiscussionsViewModel(
     private val _uiEvent = MutableSingleLiveData<DiscussionsUiEvent>()
     val uiEvent: SingleLiveData<DiscussionsUiEvent> get() = _uiEvent
 
-    init {
-        loadIsUnReadNotification()
-    }
-
     fun readNotification(notificationId: Int) {
         viewModelScope.launch {
             notificationRepository.readNotification(notificationId.toLong())
-        }
-    }
-
-    fun loadIsUnReadNotification() {
-        viewModelScope.launch {
-            notificationRepository
-                .getUnreadNotificationsCount()
-                .onSuccess { isExist ->
-                    _uiState.value = _uiState.value?.changeUnreadNotification(isExist)
-                }.onFailure { onUiEvent(DiscussionsUiEvent.ShowErrorMessage(it)) }
         }
     }
 
