@@ -16,7 +16,6 @@ val Typography =
                 color = Black21,
                 fontSize = 16.sp,
                 lineHeight = 24.sp,
-                letterSpacing = (-2.5).sp,
             ),
         labelSmall =
             TextStyle(
@@ -25,7 +24,6 @@ val Typography =
                 color = Black,
                 fontSize = 14.sp,
                 lineHeight = 24.sp,
-                letterSpacing = (-2.5).sp,
             ),
     )
 

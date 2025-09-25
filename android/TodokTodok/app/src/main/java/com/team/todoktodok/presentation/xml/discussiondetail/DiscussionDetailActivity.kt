@@ -1,12 +1,12 @@
 package com.team.todoktodok.presentation.xml.discussiondetail
 
-import android.app.ComponentCaller
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupWindow
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -32,6 +32,7 @@ import com.team.todoktodok.presentation.core.ext.registerPositiveResultListener
 import com.team.todoktodok.presentation.core.ext.registerReportResultListener
 import com.team.todoktodok.presentation.core.ext.toRelativeString
 import com.team.todoktodok.presentation.view.discussions.DiscussionsActivity
+import com.team.todoktodok.presentation.core.utils.shareDiscussionLink
 import com.team.todoktodok.presentation.xml.discussion.create.CreateDiscussionRoomActivity
 import com.team.todoktodok.presentation.xml.discussion.create.SerializationCreateDiscussionRoomMode
 import com.team.todoktodok.presentation.xml.discussiondetail.comment.CommentBottomSheet
@@ -70,7 +71,57 @@ class DiscussionDetailActivity : AppCompatActivity() {
         setContentView(binding.root)
         setupOnClick()
         setupObserve()
+        setUpRefresh()
+        handleIntent(this.intent)
         setUpDialogResultListener()
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        handleIntent(intent)
+    }
+
+    private fun handleIntent(intent: Intent) {
+        when (val entryPoint = parseEntryPoint(intent)) {
+            is DiscussionEntryPoint.Standard -> {
+                entryPoint.mode?.let { viewModel.fetchMode(it) }
+                viewModel.initLoadDiscission(entryPoint.discussionId)
+            }
+
+            is DiscussionEntryPoint.FromDeepLink -> {
+                viewModel.initLoadDiscission(entryPoint.discussionId)
+            }
+
+            is DiscussionEntryPoint.Invalid -> {
+                Toast
+                    .makeText(
+                        this,
+                        getString(R.string.discussion_entry_invalid_message),
+                        Toast.LENGTH_SHORT,
+                    ).show()
+                finish()
+            }
+        }
+    }
+
+    private fun parseEntryPoint(intent: Intent): DiscussionEntryPoint {
+        if (intent.data != null) {
+            val id = intent.data?.lastPathSegment?.toLongOrNull()
+            return if (id != null) {
+                DiscussionEntryPoint.FromDeepLink(id)
+            } else {
+                DiscussionEntryPoint.Invalid
+            }
+        }
+
+        val id = intent.getLongExtra(KEY_DISCUSSION_ID, NOT_FOUND_DISCUSSION_ID)
+        if (id != NOT_FOUND_DISCUSSION_ID) {
+            val mode = intent.getParcelableCompat<SerializationCreateDiscussionRoomMode>(KEY_MODE)
+            return DiscussionEntryPoint.Standard(id, mode)
+        }
+
+        return DiscussionEntryPoint.Invalid
     }
 
     override fun onDestroy() {
@@ -100,6 +151,12 @@ class DiscussionDetailActivity : AppCompatActivity() {
         onBackPressedDispatcher.addCallback(this, callback)
     }
 
+    private fun setUpRefresh() {
+        binding.srlDiscussionContainer.setOnRefreshListener {
+            viewModel.reloadDiscussion()
+        }
+    }
+
     private fun setupOnClick() {
         with(binding) {
             ivDiscussionDetailBack.setOnClickListener {
@@ -116,6 +173,14 @@ class DiscussionDetailActivity : AppCompatActivity() {
             }
             tvUserNickname.setOnClickListener {
                 viewModel.navigateToProfile()
+            }
+            ivDiscussionShare.setOnClickListener {
+                viewModel.uiState.value?.discussion?.let { discussion ->
+                    this@DiscussionDetailActivity.shareDiscussionLink(
+                        discussion.id,
+                        discussion.discussionTitle,
+                    )
+                }
             }
             setupLikeClick()
         }
@@ -241,6 +306,10 @@ class DiscussionDetailActivity : AppCompatActivity() {
             is DiscussionDetailUiEvent.NavigateToDiscussionsWithResult -> {
                 moveToDiscussionsWithResult(event.mode, event.discussionId)
             }
+
+            DiscussionDetailUiEvent.ReloadedDiscussion -> {
+                binding.srlDiscussionContainer.isRefreshing = false
+            }
         }
     }
 
@@ -318,31 +387,12 @@ class DiscussionDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun handleNewIntent(intent: Intent) {
-        intent
-            .getParcelableCompat<SerializationCreateDiscussionRoomMode>(KEY_MODE)
-            ?.let { viewModel.fetchMode(it) }
-        viewModel.reloadDiscussion()
-    }
-
-    override fun onNewIntent(intent: Intent) {
-        super.onNewIntent(intent)
-        handleNewIntent(intent)
-    }
-
-    override fun onNewIntent(
-        intent: Intent,
-        caller: ComponentCaller,
-    ) {
-        super.onNewIntent(intent, caller)
-        handleNewIntent(intent)
-    }
-
     companion object {
         private const val DISCUSSION_DELETE_DIALOG_REQUEST_KEY =
             "discussion_delete_dialog_request_key"
         private const val DISCUSSION_REPORT_DIALOG_REQUEST_KEY =
             "discussion_report_dialog_request_key"
+        private const val NOT_FOUND_DISCUSSION_ID = -1L
 
         fun Intent(
             context: Context,

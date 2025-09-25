@@ -50,6 +50,7 @@
     <!--  상세 토론방 페이지  -->
     <string name="content_description_discussion_detail_back">토론 상세 화면에서 뒤로가는 버튼</string>
     <string name="content_description_discussion_detail_option">토론방 옵션 버튼</string>
+    <string name="content_description_discussion_detail_share">토론방 공유 버튼</string>
     <string name="content_description_discussion_detail_book_profile">토론방 도서 이미지 버튼</string>
     <string name="content_description_discussion_detail_user_profile">토론방 유저 이미지 버튼</string>
     <string name="comment_input_hint">댓글 입력</string>
@@ -127,8 +128,9 @@
     <string name="select_book_hint_search_keyword">도서 제목 또는 저자를 입력해주세요</string>
     <string name="select_book_empty_search_result">도서 \'%s\'\n검색 결과가 없습니다</string>
     <string name="select_book_empty_search_result_content">입력한 검색어의 철자 또는 띄어쓰기가\n정확한지 다시 한번 확인해 주세요.</string>
-    <string name="select_book_searched_books_count">%,d개</string>
+    <string name="select_book_searched_books_count">총 %,d개</string>
     <string name="select_book_error_empty_keyword">검색어는 1자 이상이어야 합니다</string>
+    <string name="select_book_error_searched_book_total_size">책 검색 요청시 페이지 수는 1에서 200까지만 가능합니다.</string>
     <string name="select_book_error_empty_isbn">도서 ISBN을 입력해주세요</string>
     <string name="select_book_error_empty_author">도서의 저자가 없습니다</string>
     <string name="select_book_error_no_selected_book">도서를 선택해주세요</string>
@@ -260,7 +262,13 @@
     <string name="notification_icon">아이콘</string>
 
     <string name="network_try_connection">네트워크 연결을 재시도중입니다.</string>
+
     <string name="notification_type_like">좋아요</string>
     <string name="notification_type_comment">댓글</string>
     <string name="notification_type_reply">대댓글</string>
+
+    <string name="discussion_link_title">토론 보기</string>
+    <string name="share_discussion_title">토론방 공유</string>
+    <string name="discussion_entry_invalid_message">토론 정보를 불러올 수 없습니다.</string>
+
 </resources>

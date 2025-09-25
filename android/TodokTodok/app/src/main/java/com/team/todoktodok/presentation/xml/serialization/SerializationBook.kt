@@ -2,7 +2,7 @@ package com.team.todoktodok.presentation.xml.serialization
 
 import android.os.Parcelable
 import com.team.domain.model.Book
-import com.team.domain.model.book.AladinBook
+import com.team.domain.model.book.SearchedBook
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -23,7 +23,7 @@ fun Book.toSerialization(): SerializationBook =
         image = image,
     )
 
-fun AladinBook.toSerialization(): SerializationBook =
+fun SearchedBook.toSerialization(): SerializationBook =
     SerializationBook(
         id = isbn,
         title = mainTitle,

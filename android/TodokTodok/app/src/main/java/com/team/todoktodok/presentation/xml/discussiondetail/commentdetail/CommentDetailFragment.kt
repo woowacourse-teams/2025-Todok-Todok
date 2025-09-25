@@ -93,10 +93,11 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
         with(binding) {
             tvInputReply.setOnClickListener { viewModel.showReplyCreate() }
             ivAddReply.setOnClickListener { viewModel.createReply() }
+            ivReload.setOnClickListener { viewModel.reloadContents() }
         }
     }
 
-    fun setupObserve(binding: FragmentCommentDetailBinding) {
+    private fun setupObserve(binding: FragmentCommentDetailBinding) {
         viewModel.uiState.observe(viewLifecycleOwner) { value ->
             if (value.isLoading) {
                 binding.progressBar.show()
@@ -375,7 +376,7 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
             viewLifecycleOwner,
             ReplyCreateBottomSheet.REPLY_REQUEST_KEY,
             ReplyCreateBottomSheet.REPLY_CREATED_RESULT_KEY,
-        ) { viewModel.reloadComment() }
+        ) { viewModel.reloadReplies() }
 
         childFragmentManager.registerPositiveResultListener(
             viewLifecycleOwner,
