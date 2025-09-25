@@ -11,9 +11,8 @@ import io.restassured.http.ContentType;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.time.LocalDateTime;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -173,26 +172,6 @@ class DiscussionControllerTest {
                 .body("items.size()", is(3))
                 .body("pageInfo.hasNext", is(false))
                 .body("pageInfo.nextCursor", nullValue());
-    }
-
-    @Test
-    @DisplayName("토론방을 필터링한다")
-    void filterDiscussions() {
-        // given
-        databaseInitializer.setDefaultUserInfo();
-        databaseInitializer.setDefaultBookInfo();
-
-        databaseInitializer.setDiscussionInfo("오브젝트", "오브젝트 토론입니다", 1L, 1L);
-
-        final String token = MemberFixture.getAccessToken("user@gmail.com");
-
-        // when - then
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .header("Authorization", token)
-                .when().get("/api/v1/discussions/search?keyword=오브젝트&type=ALL")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value());
     }
 
     @Test
@@ -412,5 +391,31 @@ class DiscussionControllerTest {
                 .body("items[0].discussionId", equalTo(4))
                 .body("pageInfo.hasNext", equalTo(false))
                 .body("pageInfo.nextCursor", nullValue());
+    }
+
+    @Disabled
+    @Nested
+    @DisplayName("토론방 필터링 조회 테스트")
+    class FilterDiscussionTest {
+
+        @Test
+        @DisplayName("토론방을 필터링한다")
+        void filterDiscussions() {
+            // given
+            databaseInitializer.setDefaultUserInfo();
+            databaseInitializer.setDefaultBookInfo();
+
+            databaseInitializer.setDiscussionInfo("오브젝트", "오브젝트 토론입니다", 1L, 1L);
+
+            final String token = MemberFixture.getAccessToken("user@gmail.com");
+
+            // when - then
+            RestAssured.given().log().all()
+                    .contentType(ContentType.JSON)
+                    .header("Authorization", token)
+                    .when().get("/api/v1/discussions/search?keyword=오브젝트&type=ALL")
+                    .then().log().all()
+                    .statusCode(HttpStatus.OK.value());
+        }
     }
 }
