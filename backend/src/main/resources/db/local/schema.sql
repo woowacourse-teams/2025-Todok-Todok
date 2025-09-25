@@ -5,7 +5,7 @@ CREATE TABLE member
     modified_at     DATETIME(6) NOT NULL,
     deleted_at      DATETIME(6),
     email           VARCHAR(255) NOT NULL UNIQUE,
-    nickname        VARCHAR(255) NOT NULL,
+    nickname        VARCHAR(255) NOT NULL UNIQUE,
     profile_image   VARCHAR(255) NOT NULL,
     profile_message VARCHAR(255)
 );
