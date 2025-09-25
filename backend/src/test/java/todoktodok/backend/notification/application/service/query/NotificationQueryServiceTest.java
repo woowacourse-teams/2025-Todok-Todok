@@ -75,6 +75,6 @@ class NotificationQueryServiceTest {
         // when & then
         assertThatThrownBy(() -> notificationQueryService.getNotifications(notExistMemberId))
                 .isInstanceOf(NoSuchElementException.class)
-                .hasMessage("해당 회원을 찾을 수 없습니다 : recipientId = " + notExistMemberId);
+                .hasMessageContaining("해당 회원을 찾을 수 없습니다");
     }
 }

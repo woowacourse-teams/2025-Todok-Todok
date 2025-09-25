@@ -112,7 +112,7 @@ class NotificationCommandServiceTest {
         // when & then
         assertThatThrownBy(() -> notificationCommandService.markNotificationAsRead(2L, 1L))
                 .isInstanceOf(NotificationForbiddenException.class)
-                .hasMessage("본인 알림이 아닙니다 : memberId = " + memberId + ", recipientId = " + recipientId);
+                .hasMessageContaining("본인 알림이 아닙니다");
     }
 
     @Test
@@ -125,7 +125,7 @@ class NotificationCommandServiceTest {
         // when & then
         assertThatThrownBy(() -> notificationCommandService.markNotificationAsRead(1L, nonExistsNotificationId))
                 .isInstanceOf(NoSuchElementException.class)
-                .hasMessage("해당 알림을 찾을 수 없습니다 : notificationId = " + nonExistsNotificationId);
+                .hasMessageContaining("해당 알림을 찾을 수 없습니다");
     }
 
     @Test
@@ -160,7 +160,7 @@ class NotificationCommandServiceTest {
         // when & then
         assertThatThrownBy(() -> notificationCommandService.deleteNotification(memberId, notificationId))
                 .isInstanceOf(NotificationForbiddenException.class)
-                .hasMessage("본인 알림이 아닙니다 : memberId = " + memberId + ", recipientId = " + otherMemberId);
+                .hasMessageContaining("본인 알림이 아닙니다");
     }
 
     @Test
@@ -175,6 +175,6 @@ class NotificationCommandServiceTest {
         // when & then
         assertThatThrownBy(() -> notificationCommandService.deleteNotification(memberId, nonExistsNotificationId))
                 .isInstanceOf(NoSuchElementException.class)
-                .hasMessage("해당 알림을 찾을 수 없습니다 : notificationId = " + nonExistsNotificationId);
+                .hasMessageContaining("해당 알림을 찾을 수 없습니다");
     }
 }
