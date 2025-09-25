@@ -31,7 +31,6 @@ import todoktodok.backend.discussion.application.dto.response.ActiveDiscussionRe
 import todoktodok.backend.discussion.application.dto.response.DiscussionResponse;
 import todoktodok.backend.discussion.application.dto.response.LatestDiscussionPageResponse;
 import todoktodok.backend.discussion.application.dto.response.PageInfo;
-import todoktodok.backend.member.application.dto.response.MemberResponse;
 
 @ActiveProfiles("test")
 @Transactional
@@ -76,8 +75,63 @@ class DiscussionQueryServiceTest {
         assertAll(
                 () -> assertThat(discussionResponse.discussionId()).isEqualTo(discussionId),
                 () -> assertThat(discussionResponse.discussionTitle()).isEqualTo("클린코드에 대해 논의해볼까요"),
-                () -> assertThat(discussionResponse.discussionOpinion()).isEqualTo("클린코드만세")
+                () -> assertThat(discussionResponse.discussionOpinion()).isEqualTo("클린코드만세"),
+                () -> assertThat(discussionResponse.viewCount()).isEqualTo(1)
         );
+    }
+
+    @Test
+    @DisplayName("특정 토론방을 조회한지 10분 이후에 다시 조회하면 조회 횟수가 증가한다")
+    void getDiscussion_viewCount_after_10minutes() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+
+        final Long memberId = 1L;
+        final Long bookId = 1L;
+        final Long discussionId = 1L;
+
+        databaseInitializer.setDiscussionInfo(
+                "클린코드에 대해 논의해볼까요",
+                "클린코드만세",
+                memberId,
+                bookId
+        );
+
+        databaseInitializer.setDiscussionMemberViewInfo(memberId, discussionId, 10);
+
+        // when
+        final DiscussionResponse discussionResponse = discussionQueryService.getDiscussion(memberId, discussionId);
+
+        // then
+        assertThat(discussionResponse.viewCount()).isEqualTo(2);
+    }
+
+    @Test
+    @DisplayName("특정 토론방을 조회한지 10분 이전에 다시 조회하면 조회 횟수가 증가하지 않는다")
+    void getDiscussion_viewCount_before_10minutes() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+
+        final Long memberId = 1L;
+        final Long bookId = 1L;
+        final Long discussionId = 1L;
+
+        databaseInitializer.setDiscussionInfo(
+                "클린코드에 대해 논의해볼까요",
+                "클린코드만세",
+                memberId,
+                bookId
+        );
+
+        databaseInitializer.setDiscussionMemberViewInfo(memberId, discussionId, 9);
+
+        // when
+        final DiscussionResponse discussionResponse = discussionQueryService.getDiscussion(memberId, discussionId);
+
+        // then
+        assertThat(discussionResponse.viewCount()).isEqualTo(1);
     }
 
     @Test
@@ -642,7 +696,6 @@ class DiscussionQueryServiceTest {
                     () -> assertThat(hotDiscussions.get(3).discussionId()).isEqualTo(1L)
             );
         }
-
     }
 
     @Nested

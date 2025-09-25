@@ -86,8 +86,12 @@ public class Discussion extends TimeStamp {
         this.content = content;
     }
 
-    public boolean isSameId(final Long discussionId) {
-        return this.id.equals(discussionId);
+    public boolean isFirstView() {
+        return this.viewCount == 0;
+    }
+
+    public void updateViewCount() {
+        this.viewCount++;
     }
 
     @Override

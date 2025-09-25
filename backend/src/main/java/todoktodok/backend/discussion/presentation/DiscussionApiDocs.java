@@ -234,6 +234,7 @@ public interface DiscussionApiDocs {
                                               "createdAt": "2025-08-20T10:59:48",
                                               "discussionTitle": "토론방 제목",
                                               "discussionOpinion": "토론방 내용입니다",
+                                              "viewCount": 2,
                                               "likeCount": 0,
                                               "commentCount": 4,
                                               "isLikedByMe": false
@@ -331,6 +332,7 @@ public interface DiscussionApiDocs {
                                                     "createdAt": "2025-08-14T10:00:00",
                                                     "discussionTitle": "토론방 제목1",
                                                     "discussionOpinion": "토론방 내용1",
+                                                    "viewCount": 2,
                                                     "likeCount": 10,
                                                     "commentCount": 5,
                                                     "isLikedByMe": true
@@ -351,6 +353,7 @@ public interface DiscussionApiDocs {
                                                     "createdAt": "2025-08-14T10:05:00",
                                                     "discussionTitle": "토론방 제목2",
                                                     "discussionOpinion": "토론방 내용2",
+                                                    "viewCount": 2,
                                                     "likeCount": 5,
                                                     "commentCount": 3,
                                                     "isLikedByMe": false
@@ -454,6 +457,7 @@ public interface DiscussionApiDocs {
                                                   "createdAt": "2025-08-20T10:59:48",
                                                   "discussionTitle": "토론방 제목",
                                                   "discussionOpinion": "토론방 내용입니다",
+                                                  "viewCount": 2,
                                                   "likeCount": 0,
                                                   "commentCount": 4,
                                                   "isLikedByMe": false
@@ -474,6 +478,7 @@ public interface DiscussionApiDocs {
                                                   "createdAt": "2025-08-20T10:59:48",
                                                   "discussionTitle": "토론방 제목 2",
                                                   "discussionOpinion": "토론방 내용 2입니다",
+                                                  "viewCount": 2,
                                                   "likeCount": 0,
                                                   "commentCount": 4,
                                                   "isLikedByMe": false
@@ -565,6 +570,7 @@ public interface DiscussionApiDocs {
                                                    "createdAt": "2025-08-20T10:59:48",
                                                    "discussionTitle": "토론방 제목",
                                                    "discussionOpinion": "토론방 내용입니다",
+                                                   "viewCount": 2,
                                                    "likeCount": 5,
                                                    "commentCount": 4,
                                                    "isLikedByMe": true
@@ -585,6 +591,7 @@ public interface DiscussionApiDocs {
                                                    "createdAt": "2025-08-20T10:59:48",
                                                    "discussionTitle": "토론방 제목 3",
                                                    "discussionOpinion": "토론방 내용 3입니다",
+                                                   "viewCount": 2,
                                                    "likeCount": 6,
                                                    "commentCount": 0,
                                                    "isLikedByMe": false
@@ -961,6 +968,7 @@ public interface DiscussionApiDocs {
                                                       "createdAt": "2025-08-14T10:00:00",
                                                       "discussionTitle": "토론방4",
                                                       "discussionOpinion": "내용4",
+                                                      "viewCount": 2,
                                                       "likeCount": 0,
                                                       "commentCount": 1,
                                                       "isLikedByMe": false,
@@ -982,6 +990,7 @@ public interface DiscussionApiDocs {
                                                       "createdAt": "2025-08-14T10:00:00",
                                                       "discussionTitle": "토론방3",
                                                       "discussionOpinion": "내용3",
+                                                      "viewCount": 2,
                                                       "likeCount": 2,
                                                       "commentCount": 3,
                                                       "isLikedByMe": true,
@@ -1016,6 +1025,7 @@ public interface DiscussionApiDocs {
                                                       "createdAt": "2025-08-14T10:00:00",
                                                       "discussionTitle": "토론방2",
                                                       "discussionOpinion": "내용2",
+                                                      "viewCount": 2,
                                                       "likeCount": 1,
                                                       "commentCount": 2,
                                                       "isLikedByMe": false,
