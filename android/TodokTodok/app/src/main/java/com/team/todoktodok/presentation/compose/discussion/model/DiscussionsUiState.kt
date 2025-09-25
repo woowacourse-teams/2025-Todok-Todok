@@ -10,7 +10,7 @@ import com.team.todoktodok.presentation.compose.discussion.my.MyDiscussionUiStat
 data class DiscussionsUiState(
     val hotDiscussion: HotDiscussionUiState = HotDiscussionUiState(),
     val myDiscussion: MyDiscussionUiState = MyDiscussionUiState(),
-    val allDiscussionsUiState: AllDiscussionsUiState = AllDiscussionsUiState(),
+    val allDiscussions: AllDiscussionsUiState = AllDiscussionsUiState(),
 ) {
     fun refreshLatestDiscussion(): DiscussionsUiState = copy(allDiscussionsUiState = allDiscussionsUiState.refreshLatestDiscussion())
 
@@ -19,8 +19,8 @@ data class DiscussionsUiState(
         newDiscussions: List<Discussion>,
     ): DiscussionsUiState =
         copy(
-            allDiscussionsUiState =
-                allDiscussionsUiState.addSearchDiscussion(
+            allDiscussions =
+                allDiscussions.addSearchDiscussion(
                     keyword,
                     newDiscussions,
                 ),
@@ -40,26 +40,26 @@ data class DiscussionsUiState(
     ): DiscussionsUiState = copy(myDiscussion = myDiscussion.addDiscussions(createdDiscussion, participatedDiscussion))
 
     fun addLatestDiscussion(page: LatestDiscussionPage): DiscussionsUiState =
-        copy(allDiscussionsUiState = allDiscussionsUiState.addLatestDiscussion(page))
+        copy(allDiscussions = allDiscussions.addLatestDiscussion(page))
 
     fun modifyDiscussion(discussion: Discussion): DiscussionsUiState {
         val newHotDiscussion = hotDiscussion.modifyDiscussion(discussion)
-        val newAllDiscussionsUiState = allDiscussionsUiState.modifyAllDiscussion(discussion)
+        val newAllDiscussionsUiState = allDiscussions.modifyAllDiscussion(discussion)
         return copy(
             hotDiscussion = newHotDiscussion,
-            allDiscussionsUiState = newAllDiscussionsUiState,
+            allDiscussions = newAllDiscussionsUiState,
         )
     }
 
-    fun clearSearchDiscussion() = copy(allDiscussionsUiState = allDiscussionsUiState.clearSearchDiscussion())
+    fun clearSearchDiscussion() = copy(allDiscussions = allDiscussions.clearSearchDiscussion())
 
     fun removeDiscussion(discussionId: Long): DiscussionsUiState {
         val newHotDiscussion = hotDiscussion.removeDiscussion(discussionId)
         val newMyDiscussion = myDiscussion.removeDiscussion(discussionId)
-        val newAllDiscussionsUiState = allDiscussionsUiState.removeAllDiscussion(discussionId)
+        val newAllDiscussionsUiState = allDiscussions.removeAllDiscussion(discussionId)
         return copy(newHotDiscussion, newMyDiscussion, newAllDiscussionsUiState)
     }
 
-    val latestPageHasNext get() = allDiscussionsUiState.latestPageHasNext
-    val latestPageNextCursor get() = allDiscussionsUiState.latestPageNextCursor
+    val latestPageHasNext get() = allDiscussions.latestPageHasNext
+    val latestPageNextCursor get() = allDiscussions.latestPageNextCursor
 }
