@@ -22,9 +22,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.comment.domain.repository.CommentRepository;
-import todoktodok.backend.discussion.application.dto.DiscussionCursor;
+import todoktodok.backend.discussion.application.dto.ActiveDiscussionCursor;
 import todoktodok.backend.discussion.application.dto.response.ActiveDiscussionPageResponse;
-import todoktodok.backend.discussion.application.dto.response.ActiveDiscussionResponse;
 import todoktodok.backend.discussion.application.dto.response.DiscussionResponse;
 import todoktodok.backend.discussion.application.dto.response.LatestDiscussionPageResponse;
 import todoktodok.backend.discussion.application.dto.response.PageInfo;
@@ -33,6 +32,7 @@ import todoktodok.backend.discussion.domain.repository.DiscussionLikeRepository;
 import todoktodok.backend.discussion.domain.repository.DiscussionRepository;
 import todoktodok.backend.member.domain.Member;
 import todoktodok.backend.member.domain.repository.MemberRepository;
+import todoktodok.backend.reply.domain.repository.ReplyRepository;
 
 @Service
 @Transactional(readOnly = true)
@@ -131,45 +131,58 @@ public class DiscussionQueryService {
     public ActiveDiscussionPageResponse getActiveDiscussions(
             final Long memberId,
             final int period,
-            final int size,
+            final int requestedSize,
             @Nullable final String cursor
     ) {
         validateDiscussionPeriod(period);
-        validatePageSize(size);
+        validatePageSize(requestedSize);
 
+        validatePageSize(requestedSize);
         final Member member = findMember(memberId);
         final LocalDateTime periodStart = LocalDateTime.now().minusDays(period);
+        final String normalizedCursor = processBlankCursor(cursor);
 
-        final DiscussionCursor discussionCursor = Optional.ofNullable(cursor)
-                .map(DiscussionCursor::fromEncoded)
-                .orElse(DiscussionCursor.empty());
-
-        final Pageable pageable = Pageable.ofSize(size + 1);
-
-        final List<ActiveDiscussionResponse> discussions = discussionRepository.findActiveDiscussionsByCursor(
-                member,
+        final ActiveDiscussionCursor activeDiscussionCursor = Optional.ofNullable(normalizedCursor)
+                .map(ActiveDiscussionCursor::fromEncoded)
+                .orElse(ActiveDiscussionCursor.empty());
+        final Pageable pageable = Pageable.ofSize(requestedSize + 1);
+        final List<Long> activeDiscussionIds = discussionRepository.findActiveDiscussionsByCursor(
                 periodStart,
-                discussionCursor.lastCommentedAt(),
-                discussionCursor.cursorId(),
+                activeDiscussionCursor.lastDiscussionLatestCommentId(),
                 pageable
         );
 
-        if (discussions.isEmpty()) {
+        if (activeDiscussionIds.isEmpty()) {
             return new ActiveDiscussionPageResponse(Collections.emptyList(), new PageInfo(false, null));
         }
 
-        final boolean hasNext = discussions.size() > size;
+        final boolean hasNext = activeDiscussionIds.size() > requestedSize;
         if (hasNext) {
-            discussions.removeLast();
+            activeDiscussionIds.removeLast();
         }
 
-        final ActiveDiscussionResponse last = hasNext ? discussions.getLast() : null;
-        final String nextCursor = getNextCursor(hasNext, last, discussionCursor);
+        final Discussion lastDiscussion = getLastDiscussion(activeDiscussionIds, hasNext);
+        final Long latestCommentIdByDiscussion = commentRepository.findLatestCommentIdByDiscussion(lastDiscussion, periodStart)
+                .orElse(null);
+
+        final List<DiscussionResponse> discussionResponses = getDiscussionsResponses(activeDiscussionIds, member);
+        final String nextCursor = getNextCursor(hasNext, latestCommentIdByDiscussion);
 
         return new ActiveDiscussionPageResponse(
-                discussions,
+                discussionResponses,
                 new PageInfo(hasNext, nextCursor)
         );
+    }
+
+    private Discussion getLastDiscussion(
+            final List<Long> discussions,
+            final boolean hasNext
+    ) {
+        final Long lastDid = discussions.getLast();
+        if (hasNext) {
+            return discussionRepository.findById(lastDid).get();
+        }
+        return null;
     }
 
     private Discussion findDiscussion(final Long discussionId) {
@@ -200,6 +213,13 @@ public class DiscussionQueryService {
 
         final Long cursorId = decodeCursor(cursor);
         return discussionRepository.findIdsLessThan(cursorId, pageable);
+    }
+
+    private String processBlankCursor(String cursor) {
+        if (cursor == null || cursor.isBlank()) {
+            return null;
+        }
+        return cursor;
     }
 
     private String findNextCursor(
@@ -331,13 +351,14 @@ public class DiscussionQueryService {
 
     private String getNextCursor(
             final boolean hasNext,
-            final ActiveDiscussionResponse last,
-            final DiscussionCursor discussionCursor
+            final Long lastDiscussionLatestCommentId
     ) {
-        if (!hasNext || last == null) {
+        if (!hasNext || lastDiscussionLatestCommentId == null) {
             return null;
         }
-        return discussionCursor.toEncoded(last.lastCommentedAt(), last.discussionId());
+
+        final ActiveDiscussionCursor activeDiscussionCursor = new ActiveDiscussionCursor(lastDiscussionLatestCommentId);
+        return activeDiscussionCursor.toEncoded();
     }
 
     private void validateKeywordNotBlank(final String keyword) {
