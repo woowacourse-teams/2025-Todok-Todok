@@ -24,11 +24,12 @@ data class SearchDiscussionsUiState(
         )
     }
 
-    fun clear() = copy(
-        discussions = emptyList(),
-        searchKeyword = EMPTY_SEARCH_KEYWORD,
-        previousKeyword = EMPTY_SEARCH_KEYWORD
-    )
+    fun clear() =
+        copy(
+            discussions = emptyList(),
+            searchKeyword = EMPTY_SEARCH_KEYWORD,
+            previousKeyword = EMPTY_SEARCH_KEYWORD,
+        )
 
     fun modifyKeyword(keyword: String) = copy(searchKeyword = keyword)
 
