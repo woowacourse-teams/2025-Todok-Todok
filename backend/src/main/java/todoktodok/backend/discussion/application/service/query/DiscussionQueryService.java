@@ -211,7 +211,7 @@ public class DiscussionQueryService {
         return discussionRepository.findByIdLessThan(cursorId, pageable);
     }
 
-    private String processBlankCursor(String cursor) {
+    private String processBlankCursor(final String cursor) {
         if (cursor == null || cursor.isBlank()) {
             return null;
         }
