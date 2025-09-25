@@ -66,7 +66,7 @@ class FirebaseAdapter : FirebaseMessagingService() {
             val alert =
                 NotificationCompat
                     .Builder(this, CHANNEL_ID)
-                    .setSmallIcon(R.drawable.btn_plus)
+                    .setSmallIcon(R.drawable.ic_notification_overlay)
                     .setContentTitle(title)
                     .setContentText(body)
                     .setStyle(NotificationCompat.BigTextStyle().bigText(body))
@@ -77,12 +77,12 @@ class FirebaseAdapter : FirebaseMessagingService() {
 
             if (NotificationManagerCompat.from(this).areNotificationsEnabled() &&
                 (
-                    Build.VERSION.SDK_INT < 33 ||
-                        ActivityCompat.checkSelfPermission(
-                            this,
-                            Manifest.permission.POST_NOTIFICATIONS,
-                        ) == PackageManager.PERMISSION_GRANTED
-                )
+                        Build.VERSION.SDK_INT < 33 ||
+                                ActivityCompat.checkSelfPermission(
+                                    this,
+                                    Manifest.permission.POST_NOTIFICATIONS,
+                                ) == PackageManager.PERMISSION_GRANTED
+                        )
             ) {
                 NotificationManagerCompat
                     .from(this)
