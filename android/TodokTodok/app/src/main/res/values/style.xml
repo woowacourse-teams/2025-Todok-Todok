@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- 공통 스타일 -->
+    <style name="BaseTextStyle">
+        <item name="android:fontFamily">@font/pretendard_semi_bold</item>
+        <item name="android:letterSpacing">-0.025</item>
+        <item name="android:lineSpacingMultiplier">1.29</item>
+        <item name="android:textColor">@color/black_18</item>
+        <item name="android:textSize">@dimen/font_size_normal</item>
+    </style>
+
+    <style name="HeaderTitleText" parent="BaseTextStyle">
+        <item name="android:textSize">@dimen/font_size_x_large</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+
+    <style name="BasicButtonStyle" parent="@style/Widget.Material3.Button">
+        <item name="android:background">@drawable/bg_green_1a_radius_8dp</item>
+        <item name="backgroundTint">@color/green_1A</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:fontFamily">@font/pretendard_extra_bold</item>
+        <item name="android:textSize">@dimen/font_size_large</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+
+    <style name="HintTextStyle" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="android:textSize">@dimen/font_size_small</item>
+        <item name="fontFamily">@font/pretendard_regular</item>
+        <item name="android:textColor">@color/gray_76</item>
+    </style>
+
+    <style name="RoundedImageStyle" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/space_8</item>
+    </style>
+
+    <!-- 원형 이미지 -->
+    <style name="circleImageView">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="BottomSheetDialogTheme" parent="Theme.Material3.DayNight.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/BottomSheetStyle</item>
+    </style>
+
+    <style name="BottomSheetStyle" parent="Widget.Material3.BottomSheet.Modal">
+        <item name="backgroundTint">@color/white</item>
+    </style>
+
+    <!-- styles.xml -->
+    <style name="cornerRadiusDialog" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowMinWidthMajor">90%</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+
+    <style name="Widget.App.RadioButton.Green" parent="Widget.MaterialComponents.CompoundButton.RadioButton">
+        <item name="buttonTint">@color/green_1A</item>
+        <item name="android:fontFamily">@font/pretendard_semi_bold</item>
+        <item name="android:letterSpacing">-0.025</item>
+        <item name="android:lineSpacingMultiplier">1.29</item>
+        <item name="android:textColor">@color/black_18</item>
+        <item name="android:textSize">@dimen/font_size_normal</item>
+    </style>
+</resources>

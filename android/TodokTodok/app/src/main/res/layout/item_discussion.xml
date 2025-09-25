@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cv_discussion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/white"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="5dp"
+        app:cardUseCompatPadding="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/space_16"
+            android:paddingTop="@dimen/space_16"
+            android:paddingBottom="@dimen/space_12">
+
+            <ImageView
+                android:id="@+id/iv_book"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:contentDescription="@string/content_description_discussion_img"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@drawable/book" />
+
+            <TextView
+                android:id="@+id/tv_book_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_8"
+                android:ellipsize="end"
+                android:fontFamily="@font/pretendard_semi_bold"
+                android:maxLines="1"
+                android:textColor="@color/black_21"
+                android:textSize="@dimen/font_size_normal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/iv_book"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="오브젝트오브젝트오브젝트오브젝트오브젝트오브젝트오브젝트오브젝트" />
+
+            <TextView
+                android:id="@+id/tv_book_author"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_8"
+                android:ellipsize="end"
+                android:fontFamily="@font/pretendard_light"
+                android:maxLines="1"
+                android:textColor="@color/gray_75"
+                android:textSize="@dimen/font_size_small"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toEndOf="@id/iv_book"
+                app:layout_constraintTop_toBottomOf="@id/tv_book_title"
+                tools:text="조영호" />
+
+            <TextView
+                android:id="@+id/tv_discussion_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_8"
+                android:ellipsize="end"
+                android:fontFamily="@font/pretendard_medium"
+                android:gravity="start"
+                android:maxLines="1"
+                android:textColor="@color/black_18"
+                android:textSize="@dimen/font_size_large"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/iv_book"
+                tools:text="김수한무 거북이와 두루미 삼천갑자 동방삭 치치카포 사리사리센타" />
+
+            <TextView
+                android:id="@+id/tv_discussion_opinion"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_8"
+                android:ellipsize="end"
+                android:fontFamily="@font/pretendard_medium"
+                android:maxLines="1"
+                android:minLines="1"
+                android:textColor="@color/gray_68"
+                android:textSize="@dimen/font_size_x_small"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_discussion_title"
+                tools:text="김수한무 거북이와 두루미 삼천갑자 동방삭 치치카포 사리사리센타 워리워리 세드리벤 슬뫼 이무드리 샘이나리 시프네르 보르무스 베르무스 삼사무기 가필리아 구름에 달 가듯이 " />
+
+
+            <ImageView
+                android:id="@+id/iv_writer_profile_image"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginTop="@dimen/space_16"
+                android:layout_marginBottom="@dimen/space_8"
+                android:background="@drawable/bg_circle_white"
+                android:padding="1dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_discussion_opinion" />
+
+            <TextView
+                android:id="@+id/tv_discussion_writer_nickname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_4"
+                android:fontFamily="@font/pretendard_bold"
+                android:textSize="@dimen/font_size_normal"
+                app:layout_constraintBottom_toBottomOf="@id/iv_writer_profile_image"
+                app:layout_constraintStart_toEndOf="@id/iv_writer_profile_image"
+                app:layout_constraintTop_toTopOf="@id/iv_writer_profile_image"
+                tools:text="독서왕 정페토" />
+
+            <TextView
+                android:id="@+id/tv_comment_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/space_4"
+                android:fontFamily="@font/pretendard_regular"
+                android:textSize="@dimen/font_size_normal"
+                app:layout_constraintBottom_toBottomOf="@id/iv_comment_count"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/iv_comment_count"
+                tools:text="10" />
+
+            <ImageView
+                android:id="@+id/iv_comment_count"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginTop="@dimen/space_8"
+                android:layout_marginEnd="@dimen/space_4"
+                android:layout_marginBottom="@dimen/space_4"
+                android:src="@drawable/btn_comment"
+                app:layout_constraintBottom_toBottomOf="@id/iv_writer_profile_image"
+                app:layout_constraintEnd_toStartOf="@id/tv_comment_count"
+                app:layout_constraintTop_toTopOf="@id/iv_writer_profile_image" />
+
+            <TextView
+                android:id="@+id/tv_views"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/space_8"
+                android:fontFamily="@font/pretendard_regular"
+                android:textSize="@dimen/font_size_normal"
+                app:layout_constraintBottom_toBottomOf="@id/iv_comment_count"
+                app:layout_constraintEnd_toStartOf="@id/iv_comment_count"
+                app:layout_constraintTop_toTopOf="@+id/iv_comment_count"
+                tools:text="0" />
+
+            <ImageView
+                android:id="@+id/iv_views_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/space_4"
+                android:src="@drawable/ic_views"
+                app:layout_constraintBottom_toBottomOf="@id/iv_comment_count"
+                app:layout_constraintEnd_toStartOf="@id/tv_views"
+                app:layout_constraintTop_toTopOf="@id/iv_comment_count" />
+
+            <TextView
+                android:id="@+id/tv_like_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/space_8"
+                android:fontFamily="@font/pretendard_regular"
+                android:textSize="@dimen/font_size_normal"
+                app:layout_constraintBottom_toBottomOf="@id/iv_comment_count"
+                app:layout_constraintEnd_toStartOf="@id/iv_views_count"
+                app:layout_constraintTop_toTopOf="@id/iv_comment_count"
+                tools:text="10" />
+
+            <ImageView
+                android:id="@+id/iv_like_count"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="@dimen/space_4"
+                android:src="@drawable/btn_heart_filled"
+                app:layout_constraintBottom_toBottomOf="@id/iv_comment_count"
+                app:layout_constraintEnd_toStartOf="@id/tv_like_count"
+                app:layout_constraintTop_toTopOf="@id/iv_comment_count" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+</androidx.constraintlayout.widget.ConstraintLayout>
