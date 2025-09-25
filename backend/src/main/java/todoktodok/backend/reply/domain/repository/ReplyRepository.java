@@ -13,23 +13,15 @@ public interface ReplyRepository extends JpaRepository<Reply, Long> {
     int countRepliesByComment(final Comment comment);
 
     @Query("""
-        SELECT new todoktodok.backend.comment.application.service.query.CommentReplyCountDto(c.id, COUNT(r))
-        FROM Comment c
-        LEFT JOIN Reply r ON r.comment = c
-        WHERE c.id IN :commentIds
-        GROUP BY c.id
-    """)
+                SELECT new todoktodok.backend.comment.application.service.query.CommentReplyCountDto(c.id, COUNT(r))
+                FROM Comment c
+                LEFT JOIN Reply r ON r.comment = c
+                WHERE c.id IN :commentIds
+                GROUP BY c.id
+            """)
     List<CommentReplyCountDto> findReplyCountsByCommentIds(@Param("commentIds") final List<Long> commentIds);
 
     List<Reply> findRepliesByComment(final Comment comment);
 
     boolean existsByComment(final Comment comment);
-
-    @Query("""
-        SELECT COUNT(r)
-        FROM Reply r
-        JOIN r.comment c
-        WHERE c.discussion.id = :discussionId
-    """)
-    Long countRepliesByDiscussionId(@Param("discussionId") Long discussionId);
 }
