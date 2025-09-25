@@ -50,7 +50,6 @@ public class DiscussionQueryService {
     private final DiscussionLikeRepository discussionLikeRepository;
     private final MemberRepository memberRepository;
     private final CommentRepository commentRepository;
-    private final ReplyRepository replyRepository;
 
     public DiscussionResponse getDiscussion(
             final Long memberId,
