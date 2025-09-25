@@ -27,7 +27,6 @@ class WithdrawViewModel(
         viewModelScope.launch {
             joinAll(
                 launch { memberRepository.withdraw() },
-//                launch { notificationRepository.deletePushNotification() },
             )
             _isLoading.value = false
             _uiEvent.setValue(WithdrawUiEvent.NavigateToLogin)
