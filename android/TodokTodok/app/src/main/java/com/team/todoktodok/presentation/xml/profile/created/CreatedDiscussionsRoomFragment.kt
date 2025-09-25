@@ -6,11 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentCreatedDiscussionsRoomBinding
+import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiState
 import com.team.todoktodok.presentation.core.component.adapter.BaseDiscussionViewHolder
 import com.team.todoktodok.presentation.core.component.adapter.DiscussionAdapter
 import com.team.todoktodok.presentation.xml.book.SelectBookActivity
 import com.team.todoktodok.presentation.xml.discussiondetail.DiscussionDetailActivity
-import com.team.todoktodok.presentation.xml.discussions.DiscussionUiState
 import com.team.todoktodok.presentation.xml.profile.BaseProfileFragment
 
 class CreatedDiscussionsRoomFragment : BaseProfileFragment(R.layout.fragment_created_discussions_room) {

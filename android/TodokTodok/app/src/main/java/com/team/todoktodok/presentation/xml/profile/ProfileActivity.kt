@@ -17,12 +17,12 @@ import com.team.domain.model.member.MemberId.Companion.DEFAULT_MEMBER_ID
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivityProfileBinding
+import com.team.todoktodok.presentation.compose.discussion.DiscussionsActivity
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
 import com.team.todoktodok.presentation.core.component.ReportUserDialog
 import com.team.todoktodok.presentation.core.ext.getSerializableCompat
 import com.team.todoktodok.presentation.core.ext.registerReportResultListener
-import com.team.todoktodok.presentation.view.discussions.DiscussionsActivity
 import com.team.todoktodok.presentation.xml.profile.adapter.ContentPagerAdapter
 import com.team.todoktodok.presentation.xml.profile.adapter.ProfileAdapter
 import com.team.todoktodok.presentation.xml.profile.vm.ProfileViewModel

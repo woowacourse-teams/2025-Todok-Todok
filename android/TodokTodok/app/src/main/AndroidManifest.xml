@@ -42,14 +42,15 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".presentation.compose.discussion.DiscussionsActivity"
+            android:exported="false">
+        </activity>
+        <activity
             android:name=".presentation.xml.discussion.create.CreateDiscussionRoomActivity"
             android:exported="false"
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
             android:name=".presentation.xml.setting.SettingActivity"
-            android:exported="false" />
-        <activity
-            android:name=".presentation.xml.discussions.DiscussionsActivity"
             android:exported="false" />
         <activity
             android:name=".presentation.xml.profile.ProfileActivity"

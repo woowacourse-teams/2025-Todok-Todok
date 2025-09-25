@@ -76,6 +76,7 @@
     <string name="discussion_tab_title_hot">HOT</string>
     <string name="discussion_tab_title_all">전체</string>
     <string name="discussion_tab_title_my">내 토론방</string>
+    <string name="discussion_search_result_count">검색 결과(%d)</string>
     <string name="discussion_no_search_title">%s에 대한 검색결과가 없어요</string>
     <string name="discussion_no_search_subtitle">다른 검색어를 입력해 주세요 !</string>
     <string name="content_description_discussion_img">토론방 도서 이미지</string>

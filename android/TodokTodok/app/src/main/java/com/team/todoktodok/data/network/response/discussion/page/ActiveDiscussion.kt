@@ -1,6 +1,6 @@
 package com.team.todoktodok.data.network.response.discussion.page
 
-import com.team.domain.model.active.ActivatedDiscussion
+import com.team.domain.model.Discussion
 import com.team.todoktodok.data.core.ext.toLocalDateTime
 import com.team.todoktodok.data.network.response.discussion.BookResponse
 import com.team.todoktodok.data.network.response.discussion.MemberResponse
@@ -21,8 +21,8 @@ data class ActiveDiscussion(
     val lastCommentedAt: String,
 ) {
     fun toDomain() =
-        ActivatedDiscussion(
-            discussionId = discussionId,
+        Discussion(
+            id = discussionId,
             discussionTitle = discussionTitle,
             discussionOpinion = discussionOpinion,
             book = book.toDomain(),
@@ -30,7 +30,6 @@ data class ActiveDiscussion(
             likeCount = likeCount,
             commentCount = commentCount,
             isLikedByMe = isLikedByMe,
-            createdAt = createdAt.toLocalDateTime(),
-            lastCommentedAt = lastCommentedAt,
+            createAt = createdAt.toLocalDateTime(),
         )
 }

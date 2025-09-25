@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ItemDiscussionBinding
-import com.team.todoktodok.presentation.xml.discussions.DiscussionUiState
+import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiState
 
 class QueryHighlightingViewHolder private constructor(
     binding: ItemDiscussionBinding,

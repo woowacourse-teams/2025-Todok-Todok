@@ -10,8 +10,8 @@ import com.team.domain.model.member.Nickname
 import com.team.domain.model.member.User
 import com.team.todoktodok.presentation.compose.discussion.latest.LatestDiscussionsScreen
 import com.team.todoktodok.presentation.compose.discussion.latest.LatestDiscussionsUiState
+import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiState
 import com.team.todoktodok.presentation.compose.preview.LatestDiscussionsPreviewParameterProvider
-import com.team.todoktodok.presentation.xml.discussions.DiscussionUiState
 import org.junit.Rule
 import org.junit.Test
 import org.junit.jupiter.api.Assertions
@@ -24,7 +24,7 @@ class LatestDiscussionsScreenTest {
     private val previewData = LatestDiscussionsPreviewParameterProvider().values.first()
     private val discussion =
         LatestDiscussionsUiState(
-            items =
+            discussions =
                 listOf(
                     DiscussionUiState(
                         Discussion(
@@ -46,16 +46,16 @@ class LatestDiscussionsScreenTest {
     fun `아이템이_화면에_보여진다`() {
         composeTestRule.setContent {
             LatestDiscussionsScreen(
+                uiState = discussion,
                 onLoadMore = {},
                 onClick = {},
                 isRefreshing = false,
                 onRefresh = {},
-                latestDiscussionsUiState = discussion,
             )
         }
 
         composeTestRule
-            .onNodeWithText(discussion.items.first().bookTitle)
+            .onNodeWithText(discussion.discussions.first().bookTitle)
             .assertIsDisplayed()
     }
 
@@ -65,16 +65,16 @@ class LatestDiscussionsScreenTest {
 
         composeTestRule.setContent {
             LatestDiscussionsScreen(
+                uiState = previewData,
                 onLoadMore = {},
                 onClick = { id -> clickedId = id },
                 isRefreshing = false,
                 onRefresh = {},
-                latestDiscussionsUiState = previewData,
             )
         }
 
-        val firstItem = previewData.items.first()
-        composeTestRule.onNodeWithText(previewData.items.first().bookTitle).performClick()
+        val firstItem = previewData.discussions.first()
+        composeTestRule.onNodeWithText(previewData.discussions.first().bookTitle).performClick()
 
         Assertions.assertTrue(clickedId == firstItem.discussionId)
     }
