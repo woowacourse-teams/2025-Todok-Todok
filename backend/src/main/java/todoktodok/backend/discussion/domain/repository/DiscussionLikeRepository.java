@@ -17,11 +17,20 @@ public interface DiscussionLikeRepository extends JpaRepository<DiscussionLike, 
     Optional<DiscussionLike> findByMemberAndDiscussion(final Member member, final Discussion discussion);
 
     @Query("""
-                SELECT COUNT(dl)
+                SELECT new todoktodok.backend.discussion.application.service.query.DiscussionLikeSummaryDto(
+                        :discussionId,
+                        COUNT(dl),
+                        CASE WHEN SUM(CASE WHEN dl.member = :member THEN 1 ELSE 0 END) > 0 
+                             THEN true 
+                             ELSE false END
+                )
                 FROM DiscussionLike dl
                 WHERE dl.discussion.id = :discussionId
             """)
-    Long findLikeCountsByDiscussionId(@Param("discussionId") final Long discussionId);
+    DiscussionLikeSummaryDto findLikeSummaryByDiscussionId(
+            @Param("member") final Member member,
+            @Param("discussionId") final Long discussionId
+    );
 
     @Query("""
                     SELECT new todoktodok.backend.discussion.application.service.query.DiscussionLikeSummaryDto(

@@ -5,6 +5,7 @@ public record DiscussionLikeSummaryDto(
         int likeCount,
         boolean isLikedByMe
 ) {
+
     public DiscussionLikeSummaryDto(
             final Long discussionId,
             final Long likeCount,

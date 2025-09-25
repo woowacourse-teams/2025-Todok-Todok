@@ -59,18 +59,15 @@ public class DiscussionQueryService {
         final Member member = findMember(memberId);
         final Discussion discussion = findDiscussion(discussionId);
 
-        final int likeCount = Math.toIntExact(discussionLikeRepository.findLikeCountsByDiscussionId(discussionId));
-        final int commentCount = Math.toIntExact(
-                commentRepository.countCommentsByDiscussionId(discussionId)
-                        + replyRepository.countRepliesByDiscussionId(discussionId)
-        );
-        final boolean isLikedByMe = discussionLikeRepository.existsByMemberAndDiscussion(member, discussion);
+        final DiscussionLikeSummaryDto likeSummary = discussionLikeRepository.findLikeSummaryByDiscussionId(member, discussionId);
+        final DiscussionCommentCountDto commentSummary = commentRepository.findCommentCountByDiscussionId(discussionId);
+        final int commentCount = commentSummary.commentCount() + commentSummary.replyCount();
 
         return new DiscussionResponse(
                 discussion,
-                likeCount,
+                likeSummary.likeCount(),
                 commentCount,
-                isLikedByMe
+                likeSummary.isLikedByMe()
         );
     }
 
@@ -238,7 +235,8 @@ public class DiscussionQueryService {
             final String keyword,
             final Member member
     ) {
-        final List<Long> discussionIds = discussionRepository.searchIdsByKeyword(keyword);
+        final String keywordWithPrefix = String.format("+%s*", keyword);
+        final List<Long> discussionIds = discussionRepository.searchIdsByKeyword(keywordWithPrefix);
 
         return getDiscussionsResponses(discussionIds, member);
     }
