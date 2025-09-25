@@ -103,7 +103,7 @@ fun DiscussionToolbar(
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
-fun DiscussionToolbarPreview() {
+private fun DiscussionToolbarPreview() {
     DiscussionToolbar(
         isExistNotification = true,
         onClickNotification = {},
@@ -114,7 +114,7 @@ fun DiscussionToolbarPreview() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
-fun DiscussionToolbarPreview2() {
+private fun DiscussionToolbarPreview2() {
     DiscussionToolbar(
         isExistNotification = false,
         onClickNotification = {},

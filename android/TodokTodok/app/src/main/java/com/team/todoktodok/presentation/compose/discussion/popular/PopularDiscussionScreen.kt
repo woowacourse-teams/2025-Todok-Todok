@@ -53,7 +53,7 @@ fun PopularDiscussionsScreen(
 }
 
 @Composable
-fun PopularDiscussionsHeader() {
+private fun PopularDiscussionsHeader() {
     Row(
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -75,7 +75,7 @@ fun PopularDiscussionsHeader() {
 
 @Preview(showBackground = true)
 @Composable
-fun PopularDiscussionsScreenPreview(
+private fun PopularDiscussionsScreenPreview(
     @PreviewParameter(PopularDiscussionsPreviewParameterProvider::class)
     popularDiscussions: PopularDiscussionsUiState,
 ) {

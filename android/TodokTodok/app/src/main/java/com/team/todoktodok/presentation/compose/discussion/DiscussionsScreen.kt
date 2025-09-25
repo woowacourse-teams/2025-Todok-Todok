@@ -7,13 +7,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material.FloatingActionButton
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarDuration
@@ -29,10 +26,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -40,6 +34,7 @@ import com.team.todoktodok.R
 import com.team.todoktodok.presentation.compose.core.ObserveAsEvents
 import com.team.todoktodok.presentation.compose.discussion.component.DiscussionToolbar
 import com.team.todoktodok.presentation.compose.discussion.model.Destination
+import com.team.todoktodok.presentation.compose.discussion.model.DiscussionFAB
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionTab
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionsUiEvent
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionsUiState
@@ -184,20 +179,7 @@ fun DiscussionsScreen(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = { onClickCreateDiscussion() },
-                backgroundColor = GreenF0,
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_create_discussion),
-                    contentDescription = stringResource(R.string.all_create_discussion_room),
-                    tint = Color.Unspecified,
-                    modifier =
-                        Modifier
-                            .padding(5.dp)
-                            .size(60.dp),
-                )
-            }
+            DiscussionFAB(onClickCreateDiscussion = { onClickCreateDiscussion() })
         },
     ) { innerPadding ->
         val searchDiscussion = uiState.allDiscussions.searchDiscussion
@@ -234,7 +216,7 @@ fun DiscussionsScreen(
 
 @Preview
 @Composable
-fun DiscussionsScreenPreview() {
+private fun DiscussionsScreenPreview() {
     DiscussionsScreen(
         uiState = DiscussionsUiState(),
         pagerState = rememberPagerState(0) { 3 },

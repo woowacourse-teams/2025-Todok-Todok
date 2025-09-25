@@ -81,7 +81,7 @@ fun ActivatedDiscussionHeader() {
 
 @Preview(showBackground = true)
 @Composable
-fun ActivatedDiscussionScreenPreview(
+private fun ActivatedDiscussionScreenPreview(
     @PreviewParameter(ActivatedDiscussionsUiStatePreviewParameterProvider::class)
     activatedDiscussions: ActivatedDiscussionsUiState,
 ) {

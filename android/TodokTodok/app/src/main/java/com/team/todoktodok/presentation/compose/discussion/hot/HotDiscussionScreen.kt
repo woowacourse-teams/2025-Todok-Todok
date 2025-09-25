@@ -53,7 +53,7 @@ fun HotDiscussionScreen(
 
 @Composable
 @Preview(showBackground = true)
-fun HotDiscissionContent(
+private fun HotDiscissionContent(
     @PreviewParameter(HotDiscussionPreviewParameterProvider::class)
     hotDiscussionUiState: HotDiscussionUiState,
 ) {

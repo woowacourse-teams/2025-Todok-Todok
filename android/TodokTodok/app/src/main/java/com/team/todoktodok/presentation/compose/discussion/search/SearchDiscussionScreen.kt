@@ -46,7 +46,7 @@ fun SearchDiscussionScreen(
 }
 
 @Composable
-fun EmptySearchResults(
+private fun EmptySearchResults(
     uiState: SearchDiscussionsUiState,
     modifier: Modifier = Modifier,
 ) {
@@ -89,7 +89,7 @@ fun EmptySearchResults(
 }
 
 @Composable
-fun SearchResultDiscussions(
+private fun SearchResultDiscussions(
     uiState: SearchDiscussionsUiState,
     onClick: (Long) -> Unit,
     modifier: Modifier = Modifier,
@@ -121,7 +121,7 @@ fun SearchResultDiscussions(
 
 @Preview(showBackground = true)
 @Composable
-fun SearchDiscussionScreenPreview(
+private fun SearchDiscussionScreenPreview(
     @PreviewParameter(SearchDiscussionsUiStatePreviewParameterProvider::class)
     searchDiscussion: SearchDiscussionsUiState,
 ) {
@@ -133,7 +133,7 @@ fun SearchDiscussionScreenPreview(
 
 @Preview(showBackground = true)
 @Composable
-fun EmptySearchDiscussionScreenPreview() {
+private fun EmptySearchDiscussionScreenPreview() {
     SearchDiscussionScreen(
         onClick = {},
         uiState = SearchDiscussionsUiState(searchKeyword = "토론"),

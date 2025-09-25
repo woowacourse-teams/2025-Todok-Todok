@@ -115,7 +115,7 @@ fun SearchDiscussionBar(
 
 @Preview
 @Composable
-fun SearchDiscussionBarPreview() {
+private fun SearchDiscussionBarPreview() {
     Column {
         SearchDiscussionBar(
             searchKeyword = "코틀린",
