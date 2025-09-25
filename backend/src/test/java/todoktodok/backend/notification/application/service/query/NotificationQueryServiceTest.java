@@ -44,7 +44,7 @@ class NotificationQueryServiceTest {
         databaseInitializer.setDefaultReplyNotification();
 
         // when
-        NotificationResponse response = notificationQueryService.getNotifications(1L);
+        final NotificationResponse response = notificationQueryService.getNotifications(1L);
 
         // then
         assertThat(response.unreadCount()).isEqualTo(2);
@@ -60,7 +60,7 @@ class NotificationQueryServiceTest {
         databaseInitializer.setDefaultCommentNotification();
 
         // when
-        UnreadNotificationResponse response = notificationQueryService.checkUnReadNotification(1L);
+        final UnreadNotificationResponse response = notificationQueryService.hasUnreadNotifications(1L);
 
         // then
         assertThat(response.exist()).isTrue();
@@ -70,11 +70,11 @@ class NotificationQueryServiceTest {
     @DisplayName("존재하지 않는 회원으로 조회하면 예외가 발생한다")
     void getNotifications_fail_noSuchMember() {
         // given
-        Long notExistMemberId = 999L;
+        final Long notExistMemberId = 999L;
 
         // when & then
         assertThatThrownBy(() -> notificationQueryService.getNotifications(notExistMemberId))
                 .isInstanceOf(NoSuchElementException.class)
-                .hasMessageContaining("해당 회원을 찾을 수 없습니다");
+                .hasMessage("해당 회원을 찾을 수 없습니다 : recipientId = " + notExistMemberId);
     }
 }

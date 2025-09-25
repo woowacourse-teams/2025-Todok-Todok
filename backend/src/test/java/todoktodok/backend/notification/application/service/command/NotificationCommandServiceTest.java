@@ -106,10 +106,13 @@ class NotificationCommandServiceTest {
         databaseInitializer.setUserInfo("email2@naver.com", "user2", "image.svg", "안녕하세요");
         databaseInitializer.setDefaultCommentNotification();
 
+        final Long memberId = 2L;
+        final Long recipientId = 1L;
+
         // when & then
         assertThatThrownBy(() -> notificationCommandService.markNotificationAsRead(2L, 1L))
                 .isInstanceOf(NotificationForbiddenException.class)
-                .hasMessageContaining("본인 알림이 아닙니다");
+                .hasMessage("본인 알림이 아닙니다 : memberId = " + memberId + ", recipientId = " + recipientId);
     }
 
     @Test
@@ -122,7 +125,7 @@ class NotificationCommandServiceTest {
         // when & then
         assertThatThrownBy(() -> notificationCommandService.markNotificationAsRead(1L, nonExistsNotificationId))
                 .isInstanceOf(NoSuchElementException.class)
-                .hasMessageContaining("해당 알림을 찾을 수 없습니다 : notificationId = " + nonExistsNotificationId);
+                .hasMessage("해당 알림을 찾을 수 없습니다 : notificationId = " + nonExistsNotificationId);
     }
 
     @Test
@@ -150,13 +153,14 @@ class NotificationCommandServiceTest {
         databaseInitializer.setUserInfo("other@test.com", "다른유저", "image.svg", "msg");
         databaseInitializer.setDefaultCommentNotification();
 
-        final Long otherMemberId = 2L;
+        final Long memberId = 2L;
+        final Long otherMemberId = 1L;
         final Long notificationId = 1L;
 
         // when & then
-        assertThatThrownBy(() -> notificationCommandService.deleteNotification(otherMemberId, notificationId))
-                .isInstanceOf(NotificationForbiddenException.class) // 실제 서비스에서 쓰는 예외 타입으로 교체
-                .hasMessageContaining("본인 알림이 아닙니다");
+        assertThatThrownBy(() -> notificationCommandService.deleteNotification(memberId, notificationId))
+                .isInstanceOf(NotificationForbiddenException.class)
+                .hasMessage("본인 알림이 아닙니다 : memberId = " + memberId + ", recipientId = " + otherMemberId);
     }
 
     @Test
@@ -171,6 +175,6 @@ class NotificationCommandServiceTest {
         // when & then
         assertThatThrownBy(() -> notificationCommandService.deleteNotification(memberId, nonExistsNotificationId))
                 .isInstanceOf(NoSuchElementException.class)
-                .hasMessageContaining("해당 알림을 찾을 수 없습니다 : notificationId = " + nonExistsNotificationId);
+                .hasMessage("해당 알림을 찾을 수 없습니다 : notificationId = " + nonExistsNotificationId);
     }
 }
