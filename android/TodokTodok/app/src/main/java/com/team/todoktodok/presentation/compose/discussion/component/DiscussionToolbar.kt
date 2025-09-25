@@ -1,13 +1,11 @@
 package com.team.todoktodok.presentation.compose.discussion.component
 
-import SearchDiscussionBar
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -29,18 +27,17 @@ import com.team.todoktodok.presentation.compose.theme.White
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DiscussionToolbar(
-    searchKeyword: String,
-    previousKeyword: String,
     isExistNotification: Boolean,
-    onSearch: () -> Unit,
-    onSearchKeywordChanged: (String) -> Unit,
     onClickNotification: () -> Unit,
     onClickProfile: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(10.dp),
-        modifier = modifier.background(color = White),
+        modifier =
+            modifier
+                .background(color = White)
+                .padding(end = 8.dp),
     ) {
         TopAppBar(
             title = {
@@ -95,18 +92,10 @@ fun DiscussionToolbar(
                         .noRippleClickable(onClick = { onClickProfile() }),
                 )
             },
-            colors = TopAppBarDefaults.topAppBarColors(containerColor = White),
-        )
-
-        SearchDiscussionBar(
-            onSearch = { onSearch() },
-            searchKeyword = searchKeyword,
-            previousKeyword = previousKeyword,
-            onKeywordChange = { onSearchKeywordChanged(it) },
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 24.dp),
+            colors =
+                TopAppBarDefaults.topAppBarColors(
+                    containerColor = White,
+                ),
         )
     }
 }
@@ -116,11 +105,7 @@ fun DiscussionToolbar(
 @Composable
 fun DiscussionToolbarPreview() {
     DiscussionToolbar(
-        onSearch = {},
-        searchKeyword = "코틀린",
-        previousKeyword = "",
         isExistNotification = true,
-        onSearchKeywordChanged = {},
         onClickNotification = {},
         onClickProfile = {},
     )
@@ -131,11 +116,7 @@ fun DiscussionToolbarPreview() {
 @Composable
 fun DiscussionToolbarPreview2() {
     DiscussionToolbar(
-        onSearch = {},
-        searchKeyword = "코틀린",
-        previousKeyword = "코틀린",
         isExistNotification = false,
-        onSearchKeywordChanged = {},
         onClickNotification = {},
         onClickProfile = {},
     )

@@ -65,9 +65,6 @@ class DiscussionsActivity : ComponentActivity() {
             }
         }
 
-    private var lastBackPressed = 0L
-    private val timeout = 2000L
-
     private val messageConverter: ExceptionMessageConverter = ExceptionMessageConverter()
 
     override fun onCreate(savedInstanceState: Bundle?) {

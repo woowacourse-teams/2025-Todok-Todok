@@ -1,7 +1,10 @@
 package com.team.todoktodok.presentation.compose.discussion
 
+import SearchDiscussionBar
 import android.app.Activity
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -29,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -42,6 +46,7 @@ import com.team.todoktodok.presentation.compose.discussion.model.DiscussionsUiSt
 import com.team.todoktodok.presentation.compose.discussion.vm.DiscussionsViewModel
 import com.team.todoktodok.presentation.compose.theme.Black18
 import com.team.todoktodok.presentation.compose.theme.GreenF0
+import com.team.todoktodok.presentation.compose.theme.White
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.xml.profile.UserProfileTab
 import kotlinx.coroutines.Job
@@ -124,10 +129,10 @@ fun DiscussionsScreen(
         pagerState = pagerState,
         snackbarHostState = snackbarHostState,
         onDiscussionClick = onDiscussionClick,
-        onClickMyDiscussionHeader = onClickMyDiscussionHeader,
-        onSearchKeywordChanged = viewModel::modifySearchKeyword,
         onClickNotification = onClickNotification,
         onClickProfile = onClickProfile,
+        onClickMyDiscussionHeader = onClickMyDiscussionHeader,
+        onSearchKeywordChanged = viewModel::modifySearchKeyword,
         onSearch = viewModel::loadSearchedDiscussions,
         onLatestDiscussionLoadMore = viewModel::loadLatestDiscussions,
         onActivatedDiscussionLoadMore = viewModel::loadActivatedDiscussions,
@@ -157,11 +162,7 @@ fun DiscussionsScreen(
     Scaffold(
         topBar = {
             DiscussionToolbar(
-                searchKeyword = uiState.allDiscussions.searchDiscussion.searchKeyword,
-                previousKeyword = uiState.allDiscussions.searchDiscussion.previousKeyword,
                 isExistNotification = uiState.isUnreadNotification,
-                onSearchKeywordChanged = { onSearchKeywordChanged(it) },
-                onSearch = { onSearch() },
                 onClickNotification = { onClickNotification() },
                 onClickProfile = { onClickProfile() },
                 modifier =
@@ -189,7 +190,7 @@ fun DiscussionsScreen(
             ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_create_discussion),
-                    contentDescription = "토론방 생성",
+                    contentDescription = stringResource(R.string.all_create_discussion_room),
                     tint = Color.Unspecified,
                     modifier =
                         Modifier
@@ -199,16 +200,35 @@ fun DiscussionsScreen(
             }
         },
     ) { innerPadding ->
-        DiscussionTab(
-            uiState,
-            pagerState = pagerState,
-            onLatestDiscussionLoadMore = { onLatestDiscussionLoadMore() },
-            onActivatedDiscussionLoadMore = { onActivatedDiscussionLoadMore() },
-            onRefresh = { onRefresh() },
-            onClick = onDiscussionClick,
-            onClickMyDiscussionHeader = onClickMyDiscussionHeader,
-            modifier = modifier.padding(innerPadding),
-        )
+        val searchDiscussion = uiState.allDiscussions.searchDiscussion
+
+        Column(
+            modifier =
+                modifier
+                    .background(color = White)
+                    .padding(innerPadding),
+        ) {
+            SearchDiscussionBar(
+                onSearch = { onSearch() },
+                searchKeyword = searchDiscussion.searchKeyword,
+                previousKeyword = searchDiscussion.previousKeyword,
+                onKeywordChange = { onSearchKeywordChanged(it) },
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp),
+            )
+
+            DiscussionTab(
+                uiState,
+                pagerState = pagerState,
+                onLatestDiscussionLoadMore = { onLatestDiscussionLoadMore() },
+                onActivatedDiscussionLoadMore = { onActivatedDiscussionLoadMore() },
+                onRefresh = { onRefresh() },
+                onClick = onDiscussionClick,
+                onClickMyDiscussionHeader = onClickMyDiscussionHeader,
+            )
+        }
     }
 }
 
