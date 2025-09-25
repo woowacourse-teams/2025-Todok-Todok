@@ -78,10 +78,9 @@ public class DiscussionQueryService {
                     .member(member)
                     .build());
             discussionMemberViewRepository.save(discussionMemberView.get());
-        }
-
-        if (discussion.isFirstView()) {
             discussion.updateViewCount();
+
+            return new DiscussionResponse(discussion, likeCount, commentCount, isLikedByMe);
         }
 
         if (discussionMemberView.get().isModifiedDatePassedFrom(VIEW_THRESHOLD)) {
