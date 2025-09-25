@@ -80,9 +80,9 @@ fun AlertSnackBarPreview() {
                         override val withDismissAction: Boolean = false
                     }
 
-            override fun dismiss() {}
+            override fun dismiss() = Unit
 
-            override fun performAction() {}
+            override fun performAction() = Unit
         }
     AlertSnackBar(snackbarData = snackbarData)
 }
