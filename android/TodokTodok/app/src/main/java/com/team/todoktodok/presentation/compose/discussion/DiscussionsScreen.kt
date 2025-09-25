@@ -4,9 +4,12 @@ import android.app.Activity
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
@@ -23,8 +26,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.team.todoktodok.R
 import com.team.todoktodok.presentation.compose.core.ObserveAsEvents
@@ -49,6 +55,7 @@ fun DiscussionsScreen(
     viewModel: DiscussionsViewModel,
     onClickNotification: () -> Unit,
     onClickProfile: () -> Unit,
+    onClickCreateDiscussion: () -> Unit,
     onDiscussionClick: (Long) -> Unit,
     onClickMyDiscussionHeader: (UserProfileTab) -> Unit,
     modifier: Modifier = Modifier,
@@ -125,6 +132,7 @@ fun DiscussionsScreen(
         onLatestDiscussionLoadMore = viewModel::loadLatestDiscussions,
         onActivatedDiscussionLoadMore = viewModel::loadActivatedDiscussions,
         onRefresh = viewModel::refreshLatestDiscussions,
+        onClickCreateDiscussion = onClickCreateDiscussion,
         modifier = modifier,
     )
 }
@@ -143,12 +151,14 @@ fun DiscussionsScreen(
     onLatestDiscussionLoadMore: () -> Unit,
     onActivatedDiscussionLoadMore: () -> Unit,
     onRefresh: () -> Unit,
+    onClickCreateDiscussion: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
         topBar = {
             DiscussionToolbar(
                 searchKeyword = uiState.allDiscussions.searchDiscussion.searchKeyword,
+                previousKeyword = uiState.allDiscussions.searchDiscussion.previousKeyword,
                 isExistNotification = uiState.isUnreadNotification,
                 onSearchKeywordChanged = { onSearchKeywordChanged(it) },
                 onSearch = { onSearch() },
@@ -173,6 +183,20 @@ fun DiscussionsScreen(
             )
         },
         floatingActionButton = {
+            FloatingActionButton(
+                onClick = { onClickCreateDiscussion() },
+                backgroundColor = GreenF0,
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_create_discussion),
+                    contentDescription = "토론방 생성",
+                    tint = Color.Unspecified,
+                    modifier =
+                        Modifier
+                            .padding(5.dp)
+                            .size(60.dp),
+                )
+            }
         },
     ) { innerPadding ->
         DiscussionTab(
@@ -204,5 +228,6 @@ fun DiscussionsScreenPreview() {
         onLatestDiscussionLoadMore = {},
         onActivatedDiscussionLoadMore = {},
         onRefresh = {},
+        onClickCreateDiscussion = {},
     )
 }

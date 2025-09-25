@@ -30,6 +30,7 @@ import com.team.todoktodok.presentation.compose.theme.White
 @Composable
 fun DiscussionToolbar(
     searchKeyword: String,
+    previousKeyword: String,
     isExistNotification: Boolean,
     onSearch: () -> Unit,
     onSearchKeywordChanged: (String) -> Unit,
@@ -94,15 +95,13 @@ fun DiscussionToolbar(
                         .noRippleClickable(onClick = { onClickProfile() }),
                 )
             },
-            colors =
-                TopAppBarDefaults.topAppBarColors(
-                    containerColor = White,
-                ),
+            colors = TopAppBarDefaults.topAppBarColors(containerColor = White),
         )
 
         SearchDiscussionBar(
             onSearch = { onSearch() },
             searchKeyword = searchKeyword,
+            previousKeyword = previousKeyword,
             onKeywordChange = { onSearchKeywordChanged(it) },
             modifier =
                 Modifier
@@ -119,6 +118,7 @@ fun DiscussionToolbarPreview() {
     DiscussionToolbar(
         onSearch = {},
         searchKeyword = "코틀린",
+        previousKeyword = "",
         isExistNotification = true,
         onSearchKeywordChanged = {},
         onClickNotification = {},
@@ -133,6 +133,7 @@ fun DiscussionToolbarPreview2() {
     DiscussionToolbar(
         onSearch = {},
         searchKeyword = "코틀린",
+        previousKeyword = "코틀린",
         isExistNotification = false,
         onSearchKeywordChanged = {},
         onClickNotification = {},

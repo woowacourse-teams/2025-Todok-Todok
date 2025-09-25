@@ -8,16 +8,20 @@ data class SearchDiscussionsUiState(
     val discussions: List<DiscussionUiState> = emptyList(),
     val type: DiscussionCardType = DiscussionCardType.QueryHighlighting,
     val searchKeyword: String = EMPTY_SEARCH_KEYWORD,
+    val previousKeyword: String = EMPTY_SEARCH_KEYWORD,
 ) {
     fun add(
         keyword: String,
         newDiscussions: List<Discussion>,
     ): SearchDiscussionsUiState {
-        val updatedList = discussions.toMutableList()
-        val discussion = newDiscussions.map { DiscussionUiState(it, searchKeyword = keyword) }
-        updatedList.addAll(discussion)
+        if (keyword == previousKeyword || keyword.isBlank()) return this
+        val newDiscussions = newDiscussions.map { DiscussionUiState(it) }
 
-        return copy(discussions = updatedList, searchKeyword = keyword)
+        return copy(
+            discussions = newDiscussions,
+            searchKeyword = keyword,
+            previousKeyword = keyword,
+        )
     }
 
     fun clear() = copy(discussions = emptyList(), searchKeyword = EMPTY_SEARCH_KEYWORD)

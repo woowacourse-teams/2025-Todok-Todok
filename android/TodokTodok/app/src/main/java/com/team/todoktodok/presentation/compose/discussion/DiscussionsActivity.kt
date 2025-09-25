@@ -15,6 +15,7 @@ import com.team.todoktodok.presentation.compose.theme.TodoktodokTheme
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.ext.getParcelableCompat
 import com.team.todoktodok.presentation.view.serialization.SerializationNotificationType
+import com.team.todoktodok.presentation.xml.book.SelectBookActivity
 import com.team.todoktodok.presentation.xml.discussiondetail.DiscussionDetailActivity
 import com.team.todoktodok.presentation.xml.notification.NotificationActivity
 import com.team.todoktodok.presentation.xml.profile.ProfileActivity
@@ -81,6 +82,7 @@ class DiscussionsActivity : ComponentActivity() {
                     onClickNotification = ::moveToNotification,
                     onClickMyDiscussionHeader = ::moveToProfile,
                     onClickProfile = ::moveToProfile,
+                    onClickCreateDiscussion = ::moveToCreateDiscussion,
                 )
             }
         }
@@ -106,10 +108,6 @@ class DiscussionsActivity : ComponentActivity() {
         )
     }
 
-    private fun moveToProfile() {
-        startActivity(ProfileActivity.Intent(this))
-    }
-
     private fun moveToProfile(tab: UserProfileTab) {
         when (tab) {
             UserProfileTab.ACTIVATED_BOOKS -> Unit
@@ -118,16 +116,26 @@ class DiscussionsActivity : ComponentActivity() {
         }
     }
 
+    private fun moveToProfile() {
+        val intent = ProfileActivity.Intent(this)
+        startActivity(intent)
+    }
+
     private fun moveToMyCreatedDiscussion() {
-        startActivity(
-            ProfileActivity.Intent(this, initialTab = UserProfileTab.CREATED_DISCUSSIONS),
-        )
+        val intent =
+            ProfileActivity.Intent(this, initialTab = UserProfileTab.CREATED_DISCUSSIONS)
+        startActivity(intent)
     }
 
     private fun moveMyParticipatedDiscussion() {
-        startActivity(
-            ProfileActivity.Intent(this, initialTab = UserProfileTab.PARTICIPATED_DISCUSSIONS),
-        )
+        val intent =
+            ProfileActivity.Intent(this, initialTab = UserProfileTab.PARTICIPATED_DISCUSSIONS)
+        startActivity(intent)
+    }
+
+    private fun moveToCreateDiscussion() {
+        val intent = SelectBookActivity.Intent(this)
+        startActivity(intent)
     }
 
     override fun onResume() {
@@ -138,7 +146,6 @@ class DiscussionsActivity : ComponentActivity() {
     private fun handleNotificationDeepLink(intent: Intent) {
         val notification: SerializationFcmNotification? =
             intent.getParcelableCompat<SerializationFcmNotification>("notification") as? SerializationFcmNotification
-                ?: null
 
         triggerToMoveDiscussionDetail(notification)
     }

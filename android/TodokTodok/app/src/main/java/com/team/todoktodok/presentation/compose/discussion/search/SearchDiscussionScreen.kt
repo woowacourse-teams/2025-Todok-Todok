@@ -96,7 +96,7 @@ fun SearchResultDiscussions(
 ) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(15.dp),
-        modifier = modifier.padding(horizontal = 10.dp),
+        modifier = modifier.padding(horizontal = 10.dp, vertical = 5.dp),
     ) {
         item {
             Text(
