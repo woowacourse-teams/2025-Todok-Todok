@@ -18,7 +18,7 @@ class NotificationViewHolder(
 
     init {
         binding.root.setOnClickListener {
-            updateUnreadStatus.onClick(bindingAdapterPosition)
+            updateUnreadStatus.onClick(bindingAdapterPosition - NOTIFICATION_COUNT_SIZE)
         }
     }
 
@@ -56,6 +56,7 @@ class NotificationViewHolder(
     }
 
     companion object {
+        private const val NOTIFICATION_COUNT_SIZE: Int = 1
         fun NotificationViewHolder(
             parent: ViewGroup,
             updateUnreadStatus: UpdateUnreadStatusClickListener

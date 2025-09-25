@@ -9,6 +9,8 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.team.todoktodok.App
 import com.team.todoktodok.databinding.ActivityNotificationBinding
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
@@ -96,6 +98,54 @@ class NotificationActivity : AppCompatActivity() {
         binding.apply {
             btnBack.setOnClickListener { finish() }
             rvNotifications.adapter = adapter
+            val touchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
+                0, ItemTouchHelper.LEFT
+            ) {
+                override fun onMove(
+                    recyclerView: RecyclerView,
+                    viewHolder: RecyclerView.ViewHolder,
+                    target: RecyclerView.ViewHolder
+                ): Boolean = false
+
+                override fun getMovementFlags(
+                    recyclerView: RecyclerView,
+                    viewHolder: RecyclerView.ViewHolder
+                ): Int {
+                    val position = viewHolder.bindingAdapterPosition
+                    val item = adapter.currentList.getOrNull(position)
+                    return if (item is NotificationGroup.Notification) {
+                        makeMovementFlags(0, ItemTouchHelper.LEFT)
+                    } else {
+                        makeMovementFlags(0, 0)
+                    }
+                }
+
+                override fun onSwiped(
+                    viewHolder: RecyclerView.ViewHolder,
+                    direction: Int
+                ) {
+                    val position = viewHolder.bindingAdapterPosition
+                    val current = adapter.currentList
+                    if (position !in current.indices) {
+                        adapter.notifyItemChanged(position)
+                        return
+                    }
+
+                    val item = current[position]
+                    if (item !is NotificationGroup.Notification) {
+                        adapter.notifyItemChanged(position)
+                        return
+                    }
+
+                    val newList = current.toMutableList().apply { removeAt(position) }
+                    adapter.submitList(newList)
+
+                    viewModel.deleteNotification(position)
+                }
+
+                override fun getSwipeThreshold(viewHolder: RecyclerView.ViewHolder) = 0.5f
+            })
+            touchHelper.attachToRecyclerView(rvNotifications)
         }
     }
 

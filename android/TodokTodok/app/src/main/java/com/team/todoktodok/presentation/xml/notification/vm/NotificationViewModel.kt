@@ -27,9 +27,20 @@ class NotificationViewModel(
         initNotifications()
     }
 
-    private fun initNotifications() {
+    fun deleteNotification(position: Int) {
+        val notification = _uiState.value?.notification(position) ?: return
         viewModelScope.launch {
-            _uiState.value = _uiState.value?.copy(isLoading = true)
+            notificationRepository.deleteNotification(notification.id).onSuccess {
+                _uiState.value = _uiState.value?.deleteNotification(position)
+            }.onFailure { exception ->
+                _uiEvent.setValue(NotificationUiEvent.ShowException(exception))
+            }
+        }
+    }
+
+    private fun initNotifications() {
+        _uiState.value = _uiState.value?.copy(isLoading = true)
+        viewModelScope.launch {
             notificationRepository
                 .getNotifications()
                 .onSuccess { result ->

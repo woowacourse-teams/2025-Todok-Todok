@@ -25,7 +25,7 @@ interface NotificationService {
         @Path(value = "notificationId") notificationId: Long,
     ): NetworkResult<Unit>
 
-    @DELETE("v1/notifications")
+    @DELETE("v1/notifications/{notificationId}")
     suspend fun deleteNotifications(
         @Path(value = "notificationId") notificationId: Long,
     ): NetworkResult<Unit>

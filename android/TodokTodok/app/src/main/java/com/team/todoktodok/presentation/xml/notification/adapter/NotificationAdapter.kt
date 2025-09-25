@@ -14,9 +14,9 @@ class NotificationAdapter(
     ) {
     override fun getItemViewType(position: Int): Int =
         when (getItem(position)) {
-            is NotificationGroup.Information -> R.layout.item_notification_information
-            is NotificationGroup.Notification -> R.layout.item_notification
             is NotificationGroup.Count -> R.layout.item_notification_count
+            is NotificationGroup.Notification -> R.layout.item_notification
+            is NotificationGroup.Information -> R.layout.item_notification_information
         }
 
     override fun onCreateViewHolder(
@@ -24,11 +24,12 @@ class NotificationAdapter(
         viewType: Int,
     ): RecyclerView.ViewHolder =
         when (viewType) {
-            R.layout.item_notification_information -> NotificationInformationViewHolder(parent)
-            R.layout.item_notification -> NotificationViewHolder(parent, updateUnreadStatus)
             R.layout.item_notification_count -> NotificationCountViewHolder.Companion.NotificationCountViewHolder(
                 parent
             )
+
+            R.layout.item_notification -> NotificationViewHolder(parent, updateUnreadStatus)
+            R.layout.item_notification_information -> NotificationInformationViewHolder(parent)
 
             else -> throw IllegalArgumentException("Invalid view type")
         }
@@ -38,11 +39,9 @@ class NotificationAdapter(
         position: Int,
     ) {
         when (val item = getItem(position)) {
-            is NotificationGroup.Information ->
-                (holder as NotificationInformationViewHolder)
-
-            is NotificationGroup.Notification -> (holder as NotificationViewHolder).bind(item.notification)
             is NotificationGroup.Count -> (holder as NotificationCountViewHolder).bind(item.count)
+            is NotificationGroup.Notification -> (holder as NotificationViewHolder).bind(item.notification)
+            is NotificationGroup.Information -> (holder as NotificationInformationViewHolder)
         }
     }
 }

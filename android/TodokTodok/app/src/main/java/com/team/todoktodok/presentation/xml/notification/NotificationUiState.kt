@@ -13,7 +13,16 @@ data class NotificationUiState(
     val notificationGroup: List<NotificationGroup> =
         listOf(
             NotificationGroup.Count(notificationCount),
-            *notifications.map { NotificationGroup.Notification(it) }.toTypedArray(),
+            *notifications.sortedByDescending { it.createdAt }
+                .map { NotificationGroup.Notification(it) }
+                .toTypedArray(),
             NotificationGroup.Information,
+        )
+
+    fun deleteNotification(position: Int): NotificationUiState =
+        NotificationUiState(
+            isLoading = false,
+            notificationCount = this.notificationCount - 1,
+            notifications = notifications.filterIndexed { index, notification -> index != position }
         )
 }

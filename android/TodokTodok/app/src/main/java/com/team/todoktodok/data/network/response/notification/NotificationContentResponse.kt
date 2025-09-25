@@ -10,7 +10,7 @@ import kotlinx.serialization.Serializable
 data class NotificationContentResponse(
     val notificationId: Long,
     val discussionId: Long,
-    val commentId: Long,
+    val commentId: Long?,
     val replyId: Long?,
     val memberNickname: String,
     val discussionTitle: String,
