@@ -69,7 +69,7 @@ public class NotificationCommandService {
     ) {
         if (!notification.isOwnedBy(member)) {
             throw new NotificationForbiddenException(
-                    String.format("본인 알림이 아닙니다 : memberId = %d, recipientId = %d", member.getId(), notification.getRecipient().getId())
+                    String.format("본인 알림이 아닙니다 : memberId = %d, notificationId = %d", member.getId(), notification.getId())
             );
         }
     }
