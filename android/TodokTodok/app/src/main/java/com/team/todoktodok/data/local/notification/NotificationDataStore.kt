@@ -1,4 +1,4 @@
-package com.team.todoktodok.data.local.nofitication
+package com.team.todoktodok.data.local.notification
 
 interface NotificationDataStore {
     suspend fun saveFcmToken(token: String)

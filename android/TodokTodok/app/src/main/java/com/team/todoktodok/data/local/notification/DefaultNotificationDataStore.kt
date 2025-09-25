@@ -1,4 +1,4 @@
-package com.team.todoktodok.data.local.nofitication
+package com.team.todoktodok.data.local.notification
 
 import android.content.Context
 import androidx.datastore.core.DataStore

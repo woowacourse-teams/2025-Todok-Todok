@@ -1,6 +1,6 @@
 package com.team.todoktodok.data.datasource.notification
 
-import com.team.todoktodok.data.local.nofitication.NotificationDataStore
+import com.team.todoktodok.data.local.notification.NotificationDataStore
 
 class DefaultNotificationLocalDataSource(
     private val dataStore: NotificationDataStore,
