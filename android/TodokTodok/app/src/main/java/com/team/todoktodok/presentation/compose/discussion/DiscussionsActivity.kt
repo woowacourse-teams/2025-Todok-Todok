@@ -3,7 +3,9 @@ package com.team.todoktodok.presentation.compose.discussion
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
@@ -63,6 +65,9 @@ class DiscussionsActivity : ComponentActivity() {
                 }
             }
         }
+
+    private var lastBackPressed = 0L
+    private val timeout = 2000L
 
     private val messageConverter: ExceptionMessageConverter = ExceptionMessageConverter()
 
