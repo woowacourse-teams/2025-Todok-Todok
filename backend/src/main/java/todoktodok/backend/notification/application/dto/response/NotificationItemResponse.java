@@ -9,7 +9,7 @@ public record NotificationItemResponse(
         LocalDateTime createdAt
 ) {
 
-    public NotificationItemResponse(Notification notification) {
+    public NotificationItemResponse(final Notification notification) {
         this(
                 new NotificationData(notification),
                 notification.isRead(),
