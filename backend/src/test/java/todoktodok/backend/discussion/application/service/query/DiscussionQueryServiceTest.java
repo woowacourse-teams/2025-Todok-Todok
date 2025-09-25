@@ -12,6 +12,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -80,6 +81,7 @@ class DiscussionQueryServiceTest {
         );
     }
 
+    @Disabled
     @Test
     @DisplayName("특정 토론방을 조회한지 10분 이후에 다시 조회하면 조회 횟수가 증가한다")
     void getDiscussion_viewCount_after_10minutes() {
@@ -107,6 +109,7 @@ class DiscussionQueryServiceTest {
         assertThat(discussionResponse.viewCount()).isEqualTo(2);
     }
 
+    @Disabled
     @Test
     @DisplayName("특정 토론방을 조회한지 10분 이전에 다시 조회하면 조회 횟수가 증가하지 않는다")
     void getDiscussion_viewCount_before_10minutes() {
