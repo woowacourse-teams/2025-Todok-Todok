@@ -17,6 +17,7 @@ val DISCUSSIONS =
             discussionOpinion = "fetch join을 남발하면 안됩니다.",
             likeCount = 0,
             commentCount = 0,
+            viewCount = 0,
             isLikedByMe = false,
         ),
         Discussion(
@@ -27,6 +28,7 @@ val DISCUSSIONS =
             createAt = LocalDateTime.of(2025, 7, 13, 12, 0),
             discussionOpinion = "suspend fun과 launch 차이를 이해해야 합니다.",
             likeCount = 0,
+            viewCount = 0,
             commentCount = 0,
             isLikedByMe = false,
         ),
@@ -39,6 +41,7 @@ val DISCUSSIONS =
             discussionOpinion = "UI와 로직을 분리해 유지보수가 쉬워집니다.",
             likeCount = 0,
             commentCount = 0,
+            viewCount = 0,
             isLikedByMe = false,
         ),
         Discussion(
@@ -50,6 +53,7 @@ val DISCUSSIONS =
             discussionOpinion = "의도를 드러내는 코드가 중요합니다.",
             likeCount = 0,
             commentCount = 0,
+            viewCount = 0,
             isLikedByMe = false,
         ),
         Discussion(
@@ -61,6 +65,7 @@ val DISCUSSIONS =
             discussionOpinion = "상황에 맞는 패턴 선택이 중요합니다.",
             likeCount = 0,
             commentCount = 0,
+            viewCount = 0,
             isLikedByMe = false,
         ),
     )

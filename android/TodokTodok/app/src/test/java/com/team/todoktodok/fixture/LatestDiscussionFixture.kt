@@ -26,6 +26,7 @@ val LATEST_DISCUSSIONS_RESPONSE =
             discussionId = index.toLong(),
             isLikedByMe = listOf(true, false).random(),
             likeCount = (0..100).random(),
+            viewCount = 0,
             discussionTitle = "Discussion Title $index",
         )
     }

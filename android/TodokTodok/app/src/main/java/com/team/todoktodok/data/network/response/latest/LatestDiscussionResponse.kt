@@ -16,6 +16,7 @@ data class LatestDiscussionResponse(
     val createdAt: String,
     val discussionId: Long,
     val isLikedByMe: Boolean,
+    val viewCount: Int,
     val likeCount: Int,
 ) {
     fun toDomain(): Discussion =
@@ -27,6 +28,7 @@ data class LatestDiscussionResponse(
             discussionOpinion = discussionOpinion,
             createAt = createdAt.toLocalDateTime(),
             isLikedByMe = isLikedByMe,
+            viewCount = viewCount,
             likeCount = likeCount,
             discussionTitle = discussionTitle,
         )

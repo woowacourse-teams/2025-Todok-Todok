@@ -24,6 +24,7 @@ data class LatestDiscussionsResponse(
                     createAt = it.createdAt.toLocalDateTime(),
                     isLikedByMe = it.isLikedByMe,
                     likeCount = it.likeCount,
+                    viewCount = it.viewCount,
                 )
             }
 
