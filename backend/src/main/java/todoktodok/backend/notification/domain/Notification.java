@@ -97,8 +97,8 @@ public class Notification extends TimeStamp {
         return this.recipient.equals(recipient);
     }
 
-    public void update(final boolean isRead) {
-        this.isRead = isRead;
+    public void read() {
+        this.isRead = true;
     }
 
     private static void validateNotNullFields(

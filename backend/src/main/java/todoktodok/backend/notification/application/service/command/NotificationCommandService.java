@@ -47,8 +47,7 @@ public class NotificationCommandService {
         final Notification notification = findNotification(notificationId);
 
         validateNotificationOwnership(notification, member);
-
-        notification.update(true);
+        notification.read();
     }
 
     public void deleteNotification(
