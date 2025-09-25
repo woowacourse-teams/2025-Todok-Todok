@@ -10,12 +10,14 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -36,6 +38,8 @@ import com.team.todoktodok.presentation.compose.theme.Black18
 import com.team.todoktodok.presentation.compose.theme.GreenF0
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.xml.profile.UserProfileTab
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -48,7 +52,7 @@ fun DiscussionsScreen(
     onDiscussionClick: (Long) -> Unit,
     onClickMyDiscussionHeader: (UserProfileTab) -> Unit,
     modifier: Modifier = Modifier,
-    timeoutMillis: Long = 2000L,
+    timeoutMillis: Long = 1500L,
 ) {
     val pagerState =
         rememberPagerState(initialPage = Destination.HOT.ordinal) { Destination.entries.size }
@@ -56,11 +60,24 @@ fun DiscussionsScreen(
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
+    var snackbarJob by remember { mutableStateOf<Job?>(null) }
     var lastBackPressed by rememberSaveable { mutableLongStateOf(0L) }
-    val showMessage: (message: String) -> Unit = {
-        coroutineScope.launch {
-            snackbarHostState.showSnackbar(it)
-        }
+
+    val showMessage: (String, Long) -> Unit = { message, millis ->
+        snackbarJob?.cancel()
+        snackbarJob =
+            coroutineScope.launch {
+                val showJob =
+                    launch {
+                        snackbarHostState.showSnackbar(
+                            message = message,
+                            duration = SnackbarDuration.Indefinite,
+                        )
+                    }
+                delay(millis)
+                snackbarHostState.currentSnackbarData?.dismiss()
+                showJob.cancel()
+            }
     }
 
     BackHandler(enabled = true) {
@@ -70,7 +87,7 @@ fun DiscussionsScreen(
         } else {
             lastBackPressed = now
             snackbarHostState.currentSnackbarData?.dismiss()
-            showMessage(context.getString(R.string.press_back_again_to_exit))
+            showMessage(context.getString(R.string.press_back_again_to_exit), timeoutMillis)
         }
     }
 
@@ -78,7 +95,7 @@ fun DiscussionsScreen(
         when (event) {
             is DiscussionsUiEvent.ShowErrorMessage -> {
                 val message = context.getString(exceptionMessageConverter(event.exception))
-                showMessage(message)
+                showMessage(message, timeoutMillis)
             }
 
             DiscussionsUiEvent.ScrollToAllDiscussion ->
