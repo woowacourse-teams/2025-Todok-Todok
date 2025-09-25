@@ -17,6 +17,8 @@ class NotificationViewHolder private constructor(
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
         binding.root.setOnClickListener {
+            val position = bindingAdapterPosition
+            if (position == RecyclerView.NO_POSITION) return@setOnClickListener
             updateUnreadStatus.onClick(bindingAdapterPosition - NOTIFICATION_COUNT_SIZE)
         }
     }
