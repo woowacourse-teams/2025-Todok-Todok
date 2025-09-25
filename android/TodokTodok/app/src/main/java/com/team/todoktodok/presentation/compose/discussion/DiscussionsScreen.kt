@@ -1,6 +1,5 @@
 package com.team.todoktodok.presentation.compose.discussion
 
-import SearchDiscussionBar
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -36,6 +35,7 @@ import com.team.todoktodok.presentation.compose.core.ObserveAsEvents
 import com.team.todoktodok.presentation.compose.core.component.AlertSnackBar
 import com.team.todoktodok.presentation.compose.core.component.CloverProgressBar
 import com.team.todoktodok.presentation.compose.discussion.component.DiscussionToolbar
+import com.team.todoktodok.presentation.compose.discussion.component.SearchDiscussionBar
 import com.team.todoktodok.presentation.compose.discussion.model.Destination
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionFAB
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionTab
