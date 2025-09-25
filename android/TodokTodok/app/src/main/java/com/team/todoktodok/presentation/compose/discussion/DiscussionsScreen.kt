@@ -69,6 +69,7 @@ fun DiscussionsScreen(
     }
 
     LaunchedEffect(Unit) {
+        viewModel.loadIsUnreadNotification()
         viewModel.loadHotDiscussions()
         viewModel.loadLatestDiscussions()
         viewModel.loadMyDiscussions()
