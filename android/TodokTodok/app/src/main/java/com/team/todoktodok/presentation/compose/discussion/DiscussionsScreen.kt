@@ -170,19 +170,10 @@ fun DiscussionsScreen(
                 onClickNotification = { onClickNotification() },
                 onClickProfile = { onClickProfile() },
                 modifier =
-                    Modifier
+                    modifier
                         .fillMaxWidth()
                         .statusBarsPadding(),
             )
-        },
-        snackbarHost = {
-            SnackbarHost(
-                hostState = snackbarHostState,
-                snackbar = { AlertSnackBar(snackbarData = it) },
-            )
-        },
-        floatingActionButton = {
-            DiscussionFAB(onClickCreateDiscussion = { onClickCreateDiscussion() })
         },
     ) { innerPadding ->
         val searchDiscussion = uiState.allDiscussions.searchDiscussion
@@ -194,34 +185,80 @@ fun DiscussionsScreen(
                     .fillMaxSize()
                     .padding(innerPadding),
         ) {
-            Column(
-                modifier =
-                    modifier
-                        .background(color = White),
-            ) {
-                SearchDiscussionBar(
-                    onSearch = { onSearch() },
-                    searchKeyword = searchDiscussion.searchKeyword,
-                    previousKeyword = searchDiscussion.previousKeyword,
-                    onKeywordChange = { onSearchKeywordChanged(it) },
-                    modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 24.dp),
-                )
+            DiscussionsContent(
+                searchKeyword = searchDiscussion.searchKeyword,
+                previousKeyword = searchDiscussion.previousKeyword,
+                uiState = uiState,
+                pagerState = pagerState,
+                onSearchKeywordChanged = { onSearchKeywordChanged(it) },
+                onLatestDiscussionLoadMore = { onLatestDiscussionLoadMore() },
+                onActivatedDiscussionLoadMore = { onActivatedDiscussionLoadMore() },
+                onRefresh = { onRefresh() },
+                onDiscussionClick = { onDiscussionClick(it) },
+                onClickMyDiscussionHeader = { onClickMyDiscussionHeader(it) },
+                onSearch = { onSearch() },
+                modifier = Modifier.fillMaxSize(),
+            )
 
-                DiscussionTab(
-                    uiState,
-                    pagerState = pagerState,
-                    onLatestDiscussionLoadMore = { onLatestDiscussionLoadMore() },
-                    onActivatedDiscussionLoadMore = { onActivatedDiscussionLoadMore() },
-                    onRefresh = { onRefresh() },
-                    onClick = onDiscussionClick,
-                    onClickMyDiscussionHeader = onClickMyDiscussionHeader,
-                )
-            }
             CloverProgressBar(isLoading)
+
+            DiscussionFAB(
+                onClickCreateDiscussion = onClickCreateDiscussion,
+                modifier =
+                    Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(16.dp),
+            )
+
+            SnackbarHost(
+                hostState = snackbarHostState,
+                snackbar = { AlertSnackBar(snackbarData = it) },
+                modifier = Modifier.align(Alignment.BottomCenter),
+            )
         }
+    }
+}
+
+@Composable
+fun DiscussionsContent(
+    searchKeyword: String,
+    previousKeyword: String,
+    uiState: DiscussionsUiState,
+    pagerState: PagerState,
+    onSearchKeywordChanged: (String) -> Unit,
+    onLatestDiscussionLoadMore: () -> Unit,
+    onActivatedDiscussionLoadMore: () -> Unit,
+    onRefresh: () -> Unit,
+    onDiscussionClick: (Long) -> Unit,
+    onClickMyDiscussionHeader: (UserProfileTab) -> Unit,
+    onSearch: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier =
+            modifier
+                .background(color = White),
+    ) {
+        SearchDiscussionBar(
+            onSearch = { onSearch() },
+            searchKeyword = searchKeyword,
+            previousKeyword = previousKeyword,
+            onKeywordChange = { onSearchKeywordChanged(it) },
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 12.dp),
+        )
+
+        DiscussionTab(
+            uiState,
+            pagerState = pagerState,
+            onLatestDiscussionLoadMore = { onLatestDiscussionLoadMore() },
+            onActivatedDiscussionLoadMore = { onActivatedDiscussionLoadMore() },
+            onRefresh = { onRefresh() },
+            onClick = onDiscussionClick,
+            onClickMyDiscussionHeader = onClickMyDiscussionHeader,
+        )
     }
 }
 
