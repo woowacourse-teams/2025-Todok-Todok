@@ -3,7 +3,7 @@ package com.team.todoktodok.presentation.compose.discussion.activate
 import com.team.domain.model.Discussion
 import com.team.domain.model.active.ActivatedDiscussionPage
 import com.team.domain.model.latest.PageInfo
-import com.team.todoktodok.presentation.compose.component.DiscussionCardType
+import com.team.todoktodok.presentation.compose.core.component.DiscussionCardType
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiState
 
 data class ActivatedDiscussionsUiState(

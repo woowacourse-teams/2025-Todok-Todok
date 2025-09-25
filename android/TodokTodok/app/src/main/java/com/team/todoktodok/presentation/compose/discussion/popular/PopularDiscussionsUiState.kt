@@ -1,7 +1,7 @@
 package com.team.todoktodok.presentation.compose.discussion.popular
 
 import com.team.domain.model.Discussion
-import com.team.todoktodok.presentation.compose.component.DiscussionCardType
+import com.team.todoktodok.presentation.compose.core.component.DiscussionCardType
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiState
 
 data class PopularDiscussionsUiState(

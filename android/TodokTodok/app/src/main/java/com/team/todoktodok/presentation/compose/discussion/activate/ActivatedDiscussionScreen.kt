@@ -19,8 +19,8 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.team.todoktodok.R
-import com.team.todoktodok.presentation.compose.component.DiscussionCard
-import com.team.todoktodok.presentation.compose.component.InfinityLazyColumn
+import com.team.todoktodok.presentation.compose.core.component.DiscussionCard
+import com.team.todoktodok.presentation.compose.core.component.InfinityLazyColumn
 import com.team.todoktodok.presentation.compose.preview.ActivatedDiscussionsUiStatePreviewParameterProvider
 import com.team.todoktodok.presentation.compose.theme.Black18
 import com.team.todoktodok.presentation.compose.theme.Pretendard

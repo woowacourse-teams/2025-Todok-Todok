@@ -12,7 +12,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performScrollToIndex
 import androidx.compose.ui.unit.dp
-import com.team.todoktodok.presentation.compose.component.InfinityLazyColumn
+import com.team.todoktodok.presentation.compose.core.component.InfinityLazyColumn
 import org.junit.Rule
 import org.junit.Test
 

@@ -23,7 +23,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.team.todoktodok.R
-import com.team.todoktodok.presentation.compose.component.DiscussionCard
+import com.team.todoktodok.presentation.compose.core.component.DiscussionCard
 import com.team.todoktodok.presentation.compose.preview.SearchDiscussionsUiStatePreviewParameterProvider
 import com.team.todoktodok.presentation.compose.theme.Green1A
 import com.team.todoktodok.presentation.compose.theme.Pretendard

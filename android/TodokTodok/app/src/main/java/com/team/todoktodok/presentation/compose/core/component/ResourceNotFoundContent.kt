@@ -1,4 +1,4 @@
-package com.team.todoktodok.presentation.compose.component
+package com.team.todoktodok.presentation.compose.core.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable

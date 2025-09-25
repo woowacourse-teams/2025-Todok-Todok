@@ -1,4 +1,4 @@
-package com.team.todoktodok.presentation.compose.component
+package com.team.todoktodok.presentation.compose.core.component
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.SpanStyle

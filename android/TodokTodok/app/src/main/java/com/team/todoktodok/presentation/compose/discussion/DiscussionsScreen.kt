@@ -19,6 +19,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.team.todoktodok.presentation.compose.core.ObserveAsEvents
+import com.team.todoktodok.presentation.compose.discussion.component.DiscussionToolbar
 import com.team.todoktodok.presentation.compose.discussion.model.Destination
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionTab
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionsUiEvent

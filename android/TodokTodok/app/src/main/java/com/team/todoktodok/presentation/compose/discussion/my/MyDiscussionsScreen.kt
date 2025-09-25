@@ -23,7 +23,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.team.todoktodok.R
-import com.team.todoktodok.presentation.compose.component.ResourceNotFoundView
+import com.team.todoktodok.presentation.compose.core.component.ResourceNotFoundView
 import com.team.todoktodok.presentation.compose.core.extension.noRippleClickable
 import com.team.todoktodok.presentation.compose.discussion.created.CreatedDiscussionScreen
 import com.team.todoktodok.presentation.compose.discussion.participated.ParticipatedDiscussionsScreen

@@ -1,4 +1,4 @@
-package com.team.todoktodok.presentation.compose.discussion
+package com.team.todoktodok.presentation.compose.discussion.component
 
 import SearchDiscussionBar
 import androidx.compose.foundation.background
