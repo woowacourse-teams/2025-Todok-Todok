@@ -54,6 +54,7 @@ public class DiscussionQueryService {
     private final ReplyRepository replyRepository;
     private final DiscussionMemberViewRepository discussionMemberViewRepository;
 
+    @Transactional
     public DiscussionResponse getDiscussion(
             final Long memberId,
             final Long discussionId
