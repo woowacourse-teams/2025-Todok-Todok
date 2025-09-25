@@ -28,10 +28,10 @@ class NotificationViewModel(
     }
 
     fun deleteNotification(position: Int) {
-        val notification = _uiState.value?.notification(position) ?: return
+        val notification = _uiState.value?.notification(position - 1) ?: return
         viewModelScope.launch {
             notificationRepository.deleteNotification(notification.id).onSuccess {
-                _uiState.value = _uiState.value?.deleteNotification(position)
+                _uiState.value = _uiState.value?.deleteNotification(position - 1)
             }.onFailure { exception ->
                 _uiEvent.setValue(NotificationUiEvent.ShowException(exception))
             }

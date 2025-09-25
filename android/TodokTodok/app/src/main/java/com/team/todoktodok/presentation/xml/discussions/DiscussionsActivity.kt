@@ -318,7 +318,7 @@ class DiscussionsActivity : AppCompatActivity() {
             )
 
         if (serialized == null) return
-
+        viewModel.readNotification(serialized.notificationId ?: -1)
         triggerToMoveDiscussionDetail(serialized)
     }
 

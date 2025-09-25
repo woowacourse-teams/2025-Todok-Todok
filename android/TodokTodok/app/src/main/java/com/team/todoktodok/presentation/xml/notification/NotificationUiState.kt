@@ -19,10 +19,13 @@ data class NotificationUiState(
             NotificationGroup.Information,
         )
 
-    fun deleteNotification(position: Int): NotificationUiState =
-        NotificationUiState(
+    fun deleteNotification(position: Int): NotificationUiState {
+        val notification = notification(position = position)
+        val minus = if (notification.isRead) 0 else 1
+        return NotificationUiState(
             isLoading = false,
-            notificationCount = this.notificationCount - 1,
+            notificationCount = this.notificationCount - minus,
             notifications = notifications.filterIndexed { index, notification -> index != position }
         )
+    }
 }

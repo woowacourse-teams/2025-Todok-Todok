@@ -39,6 +39,12 @@ class DiscussionsViewModel(
         loadIsUnReadNotification()
     }
 
+    fun readNotification(notificationId: Int) {
+        viewModelScope.launch {
+            notificationRepository.readNotification(notificationId.toLong())
+        }
+    }
+
     fun loadIsUnReadNotification() {
         viewModelScope.launch {
             notificationRepository
