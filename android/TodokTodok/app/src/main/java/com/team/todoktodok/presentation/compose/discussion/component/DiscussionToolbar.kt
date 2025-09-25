@@ -64,21 +64,25 @@ fun DiscussionToolbar(
             },
             actions = {
                 Box(
-                    modifier = Modifier.padding(20.dp)
+                    modifier = Modifier.padding(20.dp),
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.ic_notification),
                         contentDescription = "notification",
-                        modifier = Modifier
-                            .background(color = White)
-                            .noRippleClickable(onClick = { onClickNotification() })
+                        modifier =
+                            Modifier
+                                .background(color = White)
+                                .noRippleClickable(onClick = { onClickNotification() }),
                     )
-                    if (isExistNotification) Box(
-                        modifier = Modifier
-                            .size(8.dp)
-                            .background(color = Green1A, shape = CircleShape)
-                            .align(Alignment.TopEnd)
-                    )
+                    if (isExistNotification) {
+                        Box(
+                            modifier =
+                                Modifier
+                                    .size(8.dp)
+                                    .background(color = Green1A, shape = CircleShape)
+                                    .align(Alignment.TopEnd),
+                        )
+                    }
                 }
 
                 Icon(

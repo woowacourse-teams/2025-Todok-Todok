@@ -36,8 +36,7 @@ data class SearchDiscussionsUiState(
                 },
         )
 
-    fun remove(discussionId: Long): SearchDiscussionsUiState =
-        copy(discussions = discussions.filter { it.discussionId != discussionId })
+    fun remove(discussionId: Long): SearchDiscussionsUiState = copy(discussions = discussions.filter { it.discussionId != discussionId })
 
     companion object {
         private const val EMPTY_SEARCH_KEYWORD = ""

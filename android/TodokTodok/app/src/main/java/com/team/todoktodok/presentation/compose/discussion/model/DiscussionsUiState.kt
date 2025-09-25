@@ -13,8 +13,7 @@ data class DiscussionsUiState(
     val allDiscussions: AllDiscussionsUiState = AllDiscussionsUiState(),
     val isUnreadNotification: Boolean = true,
 ) {
-    fun refreshLatestDiscussion(): DiscussionsUiState =
-        copy(allDiscussions = allDiscussions.refreshLatestDiscussion())
+    fun refreshLatestDiscussion(): DiscussionsUiState = copy(allDiscussions = allDiscussions.refreshLatestDiscussion())
 
     fun addSearchDiscussion(
         keyword: String,
@@ -31,8 +30,7 @@ data class DiscussionsUiState(
     fun addHotDiscussion(
         newItems: List<Discussion>,
         activatedDiscussion: ActivatedDiscussionPage,
-    ): DiscussionsUiState =
-        copy(hotDiscussion = hotDiscussion.addHotDiscussions(newItems, activatedDiscussion))
+    ): DiscussionsUiState = copy(hotDiscussion = hotDiscussion.addHotDiscussions(newItems, activatedDiscussion))
 
     fun appendActivatedDiscussion(page: ActivatedDiscussionPage): DiscussionsUiState =
         copy(hotDiscussion = hotDiscussion.appendActivatedDiscussion(page))
@@ -40,8 +38,7 @@ data class DiscussionsUiState(
     fun addMyDiscussion(
         createdDiscussion: List<Discussion>,
         participatedDiscussion: List<Discussion>,
-    ): DiscussionsUiState =
-        copy(myDiscussion = myDiscussion.addDiscussions(createdDiscussion, participatedDiscussion))
+    ): DiscussionsUiState = copy(myDiscussion = myDiscussion.addDiscussions(createdDiscussion, participatedDiscussion))
 
     fun addLatestDiscussion(page: LatestDiscussionPage): DiscussionsUiState =
         copy(allDiscussions = allDiscussions.addLatestDiscussion(page))
@@ -57,8 +54,7 @@ data class DiscussionsUiState(
 
     fun clearSearchDiscussion() = copy(allDiscussions = allDiscussions.clearSearchDiscussion())
 
-    fun modifySearchKeyword(keyword: String) =
-        copy(allDiscussions = allDiscussions.modifyKeyword(keyword))
+    fun modifySearchKeyword(keyword: String) = copy(allDiscussions = allDiscussions.modifyKeyword(keyword))
 
     fun removeDiscussion(discussionId: Long): DiscussionsUiState {
         val newHotDiscussion = hotDiscussion.removeDiscussion(discussionId)
@@ -67,8 +63,7 @@ data class DiscussionsUiState(
         return copy(newHotDiscussion, newMyDiscussion, newAllDiscussionsUiState)
     }
 
-    fun changeUnreadNotification(isExist: Boolean): DiscussionsUiState =
-        copy(isUnreadNotification = isExist)
+    fun changeUnreadNotification(isExist: Boolean): DiscussionsUiState = copy(isUnreadNotification = isExist)
 
     val latestPageHasNext get() = allDiscussions.latestPageHasNext
     val latestPageNextCursor get() = allDiscussions.latestPageNextCursor

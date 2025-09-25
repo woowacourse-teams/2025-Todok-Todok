@@ -98,8 +98,8 @@ class DiscussionsActivity : ComponentActivity() {
         discussionDetailLauncher.launch(
             DiscussionDetailActivity.Companion.Intent(
                 this,
-                discussionId
-            )
+                discussionId,
+            ),
         )
     }
 
@@ -172,7 +172,6 @@ class DiscussionsActivity : ComponentActivity() {
             }
         }
     }
-
 
     companion object {
         const val EXTRA_DELETE_DISCUSSION = "delete_discussion"
