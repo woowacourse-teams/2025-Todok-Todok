@@ -513,7 +513,7 @@ public class DatabaseInitializer {
                         """
                                 INSERT INTO NOTIFICATION (is_read, recipient_id, discussion_id, comment_id, reply_id, member_nickname, discussion_title, content, notification_type, notification_target, created_at, modified_at)
                                 VALUES 
-                                (:isRead, :recipient, :discussionId, :commentId, :replyId, :memberNickname, :discussionTitle, :content, :notificationTarget)
+                                (:isRead, :recipient, :discussionId, :commentId, :replyId, :memberNickname, :discussionTitle, :content, :notificationType, :notificationTarget, :created_at, :modified_at)
                                 """
                 )
                 .setParameter("isRead", isRead)
