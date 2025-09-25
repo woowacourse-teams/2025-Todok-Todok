@@ -13,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/toolbar_height"
         android:text="@string/signup_text"
+        android:layout_marginTop="@dimen/space_56"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView

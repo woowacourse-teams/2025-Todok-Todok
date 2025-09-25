@@ -9,11 +9,11 @@ import com.team.domain.model.member.NickNameException
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentSignupBinding
+import com.team.todoktodok.presentation.compose.discussion.DiscussionsActivity
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
 import com.team.todoktodok.presentation.xml.auth.signup.vm.SignUpViewModel
 import com.team.todoktodok.presentation.xml.auth.signup.vm.SignUpViewModelFactory
-import com.team.todoktodok.presentation.xml.discussions.DiscussionsActivity
 
 class SignUpFragment : Fragment(R.layout.fragment_signup) {
     private val viewModel: SignUpViewModel by viewModels {

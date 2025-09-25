@@ -4,6 +4,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -33,17 +35,19 @@ fun PopularDiscussionsScreen(
     Column {
         PopularDiscussionsHeader()
 
-        LazyRow(
-            contentPadding = PaddingValues(5.dp),
-        ) {
-            items(items = uiState.discussions, key = { it.discussionId }) { item ->
-                DiscussionCard(
-                    uiState = item,
-                    onClick = { onClick(item.discussionId) },
-                    discussionCardType = DiscussionCardType.OpinionVisible,
-                    modifier = Modifier.fillParentMaxWidth(0.9f),
-                )
-            }
+        Spacer(Modifier.height(5.dp))
+    }
+
+    LazyRow(
+        contentPadding = PaddingValues(5.dp),
+    ) {
+        items(items = uiState.discussions, key = { it.discussionId }) { item ->
+            DiscussionCard(
+                uiState = item,
+                onClick = { onClick(item.discussionId) },
+                discussionCardType = DiscussionCardType.OpinionVisible,
+                modifier = Modifier.fillParentMaxWidth(0.9f),
+            )
         }
     }
 }

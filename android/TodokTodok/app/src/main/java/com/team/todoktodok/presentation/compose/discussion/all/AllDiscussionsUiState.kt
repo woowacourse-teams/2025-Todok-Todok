@@ -29,6 +29,8 @@ data class AllDiscussionsUiState(
 
     fun clearSearchDiscussion(): AllDiscussionsUiState = copy(searchDiscussion = searchDiscussion.clear(), mode = AllDiscussionMode.LATEST)
 
+    fun modifyKeyword(keyword: String): AllDiscussionsUiState = copy(searchDiscussion = searchDiscussion.modifyKeyword(keyword))
+
     fun refreshLatestDiscussion(): AllDiscussionsUiState = copy(latestDiscussion = latestDiscussion.refresh())
 
     fun removeAllDiscussion(discussionId: Long): AllDiscussionsUiState {

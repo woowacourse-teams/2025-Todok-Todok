@@ -3,7 +3,6 @@ package com.team.todoktodok.presentation.compose.discussion.my
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.team.todoktodok.R
 import com.team.todoktodok.presentation.compose.component.ResourceNotFoundView
+import com.team.todoktodok.presentation.compose.core.extension.noRippleClickable
 import com.team.todoktodok.presentation.compose.discussion.created.CreatedDiscussionScreen
 import com.team.todoktodok.presentation.compose.discussion.participated.ParticipatedDiscussionsScreen
 import com.team.todoktodok.presentation.compose.preview.MyDiscussionsUiStatePreviewParameterProvider
@@ -111,7 +111,7 @@ fun MyDiscussionHeader(
                 .padding(horizontal = 20.dp)
                 .padding(top = 20.dp)
                 .fillMaxWidth()
-                .clickable(onClick = onClickHeader),
+                .noRippleClickable(onClick = onClickHeader),
     ) {
         Text(
             text = stringResource(titleResourceId),

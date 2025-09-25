@@ -22,6 +22,8 @@ data class SearchDiscussionsUiState(
 
     fun clear() = copy(discussions = emptyList(), searchKeyword = EMPTY_SEARCH_KEYWORD)
 
+    fun modifyKeyword(keyword: String) = copy(searchKeyword = keyword)
+
     fun modify(newDiscussion: Discussion): SearchDiscussionsUiState =
         copy(
             discussions =

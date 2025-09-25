@@ -1,4 +1,4 @@
-package com.team.todoktodok.presentation.xml.discussions.vm
+package com.team.todoktodok.presentation.compose.discussion.vm
 
 import androidx.lifecycle.viewModelScope
 import com.team.domain.ConnectivityObserver
@@ -9,16 +9,16 @@ import com.team.domain.model.member.MemberDiscussionType
 import com.team.domain.model.member.MemberId
 import com.team.domain.repository.DiscussionRepository
 import com.team.domain.repository.MemberRepository
+import com.team.todoktodok.presentation.compose.discussion.model.DiscussionsUiEvent
+import com.team.todoktodok.presentation.compose.discussion.model.DiscussionsUiState
 import com.team.todoktodok.presentation.core.base.BaseViewModel
-import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
-import com.team.todoktodok.presentation.core.event.SingleLiveData
-import com.team.todoktodok.presentation.xml.discussions.DiscussionsUiEvent
-import com.team.todoktodok.presentation.xml.discussions.DiscussionsUiState
 import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -30,19 +30,23 @@ class DiscussionsViewModel(
     private val _uiState = MutableStateFlow(DiscussionsUiState())
     val uiState: StateFlow<DiscussionsUiState> get() = _uiState.asStateFlow()
 
-    private val _uiEvent = MutableSingleLiveData<DiscussionsUiEvent>()
-    val uiEvent: SingleLiveData<DiscussionsUiEvent> get() = _uiEvent
+    private val _uiEvent = Channel<DiscussionsUiEvent>(Channel.BUFFERED)
+    val uiEvent get() = _uiEvent.receiveAsFlow()
 
-    fun loadSearchedDiscussions(keyword: String) =
+    fun loadSearchedDiscussions() {
+        val keyword = _uiState.value.allDiscussions.searchDiscussion.searchKeyword
+        if (keyword.isBlank()) return
+
         runAsync(
             key = KEY_SEARCH_DISCUSSIONS,
             action = { discussionRepository.getSearchDiscussion(keyword) },
             handleSuccess = { result ->
                 _uiState.update { it.addSearchDiscussion(keyword, result) }
-                _uiEvent.setValue(DiscussionsUiEvent.ShowSearchResult)
+                onUiEvent(DiscussionsUiEvent.ScrollToAllDiscussion)
             },
             handleFailure = { onUiEvent(DiscussionsUiEvent.ShowErrorMessage(it)) },
         )
+    }
 
     fun loadHotDiscussions() {
         viewModelScope.launch {
@@ -179,8 +183,15 @@ class DiscussionsViewModel(
         _uiState.update { it.removeDiscussion(discussionId) }
     }
 
+    fun modifySearchKeyword(keyword: String) {
+        _uiState.update { it.modifySearchKeyword(keyword) }
+        if (keyword.isBlank()) clearSearchResult()
+    }
+
     private fun onUiEvent(event: DiscussionsUiEvent) {
-        _uiEvent.setValue(event)
+        viewModelScope.launch {
+            _uiEvent.send(event)
+        }
     }
 
     companion object {

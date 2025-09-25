@@ -20,13 +20,14 @@ fun HotDiscussionScreen(
     uiState: HotDiscussionUiState,
     onLoadMore: () -> Unit,
     onClick: (Long) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     InfinityLazyColumn(
         loadMore = { onLoadMore() },
         loadMoreLimitCount = 3,
         contentPadding = PaddingValues(vertical = 10.dp),
         verticalArrangement = Arrangement.spacedBy(15.dp),
-        modifier = Modifier.padding(10.dp),
+        modifier = modifier.padding(10.dp),
     ) {
         item {
             PopularDiscussionsScreen(

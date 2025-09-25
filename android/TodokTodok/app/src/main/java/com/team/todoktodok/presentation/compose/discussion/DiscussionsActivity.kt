@@ -1,0 +1,120 @@
+package com.team.todoktodok.presentation.compose.discussion
+
+import android.content.Context
+import android.content.Intent
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
+import com.team.todoktodok.App
+import com.team.todoktodok.presentation.compose.discussion.vm.DiscussionsViewModel
+import com.team.todoktodok.presentation.compose.discussion.vm.DiscussionsViewModelFactory
+import com.team.todoktodok.presentation.compose.theme.TodoktodokTheme
+import com.team.todoktodok.presentation.core.ExceptionMessageConverter
+import com.team.todoktodok.presentation.xml.discussiondetail.DiscussionDetailActivity
+import com.team.todoktodok.presentation.xml.profile.ProfileActivity
+import com.team.todoktodok.presentation.xml.profile.UserProfileTab
+
+class DiscussionsActivity : ComponentActivity() {
+    private val viewModel: DiscussionsViewModel by viewModels {
+        val container = (application as App).container
+        val repositoryModule = container.repositoryModule
+        DiscussionsViewModelFactory(
+            repositoryModule.discussionRepository,
+            repositoryModule.memberRepository,
+            container.connectivityObserver,
+        )
+    }
+
+    private val discussionDetailLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                result.data?.let { data ->
+                    when {
+                        data.hasExtra(EXTRA_DELETE_DISCUSSION) -> {
+                            val deletedId =
+                                data.getLongExtra(
+                                    EXTRA_DELETE_DISCUSSION,
+                                    DEFAULT_DISCUSSION_ID,
+                                )
+                            if (deletedId != DEFAULT_DISCUSSION_ID) {
+                                viewModel.removeDiscussion(deletedId)
+                            }
+                        }
+
+                        data.hasExtra(EXTRA_WATCHED_DISCUSSION_ID) -> {
+                            val discussionId =
+                                data.getLongExtra(
+                                    EXTRA_WATCHED_DISCUSSION_ID,
+                                    DEFAULT_DISCUSSION_ID,
+                                )
+                            if (discussionId != DEFAULT_DISCUSSION_ID) {
+                                viewModel.modifyDiscussion(discussionId)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+    private val messageConverter: ExceptionMessageConverter = ExceptionMessageConverter()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        setContent {
+            TodoktodokTheme {
+                DiscussionsScreen(
+                    viewModel = viewModel,
+                    exceptionMessageConverter = messageConverter,
+                    onDiscussionClick = ::moveToDiscussionDetail,
+                    onClickMyDiscussionHeader = ::moveToProfile,
+                    onClickProfile = ::moveToProfile,
+                )
+            }
+        }
+    }
+
+    private fun moveToDiscussionDetail(discussionId: Long) {
+        discussionDetailLauncher.launch(DiscussionDetailActivity.Companion.Intent(this, discussionId))
+    }
+
+    private fun moveToProfile() {
+        startActivity(ProfileActivity.Intent(this))
+    }
+
+    private fun moveToProfile(tab: UserProfileTab) {
+        when (tab) {
+            UserProfileTab.ACTIVATED_BOOKS -> Unit
+            UserProfileTab.CREATED_DISCUSSIONS -> moveToMyCreatedDiscussion()
+            UserProfileTab.PARTICIPATED_DISCUSSIONS -> moveMyParticipatedDiscussion()
+        }
+    }
+
+    private fun moveToMyCreatedDiscussion() {
+        startActivity(
+            ProfileActivity.Intent(this, initialTab = UserProfileTab.CREATED_DISCUSSIONS),
+        )
+    }
+
+    private fun moveMyParticipatedDiscussion() {
+        startActivity(
+            ProfileActivity.Intent(this, initialTab = UserProfileTab.PARTICIPATED_DISCUSSIONS),
+        )
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadMyDiscussions()
+    }
+
+    companion object {
+        const val EXTRA_DELETE_DISCUSSION = "delete_discussion"
+        const val EXTRA_WATCHED_DISCUSSION_ID = "watched_discussion_id"
+        private const val DEFAULT_DISCUSSION_ID = -1L
+
+        fun Intent(context: Context) = Intent(context, DiscussionsActivity::class.java)
+    }
+}
