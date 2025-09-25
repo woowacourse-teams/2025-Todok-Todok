@@ -37,6 +37,9 @@ class DiscussionsViewModel(
     private val _uiEvent = Channel<DiscussionsUiEvent>(Channel.BUFFERED)
     val uiEvent get() = _uiEvent.receiveAsFlow()
 
+    private val _requestExit = MutableStateFlow(false)
+    val requestExit: StateFlow<Boolean> get() = _requestExit
+
     fun loadIsUnreadNotification() {
         viewModelScope.launch {
             notificationRepository
@@ -202,6 +205,23 @@ class DiscussionsViewModel(
     fun modifySearchKeyword(keyword: String) {
         _uiState.update { it.modifySearchKeyword(keyword) }
         if (keyword.isBlank()) clearSearchResult()
+    }
+
+    fun onBackPressed(
+        timeoutMillis: Long,
+        lastBackPressed: Long,
+    ): Boolean {
+        val now = System.currentTimeMillis()
+        return if (now - lastBackPressed <= timeoutMillis) {
+            _requestExit.value = true
+            true
+        } else {
+            false
+        }
+    }
+
+    fun resetExitRequest() {
+        _requestExit.value = false
     }
 
     private fun onUiEvent(event: DiscussionsUiEvent) {

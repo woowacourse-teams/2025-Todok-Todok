@@ -14,6 +14,7 @@ import com.team.todoktodok.presentation.compose.discussion.vm.DiscussionsViewMod
 import com.team.todoktodok.presentation.compose.theme.TodoktodokTheme
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.ext.getParcelableCompat
+import com.team.todoktodok.presentation.core.ext.repeatOnStarted
 import com.team.todoktodok.presentation.view.serialization.SerializationNotificationType
 import com.team.todoktodok.presentation.xml.book.SelectBookActivity
 import com.team.todoktodok.presentation.xml.discussiondetail.DiscussionDetailActivity
@@ -83,6 +84,7 @@ class DiscussionsActivity : ComponentActivity() {
                 )
             }
         }
+        collectRequestExit()
         handleNotificationDeepLink(intent)
     }
 
@@ -145,6 +147,17 @@ class DiscussionsActivity : ComponentActivity() {
             intent.getParcelableCompat<SerializationFcmNotification>("notification") as? SerializationFcmNotification
 
         triggerToMoveDiscussionDetail(notification)
+    }
+
+    private fun collectRequestExit() {
+        repeatOnStarted {
+            viewModel.requestExit.collect { shouldExit ->
+                if (shouldExit) {
+                    finishAffinity()
+                    viewModel.resetExitRequest()
+                }
+            }
+        }
     }
 
     private fun DiscussionsActivity.triggerToMoveDiscussionDetail(notification: SerializationFcmNotification?) {

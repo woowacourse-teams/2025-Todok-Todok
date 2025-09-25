@@ -1,7 +1,6 @@
 package com.team.todoktodok.presentation.compose.discussion
 
 import SearchDiscussionBar
-import android.app.Activity
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -14,7 +13,6 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -35,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.team.todoktodok.R
 import com.team.todoktodok.presentation.compose.core.ObserveAsEvents
+import com.team.todoktodok.presentation.compose.core.component.AlertSnackBar
 import com.team.todoktodok.presentation.compose.core.component.CloverProgressBar
 import com.team.todoktodok.presentation.compose.discussion.component.DiscussionToolbar
 import com.team.todoktodok.presentation.compose.discussion.model.Destination
@@ -43,11 +42,8 @@ import com.team.todoktodok.presentation.compose.discussion.model.DiscussionTab
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionsUiEvent
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionsUiState
 import com.team.todoktodok.presentation.compose.discussion.vm.DiscussionsViewModel
-import com.team.todoktodok.presentation.compose.theme.Black18
-import com.team.todoktodok.presentation.compose.theme.GreenF0
 import com.team.todoktodok.presentation.compose.theme.White
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
-import com.team.todoktodok.presentation.core.component.CloverProgressBar
 import com.team.todoktodok.presentation.xml.profile.UserProfileTab
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -74,7 +70,6 @@ fun DiscussionsScreen(
     val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
     var snackbarJob by remember { mutableStateOf<Job?>(null) }
-    var lastBackPressed by rememberSaveable { mutableLongStateOf(0L) }
 
     val showMessage: (String, Long) -> Unit = { message, millis ->
         snackbarJob?.cancel()
@@ -93,14 +88,14 @@ fun DiscussionsScreen(
             }
     }
 
+    var lastBackPressed by rememberSaveable { mutableLongStateOf(0L) }
+
     BackHandler(enabled = true) {
-        val now = System.currentTimeMillis()
-        if (now - lastBackPressed <= timeoutMillis) {
-            (context as? Activity)?.finishAffinity()
-        } else {
-            lastBackPressed = now
-            snackbarHostState.currentSnackbarData?.dismiss()
-            showMessage(context.getString(R.string.press_back_again_to_exit), timeoutMillis)
+        val handled =
+            viewModel.onBackPressed(timeoutMillis = 1500L, lastBackPressed = lastBackPressed)
+        if (!handled) {
+            lastBackPressed = System.currentTimeMillis()
+            showMessage(context.getString(R.string.press_back_again_to_exit), 1500L)
         }
     }
 
@@ -183,13 +178,7 @@ fun DiscussionsScreen(
         snackbarHost = {
             SnackbarHost(
                 hostState = snackbarHostState,
-                snackbar = {
-                    Snackbar(
-                        snackbarData = it,
-                        containerColor = GreenF0,
-                        contentColor = Black18,
-                    )
-                },
+                snackbar = { AlertSnackBar(snackbarData = it) },
             )
         },
         floatingActionButton = {
