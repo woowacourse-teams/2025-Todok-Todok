@@ -1,10 +1,9 @@
 package todoktodok.backend.discussion.presentation;
 
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
-
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -339,20 +338,20 @@ class DiscussionControllerTest {
         final Long memberId = 1L;
         final Long bookId = 1L;
 
-        databaseInitializer.setDiscussionInfo("게시글1", "내용1", memberId, bookId); // id=1
-        databaseInitializer.setDiscussionInfo("게시글2", "내용2", memberId, bookId); // id=2
-        databaseInitializer.setDiscussionInfo("게시글3", "내용3", memberId, bookId); // id=3
-        databaseInitializer.setDiscussionInfo("게시글4", "내용4", memberId, bookId); // id=4
+        databaseInitializer.setDiscussionInfo("게시글1", "내용1", memberId, bookId);
+        databaseInitializer.setDiscussionInfo("게시글2", "내용2", memberId, bookId);
+        databaseInitializer.setDiscussionInfo("게시글3", "내용3", memberId, bookId);
+        databaseInitializer.setDiscussionInfo("게시글4", "내용4", memberId, bookId);
 
         final LocalDateTime base = LocalDateTime.now();
 
-        databaseInitializer.setCommentInfo("1-1", memberId, 1L, base.minusMinutes(10));
-        databaseInitializer.setCommentInfo("2-1", memberId, 2L, base.minusMinutes(20));
-        databaseInitializer.setCommentInfo("2-2", memberId, 2L, base.minusMinutes(30));
-        databaseInitializer.setCommentInfo("3-1", memberId, 3L, base.minusMinutes(40));
+        databaseInitializer.setCommentInfo("4-1", memberId, 4L, base.minusMinutes(70)); // id = 1
+        databaseInitializer.setCommentInfo("3-1", memberId, 3L, base.minusMinutes(60)); // id = 2
         databaseInitializer.setCommentInfo("3-2", memberId, 3L, base.minusMinutes(50));
-        databaseInitializer.setCommentInfo("3-3", memberId, 3L, base.minusMinutes(60));
-        databaseInitializer.setCommentInfo("4-1", memberId, 4L, base.minusMinutes(70));
+        databaseInitializer.setCommentInfo("3-3", memberId, 3L, base.minusMinutes(40));
+        databaseInitializer.setCommentInfo("2-1", memberId, 2L, base.minusMinutes(30)); // id = 3
+        databaseInitializer.setCommentInfo("2-2", memberId, 2L, base.minusMinutes(20));
+        databaseInitializer.setCommentInfo("1-1", memberId, 1L, base.minusMinutes(10)); // id = 4
 
         final String token = MemberFixture.getAccessToken("user@gmail.com");
         final int size = 3;
