@@ -41,7 +41,9 @@ class SignUpViewModel(
             memberRepository
                 .signUp(nickname.value)
                 .onSuccessSuspend {
-                    notificationRepository.registerPushNotification()
+                    notificationRepository.registerPushNotification().onFailure {
+                        _uiEvent.setValue(SignUpUiEvent.ShowErrorMessage(it))
+                    }
                     _uiEvent.setValue(SignUpUiEvent.NavigateToMain)
                 }.onFailure { _uiEvent.setValue(SignUpUiEvent.ShowErrorMessage(it)) }
             _isLoading.value = false
