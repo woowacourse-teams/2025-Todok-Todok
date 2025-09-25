@@ -1,5 +1,7 @@
 package com.team.todoktodok.presentation.compose.discussion
 
+import android.app.Activity
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -8,16 +10,23 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.team.todoktodok.R
 import com.team.todoktodok.presentation.compose.core.ObserveAsEvents
 import com.team.todoktodok.presentation.compose.discussion.component.DiscussionToolbar
 import com.team.todoktodok.presentation.compose.discussion.model.Destination
@@ -29,6 +38,8 @@ import com.team.todoktodok.presentation.compose.theme.Black18
 import com.team.todoktodok.presentation.compose.theme.GreenF0
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.xml.profile.UserProfileTab
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -41,6 +52,7 @@ fun DiscussionsScreen(
     onDiscussionClick: (Long) -> Unit,
     onClickMyDiscussionHeader: (UserProfileTab) -> Unit,
     modifier: Modifier = Modifier,
+    timeoutMillis: Long = 1500L,
 ) {
     val pagerState =
         rememberPagerState(initialPage = Destination.HOT.ordinal) { Destination.entries.size }
@@ -48,9 +60,34 @@ fun DiscussionsScreen(
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
-    val showMessage: (message: String) -> Unit = {
-        coroutineScope.launch {
-            snackbarHostState.showSnackbar(it)
+    var snackbarJob by remember { mutableStateOf<Job?>(null) }
+    var lastBackPressed by rememberSaveable { mutableLongStateOf(0L) }
+
+    val showMessage: (String, Long) -> Unit = { message, millis ->
+        snackbarJob?.cancel()
+        snackbarJob =
+            coroutineScope.launch {
+                val showJob =
+                    launch {
+                        snackbarHostState.showSnackbar(
+                            message = message,
+                            duration = SnackbarDuration.Indefinite,
+                        )
+                    }
+                delay(millis)
+                snackbarHostState.currentSnackbarData?.dismiss()
+                showJob.cancel()
+            }
+    }
+
+    BackHandler(enabled = true) {
+        val now = System.currentTimeMillis()
+        if (now - lastBackPressed <= timeoutMillis) {
+            (context as? Activity)?.finishAffinity()
+        } else {
+            lastBackPressed = now
+            snackbarHostState.currentSnackbarData?.dismiss()
+            showMessage(context.getString(R.string.press_back_again_to_exit), timeoutMillis)
         }
     }
 
@@ -58,7 +95,7 @@ fun DiscussionsScreen(
         when (event) {
             is DiscussionsUiEvent.ShowErrorMessage -> {
                 val message = context.getString(exceptionMessageConverter(event.exception))
-                showMessage(message)
+                showMessage(message, timeoutMillis)
             }
 
             DiscussionsUiEvent.ScrollToAllDiscussion ->
