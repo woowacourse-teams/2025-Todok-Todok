@@ -778,6 +778,7 @@ public interface MemberApiDocs {
                                                   "createdAt": "2025-08-20T10:59:48",
                                                   "discussionTitle": "토론방 제목",
                                                   "discussionOpinion": "토론방 내용입니다",
+                                                  "viewCount": 2,
                                                   "likeCount": 0,
                                                   "commentCount": 4,
                                                   "isLikedByMe": false
@@ -798,6 +799,7 @@ public interface MemberApiDocs {
                                                   "createdAt": "2025-08-20T10:59:48",
                                                   "discussionTitle": "토론방 제목 2",
                                                   "discussionOpinion": "토론방 내용 2입니다",
+                                                  "viewCount": 2,
                                                   "likeCount": 0,
                                                   "commentCount": 4,
                                                   "isLikedByMe": false

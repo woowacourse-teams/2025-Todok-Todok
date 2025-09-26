@@ -25,3 +25,7 @@ spring:
 
 auth:
   mode: google
+
+jwt:
+  access-token:
+    expire-mills: 60_000

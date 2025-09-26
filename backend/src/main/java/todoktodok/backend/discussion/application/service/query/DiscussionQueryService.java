@@ -27,7 +27,9 @@ import todoktodok.backend.discussion.application.dto.response.DiscussionResponse
 import todoktodok.backend.discussion.application.dto.response.LatestDiscussionPageResponse;
 import todoktodok.backend.discussion.application.dto.response.PageInfo;
 import todoktodok.backend.discussion.domain.Discussion;
+import todoktodok.backend.discussion.domain.DiscussionMemberView;
 import todoktodok.backend.discussion.domain.repository.DiscussionLikeRepository;
+import todoktodok.backend.discussion.domain.repository.DiscussionMemberViewRepository;
 import todoktodok.backend.discussion.domain.repository.DiscussionRepository;
 import todoktodok.backend.member.domain.Member;
 import todoktodok.backend.member.domain.repository.MemberRepository;
@@ -43,13 +45,16 @@ public class DiscussionQueryService {
     private static final int MAX_HOT_DISCUSSION_PERIOD = 365;
     private static final int MAX_PAGE_SIZE = 50;
     private static final int MIN_PAGE_SIZE = 1;
+    private static final int VIEW_THRESHOLD = 10;
 
     private final DiscussionRepository discussionRepository;
     private final DiscussionLikeRepository discussionLikeRepository;
     private final MemberRepository memberRepository;
     private final CommentRepository commentRepository;
     private final ReplyRepository replyRepository;
+    private final DiscussionMemberViewRepository discussionMemberViewRepository;
 
+    @Transactional
     public DiscussionResponse getDiscussion(
             final Long memberId,
             final Long discussionId
@@ -64,12 +69,25 @@ public class DiscussionQueryService {
         );
         final boolean isLikedByMe = discussionLikeRepository.existsByMemberAndDiscussion(member, discussion);
 
-        return new DiscussionResponse(
-                discussion,
-                likeCount,
-                commentCount,
-                isLikedByMe
-        );
+        Optional<DiscussionMemberView> discussionMemberView = discussionMemberViewRepository.findByMemberAndDiscussion(
+                member, discussion);
+
+        if (discussionMemberView.isEmpty()) {
+            discussionMemberView = Optional.ofNullable(DiscussionMemberView.builder()
+                    .discussion(discussion)
+                    .member(member)
+                    .build());
+            discussionMemberViewRepository.save(discussionMemberView.get());
+            discussion.updateViewCount();
+
+            return new DiscussionResponse(discussion, likeCount, commentCount, isLikedByMe);
+        }
+
+        if (discussionMemberView.get().isModifiedDatePassedFrom(VIEW_THRESHOLD)) {
+            discussion.updateViewCount();
+        }
+
+        return new DiscussionResponse(discussion, likeCount, commentCount, isLikedByMe);
     }
 
     public LatestDiscussionPageResponse getDiscussions(
@@ -130,7 +148,8 @@ public class DiscussionQueryService {
         final Map<Long, Integer> likesByDiscussionId = getLikeCountsByDiscussionId(likeSinceCounts);
         final Map<Long, Integer> commentsByDiscussionId = getTotalCommentCountsByDiscussionId(commentSinceCounts);
 
-        final List<Discussion> hotDiscussions = findHotDiscussions(count, likesByDiscussionId, commentsByDiscussionId, discussions);
+        final List<Discussion> hotDiscussions = findHotDiscussions(count, likesByDiscussionId, commentsByDiscussionId,
+                discussions);
 
         final List<Long> likedDiscussionIds = getLikedDiscussionIdsFromHot(hotDiscussions, member);
 
@@ -264,7 +283,8 @@ public class DiscussionQueryService {
                 discussionIds);
         final Map<Long, Integer> likesByDiscussionId = getLikeCountsByDiscussionId(likeCounts);
         final Map<Long, Integer> commentsByDiscussionId = getTotalCommentCountsByDiscussionId(commentCounts);
-        final List<Long> likedDiscussionIds = discussionLikeRepository.findLikedDiscussionIdsByMember(member, discussionIds);
+        final List<Long> likedDiscussionIds = discussionLikeRepository.findLikedDiscussionIdsByMember(member,
+                discussionIds);
 
         return makeResponsesFrom(discussions, likesByDiscussionId, commentsByDiscussionId, likedDiscussionIds);
     }
@@ -286,8 +306,8 @@ public class DiscussionQueryService {
                 .toList();
     }
 
-
-    private Map<Long, Integer> getTotalCommentCountsByDiscussionId(final List<DiscussionCommentCountDto> commentCounts) {
+    private Map<Long, Integer> getTotalCommentCountsByDiscussionId(
+            final List<DiscussionCommentCountDto> commentCounts) {
         return commentCounts.stream()
                 .collect(Collectors.toMap(
                         DiscussionCommentCountDto::discussionId,
@@ -311,7 +331,8 @@ public class DiscussionQueryService {
 
     private static void validateHotDiscussionPeriod(final int period) {
         if (period < MIN_HOT_DISCUSSION_PERIOD || period > MAX_HOT_DISCUSSION_PERIOD) {
-            throw new IllegalArgumentException(String.format("유효하지 않은 기간 값입니다. 0일 ~ 365일 이내로 조회해주세요: period = %d", period));
+            throw new IllegalArgumentException(
+                    String.format("유효하지 않은 기간 값입니다. 0일 ~ 365일 이내로 조회해주세요: period = %d", period));
         }
     }
 

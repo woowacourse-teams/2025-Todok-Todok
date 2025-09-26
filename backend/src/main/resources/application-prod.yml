@@ -59,3 +59,7 @@ firebase:
   enabled: true
   account:
     path: ${firebase.account.path}
+
+jwt:
+  access-token:
+    expire-mills: ${jwt.access-token.prod.expire-mills}

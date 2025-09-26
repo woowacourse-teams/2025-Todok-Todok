@@ -1,6 +1,7 @@
 package todoktodok.backend.notification.infrastructure;
 
 public record FcmMessagePayload(
+        String notificationId,
         String title,
         String body,
         String discussionId,
@@ -13,6 +14,7 @@ public record FcmMessagePayload(
         String target
 ) {
     public FcmMessagePayload(
+            final Long notificationId,
             final String title,
             final String body,
             final Long discussionId,
@@ -25,6 +27,7 @@ public record FcmMessagePayload(
             final String target
     ) {
         this(
+                safeStringValue(notificationId),
                 title,
                 body,
                 safeStringValue(discussionId),
