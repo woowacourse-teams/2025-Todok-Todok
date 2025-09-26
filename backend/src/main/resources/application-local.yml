@@ -27,6 +27,9 @@ spring:
     import:
       - submodule/security/firebase.yml
 
+auth:
+  mode: bypass
+
 firebase:
   enabled: false
   account:
