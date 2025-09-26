@@ -59,20 +59,6 @@ public class MemberController implements MemberApiDocs {
                 .body(new RefreshTokenResponse(tokenResponse.refreshToken()));
     }
 
-    @Auth(value = Role.GUEST)
-    @PostMapping("/login/bypass")
-    public ResponseEntity<RefreshTokenResponse> loginBypass(
-            @RequestBody @Valid final BypassLoginRequest loginRequest
-    ) {
-        final TokenResponse tokenResponse = memberCommandService.bypassLogin(loginRequest);
-
-        return ResponseEntity.status(HttpStatus.OK)
-                .header("Authorization", tokenResponse.accessToken())
-                .header("Cache-Control", "no-store")
-                .header("Pragma", "no-cache")
-                .body(new RefreshTokenResponse(tokenResponse.refreshToken()));
-    }
-
     @Auth(value = Role.TEMP_USER)
     @PostMapping("/signup")
     public ResponseEntity<RefreshTokenResponse> signup(
