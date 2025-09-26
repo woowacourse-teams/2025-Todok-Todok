@@ -13,6 +13,7 @@ import androidx.credentials.exceptions.NoCredentialException
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
+import com.team.todoktodok.presentation.xml.auth.login.GoogleCredentialResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -117,11 +118,7 @@ class GoogleCredentialManager(
         // ID 토큰 파싱 시도
         return try {
             val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
-            GoogleCredentialResult.Success(
-                googleIdTokenCredential.id,
-                googleIdTokenCredential.displayName,
-                googleIdTokenCredential.profilePictureUri,
-            )
+            GoogleCredentialResult.Success(googleIdTokenCredential.idToken)
         } catch (e: Throwable) {
             handleGoogleCredentialException(e)
         }
