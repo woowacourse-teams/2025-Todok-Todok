@@ -19,7 +19,6 @@ data class ActiveDiscussion(
     val likeCount: Int,
     val commentCount: Int,
     val isLikedByMe: Boolean,
-    val lastCommentedAt: String,
 ) {
     fun toDomain() =
         Discussion(
