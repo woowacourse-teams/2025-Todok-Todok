@@ -2,11 +2,14 @@ package com.team.todoktodok.presentation.xml.setting.vm
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.team.domain.repository.TokenRepository
 
-class SettingViewModelFactory : ViewModelProvider.Factory {
+class SettingViewModelFactory(
+    private val tokenRepository: TokenRepository,
+) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(SettingViewModel::class.java)) {
-            return SettingViewModel() as T
+            return SettingViewModel(tokenRepository) as T
         }
         throw IllegalArgumentException()
     }

@@ -34,7 +34,6 @@ interface MemberService {
 
     @POST("v1/members/signup")
     suspend fun signUp(
-        @Query("memberEmail") request: String,
         @Body requestBody: SignUpRequest,
     ): Response<LoginResponse>
 

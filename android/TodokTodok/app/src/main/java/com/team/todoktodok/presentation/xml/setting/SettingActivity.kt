@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.commit
+import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivitySettingBinding
 import com.team.todoktodok.presentation.xml.setting.manage.ManageBlockedMembersFragment
@@ -20,7 +21,10 @@ import com.team.todoktodok.presentation.xml.setting.withdraw.WithdrawFragment
 import kotlin.getValue
 
 class SettingActivity : AppCompatActivity() {
-    private val viewModel: SettingViewModel by viewModels { SettingViewModelFactory() }
+    private val viewModel: SettingViewModel by viewModels {
+        val repositoryModule = (this.application as App).container.repositoryModule
+        SettingViewModelFactory(repositoryModule.tokenRepository)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

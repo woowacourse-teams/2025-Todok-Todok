@@ -62,6 +62,7 @@
 
     <!-- 로그인 페이지 -->
     <string name="login_fail_to_login">로그인에 실패했어요. 다시 시도해주세요</string>
+    <string name="login_cancelled">구글 로그인이 취소 되었습니다.</string>
 
     <!-- 닉네임 입력 페이지 -->
     <string name="signup_text">닉네임 설정</string>
@@ -169,10 +170,15 @@
     <string name="setting_modify_profile_complete">프로필 수정이 완료 되었습니다.</string>
     <string name="setting_member_message_et_hint">상태 메시지를 입력해주세요</string>
 
+    <!-- 로그아웃 화면 -->
+    <string name="text_logout">로그아웃</string>
+    <string name="logout_ask">이 계정에서 로그아웃 하시겠어요?</string>
+    <string name="logout_fail">로그아웃에 실패했어요. 다시 시도해주세요</string>
+
     <!-- 탈퇴 화면 -->
     <string name="setting_withdraw">회원 탈퇴</string>
     <string name="text_do_withdraw">탈퇴하기</string>
-    <string name="text_ask_really_withdraw">정말 탈퇴하시겠어요 ?</string>
+    <string name="text_ask_really_withdraw">정말 탈퇴하시겠어요?</string>
     <string name="text_guide_withdraw_policy">회원을 탈퇴하더라도 작성하신 토론은 유지돼요\n가입 정보는 탈퇴일로부터 7일간 보관됩니다.</string>
     <string name="withdraw_farewell">토독이와 함께해준 시간을 소중히 기억할게요</string>
 

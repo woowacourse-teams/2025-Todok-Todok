@@ -7,4 +7,6 @@ class DefaultTokenRepository(
     private val tokenLocalDataSource: TokenLocalDataSource,
 ) : TokenRepository {
     override suspend fun getMemberId(): Long = tokenLocalDataSource.getMemberId()
+
+    override suspend fun logout() = tokenLocalDataSource.clear()
 }

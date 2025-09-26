@@ -14,11 +14,7 @@ import com.team.domain.model.member.Profile
 import com.team.domain.model.member.ProfileMessage
 
 interface MemberRepository {
-    suspend fun login(
-        email: String,
-        nickname: String,
-        profileImage: String,
-    ): NetworkResult<MemberType>
+    suspend fun login(idToken: String): NetworkResult<MemberType>
 
     suspend fun signUp(nickname: String): NetworkResult<Unit>
 

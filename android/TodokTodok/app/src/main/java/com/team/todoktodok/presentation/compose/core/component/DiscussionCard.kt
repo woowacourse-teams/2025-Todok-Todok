@@ -116,7 +116,7 @@ fun DiscussionCard(
                             Text(
                                 text = uiState.discussionTitle,
                                 style = MaterialTheme.typography.titleMedium,
-                                maxLines = 2,
+                                maxLines = 1,
                                 overflow = TextOverflow.Ellipsis,
                             )
                             Text(

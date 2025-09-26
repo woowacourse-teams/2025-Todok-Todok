@@ -1,6 +1,5 @@
 package com.team.todoktodok.presentation.xml.auth.vm
 
-import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -47,19 +46,12 @@ class AuthViewModel(
         }
     }
 
-    fun login(
-        email: String,
-        nickname: String?,
-        profileImage: Uri?,
-    ) {
+    fun login(idToken: String) {
         viewModelScope.launch {
             _isLoading.value = true
             memberRepository
-                .login(
-                    email,
-                    nickname ?: NOT_EXIST_NICKNAME,
-                    profileImage?.toString() ?: NOT_EXIST_PROFILE_IMAGE,
-                ).onSuccessSuspend { type: MemberType ->
+                .login(idToken)
+                .onSuccessSuspend { type: MemberType ->
                     when (type) {
                         MemberType.USER -> {
                             notificationRepository.registerPushNotification()
