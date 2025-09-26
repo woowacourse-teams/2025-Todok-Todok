@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupWindow
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.annotation.StringRes
 import androidx.core.os.bundleOf
 import androidx.core.view.doOnPreDraw
@@ -71,6 +72,14 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
         setupOnClick(binding)
         setupObserve(binding)
         setupFragmentResultListener()
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    requestClose()
+                }
+            },
+        )
     }
 
     override fun onDestroyView() {

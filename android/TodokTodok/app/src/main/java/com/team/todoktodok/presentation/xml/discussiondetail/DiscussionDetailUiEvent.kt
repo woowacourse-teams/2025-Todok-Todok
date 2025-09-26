@@ -5,10 +5,6 @@ import com.team.todoktodok.presentation.xml.discussion.create.SerializationCreat
 import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussion
 
 sealed interface DiscussionDetailUiEvent {
-    data class ShowComments(
-        val discussionId: Long,
-    ) : DiscussionDetailUiEvent
-
     data class UpdateDiscussion(
         val discussionId: Long,
     ) : DiscussionDetailUiEvent

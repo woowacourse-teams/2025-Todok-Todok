@@ -82,21 +82,6 @@ class DiscussionDetailViewModelTest {
         }
 
     @Test
-    fun `댓글 보기 이벤트를 발생시킨다`() =
-        runTest {
-            // given
-            val expected = DiscussionDetailUiEvent.ShowComments(DISCUSSION_ID)
-
-            // when
-            discussionDetailViewModel.showComments()
-            advanceUntilIdle()
-            val event = discussionDetailViewModel.uiEvent.getOrAwaitValue()
-
-            // then
-            assertThat(event).isEqualTo(expected)
-        }
-
-    @Test
     fun `프로필 이동 이벤트를 발생시킨다`() =
         runTest {
             // given
