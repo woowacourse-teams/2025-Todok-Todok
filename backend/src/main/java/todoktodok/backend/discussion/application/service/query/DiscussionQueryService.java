@@ -34,7 +34,6 @@ import todoktodok.backend.discussion.domain.repository.DiscussionMemberViewRepos
 import todoktodok.backend.discussion.domain.repository.DiscussionRepository;
 import todoktodok.backend.member.domain.Member;
 import todoktodok.backend.member.domain.repository.MemberRepository;
-import todoktodok.backend.reply.domain.repository.ReplyRepository;
 
 @Service
 @Transactional(readOnly = true)

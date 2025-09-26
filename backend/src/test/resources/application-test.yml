@@ -23,6 +23,9 @@ spring:
   flyway:
     enabled: false
 
+auth:
+  mode: google
+
 jwt:
   access-token:
     expire-mills: 60_000

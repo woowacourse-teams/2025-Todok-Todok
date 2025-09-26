@@ -380,6 +380,15 @@ VALUES
      CURRENT_TIME,
      CURRENT_TIME);
 
+ INSERT INTO member (email, nickname, profile_image, profile_message, created_at, modified_at)
+ VALUES
+     ('todoktodok2025@gmail.com',
+      'todoktodok2025',
+      'https://user.png',
+      '독서 기반 토론 서비스 [토독토독]',
+      CURRENT_TIME,
+      CURRENT_TIME);
+
 INSERT INTO discussion (title, content, member_id, book_id, created_at, modified_at)
 VALUES
     ('엘강오 생성자 관련 토론',
