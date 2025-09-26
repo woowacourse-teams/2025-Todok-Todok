@@ -10,7 +10,6 @@ import io.jsonwebtoken.JwtException;
 
 import java.nio.charset.StandardCharsets;
 import java.util.NoSuchElementException;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
