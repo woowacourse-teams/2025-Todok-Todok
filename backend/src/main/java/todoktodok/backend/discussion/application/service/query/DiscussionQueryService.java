@@ -53,6 +53,7 @@ public class DiscussionQueryService {
     private final ReplyRepository replyRepository;
     private final DiscussionMemberViewRepository discussionMemberViewRepository;
 
+    @Transactional
     public DiscussionResponse getDiscussion(
             final Long memberId,
             final Long discussionId
@@ -76,10 +77,9 @@ public class DiscussionQueryService {
                     .member(member)
                     .build());
             discussionMemberViewRepository.save(discussionMemberView.get());
-        }
-
-        if (discussion.isFirstView()) {
             discussion.updateViewCount();
+
+            return new DiscussionResponse(discussion, likeCount, commentCount, isLikedByMe);
         }
 
         if (discussionMemberView.get().isModifiedDatePassedFrom(VIEW_THRESHOLD)) {

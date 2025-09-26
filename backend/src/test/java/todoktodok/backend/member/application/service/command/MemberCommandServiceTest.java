@@ -3,8 +3,11 @@ package todoktodok.backend.member.application.service.command;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.given;
 
 import io.jsonwebtoken.JwtException;
+
 import java.nio.charset.StandardCharsets;
 import java.util.NoSuchElementException;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,6 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import todoktodok.backend.DatabaseInitializer;
@@ -26,14 +30,12 @@ import todoktodok.backend.discussion.application.service.query.DiscussionQuerySe
 import todoktodok.backend.global.auth.Role;
 import todoktodok.backend.global.jwt.JwtTokenProvider;
 import todoktodok.backend.global.jwt.TokenInfo;
-import todoktodok.backend.member.application.dto.request.LoginRequest;
-import todoktodok.backend.member.application.dto.request.ProfileUpdateRequest;
-import todoktodok.backend.member.application.dto.request.RefreshTokenRequest;
-import todoktodok.backend.member.application.dto.request.SignupRequest;
+import todoktodok.backend.member.application.dto.request.*;
 import todoktodok.backend.member.application.dto.response.MemberResponse;
 import todoktodok.backend.member.application.dto.response.ProfileUpdateResponse;
 import todoktodok.backend.member.application.dto.response.TokenResponse;
 import todoktodok.backend.member.domain.repository.RefreshTokenRepository;
+import todoktodok.backend.member.infrastructure.AuthClient;
 
 @ActiveProfiles("test")
 @Transactional
@@ -42,19 +44,19 @@ import todoktodok.backend.member.domain.repository.RefreshTokenRepository;
 class MemberCommandServiceTest {
 
     @Autowired
-    private DatabaseInitializer databaseInitializer;
-
-    @Autowired
     private MemberCommandService memberCommandService;
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
     @Autowired
-    private RefreshTokenRepository refreshTokenRepository;
+    private DiscussionQueryService discussionQueryService;
+
+    @MockitoBean
+    private AuthClient authClient;
 
     @Autowired
-    private DiscussionQueryService discussionQueryService;
+    private DatabaseInitializer databaseInitializer;
 
     @BeforeEach
     void setUp() {
@@ -67,10 +69,14 @@ class MemberCommandServiceTest {
         // given
         databaseInitializer.setDefaultUserInfo();
 
-        final LoginRequest loginRequest = new LoginRequest("user@gmail.com");
+        final String email = "user@gmail.com";
+        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(email);
+
+        final String fakeToken = "fakeToken_willNotUse";
+        final LoginRequest fakeLoginRequest = new LoginRequest(fakeToken);
 
         // when
-        final TokenResponse tokenResponse = memberCommandService.login(loginRequest);
+        final TokenResponse tokenResponse = memberCommandService.login(fakeLoginRequest);
         final TokenInfo accessTokenInfo = jwtTokenProvider.getInfoByAccessToken(tokenResponse.accessToken());
         final TokenInfo refreshTokenInfo = jwtTokenProvider.getInfoByRefreshToken(tokenResponse.refreshToken());
 
@@ -85,10 +91,14 @@ class MemberCommandServiceTest {
     @DisplayName("신규 회원 로그인 시 임시 토큰을 발급한다")
     void loginTempUserTest() {
         // given
-        final LoginRequest loginRequest = new LoginRequest("user@gmail.com");
+        final String email = "user@gmail.com";
+        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(email);
+
+        final String fakeToken = "fakeToken_willNotUse";
+        final LoginRequest fakeLoginRequest = new LoginRequest(fakeToken);
 
         // when
-        final TokenResponse tokenResponse = memberCommandService.login(loginRequest);
+        final TokenResponse tokenResponse = memberCommandService.login(fakeLoginRequest);
         final TokenInfo accessTokenInfo = jwtTokenProvider.getInfoByAccessToken(tokenResponse.accessToken());
 
         // then
@@ -103,7 +113,11 @@ class MemberCommandServiceTest {
     void signUpTest() {
         // given
         final String email = "user@gmail.com";
-        final SignupRequest signupRequest = new SignupRequest("user", "https://user.png", email);
+        final String fakeIdToken = "fakeIdToken_willNotUse";
+        final SignupRequest signupRequest = new SignupRequest("user", fakeIdToken);
+
+        given(authClient.resolveVerifiedEmailAndNicknameFrom(anyString()))
+                .willReturn(new GoogleAuthMemberDto(email, ""));
 
         // when
         final TokenResponse tokenResponse = memberCommandService.signup(signupRequest, email);
@@ -127,7 +141,12 @@ class MemberCommandServiceTest {
         final String profileMessage = "profileMessage";
         databaseInitializer.setUserInfo(email, nickname, profileImage, profileMessage);
 
-        final TokenResponse oldTokenResponse = memberCommandService.login(new LoginRequest(email));
+        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(email);
+
+        final String fakeToken = "fakeToken_willNotUse";
+        final LoginRequest fakeLoginRequest = new LoginRequest(fakeToken);
+
+        final TokenResponse oldTokenResponse = memberCommandService.login(fakeLoginRequest);
         final String oldRefreshToken = oldTokenResponse.refreshToken();
         final RefreshTokenRequest refreshTokenRequest = new RefreshTokenRequest(oldRefreshToken);
 
@@ -167,13 +186,19 @@ class MemberCommandServiceTest {
     @DisplayName("회원가입 시 중복된 닉네임을 입력하면 예외가 발생한다")
     void validateDuplicatedNicknameTest() {
         // given
-        databaseInitializer.setDefaultUserInfo();
-
         final String nickname = "user";
-        final SignupRequest signupRequest = new SignupRequest(nickname, "https://user.png", "user22@gmail.com");
+
+        databaseInitializer.setUserInfo("user@gmail.com", nickname, "", "");
+
+        final String loginMemberEmail = "user22@gmail.com";
+        final String fakeIdToken = "fakeIdToken_willNotUse";
+        final SignupRequest signupRequest = new SignupRequest(nickname, fakeIdToken);
+
+        given(authClient.resolveVerifiedEmailAndNicknameFrom(anyString()))
+                .willReturn(new GoogleAuthMemberDto(loginMemberEmail, ""));
 
         // when - then
-        assertThatThrownBy(() -> memberCommandService.signup(signupRequest, "user22@gmail.com"))
+        assertThatThrownBy(() -> memberCommandService.signup(signupRequest, loginMemberEmail))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("이미 존재하는 닉네임입니다");
     }
@@ -182,10 +207,15 @@ class MemberCommandServiceTest {
     @DisplayName("회원가입 시 중복된 이메일을 입력하면 예외가 발생한다")
     void validateDuplicatedEmailTest() {
         // given
-        databaseInitializer.setDefaultUserInfo();
-
         final String email = "user@gmail.com";
-        final SignupRequest signupRequest = new SignupRequest("user22", "https://user.png", email);
+
+        databaseInitializer.setUserInfo(email, "user", "", "");
+
+        final String fakeIdToken = "fakeIdToken_willNotUse";
+        final SignupRequest signupRequest = new SignupRequest("user22", fakeIdToken);
+
+        given(authClient.resolveVerifiedEmailAndNicknameFrom(anyString()))
+                .willReturn(new GoogleAuthMemberDto(email, ""));
 
         // when - then
         assertThatThrownBy(() -> memberCommandService.signup(signupRequest, email))
@@ -197,13 +227,16 @@ class MemberCommandServiceTest {
     @DisplayName("소셜 로그인을 하지 않은 유저가 회원가입을 시도할 경우 예외가 발생한다")
     void validateEmailWithTokenEmailTest() {
         // given
-        final String email = "user@gmail.com";
-        final SignupRequest signupRequest = new SignupRequest("user", "https://user.png", email);
+        final String fakeIdToken = "fakeIdToken_willNotUse";
+        final SignupRequest signupRequest = new SignupRequest("user", fakeIdToken);
+
+        given(authClient.resolveVerifiedEmailAndNicknameFrom(anyString()))
+                .willThrow(new IllegalArgumentException("유효하지 않은 토큰입니다"));
 
         // when - then
         assertThatThrownBy(() -> memberCommandService.signup(signupRequest, "notLoginUser@gmail.com"))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("소셜 로그인을 하지 않은 이메일입니다");
+                .hasMessageContaining("유효하지 않은 토큰입니다");
     }
 
     @Test
@@ -433,7 +466,12 @@ class MemberCommandServiceTest {
             databaseInitializer.setUserInfo(email, "user", "https://user.png", "");
             databaseInitializer.setUserInfo("user2@gmail.com", "user2", "https://user.png", "");
 
-            final TokenResponse tokenResponse = memberCommandService.login(new LoginRequest(email));
+            given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(email);
+
+            final String fakeToken = "fakeToken_willNotUse";
+            final LoginRequest fakeLoginRequest = new LoginRequest(fakeToken);
+
+            final TokenResponse tokenResponse = memberCommandService.login(fakeLoginRequest);
             final Long memberId = 1L;
             final String refreshToken = tokenResponse.refreshToken();
 
@@ -460,10 +498,13 @@ class MemberCommandServiceTest {
             databaseInitializer.setUserInfo(email, "user", "", "");
             databaseInitializer.deleteUserInfo(email);
 
-            final LoginRequest loginRequest = new LoginRequest(email);
+            given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(email);
+
+            final String fakeToken = "fakeToken_willNotUse";
+            final LoginRequest fakeLoginRequest = new LoginRequest(fakeToken);
 
             // when
-            final TokenResponse tokenResponse = memberCommandService.login(loginRequest);
+            final TokenResponse tokenResponse = memberCommandService.login(fakeLoginRequest);
             final TokenInfo accessTokenInfo = jwtTokenProvider.getInfoByAccessToken(tokenResponse.accessToken());
             final TokenInfo refreshTokenInfo = jwtTokenProvider.getInfoByRefreshToken(tokenResponse.refreshToken());
 
@@ -482,7 +523,12 @@ class MemberCommandServiceTest {
 
             databaseInitializer.setUserInfo(email, "user", "https://user.png", "");
 
-            final TokenResponse tokenResponse = memberCommandService.login(new LoginRequest(email));
+            given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(email);
+
+            final String fakeToken = "fakeToken_willNotUse";
+            final LoginRequest fakeLoginRequest = new LoginRequest(fakeToken);
+
+            final TokenResponse tokenResponse = memberCommandService.login(fakeLoginRequest);
             final Long wrongMemberId = 999L;
 
             // when - then
