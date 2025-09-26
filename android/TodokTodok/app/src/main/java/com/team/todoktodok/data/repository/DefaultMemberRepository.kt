@@ -12,7 +12,9 @@ import com.team.domain.model.member.Member
 import com.team.domain.model.member.MemberDiscussionType
 import com.team.domain.model.member.MemberId
 import com.team.domain.model.member.MemberType
+import com.team.domain.model.member.Nickname
 import com.team.domain.model.member.Profile
+import com.team.domain.model.member.ProfileMessage
 import com.team.domain.repository.MemberRepository
 import com.team.todoktodok.data.core.ext.toMultipartPart
 import com.team.todoktodok.data.datasource.member.MemberRemoteDataSource
@@ -65,9 +67,15 @@ class DefaultMemberRepository(
             .map { books -> books.map { it.toDomain() } }
 
     override suspend fun modifyProfile(
-        nickname: String,
-        message: String,
-    ): NetworkResult<Unit> = remoteMemberRemoteDataSource.modifyProfile(ModifyProfileRequest(nickname, message))
+        nickname: Nickname,
+        message: ProfileMessage,
+    ): NetworkResult<Unit> =
+        remoteMemberRemoteDataSource.modifyProfile(
+            ModifyProfileRequest(
+                nickname.value,
+                message.value,
+            ),
+        )
 
     override suspend fun modifyProfileImage(imagePayload: ImagePayload): NetworkResult<String> =
         remoteMemberRemoteDataSource
