@@ -6,4 +6,3 @@
       '독서 기반 토론 서비스 [토독토독]',
       CURRENT_TIME,
       CURRENT_TIME);
-

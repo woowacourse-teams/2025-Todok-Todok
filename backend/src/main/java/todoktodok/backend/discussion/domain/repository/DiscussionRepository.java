@@ -2,6 +2,7 @@ package todoktodok.backend.discussion.domain.repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,50 +13,68 @@ import todoktodok.backend.member.domain.Member;
 
 public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
 
-    List<Discussion> findDiscussionsByMember(final Member member);
+    @Query("""
+                   SELECT d
+                   FROM Discussion d
+                   WHERE d.id IN :discussionIds
+            """)
+    List<Discussion> findDiscussionsInIds(@Param("discussionIds") final List<Long> discussionIds);
 
     @Query("""
-                SELECT d FROM Discussion d
-                WHERE UPPER(d.title) LIKE UPPER(CONCAT('%', :keyword, '%'))
-                AND d.deletedAt IS NULL
-                UNION
-                SELECT d FROM Discussion d
-                JOIN d.book b
-                WHERE UPPER(b.title) LIKE UPPER(CONCAT('%', :keyword, '%'))
-                AND d.deletedAt IS NULL
-                AND b.deletedAt IS NULL
+                   SELECT d.id 
+                   FROM Discussion d
+                   WHERE d.member = :member
             """)
-    List<Discussion> searchByKeyword(
-            @Param("keyword") final String keyword
-    );
+    List<Long> findIdsByMember(@Param("member") final Member member);
 
     @Query("""
-                SELECT d FROM Discussion d
-                WHERE UPPER(d.title) LIKE UPPER(CONCAT('%', :keyword, '%'))
-                AND d.deletedAt IS NULL
-                AND d.member = :member
-                UNION
-                SELECT d FROM Discussion d
-                JOIN d.book b
-                WHERE UPPER(b.title) LIKE UPPER(CONCAT('%', :keyword, '%'))
-                AND d.deletedAt IS NULL
-                AND b.deletedAt IS NULL
-                AND d.member = :member
+                   SELECT d.id 
+                   FROM Discussion d
             """)
-    List<Discussion> searchByKeywordAndMember(
-            @Param("keyword") final String keyword,
-            @Param("member") final Member member
+    List<Long> findAllIds();
+
+    @Query("""
+                    SELECT d.id
+                    FROM Discussion d
+            """)
+    Slice<Long> findAllIdsBy(final Pageable pageable);
+
+    @Query("""
+                    SELECT d.id 
+                    FROM Discussion d
+                    WHERE :cursorId IS NULL OR d.id < :cursorId
+            """)
+    Slice<Long> findIdsLessThan(
+            @Param("cursorId") final Long cursorId,
+            final Pageable pageable
     );
 
     @Query(value = """
-                SELECT d.* 
+            SELECT d.id
+            FROM discussion d
+            WHERE MATCH(d.title) AGAINST(:keyword IN BOOLEAN MODE)
+              AND d.deleted_at IS NULL
+              
+            UNION
+            
+            SELECT d.id
+            FROM discussion d
+            JOIN book b ON d.book_id = b.id
+            WHERE MATCH(b.title) AGAINST(:keyword IN BOOLEAN MODE)
+              AND d.deleted_at IS NULL
+              AND b.deleted_at IS NULL
+            """, nativeQuery = true)
+    List<Long> searchIdsByKeyword(@Param("keyword") final String keyword);
+
+    @Query(value = """
+                SELECT d.id
                 FROM discussion d
                 WHERE d.member_id = :memberId
                 AND d.deleted_at IS NULL
                     
                 UNION
                     
-                SELECT d.* 
+                SELECT d.id
                 FROM discussion d
                 JOIN comment c ON c.discussion_id = d.id
                 WHERE c.member_id = :memberId
@@ -64,7 +83,7 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
                     
                 UNION
                     
-                SELECT d.* 
+                SELECT d.id
                 FROM discussion d
                 JOIN comment c ON c.discussion_id = d.id
                 JOIN reply r ON r.comment_id = c.id
@@ -73,22 +92,10 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
                 AND c.deleted_at IS NULL
                 AND r.deleted_at IS NULL
             """, nativeQuery = true)
-    List<Discussion> findParticipatedDiscussionsByMember(@Param("memberId") final Long memberId);
-
-    Slice<Discussion> findAllBy(final Pageable pageable);
+    List<Long> findParticipatedDiscussionIdsByMember(@Param("memberId") final Long memberId);
 
     @Query("""
-            SELECT d
-            FROM Discussion d
-            WHERE :cursorId IS NULL OR d.id < :cursorId
-            """)
-    Slice<Discussion> findByIdLessThan(
-            @Param("cursorId") final Long cursorId,
-            final Pageable pageable
-    );
-
-    @Query("""
-        SELECT d
+        SELECT d.id
         FROM Discussion d
         JOIN Comment c ON c.discussion = d
         WHERE c.createdAt >= :periodStart
@@ -99,7 +106,7 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
         )
         ORDER BY MAX(c.id) DESC
    """)
-    List<Discussion> findActiveDiscussionsByCursor(
+    List<Long> findActiveDiscussionsByCursor(
             @Param("periodStart") final LocalDateTime periodStart,
             @Param("lastDiscussionLatestCommentId") final Long lastDiscussionLatestCommentId,
             final Pageable pageable

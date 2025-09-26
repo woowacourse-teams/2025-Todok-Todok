@@ -10,6 +10,7 @@ import io.jsonwebtoken.JwtException;
 
 import java.nio.charset.StandardCharsets;
 import java.util.NoSuchElementException;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -34,7 +35,6 @@ import todoktodok.backend.member.application.dto.request.*;
 import todoktodok.backend.member.application.dto.response.MemberResponse;
 import todoktodok.backend.member.application.dto.response.ProfileUpdateResponse;
 import todoktodok.backend.member.application.dto.response.TokenResponse;
-import todoktodok.backend.member.domain.repository.RefreshTokenRepository;
 import todoktodok.backend.member.infrastructure.AuthClient;
 
 @ActiveProfiles("test")
