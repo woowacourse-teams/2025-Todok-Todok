@@ -50,6 +50,7 @@
     <!--  상세 토론방 페이지  -->
     <string name="content_description_discussion_detail_back">토론 상세 화면에서 뒤로가는 버튼</string>
     <string name="content_description_discussion_detail_option">토론방 옵션 버튼</string>
+    <string name="content_description_discussion_detail_share">토론방 공유 버튼</string>
     <string name="content_description_discussion_detail_book_profile">토론방 도서 이미지 버튼</string>
     <string name="content_description_discussion_detail_user_profile">토론방 유저 이미지 버튼</string>
     <string name="comment_input_hint">댓글 입력</string>
@@ -76,6 +77,7 @@
     <string name="discussion_tab_title_hot">HOT</string>
     <string name="discussion_tab_title_all">전체</string>
     <string name="discussion_tab_title_my">내 토론방</string>
+    <string name="discussion_search_result_count">검색 결과(%d)</string>
     <string name="discussion_no_search_title">%s에 대한 검색결과가 없어요</string>
     <string name="discussion_no_search_subtitle">다른 검색어를 입력해 주세요 !</string>
     <string name="content_description_discussion_img">토론방 도서 이미지</string>
@@ -101,8 +103,14 @@
     <string name="profile_not_has_participated_discussions_title">아직 참여한 토론방이 없어요 !</string>
     <string name="profile_not_has_participated_discussions_subtitle">토론에 참여하고 토론방을 추가해보세요 !</string>
     <string name="profile_action_participated_discussion">토론방 둘러보기 ></string>
-
     <string name="content_description_profile_setting">설정 버튼</string>
+
+    <!-- 프로필 수정 화면 -->
+    <string name="profile_invalid_nickname_white_space">띄어쓰기를 제거해주세요.</string>
+    <string name="profile_invalid_nickname_character">한글, 영문, 숫자만 입력할 수 있어요.</string>
+    <string name="profile_invalid_nickname_length">1자 이상 8자 이하로 입력해주세요.</string>
+    <string name="profile_invalid_nickname_same">동일한 닉네임으로 수정할 수 없습니다.</string>
+    <string name="profile_invalid_profile_message_same">동일한 메시지로 수정할 수 없습니다.</string>
 
     <string name="discussion_menu_alarm">알람</string>
     <string name="discussion_menu_profile">내정보</string>
@@ -128,8 +136,9 @@
     <string name="select_book_hint_search_keyword">도서 제목 또는 저자를 입력해주세요</string>
     <string name="select_book_empty_search_result">도서 \'%s\'\n검색 결과가 없습니다</string>
     <string name="select_book_empty_search_result_content">입력한 검색어의 철자 또는 띄어쓰기가\n정확한지 다시 한번 확인해 주세요.</string>
-    <string name="select_book_searched_books_count">%,d개</string>
+    <string name="select_book_searched_books_count">총 %,d개</string>
     <string name="select_book_error_empty_keyword">검색어는 1자 이상이어야 합니다</string>
+    <string name="select_book_error_searched_book_total_size">책 검색 요청시 페이지 수는 1에서 200까지만 가능합니다.</string>
     <string name="select_book_error_empty_isbn">도서 ISBN을 입력해주세요</string>
     <string name="select_book_error_empty_author">도서의 저자가 없습니다</string>
     <string name="select_book_error_no_selected_book">도서를 선택해주세요</string>
@@ -201,6 +210,7 @@
     <string name="error_unknown">알 수 없는 오류가 발생했습니다.</string>
     <string name="error_missing_location">사용자 인증 정보가 없습니다.</string>
     <string name="error_missing_missing_field">Json 직렬화 객체 필드가 일치하지 않습니다.</string>
+    <string name="error_uri_input_stream_not_found">선택한 파일을 열 수 없습니다. 다른 파일을 선택해 주세요.</string>
 
     <!-- 네트워크 관련 -->
     <string name="error_timeout">서버 응답이 지연되고 있습니다. 잠시 후 다시 시도해주세요.</string>
@@ -261,4 +271,19 @@
     <string name="error_reply_not_in_comment">해당 댓글에 있는 대댓글이 아닙니다</string>
     <string name="error_reply_only_owner_can_modify_or_delete">자기 자신의 대댓글만 수정/삭제 가능합니다</string>
     <string name="content_description_delete_keyword">입력한 키워드를 삭제합니다</string>
+    <string name="discussions_content_description_notificition">알림 페이지로 이동합니다</string>
+    <string name="notification_icon">아이콘</string>
+
+    <string name="network_try_connection">네트워크 연결을 재시도중입니다.</string>
+    <string name="progress_description">로딩 중</string>
+
+    <string name="notification_type_like">좋아요</string>
+    <string name="notification_type_comment">댓글</string>
+    <string name="notification_type_reply">대댓글</string>
+
+    <string name="discussion_link_title">토론 보기</string>
+    <string name="share_discussion_title">토론방 공유</string>
+    <string name="discussion_entry_invalid_message">토론 정보를 불러올 수 없습니다.</string>
+    <string name="press_back_again_to_exit">한 번 더 누르면 종료됩니다</string>
+
 </resources>

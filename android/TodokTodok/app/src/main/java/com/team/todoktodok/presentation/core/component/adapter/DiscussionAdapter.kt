@@ -2,11 +2,11 @@ package com.team.todoktodok.presentation.core.component.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
+import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiState
 import com.team.todoktodok.presentation.core.component.adapter.DefaultDiscussionViewHolder.Companion.DefaultDiscussionViewHolder
 import com.team.todoktodok.presentation.core.component.adapter.QueryHighlightingViewHolder.Companion.QueryHighlightingViewHolder
 import com.team.todoktodok.presentation.core.component.adapter.ResizingDiscussionViewHolder.Companion.ResizingDiscussionViewHolder
 import com.team.todoktodok.presentation.core.component.adapter.WriterHiddenDiscussionViewHolder.Companion.WriterHiddenDiscussionViewHolder
-import com.team.todoktodok.presentation.view.discussions.DiscussionUiState
 
 class DiscussionAdapter(
     private val handler: Handler,

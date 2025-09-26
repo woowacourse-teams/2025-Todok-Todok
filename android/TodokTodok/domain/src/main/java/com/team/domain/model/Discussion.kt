@@ -12,11 +12,12 @@ data class Discussion(
     val createAt: LocalDateTime,
     val likeCount: Int,
     val commentCount: Int,
-    val viewCount: Int = 0, // TODO("API 완성시 수정")
+    val viewCount: Int,
     val isLikedByMe: Boolean,
 ) {
     val bookImage get() = book.image
     val writerNickname get() = writer.nickname.value
+    val writerImage get() = writer.profileImage
 
     fun getBookTitle(): String = book.extractSubtitle()
 

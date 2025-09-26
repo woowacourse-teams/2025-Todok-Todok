@@ -1,7 +1,7 @@
 package com.team.todoktodok.presentation.core.component.adapter
 
 import androidx.recyclerview.widget.DiffUtil
-import com.team.todoktodok.presentation.view.discussions.DiscussionUiState
+import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiState
 
 class DiscussionDiffUtil : DiffUtil.ItemCallback<DiscussionUiState>() {
     override fun areItemsTheSame(

@@ -9,9 +9,9 @@ import com.team.todoktodok.CoroutinesTestExtension
 import com.team.todoktodok.InstantTaskExecutorExtension
 import com.team.todoktodok.ext.getOrAwaitValue
 import com.team.todoktodok.fixture.DISCUSSIONS
-import com.team.todoktodok.presentation.view.discussiondetail.DiscussionDetailUiEvent
-import com.team.todoktodok.presentation.view.discussiondetail.vm.DiscussionDetailViewModel
-import com.team.todoktodok.presentation.view.discussiondetail.vm.DiscussionDetailViewModel.Companion.KEY_DISCUSSION_ID
+import com.team.todoktodok.presentation.xml.discussiondetail.DiscussionDetailUiEvent
+import com.team.todoktodok.presentation.xml.discussiondetail.vm.DiscussionDetailViewModel
+import com.team.todoktodok.presentation.xml.discussiondetail.vm.DiscussionDetailViewModel.Companion.KEY_DISCUSSION_ID
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -33,7 +33,6 @@ class DiscussionDetailViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        // given
         val state = SavedStateHandle(mapOf(KEY_DISCUSSION_ID to DISCUSSION_ID))
         tokenRepository = mockk(relaxed = true)
         coEvery { tokenRepository.getMemberId() } returns WRITER_ID
@@ -41,7 +40,6 @@ class DiscussionDetailViewModelTest {
         coEvery { discussionRepository.getDiscussion(DISCUSSION_ID) } returns
             NetworkResult.Success(DISCUSSIONS.first())
 
-        // when
         discussionDetailViewModel =
             DiscussionDetailViewModel(
                 state,
@@ -49,7 +47,7 @@ class DiscussionDetailViewModelTest {
                 tokenRepository,
             )
 
-        // then (no-op: 생성 성공이 곧 준비 완료)
+        discussionDetailViewModel.initLoadDiscission(DISCUSSION_ID)
     }
 
     @Test

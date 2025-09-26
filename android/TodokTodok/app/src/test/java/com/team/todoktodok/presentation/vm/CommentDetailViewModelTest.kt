@@ -12,10 +12,10 @@ import com.team.domain.repository.TokenRepository
 import com.team.todoktodok.CoroutinesTestExtension
 import com.team.todoktodok.InstantTaskExecutorExtension
 import com.team.todoktodok.ext.getOrAwaitValue
-import com.team.todoktodok.presentation.view.discussiondetail.commentdetail.CommentDetailUiEvent
-import com.team.todoktodok.presentation.view.discussiondetail.commentdetail.vm.CommentDetailViewModel
-import com.team.todoktodok.presentation.view.discussiondetail.commentdetail.vm.CommentDetailViewModel.Companion.KEY_COMMENT_ID
-import com.team.todoktodok.presentation.view.discussiondetail.commentdetail.vm.CommentDetailViewModel.Companion.KEY_DISCUSSION_ID
+import com.team.todoktodok.presentation.xml.discussiondetail.commentdetail.CommentDetailUiEvent
+import com.team.todoktodok.presentation.xml.discussiondetail.commentdetail.vm.CommentDetailViewModel
+import com.team.todoktodok.presentation.xml.discussiondetail.commentdetail.vm.CommentDetailViewModel.Companion.KEY_COMMENT_ID
+import com.team.todoktodok.presentation.xml.discussiondetail.commentdetail.vm.CommentDetailViewModel.Companion.KEY_DISCUSSION_ID
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -155,12 +155,11 @@ class CommentDetailViewModelTest {
 
             loadViewModel(DISCUSSION_ID, COMMENT_ID)
 
-            commentDetailViewModel.reloadComment()
+            commentDetailViewModel.reloadReplies()
             advanceUntilIdle()
             val event = commentDetailViewModel.uiEvent.getOrAwaitValue()
 
             // then
-            coVerify(exactly = 2) { commentRepository.getComment(DISCUSSION_ID, COMMENT_ID) }
             coVerify(exactly = 2) { replyRepository.getReplies(DISCUSSION_ID, COMMENT_ID) }
             assertEquals(CommentDetailUiEvent.ShowNewReply, event)
         }

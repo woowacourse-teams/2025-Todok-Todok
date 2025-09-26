@@ -1,9 +1,11 @@
 package com.team.domain.model.member
 
 sealed class NickNameException : IllegalArgumentException() {
-    object InvalidWhiteSpace : NickNameException()
+    data object InvalidWhiteSpace : NickNameException()
 
-    object InvalidCharacters : NickNameException()
+    data object InvalidCharacters : NickNameException()
 
-    object InvalidLength : NickNameException()
+    data object InvalidLength : NickNameException()
+
+    data object SameNicknameModification : NickNameException()
 }

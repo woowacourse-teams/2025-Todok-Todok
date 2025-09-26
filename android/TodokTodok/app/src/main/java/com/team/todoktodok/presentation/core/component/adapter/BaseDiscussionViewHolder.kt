@@ -4,9 +4,9 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ItemDiscussionBinding
+import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiState
 import com.team.todoktodok.presentation.core.ext.loadCircleImage
 import com.team.todoktodok.presentation.core.ext.loadImage
-import com.team.todoktodok.presentation.view.discussions.DiscussionUiState
 
 abstract class BaseDiscussionViewHolder(
     protected val binding: ItemDiscussionBinding,

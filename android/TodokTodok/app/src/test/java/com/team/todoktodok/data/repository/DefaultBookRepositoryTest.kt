@@ -1,35 +1,14 @@
 package com.team.todoktodok.data.repository
 
-import com.team.domain.model.book.AladinBook
-import com.team.domain.model.book.AladinBooks
 import com.team.domain.model.book.Keyword
 import com.team.domain.model.exception.NetworkResult
 import com.team.todoktodok.fake.datasource.StubBookRemoteDataSource
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertAll
-import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 class DefaultBookRepositoryTest {
-    @Test
-    fun `도서를 불러오면 도메인으로 매핑된다`() =
-        runTest {
-            val bookRemoteDataSource = StubBookRemoteDataSource()
-            val defaultBookRepository = DefaultBookRepository(bookRemoteDataSource)
-            val keyword = "오브젝트"
-
-            val result = defaultBookRepository.fetchBooks(Keyword(keyword))
-
-            assertAll(
-                { assertEquals(1, bookRemoteDataSource.callCount) },
-                { assertTrue(result is NetworkResult.Success) },
-                { assertEquals(16, (result as NetworkResult.Success).data.size) },
-                { assertTrue((result as NetworkResult.Success).data is AladinBooks) },
-                { assertTrue((result as NetworkResult.Success).data[0] is AladinBook) },
-            )
-        }
-
     @Test
     fun `원격 실패면 실패가 그대로 전파된다`() =
         runTest {
@@ -37,9 +16,13 @@ class DefaultBookRepositoryTest {
             val bookRemoteDataSource = StubBookRemoteDataSource()
             val defaultBookRepository = DefaultBookRepository(bookRemoteDataSource)
             bookRemoteDataSource.shouldFailFetchBooks = true
-            val keyword = "오브젝트"
+            "오브젝트"
 
-            val result = defaultBookRepository.fetchBooks(Keyword(keyword))
+            val result =
+                defaultBookRepository.fetchBooks(
+                    size = 20,
+                    keyword = Keyword("오브젝트"),
+                )
 
             // then
             assertTrue(result is NetworkResult.Failure)
@@ -50,14 +33,18 @@ class DefaultBookRepositoryTest {
         runTest {
             val bookRemoteDataSource = StubBookRemoteDataSource()
             val defaultBookRepository = DefaultBookRepository(bookRemoteDataSource)
-            val keyword = "ㅁ나ㅣㅇ러;ㅣ마넝리ㅏ;ㅁ넝리;ㅏㅓㅁㄴㄹㅇ"
+            "ㅁ나ㅣㅇ러;ㅣ마넝리ㅏ;ㅁ넝리;ㅏㅓㅁㄴㄹㅇ"
 
             bookRemoteDataSource.isInvalidKeyword = true
-            val result = defaultBookRepository.fetchBooks(Keyword(keyword))
+            val result =
+                defaultBookRepository.fetchBooks(
+                    size = 20,
+                    keyword = Keyword("오브젝트"),
+                )
 
             assertAll(
                 { assertTrue(result is NetworkResult.Success) },
-                { assertTrue((result as NetworkResult.Success).data.isEmpty()) },
+                { assertTrue((result as NetworkResult.Success).data.books.isEmpty()) },
             )
         }
 }

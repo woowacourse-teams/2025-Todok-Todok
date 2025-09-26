@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation.view.auth.signup.SignUpFragment">
+    tools:context=".presentation.xml.auth.signup.SignUpFragment">
 
     <TextView
         android:id="@+id/tv_header"
@@ -13,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/toolbar_height"
         android:text="@string/signup_text"
+        android:layout_marginTop="@dimen/space_56"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView

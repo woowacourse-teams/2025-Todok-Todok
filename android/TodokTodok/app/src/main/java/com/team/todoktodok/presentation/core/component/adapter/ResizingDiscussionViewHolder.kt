@@ -3,7 +3,7 @@ package com.team.todoktodok.presentation.core.component.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.team.todoktodok.databinding.ItemDiscussionBinding
-import com.team.todoktodok.presentation.view.discussions.DiscussionUiState
+import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiState
 
 class ResizingDiscussionViewHolder private constructor(
     binding: ItemDiscussionBinding,
@@ -14,21 +14,16 @@ class ResizingDiscussionViewHolder private constructor(
             tvDiscussionOpinion.text = item.discussionOpinion
             tvDiscussionOpinion.maxLines = 2
             tvDiscussionOpinion.minLines = 2
-            adjustItemSize(item.opinionVisibility)
+            adjustItemSize()
         }
 
-    private fun adjustItemSize(showOpinion: Boolean) {
+    private fun adjustItemSize() {
         val resource = itemView.context.resources
         val displayMetrics = resource.displayMetrics
         val screenWidth = displayMetrics.widthPixels
 
         val params = itemView.layoutParams
-        params.width =
-            if (showOpinion) {
-                (screenWidth * 0.7).toInt()
-            } else {
-                ViewGroup.LayoutParams.MATCH_PARENT
-            }
+        params.width = (screenWidth * 0.7).toInt()
         itemView.layoutParams = params
     }
 

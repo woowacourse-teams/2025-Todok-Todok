@@ -51,7 +51,7 @@ android {
         applicationId = "com.team.todoktodok"
         minSdk = 30
         targetSdk = 35
-        versionCode = 4
+        versionCode = 5
         versionName = "1.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -96,18 +96,26 @@ android {
 
 dependencies {
     implementation(project(":domain"))
-    implementation(platform(libs.androidx.compose.bom))
+
     implementation(libs.bundles.androidx)
     implementation(libs.bundles.kotlin)
     implementation(libs.bundles.network)
     implementation(libs.bundles.google)
     implementation(libs.bundles.glide)
     implementation(libs.bundles.logging)
+    implementation("com.google.firebase:firebase-messaging:25.0.1")
+
     testImplementation(libs.bundles.test)
     testImplementation(libs.androidx.core.testing)
     ksp(libs.androidx.room.compiler)
 
-    androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.bundles.android.test)
     androidTestRuntimeOnly(libs.mannodermaus.junit5.runner)
+
+    implementation(platform(libs.compose.bom))
+    implementation(libs.bundles.compose)
+
+    androidTestImplementation(platform(libs.compose.bom))
+    androidTestImplementation(libs.bundles.compose.test)
+    debugImplementation(libs.bundles.compose.debug)
 }

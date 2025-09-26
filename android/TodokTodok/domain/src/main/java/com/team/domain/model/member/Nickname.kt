@@ -12,6 +12,6 @@ value class Nickname(
 
     companion object {
         private const val MIN_LENGTH = 1
-        private const val MAX_LENGTH = 8
+        const val MAX_LENGTH = 8
     }
 }
