@@ -81,11 +81,6 @@ class UserInformationViewHolder private constructor(
                 }
 
             tvDescription.text = message
-
-//            Glide
-//                .with(binding.root)
-//                .load(content.profileImage)
-//                .into(ivProfile)
         }
     }
 

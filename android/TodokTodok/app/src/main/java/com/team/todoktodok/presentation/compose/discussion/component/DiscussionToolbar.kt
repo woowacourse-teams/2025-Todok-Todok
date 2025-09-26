@@ -39,7 +39,10 @@ fun DiscussionToolbar(
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(10.dp),
-        modifier = modifier.background(color = White),
+        modifier =
+            modifier
+                .background(color = White)
+                .padding(end = 8.dp),
     ) {
         TopAppBar(
             title = {
@@ -107,7 +110,7 @@ fun DiscussionToolbar(
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 24.dp),
+                    .padding(horizontal = 16.dp),
         )
     }
 }

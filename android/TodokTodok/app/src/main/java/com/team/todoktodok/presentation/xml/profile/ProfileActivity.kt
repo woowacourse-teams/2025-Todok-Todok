@@ -189,6 +189,11 @@ class ProfileActivity : AppCompatActivity() {
             }
         }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.refreshProfile()
+    }
+
     companion object {
         fun Intent(
             context: Context,

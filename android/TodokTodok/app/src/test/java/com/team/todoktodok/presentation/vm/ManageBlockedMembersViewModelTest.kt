@@ -5,7 +5,7 @@ import com.team.domain.model.member.BlockedMember
 import com.team.domain.repository.MemberRepository
 import com.team.todoktodok.CoroutinesTestExtension
 import com.team.todoktodok.InstantTaskExecutorExtension
-import com.team.todoktodok.data.core.ext.toLocalDate
+import com.team.todoktodok.data.core.ext.toLocalDateTime
 import com.team.todoktodok.ext.getOrAwaitValue
 import com.team.todoktodok.presentation.xml.setting.manage.vm.ManageBlockedMembersViewModel
 import io.mockk.coEvery
@@ -37,7 +37,7 @@ class ManageBlockedMembersViewModelTest {
     fun `초기화 시 차단된 유저 목록을 불러온다`() =
         runTest {
             // given
-            val blockedList = listOf(BlockedMember(1L, "닉네임", "2025-07-30T07:54:24.604Z".toLocalDate()))
+            val blockedList = listOf(BlockedMember(1L, "닉네임", "2025-07-30T07:54:24.729011".toLocalDateTime()))
             coEvery { repository.getBlockedMembers() } returns NetworkResult.Success(blockedList)
 
             // when
@@ -55,8 +55,8 @@ class ManageBlockedMembersViewModelTest {
             val unblockMemberId = 2L
             val members =
                 listOf(
-                    BlockedMember(1L, "user1", "2025-07-30T07:54:24.604Z".toLocalDate()),
-                    BlockedMember(2L, "user2", "2025-07-30T07:54:24.604Z".toLocalDate()),
+                    BlockedMember(1L, "user1", "2025-07-30T07:54:24.729011".toLocalDateTime()),
+                    BlockedMember(2L, "user2", "2025-07-30T07:54:24.729011".toLocalDateTime()),
                 )
             coEvery { repository.getBlockedMembers() } returns NetworkResult.Success(members)
             coEvery { repository.unblock(unblockMemberId) } returns NetworkResult.Success(Unit)
