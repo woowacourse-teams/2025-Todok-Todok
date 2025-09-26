@@ -28,7 +28,9 @@ import todoktodok.backend.discussion.application.dto.response.DiscussionResponse
 import todoktodok.backend.discussion.application.dto.response.LatestDiscussionPageResponse;
 import todoktodok.backend.discussion.application.dto.response.PageInfo;
 import todoktodok.backend.discussion.domain.Discussion;
+import todoktodok.backend.discussion.domain.DiscussionMemberView;
 import todoktodok.backend.discussion.domain.repository.DiscussionLikeRepository;
+import todoktodok.backend.discussion.domain.repository.DiscussionMemberViewRepository;
 import todoktodok.backend.discussion.domain.repository.DiscussionRepository;
 import todoktodok.backend.member.domain.Member;
 import todoktodok.backend.member.domain.repository.MemberRepository;
@@ -44,11 +46,13 @@ public class DiscussionQueryService {
     private static final int MAX_DISCUSSION_PERIOD = 7;
     private static final int MAX_PAGE_SIZE = 50;
     private static final int MIN_PAGE_SIZE = 1;
+    private static final int VIEW_THRESHOLD = 10;
 
     private final DiscussionRepository discussionRepository;
     private final DiscussionLikeRepository discussionLikeRepository;
     private final MemberRepository memberRepository;
     private final CommentRepository commentRepository;
+    private final DiscussionMemberViewRepository discussionMemberViewRepository;
 
     public DiscussionResponse getDiscussion(
             final Long memberId,
@@ -60,6 +64,25 @@ public class DiscussionQueryService {
         final DiscussionLikeSummaryDto likeSummary = discussionLikeRepository.findLikeSummaryByDiscussionId(member, discussionId);
         final DiscussionCommentCountDto commentSummary = commentRepository.findCommentCountByDiscussionId(discussionId);
         final int commentCount = commentSummary.commentCount() + commentSummary.replyCount();
+
+        Optional<DiscussionMemberView> discussionMemberView = discussionMemberViewRepository.findByMemberAndDiscussion(
+                member, discussion);
+
+        if (discussionMemberView.isEmpty()) {
+            discussionMemberView = Optional.ofNullable(DiscussionMemberView.builder()
+                    .discussion(discussion)
+                    .member(member)
+                    .build());
+            discussionMemberViewRepository.save(discussionMemberView.get());
+        }
+
+        if (discussion.isFirstView()) {
+            discussion.updateViewCount();
+        }
+
+        if (discussionMemberView.get().isModifiedDatePassedFrom(VIEW_THRESHOLD)) {
+            discussion.updateViewCount();
+        }
 
         return new DiscussionResponse(
                 discussion,
@@ -215,7 +238,7 @@ public class DiscussionQueryService {
         return discussionRepository.findIdsLessThan(cursorId, pageable);
     }
 
-    private String processBlankCursor(String cursor) {
+    private String processBlankCursor(final String cursor) {
         if (cursor == null || cursor.isBlank()) {
             return null;
         }

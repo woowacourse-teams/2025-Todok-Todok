@@ -9,9 +9,7 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-
 import java.util.List;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
@@ -603,6 +601,7 @@ public interface MemberApiDocs {
                                                   "createdAt": "2025-08-20T10:59:48",
                                                   "discussionTitle": "토론방 제목",
                                                   "discussionOpinion": "토론방 내용입니다",
+                                                  "viewCount": 2,
                                                   "likeCount": 0,
                                                   "commentCount": 4,
                                                   "isLikedByMe": false
@@ -623,6 +622,7 @@ public interface MemberApiDocs {
                                                   "createdAt": "2025-08-20T10:59:48",
                                                   "discussionTitle": "토론방 제목 2",
                                                   "discussionOpinion": "토론방 내용 2입니다",
+                                                  "viewCount": 2,
                                                   "likeCount": 0,
                                                   "commentCount": 4,
                                                   "isLikedByMe": false
