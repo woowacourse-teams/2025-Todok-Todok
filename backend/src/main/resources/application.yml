@@ -6,7 +6,6 @@ spring:
       - submodule/security/aladin.yml
       - submodule/security/jwt.yml
       - submodule/security/aws.yml
-      - submodule/security/firebase.yml
       - submodule/security/google.yml
       - submodule/security/admin.yml
   servlet:
