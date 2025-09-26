@@ -34,7 +34,7 @@ public class GoogleAuthClient implements AuthClient{
             final GoogleIdToken idToken = googleIdTokenVerifier.verify(idTokenRequest);
             validateResolvedIdToken(idToken, idTokenRequest);
 
-            GoogleIdToken.Payload payload = idToken.getPayload();
+            final GoogleIdToken.Payload payload = idToken.getPayload();
             validateEmailValidity(payload);
 
             return payload;
