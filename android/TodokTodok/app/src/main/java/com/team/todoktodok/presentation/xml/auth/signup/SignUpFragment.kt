@@ -1,7 +1,9 @@
 package com.team.todoktodok.presentation.xml.auth.signup
 
+import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -60,6 +62,7 @@ class SignUpFragment : Fragment(R.layout.fragment_signup) {
             btnCreate.setOnClickListener {
                 val nickname = etNickname.text.toString()
                 viewModel.submitNickname(nickname)
+                hideKeyBoard()
             }
 
             etNickname.doAfterTextChanged {
@@ -84,6 +87,12 @@ class SignUpFragment : Fragment(R.layout.fragment_signup) {
                 }
             }
         }
+    }
+
+    private fun hideKeyBoard() {
+        val inputMethodManager: InputMethodManager =
+            requireContext().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view?.windowToken, 0)
     }
 
     private fun moveToMain() {
