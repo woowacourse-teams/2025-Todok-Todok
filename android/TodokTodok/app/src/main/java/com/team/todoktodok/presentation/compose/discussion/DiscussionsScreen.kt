@@ -123,7 +123,6 @@ fun DiscussionsScreen(
         viewModel.loadIsUnreadNotification()
         viewModel.loadHotDiscussions()
         viewModel.loadLatestDiscussions()
-        viewModel.loadMyDiscussions()
     }
 
     DiscussionsScreen(
