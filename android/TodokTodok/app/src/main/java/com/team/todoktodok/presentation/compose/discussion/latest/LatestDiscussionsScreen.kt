@@ -69,7 +69,7 @@ fun LatestDiscussionsScreen(
 
 @Preview
 @Composable
-fun DiscussionsScreenPreview(
+private fun DiscussionsScreenPreview(
     @PreviewParameter(LatestDiscussionsPreviewParameterProvider::class)
     latestDiscussionsUiState: LatestDiscussionsUiState,
 ) {

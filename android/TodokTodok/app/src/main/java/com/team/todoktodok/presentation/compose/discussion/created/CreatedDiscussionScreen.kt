@@ -30,7 +30,7 @@ fun CreatedDiscussionScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun CreatedDiscussionScreenPreview(
+private fun CreatedDiscussionScreenPreview(
     @PreviewParameter(CreatedDiscussionUiStatePreviewParameterProvider::class)
     createdDiscussions: CreatedDiscussionsUiState,
 ) {

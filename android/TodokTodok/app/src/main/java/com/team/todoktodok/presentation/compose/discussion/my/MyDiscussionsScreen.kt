@@ -132,7 +132,7 @@ fun MyDiscussionHeader(
 
 @Preview(showBackground = true)
 @Composable
-fun MyDiscussionsScreenPreview(
+private fun MyDiscussionsScreenPreview(
     @PreviewParameter(MyDiscussionsUiStatePreviewParameterProvider::class)
     uiState: MyDiscussionUiState,
 ) {
@@ -145,7 +145,7 @@ fun MyDiscussionsScreenPreview(
 
 @Preview(showBackground = true)
 @Composable
-fun EmptyMyDiscussionsScreenPreview() {
+private fun EmptyMyDiscussionsScreenPreview() {
     MyDiscussionsScreen(
         onClick = {},
         onClickHeader = {},

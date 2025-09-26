@@ -1,13 +1,11 @@
 package com.team.todoktodok.presentation.compose.discussion.component
 
-import SearchDiscussionBar
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -29,10 +27,7 @@ import com.team.todoktodok.presentation.compose.theme.White
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DiscussionToolbar(
-    searchKeyword: String,
     isExistNotification: Boolean,
-    onSearch: () -> Unit,
-    onSearchKeywordChanged: (String) -> Unit,
     onClickNotification: () -> Unit,
     onClickProfile: () -> Unit,
     modifier: Modifier = Modifier,
@@ -102,28 +97,15 @@ fun DiscussionToolbar(
                     containerColor = White,
                 ),
         )
-
-        SearchDiscussionBar(
-            onSearch = { onSearch() },
-            searchKeyword = searchKeyword,
-            onKeywordChange = { onSearchKeywordChanged(it) },
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-        )
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
-fun DiscussionToolbarPreview() {
+private fun DiscussionToolbarPreview() {
     DiscussionToolbar(
-        onSearch = {},
-        searchKeyword = "코틀린",
         isExistNotification = true,
-        onSearchKeywordChanged = {},
         onClickNotification = {},
         onClickProfile = {},
     )
@@ -132,12 +114,9 @@ fun DiscussionToolbarPreview() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
-fun DiscussionToolbarPreview2() {
+private fun DiscussionToolbarPreview2() {
     DiscussionToolbar(
-        onSearch = {},
-        searchKeyword = "코틀린",
         isExistNotification = false,
-        onSearchKeywordChanged = {},
         onClickNotification = {},
         onClickProfile = {},
     )

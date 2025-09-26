@@ -269,6 +269,7 @@
     <string name="notification_icon">아이콘</string>
 
     <string name="network_try_connection">네트워크 연결을 재시도중입니다.</string>
+    <string name="progress_description">로딩 중</string>
 
     <string name="notification_type_like">좋아요</string>
     <string name="notification_type_comment">댓글</string>

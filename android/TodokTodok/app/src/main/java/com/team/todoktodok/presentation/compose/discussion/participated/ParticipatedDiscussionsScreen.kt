@@ -30,7 +30,7 @@ fun ParticipatedDiscussionsScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun ParticipatedDiscussionHeaderPreview(
+private fun ParticipatedDiscussionHeaderPreview(
     @PreviewParameter(ParticipatedDiscussionPreviewParameterProvider::class)
     uiState: ParticipatedDiscussionsUiState,
 ) {
