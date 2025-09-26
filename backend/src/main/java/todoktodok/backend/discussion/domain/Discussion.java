@@ -86,10 +86,6 @@ public class Discussion extends TimeStamp {
         this.content = content;
     }
 
-    public boolean isFirstView() {
-        return this.viewCount == 0;
-    }
-
     public void updateViewCount() {
         this.viewCount++;
     }

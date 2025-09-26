@@ -54,6 +54,7 @@ public class DiscussionQueryService {
     private final CommentRepository commentRepository;
     private final DiscussionMemberViewRepository discussionMemberViewRepository;
 
+    @Transactional
     public DiscussionResponse getDiscussion(
             final Long memberId,
             final Long discussionId
@@ -74,22 +75,16 @@ public class DiscussionQueryService {
                     .member(member)
                     .build());
             discussionMemberViewRepository.save(discussionMemberView.get());
-        }
-
-        if (discussion.isFirstView()) {
             discussion.updateViewCount();
+
+            return new DiscussionResponse(discussion, likeSummary.likeCount(), commentCount, likeSummary.isLikedByMe());
         }
 
         if (discussionMemberView.get().isModifiedDatePassedFrom(VIEW_THRESHOLD)) {
             discussion.updateViewCount();
         }
 
-        return new DiscussionResponse(
-                discussion,
-                likeSummary.likeCount(),
-                commentCount,
-                likeSummary.isLikedByMe()
-        );
+        return new DiscussionResponse(discussion, likeSummary.likeCount(), commentCount, likeSummary.isLikedByMe());
     }
 
     public LatestDiscussionPageResponse getDiscussions(

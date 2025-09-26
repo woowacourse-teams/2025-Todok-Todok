@@ -100,7 +100,7 @@ class DiscussionQueryServiceTest {
         final DiscussionResponse discussionResponse = discussionQueryService.getDiscussion(memberId, discussionId);
 
         // then
-        assertThat(discussionResponse.viewCount()).isEqualTo(2);
+        assertThat(discussionResponse.viewCount()).isEqualTo(1);
     }
 
     @Test
@@ -127,7 +127,7 @@ class DiscussionQueryServiceTest {
         final DiscussionResponse discussionResponse = discussionQueryService.getDiscussion(memberId, discussionId);
 
         // then
-        assertThat(discussionResponse.viewCount()).isEqualTo(1);
+        assertThat(discussionResponse.viewCount()).isEqualTo(0);
     }
 
     @Test
@@ -693,6 +693,7 @@ class DiscussionQueryServiceTest {
                     () -> assertThat(hotDiscussions.get(3).discussionId()).isEqualTo(1L)
             );
         }
+
     }
 
     @Nested
