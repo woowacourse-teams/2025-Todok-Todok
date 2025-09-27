@@ -2,7 +2,6 @@ package com.team.todoktodok.presentation.compose.discussion.model
 
 import com.team.domain.model.Discussion
 import com.team.domain.model.active.ActivatedDiscussionPage
-import com.team.domain.model.latest.LatestDiscussionPage
 import com.team.todoktodok.presentation.compose.discussion.all.AllDiscussionsUiState
 import com.team.todoktodok.presentation.compose.discussion.hot.HotDiscussionUiState
 import com.team.todoktodok.presentation.compose.discussion.my.MyDiscussionUiState
@@ -13,8 +12,6 @@ data class DiscussionsUiState(
     val allDiscussions: AllDiscussionsUiState = AllDiscussionsUiState(),
     val isUnreadNotification: Boolean = true,
 ) {
-    fun refreshLatestDiscussion(): DiscussionsUiState = copy(allDiscussions = allDiscussions.refreshLatestDiscussion())
-
     fun addSearchDiscussion(
         keyword: String,
         newDiscussions: List<Discussion>,
@@ -40,9 +37,6 @@ data class DiscussionsUiState(
         participatedDiscussion: List<Discussion>,
     ): DiscussionsUiState = copy(myDiscussion = myDiscussion.addDiscussions(createdDiscussion, participatedDiscussion))
 
-    fun addLatestDiscussion(page: LatestDiscussionPage): DiscussionsUiState =
-        copy(allDiscussions = allDiscussions.addLatestDiscussion(page))
-
     fun modifyDiscussion(discussion: Discussion): DiscussionsUiState {
         val newHotDiscussion = hotDiscussion.modifyDiscussion(discussion)
         val newAllDiscussionsUiState = allDiscussions.modifyAllDiscussion(discussion)
@@ -64,7 +58,4 @@ data class DiscussionsUiState(
     }
 
     fun changeUnreadNotification(isExist: Boolean): DiscussionsUiState = copy(isUnreadNotification = isExist)
-
-    val latestPageHasNext get() = allDiscussions.latestPageHasNext
-    val latestPageNextCursor get() = allDiscussions.latestPageNextCursor
 }
