@@ -56,7 +56,7 @@ class DiscussionCardTest {
         composeTestRule.onNodeWithText("홍길동").assertIsDisplayed()
         composeTestRule.onNodeWithText("12").assertIsDisplayed()
         composeTestRule.onNodeWithText("3").assertIsDisplayed()
-        composeTestRule.onNodeWithText("0").assertIsDisplayed() // viewCount
+        composeTestRule.onNodeWithText("10").assertIsDisplayed()
     }
 
     @Test
@@ -78,7 +78,7 @@ class DiscussionCardTest {
         composeTestRule.onNodeWithText("JPA 성능 최적화").assertIsDisplayed()
         composeTestRule.onNodeWithText("12").assertIsDisplayed()
         composeTestRule.onNodeWithText("3").assertIsDisplayed()
-        composeTestRule.onNodeWithText("0").assertIsDisplayed()
+        composeTestRule.onNodeWithText("10").assertIsDisplayed()
     }
 
     @Test
