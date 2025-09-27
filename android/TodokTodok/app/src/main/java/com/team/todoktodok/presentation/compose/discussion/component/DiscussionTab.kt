@@ -1,7 +1,6 @@
-package com.team.todoktodok.presentation.compose.discussion.model
+package com.team.todoktodok.presentation.compose.discussion.component
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ScrollableTabRow
@@ -27,13 +25,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.team.todoktodok.presentation.compose.discussion.all.AllDiscussionsScreen
+import com.team.todoktodok.presentation.compose.discussion.model.AllDiscussionMode
 import com.team.todoktodok.presentation.compose.discussion.hot.HotDiscussionScreen
+import com.team.todoktodok.presentation.compose.discussion.latest.LatestDiscussionsScreen
 import com.team.todoktodok.presentation.compose.discussion.latest.vm.LatestDiscussionViewModel
+import com.team.todoktodok.presentation.compose.discussion.model.Destination
 import com.team.todoktodok.presentation.compose.discussion.model.Destination.Companion.Destination
+import com.team.todoktodok.presentation.compose.discussion.model.DiscussionsUiState
 import com.team.todoktodok.presentation.compose.discussion.my.MyDiscussionsScreen
+import com.team.todoktodok.presentation.compose.discussion.search.SearchDiscussionScreen
 import com.team.todoktodok.presentation.compose.theme.Green1A
 import com.team.todoktodok.presentation.compose.theme.Pretendard
 import com.team.todoktodok.presentation.compose.theme.White
@@ -64,16 +65,12 @@ fun DiscussionTab(
         ScrollableTabRow(
             selectedTabIndex = pagerState.currentPage,
             indicator = { tabPositions ->
-                val currentTab = tabPositions[pagerState.currentPage]
                 Box(
                     Modifier
-                        .tabIndicatorOffset(currentTab)
-                        .padding(horizontal = 20.dp)
+                        .tabIndicatorOffset(tabPositions[pagerState.currentPage])
                         .height(4.dp)
-                        .background(
-                            color = Green1A,
-                            shape = RoundedCornerShape(50),
-                        ),
+                        .padding(horizontal = 20.dp)
+                        .background(Green1A, RoundedCornerShape(50)),
                 )
             },
             divider = {},
@@ -82,19 +79,17 @@ fun DiscussionTab(
             edgePadding = 0.dp,
         ) {
             Destination.entries.forEachIndexed { index, tab ->
+                val label = stringResource(tab.label)
                 Tab(
                     text = {
                         Text(
-                            text = stringResource(tab.label),
+                            text = label,
                             fontFamily = Pretendard,
                             fontWeight = FontWeight.SemiBold,
                         )
                     },
                     selected = pagerState.currentPage == index,
-                    modifier =
-                        Modifier
-                            .width(100.dp)
-                            .height(50.dp),
+                    modifier = Modifier.width(100.dp).height(50.dp),
                     onClick = {
                         coroutineScope.launch {
                             pagerState.animateScrollToPage(index)
@@ -103,70 +98,59 @@ fun DiscussionTab(
                 )
             }
         }
+
         HorizontalDivider(
-            modifier =
-                Modifier
-                    .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             color = Color.LightGray,
             thickness = 1.dp,
         )
 
         HorizontalPager(
             state = pagerState,
+            modifier = Modifier.fillMaxSize(),
         ) { page ->
-            Column(
+            Box(
                 modifier =
                     Modifier
                         .fillMaxSize()
                         .background(White),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
+                contentAlignment = Alignment.Center,
             ) {
                 when (Destination(page)) {
-                    Destination.HOT -> {
+                    Destination.HOT ->
                         HotDiscussionScreen(
                             uiState = uiState.hotDiscussion,
-                            onLoadMore = { onActivatedDiscussionLoadMore() },
-                            onClick = { onClick(it) },
+                            onLoadMore = onActivatedDiscussionLoadMore,
+                            onClick = onClickDiscussion,
                             modifier = Modifier.fillMaxSize(),
                         )
-                    }
 
-                    Destination.ALL -> {
-                        AllDiscussionsScreen(
-                            latestDiscussionViewModel = latestDiscussionViewModel,
-                            messageConverter = messageConverter,
-                            uiState = uiState.allDiscussions,
-                            onClickDiscussion = { onClick(it) },
-                            modifier = Modifier.fillMaxSize(),
-                        )
-                    }
+                    Destination.ALL ->
+                        when (uiState.allDiscussionMode) {
+                            AllDiscussionMode.LATEST ->
+                                LatestDiscussionsScreen(
+                                    viewModel = latestDiscussionViewModel,
+                                    messageConverter = messageConverter,
+                                    onClick = onClickDiscussion,
+                                    modifier = Modifier.fillMaxSize(),
+                                )
+                            AllDiscussionMode.SEARCH ->
+                                SearchDiscussionScreen(
+                                    uiState = uiState.searchDiscussion,
+                                    onClick = onClickDiscussion,
+                                    modifier = Modifier.fillMaxSize(),
+                                )
+                        }
 
-                    Destination.MY -> {
+                    Destination.MY ->
                         MyDiscussionsScreen(
                             uiState = uiState.myDiscussion,
-                            onClick = { onClick(it) },
-                            onClickHeader = { onClickMyDiscussionHeader(it) },
+                            onClick = onClickDiscussion,
+                            onClickHeader = onClickMyDiscussionHeader,
                             modifier = Modifier.fillMaxSize(),
                         )
-                    }
                 }
             }
         }
     }
-}
-
-@Preview
-@Composable
-fun DiscussionTabPreview() {
-    val pagerState = rememberPagerState(initialPage = 0) { 3 }
-//    DiscussionTab(
-//        pagerState = pagerState,
-//        uiState = DiscussionsUiState(),
-//        onLatestDiscussionLoadMore = {},
-//        onActivatedDiscussionLoadMore = {},
-//        onRefresh = {},
-//        onClick = {},
-//        onClickMyDiscussionHeader = {},
-//    )
 }
