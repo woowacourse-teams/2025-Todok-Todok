@@ -16,6 +16,6 @@ class LatestDiscussionViewModelFactory(
                 networkConnectivityObserver,
             ) as T
         }
-        return super.create(modelClass)
+        throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
     }
 }
