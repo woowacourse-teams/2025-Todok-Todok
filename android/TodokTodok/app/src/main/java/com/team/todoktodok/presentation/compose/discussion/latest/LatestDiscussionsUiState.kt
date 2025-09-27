@@ -1,10 +1,10 @@
 package com.team.todoktodok.presentation.compose.discussion.latest
 
-import com.team.domain.model.Discussion
 import com.team.domain.model.latest.LatestDiscussionPage
 import com.team.domain.model.latest.PageInfo
 import com.team.todoktodok.presentation.compose.core.component.DiscussionCardType
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiState
+import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussion
 
 data class LatestDiscussionsUiState(
     val discussions: List<DiscussionUiState> = emptyList(),
@@ -33,11 +33,15 @@ data class LatestDiscussionsUiState(
         return copy(discussions = newDiscussion, isRefreshing = false, latestPage = newLatestPage)
     }
 
-    fun modify(newDiscussion: Discussion): LatestDiscussionsUiState =
+    fun modify(newDiscussion: SerializationDiscussion): LatestDiscussionsUiState =
         copy(
             discussions =
                 discussions.map {
-                    if (it.discussionId == newDiscussion.id) DiscussionUiState(newDiscussion) else it
+                    if (it.discussionId == newDiscussion.id) {
+                        DiscussionUiState(newDiscussion.toDomain())
+                    } else {
+                        it
+                    }
                 },
         )
 

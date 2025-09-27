@@ -6,6 +6,7 @@ import com.team.domain.repository.DiscussionRepository
 import com.team.todoktodok.presentation.compose.discussion.latest.LatestDiscussionsUiEvent
 import com.team.todoktodok.presentation.compose.discussion.latest.LatestDiscussionsUiState
 import com.team.todoktodok.presentation.core.base.BaseViewModel
+import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussion
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -46,6 +47,10 @@ class LatestDiscussionViewModel(
 
     fun removeDiscussion(discussionId: Long) {
         _uiState.update { it.remove(discussionId) }
+    }
+
+    fun modifyDiscussion(discussion: SerializationDiscussion) {
+        _uiState.update { it.modify(discussion) }
     }
 
     private fun onUiEvent(event: LatestDiscussionsUiEvent) {

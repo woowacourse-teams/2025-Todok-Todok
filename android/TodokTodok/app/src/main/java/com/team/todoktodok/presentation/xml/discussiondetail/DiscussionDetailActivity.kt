@@ -22,7 +22,7 @@ import com.team.todoktodok.databinding.MenuExternalDiscussionBinding
 import com.team.todoktodok.databinding.MenuOwnedDiscussionBinding
 import com.team.todoktodok.presentation.compose.discussion.DiscussionsActivity
 import com.team.todoktodok.presentation.compose.discussion.DiscussionsActivity.Companion.EXTRA_DELETE_DISCUSSION
-import com.team.todoktodok.presentation.compose.discussion.DiscussionsActivity.Companion.EXTRA_WATCHED_DISCUSSION_ID
+import com.team.todoktodok.presentation.compose.discussion.DiscussionsActivity.Companion.EXTRA_WATCHED_DISCUSSION
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
 import com.team.todoktodok.presentation.core.component.CommonDialog
@@ -44,6 +44,7 @@ import com.team.todoktodok.presentation.xml.discussiondetail.vm.DiscussionDetail
 import com.team.todoktodok.presentation.xml.discussiondetail.vm.DiscussionDetailViewModel.Companion.KEY_MODE
 import com.team.todoktodok.presentation.xml.discussiondetail.vm.DiscussionDetailViewModelFactory
 import com.team.todoktodok.presentation.xml.profile.ProfileActivity
+import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussion
 
 class DiscussionDetailActivity : AppCompatActivity() {
     private val viewModel by viewModels<DiscussionDetailViewModel> {
@@ -305,7 +306,7 @@ class DiscussionDetailActivity : AppCompatActivity() {
                 showSnackBar(R.string.all_report_discussion_success)
 
             is DiscussionDetailUiEvent.NavigateToDiscussionsWithResult -> {
-                moveToDiscussionsWithResult(event.mode, event.discussionId)
+                moveToDiscussionsWithResult(event.mode, event.discussion)
             }
 
             DiscussionDetailUiEvent.ReloadedDiscussion -> {
@@ -322,7 +323,7 @@ class DiscussionDetailActivity : AppCompatActivity() {
 
     private fun moveToDiscussionsWithResult(
         mode: SerializationCreateDiscussionRoomMode?,
-        discussionId: Long,
+        discussion: SerializationDiscussion,
     ) {
         when (mode) {
             is SerializationCreateDiscussionRoomMode.Create -> {
@@ -337,7 +338,7 @@ class DiscussionDetailActivity : AppCompatActivity() {
             else -> {
                 val resultIntent =
                     Intent().apply {
-                        putExtra(EXTRA_WATCHED_DISCUSSION_ID, discussionId)
+                        putExtra(EXTRA_WATCHED_DISCUSSION, discussion)
                     }
                 setResult(RESULT_OK, resultIntent)
                 finish()

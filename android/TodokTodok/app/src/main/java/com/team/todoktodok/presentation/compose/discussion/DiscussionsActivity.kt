@@ -23,6 +23,7 @@ import com.team.todoktodok.presentation.xml.discussiondetail.DiscussionDetailAct
 import com.team.todoktodok.presentation.xml.notification.NotificationActivity
 import com.team.todoktodok.presentation.xml.profile.ProfileActivity
 import com.team.todoktodok.presentation.xml.profile.UserProfileTab
+import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussion
 import com.team.todoktodok.presentation.xml.serialization.SerializationFcmNotification
 
 class DiscussionsActivity : ComponentActivity() {
@@ -63,16 +64,14 @@ class DiscussionsActivity : ComponentActivity() {
                             }
                         }
 
-                        data.hasExtra(EXTRA_WATCHED_DISCUSSION_ID) -> {
-                            val discussionId =
-                                data.getLongExtra(
-                                    EXTRA_WATCHED_DISCUSSION_ID,
-                                    DEFAULT_DISCUSSION_ID,
-                                )
-                            if (discussionId != DEFAULT_DISCUSSION_ID) {
-                                viewModel.modifyDiscussion(discussionId)
-                                viewModel.loadMyDiscussions()
-                            }
+                        data.hasExtra(EXTRA_WATCHED_DISCUSSION) -> {
+                            data
+                                .getParcelableCompat<SerializationDiscussion>(
+                                    EXTRA_WATCHED_DISCUSSION,
+                                )?.let {
+                                    viewModel.modifyDiscussion(it)
+                                    latestDiscussionViewModel.modifyDiscussion(it)
+                                }
                         }
                     }
                 }
@@ -209,7 +208,7 @@ class DiscussionsActivity : ComponentActivity() {
 
     companion object {
         const val EXTRA_DELETE_DISCUSSION = "delete_discussion"
-        const val EXTRA_WATCHED_DISCUSSION_ID = "watched_discussion_id"
+        const val EXTRA_WATCHED_DISCUSSION = "watched_discussion"
         private const val DEFAULT_DISCUSSION_ID = -1L
 
         fun Intent(context: Context) = Intent(context, DiscussionsActivity::class.java)

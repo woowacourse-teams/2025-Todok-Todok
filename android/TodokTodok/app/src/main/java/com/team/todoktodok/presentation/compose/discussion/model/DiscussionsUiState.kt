@@ -5,6 +5,7 @@ import com.team.domain.model.active.ActivatedDiscussionPage
 import com.team.todoktodok.presentation.compose.discussion.all.AllDiscussionsUiState
 import com.team.todoktodok.presentation.compose.discussion.hot.HotDiscussionUiState
 import com.team.todoktodok.presentation.compose.discussion.my.MyDiscussionUiState
+import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussion
 
 data class DiscussionsUiState(
     val hotDiscussion: HotDiscussionUiState = HotDiscussionUiState(),
@@ -37,7 +38,8 @@ data class DiscussionsUiState(
         participatedDiscussion: List<Discussion>,
     ): DiscussionsUiState = copy(myDiscussion = myDiscussion.addDiscussions(createdDiscussion, participatedDiscussion))
 
-    fun modifyDiscussion(discussion: Discussion): DiscussionsUiState {
+    fun modifyDiscussion(discussion: SerializationDiscussion): DiscussionsUiState {
+        val discussion = discussion.toDomain()
         val newHotDiscussion = hotDiscussion.modifyDiscussion(discussion)
         val newAllDiscussionsUiState = allDiscussions.modifyAllDiscussion(discussion)
         return copy(
