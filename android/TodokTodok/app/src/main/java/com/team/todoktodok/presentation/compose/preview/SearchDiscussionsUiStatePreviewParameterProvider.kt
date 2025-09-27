@@ -38,7 +38,6 @@ class SearchDiscussionsUiStatePreviewParameterProvider : PreviewParameterProvide
                         viewCount = 0,
                         isLikedByMe = true,
                     ),
-                    searchKeyword = "코드",
                 )
 
             val dummyDiscussion2 =
@@ -66,14 +65,12 @@ class SearchDiscussionsUiStatePreviewParameterProvider : PreviewParameterProvide
                         viewCount = 0,
                         isLikedByMe = false,
                     ),
-                    searchKeyword = "리팩터링",
                 )
 
             return sequenceOf(
                 SearchDiscussionsUiState(
                     discussions = listOf(dummyDiscussion1, dummyDiscussion2),
-                    type = DiscussionCardType.QueryHighlighting,
-                    searchKeyword = "코드",
+                    type = DiscussionCardType.QueryHighlighting("코드"),
                 ),
             )
         }

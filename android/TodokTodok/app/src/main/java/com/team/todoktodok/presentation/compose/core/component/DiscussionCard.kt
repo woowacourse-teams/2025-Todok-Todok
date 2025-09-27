@@ -43,7 +43,9 @@ import com.team.todoktodok.presentation.compose.theme.White
 sealed interface DiscussionCardType {
     data object Default : DiscussionCardType
 
-    data object QueryHighlighting : DiscussionCardType
+    data class QueryHighlighting(
+        val keyword: String,
+    ) : DiscussionCardType
 
     data object WriterHidden : DiscussionCardType
 
@@ -96,11 +98,11 @@ fun DiscussionCard(
                         )
                     }
 
-                    DiscussionCardType.QueryHighlighting -> {
+                    is DiscussionCardType.QueryHighlighting -> {
                         val highlightedText =
                             highlightedText(
                                 uiState.discussionTitle,
-                                uiState.searchKeyword,
+                                discussionCardType.keyword,
                                 contextLength = 10,
                             )
                         Text(
@@ -281,7 +283,7 @@ fun DiscussionCardPreviewHighlighted(
     DiscussionCard(
         uiState = uiState.first(),
         onClick = {},
-        discussionCardType = DiscussionCardType.QueryHighlighting,
+        discussionCardType = DiscussionCardType.QueryHighlighting("JPA"),
     )
 }
 

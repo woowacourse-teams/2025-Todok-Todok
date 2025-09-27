@@ -54,7 +54,7 @@ class DiscussionsViewModel(
     }
 
     fun loadSearchedDiscussions() {
-        val keyword = _uiState.value.allDiscussions.searchDiscussion.searchKeyword
+        val keyword = _uiState.value.searchDiscussion.type.keyword
         if (keyword.isBlank()) return
 
         runAsync(

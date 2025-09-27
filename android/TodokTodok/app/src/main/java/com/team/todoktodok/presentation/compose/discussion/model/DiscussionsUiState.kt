@@ -2,28 +2,24 @@ package com.team.todoktodok.presentation.compose.discussion.model
 
 import com.team.domain.model.Discussion
 import com.team.domain.model.active.ActivatedDiscussionPage
-import com.team.todoktodok.presentation.compose.discussion.all.AllDiscussionsUiState
 import com.team.todoktodok.presentation.compose.discussion.hot.HotDiscussionUiState
+import com.team.todoktodok.presentation.compose.discussion.model.AllDiscussionMode
 import com.team.todoktodok.presentation.compose.discussion.my.MyDiscussionUiState
+import com.team.todoktodok.presentation.compose.discussion.search.SearchDiscussionsUiState
 import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussion
 
 data class DiscussionsUiState(
     val hotDiscussion: HotDiscussionUiState = HotDiscussionUiState(),
     val myDiscussion: MyDiscussionUiState = MyDiscussionUiState(),
-    val allDiscussions: AllDiscussionsUiState = AllDiscussionsUiState(),
+    val searchDiscussion: SearchDiscussionsUiState = SearchDiscussionsUiState(),
+    val allDiscussionMode: AllDiscussionMode = AllDiscussionMode.LATEST,
     val isUnreadNotification: Boolean = true,
 ) {
     fun addSearchDiscussion(
         keyword: String,
         newDiscussions: List<Discussion>,
     ): DiscussionsUiState =
-        copy(
-            allDiscussions =
-                allDiscussions.addSearchDiscussion(
-                    keyword,
-                    newDiscussions,
-                ),
-        )
+        copy(searchDiscussion = searchDiscussion.add(keyword, newDiscussions), allDiscussionMode = AllDiscussionMode.SEARCH)
 
     fun addHotDiscussion(
         newItems: List<Discussion>,
@@ -41,21 +37,22 @@ data class DiscussionsUiState(
     fun modifyDiscussion(discussion: SerializationDiscussion): DiscussionsUiState {
         val newDiscussion = discussion.toDomain()
         val newHotDiscussion = hotDiscussion.modifyDiscussion(newDiscussion)
-        val newAllDiscussionsUiState = allDiscussions.modifyAllDiscussion(newDiscussion)
+        val newSearchDiscussionsUiState = searchDiscussion.modify(newDiscussion)
+
         return copy(
             hotDiscussion = newHotDiscussion,
-            allDiscussions = newAllDiscussionsUiState,
+            searchDiscussion = newSearchDiscussionsUiState,
         )
     }
 
-    fun clearSearchDiscussion() = copy(allDiscussions = allDiscussions.clearSearchDiscussion())
+    fun clearSearchDiscussion() = copy(searchDiscussion = searchDiscussion.clear(), allDiscussionMode = AllDiscussionMode.LATEST)
 
-    fun modifySearchKeyword(keyword: String) = copy(allDiscussions = allDiscussions.modifyKeyword(keyword))
+    fun modifySearchKeyword(keyword: String) = copy(searchDiscussion = searchDiscussion.modifyKeyword(keyword))
 
     fun removeDiscussion(discussionId: Long): DiscussionsUiState {
         val newHotDiscussion = hotDiscussion.removeDiscussion(discussionId)
         val newMyDiscussion = myDiscussion.removeDiscussion(discussionId)
-        val newAllDiscussionsUiState = allDiscussions.removeAllDiscussion(discussionId)
+        val newAllDiscussionsUiState = searchDiscussion.remove(discussionId)
         return copy(newHotDiscussion, newMyDiscussion, newAllDiscussionsUiState)
     }
 

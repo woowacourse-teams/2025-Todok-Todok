@@ -30,7 +30,6 @@ class DiscussionUiStatePreviewParameterProvider : PreviewParameterProvider<List<
                                 viewCount = 0,
                                 isLikedByMe = false,
                             ),
-                        searchKeyword = "JPA",
                     ),
                     DiscussionUiState(
                         item =

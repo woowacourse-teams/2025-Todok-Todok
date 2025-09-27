@@ -12,9 +12,10 @@ import com.team.todoktodok.presentation.compose.theme.Green1A
 
 data class SearchDiscussionsUiState(
     val discussions: List<DiscussionUiState> = emptyList(),
-    val type: DiscussionCardType = DiscussionCardType.QueryHighlighting,
-    val searchKeyword: String = EMPTY_SEARCH_KEYWORD,
     val type: DiscussionCardType.QueryHighlighting =
+        DiscussionCardType.QueryHighlighting(
+            EMPTY_SEARCH_KEYWORD,
+        ),
     val previousKeyword: String = EMPTY_SEARCH_KEYWORD,
 ) {
     fun formatNotFoundGuideMessage(defaultFormat: String): AnnotatedString {
@@ -40,10 +41,8 @@ data class SearchDiscussionsUiState(
     ): SearchDiscussionsUiState {
         if (keyword == previousKeyword || keyword.isBlank()) return this
         val newDiscussions = newDiscussions.map { DiscussionUiState(it) }
-
         return copy(
             discussions = newDiscussions,
-            searchKeyword = keyword,
             previousKeyword = keyword,
         )
     }
@@ -51,11 +50,10 @@ data class SearchDiscussionsUiState(
     fun clear() =
         copy(
             discussions = emptyList(),
-            searchKeyword = EMPTY_SEARCH_KEYWORD,
             previousKeyword = EMPTY_SEARCH_KEYWORD,
         )
 
-    fun modifyKeyword(keyword: String) = copy(searchKeyword = keyword)
+    fun modifyKeyword(keyword: String) = copy(type = type.copy(keyword = keyword))
 
     fun modify(newDiscussion: Discussion): SearchDiscussionsUiState =
         copy(

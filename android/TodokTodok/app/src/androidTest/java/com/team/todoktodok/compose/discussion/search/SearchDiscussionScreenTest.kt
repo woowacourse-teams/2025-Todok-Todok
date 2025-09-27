@@ -4,6 +4,7 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import com.team.todoktodok.presentation.compose.core.component.DiscussionCardType
 import com.team.todoktodok.presentation.compose.discussion.search.SearchDiscussionScreen
 import com.team.todoktodok.presentation.compose.discussion.search.SearchDiscussionsUiState
 import com.team.todoktodok.presentation.compose.preview.SearchDiscussionsUiStatePreviewParameterProvider
@@ -58,7 +59,7 @@ class SearchDiscussionScreenTest {
     @Test
     fun `검색화면_검색결과_없을_때_빈화면이_표시된다`() {
         // given
-        val emptyState = SearchDiscussionsUiState(searchKeyword = "토론")
+        val emptyState = SearchDiscussionsUiState(type = DiscussionCardType.QueryHighlighting("토론"))
 
         // when
         composeTestRule.setContent {

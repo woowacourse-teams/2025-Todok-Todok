@@ -4,7 +4,6 @@ import com.team.domain.model.Discussion
 
 data class DiscussionUiState(
     private val item: Discussion,
-    val searchKeyword: String = DEFAULT_SEARCH_KEYWORD,
 ) {
     val bookImage: String get() = item.bookImage
     val bookTitle: String get() = item.getBookTitle()
@@ -20,8 +19,4 @@ data class DiscussionUiState(
     val viewCount: String get() = item.viewCount.toString()
 
     val isLikedByMe: Boolean get() = item.isLikedByMe
-
-    companion object {
-        const val DEFAULT_SEARCH_KEYWORD = ""
-    }
 }
