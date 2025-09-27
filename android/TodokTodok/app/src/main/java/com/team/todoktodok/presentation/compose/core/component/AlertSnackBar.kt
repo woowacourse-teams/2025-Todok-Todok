@@ -32,13 +32,14 @@ import com.team.todoktodok.presentation.compose.theme.Pretendard
 @Composable
 fun AlertSnackBar(
     snackbarData: SnackbarData,
+    modifier: Modifier = Modifier,
     @DrawableRes iconRes: Int = R.drawable.ic_alert,
     backgroundColor: Color = GreenDF,
     contentColor: Color = Gray4D,
 ) {
     Row(
         modifier =
-            Modifier
+            modifier
                 .fillMaxWidth()
                 .padding(horizontal = 24.dp)
                 .background(

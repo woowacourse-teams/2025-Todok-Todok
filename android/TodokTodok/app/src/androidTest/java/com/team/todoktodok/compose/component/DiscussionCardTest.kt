@@ -32,6 +32,7 @@ class DiscussionCardTest {
                             "응집도는 내부에 얼마나 비슷한 책임들이 모여있는가. 얼마나 연관있는 멤버들이 똘똘 뭉쳐있는가",
                     likeCount = 12,
                     commentCount = 3,
+                    viewCount = 10,
                     isLikedByMe = false,
                 ),
             searchKeyword = "JPA",
@@ -55,7 +56,7 @@ class DiscussionCardTest {
         composeTestRule.onNodeWithText("홍길동").assertIsDisplayed()
         composeTestRule.onNodeWithText("12").assertIsDisplayed()
         composeTestRule.onNodeWithText("3").assertIsDisplayed()
-        composeTestRule.onNodeWithText("0").assertIsDisplayed() // viewCount
+        composeTestRule.onNodeWithText("10").assertIsDisplayed()
     }
 
     @Test
@@ -77,7 +78,7 @@ class DiscussionCardTest {
         composeTestRule.onNodeWithText("JPA 성능 최적화").assertIsDisplayed()
         composeTestRule.onNodeWithText("12").assertIsDisplayed()
         composeTestRule.onNodeWithText("3").assertIsDisplayed()
-        composeTestRule.onNodeWithText("0").assertIsDisplayed()
+        composeTestRule.onNodeWithText("10").assertIsDisplayed()
     }
 
     @Test

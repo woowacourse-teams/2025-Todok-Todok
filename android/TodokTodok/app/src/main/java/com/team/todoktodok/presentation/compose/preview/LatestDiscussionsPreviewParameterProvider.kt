@@ -12,5 +12,9 @@ class LatestDiscussionsPreviewParameterProvider : PreviewParameterProvider<Lates
                     discussions = DiscussionUiStatePreviewParameterProvider().values.first(),
                     type = DiscussionCardType.Default,
                 ),
+                LatestDiscussionsUiState(
+                    discussions = DiscussionUiStatePreviewParameterProvider().values.first().take(2),
+                    type = DiscussionCardType.Default,
+                ),
             )
 }

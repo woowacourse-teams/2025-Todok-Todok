@@ -1,4 +1,4 @@
-package com.team.todoktodok.presentation.compose.discussion.model
+package com.team.todoktodok.presentation.compose.discussion.component
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size

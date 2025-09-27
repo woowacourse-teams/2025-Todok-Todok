@@ -13,6 +13,7 @@ import com.team.todoktodok.presentation.core.event.SingleLiveData
 import com.team.todoktodok.presentation.xml.discussion.create.SerializationCreateDiscussionRoomMode
 import com.team.todoktodok.presentation.xml.discussiondetail.DiscussionDetailUiEvent
 import com.team.todoktodok.presentation.xml.discussiondetail.DiscussionDetailUiState
+import com.team.todoktodok.presentation.xml.serialization.toSerialization
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -38,7 +39,7 @@ class DiscussionDetailViewModel(
         onUiEvent(
             DiscussionDetailUiEvent.NavigateToDiscussionsWithResult(
                 mode,
-                currentState.discussion.id,
+                currentState.discussion.toSerialization(),
             ),
         )
     }

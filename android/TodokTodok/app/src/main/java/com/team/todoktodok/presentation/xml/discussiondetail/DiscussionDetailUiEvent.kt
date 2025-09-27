@@ -2,6 +2,7 @@ package com.team.todoktodok.presentation.xml.discussiondetail
 
 import com.team.domain.model.exception.TodokTodokExceptions
 import com.team.todoktodok.presentation.xml.discussion.create.SerializationCreateDiscussionRoomMode
+import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussion
 
 sealed interface DiscussionDetailUiEvent {
     data class ShowComments(
@@ -22,7 +23,7 @@ sealed interface DiscussionDetailUiEvent {
 
     data class NavigateToDiscussionsWithResult(
         val mode: SerializationCreateDiscussionRoomMode?,
-        val discussionId: Long,
+        val discussion: SerializationDiscussion,
     ) : DiscussionDetailUiEvent
 
     data object ShowReportDiscussionSuccessMessage : DiscussionDetailUiEvent

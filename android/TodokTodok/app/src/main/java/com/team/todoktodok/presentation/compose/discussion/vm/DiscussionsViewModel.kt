@@ -15,6 +15,7 @@ import com.team.domain.repository.NotificationRepository
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionsUiEvent
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionsUiState
 import com.team.todoktodok.presentation.core.base.BaseViewModel
+import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussion
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
@@ -101,21 +102,6 @@ class DiscussionsViewModel(
             action = { discussionRepository.getActivatedDiscussion() },
         )
 
-    fun loadLatestDiscussions() {
-        val currentState = _uiState.value
-        if (!currentState.latestPageHasNext) return
-        val cursor = currentState.latestPageNextCursor
-
-        runAsync(
-            key = KEY_LATEST_DISCUSSIONS,
-            action = { discussionRepository.getLatestDiscussions(cursor = cursor) },
-            handleSuccess = { result ->
-                _uiState.update { it.addLatestDiscussion(result) }
-            },
-            handleFailure = { onUiEvent(DiscussionsUiEvent.ShowErrorMessage(it)) },
-        )
-    }
-
     fun loadMyDiscussions() {
         viewModelScope.launch {
             coroutineScope {
@@ -179,19 +165,9 @@ class DiscussionsViewModel(
         )
     }
 
-    fun modifyDiscussion(discussionId: Long) {
-        runAsync(
-            key = KEY_MODIFY_DISCUSSION,
-            action = { discussionRepository.getDiscussion(discussionId) },
-            handleSuccess = { result -> _uiState.update { it.modifyDiscussion(result) } },
-            handleFailure = { onUiEvent(DiscussionsUiEvent.ShowErrorMessage(it)) },
-        )
+    fun modifyDiscussion(discussion: SerializationDiscussion) {
+        _uiState.update { it.modifyDiscussion(discussion) }
         clearSearchResult()
-    }
-
-    fun refreshLatestDiscussions() {
-        _uiState.update { it.refreshLatestDiscussion() }
-        loadLatestDiscussions()
     }
 
     fun clearSearchResult() {
