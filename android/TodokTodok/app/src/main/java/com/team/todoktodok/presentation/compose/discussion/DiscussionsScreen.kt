@@ -138,6 +138,7 @@ fun DiscussionsScreen(
         onClickNotification = onClickNotification,
         onClickProfile = onClickProfile,
         onClickMyDiscussionHeader = onClickMyDiscussionHeader,
+        onTabChanged = viewModel::modifySearchKeyword,
         onSearchKeywordChanged = viewModel::modifySearchKeyword,
         onSearch = viewModel::loadSearchedDiscussions,
         onActivatedDiscussionLoadMore = viewModel::loadActivatedDiscussions,
@@ -195,6 +196,7 @@ fun DiscussionsScreen(
                 pagerState = pagerState,
                 onSearchKeywordChanged = { onSearchKeywordChanged(it) },
                 onActivatedDiscussionLoadMore = { onActivatedDiscussionLoadMore() },
+                onTabChanged = { tab -> if (tab != Destination.ALL) onTabChanged("") },
                 onDiscussionClick = { onDiscussionClick(it) },
                 onClickMyDiscussionHeader = { onClickMyDiscussionHeader(it) },
                 onSearch = { onSearch() },
@@ -230,6 +232,7 @@ fun DiscussionsContent(
     pagerState: PagerState,
     onSearchKeywordChanged: (String) -> Unit,
     onActivatedDiscussionLoadMore: () -> Unit,
+    onTabChanged: (Destination) -> Unit,
     onDiscussionClick: (Long) -> Unit,
     onClickMyDiscussionHeader: (UserProfileTab) -> Unit,
     onSearch: () -> Unit,
@@ -257,7 +260,8 @@ fun DiscussionsContent(
             uiState = uiState,
             pagerState = pagerState,
             onActivatedDiscussionLoadMore = { onActivatedDiscussionLoadMore() },
-            onClick = onDiscussionClick,
+            onClickDiscussion = onDiscussionClick,
+            onTabChanged = onTabChanged,
             onClickMyDiscussionHeader = onClickMyDiscussionHeader,
         )
     }

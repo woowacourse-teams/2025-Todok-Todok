@@ -19,7 +19,9 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -46,12 +48,19 @@ fun DiscussionTab(
     uiState: DiscussionsUiState,
     pagerState: PagerState,
     onActivatedDiscussionLoadMore: () -> Unit,
-    onClick: (Long) -> Unit,
+    onTabChanged: (Destination) -> Unit,
+    onClickDiscussion: (Long) -> Unit,
     onClickMyDiscussionHeader: (UserProfileTab) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val coroutineScope = rememberCoroutineScope()
-    Column(modifier = modifier) {
+
+    LaunchedEffect(pagerState) {
+        snapshotFlow { pagerState.currentPage }
+            .collect { page -> onTabChanged(Destination(page)) }
+    }
+
+    Column(modifier = modifier.fillMaxSize()) {
         ScrollableTabRow(
             selectedTabIndex = pagerState.currentPage,
             indicator = { tabPositions ->
