@@ -39,9 +39,9 @@ data class DiscussionsUiState(
     ): DiscussionsUiState = copy(myDiscussion = myDiscussion.addDiscussions(createdDiscussion, participatedDiscussion))
 
     fun modifyDiscussion(discussion: SerializationDiscussion): DiscussionsUiState {
-        val discussion = discussion.toDomain()
-        val newHotDiscussion = hotDiscussion.modifyDiscussion(discussion)
-        val newAllDiscussionsUiState = allDiscussions.modifyAllDiscussion(discussion)
+        val newDiscussion = discussion.toDomain()
+        val newHotDiscussion = hotDiscussion.modifyDiscussion(newDiscussion)
+        val newAllDiscussionsUiState = allDiscussions.modifyAllDiscussion(newDiscussion)
         return copy(
             hotDiscussion = newHotDiscussion,
             allDiscussions = newAllDiscussionsUiState,
