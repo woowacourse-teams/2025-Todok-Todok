@@ -38,7 +38,7 @@ import com.team.todoktodok.presentation.compose.discussion.component.DiscussionT
 import com.team.todoktodok.presentation.compose.discussion.component.SearchDiscussionBar
 import com.team.todoktodok.presentation.compose.discussion.latest.vm.LatestDiscussionViewModel
 import com.team.todoktodok.presentation.compose.discussion.model.Destination
-import com.team.todoktodok.presentation.compose.discussion.model.DiscussionFAB
+import com.team.todoktodok.presentation.compose.discussion.component.DiscussionFAB
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionTab
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionsUiEvent
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionsUiState
