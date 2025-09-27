@@ -32,6 +32,7 @@ class DiscussionCardTest {
                             "응집도는 내부에 얼마나 비슷한 책임들이 모여있는가. 얼마나 연관있는 멤버들이 똘똘 뭉쳐있는가",
                     likeCount = 12,
                     commentCount = 3,
+                    viewCount = 10,
                     isLikedByMe = false,
                 ),
             searchKeyword = "JPA",
