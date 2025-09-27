@@ -44,6 +44,10 @@ class LatestDiscussionViewModel(
         loadLatestDiscussions()
     }
 
+    fun removeDiscussion(discussionId: Long) {
+        _uiState.update { it.remove(discussionId) }
+    }
+
     private fun onUiEvent(event: LatestDiscussionsUiEvent) {
         viewModelScope.launch {
             _uiEvent.send(event)

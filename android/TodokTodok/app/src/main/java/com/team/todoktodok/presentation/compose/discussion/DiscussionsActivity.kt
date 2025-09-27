@@ -59,6 +59,7 @@ class DiscussionsActivity : ComponentActivity() {
                                 )
                             if (deletedId != DEFAULT_DISCUSSION_ID) {
                                 viewModel.removeDiscussion(deletedId)
+                                latestDiscussionViewModel.removeDiscussion(deletedId)
                             }
                         }
 
@@ -70,6 +71,7 @@ class DiscussionsActivity : ComponentActivity() {
                                 )
                             if (discussionId != DEFAULT_DISCUSSION_ID) {
                                 viewModel.modifyDiscussion(discussionId)
+                                viewModel.loadMyDiscussions()
                             }
                         }
                     }
