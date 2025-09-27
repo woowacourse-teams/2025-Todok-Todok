@@ -113,7 +113,7 @@ class DiscussionsActivity : ComponentActivity() {
 
     private fun moveToDiscussionDetail(discussionId: Long) {
         discussionDetailLauncher.launch(
-            DiscussionDetailActivity.Companion.Intent(
+            DiscussionDetailActivity.Intent(
                 this,
                 discussionId,
             ),

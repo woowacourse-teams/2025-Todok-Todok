@@ -89,7 +89,10 @@ fun DiscussionTab(
                         )
                     },
                     selected = pagerState.currentPage == index,
-                    modifier = Modifier.width(100.dp).height(50.dp),
+                    modifier =
+                        Modifier
+                            .width(100.dp)
+                            .height(50.dp),
                     onClick = {
                         coroutineScope.launch {
                             pagerState.animateScrollToPage(index)

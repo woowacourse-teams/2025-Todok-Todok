@@ -167,7 +167,6 @@ class DiscussionsViewModel(
 
     fun modifyDiscussion(discussion: SerializationDiscussion) {
         _uiState.update { it.modifyDiscussion(discussion) }
-        clearSearchResult()
     }
 
     fun clearSearchResult() {
@@ -211,9 +210,7 @@ class DiscussionsViewModel(
         private const val KEY_HOT_DISCUSSIONS = "HOT_DISCUSSIONS"
         private const val KEY_ACTIVATED_DISCUSSIONS = "ACTIVATED_DISCUSSIONS"
         private const val KEY_ACTIVATED_DISCUSSIONS_LOAD_MORE = "ACTIVATED_DISCUSSIONS_LOAD_MORE"
-        private const val KEY_LATEST_DISCUSSIONS = "LATEST_DISCUSSIONS"
         private const val KEY_MY_CREATED_DISCUSSIONS = "MY_CREATED_DISCUSSIONS"
         private const val KEY_MY_PARTICIPATED_DISCUSSIONS = "MY_PARTICIPATED_DISCUSSIONS"
-        private const val KEY_MODIFY_DISCUSSION = "MODIFY_DISCUSSION"
     }
 }
