@@ -54,7 +54,7 @@ class DefaultMemberRemoteDataSource(
     override suspend fun signUp(request: SignUpRequest): NetworkResult<Unit> =
         runCatching {
             memberService
-                .signUp(request.email, request)
+                .signUp(request)
                 .extractTokens { accessToken, refreshToken ->
                     val parser = JwtParser(accessToken)
 

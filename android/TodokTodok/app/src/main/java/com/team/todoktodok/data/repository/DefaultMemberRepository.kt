@@ -8,7 +8,6 @@ import com.team.domain.model.exception.NetworkResult
 import com.team.domain.model.exception.SignUpException
 import com.team.domain.model.exception.map
 import com.team.domain.model.member.BlockedMember
-import com.team.domain.model.member.Member
 import com.team.domain.model.member.MemberDiscussionType
 import com.team.domain.model.member.MemberId
 import com.team.domain.model.member.MemberType
@@ -20,28 +19,22 @@ import com.team.todoktodok.data.core.ext.toMultipartPart
 import com.team.todoktodok.data.datasource.member.MemberRemoteDataSource
 import com.team.todoktodok.data.network.request.ModifyProfileRequest
 import com.team.todoktodok.data.network.request.ProfileImageRequest
-import com.team.todoktodok.data.network.request.toRequest
+import com.team.todoktodok.data.network.request.SignUpRequest
 import com.team.todoktodok.data.network.response.discussion.toDomain
 
 class DefaultMemberRepository(
     private val remoteMemberRemoteDataSource: MemberRemoteDataSource,
 ) : MemberRepository {
-    private var cachedMember: Member? = null
+    private var cachedGooleIdToken: String? = null
 
-    override suspend fun login(
-        email: String,
-        nickname: String,
-        profileImage: String,
-    ): NetworkResult<MemberType> {
-        cachedMember = Member(nickname, profileImage, email)
-
-        return remoteMemberRemoteDataSource.login(email)
+    override suspend fun login(idToken: String): NetworkResult<MemberType> {
+        cachedGooleIdToken = idToken
+        return remoteMemberRemoteDataSource.login(idToken)
     }
 
     override suspend fun signUp(nickname: String): NetworkResult<Unit> =
-        cachedMember?.let {
-            val request = it.copy(nickName = nickname).toRequest()
-            remoteMemberRemoteDataSource.signUp(request)
+        cachedGooleIdToken?.let {
+            remoteMemberRemoteDataSource.signUp(SignUpRequest(nickname, it))
         } ?: NetworkResult.Failure(SignUpException.InvalidTokenException)
 
     override suspend fun getProfile(id: MemberId): NetworkResult<Profile> =
