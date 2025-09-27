@@ -9,6 +9,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import com.team.todoktodok.App
+import com.team.todoktodok.presentation.compose.discussion.latest.vm.LatestDiscussionViewModel
+import com.team.todoktodok.presentation.compose.discussion.latest.vm.LatestDiscussionViewModelFactory
 import com.team.todoktodok.presentation.compose.discussion.vm.DiscussionsViewModel
 import com.team.todoktodok.presentation.compose.discussion.vm.DiscussionsViewModelFactory
 import com.team.todoktodok.presentation.compose.theme.TodoktodokTheme
@@ -31,6 +33,15 @@ class DiscussionsActivity : ComponentActivity() {
             repositoryModule.discussionRepository,
             repositoryModule.memberRepository,
             repositoryModule.notificationRepository,
+            container.connectivityObserver,
+        )
+    }
+
+    private val latestDiscussionViewModel: LatestDiscussionViewModel by viewModels {
+        val container = (application as App).container
+        val repositoryModule = container.repositoryModule
+        LatestDiscussionViewModelFactory(
+            repositoryModule.discussionRepository,
             container.connectivityObserver,
         )
     }
@@ -75,6 +86,7 @@ class DiscussionsActivity : ComponentActivity() {
             TodoktodokTheme {
                 DiscussionsScreen(
                     viewModel = viewModel,
+                    latestDiscussionViewModel,
                     exceptionMessageConverter = messageConverter,
                     onDiscussionClick = ::moveToDiscussionDetail,
                     onClickNotification = ::moveToNotification,

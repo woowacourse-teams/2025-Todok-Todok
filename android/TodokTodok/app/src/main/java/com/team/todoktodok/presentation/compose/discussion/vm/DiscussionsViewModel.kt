@@ -101,21 +101,6 @@ class DiscussionsViewModel(
             action = { discussionRepository.getActivatedDiscussion() },
         )
 
-    fun loadLatestDiscussions() {
-        val currentState = _uiState.value
-        if (!currentState.latestPageHasNext) return
-        val cursor = currentState.latestPageNextCursor
-
-        runAsync(
-            key = KEY_LATEST_DISCUSSIONS,
-            action = { discussionRepository.getLatestDiscussions(cursor = cursor) },
-            handleSuccess = { result ->
-                _uiState.update { it.addLatestDiscussion(result) }
-            },
-            handleFailure = { onUiEvent(DiscussionsUiEvent.ShowErrorMessage(it)) },
-        )
-    }
-
     fun loadMyDiscussions() {
         viewModelScope.launch {
             coroutineScope {
@@ -187,11 +172,6 @@ class DiscussionsViewModel(
             handleFailure = { onUiEvent(DiscussionsUiEvent.ShowErrorMessage(it)) },
         )
         clearSearchResult()
-    }
-
-    fun refreshLatestDiscussions() {
-        _uiState.update { it.refreshLatestDiscussion() }
-        loadLatestDiscussions()
     }
 
     fun clearSearchResult() {

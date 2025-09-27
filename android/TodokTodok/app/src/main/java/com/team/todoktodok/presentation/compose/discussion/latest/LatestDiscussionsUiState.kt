@@ -48,4 +48,5 @@ data class LatestDiscussionsUiState(
 
     val hasNext get() = latestPage.hasNext
     val nextCursor get() = latestPage.nextCursor
+    val isLastPage get() = latestPage.isLastPage
 }

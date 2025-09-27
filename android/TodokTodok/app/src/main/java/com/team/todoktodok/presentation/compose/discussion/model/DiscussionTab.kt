@@ -29,22 +29,23 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.team.todoktodok.presentation.compose.discussion.all.AllDiscussionsScreen
 import com.team.todoktodok.presentation.compose.discussion.hot.HotDiscussionScreen
-import com.team.todoktodok.presentation.compose.discussion.model.Destination
+import com.team.todoktodok.presentation.compose.discussion.latest.vm.LatestDiscussionViewModel
 import com.team.todoktodok.presentation.compose.discussion.model.Destination.Companion.Destination
 import com.team.todoktodok.presentation.compose.discussion.my.MyDiscussionsScreen
 import com.team.todoktodok.presentation.compose.theme.Green1A
 import com.team.todoktodok.presentation.compose.theme.Pretendard
 import com.team.todoktodok.presentation.compose.theme.White
+import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.xml.profile.UserProfileTab
 import kotlinx.coroutines.launch
 
 @Composable
 fun DiscussionTab(
+    latestDiscussionViewModel: LatestDiscussionViewModel,
+    messageConverter: ExceptionMessageConverter,
     uiState: DiscussionsUiState,
     pagerState: PagerState,
-    onLatestDiscussionLoadMore: () -> Unit,
     onActivatedDiscussionLoadMore: () -> Unit,
-    onRefresh: () -> Unit,
     onClick: (Long) -> Unit,
     onClickMyDiscussionHeader: (UserProfileTab) -> Unit,
     modifier: Modifier = Modifier,
@@ -124,10 +125,10 @@ fun DiscussionTab(
 
                     Destination.ALL -> {
                         AllDiscussionsScreen(
+                            latestDiscussionViewModel = latestDiscussionViewModel,
+                            messageConverter = messageConverter,
                             uiState = uiState.allDiscussions,
-                            onLoadMore = { onLatestDiscussionLoadMore() },
-                            onClick = { onClick(it) },
-                            onRefresh = { onRefresh() },
+                            onClickDiscussion = { onClick(it) },
                             modifier = Modifier.fillMaxSize(),
                         )
                     }
@@ -150,13 +151,13 @@ fun DiscussionTab(
 @Composable
 fun DiscussionTabPreview() {
     val pagerState = rememberPagerState(initialPage = 0) { 3 }
-    DiscussionTab(
-        pagerState = pagerState,
-        uiState = DiscussionsUiState(),
-        onLatestDiscussionLoadMore = {},
-        onActivatedDiscussionLoadMore = {},
-        onRefresh = {},
-        onClick = {},
-        onClickMyDiscussionHeader = {},
-    )
+//    DiscussionTab(
+//        pagerState = pagerState,
+//        uiState = DiscussionsUiState(),
+//        onLatestDiscussionLoadMore = {},
+//        onActivatedDiscussionLoadMore = {},
+//        onRefresh = {},
+//        onClick = {},
+//        onClickMyDiscussionHeader = {},
+//    )
 }

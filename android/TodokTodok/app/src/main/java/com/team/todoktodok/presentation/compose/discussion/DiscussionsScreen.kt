@@ -36,6 +36,7 @@ import com.team.todoktodok.presentation.compose.core.component.AlertSnackBar
 import com.team.todoktodok.presentation.compose.core.component.CloverProgressBar
 import com.team.todoktodok.presentation.compose.discussion.component.DiscussionToolbar
 import com.team.todoktodok.presentation.compose.discussion.component.SearchDiscussionBar
+import com.team.todoktodok.presentation.compose.discussion.latest.vm.LatestDiscussionViewModel
 import com.team.todoktodok.presentation.compose.discussion.model.Destination
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionFAB
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionTab
@@ -52,8 +53,9 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DiscussionsScreen(
-    exceptionMessageConverter: ExceptionMessageConverter,
     viewModel: DiscussionsViewModel,
+    latestDiscussionViewModel: LatestDiscussionViewModel,
+    exceptionMessageConverter: ExceptionMessageConverter,
     onClickNotification: () -> Unit,
     onClickProfile: () -> Unit,
     onClickCreateDiscussion: () -> Unit,
@@ -121,11 +123,13 @@ fun DiscussionsScreen(
 
     LaunchedEffect(Unit) {
         viewModel.loadIsUnreadNotification()
+        viewModel.loadMyDiscussions()
         viewModel.loadHotDiscussions()
-        viewModel.loadLatestDiscussions()
     }
 
     DiscussionsScreen(
+        latestDiscussionViewModel = latestDiscussionViewModel,
+        exceptionMessageConverter = exceptionMessageConverter,
         isLoading = isLoading.value,
         uiState = uiState.value,
         pagerState = pagerState,
@@ -136,9 +140,7 @@ fun DiscussionsScreen(
         onClickMyDiscussionHeader = onClickMyDiscussionHeader,
         onSearchKeywordChanged = viewModel::modifySearchKeyword,
         onSearch = viewModel::loadSearchedDiscussions,
-        onLatestDiscussionLoadMore = viewModel::loadLatestDiscussions,
         onActivatedDiscussionLoadMore = viewModel::loadActivatedDiscussions,
-        onRefresh = viewModel::refreshLatestDiscussions,
         onClickCreateDiscussion = onClickCreateDiscussion,
         modifier = modifier,
     )
@@ -146,6 +148,8 @@ fun DiscussionsScreen(
 
 @Composable
 fun DiscussionsScreen(
+    latestDiscussionViewModel: LatestDiscussionViewModel,
+    exceptionMessageConverter: ExceptionMessageConverter,
     isLoading: Boolean,
     uiState: DiscussionsUiState,
     pagerState: PagerState,
@@ -156,9 +160,7 @@ fun DiscussionsScreen(
     onClickNotification: () -> Unit,
     onClickProfile: () -> Unit,
     onSearch: () -> Unit,
-    onLatestDiscussionLoadMore: () -> Unit,
     onActivatedDiscussionLoadMore: () -> Unit,
-    onRefresh: () -> Unit,
     onClickCreateDiscussion: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -185,14 +187,14 @@ fun DiscussionsScreen(
                     .padding(innerPadding),
         ) {
             DiscussionsContent(
+                latestDiscussionViewModel,
+                exceptionMessageConverter,
                 searchKeyword = searchDiscussion.searchKeyword,
                 previousKeyword = searchDiscussion.previousKeyword,
                 uiState = uiState,
                 pagerState = pagerState,
                 onSearchKeywordChanged = { onSearchKeywordChanged(it) },
-                onLatestDiscussionLoadMore = { onLatestDiscussionLoadMore() },
                 onActivatedDiscussionLoadMore = { onActivatedDiscussionLoadMore() },
-                onRefresh = { onRefresh() },
                 onDiscussionClick = { onDiscussionClick(it) },
                 onClickMyDiscussionHeader = { onClickMyDiscussionHeader(it) },
                 onSearch = { onSearch() },
@@ -220,14 +222,14 @@ fun DiscussionsScreen(
 
 @Composable
 fun DiscussionsContent(
+    latestDiscussionViewModel: LatestDiscussionViewModel,
+    exceptionMessageConverter: ExceptionMessageConverter,
     searchKeyword: String,
     previousKeyword: String,
     uiState: DiscussionsUiState,
     pagerState: PagerState,
     onSearchKeywordChanged: (String) -> Unit,
-    onLatestDiscussionLoadMore: () -> Unit,
     onActivatedDiscussionLoadMore: () -> Unit,
-    onRefresh: () -> Unit,
     onDiscussionClick: (Long) -> Unit,
     onClickMyDiscussionHeader: (UserProfileTab) -> Unit,
     onSearch: () -> Unit,
@@ -250,11 +252,11 @@ fun DiscussionsContent(
         )
 
         DiscussionTab(
-            uiState,
+            latestDiscussionViewModel = latestDiscussionViewModel,
+            messageConverter = exceptionMessageConverter,
+            uiState = uiState,
             pagerState = pagerState,
-            onLatestDiscussionLoadMore = { onLatestDiscussionLoadMore() },
             onActivatedDiscussionLoadMore = { onActivatedDiscussionLoadMore() },
-            onRefresh = { onRefresh() },
             onClick = onDiscussionClick,
             onClickMyDiscussionHeader = onClickMyDiscussionHeader,
         )
@@ -264,20 +266,20 @@ fun DiscussionsContent(
 @Preview
 @Composable
 private fun DiscussionsScreenPreview() {
-    DiscussionsScreen(
-        isLoading = true,
-        uiState = DiscussionsUiState(),
-        pagerState = rememberPagerState(0) { 3 },
-        snackbarHostState = remember { SnackbarHostState() },
-        onDiscussionClick = {},
-        onClickMyDiscussionHeader = {},
-        onSearchKeywordChanged = {},
-        onClickNotification = {},
-        onClickProfile = {},
-        onSearch = {},
-        onLatestDiscussionLoadMore = {},
-        onActivatedDiscussionLoadMore = {},
-        onRefresh = {},
-        onClickCreateDiscussion = {},
-    )
+//    DiscussionsScreen(
+//        isLoading = true,
+//        uiState = DiscussionsUiState(),
+//        pagerState = rememberPagerState(0) { 3 },
+//        snackbarHostState = remember { SnackbarHostState() },
+//        onDiscussionClick = {},
+//        onClickMyDiscussionHeader = {},
+//        onSearchKeywordChanged = {},
+//        onClickNotification = {},
+//        onClickProfile = {},
+//        onSearch = {},
+//        onLatestDiscussionLoadMore = {},
+//        onActivatedDiscussionLoadMore = {},
+//        onRefresh = {},
+//        onClickCreateDiscussion = {},
+//    )
 }
