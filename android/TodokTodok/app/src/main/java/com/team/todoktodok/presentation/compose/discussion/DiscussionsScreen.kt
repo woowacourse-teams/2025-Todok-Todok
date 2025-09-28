@@ -34,11 +34,11 @@ import com.team.todoktodok.R
 import com.team.todoktodok.presentation.compose.core.ObserveAsEvents
 import com.team.todoktodok.presentation.compose.core.component.AlertSnackBar
 import com.team.todoktodok.presentation.compose.core.component.CloverProgressBar
+import com.team.todoktodok.presentation.compose.discussion.component.DiscussionFAB
 import com.team.todoktodok.presentation.compose.discussion.component.DiscussionToolbar
 import com.team.todoktodok.presentation.compose.discussion.component.SearchDiscussionBar
 import com.team.todoktodok.presentation.compose.discussion.latest.vm.LatestDiscussionViewModel
 import com.team.todoktodok.presentation.compose.discussion.model.Destination
-import com.team.todoktodok.presentation.compose.discussion.component.DiscussionFAB
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionTab
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionsUiEvent
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionsUiState
