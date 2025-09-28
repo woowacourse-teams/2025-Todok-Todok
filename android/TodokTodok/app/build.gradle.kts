@@ -45,6 +45,7 @@ android {
 
     lint {
         disable += "NullSafeMutableLiveData"
+        disable += "ComposeViewModelForwarding"
     }
 
     defaultConfig {

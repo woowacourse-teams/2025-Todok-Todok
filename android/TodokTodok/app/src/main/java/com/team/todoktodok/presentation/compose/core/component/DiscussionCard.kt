@@ -265,7 +265,7 @@ private fun DiscussionBottom(
 
 @Preview(showBackground = true)
 @Composable
-fun DiscussionCardPreviewDefault(
+private fun DiscussionCardPreviewDefault(
     @PreviewParameter(DiscussionUiStatePreviewParameterProvider::class) uiState: List<DiscussionUiState>,
 ) {
     DiscussionCard(
@@ -277,7 +277,7 @@ fun DiscussionCardPreviewDefault(
 
 @Preview(showBackground = true)
 @Composable
-fun DiscussionCardPreviewHighlighted(
+private fun DiscussionCardPreviewHighlighted(
     @PreviewParameter(DiscussionUiStatePreviewParameterProvider::class) uiState: List<DiscussionUiState>,
 ) {
     DiscussionCard(
@@ -289,7 +289,7 @@ fun DiscussionCardPreviewHighlighted(
 
 @Preview(showBackground = true)
 @Composable
-fun DiscussionCardPreviewWriterHidden(
+private fun DiscussionCardPreviewWriterHidden(
     @PreviewParameter(DiscussionUiStatePreviewParameterProvider::class) uiState: List<DiscussionUiState>,
 ) {
     DiscussionCard(
@@ -301,7 +301,7 @@ fun DiscussionCardPreviewWriterHidden(
 
 @Preview(showBackground = true)
 @Composable
-fun DiscussionCardPreviewResizing(
+private fun DiscussionCardPreviewResizing(
     @PreviewParameter(DiscussionUiStatePreviewParameterProvider::class) uiState: List<DiscussionUiState>,
 ) {
     DiscussionCard(

@@ -72,7 +72,7 @@ fun ResourceNotFoundView(
 
 @Preview(showBackground = true)
 @Composable
-fun ResourceNotFoundViewPreview() {
+private fun ResourceNotFoundViewPreview() {
     ResourceNotFoundView(
         title = "데이터 없음",
         subtitle = "표시할 데이터가 없습니다.",

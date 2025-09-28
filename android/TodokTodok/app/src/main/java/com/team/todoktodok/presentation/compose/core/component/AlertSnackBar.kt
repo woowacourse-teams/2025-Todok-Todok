@@ -69,7 +69,7 @@ fun AlertSnackBar(
 
 @Preview
 @Composable
-fun AlertSnackBarPreview() {
+private fun AlertSnackBarPreview() {
     val snackbarData =
         object : SnackbarData {
             override val visuals: SnackbarVisuals

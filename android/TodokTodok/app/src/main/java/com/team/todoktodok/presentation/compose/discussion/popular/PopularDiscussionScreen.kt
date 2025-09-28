@@ -31,23 +31,23 @@ import com.team.todoktodok.presentation.compose.theme.Pretendard
 fun PopularDiscussionsScreen(
     uiState: PopularDiscussionsUiState,
     onClick: (Long) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    Column {
+    Column(modifier = modifier) {
         PopularDiscussionsHeader()
-
         Spacer(Modifier.height(5.dp))
-    }
 
-    LazyRow(
-        contentPadding = PaddingValues(5.dp),
-    ) {
-        items(items = uiState.discussions, key = { it.discussionId }) { item ->
-            DiscussionCard(
-                uiState = item,
-                onClick = { onClick(item.discussionId) },
-                discussionCardType = DiscussionCardType.OpinionVisible,
-                modifier = Modifier.fillParentMaxWidth(0.9f),
-            )
+        LazyRow(
+            contentPadding = PaddingValues(5.dp),
+        ) {
+            items(items = uiState.discussions, key = { it.discussionId }) { item ->
+                DiscussionCard(
+                    uiState = item,
+                    onClick = { onClick(item.discussionId) },
+                    discussionCardType = DiscussionCardType.OpinionVisible,
+                    modifier = Modifier.fillParentMaxWidth(0.9f),
+                )
+            }
         }
     }
 }

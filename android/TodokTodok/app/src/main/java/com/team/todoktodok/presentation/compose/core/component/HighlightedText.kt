@@ -48,7 +48,7 @@ fun highlightedText(
 
 @Preview(showBackground = true)
 @Composable
-fun HighlightedTextPreview() {
+private fun HighlightedTextPreview() {
     highlightedText(
         text = "This is a sample text with a keyword.",
         keyword = "keyword",

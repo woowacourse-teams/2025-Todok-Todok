@@ -38,7 +38,7 @@ fun DiscussionStat(
 
 @Preview(showBackground = true)
 @Composable
-fun DiscussionStatsPreview() {
+private fun DiscussionStatsPreview() {
     DiscussionStat(
         content = "100",
         icon = {
