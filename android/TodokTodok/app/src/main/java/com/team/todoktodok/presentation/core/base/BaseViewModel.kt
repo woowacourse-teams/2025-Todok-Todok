@@ -8,9 +8,7 @@ import com.team.domain.model.exception.NetworkResult
 import com.team.domain.model.exception.TodokTodokExceptions
 import com.team.domain.model.exception.onFailure
 import com.team.domain.model.exception.onSuccess
-import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -82,30 +80,5 @@ abstract class BaseViewModel(
         }
 
         viewModelScope.launch(recordExceptionHandler) { job() }
-    }
-
-    protected fun <T> runAsyncWithResult(
-        key: String,
-        action: suspend () -> NetworkResult<T>,
-    ): Deferred<NetworkResult<T>> {
-        val deferred = CompletableDeferred<NetworkResult<T>>()
-
-        val job: suspend () -> Unit = {
-            _isLoading.update { true }
-            val result = action()
-            deferred.complete(result)
-            if (result is NetworkResult.Success) {
-                pendingActions.remove(key)
-            }
-            _isLoading.update { false }
-        }
-
-        if (connectivityObserver.value() != ConnectivityObserver.Status.Available) {
-            pendingActions[key] = job
-        } else {
-            viewModelScope.launch(recordExceptionHandler) { job() }
-        }
-
-        return deferred
     }
 }

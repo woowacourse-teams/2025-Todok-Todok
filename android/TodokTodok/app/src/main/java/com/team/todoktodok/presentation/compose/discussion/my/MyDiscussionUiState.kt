@@ -10,14 +10,11 @@ data class MyDiscussionUiState(
 ) {
     fun isEmpty() = createdDiscussionsUiState.isEmpty() && participatedDiscussionsUiState.isEmpty()
 
-    fun addDiscussions(
-        created: List<Discussion>,
-        participated: List<Discussion>,
-    ): MyDiscussionUiState =
-        copy(
-            createdDiscussionsUiState = createdDiscussionsUiState.add(created),
-            participatedDiscussionsUiState = participatedDiscussionsUiState.add(participated),
-        )
+    fun addCreatedDiscussions(discussions: List<Discussion>): MyDiscussionUiState =
+        copy(createdDiscussionsUiState = createdDiscussionsUiState.add(discussions))
+
+    fun addParticipatedDiscussions(discussions: List<Discussion>): MyDiscussionUiState =
+        copy(participatedDiscussionsUiState = participatedDiscussionsUiState.add(discussions))
 
     fun removeDiscussion(discussionId: Long): MyDiscussionUiState =
         copy(

@@ -3,7 +3,6 @@ package com.team.todoktodok.presentation.compose.discussion.model
 import com.team.domain.model.Discussion
 import com.team.domain.model.active.ActivatedDiscussionPage
 import com.team.todoktodok.presentation.compose.discussion.hot.HotDiscussionUiState
-import com.team.todoktodok.presentation.compose.discussion.model.AllDiscussionMode
 import com.team.todoktodok.presentation.compose.discussion.my.MyDiscussionUiState
 import com.team.todoktodok.presentation.compose.discussion.search.SearchDiscussionsUiState
 import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussion
@@ -19,20 +18,25 @@ data class DiscussionsUiState(
         keyword: String,
         newDiscussions: List<Discussion>,
     ): DiscussionsUiState =
-        copy(searchDiscussion = searchDiscussion.add(keyword, newDiscussions), allDiscussionMode = AllDiscussionMode.SEARCH)
+        copy(
+            searchDiscussion = searchDiscussion.add(keyword, newDiscussions),
+            allDiscussionMode = AllDiscussionMode.SEARCH,
+        )
 
-    fun addHotDiscussion(
-        newItems: List<Discussion>,
-        activatedDiscussion: ActivatedDiscussionPage,
-    ): DiscussionsUiState = copy(hotDiscussion = hotDiscussion.addHotDiscussions(newItems, activatedDiscussion))
+    fun addPopularDiscussion(discussions: List<Discussion>): DiscussionsUiState =
+        copy(hotDiscussion = hotDiscussion.addPopularDiscussions(discussions))
+
+    fun addActivatedDiscussion(page: ActivatedDiscussionPage): DiscussionsUiState =
+        copy(hotDiscussion = hotDiscussion.addActivatedDiscussions(page))
 
     fun appendActivatedDiscussion(page: ActivatedDiscussionPage): DiscussionsUiState =
         copy(hotDiscussion = hotDiscussion.appendActivatedDiscussion(page))
 
-    fun addMyDiscussion(
-        createdDiscussion: List<Discussion>,
-        participatedDiscussion: List<Discussion>,
-    ): DiscussionsUiState = copy(myDiscussion = myDiscussion.addDiscussions(createdDiscussion, participatedDiscussion))
+    fun addCreatedDiscussion(discussions: List<Discussion>): DiscussionsUiState =
+        copy(myDiscussion = myDiscussion.addCreatedDiscussions(discussions))
+
+    fun addParticipatedDiscussion(discussions: List<Discussion>): DiscussionsUiState =
+        copy(myDiscussion = myDiscussion.addParticipatedDiscussions(discussions))
 
     fun modifyDiscussion(discussion: SerializationDiscussion): DiscussionsUiState {
         val newDiscussion = discussion.toDomain()
@@ -45,7 +49,11 @@ data class DiscussionsUiState(
         )
     }
 
-    fun clearSearchDiscussion() = copy(searchDiscussion = searchDiscussion.clear(), allDiscussionMode = AllDiscussionMode.LATEST)
+    fun clearSearchDiscussion() =
+        copy(
+            searchDiscussion = searchDiscussion.clear(),
+            allDiscussionMode = AllDiscussionMode.LATEST,
+        )
 
     fun modifySearchKeyword(keyword: String) = copy(searchDiscussion = searchDiscussion.modifyKeyword(keyword))
 
