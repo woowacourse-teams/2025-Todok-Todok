@@ -103,7 +103,6 @@ dependencies {
     implementation(libs.bundles.google)
     implementation(libs.bundles.glide)
     implementation(libs.bundles.logging)
-    implementation("com.google.firebase:firebase-messaging:25.0.1")
 
     testImplementation(libs.bundles.test)
     testImplementation(libs.androidx.core.testing)
