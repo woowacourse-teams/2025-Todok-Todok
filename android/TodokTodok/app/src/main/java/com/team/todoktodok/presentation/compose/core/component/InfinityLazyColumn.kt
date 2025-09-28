@@ -27,7 +27,7 @@ fun InfinityLazyColumn(
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
     flingBehavior: FlingBehavior = ScrollableDefaults.flingBehavior(),
     userScrollEnabled: Boolean = true,
-    loadMoreLimitCount: Int = 3,
+    loadMoreLimitCount: Int = 6,
     loadMore: () -> Unit = {},
     content: LazyListScope.() -> Unit,
 ) {
@@ -48,7 +48,7 @@ fun InfinityLazyColumn(
 
 @Composable
 private fun LazyListState.OnLoadMore(
-    limitCount: Int = 3,
+    limitCount: Int = 6,
     loadOnBottom: Boolean = true,
     action: () -> Unit,
 ) {
@@ -63,7 +63,7 @@ private fun LazyListState.OnLoadMore(
 }
 
 private fun LazyListState.reachedBottom(
-    limitCount: Int = 3,
+    limitCount: Int = 6,
     triggerOnEnd: Boolean = false,
 ): Boolean {
     val lastVisibleItem = layoutInfo.visibleItemsInfo.lastOrNull()

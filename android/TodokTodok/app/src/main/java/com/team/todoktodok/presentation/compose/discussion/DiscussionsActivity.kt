@@ -9,6 +9,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import com.team.todoktodok.App
+import com.team.todoktodok.presentation.compose.discussion.latest.vm.LatestDiscussionViewModel
+import com.team.todoktodok.presentation.compose.discussion.latest.vm.LatestDiscussionViewModelFactory
 import com.team.todoktodok.presentation.compose.discussion.vm.DiscussionsViewModel
 import com.team.todoktodok.presentation.compose.discussion.vm.DiscussionsViewModelFactory
 import com.team.todoktodok.presentation.compose.theme.TodoktodokTheme
@@ -21,6 +23,7 @@ import com.team.todoktodok.presentation.xml.discussiondetail.DiscussionDetailAct
 import com.team.todoktodok.presentation.xml.notification.NotificationActivity
 import com.team.todoktodok.presentation.xml.profile.ProfileActivity
 import com.team.todoktodok.presentation.xml.profile.UserProfileTab
+import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussion
 import com.team.todoktodok.presentation.xml.serialization.SerializationFcmNotification
 
 class DiscussionsActivity : ComponentActivity() {
@@ -31,6 +34,15 @@ class DiscussionsActivity : ComponentActivity() {
             repositoryModule.discussionRepository,
             repositoryModule.memberRepository,
             repositoryModule.notificationRepository,
+            container.connectivityObserver,
+        )
+    }
+
+    private val latestDiscussionViewModel: LatestDiscussionViewModel by viewModels {
+        val container = (application as App).container
+        val repositoryModule = container.repositoryModule
+        LatestDiscussionViewModelFactory(
+            repositoryModule.discussionRepository,
             container.connectivityObserver,
         )
     }
@@ -48,18 +60,18 @@ class DiscussionsActivity : ComponentActivity() {
                                 )
                             if (deletedId != DEFAULT_DISCUSSION_ID) {
                                 viewModel.removeDiscussion(deletedId)
+                                latestDiscussionViewModel.removeDiscussion(deletedId)
                             }
                         }
 
-                        data.hasExtra(EXTRA_WATCHED_DISCUSSION_ID) -> {
-                            val discussionId =
-                                data.getLongExtra(
-                                    EXTRA_WATCHED_DISCUSSION_ID,
-                                    DEFAULT_DISCUSSION_ID,
-                                )
-                            if (discussionId != DEFAULT_DISCUSSION_ID) {
-                                viewModel.modifyDiscussion(discussionId)
-                            }
+                        data.hasExtra(EXTRA_WATCHED_DISCUSSION) -> {
+                            data
+                                .getParcelableCompat<SerializationDiscussion>(
+                                    EXTRA_WATCHED_DISCUSSION,
+                                )?.let {
+                                    viewModel.modifyDiscussion(it)
+                                    latestDiscussionViewModel.modifyDiscussion(it)
+                                }
                         }
                     }
                 }
@@ -75,6 +87,7 @@ class DiscussionsActivity : ComponentActivity() {
             TodoktodokTheme {
                 DiscussionsScreen(
                     viewModel = viewModel,
+                    latestDiscussionViewModel,
                     exceptionMessageConverter = messageConverter,
                     onDiscussionClick = ::moveToDiscussionDetail,
                     onClickNotification = ::moveToNotification,
@@ -195,7 +208,7 @@ class DiscussionsActivity : ComponentActivity() {
 
     companion object {
         const val EXTRA_DELETE_DISCUSSION = "delete_discussion"
-        const val EXTRA_WATCHED_DISCUSSION_ID = "watched_discussion_id"
+        const val EXTRA_WATCHED_DISCUSSION = "watched_discussion"
         private const val DEFAULT_DISCUSSION_ID = -1L
 
         fun Intent(context: Context) = Intent(context, DiscussionsActivity::class.java)

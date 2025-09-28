@@ -10,7 +10,6 @@ class AllDiscussionUiStatePreviewParameterProvider : PreviewParameterProvider<Al
             sequenceOf(
                 AllDiscussionsUiState(
                     mode = AllDiscussionMode.LATEST,
-                    latestDiscussion = LatestDiscussionsPreviewParameterProvider().values.first(),
                 ),
                 AllDiscussionsUiState(
                     mode = AllDiscussionMode.SEARCH,
