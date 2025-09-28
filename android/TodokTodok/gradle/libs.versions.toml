@@ -24,6 +24,7 @@ activity-compose = "1.10.1"
 compose-bom = "2025.09.00"
 compose-coil = "3.3.0"
 compose-navigation = "2.9.4"
+compose-lint = "1.4.2"
 
 # compose-test
 compose-ui-test = "1.6.0"
@@ -75,8 +76,6 @@ mannodermaus-junit5 = "1.7.0"
 junit-jupiter = "5.12.0"
 kotest-runner-junit5 = "5.9.1"
 mockk = "1.13.8"
-junit = "4.13.2"
-firebase-messaging-ktx = "25.0.1"
 
 [libraries]
 # AndroidX
@@ -97,6 +96,7 @@ androidx-lifecycle-process = { module = "androidx.lifecycle:lifecycle-process", 
 # compose
 compose-activity = { group = "androidx.activity", name = "activity-compose", version.ref = "activity-compose" }
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
+compose-lint = { module = "com.slack.lint.compose:compose-lint-checks", version.ref = "compose-lint" }
 compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 compose-navigtion = { module = "androidx.navigation:navigation-compose", version.ref = "compose-navigation" }
 compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "material-icons-extended" }
@@ -155,9 +155,6 @@ mannodermaus-junit5-runner = { group = "de.mannodermaus.junit5", name = "android
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 mockk-android = { module = "io.mockk:mockk-android", version.ref = "mockk" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines-core" }
-junit = { group = "junit", name = "junit", version.ref = "junit" }
-firebase-messaging-ktx = { group = "com.google.firebase", name = "firebase-messaging-ktx", version.ref = "firebase-messaging-ktx" }
-
 
 [bundles]
 androidx = [
@@ -178,6 +175,7 @@ androidx = [
 compose = [
     "compose-activity",
     "compose-bom",
+    "compose-lint",
     "compose-ui",
     "compose-ui-graphics",
     "compose-ui-tooling-preview",
@@ -196,7 +194,6 @@ compose-debug = [
 
 compose-test = [
     "compose-ui-test-junit4"
-
 ]
 
 kotlin = [
