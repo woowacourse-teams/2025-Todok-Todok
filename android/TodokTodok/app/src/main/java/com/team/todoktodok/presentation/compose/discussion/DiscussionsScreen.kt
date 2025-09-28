@@ -41,7 +41,6 @@ import com.team.todoktodok.presentation.compose.discussion.latest.vm.LatestDiscu
 import com.team.todoktodok.presentation.compose.discussion.model.Destination
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionsUiEvent
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionsUiState
-import com.team.todoktodok.presentation.compose.discussion.my.vm.MyDiscussionViewModel
 import com.team.todoktodok.presentation.compose.discussion.vm.DiscussionsViewModel
 import com.team.todoktodok.presentation.compose.theme.White
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
@@ -55,7 +54,6 @@ import kotlinx.coroutines.launch
 fun DiscussionsScreen(
     viewModel: DiscussionsViewModel,
     latestDiscussionViewModel: LatestDiscussionViewModel,
-    myDiscussionViewModel: MyDiscussionViewModel,
     exceptionMessageConverter: ExceptionMessageConverter,
     onClickNotification: () -> Unit,
     onClickProfile: () -> Unit,
@@ -124,12 +122,12 @@ fun DiscussionsScreen(
 
     LaunchedEffect(Unit) {
         viewModel.loadIsUnreadNotification()
+        viewModel.loadMyDiscussions()
         viewModel.loadHotDiscussions()
     }
 
     DiscussionsScreen(
         latestDiscussionViewModel = latestDiscussionViewModel,
-        myDiscussionViewModel = myDiscussionViewModel,
         exceptionMessageConverter = exceptionMessageConverter,
         isLoading = isLoading.value,
         uiState = uiState.value,
@@ -151,7 +149,6 @@ fun DiscussionsScreen(
 @Composable
 fun DiscussionsScreen(
     latestDiscussionViewModel: LatestDiscussionViewModel,
-    myDiscussionViewModel: MyDiscussionViewModel,
     exceptionMessageConverter: ExceptionMessageConverter,
     isLoading: Boolean,
     uiState: DiscussionsUiState,
@@ -189,9 +186,8 @@ fun DiscussionsScreen(
                     .padding(innerPadding),
         ) {
             DiscussionsContent(
-                latestDiscussionViewModel = latestDiscussionViewModel,
-                myDiscussionViewModel = myDiscussionViewModel,
-                exceptionMessageConverter = exceptionMessageConverter,
+                latestDiscussionViewModel,
+                exceptionMessageConverter,
                 uiState = uiState,
                 pagerState = pagerState,
                 onSearchKeywordChanged = { onSearchKeywordChanged(it) },
@@ -199,7 +195,7 @@ fun DiscussionsScreen(
                 onTabChanged = { tab -> if (tab != Destination.ALL) onTabChanged("") },
                 onDiscussionClick = { onDiscussionClick(it) },
                 onClickMyDiscussionHeader = { onClickMyDiscussionHeader(it) },
-                onSearch = onSearch,
+                onSearch = { onSearch() },
                 modifier = Modifier.fillMaxSize(),
             )
 
@@ -225,7 +221,6 @@ fun DiscussionsScreen(
 @Composable
 fun DiscussionsContent(
     latestDiscussionViewModel: LatestDiscussionViewModel,
-    myDiscussionViewModel: MyDiscussionViewModel,
     exceptionMessageConverter: ExceptionMessageConverter,
     uiState: DiscussionsUiState,
     pagerState: PagerState,
@@ -255,7 +250,6 @@ fun DiscussionsContent(
 
         DiscussionTab(
             latestDiscussionViewModel = latestDiscussionViewModel,
-            myDiscussionViewModel = myDiscussionViewModel,
             messageConverter = exceptionMessageConverter,
             uiState = uiState,
             pagerState = pagerState,
