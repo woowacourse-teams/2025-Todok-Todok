@@ -11,6 +11,8 @@ import androidx.activity.viewModels
 import com.team.todoktodok.App
 import com.team.todoktodok.presentation.compose.discussion.latest.vm.LatestDiscussionViewModel
 import com.team.todoktodok.presentation.compose.discussion.latest.vm.LatestDiscussionViewModelFactory
+import com.team.todoktodok.presentation.compose.discussion.my.vm.MyDiscussionViewModel
+import com.team.todoktodok.presentation.compose.discussion.my.vm.MyDiscussionViewModelFactory
 import com.team.todoktodok.presentation.compose.discussion.vm.DiscussionsViewModel
 import com.team.todoktodok.presentation.compose.discussion.vm.DiscussionsViewModelFactory
 import com.team.todoktodok.presentation.compose.theme.TodoktodokTheme
@@ -32,7 +34,6 @@ class DiscussionsActivity : ComponentActivity() {
         val repositoryModule = container.repositoryModule
         DiscussionsViewModelFactory(
             repositoryModule.discussionRepository,
-            repositoryModule.memberRepository,
             repositoryModule.notificationRepository,
             container.connectivityObserver,
         )
@@ -43,6 +44,15 @@ class DiscussionsActivity : ComponentActivity() {
         val repositoryModule = container.repositoryModule
         LatestDiscussionViewModelFactory(
             repositoryModule.discussionRepository,
+            container.connectivityObserver,
+        )
+    }
+
+    private val myDiscussionViewModel: MyDiscussionViewModel by viewModels {
+        val container = (application as App).container
+        val repositoryModule = container.repositoryModule
+        MyDiscussionViewModelFactory(
+            repositoryModule.memberRepository,
             container.connectivityObserver,
         )
     }
@@ -87,7 +97,8 @@ class DiscussionsActivity : ComponentActivity() {
             TodoktodokTheme {
                 DiscussionsScreen(
                     viewModel = viewModel,
-                    latestDiscussionViewModel,
+                    latestDiscussionViewModel = latestDiscussionViewModel,
+                    myDiscussionViewModel = myDiscussionViewModel,
                     exceptionMessageConverter = messageConverter,
                     onDiscussionClick = ::moveToDiscussionDetail,
                     onClickNotification = ::moveToNotification,
@@ -148,11 +159,6 @@ class DiscussionsActivity : ComponentActivity() {
     private fun moveToCreateDiscussion() {
         val intent = SelectBookActivity.Intent(this)
         startActivity(intent)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.loadMyDiscussions()
     }
 
     private fun handleNotificationDeepLink(intent: Intent) {

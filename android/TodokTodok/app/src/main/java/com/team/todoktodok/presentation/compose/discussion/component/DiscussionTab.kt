@@ -34,6 +34,7 @@ import com.team.todoktodok.presentation.compose.discussion.model.Destination
 import com.team.todoktodok.presentation.compose.discussion.model.Destination.Companion.Destination
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionsUiState
 import com.team.todoktodok.presentation.compose.discussion.my.MyDiscussionsScreen
+import com.team.todoktodok.presentation.compose.discussion.my.vm.MyDiscussionViewModel
 import com.team.todoktodok.presentation.compose.discussion.search.SearchDiscussionScreen
 import com.team.todoktodok.presentation.compose.theme.Green1A
 import com.team.todoktodok.presentation.compose.theme.Pretendard
@@ -45,6 +46,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun DiscussionTab(
     latestDiscussionViewModel: LatestDiscussionViewModel,
+    myDiscussionViewModel: MyDiscussionViewModel,
     messageConverter: ExceptionMessageConverter,
     uiState: DiscussionsUiState,
     pagerState: PagerState,
@@ -137,6 +139,7 @@ fun DiscussionTab(
                                     onClick = onClickDiscussion,
                                     modifier = Modifier.fillMaxSize(),
                                 )
+
                             AllDiscussionMode.SEARCH ->
                                 SearchDiscussionScreen(
                                     uiState = uiState.searchDiscussion,
@@ -147,8 +150,9 @@ fun DiscussionTab(
 
                     Destination.MY ->
                         MyDiscussionsScreen(
-                            uiState = uiState.myDiscussion,
-                            onClick = onClickDiscussion,
+                            viewModel = myDiscussionViewModel,
+                            messageConverter = messageConverter,
+                            onClickDiscussion = onClickDiscussion,
                             onClickHeader = onClickMyDiscussionHeader,
                             modifier = Modifier.fillMaxSize(),
                         )

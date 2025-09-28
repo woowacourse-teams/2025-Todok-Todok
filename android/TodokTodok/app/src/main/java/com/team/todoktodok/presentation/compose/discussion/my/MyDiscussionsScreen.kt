@@ -15,6 +15,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -22,21 +23,46 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.team.todoktodok.R
 import com.team.todoktodok.presentation.compose.core.component.ResourceNotFoundView
 import com.team.todoktodok.presentation.compose.core.extension.noRippleClickable
 import com.team.todoktodok.presentation.compose.discussion.created.CreatedDiscussionScreen
+import com.team.todoktodok.presentation.compose.discussion.my.vm.MyDiscussionViewModel
 import com.team.todoktodok.presentation.compose.discussion.participated.ParticipatedDiscussionsScreen
 import com.team.todoktodok.presentation.compose.preview.MyDiscussionsUiStatePreviewParameterProvider
 import com.team.todoktodok.presentation.compose.theme.GrayE0
 import com.team.todoktodok.presentation.compose.theme.White
+import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.xml.profile.UserProfileTab
 
 @Composable
 fun MyDiscussionsScreen(
+    viewModel: MyDiscussionViewModel,
+    messageConverter: ExceptionMessageConverter,
+    onClickHeader: (UserProfileTab) -> Unit,
+    onClickDiscussion: (Long) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        viewModel.loadMyDiscussions()
+    }
+
+    MyDiscussionsScreen(
+        onClickDiscussion = onClickDiscussion,
+        onClickHeader = { onClickHeader(it) },
+        uiState = uiState.value,
+        modifier = modifier,
+    )
+}
+
+@Composable
+private fun MyDiscussionsScreen(
     uiState: MyDiscussionUiState,
     onClickHeader: (UserProfileTab) -> Unit,
-    onClick: (Long) -> Unit,
+    onClickDiscussion: (Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     if (uiState.isEmpty()) {
@@ -61,7 +87,7 @@ fun MyDiscussionsScreen(
             }
             item {
                 ParticipatedDiscussionsScreen(
-                    onClick = onClick,
+                    onClick = onClickDiscussion,
                     uiState = participated,
                 )
             }
@@ -89,7 +115,7 @@ fun MyDiscussionsScreen(
             }
             item {
                 CreatedDiscussionScreen(
-                    onClick = onClick,
+                    onClick = onClickDiscussion,
                     uiState = created,
                 )
             }
@@ -137,7 +163,7 @@ private fun MyDiscussionsScreenPreview(
     uiState: MyDiscussionUiState,
 ) {
     MyDiscussionsScreen(
-        onClick = {},
+        onClickDiscussion = {},
         onClickHeader = {},
         uiState = uiState,
     )
@@ -147,7 +173,7 @@ private fun MyDiscussionsScreenPreview(
 @Composable
 private fun EmptyMyDiscussionsScreenPreview() {
     MyDiscussionsScreen(
-        onClick = {},
+        onClickDiscussion = {},
         onClickHeader = {},
         uiState = MyDiscussionUiState(),
     )

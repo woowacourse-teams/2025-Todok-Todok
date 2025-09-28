@@ -4,10 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.team.domain.ConnectivityObserver
 import com.team.domain.model.exception.onFailure
 import com.team.domain.model.exception.onSuccess
-import com.team.domain.model.member.MemberDiscussionType
-import com.team.domain.model.member.MemberId
 import com.team.domain.repository.DiscussionRepository
-import com.team.domain.repository.MemberRepository
 import com.team.domain.repository.NotificationRepository
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionsUiEvent
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionsUiState
@@ -23,7 +20,6 @@ import kotlinx.coroutines.launch
 
 class DiscussionsViewModel(
     private val discussionRepository: DiscussionRepository,
-    private val memberRepository: MemberRepository,
     private val notificationRepository: NotificationRepository,
     networkConnectivityObserver: ConnectivityObserver,
 ) : BaseViewModel(networkConnectivityObserver) {
@@ -86,39 +82,6 @@ class DiscussionsViewModel(
             handleFailure = { onUiEvent(DiscussionsUiEvent.ShowErrorMessage(it)) },
         )
 
-    fun loadMyDiscussions() {
-        viewModelScope.launch {
-            loadCreatedDiscussions()
-            loadParticipatedDiscussions()
-        }
-    }
-
-    private fun loadCreatedDiscussions() =
-        runAsync(
-            key = KEY_MY_CREATED_DISCUSSIONS,
-            action = {
-                memberRepository.getMemberDiscussionRooms(
-                    MemberId.Mine,
-                    MemberDiscussionType.CREATED,
-                )
-            },
-            handleSuccess = { result -> _uiState.update { it.addCreatedDiscussion(result) } },
-            handleFailure = { onUiEvent(DiscussionsUiEvent.ShowErrorMessage(it)) },
-        )
-
-    private fun loadParticipatedDiscussions() =
-        runAsync(
-            key = KEY_MY_PARTICIPATED_DISCUSSIONS,
-            action = {
-                memberRepository.getMemberDiscussionRooms(
-                    MemberId.Mine,
-                    MemberDiscussionType.PARTICIPATED,
-                )
-            },
-            handleSuccess = { result -> _uiState.update { it.addParticipatedDiscussion(result) } },
-            handleFailure = { onUiEvent(DiscussionsUiEvent.ShowErrorMessage(it)) },
-        )
-
     fun loadActivatedDiscussions() {
         val pageInfo = _uiState.value.hotDiscussion.activatedDiscussions.pageInfo ?: return
         if (!pageInfo.hasNext) return
@@ -177,7 +140,5 @@ class DiscussionsViewModel(
         private const val KEY_HOT_DISCUSSIONS = "HOT_DISCUSSIONS"
         private const val KEY_ACTIVATED_DISCUSSIONS = "ACTIVATED_DISCUSSIONS"
         private const val KEY_ACTIVATED_DISCUSSIONS_LOAD_MORE = "ACTIVATED_DISCUSSIONS_LOAD_MORE"
-        private const val KEY_MY_CREATED_DISCUSSIONS = "MY_CREATED_DISCUSSIONS"
-        private const val KEY_MY_PARTICIPATED_DISCUSSIONS = "MY_PARTICIPATED_DISCUSSIONS"
     }
 }
