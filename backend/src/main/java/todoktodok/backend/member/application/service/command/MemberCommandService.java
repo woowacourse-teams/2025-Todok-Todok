@@ -3,19 +3,16 @@ package todoktodok.backend.member.application.service.command;
 import java.util.ConcurrentModificationException;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import todoktodok.backend.global.auth.AdminProperties;
 import todoktodok.backend.global.jwt.JwtTokenProvider;
 import todoktodok.backend.global.jwt.TokenInfo;
 import todoktodok.backend.member.application.ImageType;
-import todoktodok.backend.member.application.dto.request.LoginRequest;
-import todoktodok.backend.member.application.dto.request.ProfileUpdateRequest;
-import todoktodok.backend.member.application.dto.request.RefreshTokenRequest;
-import todoktodok.backend.member.application.dto.request.SignupRequest;
+import todoktodok.backend.member.application.dto.request.*;
 import todoktodok.backend.member.application.dto.response.ProfileImageUpdateResponse;
 import todoktodok.backend.member.application.dto.response.ProfileUpdateResponse;
 import todoktodok.backend.member.application.dto.response.TokenResponse;
@@ -28,6 +25,7 @@ import todoktodok.backend.member.domain.repository.BlockRepository;
 import todoktodok.backend.member.domain.repository.MemberReportRepository;
 import todoktodok.backend.member.domain.repository.MemberRepository;
 import todoktodok.backend.member.domain.repository.RefreshTokenRepository;
+import todoktodok.backend.member.infrastructure.AuthClient;
 import todoktodok.backend.member.infrastructure.ProfileImageResponse;
 import todoktodok.backend.member.infrastructure.S3ImageUploadClient;
 
@@ -42,32 +40,98 @@ public class MemberCommandService {
     private final BlockRepository blockRepository;
     private final MemberReportRepository memberReportRepository;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final AdminProperties adminProperties;
     private final JwtTokenProvider jwtTokenProvider;
     private final S3ImageUploadClient s3ImageUploadClient;
+    private final AuthClient authclient;
 
     public TokenResponse login(final LoginRequest loginRequest) {
-        final Optional<Member> memberOrEmpty = memberRepository.findByEmail(loginRequest.email());
+        final String email = authclient.resolveVerifiedEmailFrom(loginRequest.googleIdToken());
+        final Optional<Member> memberOrEmpty = memberRepository.findByEmail(email);
+
         if (memberOrEmpty.isPresent()) {
-            final String accessToken = jwtTokenProvider.createAccessToken(memberOrEmpty.get());
-            final String refreshToken = jwtTokenProvider.createRefreshToken(memberOrEmpty.get());
+            final Member member = memberOrEmpty.get();
+
+            resignUpIfDeleted(member);
+
+            final String accessToken = jwtTokenProvider.createAccessToken(member);
+            final String refreshToken = jwtTokenProvider.createRefreshToken(member);
 
             final RefreshToken savedRefreshToken = RefreshToken.create(refreshToken);
-            saveRefreshTokenIfUnique(savedRefreshToken, memberOrEmpty.get().getId());
+            saveRefreshTokenIfUnique(savedRefreshToken, member.getId());
 
             return new TokenResponse(accessToken, refreshToken);
         }
 
-        final String tempToken = jwtTokenProvider.createTempToken(loginRequest.email());
+        final String tempToken = jwtTokenProvider.createTempToken(email);
         return new TokenResponse(tempToken, null);
+    }
+
+    public TokenResponse bypassLogin(final BypassLoginRequest loginRequest) {
+        final Optional<Member> memberOrEmpty = memberRepository.findByEmail(loginRequest.email());
+
+        if (memberOrEmpty.isEmpty()) {
+            throw new IllegalArgumentException(
+                    String.format("올바르지 않은 로그인입니다. /login으로 로그인 해주세요 : email = %s", loginRequest.email()));
+        }
+
+        final Member member = memberOrEmpty.get();
+
+        if (!adminProperties.checkIsAdmin(member)) {
+            throw new IllegalArgumentException(
+                    String.format("올바르지 않은 로그인입니다. /login으로 로그인 해주세요 : memberId = %d", member.getId()));
+        }
+        if (!adminProperties.matchesPassword(loginRequest.password())) {
+            throw new IllegalArgumentException(
+                    String.format("비밀번호가 올바르지 않습니다 : memberId = %d", member.getId()));
+        }
+
+        resignUpIfDeleted(member);
+
+        final String accessToken = jwtTokenProvider.createAccessToken(member);
+        final String refreshToken = jwtTokenProvider.createRefreshToken(member);
+
+        final RefreshToken savedRefreshToken = RefreshToken.create(refreshToken);
+        saveRefreshTokenIfUnique(savedRefreshToken, member.getId());
+
+        return new TokenResponse(accessToken, refreshToken);
     }
 
     public TokenResponse signup(
             final SignupRequest signupRequest,
             final String memberEmail
     ) {
+        final String idToken = signupRequest.googleIdToken();
+        final GoogleAuthMemberDto requestMemberDto = authclient.resolveVerifiedEmailAndNicknameFrom(idToken);
+        final String requestEmail = requestMemberDto.email();
+        final String requestProfileImage = requestMemberDto.profileImage();
+
         validateDuplicatedNickname(signupRequest.nickname());
-        validateDuplicatedEmail(signupRequest);
-        validateEmailWithTokenEmail(signupRequest, memberEmail);
+        validateDuplicatedEmail(requestEmail);
+        validateEmailWithTokenEmail(requestEmail, memberEmail);
+
+        final Member member = Member.builder()
+                .nickname(signupRequest.nickname())
+                .email(requestEmail)
+                .profileImage(requestProfileImage)
+                .build();
+
+        final Member savedMember = memberRepository.save(member);
+        final String accessToken = jwtTokenProvider.createAccessToken(savedMember);
+        final String refreshToken = jwtTokenProvider.createRefreshToken(savedMember);
+        saveRefreshTokenIfUnique(RefreshToken.create(refreshToken), savedMember.getId());
+
+        return new TokenResponse(accessToken, refreshToken);
+    }
+
+    @Deprecated
+    public TokenResponse signupLegacy(
+            final SignupRequestLegacy signupRequest,
+            final String memberEmail
+    ) {
+        validateDuplicatedNickname(signupRequest.nickname());
+        validateDuplicatedEmail(signupRequest.email());
+        validateEmailWithTokenEmail(signupRequest.email(), memberEmail);
 
         final Member member = Member.builder()
                 .nickname(signupRequest.nickname())
@@ -198,31 +262,37 @@ public class MemberCommandService {
         blockRepository.delete(block);
     }
 
+    private void resignUpIfDeleted(final Member member) {
+        if (member.isDeleted()) {
+            member.resignUp();
+        }
+    }
+
     private void validateDuplicatedNickname(final String nickname) {
-        if (memberRepository.existsByNickname(nickname)) {
+        if (memberRepository.existsByNicknameAndDeletedAtIsNull(nickname)) {
             throw new IllegalArgumentException(String.format("이미 존재하는 닉네임입니다: nickname = %s", nickname));
         }
     }
 
-    private void validateDuplicatedEmail(final SignupRequest signupRequest) {
-        if (memberRepository.existsByEmail(signupRequest.email())) {
+    private void validateDuplicatedEmail(final String email) {
+        if (memberRepository.existsByEmailAndDeletedAtIsNull(email)) {
             throw new IllegalArgumentException(
-                    String.format("이미 가입된 이메일입니다: email = %s", maskEmail(signupRequest.email())));
+                    String.format("이미 가입된 이메일입니다: email = %s", maskEmail(email)));
         }
     }
 
     private void validateEmailWithTokenEmail(
-            final SignupRequest signupRequest,
+            final String requestEmail,
             final String tokenEmail
     ) {
-        if (!tokenEmail.equals(signupRequest.email())) {
+        if (!tokenEmail.equals(requestEmail)) {
             throw new IllegalArgumentException(
-                    String.format("소셜 로그인을 하지 않은 이메일입니다: email = %s", maskEmail(signupRequest.email())));
+                    String.format("소셜 로그인을 하지 않은 이메일입니다: email = %s", maskEmail(requestEmail)));
         }
     }
 
     private Member findMember(final Long memberId) {
-        return memberRepository.findById(memberId)
+        return memberRepository.findByIdAndDeletedAtIsNull(memberId)
                 .orElseThrow(
                         () -> new NoSuchElementException(String.format("해당 회원을 찾을 수 없습니다: memberId = %s", memberId)));
     }

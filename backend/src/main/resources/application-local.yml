@@ -24,3 +24,17 @@ spring:
   config:
     activate:
       on-profile: local
+    import:
+      - submodule/security/firebase.yml
+
+auth:
+  mode: bypass
+
+firebase:
+  enabled: false
+  account:
+    path: ${firebase.account.path}
+
+jwt:
+  access-token:
+    expire-mills: ${jwt.access-token.local.expire-mills}

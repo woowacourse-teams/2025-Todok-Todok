@@ -12,6 +12,7 @@ public record DiscussionResponse(
         LocalDateTime createdAt,
         String discussionTitle,
         String discussionOpinion,
+        int viewCount,
         int likeCount,
         int commentCount,
         boolean isLikedByMe
@@ -29,6 +30,7 @@ public record DiscussionResponse(
                 discussion.getCreatedAt(),
                 discussion.getTitle(),
                 discussion.getContent(),
+                Math.toIntExact(discussion.getViewCount()),
                 likeCount,
                 commentCount,
                 isLikedByMe

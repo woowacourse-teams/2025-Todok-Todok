@@ -35,6 +35,10 @@ spring:
       on-profile: dev
     import:
       - submodule/security/database.yml
+      - submodule/security/firebase.yml
+
+auth:
+  mode: google
 
 management:
   endpoints:
@@ -51,3 +55,12 @@ management:
         http:
           server:
             requests: true
+
+firebase:
+  enabled: true
+  account:
+    path: ${firebase.account.path}
+
+jwt:
+  access-token:
+    expire-mills: ${jwt.access-token.dev.expire-mills}

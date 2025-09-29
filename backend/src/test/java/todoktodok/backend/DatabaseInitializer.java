@@ -8,6 +8,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import todoktodok.backend.member.domain.Member;
+import todoktodok.backend.notification.domain.NotificationTarget;
+import todoktodok.backend.notification.domain.NotificationType;
 
 @Component
 public class DatabaseInitializer {
@@ -71,6 +74,24 @@ public class DatabaseInitializer {
                 .setParameter("profileMessage", profileMessage)
                 .setParameter("createdAt", now)
                 .setParameter("modifiedAt", now)
+                .executeUpdate();
+    }
+
+    @Transactional
+    public void deleteUserInfo(
+            final String email
+    ) {
+        final LocalDateTime now = LocalDateTime.now().truncatedTo(MICROS);
+
+        em.createNativeQuery(
+                        """
+                                UPDATE Member m 
+                                SET m.deleted_at = :deletedAt
+                                WHERE m.email = :email
+                                """
+                )
+                .setParameter("email", email)
+                .setParameter("deletedAt", now)
                 .executeUpdate();
     }
 
@@ -183,6 +204,47 @@ public class DatabaseInitializer {
                 .setParameter("bookId", bookId)
                 .setParameter("createdAt", createdAt)
                 .setParameter("modifiedAt", now)
+                .executeUpdate();
+    }
+
+    @Transactional
+    public void setDefaultDiscussionMemberViewInfo() {
+        final LocalDateTime now = LocalDateTime.now().truncatedTo(MICROS);
+
+        em.createNativeQuery(
+                        """
+                                INSERT INTO DISCUSSION_MEMBER_VIEW (discussion_id, member_id, created_at, modified_at)
+                                VALUES 
+                                (:discussionId, :memberId, :createdAt, :modifiedAt)
+                                """
+                )
+                .setParameter("discussionId", 1L)
+                .setParameter("memberId", 1L)
+                .setParameter("createdAt", now)
+                .setParameter("modifiedAt", now)
+                .executeUpdate();
+    }
+
+    @Transactional
+    public void setDiscussionMemberViewInfo(
+            final Long memberId,
+            final Long discussionId,
+            final int minusMinute
+    ) {
+        final LocalDateTime now = LocalDateTime.now().truncatedTo(MICROS);
+        final LocalDateTime before = now.minusMinutes(minusMinute);
+
+        em.createNativeQuery(
+                        """
+                                INSERT INTO DISCUSSION_MEMBER_VIEW (discussion_id, member_id, created_at, modified_at)
+                                VALUES 
+                                (:discussionId, :memberId, :createdAt, :modifiedAt)
+                                """
+                )
+                .setParameter("discussionId", discussionId)
+                .setParameter("memberId", memberId)
+                .setParameter("createdAt", now)
+                .setParameter("modifiedAt", before)
                 .executeUpdate();
     }
 
@@ -413,6 +475,100 @@ public class DatabaseInitializer {
                 .setParameter("targetId", targetId)
                 .setParameter("createdAt", now)
                 .setParameter("modifiedAt", now)
+                .executeUpdate();
+    }
+
+    @Transactional
+    public void setNotificationTokenInfo(
+            final String token,
+            final String fid,
+            final Long memberId
+    ) {
+        final LocalDateTime now = LocalDateTime.now().truncatedTo(MICROS);
+
+        em.createNativeQuery(
+                        """
+                                INSERT INTO NOTIFICATION_TOKEN (token, fid, member_id, created_at, modified_at)
+                                VALUES 
+                                (:token, :fid, :memberId, :createdAt, :modifiedAt)
+                                """
+                )
+                .setParameter("token", token)
+                .setParameter("fid", fid)
+                .setParameter("memberId", memberId)
+                .setParameter("createdAt", now)
+                .setParameter("modifiedAt", now)
+                .executeUpdate();
+    }
+
+    @Transactional
+    public void setDefaultCommentNotification(
+    ) {
+        final LocalDateTime now = LocalDateTime.now().truncatedTo(MICROS);
+
+        em.createNativeQuery(
+                        """
+                                INSERT INTO NOTIFICATION (is_read, recipient_id, discussion_id, comment_id, reply_id, member_nickname, discussion_title, content, notification_type, notification_target, created_at, modified_at)
+                                VALUES 
+                                (false, 1L, 1L, 1L, null, 'user', 'discussionTitle', 'content', 'COMMENT', 'COMMENT', :created_at, :modified_at)
+                                """
+                )
+                .setParameter("created_at", now)
+                .setParameter("modified_at", now)
+                .executeUpdate();
+    }
+
+    @Transactional
+    public void setDefaultReplyNotification(
+    ) {
+        final LocalDateTime now = LocalDateTime.now().truncatedTo(MICROS);
+
+        em.createNativeQuery(
+                        """
+                                INSERT INTO NOTIFICATION (is_read, recipient_id, discussion_id, comment_id, reply_id, member_nickname, discussion_title, content, notification_type, notification_target, created_at, modified_at)
+                                VALUES 
+                                (false, 1L, 1L, 1L, 1L, 'user', 'discussionTitle', 'content', 'REPLY', 'REPLY', :created_at, :modified_at)
+                                """
+                )
+                .setParameter("created_at", now)
+                .setParameter("modified_at", now)
+                .executeUpdate();
+    }
+
+    @Transactional
+    public void setNotification(
+            final boolean isRead,
+            final Member recipient,
+            final Long discussionId,
+            final Long commentId,
+            final Long replyId,
+            final String memberNickname,
+            final String discussionTitle,
+            final String content,
+            final NotificationType notificationType,
+            final NotificationTarget notificationTarget
+    ) {
+        final LocalDateTime now = LocalDateTime.now().truncatedTo(MICROS);
+
+        em.createNativeQuery(
+                        """
+                                INSERT INTO NOTIFICATION (is_read, recipient_id, discussion_id, comment_id, reply_id, member_nickname, discussion_title, content, notification_type, notification_target, created_at, modified_at)
+                                VALUES 
+                                (:isRead, :recipient, :discussionId, :commentId, :replyId, :memberNickname, :discussionTitle, :content, :notificationType, :notificationTarget, :created_at, :modified_at)
+                                """
+                )
+                .setParameter("isRead", isRead)
+                .setParameter("recipient", recipient)
+                .setParameter("discussionId", discussionId)
+                .setParameter("commentId", commentId)
+                .setParameter("replyId", replyId)
+                .setParameter("memberNickname", memberNickname)
+                .setParameter("discussionTitle", discussionTitle)
+                .setParameter("content", content)
+                .setParameter("notificationType", notificationType)
+                .setParameter("notificationTarget", notificationTarget)
+                .setParameter("created_at", now)
+                .setParameter("modified_at", now)
                 .executeUpdate();
     }
 }

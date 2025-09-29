@@ -5,10 +5,12 @@ import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+@Slf4j
 @Getter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
@@ -22,4 +24,20 @@ public abstract class TimeStamp {
     private LocalDateTime modifiedAt;
 
     private LocalDateTime deletedAt;
+
+    public boolean isDeleted() {
+        return deletedAt != null;
+    }
+
+    protected void cancelDeletion() {
+        this.deletedAt = null;
+    }
+
+    public boolean isModifiedDatePassedFrom(final int minute) {
+        if (LocalDateTime.now().isAfter(modifiedAt.plusMinutes(minute))) {
+            modifiedAt = LocalDateTime.now();
+            return true;
+        }
+        return false;
+    }
 }

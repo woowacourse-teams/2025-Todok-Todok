@@ -72,7 +72,7 @@ public class CommentQueryService {
     }
 
     private void validateIsExistMember(final Long memberId) {
-        if (!memberRepository.existsById(memberId)) {
+        if (!memberRepository.existsByIdAndDeletedAtIsNull(memberId)) {
             throw new NoSuchElementException(String.format("해당 회원을 찾을 수 없습니다: memberId = %s", memberId));
         }
     }

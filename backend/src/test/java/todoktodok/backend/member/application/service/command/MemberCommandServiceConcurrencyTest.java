@@ -1,5 +1,13 @@
 package todoktodok.backend.member.application.service.command;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.ConcurrentModificationException;
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -16,12 +24,6 @@ import todoktodok.backend.member.application.dto.request.RefreshTokenRequest;
 import todoktodok.backend.member.domain.Member;
 import todoktodok.backend.member.domain.RefreshToken;
 import todoktodok.backend.member.domain.repository.RefreshTokenRepository;
-
-import java.util.*;
-import java.util.concurrent.CountDownLatch;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 @ActiveProfiles("local")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
