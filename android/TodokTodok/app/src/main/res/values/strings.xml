@@ -154,8 +154,8 @@
     <string name="all_create_discussion_room_appbar">토론방 생성</string>
     <string name="create">등록</string>
     <string name="content_description_edit_book_in_discussion_room">토론방 도서를 변경합니다</string>
-    <string name="hint_discussion_room_opinion">최근에 읽은 도서에서 이야기하고 싶은 내용을 입력해주세요!</string>
-    <string name="hint_discussion_room_title">제목을 입력해주세요!</string>
+    <string name="hint_discussion_room_opinion">내용</string>
+    <string name="hint_discussion_room_title">제목</string>
     <string name="edit_discussion_room_title">토론방 수정</string>
     <string name="edit">수정</string>
     <string name="draft">임시저장</string>
@@ -287,5 +287,6 @@
     <string name="share_discussion_title">토론방 공유</string>
     <string name="discussion_entry_invalid_message">토론 정보를 불러올 수 없습니다.</string>
     <string name="press_back_again_to_exit">한 번 더 누르면 종료됩니다</string>
+    <string name="create_discussion_temp_save">임시 저장 | %d</string>
 
 </resources>

@@ -5,29 +5,18 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="@dimen/space_24"
-    android:paddingRight="@dimen/space_24"
     tools:context=".presentation.xml.discussion.create.CreateDiscussionRoomActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/topBar_create_discussion_room"
         android:layout_width="0dp"
         android:layout_height="@dimen/space_56"
+        android:layout_marginHorizontal="@dimen/space_24"
         android:background="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/tv_create_discussion_room_title"
-        style="@style/HeaderTitleText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/all_create_discussion_room"
-        app:layout_constraintBottom_toBottomOf="@id/topBar_create_discussion_room"
-        app:layout_constraintEnd_toEndOf="@id/topBar_create_discussion_room"
-        app:layout_constraintStart_toStartOf="@id/topBar_create_discussion_room"
-        app:layout_constraintTop_toTopOf="@id/topBar_create_discussion_room" />
 
     <ImageView
         android:id="@+id/btn_back"
@@ -40,11 +29,30 @@
         app:layout_constraintTop_toTopOf="@id/topBar_create_discussion_room" />
 
     <TextView
-        android:id="@+id/btn_create"
+        android:id="@+id/btn_save"
         style="@style/HeaderTitleText"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/space_32"
+        android:layout_marginEnd="@dimen/space_24"
+        android:background="@drawable/bg_radius_16dp"
         android:fontFamily="@font/pretendard_regular"
+        android:gravity="center"
+        android:paddingHorizontal="@dimen/space_16"
+        android:text="@string/create_discussion_temp_save"
+        android:textColor="@color/gray_76"
+        android:textSize="@dimen/font_size_large"
+        app:layout_constraintBottom_toBottomOf="@id/topBar_create_discussion_room"
+        app:layout_constraintEnd_toStartOf="@id/btn_create"
+        app:layout_constraintTop_toTopOf="@id/topBar_create_discussion_room" />
+
+    <TextView
+        android:id="@+id/btn_create"
+        style="@style/HeaderTitleText"
+        android:layout_width="@dimen/space_56"
+        android:layout_height="@dimen/space_32"
+        android:background="@drawable/bg_radius_16dp"
+        android:fontFamily="@font/pretendard_regular"
+        android:gravity="center"
         android:text="@string/create"
         android:textColor="@color/gray_76"
         android:textSize="@dimen/font_size_large"
@@ -68,13 +76,16 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/content_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@color/gray_ED">
+
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/iv_book_image"
                 android:layout_width="80dp"
                 android:layout_height="100dp"
-                android:layout_marginVertical="@dimen/space_8"
+                android:layout_marginVertical="@dimen/space_16"
+                android:layout_marginStart="@dimen/space_24"
                 android:contentDescription="@string/select_book_content_description_book_cover"
                 android:scaleType="centerCrop"
                 app:layout_constraintBottom_toTopOf="@id/etl_discussion_room_title"
@@ -89,12 +100,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/space_16"
-                android:layout_marginEnd="@dimen/space_16"
-                android:ellipsize="end"
-                android:maxLines="1"
+                android:layout_marginEnd="@dimen/space_24"
                 android:textSize="18sp"
                 app:layout_constraintBottom_toTopOf="@id/tv_book_author"
-                app:layout_constraintEnd_toStartOf="@id/btn_edit"
+                app:layout_constraintEnd_toEndOf="@id/content_container"
                 app:layout_constraintStart_toEndOf="@id/iv_book_image"
                 app:layout_constraintTop_toTopOf="@id/iv_book_image"
                 app:layout_constraintVertical_chainStyle="packed"
@@ -105,27 +114,17 @@
                 style="@style/BaseTextStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/space_16"
+                android:layout_marginEnd="@dimen/space_24"
                 android:ellipsize="end"
                 android:fontFamily="@font/pretendard_medium"
                 android:maxLines="1"
                 android:textColor="@color/gray_66"
                 android:textSize="@dimen/font_size_normal"
                 app:layout_constraintBottom_toBottomOf="@id/iv_book_image"
-                app:layout_constraintEnd_toStartOf="@id/btn_edit"
+                app:layout_constraintEnd_toEndOf="@id/content_container"
                 app:layout_constraintStart_toStartOf="@id/tv_book_title"
                 app:layout_constraintTop_toBottomOf="@id/tv_book_title"
                 tools:text="조슈아 블로쉬" />
-
-            <ImageView
-                android:id="@+id/btn_edit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/ic_edit"
-                android:contentDescription="@string/content_description_edit_book_in_discussion_room"
-                app:layout_constraintBottom_toBottomOf="@id/iv_book_image"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/iv_book_image" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/etl_discussion_room_title"
@@ -133,6 +132,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_20"
                 android:layout_marginBottom="10dp"
+                android:background="@drawable/bg_white_radius_16dp"
+                android:paddingVertical="@dimen/space_16"
                 app:boxBackgroundColor="@color/white"
                 app:boxBackgroundMode="filled"
                 app:boxStrokeWidth="@dimen/space_0"
@@ -148,6 +149,7 @@
                     style="@style/BaseTextStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/space_24"
                     android:fontFamily="@font/pretendard_regular"
                     android:gravity="top|start"
                     android:hint="@string/hint_discussion_room_title"
@@ -158,25 +160,24 @@
                     android:overScrollMode="ifContentScrolls"
                     android:paddingVertical="@dimen/space_0"
                     android:textColor="@color/black_18"
-                    android:textColorHint="@color/gray_76" />
+                    android:textColorHint="@color/gray_76"
+                    android:textSize="@dimen/font_size_2x_large" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <View
                 android:id="@+id/view_divider"
                 android:layout_width="0dp"
                 android:layout_height="1dp"
-                android:layout_marginTop="@dimen/space_20"
-                android:background="@color/gray_76"
+                android:background="@color/gray_D9"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/etl_discussion_room_title" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/etl_discussion_room_opinion"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_20"
-                android:layout_marginBottom="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:background="@color/white"
                 android:gravity="top|start"
                 app:boxBackgroundColor="@color/white"
                 app:boxBackgroundMode="filled"
@@ -184,6 +185,7 @@
                 app:boxStrokeWidthFocused="@dimen/space_0"
                 app:counterEnabled="false"
                 app:hintEnabled="false"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/view_divider">
@@ -192,7 +194,8 @@
                     android:id="@+id/et_discussion_room_opinion"
                     style="@style/BaseTextStyle"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="@dimen/space_24"
                     android:fontFamily="@font/pretendard_regular"
                     android:gravity="top|start"
                     android:hint="@string/hint_discussion_room_opinion"
@@ -202,7 +205,8 @@
                     android:overScrollMode="never"
                     android:scrollbars="none"
                     android:textColor="@color/black_18"
-                    android:textColorHint="@color/gray_76" />
+                    android:textColorHint="@color/gray_76"
+                    android:textSize="@dimen/font_size_x_large" />
             </com.google.android.material.textfield.TextInputLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

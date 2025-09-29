@@ -154,7 +154,6 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
             }
             btnCreate.isEnabled = false
             btnBack.setOnClickListener { finish() }
-            btnEdit.setOnClickListener { moveToSelectBook() }
             etDiscussionRoomTitle.doAfterTextChanged { text: Editable? ->
                 viewModel.updateTitle(text.toString())
             }
@@ -177,9 +176,6 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
 
     private fun settingEditMode(binding: ActivityCreateDiscussionRoomBinding) {
         binding.apply {
-            tvCreateDiscussionRoomTitle.text =
-                getString(R.string.edit_discussion_room_title)
-            btnEdit.visibility = View.INVISIBLE
             btnCreate.apply {
                 text = getString(R.string.edit)
                 setOnClickListener {
