@@ -169,8 +169,8 @@ fun DiscussionsScreen(
         topBar = {
             DiscussionToolbar(
                 isExistNotification = uiState.isUnreadNotification,
-                onClickNotification = { onClickNotification() },
-                onClickProfile = { onClickProfile() },
+                onClickNotification = onClickNotification,
+                onClickProfile = onClickProfile,
                 modifier =
                     modifier
                         .fillMaxWidth()
@@ -191,11 +191,11 @@ fun DiscussionsScreen(
                 uiState = uiState,
                 pagerState = pagerState,
                 onSearchKeywordChanged = { onSearchKeywordChanged(it) },
-                onActivatedDiscussionLoadMore = { onActivatedDiscussionLoadMore() },
+                onActivatedDiscussionLoadMore = onActivatedDiscussionLoadMore,
                 onTabChanged = { tab -> if (tab != Destination.ALL) onTabChanged("") },
                 onDiscussionClick = { onDiscussionClick(it) },
                 onClickMyDiscussionHeader = { onClickMyDiscussionHeader(it) },
-                onSearch = { onSearch() },
+                onSearch = onSearch,
                 modifier = Modifier.fillMaxSize(),
             )
 
@@ -238,7 +238,7 @@ fun DiscussionsContent(
                 .background(color = White),
     ) {
         SearchDiscussionBar(
-            onSearch = { onSearch() },
+            onSearch = onSearch,
             searchKeyword = uiState.searchDiscussion.type.keyword,
             previousKeyword = uiState.searchDiscussion.previousKeyword,
             onKeywordChange = { onSearchKeywordChanged(it) },
