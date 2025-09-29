@@ -67,7 +67,7 @@
         style="@style/BaseTextStyle"
         android:layout_width="0dp"
         android:layout_height="36dp"
-        android:layout_marginBottom="@dimen/space_20"
+        android:layout_marginBottom="@dimen/space_120"
         android:background="@drawable/bg_green_f0_radius_8dp"
         android:fontFamily="@font/pretendard_regular"
         android:gravity="center_vertical"
