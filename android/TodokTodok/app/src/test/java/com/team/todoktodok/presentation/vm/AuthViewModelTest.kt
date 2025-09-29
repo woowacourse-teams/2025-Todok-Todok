@@ -9,8 +9,10 @@ import com.team.todoktodok.InstantTaskExecutorExtension
 import com.team.todoktodok.presentation.xml.auth.login.LoginUiEvent
 import com.team.todoktodok.presentation.xml.auth.vm.AuthViewModel
 import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
@@ -32,6 +34,9 @@ class AuthViewModelTest {
         tokenRepository = mockk()
         connectivityObserver = mockk()
 
+        every { connectivityObserver.subscribe() } returns emptyFlow()
+        coEvery { tokenRepository.getMemberId() } returns 1L
+
         viewModel =
             AuthViewModel(
                 memberRepository,
@@ -43,15 +48,14 @@ class AuthViewModelTest {
     @Test
     fun `memberId가 존재할 경우 메인 화면으로 이동 이벤트가 발생한다`() =
         runTest {
-            // given
-            coEvery { tokenRepository.getMemberId() } returns 1L
-
             viewModel.uiEvent.test {
                 // when
                 viewModel.checkMember()
 
                 // then
                 assertEquals(LoginUiEvent.NavigateToMain, awaitItem())
+
+                cancelAndIgnoreRemainingEvents()
             }
         }
 
