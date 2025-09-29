@@ -6,13 +6,6 @@
     android:layout_height="match_parent"
     android:paddingHorizontal="@dimen/space_24">
 
-    <View
-        android:id="@+id/view_spacer"
-        android:layout_width="match_parent"
-        android:layout_height="160dp"
-        android:background="@android:color/transparent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <ImageView
         android:id="@+id/iv_bottom_sheet_header"
         android:layout_width="wrap_content"
@@ -21,7 +14,7 @@
         android:src="@drawable/bottom_sheet_header"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/view_spacer" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/iv_reload"
@@ -49,7 +42,7 @@
         style="@style/BaseTextStyle"
         android:layout_width="@dimen/space_0"
         android:layout_height="36dp"
-        android:layout_marginBottom="@dimen/space_20"
+        android:layout_marginBottom="@dimen/space_120"
         android:background="@drawable/bg_green_f0_radius_8dp"
         android:fontFamily="@font/pretendard_regular"
         android:gravity="center_vertical"

@@ -10,7 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/space_0"
-        android:layout_marginBottom="72dp"
         android:fillViewport="true"
         android:paddingHorizontal="@dimen/space_24">
 
@@ -248,6 +247,8 @@
         android:id="@+id/bottom_sheet_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/white"
+        app:behavior_expandedOffset="100dp"
         app:behavior_fitToContents="false"
         app:behavior_halfExpandedRatio="0.4"
         app:behavior_hideable="false"
