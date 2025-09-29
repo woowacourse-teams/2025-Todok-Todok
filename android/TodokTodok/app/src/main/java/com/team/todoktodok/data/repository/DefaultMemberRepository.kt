@@ -25,16 +25,16 @@ import com.team.todoktodok.data.network.response.discussion.toDomain
 class DefaultMemberRepository(
     private val remoteMemberRemoteDataSource: MemberRemoteDataSource,
 ) : MemberRepository {
-    private var cachedGooleIdToken: String? = null
+    private var cachedGoogleIdToken: String? = null
 
     override suspend fun login(idToken: String): NetworkResult<MemberType> {
-        cachedGooleIdToken = idToken
+        cachedGoogleIdToken = idToken
         return remoteMemberRemoteDataSource.login(idToken)
     }
 
-    override suspend fun signUp(nickname: String): NetworkResult<Unit> =
-        cachedGooleIdToken?.let {
-            remoteMemberRemoteDataSource.signUp(SignUpRequest(nickname, it))
+    override suspend fun signUp(nickname: Nickname): NetworkResult<Unit> =
+        cachedGoogleIdToken?.let {
+            remoteMemberRemoteDataSource.signUp(SignUpRequest(nickname.value, it))
         } ?: NetworkResult.Failure(SignUpException.InvalidTokenException)
 
     override suspend fun getProfile(id: MemberId): NetworkResult<Profile> =

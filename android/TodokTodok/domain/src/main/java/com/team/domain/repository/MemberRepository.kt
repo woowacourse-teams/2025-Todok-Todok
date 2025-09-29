@@ -16,7 +16,7 @@ import com.team.domain.model.member.ProfileMessage
 interface MemberRepository {
     suspend fun login(idToken: String): NetworkResult<MemberType>
 
-    suspend fun signUp(nickname: String): NetworkResult<Unit>
+    suspend fun signUp(nickname: Nickname): NetworkResult<Unit>
 
     suspend fun getProfile(id: MemberId): NetworkResult<Profile>
 
