@@ -36,7 +36,6 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         AuthViewModelFactory(
             repositoryModule.memberRepository,
             repositoryModule.tokenRepository,
-            repositoryModule.notificationRepository,
             container.connectivityObserver,
         )
     }
