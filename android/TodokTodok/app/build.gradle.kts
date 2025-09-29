@@ -20,33 +20,8 @@ android {
     val properties = Properties()
     properties.load(project.rootProject.file("local.properties").inputStream())
 
-    defaultConfig {
-        buildConfigField(
-            "String",
-            "BASE_URL",
-            "\"${properties.getProperty("base_url")}\"",
-        )
-
-        buildConfigField(
-            "String",
-            "GOOGLE_CLIENT_ID",
-            "\"${properties.getProperty("google_client_id")}\"",
-        )
-
-        buildConfigField(
-            "String",
-            "FEEDBACK_URL",
-            "\"${properties.getProperty("feedback_url")}\"",
-        )
-    }
-
     namespace = "com.team.todoktodok"
     compileSdk = 35
-
-    lint {
-        disable += "NullSafeMutableLiveData"
-        disable += "ComposeViewModelForwarding"
-    }
 
     defaultConfig {
         applicationId = "com.team.todoktodok"
@@ -55,9 +30,17 @@ android {
         versionCode = 5
         versionName = "1.0.1"
 
+        buildConfigField("String", "BASE_URL", "\"${properties.getProperty("base_url")}\"")
+        buildConfigField("String", "GOOGLE_CLIENT_ID", "\"${properties.getProperty("google_client_id")}\"")
+        buildConfigField("String", "FEEDBACK_URL", "\"${properties.getProperty("feedback_url")}\"")
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments["runnerBuilder"] =
             "de.mannodermaus.junit5.AndroidJUnit5Builder"
+    }
+    lint {
+        disable += "NullSafeMutableLiveData"
+        disable += "ComposeViewModelForwarding"
     }
 
     buildTypes {
@@ -107,11 +90,11 @@ dependencies {
 
     testImplementation(libs.bundles.test)
     testImplementation(libs.androidx.core.testing)
-    ksp(libs.androidx.room.compiler)
-
     androidTestImplementation(libs.bundles.android.test)
     androidTestRuntimeOnly(libs.mannodermaus.junit5.runner)
+    ksp(libs.androidx.room.compiler)
 
+    // Compose
     implementation(platform(libs.compose.bom))
     implementation(libs.bundles.compose)
     lintChecks(libs.compose.lint)
