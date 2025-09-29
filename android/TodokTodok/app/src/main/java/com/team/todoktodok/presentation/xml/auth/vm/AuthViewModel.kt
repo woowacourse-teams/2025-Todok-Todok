@@ -5,7 +5,6 @@ import com.team.domain.ConnectivityObserver
 import com.team.domain.model.member.MemberType
 import com.team.domain.model.member.MemberType.Companion.MemberType
 import com.team.domain.repository.MemberRepository
-import com.team.domain.repository.NotificationRepository
 import com.team.domain.repository.TokenRepository
 import com.team.todoktodok.presentation.core.base.BaseViewModel
 import com.team.todoktodok.presentation.xml.auth.login.LoginUiEvent
@@ -18,7 +17,6 @@ import kotlinx.coroutines.launch
 class AuthViewModel(
     private val memberRepository: MemberRepository,
     private val tokenRepository: TokenRepository,
-    private val notificationRepository: NotificationRepository,
     connectivityObserver: ConnectivityObserver,
 ) : BaseViewModel(connectivityObserver) {
     private val _uiEvent: Channel<LoginUiEvent> = Channel(Channel.BUFFERED)
@@ -34,7 +32,7 @@ class AuthViewModel(
             when (MemberType(memberId)) {
                 MemberType.USER -> {
                     delay(SPLASH_DURATION)
-                    registerNotification()
+                    onUiEvent(LoginUiEvent.NavigateToMain)
                 }
 
                 MemberType.TEMP_USER -> onUiEvent(LoginUiEvent.ShowLoginButton)
@@ -48,22 +46,13 @@ class AuthViewModel(
             action = { memberRepository.login(idToken) },
             handleSuccess = { type: MemberType ->
                 when (type) {
-                    MemberType.USER -> {
-                        registerNotification()
-                    }
-
+                    MemberType.USER -> onUiEvent(LoginUiEvent.NavigateToMain)
                     MemberType.TEMP_USER -> onUiEvent(LoginUiEvent.NavigateToSignUp)
                 }
             },
-            handleFailure = { onUiEvent(LoginUiEvent.ShowErrorMessage(it)) },
-        )
-
-    fun registerNotification() =
-        runAsync(
-            key = KEY_NOTIFICATION,
-            action = { notificationRepository.registerPushNotification() },
-            handleSuccess = { onUiEvent(LoginUiEvent.NavigateToMain) },
-            handleFailure = { onUiEvent(LoginUiEvent.ShowErrorMessage(it)) },
+            handleFailure = {
+                onUiEvent(LoginUiEvent.ShowErrorMessage(it))
+            },
         )
 
     private fun onUiEvent(event: LoginUiEvent) {
@@ -74,7 +63,6 @@ class AuthViewModel(
 
     companion object {
         private const val KEY_LOGIN = "login"
-        private const val KEY_NOTIFICATION = "Notification"
         private const val SPLASH_DURATION = 1500L
     }
 }
