@@ -1,31 +1,28 @@
 package com.team.todoktodok.presentation.xml.auth.vm
 
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.team.domain.model.exception.onFailure
-import com.team.domain.model.exception.onSuccessSuspend
+import com.team.domain.ConnectivityObserver
 import com.team.domain.model.member.MemberType
 import com.team.domain.model.member.MemberType.Companion.MemberType
 import com.team.domain.repository.MemberRepository
 import com.team.domain.repository.NotificationRepository
 import com.team.domain.repository.TokenRepository
-import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
-import com.team.todoktodok.presentation.core.event.SingleLiveData
+import com.team.todoktodok.presentation.core.base.BaseViewModel
 import com.team.todoktodok.presentation.xml.auth.login.LoginUiEvent
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 class AuthViewModel(
     private val memberRepository: MemberRepository,
     private val tokenRepository: TokenRepository,
     private val notificationRepository: NotificationRepository,
-) : ViewModel() {
-    private val _isLoading: MutableLiveData<Boolean> = MutableLiveData(false)
-    val isLoading: MutableLiveData<Boolean> get() = _isLoading
-
-    private val _uiEvent: MutableSingleLiveData<LoginUiEvent> = MutableSingleLiveData()
-    val uiEvent: SingleLiveData<LoginUiEvent> get() = _uiEvent
+    connectivityObserver: ConnectivityObserver,
+) : BaseViewModel(connectivityObserver) {
+    private val _uiEvent: Channel<LoginUiEvent> = Channel(Channel.BUFFERED)
+    val uiEvent: Flow<LoginUiEvent> get() = _uiEvent.receiveAsFlow()
 
     init {
         checkMember()
@@ -37,8 +34,7 @@ class AuthViewModel(
             when (MemberType(memberId)) {
                 MemberType.USER -> {
                     delay(SPLASH_DURATION)
-                    notificationRepository.registerPushNotification()
-                    onUiEvent(LoginUiEvent.NavigateToMain)
+                    registerNotification()
                 }
 
                 MemberType.TEMP_USER -> onUiEvent(LoginUiEvent.ShowLoginButton)
@@ -46,34 +42,39 @@ class AuthViewModel(
         }
     }
 
-    fun login(idToken: String) {
-        viewModelScope.launch {
-            _isLoading.value = true
-            memberRepository
-                .login(idToken)
-                .onSuccessSuspend { type: MemberType ->
-                    when (type) {
-                        MemberType.USER -> {
-                            notificationRepository.registerPushNotification()
-                            onUiEvent(LoginUiEvent.NavigateToMain)
-                        }
-
-                        MemberType.TEMP_USER -> onUiEvent(LoginUiEvent.NavigateToSignUp)
+    fun login(idToken: String) =
+        runAsync(
+            key = KEY_LOGIN,
+            action = { memberRepository.login(idToken) },
+            handleSuccess = { type: MemberType ->
+                when (type) {
+                    MemberType.USER -> {
+                        registerNotification()
                     }
-                }.onFailure {
-                    onUiEvent(LoginUiEvent.ShowErrorMessage(it))
+
+                    MemberType.TEMP_USER -> onUiEvent(LoginUiEvent.NavigateToSignUp)
                 }
-            _isLoading.value = false
+            },
+            handleFailure = { onUiEvent(LoginUiEvent.ShowErrorMessage(it)) },
+        )
+
+    fun registerNotification() =
+        runAsync(
+            key = KEY_NOTIFICATION,
+            action = { notificationRepository.registerPushNotification() },
+            handleSuccess = { onUiEvent(LoginUiEvent.NavigateToMain) },
+            handleFailure = { onUiEvent(LoginUiEvent.ShowErrorMessage(it)) },
+        )
+
+    private fun onUiEvent(event: LoginUiEvent) {
+        viewModelScope.launch {
+            _uiEvent.send(event)
         }
     }
 
-    private fun onUiEvent(event: LoginUiEvent) {
-        _uiEvent.setValue(event)
-    }
-
     companion object {
-        private const val NOT_EXIST_NICKNAME = ""
-        private const val NOT_EXIST_PROFILE_IMAGE = ""
+        private const val KEY_LOGIN = "login"
+        private const val KEY_NOTIFICATION = "Notification"
         private const val SPLASH_DURATION = 1500L
     }
 }
