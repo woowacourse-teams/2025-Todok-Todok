@@ -59,6 +59,6 @@ fun CloverProgressBar(
 
 @Preview
 @Composable
-fun CloverProgressBarPreview() {
+private fun CloverProgressBarPreview() {
     CloverProgressBar(visible = true)
 }

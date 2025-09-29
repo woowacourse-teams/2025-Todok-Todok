@@ -59,9 +59,10 @@ fun ActivatedDiscussionScreen(
 }
 
 @Composable
-fun ActivatedDiscussionHeader() {
+fun ActivatedDiscussionHeader(modifier: Modifier = Modifier) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier,
     ) {
         Image(
             painter = painterResource(R.drawable.img_fire),

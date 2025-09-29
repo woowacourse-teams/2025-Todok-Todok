@@ -175,7 +175,6 @@ androidx = [
 compose = [
     "compose-activity",
     "compose-bom",
-    "compose-lint",
     "compose-ui",
     "compose-ui-graphics",
     "compose-ui-tooling-preview",

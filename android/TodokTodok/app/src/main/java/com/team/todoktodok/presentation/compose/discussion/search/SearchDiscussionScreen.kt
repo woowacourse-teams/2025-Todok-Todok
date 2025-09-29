@@ -3,6 +3,8 @@ package com.team.todoktodok.presentation.compose.discussion.search
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -14,10 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
@@ -25,7 +24,6 @@ import androidx.compose.ui.unit.sp
 import com.team.todoktodok.R
 import com.team.todoktodok.presentation.compose.core.component.DiscussionCard
 import com.team.todoktodok.presentation.compose.preview.SearchDiscussionsUiStatePreviewParameterProvider
-import com.team.todoktodok.presentation.compose.theme.Green1A
 import com.team.todoktodok.presentation.compose.theme.Pretendard
 
 @Composable
@@ -50,6 +48,9 @@ private fun EmptySearchResults(
     uiState: SearchDiscussionsUiState,
     modifier: Modifier = Modifier,
 ) {
+    val format = stringResource(R.string.discussion_no_search_title)
+    val guideMessage = uiState.formatNotFoundGuideMessage(format)
+
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -60,26 +61,9 @@ private fun EmptySearchResults(
             contentDescription = null,
             modifier = Modifier.size(130.dp),
         )
-        val fullText =
-            stringResource(
-                R.string.discussion_no_search_title,
-                uiState.searchKeyword,
-            )
+
         Text(
-            text =
-                buildAnnotatedString {
-                    val keyword = uiState.searchKeyword
-                    val startIndex = fullText.indexOf(keyword)
-                    if (startIndex >= 0) {
-                        append(fullText.substring(0, startIndex))
-                        withStyle(SpanStyle(color = Green1A, fontWeight = FontWeight.Bold)) {
-                            append(keyword)
-                        }
-                        append(fullText.substring(startIndex + keyword.length))
-                    } else {
-                        append(fullText)
-                    }
-                },
+            text = guideMessage,
             fontSize = 20.sp,
             fontFamily = Pretendard,
             fontWeight = FontWeight.SemiBold,
@@ -96,7 +80,7 @@ private fun SearchResultDiscussions(
 ) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(15.dp),
-        modifier = modifier.padding(horizontal = 10.dp, vertical = 5.dp),
+        modifier = modifier.padding(horizontal = 10.dp),
     ) {
         item {
             Text(
@@ -116,6 +100,8 @@ private fun SearchResultDiscussions(
                 onClick = { onClick(item.discussionId) },
             )
         }
+
+        item { Spacer(modifier = Modifier.height(5.dp)) }
     }
 }
 
@@ -136,6 +122,6 @@ private fun SearchDiscussionScreenPreview(
 private fun EmptySearchDiscussionScreenPreview() {
     SearchDiscussionScreen(
         onClick = {},
-        uiState = SearchDiscussionsUiState(searchKeyword = "토론"),
+        uiState = SearchDiscussionsUiState(),
     )
 }

@@ -45,6 +45,7 @@ android {
 
     lint {
         disable += "NullSafeMutableLiveData"
+        disable += "ComposeViewModelForwarding"
     }
 
     defaultConfig {
@@ -113,6 +114,7 @@ dependencies {
 
     implementation(platform(libs.compose.bom))
     implementation(libs.bundles.compose)
+    lintChecks(libs.compose.lint)
 
     androidTestImplementation(platform(libs.compose.bom))
     androidTestImplementation(libs.bundles.compose.test)

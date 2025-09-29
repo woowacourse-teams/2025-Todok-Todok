@@ -1,25 +1,48 @@
 package com.team.todoktodok.presentation.compose.discussion.search
 
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import com.team.domain.model.Discussion
 import com.team.todoktodok.presentation.compose.core.component.DiscussionCardType
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiState
+import com.team.todoktodok.presentation.compose.theme.Green1A
 
 data class SearchDiscussionsUiState(
     val discussions: List<DiscussionUiState> = emptyList(),
-    val type: DiscussionCardType = DiscussionCardType.QueryHighlighting,
-    val searchKeyword: String = EMPTY_SEARCH_KEYWORD,
+    val type: DiscussionCardType.QueryHighlighting =
+        DiscussionCardType.QueryHighlighting(
+            EMPTY_SEARCH_KEYWORD,
+        ),
     val previousKeyword: String = EMPTY_SEARCH_KEYWORD,
 ) {
+    fun formatNotFoundGuideMessage(defaultFormat: String): AnnotatedString {
+        val defaultGuideMessage = defaultFormat.format(type.keyword)
+        return buildAnnotatedString {
+            val keyword = type.keyword
+            val startIndex = defaultGuideMessage.indexOf(keyword)
+            if (startIndex >= 0) {
+                append(defaultGuideMessage.substring(0, startIndex))
+                withStyle(SpanStyle(color = Green1A, fontWeight = FontWeight.Bold)) {
+                    append(keyword)
+                }
+                append(defaultGuideMessage.substring(startIndex + keyword.length))
+            } else {
+                append(defaultGuideMessage)
+            }
+        }
+    }
+
     fun add(
         keyword: String,
         newDiscussions: List<Discussion>,
     ): SearchDiscussionsUiState {
         if (keyword == previousKeyword || keyword.isBlank()) return this
         val newDiscussions = newDiscussions.map { DiscussionUiState(it) }
-
         return copy(
             discussions = newDiscussions,
-            searchKeyword = keyword,
             previousKeyword = keyword,
         )
     }
@@ -27,11 +50,10 @@ data class SearchDiscussionsUiState(
     fun clear() =
         copy(
             discussions = emptyList(),
-            searchKeyword = EMPTY_SEARCH_KEYWORD,
             previousKeyword = EMPTY_SEARCH_KEYWORD,
         )
 
-    fun modifyKeyword(keyword: String) = copy(searchKeyword = keyword)
+    fun modifyKeyword(keyword: String) = copy(type = type.copy(keyword = keyword))
 
     fun modify(newDiscussion: Discussion): SearchDiscussionsUiState =
         copy(

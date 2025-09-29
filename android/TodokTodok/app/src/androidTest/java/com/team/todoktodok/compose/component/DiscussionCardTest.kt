@@ -35,7 +35,6 @@ class DiscussionCardTest {
                     viewCount = 10,
                     isLikedByMe = false,
                 ),
-            searchKeyword = "JPA",
         )
 
     @Test
@@ -86,9 +85,9 @@ class DiscussionCardTest {
         // when
         composeTestRule.setContent {
             DiscussionCard(
-                uiState = baseUiState.copy(searchKeyword = "성능"),
+                uiState = baseUiState.copy(),
                 onClick = {},
-                discussionCardType = DiscussionCardType.QueryHighlighting,
+                discussionCardType = DiscussionCardType.QueryHighlighting("성능"),
             )
         }
 

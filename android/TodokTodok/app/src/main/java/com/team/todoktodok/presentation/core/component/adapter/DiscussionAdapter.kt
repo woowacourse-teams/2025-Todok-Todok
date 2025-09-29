@@ -4,7 +4,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiState
 import com.team.todoktodok.presentation.core.component.adapter.DefaultDiscussionViewHolder.Companion.DefaultDiscussionViewHolder
-import com.team.todoktodok.presentation.core.component.adapter.QueryHighlightingViewHolder.Companion.QueryHighlightingViewHolder
 import com.team.todoktodok.presentation.core.component.adapter.ResizingDiscussionViewHolder.Companion.ResizingDiscussionViewHolder
 import com.team.todoktodok.presentation.core.component.adapter.WriterHiddenDiscussionViewHolder.Companion.WriterHiddenDiscussionViewHolder
 
@@ -20,8 +19,7 @@ class DiscussionAdapter(
             BaseDiscussionViewHolder.ViewHolderType.DEFAULT ->
                 DefaultDiscussionViewHolder(parent, handler)
 
-            BaseDiscussionViewHolder.ViewHolderType.QUERY_HIGHLIGHTING ->
-                QueryHighlightingViewHolder(parent, handler)
+            BaseDiscussionViewHolder.ViewHolderType.QUERY_HIGHLIGHTING -> TODO("제거예정")
 
             BaseDiscussionViewHolder.ViewHolderType.WRITER_HIDDEN ->
                 WriterHiddenDiscussionViewHolder(parent, handler)

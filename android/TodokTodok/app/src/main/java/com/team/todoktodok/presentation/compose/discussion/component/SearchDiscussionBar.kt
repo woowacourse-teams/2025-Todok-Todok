@@ -65,7 +65,7 @@ fun SearchDiscussionBar(
                 IconButton(onClick = { onKeywordChange("") }) {
                     Icon(
                         imageVector = Icons.Default.Cancel,
-                        contentDescription = "Clear text",
+                        contentDescription = stringResource(R.string.search_clear_keyword),
                     )
                 }
             }

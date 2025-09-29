@@ -9,14 +9,13 @@ data class HotDiscussionUiState(
     val popularDiscussions: PopularDiscussionsUiState = PopularDiscussionsUiState(),
     val activatedDiscussions: ActivatedDiscussionsUiState = ActivatedDiscussionsUiState(),
 ) {
-    fun addHotDiscussions(
-        hotDiscussions: List<Discussion>,
-        activatedDiscussion: ActivatedDiscussionPage,
-    ): HotDiscussionUiState =
+    fun addPopularDiscussions(discussions: List<Discussion>): HotDiscussionUiState =
         copy(
-            popularDiscussions = popularDiscussions.update(hotDiscussions),
-            activatedDiscussions = activatedDiscussions.update(activatedDiscussion),
+            popularDiscussions = popularDiscussions.update(discussions),
         )
+
+    fun addActivatedDiscussions(activatedDiscussion: ActivatedDiscussionPage): HotDiscussionUiState =
+        copy(activatedDiscussions = activatedDiscussions.update(activatedDiscussion))
 
     fun removeDiscussion(discussionId: Long): HotDiscussionUiState =
         copy(
