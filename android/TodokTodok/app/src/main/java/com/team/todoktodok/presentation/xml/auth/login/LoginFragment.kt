@@ -19,6 +19,8 @@ import com.team.todoktodok.databinding.FragmentLoginBinding
 import com.team.todoktodok.presentation.compose.discussion.DiscussionsActivity
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
+import com.team.todoktodok.presentation.core.ext.repeatOnStarted
+import com.team.todoktodok.presentation.core.ext.repeatOnViewStarted
 import com.team.todoktodok.presentation.view.auth.login.GoogleCredentialManager
 import com.team.todoktodok.presentation.xml.auth.signup.SignUpFragment
 import com.team.todoktodok.presentation.xml.auth.vm.AuthViewModel
@@ -29,11 +31,13 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
     private lateinit var googleLoginManager: GoogleCredentialManager
     private lateinit var messageConverter: ExceptionMessageConverter
     private val viewModel: AuthViewModel by viewModels {
-        val repositoryModule = (requireActivity().application as App).container.repositoryModule
+        val container = (requireActivity().application as App).container
+        val repositoryModule = container.repositoryModule
         AuthViewModelFactory(
             repositoryModule.memberRepository,
             repositoryModule.tokenRepository,
             repositoryModule.notificationRepository,
+            container.connectivityObserver,
         )
     }
 
@@ -47,6 +51,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         messageConverter = ExceptionMessageConverter()
 
         setupLoading(binding)
+        setUpRestoringState(binding)
         setUpUiEvent(binding)
         showAnimation(binding)
         initView(binding)
@@ -103,23 +108,35 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
     }
 
     private fun setupLoading(binding: FragmentLoginBinding) {
-        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-            if (isLoading) {
-                binding.progressBar.show()
-            } else {
-                binding.progressBar.hide()
+        repeatOnStarted {
+            viewModel.isLoading.collect { isLoading ->
+                if (isLoading) {
+                    binding.progressBar.show()
+                } else {
+                    binding.progressBar.hide()
+                }
+            }
+        }
+    }
+
+    private fun setUpRestoringState(binding: FragmentLoginBinding) {
+        repeatOnViewStarted {
+            viewModel.isRestoring.collect { isRestoring ->
+                AlertSnackBar(binding.root, R.string.network_try_connection).show()
             }
         }
     }
 
     private fun setUpUiEvent(binding: FragmentLoginBinding) {
-        viewModel.uiEvent.observe(viewLifecycleOwner) {
-            when (it) {
-                LoginUiEvent.NavigateToMain -> moveToMain()
-                LoginUiEvent.NavigateToSignUp -> moveToSignUp()
-                LoginUiEvent.ShowLoginButton -> showLoginButton(binding)
-                is LoginUiEvent.ShowErrorMessage -> {
-                    AlertSnackBar(binding.root, messageConverter(it.exception)).show()
+        repeatOnViewStarted {
+            viewModel.uiEvent.collect {
+                when (it) {
+                    LoginUiEvent.NavigateToMain -> moveToMain()
+                    LoginUiEvent.NavigateToSignUp -> moveToSignUp()
+                    LoginUiEvent.ShowLoginButton -> showLoginButton(binding)
+                    is LoginUiEvent.ShowErrorMessage -> {
+                        AlertSnackBar(binding.root, messageConverter(it.exception)).show()
+                    }
                 }
             }
         }
