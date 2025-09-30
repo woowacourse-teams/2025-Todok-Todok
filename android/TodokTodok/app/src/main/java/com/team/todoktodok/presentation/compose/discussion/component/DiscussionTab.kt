@@ -28,7 +28,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.team.todoktodok.presentation.compose.discussion.hot.HotDiscussionScreen
 import com.team.todoktodok.presentation.compose.discussion.latest.LatestDiscussionsScreen
-import com.team.todoktodok.presentation.compose.discussion.latest.vm.LatestDiscussionViewModel
 import com.team.todoktodok.presentation.compose.discussion.model.AllDiscussionMode
 import com.team.todoktodok.presentation.compose.discussion.model.Destination
 import com.team.todoktodok.presentation.compose.discussion.model.Destination.Companion.Destination
@@ -42,7 +41,6 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun DiscussionTab(
-    latestDiscussionViewModel: LatestDiscussionViewModel,
     messageConverter: ExceptionMessageConverter,
     uiState: DiscussionsUiState,
     pagerState: PagerState,
@@ -129,7 +127,6 @@ fun DiscussionTab(
                         when (uiState.allDiscussionMode) {
                             AllDiscussionMode.LATEST ->
                                 LatestDiscussionsScreen(
-                                    viewModel = latestDiscussionViewModel,
                                     messageConverter = messageConverter,
                                     onClick = onClickDiscussion,
                                     modifier = Modifier.fillMaxSize(),

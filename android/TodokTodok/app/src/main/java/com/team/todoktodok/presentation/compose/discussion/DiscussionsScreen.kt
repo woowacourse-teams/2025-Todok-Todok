@@ -33,18 +33,15 @@ import com.team.todoktodok.R
 import com.team.todoktodok.presentation.compose.core.ObserveAsEvents
 import com.team.todoktodok.presentation.compose.core.component.AlertSnackBar
 import com.team.todoktodok.presentation.compose.core.component.CloverProgressBar
-import com.team.todoktodok.presentation.compose.discussion.component.DiscussionFAB
 import com.team.todoktodok.presentation.compose.discussion.component.DiscussionTab
 import com.team.todoktodok.presentation.compose.discussion.component.DiscussionToolbar
 import com.team.todoktodok.presentation.compose.discussion.component.SearchDiscussionBar
-import com.team.todoktodok.presentation.compose.discussion.latest.vm.LatestDiscussionViewModel
 import com.team.todoktodok.presentation.compose.discussion.model.Destination
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionsUiEvent
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionsUiState
 import com.team.todoktodok.presentation.compose.discussion.vm.DiscussionsViewModel
 import com.team.todoktodok.presentation.compose.theme.White
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
-import com.team.todoktodok.presentation.xml.profile.UserProfileTab
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -53,9 +50,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun DiscussionsScreen(
     viewModel: DiscussionsViewModel,
-    latestDiscussionViewModel: LatestDiscussionViewModel,
     exceptionMessageConverter: ExceptionMessageConverter,
-    onClickNotification: () -> Unit,
     modifier: Modifier = Modifier,
     timeoutMillis: Long = 1500L,
 ) {
@@ -123,25 +118,22 @@ fun DiscussionsScreen(
     }
 
     DiscussionsScreen(
-        latestDiscussionViewModel = latestDiscussionViewModel,
         exceptionMessageConverter = exceptionMessageConverter,
         isLoading = isLoading.value,
         uiState = uiState.value,
         pagerState = pagerState,
         snackbarHostState = snackbarHostState,
-        onDiscussionClick = onDiscussionClick,
+        onDiscussionClick = {},
         onTabChanged = viewModel::modifySearchKeyword,
         onSearchKeywordChanged = viewModel::modifySearchKeyword,
         onSearch = viewModel::loadSearchedDiscussions,
         onActivatedDiscussionLoadMore = viewModel::loadActivatedDiscussions,
-        onTabChanged = discussionViewModel::modifySearchKeyword,
         modifier = modifier,
     )
 }
 
 @Composable
 fun DiscussionsScreen(
-    latestDiscussionViewModel: LatestDiscussionViewModel,
     exceptionMessageConverter: ExceptionMessageConverter,
     isLoading: Boolean,
     uiState: DiscussionsUiState,
@@ -158,8 +150,6 @@ fun DiscussionsScreen(
         topBar = {
             DiscussionToolbar(
                 isExistNotification = uiState.isUnreadNotification,
-                onClickNotification = onClickNotification,
-                onClickProfile = onClickProfile,
                 modifier =
                     modifier
                         .fillMaxWidth()
@@ -175,7 +165,6 @@ fun DiscussionsScreen(
                     .padding(innerPadding),
         ) {
             DiscussionsContent(
-                latestDiscussionViewModel,
                 exceptionMessageConverter,
                 uiState = uiState,
                 pagerState = pagerState,
@@ -183,14 +172,11 @@ fun DiscussionsScreen(
                 onActivatedDiscussionLoadMore = onActivatedDiscussionLoadMore,
                 onTabChanged = { tab -> if (tab != Destination.ALL) onTabChanged("") },
                 onDiscussionClick = { onDiscussionClick(it) },
-                onClickMyDiscussionHeader = { onClickMyDiscussionHeader(it) },
                 onSearch = onSearch,
                 modifier = Modifier.fillMaxSize(),
             )
 
             CloverProgressBar(isLoading)
-
-        CloverProgressBar(isLoading)
 
             SnackbarHost(
                 hostState = snackbarHostState,
@@ -203,7 +189,6 @@ fun DiscussionsScreen(
 
 @Composable
 fun DiscussionsContent(
-    latestDiscussionViewModel: LatestDiscussionViewModel,
     exceptionMessageConverter: ExceptionMessageConverter,
     uiState: DiscussionsUiState,
     pagerState: PagerState,
@@ -231,7 +216,6 @@ fun DiscussionsContent(
         )
 
         DiscussionTab(
-            latestDiscussionViewModel = latestDiscussionViewModel,
             messageConverter = exceptionMessageConverter,
             uiState = uiState,
             pagerState = pagerState,
