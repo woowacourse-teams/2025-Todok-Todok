@@ -56,9 +56,6 @@ fun DiscussionsScreen(
     latestDiscussionViewModel: LatestDiscussionViewModel,
     exceptionMessageConverter: ExceptionMessageConverter,
     onClickNotification: () -> Unit,
-    onClickProfile: () -> Unit,
-    onDiscussionClick: (Long) -> Unit,
-    onClickMyDiscussionHeader: (UserProfileTab) -> Unit,
     modifier: Modifier = Modifier,
     timeoutMillis: Long = 1500L,
 ) {
@@ -133,9 +130,6 @@ fun DiscussionsScreen(
         pagerState = pagerState,
         snackbarHostState = snackbarHostState,
         onDiscussionClick = onDiscussionClick,
-        onClickNotification = onClickNotification,
-        onClickProfile = onClickProfile,
-        onClickMyDiscussionHeader = onClickMyDiscussionHeader,
         onTabChanged = viewModel::modifySearchKeyword,
         onSearchKeywordChanged = viewModel::modifySearchKeyword,
         onSearch = viewModel::loadSearchedDiscussions,
@@ -154,11 +148,8 @@ fun DiscussionsScreen(
     pagerState: PagerState,
     snackbarHostState: SnackbarHostState,
     onDiscussionClick: (Long) -> Unit,
-    onClickMyDiscussionHeader: (UserProfileTab) -> Unit,
     onSearchKeywordChanged: (String) -> Unit,
-    onClickNotification: () -> Unit,
     onTabChanged: (String) -> Unit,
-    onClickProfile: () -> Unit,
     onSearch: () -> Unit,
     onActivatedDiscussionLoadMore: () -> Unit,
     modifier: Modifier = Modifier,
@@ -220,7 +211,6 @@ fun DiscussionsContent(
     onActivatedDiscussionLoadMore: () -> Unit,
     onTabChanged: (Destination) -> Unit,
     onDiscussionClick: (Long) -> Unit,
-    onClickMyDiscussionHeader: (UserProfileTab) -> Unit,
     onSearch: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -248,7 +238,6 @@ fun DiscussionsContent(
             onActivatedDiscussionLoadMore = { onActivatedDiscussionLoadMore() },
             onClickDiscussion = onDiscussionClick,
             onTabChanged = onTabChanged,
-            onClickMyDiscussionHeader = onClickMyDiscussionHeader,
         )
     }
 }

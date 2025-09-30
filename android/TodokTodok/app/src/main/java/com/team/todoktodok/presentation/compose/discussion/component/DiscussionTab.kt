@@ -51,7 +51,6 @@ fun DiscussionTab(
     onActivatedDiscussionLoadMore: () -> Unit,
     onTabChanged: (Destination) -> Unit,
     onClickDiscussion: (Long) -> Unit,
-    onClickMyDiscussionHeader: (UserProfileTab) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -144,14 +143,6 @@ fun DiscussionTab(
                                     modifier = Modifier.fillMaxSize(),
                                 )
                         }
-
-                    Destination.MY ->
-                        MyDiscussionsScreen(
-                            uiState = uiState.myDiscussion,
-                            onClick = onClickDiscussion,
-                            onClickHeader = onClickMyDiscussionHeader,
-                            modifier = Modifier.fillMaxSize(),
-                        )
                 }
             }
         }
