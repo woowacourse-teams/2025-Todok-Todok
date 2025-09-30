@@ -57,7 +57,6 @@ fun DiscussionsScreen(
     exceptionMessageConverter: ExceptionMessageConverter,
     onClickNotification: () -> Unit,
     onClickProfile: () -> Unit,
-    onClickCreateDiscussion: () -> Unit,
     onDiscussionClick: (Long) -> Unit,
     onClickMyDiscussionHeader: (UserProfileTab) -> Unit,
     modifier: Modifier = Modifier,
@@ -141,7 +140,7 @@ fun DiscussionsScreen(
         onSearchKeywordChanged = viewModel::modifySearchKeyword,
         onSearch = viewModel::loadSearchedDiscussions,
         onActivatedDiscussionLoadMore = viewModel::loadActivatedDiscussions,
-        onClickCreateDiscussion = onClickCreateDiscussion,
+        onTabChanged = discussionViewModel::modifySearchKeyword,
         modifier = modifier,
     )
 }
@@ -162,7 +161,6 @@ fun DiscussionsScreen(
     onClickProfile: () -> Unit,
     onSearch: () -> Unit,
     onActivatedDiscussionLoadMore: () -> Unit,
-    onClickCreateDiscussion: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -201,13 +199,7 @@ fun DiscussionsScreen(
 
             CloverProgressBar(isLoading)
 
-            DiscussionFAB(
-                onClickCreateDiscussion = onClickCreateDiscussion,
-                modifier =
-                    Modifier
-                        .align(Alignment.BottomEnd)
-                        .padding(16.dp),
-            )
+        CloverProgressBar(isLoading)
 
             SnackbarHost(
                 hostState = snackbarHostState,
