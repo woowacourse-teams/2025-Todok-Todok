@@ -25,4 +25,5 @@
 
     <!--  상세 토론방 페이지  -->
     <dimen name="item_discussion_detail_meta_line_height">34dp</dimen>
+    <dimen name="item_discussion_detail_bottom_sheet_min_height">100dp</dimen>
 </resources>

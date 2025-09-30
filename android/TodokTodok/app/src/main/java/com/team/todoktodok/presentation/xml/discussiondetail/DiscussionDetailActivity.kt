@@ -171,10 +171,10 @@ class DiscussionDetailActivity : AppCompatActivity() {
             }
 
             ivComment.setOnClickListener {
-                behavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+                behavior.state = BottomSheetBehavior.STATE_EXPANDED
             }
             tvCommentCount.setOnClickListener {
-                behavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+                behavior.state = BottomSheetBehavior.STATE_EXPANDED
             }
             ivUserProfile.setOnClickListener {
                 viewModel.navigateToProfile()
@@ -379,7 +379,7 @@ class DiscussionDetailActivity : AppCompatActivity() {
 
         behavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
         behavior.setPeekHeight(
-            resources.getDimensionPixelSize(R.dimen.space_56),
+            resources.getDimensionPixelSize(R.dimen.item_discussion_detail_bottom_sheet_min_height),
             true,
         )
         supportFragmentManager.commit {
