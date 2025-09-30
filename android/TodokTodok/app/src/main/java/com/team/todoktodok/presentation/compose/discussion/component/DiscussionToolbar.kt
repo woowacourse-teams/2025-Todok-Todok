@@ -16,6 +16,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
@@ -26,14 +27,16 @@ import com.team.todoktodok.R
 import com.team.todoktodok.presentation.compose.core.extension.noRippleClickable
 import com.team.todoktodok.presentation.compose.theme.Green1A
 import com.team.todoktodok.presentation.compose.theme.White
+import com.team.todoktodok.presentation.xml.notification.NotificationActivity
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DiscussionToolbar(
     isExistNotification: Boolean,
-    onClickNotification: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val context = LocalContext.current
+
     Column(
         verticalArrangement = Arrangement.spacedBy(10.dp),
         modifier =
@@ -71,7 +74,9 @@ fun DiscussionToolbar(
                         modifier =
                             Modifier
                                 .background(color = White)
-                                .noRippleClickable(onClick = { onClickNotification() }),
+                                .noRippleClickable(onClick = {
+                                    context.startActivity(NotificationActivity.Intent(context))
+                                }),
                     )
                     if (isExistNotification) {
                         val contentDescription =
@@ -103,7 +108,6 @@ fun DiscussionToolbar(
 private fun DiscussionToolbarPreview() {
     DiscussionToolbar(
         isExistNotification = true,
-        onClickNotification = {},
     )
 }
 
@@ -113,6 +117,5 @@ private fun DiscussionToolbarPreview() {
 private fun DiscussionToolbarPreview2() {
     DiscussionToolbar(
         isExistNotification = false,
-        onClickNotification = {},
     )
 }
