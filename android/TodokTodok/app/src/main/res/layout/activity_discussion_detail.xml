@@ -8,8 +8,9 @@
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/srl_discussion_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/space_0"
+        android:layout_marginBottom="@dimen/space_24"
         android:fillViewport="true"
         android:paddingHorizontal="@dimen/space_24">
 

@@ -11,6 +11,7 @@
     <string name="book_image">도서 이미지입니다</string>
     <string name="all_opinion">의견</string>
     <string name="all_comment">댓글</string>
+    <string name="all_reply">대댓글</string>
     <string name="all_unknown_exception">알 수 없는 오류가 발생했어요</string>
     <string name="date_format_pattern">yyyy년 M월 d일</string>
     <string name="all_divider_dot">" · "</string>

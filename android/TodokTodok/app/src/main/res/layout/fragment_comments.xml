@@ -16,25 +16,47 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/abl_comment_detail"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/space_32"
+        android:layout_marginTop="@dimen/space_32"
+        android:layout_marginEnd="@dimen/space_4"
+        android:background="@color/white"
+        app:layout_constraintEnd_toStartOf="@id/iv_reload"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        style="@style/HeaderTitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="5dp"
+        android:text="@string/all_comment"
+        app:layout_constraintBottom_toBottomOf="@id/abl_comment_detail"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/abl_comment_detail" />
+
     <ImageView
         android:id="@+id/iv_reload"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_marginEnd="@dimen/space_8"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:padding="@dimen/space_12"
         android:src="@drawable/cached"
-        app:layout_constraintBottom_toTopOf="@id/rv_comments"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintBottom_toBottomOf="@id/abl_comment_detail"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/abl_comment_detail" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_comments"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="@dimen/space_56"
+        android:layout_marginTop="14dp"
         android:scrollbars="vertical"
         app:layout_constraintBottom_toTopOf="@id/tv_input_comment"
-        app:layout_constraintTop_toBottomOf="@id/iv_bottom_sheet_header"
+        app:layout_constraintTop_toBottomOf="@id/abl_comment_detail"
         tools:listitem="@layout/item_comment" />
 
     <TextView

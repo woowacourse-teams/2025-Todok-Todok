@@ -7,6 +7,16 @@
     android:paddingHorizontal="@dimen/space_24"
     tools:context=".presentation.xml.discussiondetail.commentdetail.CommentDetailFragment">
 
+    <ImageView
+        android:id="@+id/iv_bottom_sheet_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:src="@drawable/bottom_sheet_header"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/abl_comment_detail"
         android:layout_width="0dp"
@@ -33,9 +43,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="5dp"
-        android:text="@string/all_comment"
+        android:text="@string/all_reply"
         app:layout_constraintBottom_toBottomOf="@id/abl_comment_detail"
-        app:layout_constraintStart_toEndOf="@id/iv_comment_detail_back"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/abl_comment_detail" />
 
     <ImageView
