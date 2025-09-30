@@ -49,6 +49,10 @@
     <string name="last_discussion_page_guide">마지막 토론이에요</string>
     <string name="search_clear_keyword">검색어 초기화</string>
 
+    <!-- 토론 툴바 !-->
+    <string name="content_description_discussions_toolbar_notification">알람 아이콘</string>
+    <string name="content_description_discussions_toolbar_has_notification">확인하지 않은 알람이 있어요</string>
+
     <!--  상세 토론방 페이지  -->
     <string name="content_description_discussion_detail_back">토론 상세 화면에서 뒤로가는 버튼</string>
     <string name="content_description_discussion_detail_option">토론방 옵션 버튼</string>
