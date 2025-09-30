@@ -29,6 +29,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.presentation.compose.core.ObserveAsEvents
 import com.team.todoktodok.presentation.compose.core.component.AlertSnackBar
@@ -40,6 +42,7 @@ import com.team.todoktodok.presentation.compose.discussion.model.Destination
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionsUiEvent
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionsUiState
 import com.team.todoktodok.presentation.compose.discussion.vm.DiscussionsViewModel
+import com.team.todoktodok.presentation.compose.discussion.vm.DiscussionsViewModelFactory
 import com.team.todoktodok.presentation.compose.theme.White
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import kotlinx.coroutines.Job
@@ -49,10 +52,13 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DiscussionsScreen(
-    viewModel: DiscussionsViewModel,
     exceptionMessageConverter: ExceptionMessageConverter,
     modifier: Modifier = Modifier,
     timeoutMillis: Long = 1500L,
+    viewModel: DiscussionsViewModel =
+        viewModel(
+            factory = DiscussionsViewModelFactory((LocalContext.current.applicationContext as App).container),
+        ),
 ) {
     val pagerState =
         rememberPagerState(initialPage = Destination.HOT.ordinal) { Destination.entries.size }
@@ -133,7 +139,7 @@ fun DiscussionsScreen(
 }
 
 @Composable
-fun DiscussionsScreen(
+private fun DiscussionsScreen(
     exceptionMessageConverter: ExceptionMessageConverter,
     isLoading: Boolean,
     uiState: DiscussionsUiState,
