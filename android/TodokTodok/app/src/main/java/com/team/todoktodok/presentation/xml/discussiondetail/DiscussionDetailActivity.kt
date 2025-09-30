@@ -3,6 +3,7 @@ package com.team.todoktodok.presentation.xml.discussiondetail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupWindow
@@ -147,13 +148,6 @@ class DiscussionDetailActivity : AppCompatActivity() {
             )
             insets
         }
-        val callback =
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    viewModel.onFinishEvent()
-                }
-            }
-        onBackPressedDispatcher.addCallback(this, callback)
     }
 
     private fun setUpRefresh() {
@@ -167,7 +161,7 @@ class DiscussionDetailActivity : AppCompatActivity() {
         val behavior = BottomSheetBehavior.from(sheetView)
         with(binding) {
             ivDiscussionDetailBack.setOnClickListener {
-                viewModel.onFinishEvent()
+                onBackPressedDispatcher.onBackPressed()
             }
 
             ivComment.setOnClickListener {
