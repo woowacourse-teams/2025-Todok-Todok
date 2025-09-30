@@ -91,14 +91,7 @@ class CommentsFragment : Fragment(R.layout.fragment_comments) {
         setupFragmentResultListener()
         adapter.stateRestorationPolicy =
             RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
-        requireActivity().onBackPressedDispatcher.addCallback(
-            viewLifecycleOwner,
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    requestClose()
-                }
-            },
-        )
+        setBackPressed()
     }
 
     override fun onStop() {
@@ -226,6 +219,12 @@ class CommentsFragment : Fragment(R.layout.fragment_comments) {
         ) {
             viewModel.showNewComment()
         }
+
+        childFragmentManager.registerPositiveResultListener(
+            viewLifecycleOwner,
+            COMMENT_DRAFT_DISCARD_REQUEST_KEY_ACTIVITY,
+            CommonDialog.RESULT_KEY_COMMON_DIALOG,
+        ) { sharedViewModel.onFinishEvent() }
     }
 
     private fun createPopUpView(popupView: View) =
@@ -268,14 +267,25 @@ class CommentsFragment : Fragment(R.layout.fragment_comments) {
         return createPopUpView(binding.root)
     }
 
-    private fun requestClose() {
+    private fun setBackPressed() {
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    requestActivityClose()
+                }
+            },
+        )
+    }
+
+    private fun requestActivityClose() {
         if (viewModel.uiState.value
                 ?.commentContent
                 ?.isNotEmpty() == true
         ) {
             showConfirmClose()
         } else {
-            parentFragmentManager.popBackStack()
+            sharedViewModel.onFinishEvent()
         }
     }
 
@@ -285,7 +295,7 @@ class CommentsFragment : Fragment(R.layout.fragment_comments) {
                 .newInstance(
                     getString(R.string.comment_confirm_delete_message),
                     getString(R.string.all_delete_action),
-                    COMMENT_CONTENT_DELETE_DIALOG_REQUEST_KEY,
+                    COMMENT_DRAFT_DISCARD_REQUEST_KEY_ACTIVITY,
                 )
         confirmDialog.show(childFragmentManager, CommonDialog.TAG)
     }
@@ -399,8 +409,8 @@ class CommentsFragment : Fragment(R.layout.fragment_comments) {
 
         private const val COMMENT_DELETE_DIALOG_REQUEST_KEY = "comment_delete_dialog_request_key_%d"
         private const val COMMENT_REPORT_DIALOG_REQUEST_KEY = "comment_report_dialog_request_key_%d"
-        private const val COMMENT_CONTENT_DELETE_DIALOG_REQUEST_KEY =
-            "reply_content_delete_dialog_request_key"
+        private const val COMMENT_DRAFT_DISCARD_REQUEST_KEY_ACTIVITY =
+            "comment_draft_discard_request_key_activity"
 
         fun newInstance(discussionId: Long): CommentsFragment =
             CommentsFragment().apply {
