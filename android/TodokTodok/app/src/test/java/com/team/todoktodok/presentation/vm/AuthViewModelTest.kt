@@ -1,18 +1,18 @@
 package com.team.todoktodok.presentation.vm
 
-import com.team.domain.model.exception.NetworkResult
+import app.cash.turbine.test
+import com.team.domain.ConnectivityObserver
 import com.team.domain.repository.MemberRepository
-import com.team.domain.repository.NotificationRepository
 import com.team.domain.repository.TokenRepository
 import com.team.todoktodok.CoroutinesTestExtension
 import com.team.todoktodok.InstantTaskExecutorExtension
-import com.team.todoktodok.ext.getOrAwaitValue
 import com.team.todoktodok.presentation.xml.auth.login.LoginUiEvent
 import com.team.todoktodok.presentation.xml.auth.vm.AuthViewModel
 import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
@@ -25,38 +25,52 @@ import org.junit.jupiter.api.extension.ExtendWith
 class AuthViewModelTest {
     private lateinit var memberRepository: MemberRepository
     private lateinit var tokenRepository: TokenRepository
-    private lateinit var notificationRepository: NotificationRepository
+    private lateinit var connectivityObserver: ConnectivityObserver
     private lateinit var viewModel: AuthViewModel
 
     @BeforeEach
     fun setup() {
         memberRepository = mockk()
         tokenRepository = mockk()
-        notificationRepository = mockk()
+        connectivityObserver = mockk()
 
+        every { connectivityObserver.subscribe() } returns emptyFlow()
         coEvery { tokenRepository.getMemberId() } returns 1L
-        coEvery { notificationRepository.registerPushNotification() } returns NetworkResult.Success(Unit)
 
-        viewModel = AuthViewModel(memberRepository, tokenRepository, notificationRepository)
+        viewModel =
+            AuthViewModel(
+                memberRepository,
+                tokenRepository,
+                connectivityObserver,
+            )
     }
 
     @Test
     fun `memberId가 존재할 경우 메인 화면으로 이동 이벤트가 발생한다`() =
         runTest {
-            viewModel.checkMember()
+            viewModel.uiEvent.test {
+                // when
+                viewModel.checkMember()
 
-            advanceUntilIdle()
+                // then
+                assertEquals(LoginUiEvent.NavigateToMain, awaitItem())
 
-            assertEquals(LoginUiEvent.NavigateToMain, viewModel.uiEvent.getOrAwaitValue())
+                cancelAndIgnoreRemainingEvents()
+            }
         }
 
     @Test
     fun `memberId가 0이면 로그인 버튼 표시 이벤트가 발생한다`() =
         runTest {
+            // given
             coEvery { tokenRepository.getMemberId() } returns 0L
 
-            viewModel.checkMember()
+            viewModel.uiEvent.test {
+                // when
+                viewModel.checkMember()
 
-            assertEquals(LoginUiEvent.ShowLoginButton, viewModel.uiEvent.getOrAwaitValue())
+                // then
+                assertEquals(LoginUiEvent.ShowLoginButton, awaitItem())
+            }
         }
 }

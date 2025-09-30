@@ -1,29 +1,23 @@
 package com.team.todoktodok.presentation.xml.auth.signup.vm
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.team.domain.model.exception.onFailure
-import com.team.domain.model.exception.onSuccessSuspend
+import com.team.domain.ConnectivityObserver
 import com.team.domain.model.member.NickNameException
 import com.team.domain.model.member.Nickname
 import com.team.domain.repository.MemberRepository
-import com.team.domain.repository.NotificationRepository
-import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
-import com.team.todoktodok.presentation.core.event.SingleLiveData
+import com.team.todoktodok.presentation.core.base.BaseViewModel
 import com.team.todoktodok.presentation.xml.auth.signup.SignUpUiEvent
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 class SignUpViewModel(
     private val memberRepository: MemberRepository,
-    private val notificationRepository: NotificationRepository,
-) : ViewModel() {
-    private val _isLoading: MutableLiveData<Boolean> = MutableLiveData(false)
-    val isLoading: LiveData<Boolean> get() = _isLoading
-
-    private val _uiEvent = MutableSingleLiveData<SignUpUiEvent>()
-    val uiEvent: SingleLiveData<SignUpUiEvent> get() = _uiEvent
+    connectivityObserver: ConnectivityObserver,
+) : BaseViewModel(connectivityObserver) {
+    private val _uiEvent = Channel<SignUpUiEvent>(Channel.BUFFERED)
+    val uiEvent: Flow<SignUpUiEvent> get() = _uiEvent.receiveAsFlow()
 
     fun submitNickname(text: String) {
         runCatching {
@@ -31,22 +25,27 @@ class SignUpViewModel(
         }.onSuccess { nickname ->
             signUp(nickname)
         }.onFailure { e ->
-            _uiEvent.setValue(SignUpUiEvent.ShowInvalidNickNameMessage(e as NickNameException))
+            onUiEvent(SignUpUiEvent.ShowInvalidNickNameMessage(e as NickNameException))
         }
     }
 
-    private fun signUp(nickname: Nickname) {
+    private fun signUp(nickname: Nickname) =
+        runAsync(
+            key = KEY_SIGN_UP,
+            action = { memberRepository.signUp(nickname) },
+            handleSuccess = { onUiEvent(SignUpUiEvent.NavigateToMain) },
+            handleFailure = {
+                onUiEvent(SignUpUiEvent.ShowErrorMessage(it))
+            },
+        )
+
+    private fun onUiEvent(event: SignUpUiEvent) {
         viewModelScope.launch {
-            _isLoading.value = true
-            memberRepository
-                .signUp(nickname.value)
-                .onSuccessSuspend {
-                    notificationRepository.registerPushNotification().onFailure {
-                        _uiEvent.setValue(SignUpUiEvent.ShowErrorMessage(it))
-                    }
-                    _uiEvent.setValue(SignUpUiEvent.NavigateToMain)
-                }.onFailure { _uiEvent.setValue(SignUpUiEvent.ShowErrorMessage(it)) }
-            _isLoading.value = false
+            _uiEvent.send(event)
         }
+    }
+
+    companion object {
+        private const val KEY_SIGN_UP = "signUp"
     }
 }

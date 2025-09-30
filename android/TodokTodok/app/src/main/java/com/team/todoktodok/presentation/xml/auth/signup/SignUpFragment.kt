@@ -14,15 +14,17 @@ import com.team.todoktodok.databinding.FragmentSignupBinding
 import com.team.todoktodok.presentation.compose.discussion.DiscussionsActivity
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
+import com.team.todoktodok.presentation.core.ext.repeatOnViewStarted
 import com.team.todoktodok.presentation.xml.auth.signup.vm.SignUpViewModel
 import com.team.todoktodok.presentation.xml.auth.signup.vm.SignUpViewModelFactory
 
 class SignUpFragment : Fragment(R.layout.fragment_signup) {
     private val viewModel: SignUpViewModel by viewModels {
-        val repositoryModule = (requireActivity().application as App).container.repositoryModule
+        val container = (requireActivity().application as App).container
+        val repositoryModule = container.repositoryModule
         SignUpViewModelFactory(
             repositoryModule.memberRepository,
-            repositoryModule.notificationRepository,
+            container.connectivityObserver,
         )
     }
 
@@ -38,16 +40,19 @@ class SignUpFragment : Fragment(R.layout.fragment_signup) {
         messageConverter = ExceptionMessageConverter()
 
         setupLoading(binding)
+        setUpRestoringState(binding)
         initView(binding)
         setUpObserveUiEvent(binding)
     }
 
     private fun setupLoading(binding: FragmentSignupBinding) {
-        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-            if (isLoading) {
-                binding.progressBar.show()
-            } else {
-                binding.progressBar.hide()
+        repeatOnViewStarted {
+            viewModel.isLoading.collect { isLoading ->
+                if (isLoading) {
+                    binding.progressBar.show()
+                } else {
+                    binding.progressBar.hide()
+                }
             }
         }
     }
@@ -72,19 +77,29 @@ class SignUpFragment : Fragment(R.layout.fragment_signup) {
     }
 
     private fun setUpObserveUiEvent(binding: FragmentSignupBinding) {
-        viewModel.uiEvent.observe(viewLifecycleOwner) { event ->
-            when (event) {
-                SignUpUiEvent.NavigateToMain -> moveToMain()
-                is SignUpUiEvent.ShowInvalidNickNameMessage -> {
-                    handleNickNameErrorEvent(event.exception, binding)
-                }
+        repeatOnViewStarted {
+            viewModel.uiEvent.collect { event ->
+                when (event) {
+                    SignUpUiEvent.NavigateToMain -> moveToMain()
+                    is SignUpUiEvent.ShowInvalidNickNameMessage -> {
+                        handleNickNameErrorEvent(event.exception, binding)
+                    }
 
-                is SignUpUiEvent.ShowErrorMessage -> {
-                    AlertSnackBar(
-                        binding.root,
-                        messageConverter(event.exception),
-                    ).show()
+                    is SignUpUiEvent.ShowErrorMessage -> {
+                        AlertSnackBar(
+                            binding.root,
+                            messageConverter(event.exception),
+                        ).show()
+                    }
                 }
+            }
+        }
+    }
+
+    private fun setUpRestoringState(binding: FragmentSignupBinding) {
+        repeatOnViewStarted {
+            viewModel.isRestoring.collect { isRestoring ->
+                AlertSnackBar(binding.root, R.string.network_try_connection).show()
             }
         }
     }
