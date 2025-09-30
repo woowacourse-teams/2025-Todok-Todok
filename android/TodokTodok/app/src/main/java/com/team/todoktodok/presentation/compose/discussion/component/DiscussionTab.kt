@@ -33,13 +33,11 @@ import com.team.todoktodok.presentation.compose.discussion.model.AllDiscussionMo
 import com.team.todoktodok.presentation.compose.discussion.model.Destination
 import com.team.todoktodok.presentation.compose.discussion.model.Destination.Companion.Destination
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionsUiState
-import com.team.todoktodok.presentation.compose.discussion.my.MyDiscussionsScreen
 import com.team.todoktodok.presentation.compose.discussion.search.SearchDiscussionScreen
 import com.team.todoktodok.presentation.compose.theme.Green1A
 import com.team.todoktodok.presentation.compose.theme.Pretendard
 import com.team.todoktodok.presentation.compose.theme.White
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
-import com.team.todoktodok.presentation.xml.profile.UserProfileTab
 import kotlinx.coroutines.launch
 
 @Composable

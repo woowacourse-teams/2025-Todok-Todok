@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -13,12 +12,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
-import com.team.todoktodok.presentation.compose.discussion.DiscussionsScreen
 import com.team.todoktodok.presentation.compose.discussion.component.DiscussionToolbar
-import com.team.todoktodok.presentation.compose.discussion.latest.vm.LatestDiscussionViewModel
-import com.team.todoktodok.presentation.compose.discussion.vm.DiscussionsViewModel
-import com.team.todoktodok.presentation.core.ExceptionMessageConverter
-import com.team.todoktodok.presentation.xml.profile.UserProfileTab
 
 @Composable
 fun MainScreen(
@@ -66,4 +60,3 @@ private fun MainScreenPreview() {
         modifier = Modifier,
     )
 }
-
