@@ -5,9 +5,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupWindow
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.annotation.StringRes
 import androidx.core.os.bundleOf
 import androidx.core.view.doOnPreDraw
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
@@ -15,7 +17,6 @@ import androidx.lifecycle.DEFAULT_ARGS_KEY
 import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentCommentsBinding
@@ -38,7 +39,7 @@ import com.team.todoktodok.presentation.xml.discussiondetail.model.CommentItemUi
 import com.team.todoktodok.presentation.xml.discussiondetail.vm.DiscussionDetailViewModel
 import com.team.todoktodok.presentation.xml.profile.ProfileActivity
 
-class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
+class CommentsFragment : Fragment(R.layout.fragment_comments) {
     private val adapter by lazy { CommentAdapter(adapterHandler) }
 
     private val layoutManager by lazy { LinearLayoutManager(requireContext()) }
@@ -90,6 +91,7 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
         setupFragmentResultListener()
         adapter.stateRestorationPolicy =
             RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+        setBackPressed()
     }
 
     override fun onStop() {
@@ -217,6 +219,12 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
         ) {
             viewModel.showNewComment()
         }
+
+        childFragmentManager.registerPositiveResultListener(
+            viewLifecycleOwner,
+            COMMENT_DRAFT_DISCARD_REQUEST_KEY_ACTIVITY,
+            CommonDialog.RESULT_KEY_COMMON_DIALOG,
+        ) { sharedViewModel.onFinishEvent() }
     }
 
     private fun createPopUpView(popupView: View) =
@@ -257,6 +265,39 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
         }
 
         return createPopUpView(binding.root)
+    }
+
+    private fun setBackPressed() {
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    requestActivityClose()
+                }
+            },
+        )
+    }
+
+    private fun requestActivityClose() {
+        if (viewModel.uiState.value
+                ?.commentContent
+                ?.isNotEmpty() == true
+        ) {
+            showConfirmClose()
+        } else {
+            sharedViewModel.onFinishEvent()
+        }
+    }
+
+    private fun showConfirmClose() {
+        val confirmDialog =
+            CommonDialog
+                .newInstance(
+                    getString(R.string.comment_confirm_delete_message),
+                    getString(R.string.all_delete_action),
+                    COMMENT_DRAFT_DISCARD_REQUEST_KEY_ACTIVITY,
+                )
+        confirmDialog.show(childFragmentManager, CommonDialog.TAG)
     }
 
     private fun createExternalCommentPopup(state: CommentItemUiState): PopupWindow {
@@ -329,7 +370,7 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
                     )
                     hide(this@CommentsFragment)
                     add(
-                        R.id.fcv_comment,
+                        R.id.bottom_sheet_container,
                         CommentDetailFragment.newInstance(viewModel.discussionId, commentId),
                         CommentDetailFragment.TAG,
                     )
@@ -368,6 +409,8 @@ class CommentsFragment : BottomSheetDialogFragment(R.layout.fragment_comments) {
 
         private const val COMMENT_DELETE_DIALOG_REQUEST_KEY = "comment_delete_dialog_request_key_%d"
         private const val COMMENT_REPORT_DIALOG_REQUEST_KEY = "comment_report_dialog_request_key_%d"
+        private const val COMMENT_DRAFT_DISCARD_REQUEST_KEY_ACTIVITY =
+            "comment_draft_discard_request_key_activity"
 
         fun newInstance(discussionId: Long): CommentsFragment =
             CommentsFragment().apply {

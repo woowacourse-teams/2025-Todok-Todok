@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupWindow
 import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.annotation.StringRes
@@ -15,6 +14,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.marginTop
+import androidx.fragment.app.commit
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivityDiscussionDetailBinding
@@ -37,7 +38,6 @@ import com.team.todoktodok.presentation.core.ext.toRelativeString
 import com.team.todoktodok.presentation.core.utils.shareDiscussionLink
 import com.team.todoktodok.presentation.xml.discussion.create.CreateDiscussionRoomActivity
 import com.team.todoktodok.presentation.xml.discussion.create.SerializationCreateDiscussionRoomMode
-import com.team.todoktodok.presentation.xml.discussiondetail.comment.CommentBottomSheet
 import com.team.todoktodok.presentation.xml.discussiondetail.comments.CommentsFragment
 import com.team.todoktodok.presentation.xml.discussiondetail.vm.DiscussionDetailViewModel
 import com.team.todoktodok.presentation.xml.discussiondetail.vm.DiscussionDetailViewModel.Companion.KEY_DISCUSSION_ID
@@ -68,6 +68,7 @@ class DiscussionDetailActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         initView()
         setContentView(binding.root)
         setupOnClick()
@@ -88,10 +89,12 @@ class DiscussionDetailActivity : AppCompatActivity() {
             is DiscussionEntryPoint.Standard -> {
                 entryPoint.mode?.let { viewModel.fetchMode(it) }
                 viewModel.initLoadDiscission(entryPoint.discussionId)
+                showComments(entryPoint.discussionId)
             }
 
             is DiscussionEntryPoint.FromDeepLink -> {
                 viewModel.initLoadDiscission(entryPoint.discussionId)
+                showComments(entryPoint.discussionId)
             }
 
             is DiscussionEntryPoint.Invalid -> {
@@ -143,13 +146,6 @@ class DiscussionDetailActivity : AppCompatActivity() {
             )
             insets
         }
-        val callback =
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    viewModel.onFinishEvent()
-                }
-            }
-        onBackPressedDispatcher.addCallback(this, callback)
     }
 
     private fun setUpRefresh() {
@@ -159,15 +155,18 @@ class DiscussionDetailActivity : AppCompatActivity() {
     }
 
     private fun setupOnClick() {
+        val sheetView = binding.bottomSheetContainer
+        val behavior = BottomSheetBehavior.from(sheetView)
         with(binding) {
             ivDiscussionDetailBack.setOnClickListener {
-                viewModel.onFinishEvent()
+                onBackPressedDispatcher.onBackPressed()
             }
+
             ivComment.setOnClickListener {
-                viewModel.showComments()
+                behavior.state = BottomSheetBehavior.STATE_EXPANDED
             }
             tvCommentCount.setOnClickListener {
-                viewModel.showComments()
+                behavior.state = BottomSheetBehavior.STATE_EXPANDED
             }
             ivUserProfile.setOnClickListener {
                 viewModel.navigateToProfile()
@@ -182,6 +181,9 @@ class DiscussionDetailActivity : AppCompatActivity() {
                         discussion.discussionTitle,
                     )
                 }
+            }
+            tvDiscussionOpinion.setOnClickListener {
+                behavior.state = BottomSheetBehavior.STATE_COLLAPSED
             }
             setupLikeClick()
         }
@@ -287,9 +289,6 @@ class DiscussionDetailActivity : AppCompatActivity() {
 
     private fun handleEvent(event: DiscussionDetailUiEvent) {
         when (event) {
-            is DiscussionDetailUiEvent.ShowComments ->
-                showComments(event.discussionId)
-
             is DiscussionDetailUiEvent.DeleteDiscussion ->
                 moveToDiscussionsWithDeletedDiscussionId(event.discussionId)
 
@@ -367,8 +366,23 @@ class DiscussionDetailActivity : AppCompatActivity() {
     }
 
     private fun showComments(discussionId: Long) {
-        val bottomSheet = CommentBottomSheet.newInstance(discussionId)
-        bottomSheet.show(supportFragmentManager, CommentsFragment.TAG)
+        val sheetView = binding.bottomSheetContainer
+        val behavior = BottomSheetBehavior.from(sheetView)
+
+        behavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+        behavior.setPeekHeight(
+            resources.getDimensionPixelSize(R.dimen.item_discussion_detail_bottom_sheet_min_height),
+            true,
+        )
+        supportFragmentManager.commit {
+            setReorderingAllowed(true)
+            replace(
+                binding.bottomSheetContainer.id,
+                CommentsFragment.newInstance(
+                    discussionId,
+                ),
+            )
+        }
     }
 
     private fun setUpDialogResultListener() {

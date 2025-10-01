@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupWindow
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.annotation.StringRes
 import androidx.core.os.bundleOf
 import androidx.core.view.doOnPreDraw
@@ -71,6 +72,14 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
         setupOnClick(binding)
         setupObserve(binding)
         setupFragmentResultListener()
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    requestActivityClose()
+                }
+            },
+        )
     }
 
     override fun onDestroyView() {
@@ -121,6 +130,23 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
         }
     }
 
+    private fun requestActivityClose() {
+        val hasReplyContent =
+            viewModel.uiState.value
+                ?.content
+                ?.isNotBlank() ?: false
+        val hasCommentContent =
+            commentsViewModel.uiState.value
+                ?.commentContent
+                ?.isNotBlank() ?: false
+
+        when {
+            hasReplyContent -> showConfirmActivityClose(getString(R.string.reply_confirm_delete_message))
+            hasCommentContent -> showConfirmActivityClose(getString(R.string.comment_confirm_delete_message))
+            else -> sharedViewModel.onFinishEvent()
+        }
+    }
+
     private fun requestClose() {
         if (viewModel.uiState.value
                 ?.content
@@ -132,13 +158,24 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
         }
     }
 
+    private fun showConfirmActivityClose(deleteMessage: String) {
+        val confirmDialog =
+            CommonDialog
+                .newInstance(
+                    deleteMessage,
+                    getString(R.string.all_delete_action),
+                    REPLY_DRAFT_DISCARD_REQUEST_KEY_ACTIVITY,
+                )
+        confirmDialog.show(childFragmentManager, CommonDialog.TAG)
+    }
+
     private fun showConfirmClose() {
         val confirmDialog =
             CommonDialog
                 .newInstance(
-                    getString(R.string.comment_confirm_delete_message),
+                    getString(R.string.reply_confirm_delete_message),
                     getString(R.string.all_delete_action),
-                    REPLY_CONTENT_DELETE_DIALOG_REQUEST_KEY,
+                    REPLY_DRAFT_DISCARD_REQUEST_KEY_POP,
                 )
         confirmDialog.show(childFragmentManager, CommonDialog.TAG)
     }
@@ -380,7 +417,13 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
 
         childFragmentManager.registerPositiveResultListener(
             viewLifecycleOwner,
-            REPLY_CONTENT_DELETE_DIALOG_REQUEST_KEY,
+            REPLY_DRAFT_DISCARD_REQUEST_KEY_ACTIVITY,
+            CommonDialog.RESULT_KEY_COMMON_DIALOG,
+        ) { sharedViewModel.onFinishEvent() }
+
+        childFragmentManager.registerPositiveResultListener(
+            viewLifecycleOwner,
+            REPLY_DRAFT_DISCARD_REQUEST_KEY_POP,
             CommonDialog.RESULT_KEY_COMMON_DIALOG,
         ) { parentFragmentManager.popBackStack() }
 
@@ -485,8 +528,11 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
         const val TAG = "TAG_COMMENT_DETAIL"
         private const val COMMENT_DELETE_DIALOG_REQUEST_KEY = "comment_delete_dialog_request_key"
         private const val COMMENT_REPORT_DIALOG_REQUEST_KEY = "comment_report_dialog_request_key"
-        private const val REPLY_CONTENT_DELETE_DIALOG_REQUEST_KEY =
-            "reply_content_delete_dialog_request_key"
+
+        private const val REPLY_DRAFT_DISCARD_REQUEST_KEY_ACTIVITY =
+            "reply_draft_discard_request_key_activity"
+        private const val REPLY_DRAFT_DISCARD_REQUEST_KEY_POP =
+            "reply_draft_discard_request_key_pop"
         private const val REPLY_REPORT_DIALOG_REQUEST_KEY = "reply_report_dialog_request_key_%d"
         private const val REPLY_DELETE_DIALOG_REQUEST_KEY = "reply_delete_dialog_request_key_%d"
 

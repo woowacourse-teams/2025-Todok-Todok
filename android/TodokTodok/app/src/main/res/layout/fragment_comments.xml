@@ -16,6 +16,28 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/abl_comment_detail"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/space_32"
+        android:layout_marginTop="@dimen/space_32"
+        android:layout_marginEnd="@dimen/space_4"
+        android:background="@color/white"
+        app:layout_constraintEnd_toStartOf="@id/iv_reload"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        style="@style/HeaderTitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="5dp"
+        android:text="@string/all_comment"
+        app:layout_constraintBottom_toBottomOf="@id/abl_comment_detail"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/abl_comment_detail" />
+
     <ImageView
         android:id="@+id/iv_reload"
         android:layout_width="48dp"
@@ -23,18 +45,18 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:padding="@dimen/space_12"
         android:src="@drawable/cached"
-        android:layout_marginEnd="@dimen/space_8"
+        app:layout_constraintBottom_toBottomOf="@id/abl_comment_detail"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/rv_comments" />
+        app:layout_constraintTop_toTopOf="@id/abl_comment_detail" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_comments"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="@dimen/space_56"
+        android:layout_marginTop="14dp"
         android:scrollbars="vertical"
         app:layout_constraintBottom_toTopOf="@id/tv_input_comment"
-        app:layout_constraintTop_toBottomOf="@id/iv_bottom_sheet_header"
+        app:layout_constraintTop_toBottomOf="@id/abl_comment_detail"
         tools:listitem="@layout/item_comment" />
 
     <TextView
@@ -42,7 +64,7 @@
         style="@style/BaseTextStyle"
         android:layout_width="@dimen/space_0"
         android:layout_height="36dp"
-        android:layout_marginBottom="@dimen/space_20"
+        android:layout_marginBottom="@dimen/space_120"
         android:background="@drawable/bg_green_f0_radius_8dp"
         android:fontFamily="@font/pretendard_regular"
         android:gravity="center_vertical"
@@ -73,8 +95,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/iv_reload">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -99,5 +120,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/iv_reload" />
 </androidx.constraintlayout.widget.ConstraintLayout>

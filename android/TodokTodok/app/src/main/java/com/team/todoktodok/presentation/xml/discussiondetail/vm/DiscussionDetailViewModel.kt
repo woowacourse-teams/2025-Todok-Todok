@@ -23,7 +23,8 @@ class DiscussionDetailViewModel(
     private val discussionRepository: DiscussionRepository,
     private val tokenRepository: TokenRepository,
 ) : ViewModel() {
-    private var discussionId: Long? = savedStateHandle.get<Long>(KEY_DISCUSSION_ID)
+    var discussionId: Long? = savedStateHandle.get<Long>(KEY_DISCUSSION_ID)
+        private set
 
     var mode = savedStateHandle.get<SerializationCreateDiscussionRoomMode>(KEY_MODE)
         private set
@@ -55,10 +56,6 @@ class DiscussionDetailViewModel(
     fun fetchMode(mode: SerializationCreateDiscussionRoomMode) {
         this.mode = mode
         savedStateHandle[KEY_MODE] = mode
-    }
-
-    fun showComments() {
-        onUiEvent(DiscussionDetailUiEvent.ShowComments(discussionId ?: THROW_DISCUSSION_ID))
     }
 
     fun reportDiscussion(reason: String) {

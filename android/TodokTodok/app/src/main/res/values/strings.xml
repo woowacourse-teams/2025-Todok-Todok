@@ -11,6 +11,7 @@
     <string name="book_image">도서 이미지입니다</string>
     <string name="all_opinion">의견</string>
     <string name="all_comment">댓글</string>
+    <string name="all_reply">대댓글</string>
     <string name="all_unknown_exception">알 수 없는 오류가 발생했어요</string>
     <string name="date_format_pattern">yyyy년 M월 d일</string>
     <string name="all_divider_dot">" · "</string>
@@ -125,6 +126,7 @@
     <string name="comment_content_description_comment_like">댓글 좋아요 클릭 버튼</string>
     <string name="comment_content_description_reply_like">대댓글 좋아요 클릭 버튼</string>
     <string name="comment_confirm_delete_message">작성중인 댓글을 삭제할까요?</string>
+    <string name="reply_confirm_delete_message">작성중인 대댓글을 삭제할까요?</string>
     <string name="comment_content_description_comment_detail_reply_user_profile">대댓글 유저 이미지 버튼</string>
     <string name="comment_nothing_comments">아직 의견이 없어요 🥲\n가장 먼저 의견을 달아주세요</string>
     <string name="comment_content_description_noting_comment">댓글이 없을 때 나오는 토독이</string>
