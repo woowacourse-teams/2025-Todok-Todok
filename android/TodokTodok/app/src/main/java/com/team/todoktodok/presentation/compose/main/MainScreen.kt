@@ -10,15 +10,18 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import com.team.todoktodok.presentation.compose.discussion.component.DiscussionToolbar
+import com.team.todoktodok.presentation.xml.book.SelectBookActivity
 
 @Composable
 fun MainScreen(
     isUnreadNotification: Boolean,
     modifier: Modifier = Modifier,
 ) {
+    val context = LocalContext.current
     val navController = rememberNavController()
     val startDestination = MainDestination.Discussion
     var selectedDestination by rememberSaveable { mutableStateOf(MainDestination.Discussion) }
@@ -40,7 +43,9 @@ fun MainScreen(
                 onSelectedDestinationChanged = { index ->
                     selectedDestination = MainDestination.of(index)
                 },
-                onClickCreateDiscussion = {},
+                onClickCreateDiscussion = {
+                    context.startActivity(SelectBookActivity.Intent(context))
+                },
             )
         },
         modifier = modifier,
