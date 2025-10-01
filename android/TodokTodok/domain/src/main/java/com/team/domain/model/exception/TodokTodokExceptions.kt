@@ -48,6 +48,9 @@ sealed class TodokTodokExceptions : Throwable() {
         /** 400 Bad Request */
         data object BadRequestException : HttpExceptions()
 
+        /** 401 Bad Request */
+        data object UnauthorizedException : HttpExceptions()
+
         /** 403 Forbidden */
         data object AuthorizationException : HttpExceptions()
 
@@ -72,6 +75,7 @@ sealed class TodokTodokExceptions : Throwable() {
         ): TodokTodokExceptions =
             when (statusCode) {
                 400 -> fromTokdokTodokExceptions(message) // 400 Bad Request: 서버 메시지에 따라 도메인 예외 매핑
+                401 -> HttpExceptions.UnauthorizedException // 401 UnauthorizedException: 토큰 없이 접근 했을 경우
                 403 -> HttpExceptions.AuthorizationException // 403 Forbidden
                 404 -> HttpExceptions.NotFoundException // 404 Not Found
                 in 500..599 -> HttpExceptions.ServerException // 서버 5xx 에러
