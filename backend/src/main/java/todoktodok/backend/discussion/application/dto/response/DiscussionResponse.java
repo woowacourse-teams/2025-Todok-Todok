@@ -15,8 +15,12 @@ public record DiscussionResponse(
         int viewCount,
         int likeCount,
         int commentCount,
-        boolean isLikedByMe
+        boolean isLikedByMe,
+        LocalDateTime lastCommentedAt
 ) {
+
+    private static final LocalDateTime fakeLastCommentedAt = LocalDateTime.now();
+
     public DiscussionResponse(
             final Discussion discussion,
             final int likeCount,
@@ -33,7 +37,8 @@ public record DiscussionResponse(
                 Math.toIntExact(discussion.getViewCount()),
                 likeCount,
                 commentCount,
-                isLikedByMe
+                isLikedByMe,
+                fakeLastCommentedAt
         );
     }
 }
