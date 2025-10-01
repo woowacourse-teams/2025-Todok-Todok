@@ -7,11 +7,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.team.todoktodok.presentation.compose.discussion.DiscussionsScreen
 import com.team.todoktodok.presentation.compose.my.MyScreen
-import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 
 @Composable
 fun MainNavHost(
-    messageConverter: ExceptionMessageConverter,
     navController: NavHostController,
     startDestination: MainDestination,
     modifier: Modifier = Modifier,
@@ -24,7 +22,7 @@ fun MainNavHost(
         MainDestination.entries.forEach { destination ->
             composable(destination.route) {
                 when (destination) {
-                    MainDestination.Discussion -> DiscussionsScreen(messageConverter)
+                    MainDestination.Discussion -> DiscussionsScreen()
                     MainDestination.My -> MyScreen()
                 }
             }

@@ -14,6 +14,7 @@ import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
@@ -30,6 +31,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.team.todoktodok.App
 import com.team.todoktodok.R
+import com.team.todoktodok.presentation.compose.LocalUiExceptionHandler
+import com.team.todoktodok.presentation.compose.UiExceptionHandler
 import com.team.todoktodok.presentation.compose.core.ObserveAsEvents
 import com.team.todoktodok.presentation.compose.core.component.AlertSnackBar
 import com.team.todoktodok.presentation.compose.core.component.CloverProgressBar
@@ -120,18 +123,24 @@ fun DiscussionsScreen(
         viewModel.loadHotDiscussions()
     }
 
-    DiscussionsScreen(
-        exceptionMessageConverter = exceptionMessageConverter,
-        isLoading = isLoading.value,
-        uiState = uiState.value,
-        pagerState = pagerState,
-        snackbarHostState = snackbarHostState,
-        onTabChanged = viewModel::modifySearchKeyword,
-        onSearchKeywordChanged = viewModel::modifySearchKeyword,
-        onSearch = viewModel::loadSearchedDiscussions,
-        onActivatedDiscussionLoadMore = viewModel::loadActivatedDiscussions,
-        modifier = modifier,
-    )
+    CompositionLocalProvider(
+        LocalUiExceptionHandler provides
+            UiExceptionHandler(
+                snackbarHostState = snackbarHostState,
+                messageConverter = ExceptionMessageConverter(),
+            ),
+    ) {
+        DiscussionsScreen(
+            isLoading = isLoading.value,
+            uiState = uiState.value,
+            pagerState = pagerState,
+            snackbarHostState = snackbarHostState,
+            onTabChanged = viewModel::modifySearchKeyword,
+            onSearchKeywordChanged = viewModel::modifySearchKeyword,
+            onSearch = viewModel::loadSearchedDiscussions,
+            modifier = modifier,
+        )
+    }
 }
 
 @Composable

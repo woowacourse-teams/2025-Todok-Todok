@@ -36,15 +36,12 @@ import com.team.todoktodok.presentation.compose.discussion.search.SearchDiscussi
 import com.team.todoktodok.presentation.compose.theme.Green1A
 import com.team.todoktodok.presentation.compose.theme.Pretendard
 import com.team.todoktodok.presentation.compose.theme.White
-import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import kotlinx.coroutines.launch
 
 @Composable
 fun DiscussionTab(
-    messageConverter: ExceptionMessageConverter,
     uiState: DiscussionsUiState,
     pagerState: PagerState,
-    onActivatedDiscussionLoadMore: () -> Unit,
     onTabChanged: (Destination) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -116,8 +113,6 @@ fun DiscussionTab(
                 when (Destination(page)) {
                     Destination.HOT ->
                         HotDiscussionScreen(
-                            uiState = uiState.hotDiscussion,
-                            onLoadMore = onActivatedDiscussionLoadMore,
                             modifier = Modifier.fillMaxSize(),
                         )
 
@@ -125,9 +120,9 @@ fun DiscussionTab(
                         when (uiState.allDiscussionMode) {
                             AllDiscussionMode.LATEST ->
                                 LatestDiscussionsScreen(
-                                    messageConverter = messageConverter,
                                     modifier = Modifier.fillMaxSize(),
                                 )
+
                             AllDiscussionMode.SEARCH ->
                                 SearchDiscussionScreen(
                                     uiState = uiState.searchDiscussion,

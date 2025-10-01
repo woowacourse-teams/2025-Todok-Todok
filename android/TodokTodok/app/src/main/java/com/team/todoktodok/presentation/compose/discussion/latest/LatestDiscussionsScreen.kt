@@ -31,6 +31,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.team.domain.model.PageInfo
 import com.team.todoktodok.App
 import com.team.todoktodok.R
+import com.team.todoktodok.presentation.compose.LocalUiExceptionHandler
 import com.team.todoktodok.presentation.compose.core.ObserveAsEvents
 import com.team.todoktodok.presentation.compose.core.component.AlertSnackBar
 import com.team.todoktodok.presentation.compose.core.component.CloverProgressBar
@@ -41,13 +42,11 @@ import com.team.todoktodok.presentation.compose.discussion.latest.vm.LatestDiscu
 import com.team.todoktodok.presentation.compose.preview.LatestDiscussionsPreviewParameterProvider
 import com.team.todoktodok.presentation.compose.theme.Green1A
 import com.team.todoktodok.presentation.compose.theme.White
-import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LatestDiscussionsScreen(
-    messageConverter: ExceptionMessageConverter,
     modifier: Modifier = Modifier,
     viewModel: LatestDiscussionViewModel =
         viewModel(
@@ -57,6 +56,7 @@ fun LatestDiscussionsScreen(
     val coroutineScope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
+    val uiExceptionHandler = LocalUiExceptionHandler.current
 
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
     val isLoading = viewModel.isLoading.collectAsStateWithLifecycle()
@@ -76,7 +76,8 @@ fun LatestDiscussionsScreen(
     ObserveAsEvents(viewModel.uiEvent) { event ->
         when (event) {
             is LatestDiscussionsUiEvent.ShowErrorMessage -> {
-                val message = context.getString(messageConverter(event.exception))
+                val message =
+                    context.getString(uiExceptionHandler.messageConverter(event.exception))
                 showSnackbar(message)
             }
         }

@@ -13,11 +13,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import com.team.todoktodok.presentation.compose.discussion.component.DiscussionToolbar
-import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 
 @Composable
 fun MainScreen(
-    messageConverter: ExceptionMessageConverter,
     isUnreadNotification: Boolean,
     modifier: Modifier = Modifier,
 ) {
@@ -48,7 +46,6 @@ fun MainScreen(
         modifier = modifier,
     ) { innerPadding ->
         MainNavHost(
-            messageConverter = messageConverter,
             navController = navController,
             startDestination = startDestination,
             modifier = Modifier.padding(innerPadding),
@@ -59,9 +56,5 @@ fun MainScreen(
 @Preview
 @Composable
 private fun MainScreenPreview() {
-    MainScreen(
-        messageConverter = ExceptionMessageConverter(),
-        isUnreadNotification = true,
-        modifier = Modifier,
-    )
+    MainScreen(isUnreadNotification = true)
 }
