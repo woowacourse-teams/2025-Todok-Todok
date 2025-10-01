@@ -126,7 +126,6 @@ fun DiscussionsScreen(
         uiState = uiState.value,
         pagerState = pagerState,
         snackbarHostState = snackbarHostState,
-        onDiscussionClick = {},
         onTabChanged = viewModel::modifySearchKeyword,
         onSearchKeywordChanged = viewModel::modifySearchKeyword,
         onSearch = viewModel::loadSearchedDiscussions,
@@ -142,7 +141,6 @@ private fun DiscussionsScreen(
     uiState: DiscussionsUiState,
     pagerState: PagerState,
     snackbarHostState: SnackbarHostState,
-    onDiscussionClick: (Long) -> Unit,
     onSearchKeywordChanged: (String) -> Unit,
     onTabChanged: (String) -> Unit,
     onSearch: () -> Unit,
@@ -160,7 +158,6 @@ private fun DiscussionsScreen(
             onSearchKeywordChanged = { onSearchKeywordChanged(it) },
             onActivatedDiscussionLoadMore = onActivatedDiscussionLoadMore,
             onTabChanged = { tab -> if (tab != Destination.ALL) onTabChanged("") },
-            onDiscussionClick = { onDiscussionClick(it) },
             onSearch = onSearch,
             modifier = Modifier.fillMaxSize(),
         )
@@ -183,7 +180,6 @@ fun DiscussionsContent(
     onSearchKeywordChanged: (String) -> Unit,
     onActivatedDiscussionLoadMore: () -> Unit,
     onTabChanged: (Destination) -> Unit,
-    onDiscussionClick: (Long) -> Unit,
     onSearch: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -208,7 +204,6 @@ fun DiscussionsContent(
             uiState = uiState,
             pagerState = pagerState,
             onActivatedDiscussionLoadMore = { onActivatedDiscussionLoadMore() },
-            onClickDiscussion = onDiscussionClick,
             onTabChanged = onTabChanged,
         )
     }

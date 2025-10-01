@@ -46,7 +46,6 @@ fun DiscussionTab(
     pagerState: PagerState,
     onActivatedDiscussionLoadMore: () -> Unit,
     onTabChanged: (Destination) -> Unit,
-    onClickDiscussion: (Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -119,7 +118,6 @@ fun DiscussionTab(
                         HotDiscussionScreen(
                             uiState = uiState.hotDiscussion,
                             onLoadMore = onActivatedDiscussionLoadMore,
-                            onClick = onClickDiscussion,
                             modifier = Modifier.fillMaxSize(),
                         )
 
@@ -128,13 +126,11 @@ fun DiscussionTab(
                             AllDiscussionMode.LATEST ->
                                 LatestDiscussionsScreen(
                                     messageConverter = messageConverter,
-                                    onClick = onClickDiscussion,
                                     modifier = Modifier.fillMaxSize(),
                                 )
                             AllDiscussionMode.SEARCH ->
                                 SearchDiscussionScreen(
                                     uiState = uiState.searchDiscussion,
-                                    onClick = onClickDiscussion,
                                     modifier = Modifier.fillMaxSize(),
                                 )
                         }

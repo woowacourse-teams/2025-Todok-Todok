@@ -39,6 +39,7 @@ import com.team.todoktodok.presentation.compose.preview.DiscussionUiStatePreview
 import com.team.todoktodok.presentation.compose.theme.Gray75
 import com.team.todoktodok.presentation.compose.theme.RedFF
 import com.team.todoktodok.presentation.compose.theme.White
+import com.team.todoktodok.presentation.xml.discussiondetail.DiscussionDetailActivity
 
 sealed interface DiscussionCardType {
     data object Default : DiscussionCardType
@@ -55,10 +56,10 @@ sealed interface DiscussionCardType {
 @Composable
 fun DiscussionCard(
     uiState: DiscussionUiState,
-    onClick: () -> Unit,
     discussionCardType: DiscussionCardType,
     modifier: Modifier = Modifier,
 ) {
+    val context = LocalContext.current
     BoxWithConstraints(modifier = modifier.fillMaxWidth()) {
         val cardWidth =
             if (discussionCardType is DiscussionCardType.OpinionVisible) {
@@ -68,7 +69,14 @@ fun DiscussionCard(
             }
 
         ElevatedCard(
-            onClick = onClick,
+            onClick = {
+                context.startActivity(
+                    DiscussionDetailActivity.Intent(
+                        context = context,
+                        discussionId = uiState.discussionId,
+                    ),
+                )
+            },
             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
             modifier = Modifier.width(cardWidth),
         ) {
@@ -270,7 +278,6 @@ private fun DiscussionCardPreviewDefault(
 ) {
     DiscussionCard(
         uiState = uiState.first(),
-        onClick = {},
         discussionCardType = DiscussionCardType.Default,
     )
 }
@@ -282,7 +289,6 @@ private fun DiscussionCardPreviewHighlighted(
 ) {
     DiscussionCard(
         uiState = uiState.first(),
-        onClick = {},
         discussionCardType = DiscussionCardType.QueryHighlighting("JPA"),
     )
 }
@@ -294,7 +300,6 @@ private fun DiscussionCardPreviewWriterHidden(
 ) {
     DiscussionCard(
         uiState = uiState.first(),
-        onClick = {},
         discussionCardType = DiscussionCardType.WriterHidden,
     )
 }
@@ -306,7 +311,6 @@ private fun DiscussionCardPreviewResizing(
 ) {
     DiscussionCard(
         uiState = uiState.first(),
-        onClick = {},
         discussionCardType = DiscussionCardType.OpinionVisible,
     )
 }

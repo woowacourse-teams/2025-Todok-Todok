@@ -29,7 +29,6 @@ import com.team.todoktodok.presentation.compose.theme.Pretendard
 fun ActivatedDiscussionScreen(
     uiState: ActivatedDiscussionsUiState,
     onLoadMore: () -> Unit,
-    onClick: (Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
@@ -49,7 +48,6 @@ fun ActivatedDiscussionScreen(
                 ) { item ->
                     DiscussionCard(
                         uiState = item,
-                        onClick = { onClick(item.discussionId) },
                         discussionCardType = uiState.type,
                     )
                 }
@@ -88,7 +86,6 @@ private fun ActivatedDiscussionScreenPreview(
 ) {
     ActivatedDiscussionScreen(
         onLoadMore = {},
-        onClick = {},
         uiState = activatedDiscussions,
     )
 }

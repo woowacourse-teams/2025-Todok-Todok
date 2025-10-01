@@ -13,14 +13,12 @@ import com.team.todoktodok.presentation.compose.preview.ParticipatedDiscussionPr
 @Composable
 fun ParticipatedDiscussionsScreen(
     uiState: ParticipatedDiscussionsUiState,
-    onClick: (Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.padding(10.dp)) {
         uiState.discussions.forEach { discussion ->
             DiscussionCard(
                 discussion,
-                onClick = { onClick(discussion.discussionId) },
                 discussionCardType = uiState.type,
                 modifier = Modifier.padding(top = 10.dp),
             )
@@ -35,7 +33,6 @@ private fun ParticipatedDiscussionHeaderPreview(
     uiState: ParticipatedDiscussionsUiState,
 ) {
     ParticipatedDiscussionsScreen(
-        onClick = {},
         uiState = uiState,
     )
 }

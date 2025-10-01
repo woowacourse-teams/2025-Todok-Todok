@@ -29,7 +29,6 @@ import com.team.todoktodok.presentation.compose.theme.Pretendard
 @Composable
 fun SearchDiscussionScreen(
     uiState: SearchDiscussionsUiState,
-    onClick: (Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     if (uiState.discussions.isEmpty()) {
@@ -37,7 +36,6 @@ fun SearchDiscussionScreen(
     } else {
         SearchResultDiscussions(
             uiState = uiState,
-            onClick = onClick,
             modifier = modifier,
         )
     }
@@ -75,7 +73,6 @@ private fun EmptySearchResults(
 @Composable
 private fun SearchResultDiscussions(
     uiState: SearchDiscussionsUiState,
-    onClick: (Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
@@ -97,7 +94,6 @@ private fun SearchResultDiscussions(
             DiscussionCard(
                 uiState = item,
                 discussionCardType = uiState.type,
-                onClick = { onClick(item.discussionId) },
             )
         }
 
@@ -112,7 +108,6 @@ private fun SearchDiscussionScreenPreview(
     searchDiscussion: SearchDiscussionsUiState,
 ) {
     SearchDiscussionScreen(
-        onClick = {},
         uiState = searchDiscussion,
     )
 }
@@ -121,7 +116,6 @@ private fun SearchDiscussionScreenPreview(
 @Composable
 private fun EmptySearchDiscussionScreenPreview() {
     SearchDiscussionScreen(
-        onClick = {},
         uiState = SearchDiscussionsUiState(),
     )
 }

@@ -48,7 +48,6 @@ import kotlinx.coroutines.launch
 @Composable
 fun LatestDiscussionsScreen(
     messageConverter: ExceptionMessageConverter,
-    onClick: (Long) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: LatestDiscussionViewModel =
         viewModel(
@@ -93,7 +92,6 @@ fun LatestDiscussionsScreen(
         uiState = uiState.value,
         isLoading = isLoading.value,
         snackbarHostState = snackbarHostState,
-        onClick = onClick,
         pullToRefreshState = pullToRefreshState,
         onLoadMore = { viewModel.loadLatestDiscussions() },
         onRefresh = viewModel::refreshLatestDiscussions,
@@ -109,7 +107,6 @@ fun LatestDiscussionsScreen(
     snackbarHostState: SnackbarHostState,
     pullToRefreshState: PullToRefreshState,
     onLoadMore: () -> Unit,
-    onClick: (Long) -> Unit,
     onRefresh: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -139,7 +136,6 @@ fun LatestDiscussionsScreen(
                 ) { item ->
                     DiscussionCard(
                         uiState = item,
-                        onClick = { onClick(item.discussionId) },
                         discussionCardType = uiState.type,
                         modifier = Modifier.padding(vertical = 2.dp),
                     )
@@ -202,7 +198,6 @@ private fun DiscussionsScreenPreview(
         snackbarHostState = SnackbarHostState(),
         pullToRefreshState = rememberPullToRefreshState(),
         onLoadMore = {},
-        onClick = {},
         onRefresh = {},
     )
 }
@@ -217,7 +212,6 @@ private fun LoadingDiscussionsScreenPreview() {
         snackbarHostState = SnackbarHostState(),
         pullToRefreshState = rememberPullToRefreshState(),
         onLoadMore = {},
-        onClick = {},
         onRefresh = {},
     )
 }
@@ -239,7 +233,6 @@ private fun LastPageDiscussionsScreenPreview() {
         snackbarHostState = SnackbarHostState(),
         pullToRefreshState = rememberPullToRefreshState(),
         onLoadMore = {},
-        onClick = {},
         onRefresh = {},
     )
 }

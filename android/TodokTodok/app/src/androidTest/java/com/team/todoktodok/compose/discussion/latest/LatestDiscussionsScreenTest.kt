@@ -33,7 +33,6 @@ class LatestDiscussionsScreenTest {
     private fun setContent(
         uiState: LatestDiscussionsUiState,
         isLoading: Boolean = false,
-        onClick: (Long) -> Unit = {},
         onLoadMore: () -> Unit = {},
         onRefresh: () -> Unit = {},
     ) {
@@ -43,7 +42,6 @@ class LatestDiscussionsScreenTest {
                 isLoading = isLoading,
                 snackbarHostState = SnackbarHostState(),
                 pullToRefreshState = rememberPullToRefreshState(),
-                onClick = onClick,
                 onLoadMore = onLoadMore,
                 onRefresh = onRefresh,
             )
@@ -85,22 +83,6 @@ class LatestDiscussionsScreenTest {
         composeTestRule.onNodeWithText("96").assertIsDisplayed()
         composeTestRule.onNodeWithText("97").assertIsDisplayed()
         composeTestRule.onNodeWithText("응집도와 결합도가 어떤 차이를 가지는 지").assertIsNotDisplayed()
-    }
-
-    @Test
-    fun `토론방_클릭시_onClick이_호출된다`() {
-        var clickedId: Long? = null
-
-        val firstItem = previewData.discussions.first()
-
-        setContent(
-            uiState = previewData,
-            onClick = { id -> clickedId = id },
-        )
-
-        composeTestRule.onNodeWithText(firstItem.bookTitle).performClick()
-
-        Assertions.assertTrue(clickedId == firstItem.discussionId)
     }
 
     @Test

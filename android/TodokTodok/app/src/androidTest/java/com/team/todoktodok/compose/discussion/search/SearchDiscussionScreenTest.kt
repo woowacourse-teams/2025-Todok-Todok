@@ -25,7 +25,6 @@ class SearchDiscussionScreenTest {
         composeTestRule.setContent {
             SearchDiscussionScreen(
                 uiState = state,
-                onClick = {},
             )
         }
 
@@ -33,27 +32,6 @@ class SearchDiscussionScreenTest {
         state.discussions.forEach { item ->
             composeTestRule.onNodeWithText(item.discussionTitle).assertIsDisplayed()
         }
-    }
-
-    @Test
-    fun `검색화면_아이템_클릭시_콜백이_호출된다`() {
-        // given
-        val sampleState = SearchDiscussionsUiStatePreviewParameterProvider().values.first()
-        var clickedId: Long? = null
-
-        // when
-        composeTestRule.setContent {
-            SearchDiscussionScreen(
-                uiState = sampleState,
-                onClick = { clickedId = it },
-            )
-        }
-
-        val firstItem = sampleState.discussions.first()
-        composeTestRule.onNodeWithText(firstItem.bookTitle).performClick()
-
-        // then
-        assertEquals(clickedId, firstItem.discussionId)
     }
 
     @Test
@@ -65,7 +43,6 @@ class SearchDiscussionScreenTest {
         composeTestRule.setContent {
             SearchDiscussionScreen(
                 uiState = emptyState,
-                onClick = {},
             )
         }
 
