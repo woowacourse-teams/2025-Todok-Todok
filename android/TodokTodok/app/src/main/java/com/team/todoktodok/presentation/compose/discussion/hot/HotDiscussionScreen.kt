@@ -2,22 +2,72 @@ package com.team.todoktodok.presentation.compose.discussion.hot
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.team.todoktodok.App
+import com.team.todoktodok.presentation.compose.LocalUiExceptionHandler
+import com.team.todoktodok.presentation.compose.core.ObserveAsEvents
+import com.team.todoktodok.presentation.compose.core.component.CloverProgressBar
 import com.team.todoktodok.presentation.compose.core.component.DiscussionCard
 import com.team.todoktodok.presentation.compose.core.component.InfinityLazyColumn
 import com.team.todoktodok.presentation.compose.discussion.activate.ActivatedDiscussionHeader
+import com.team.todoktodok.presentation.compose.discussion.hot.vm.HotDiscussionViewModel
+import com.team.todoktodok.presentation.compose.discussion.hot.vm.HotDiscussionViewModelFactory
 import com.team.todoktodok.presentation.compose.discussion.popular.PopularDiscussionsScreen
 import com.team.todoktodok.presentation.compose.preview.HotDiscussionPreviewParameterProvider
 
 @Composable
 fun HotDiscussionScreen(
+    modifier: Modifier = Modifier,
+    viewModel: HotDiscussionViewModel =
+        viewModel(
+            factory =
+                HotDiscussionViewModelFactory(
+                    appContainer = (LocalContext.current.applicationContext as App).container,
+                ),
+        ),
+) {
+    val context = LocalContext.current
+    val exceptionHandler = LocalUiExceptionHandler.current
+    val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+    val isLoading = viewModel.isLoading.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        viewModel.loadHotDiscussions()
+    }
+
+    ObserveAsEvents(viewModel.uiEvent) { event ->
+        when (event) {
+            is HotDiscussionUiEvent.ShowErrorMessage -> {
+                val message = context.getString(exceptionHandler.messageConverter(event.exception))
+                exceptionHandler.snackbarHostState.showSnackbar(message)
+            }
+        }
+    }
+
+    HotDiscussionScreen(
+        uiState = uiState.value,
+        isLoading = isLoading.value,
+        onLoadMore = { viewModel.loadActivatedDiscussions() },
+        modifier = modifier,
+    )
+}
+
+@Composable
+private fun HotDiscussionScreen(
     uiState: HotDiscussionUiState,
+    isLoading: Boolean,
     onLoadMore: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -45,6 +95,18 @@ fun HotDiscussionScreen(
                 discussionCardType = uiState.activatedDiscussions.type,
             )
         }
+
+        if (isLoading) {
+            item {
+                CloverProgressBar(
+                    visible = true,
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .size(50.dp),
+                )
+            }
+        }
     }
 }
 
@@ -55,7 +117,8 @@ private fun HotDiscissionContent(
     hotDiscussionUiState: HotDiscussionUiState,
 ) {
     HotDiscussionScreen(
-        onLoadMore = {},
         uiState = hotDiscussionUiState,
+        isLoading = true,
+        onLoadMore = {},
     )
 }
