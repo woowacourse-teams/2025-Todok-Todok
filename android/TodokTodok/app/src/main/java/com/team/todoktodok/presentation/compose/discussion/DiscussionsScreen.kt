@@ -7,11 +7,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -36,7 +34,6 @@ import com.team.todoktodok.presentation.compose.core.ObserveAsEvents
 import com.team.todoktodok.presentation.compose.core.component.AlertSnackBar
 import com.team.todoktodok.presentation.compose.core.component.CloverProgressBar
 import com.team.todoktodok.presentation.compose.discussion.component.DiscussionTab
-import com.team.todoktodok.presentation.compose.discussion.component.DiscussionToolbar
 import com.team.todoktodok.presentation.compose.discussion.component.SearchDiscussionBar
 import com.team.todoktodok.presentation.compose.discussion.model.Destination
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionsUiEvent
@@ -152,10 +149,9 @@ private fun DiscussionsScreen(
     onActivatedDiscussionLoadMore: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-
     Box(
         contentAlignment = Alignment.Center,
-        modifier = modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize(),
     ) {
         DiscussionsContent(
             exceptionMessageConverter,
