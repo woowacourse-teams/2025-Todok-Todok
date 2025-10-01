@@ -29,4 +29,12 @@ sealed interface DiscussionDetailUiEvent {
     data class ShowErrorMessage(
         val exceptions: TodokTodokExceptions,
     ) : DiscussionDetailUiEvent
+
+    data class NotFoundDiscussion(
+        val exceptions: TodokTodokExceptions,
+    ) : DiscussionDetailUiEvent
+
+    data class Unauthorized(
+        val exceptions: TodokTodokExceptions,
+    ) : DiscussionDetailUiEvent
 }
