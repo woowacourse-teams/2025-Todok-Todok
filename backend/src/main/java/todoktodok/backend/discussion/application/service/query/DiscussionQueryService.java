@@ -313,7 +313,6 @@ public class DiscussionQueryService {
 
     }
 
-
     private Map<Long, Integer> mapTotalCommentCountsByDiscussionId(final List<DiscussionCommentCountDto> commentCounts) {
         return commentCounts.stream()
                 .collect(Collectors.toMap(
