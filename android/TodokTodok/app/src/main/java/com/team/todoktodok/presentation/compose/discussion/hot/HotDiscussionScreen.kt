@@ -1,5 +1,8 @@
 package com.team.todoktodok.presentation.compose.discussion.hot
 
+import android.app.Activity.RESULT_OK
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,7 +28,13 @@ import com.team.todoktodok.presentation.compose.discussion.activate.ActivatedDis
 import com.team.todoktodok.presentation.compose.discussion.hot.vm.HotDiscussionViewModel
 import com.team.todoktodok.presentation.compose.discussion.hot.vm.HotDiscussionViewModelFactory
 import com.team.todoktodok.presentation.compose.discussion.popular.PopularDiscussionsScreen
+import com.team.todoktodok.presentation.compose.main.MainActivity.Companion.DEFAULT_DISCUSSION_ID
+import com.team.todoktodok.presentation.compose.main.MainActivity.Companion.EXTRA_DELETE_DISCUSSION
+import com.team.todoktodok.presentation.compose.main.MainActivity.Companion.EXTRA_WATCHED_DISCUSSION
 import com.team.todoktodok.presentation.compose.preview.HotDiscussionPreviewParameterProvider
+import com.team.todoktodok.presentation.core.ext.getParcelableCompat
+import com.team.todoktodok.presentation.xml.discussiondetail.DiscussionDetailActivity
+import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussion
 
 @Composable
 fun HotDiscussionScreen(
@@ -38,6 +47,37 @@ fun HotDiscussionScreen(
                 ),
         ),
 ) {
+    val activityResultLauncher =
+        rememberLauncherForActivityResult(
+            ActivityResultContracts.StartActivityForResult(),
+        ) { result ->
+            if (result.resultCode == RESULT_OK) {
+                result.data?.let { data ->
+                    when {
+                        data.hasExtra(EXTRA_DELETE_DISCUSSION) -> {
+                            val deletedId =
+                                data.getLongExtra(
+                                    EXTRA_DELETE_DISCUSSION,
+                                    DEFAULT_DISCUSSION_ID,
+                                )
+                            if (deletedId != DEFAULT_DISCUSSION_ID) {
+                                viewModel.removeDiscussion(deletedId)
+                            }
+                        }
+
+                        data.hasExtra(EXTRA_WATCHED_DISCUSSION) -> {
+                            data
+                                .getParcelableCompat<SerializationDiscussion>(
+                                    EXTRA_WATCHED_DISCUSSION,
+                                )?.let {
+                                    viewModel.modifyDiscussion(it)
+                                }
+                        }
+                    }
+                }
+            }
+        }
+
     val context = LocalContext.current
     val exceptionHandler = LocalUiExceptionHandler.current
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
@@ -60,6 +100,14 @@ fun HotDiscussionScreen(
         uiState = uiState.value,
         isLoading = isLoading.value,
         onLoadMore = { viewModel.loadActivatedDiscussions() },
+        onClickDiscussion = {
+            activityResultLauncher.launch(
+                DiscussionDetailActivity.Intent(
+                    context = context,
+                    discussionId = it,
+                ),
+            )
+        },
         modifier = modifier,
     )
 }
@@ -69,6 +117,7 @@ private fun HotDiscussionScreen(
     uiState: HotDiscussionUiState,
     isLoading: Boolean,
     onLoadMore: () -> Unit,
+    onClickDiscussion: (Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     InfinityLazyColumn(
@@ -81,6 +130,7 @@ private fun HotDiscussionScreen(
         item {
             PopularDiscussionsScreen(
                 uiState = uiState.popularDiscussions,
+                onClickDiscussion = { onClickDiscussion(it) },
             )
         }
 
@@ -93,6 +143,7 @@ private fun HotDiscussionScreen(
             DiscussionCard(
                 uiState = item,
                 discussionCardType = uiState.activatedDiscussions.type,
+                onClick = { onClickDiscussion(it) },
             )
         }
 
@@ -120,5 +171,6 @@ private fun HotDiscissionContent(
         uiState = hotDiscussionUiState,
         isLoading = true,
         onLoadMore = {},
+        onClickDiscussion = {},
     )
 }

@@ -39,7 +39,6 @@ import com.team.todoktodok.presentation.compose.preview.DiscussionUiStatePreview
 import com.team.todoktodok.presentation.compose.theme.Gray75
 import com.team.todoktodok.presentation.compose.theme.RedFF
 import com.team.todoktodok.presentation.compose.theme.White
-import com.team.todoktodok.presentation.xml.discussiondetail.DiscussionDetailActivity
 
 sealed interface DiscussionCardType {
     data object Default : DiscussionCardType
@@ -58,8 +57,8 @@ fun DiscussionCard(
     uiState: DiscussionUiState,
     discussionCardType: DiscussionCardType,
     modifier: Modifier = Modifier,
+    onClick: (Long) -> Unit = {},
 ) {
-    val context = LocalContext.current
     BoxWithConstraints(modifier = modifier.fillMaxWidth()) {
         val cardWidth =
             if (discussionCardType is DiscussionCardType.OpinionVisible) {
@@ -69,14 +68,7 @@ fun DiscussionCard(
             }
 
         ElevatedCard(
-            onClick = {
-                context.startActivity(
-                    DiscussionDetailActivity.Intent(
-                        context = context,
-                        discussionId = uiState.discussionId,
-                    ),
-                )
-            },
+            onClick = { onClick(uiState.discussionId) },
             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
             modifier = Modifier.width(cardWidth),
         ) {

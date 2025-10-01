@@ -39,7 +39,6 @@ import com.team.todoktodok.presentation.compose.core.component.CloverProgressBar
 import com.team.todoktodok.presentation.compose.discussion.component.DiscussionTab
 import com.team.todoktodok.presentation.compose.discussion.component.SearchDiscussionBar
 import com.team.todoktodok.presentation.compose.discussion.model.Destination
-import com.team.todoktodok.presentation.compose.discussion.model.DiscussionsUiEvent
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionsUiState
 import com.team.todoktodok.presentation.compose.discussion.vm.DiscussionsViewModel
 import com.team.todoktodok.presentation.compose.discussion.vm.DiscussionsViewModelFactory
@@ -52,7 +51,6 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DiscussionsScreen(
-    exceptionMessageConverter: ExceptionMessageConverter,
     modifier: Modifier = Modifier,
     timeoutMillis: Long = 1500L,
     viewModel: DiscussionsViewModel =
@@ -97,19 +95,19 @@ fun DiscussionsScreen(
         }
     }
 
-    ObserveAsEvents(viewModel.uiEvent) { event ->
-        when (event) {
-            is DiscussionsUiEvent.ShowErrorMessage -> {
-                val message = context.getString(exceptionMessageConverter(event.exception))
-                showMessage(message, timeoutMillis)
-            }
-
-            DiscussionsUiEvent.ScrollToAllDiscussion ->
-                coroutineScope.launch {
-                    pagerState.animateScrollToPage(Destination.ALL.ordinal)
-                }
-        }
-    }
+//    ObserveAsEvents(viewModel.uiEvent) { event ->
+//        when (event) {
+//            is DiscussionsUiEvent.ShowErrorMessage -> {
+//                val message = context.getString(exceptionHandler.messageConverter(event.exception))
+//                showMessage(message, timeoutMillis)
+//            }
+//
+//            DiscussionsUiEvent.ScrollToAllDiscussion ->
+//                coroutineScope.launch {
+//                    pagerState.animateScrollToPage(Destination.ALL.ordinal)
+//                }
+//        }
+//    }
 
     ObserveAsEvents(viewModel.isRestoring) {
         coroutineScope.launch {
@@ -118,9 +116,8 @@ fun DiscussionsScreen(
     }
 
     LaunchedEffect(Unit) {
-        viewModel.loadIsUnreadNotification()
-        viewModel.loadMyDiscussions()
-        viewModel.loadHotDiscussions()
+//        viewModel.loadIsUnreadNotification()
+//        viewModel.loadMyDiscussions()
     }
 
     CompositionLocalProvider(
@@ -145,7 +142,6 @@ fun DiscussionsScreen(
 
 @Composable
 private fun DiscussionsScreen(
-    exceptionMessageConverter: ExceptionMessageConverter,
     isLoading: Boolean,
     uiState: DiscussionsUiState,
     pagerState: PagerState,
@@ -153,7 +149,6 @@ private fun DiscussionsScreen(
     onSearchKeywordChanged: (String) -> Unit,
     onTabChanged: (String) -> Unit,
     onSearch: () -> Unit,
-    onActivatedDiscussionLoadMore: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(
@@ -161,11 +156,9 @@ private fun DiscussionsScreen(
         modifier = modifier.fillMaxSize(),
     ) {
         DiscussionsContent(
-            exceptionMessageConverter,
             uiState = uiState,
             pagerState = pagerState,
             onSearchKeywordChanged = { onSearchKeywordChanged(it) },
-            onActivatedDiscussionLoadMore = onActivatedDiscussionLoadMore,
             onTabChanged = { tab -> if (tab != Destination.ALL) onTabChanged("") },
             onSearch = onSearch,
             modifier = Modifier.fillMaxSize(),
@@ -182,12 +175,10 @@ private fun DiscussionsScreen(
 }
 
 @Composable
-fun DiscussionsContent(
-    exceptionMessageConverter: ExceptionMessageConverter,
+private fun DiscussionsContent(
     uiState: DiscussionsUiState,
     pagerState: PagerState,
     onSearchKeywordChanged: (String) -> Unit,
-    onActivatedDiscussionLoadMore: () -> Unit,
     onTabChanged: (Destination) -> Unit,
     onSearch: () -> Unit,
     modifier: Modifier = Modifier,
@@ -209,10 +200,8 @@ fun DiscussionsContent(
         )
 
         DiscussionTab(
-            messageConverter = exceptionMessageConverter,
             uiState = uiState,
             pagerState = pagerState,
-            onActivatedDiscussionLoadMore = { onActivatedDiscussionLoadMore() },
             onTabChanged = onTabChanged,
         )
     }

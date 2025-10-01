@@ -104,7 +104,7 @@ class MainActivity : ComponentActivity() {
     companion object {
         const val EXTRA_DELETE_DISCUSSION = "delete_discussion"
         const val EXTRA_WATCHED_DISCUSSION = "watched_discussion"
-        private const val DEFAULT_DISCUSSION_ID = -1L
+        const val DEFAULT_DISCUSSION_ID = -1L
 
         fun Intent(context: Context) = Intent(context, MainActivity::class.java)
     }
