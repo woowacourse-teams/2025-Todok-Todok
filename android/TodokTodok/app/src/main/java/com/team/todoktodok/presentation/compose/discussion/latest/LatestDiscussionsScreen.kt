@@ -28,7 +28,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.team.domain.model.latest.PageInfo
+import com.team.domain.model.PageInfo
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.presentation.compose.core.ObserveAsEvents

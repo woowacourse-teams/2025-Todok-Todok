@@ -8,10 +8,9 @@ import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.performClick
 import com.team.domain.model.Book
 import com.team.domain.model.Discussion
-import com.team.domain.model.latest.PageInfo
+import com.team.domain.model.PageInfo
 import com.team.domain.model.member.Nickname
 import com.team.domain.model.member.User
 import com.team.todoktodok.presentation.compose.discussion.latest.LatestDiscussionsScreen
@@ -20,7 +19,6 @@ import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiSta
 import com.team.todoktodok.presentation.compose.preview.LatestDiscussionsPreviewParameterProvider
 import org.junit.Rule
 import org.junit.Test
-import org.junit.jupiter.api.Assertions
 import java.time.LocalDateTime
 
 class LatestDiscussionsScreenTest {

@@ -1,7 +1,7 @@
 package com.team.todoktodok.presentation.compose.discussion.latest
 
+import com.team.domain.model.PageInfo
 import com.team.domain.model.latest.LatestDiscussionPage
-import com.team.domain.model.latest.PageInfo
 import com.team.todoktodok.presentation.compose.core.component.DiscussionCardType
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiState
 import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussion

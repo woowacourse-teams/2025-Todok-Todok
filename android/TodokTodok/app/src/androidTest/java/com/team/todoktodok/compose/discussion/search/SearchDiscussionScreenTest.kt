@@ -3,12 +3,10 @@ package com.team.todoktodok.compose.discussion.search
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.performClick
 import com.team.todoktodok.presentation.compose.core.component.DiscussionCardType
 import com.team.todoktodok.presentation.compose.discussion.search.SearchDiscussionScreen
 import com.team.todoktodok.presentation.compose.discussion.search.SearchDiscussionsUiState
 import com.team.todoktodok.presentation.compose.preview.SearchDiscussionsUiStatePreviewParameterProvider
-import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
 
