@@ -19,7 +19,7 @@ import com.google.firebase.messaging.RemoteMessage
 import com.team.todoktodok.App
 import com.team.todoktodok.adapter.model.FcmNotification
 import com.team.todoktodok.adapter.model.FcmNotification.Companion.FcmNotification
-import com.team.todoktodok.presentation.compose.discussion.DiscussionsActivity
+import com.team.todoktodok.presentation.compose.main.MainActivity
 import com.team.todoktodok.presentation.xml.serialization.toSerialization
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -114,7 +114,7 @@ class FirebaseMessagingAdapter : FirebaseMessagingService() {
 
     private fun intent(fcmNotification: FcmNotification): Intent {
         val intent =
-            DiscussionsActivity.Intent(this).apply {
+            MainActivity.Intent(this).apply {
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
                 putExtra(KEY_NOTIFICATION, true)
                 putExtra(KEY_NOTIFICATION_DATA, fcmNotification.toSerialization())

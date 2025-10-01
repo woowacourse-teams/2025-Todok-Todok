@@ -17,7 +17,7 @@ import com.team.domain.model.member.MemberId.Companion.DEFAULT_MEMBER_ID
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivityProfileBinding
-import com.team.todoktodok.presentation.compose.discussion.DiscussionsActivity
+import com.team.todoktodok.presentation.compose.main.MainActivity
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
 import com.team.todoktodok.presentation.core.component.ReportUserDialog
@@ -161,7 +161,7 @@ class ProfileActivity : AppCompatActivity() {
             override fun onClickBack() {
                 if (viewModel.uiState.value?.isMyProfilePage == true) {
                     val intent =
-                        DiscussionsActivity.Intent(this@ProfileActivity).apply {
+                        MainActivity.Intent(this@ProfileActivity).apply {
                             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
                         }
                     startActivity(intent)

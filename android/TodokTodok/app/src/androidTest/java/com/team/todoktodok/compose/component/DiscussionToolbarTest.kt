@@ -16,10 +16,7 @@ class DiscussionToolbarTest {
     @Test
     fun `알람 아이콘이 화면에 보이고 확인하지 않은 알람이 없으면 뱃지가 보이지 않는다`() {
         composeTestRule.setContent {
-            DiscussionToolbar(
-                isExistNotification = false,
-                onClickNotification = {},
-            )
+            DiscussionToolbar(isExistNotification = false)
         }
 
         composeTestRule
@@ -34,13 +31,9 @@ class DiscussionToolbarTest {
     @Test
     fun `확인하지 않은 알람이 있으면 뱃지가 보인다`() {
         composeTestRule.setContent {
-            DiscussionToolbar(
-                isExistNotification = true,
-                onClickNotification = {},
-            )
+            DiscussionToolbar(isExistNotification = true)
         }
 
-        // 뱃지 점의 contentDescription 확인
         composeTestRule
             .onNodeWithContentDescription(
                 "확인하지 않은 알람이 있어요",

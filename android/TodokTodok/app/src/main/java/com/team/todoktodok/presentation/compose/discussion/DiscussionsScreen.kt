@@ -152,44 +152,30 @@ private fun DiscussionsScreen(
     onActivatedDiscussionLoadMore: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Scaffold(
-        topBar = {
-            DiscussionToolbar(
-                isExistNotification = uiState.isUnreadNotification,
-                modifier =
-                    modifier
-                        .fillMaxWidth()
-                        .statusBarsPadding(),
-            )
-        },
-    ) { innerPadding ->
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier =
-                Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding),
-        ) {
-            DiscussionsContent(
-                exceptionMessageConverter,
-                uiState = uiState,
-                pagerState = pagerState,
-                onSearchKeywordChanged = { onSearchKeywordChanged(it) },
-                onActivatedDiscussionLoadMore = onActivatedDiscussionLoadMore,
-                onTabChanged = { tab -> if (tab != Destination.ALL) onTabChanged("") },
-                onDiscussionClick = { onDiscussionClick(it) },
-                onSearch = onSearch,
-                modifier = Modifier.fillMaxSize(),
-            )
 
-            CloverProgressBar(isLoading)
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = modifier.fillMaxSize()
+    ) {
+        DiscussionsContent(
+            exceptionMessageConverter,
+            uiState = uiState,
+            pagerState = pagerState,
+            onSearchKeywordChanged = { onSearchKeywordChanged(it) },
+            onActivatedDiscussionLoadMore = onActivatedDiscussionLoadMore,
+            onTabChanged = { tab -> if (tab != Destination.ALL) onTabChanged("") },
+            onDiscussionClick = { onDiscussionClick(it) },
+            onSearch = onSearch,
+            modifier = Modifier.fillMaxSize(),
+        )
 
-            SnackbarHost(
-                hostState = snackbarHostState,
-                snackbar = { AlertSnackBar(snackbarData = it) },
-                modifier = Modifier.align(Alignment.BottomCenter),
-            )
-        }
+        CloverProgressBar(isLoading)
+
+        SnackbarHost(
+            hostState = snackbarHostState,
+            snackbar = { AlertSnackBar(snackbarData = it) },
+            modifier = Modifier.align(Alignment.BottomCenter),
+        )
     }
 }
 
