@@ -78,7 +78,7 @@ fun MainBottomNavigation(
         ) {
             Image(
                 painter = painterResource(id = R.drawable.ic_create_discussion),
-                contentDescription = stringResource(R.string.bottom_navigation__content_description_create_discussion),
+                contentDescription = stringResource(R.string.bottom_navigation_content_description_create_discussion),
                 modifier = Modifier.size(50.dp),
             )
         }

@@ -46,8 +46,8 @@
     <string name="bottom_navigation_my">MY</string>
 
     <string name="bottom_navigation_content_description_discussion">모든 토론방</string>
-    <string name="bottom_navigation__content_description_create_discussion">토론방 생성</string>
-    <string name="bottom_navigation__content_description_my">내 토론방</string>
+    <string name="bottom_navigation_content_description_create_discussion">토론방 생성</string>
+    <string name="bottom_navigation_content_description_my">내 토론방</string>
 
     <!--  토론 목록 페이지  -->
     <string name="discussions_hot_discussion_rooms">인기 토론방</string>

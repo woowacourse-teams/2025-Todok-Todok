@@ -19,7 +19,7 @@ enum class MainDestination(
     My(
         "MynScreen",
         R.string.bottom_navigation_my,
-        R.string.bottom_navigation__content_description_my,
+        R.string.bottom_navigation_content_description_my,
     ),
     ;
 
