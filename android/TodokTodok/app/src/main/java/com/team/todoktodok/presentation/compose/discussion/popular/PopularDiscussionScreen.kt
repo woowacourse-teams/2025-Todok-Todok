@@ -81,6 +81,6 @@ private fun PopularDiscussionsScreenPreview(
 ) {
     PopularDiscussionsScreen(
         uiState = popularDiscussions,
-        onClickDiscussion = {}
+        onClickDiscussion = {},
     )
 }

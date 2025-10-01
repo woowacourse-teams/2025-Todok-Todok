@@ -1,5 +1,8 @@
 package com.team.todoktodok.presentation.compose.discussion.latest
 
+import android.app.Activity.RESULT_OK
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -39,9 +42,15 @@ import com.team.todoktodok.presentation.compose.core.component.DiscussionCard
 import com.team.todoktodok.presentation.compose.core.component.InfinityLazyColumn
 import com.team.todoktodok.presentation.compose.discussion.latest.vm.LatestDiscussionViewModel
 import com.team.todoktodok.presentation.compose.discussion.latest.vm.LatestDiscussionViewModelFactory
+import com.team.todoktodok.presentation.compose.main.MainActivity.Companion.DEFAULT_DISCUSSION_ID
+import com.team.todoktodok.presentation.compose.main.MainActivity.Companion.EXTRA_DELETE_DISCUSSION
+import com.team.todoktodok.presentation.compose.main.MainActivity.Companion.EXTRA_WATCHED_DISCUSSION
 import com.team.todoktodok.presentation.compose.preview.LatestDiscussionsPreviewParameterProvider
 import com.team.todoktodok.presentation.compose.theme.Green1A
 import com.team.todoktodok.presentation.compose.theme.White
+import com.team.todoktodok.presentation.core.ext.getParcelableCompat
+import com.team.todoktodok.presentation.xml.discussiondetail.DiscussionDetailActivity
+import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussion
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -53,6 +62,37 @@ fun LatestDiscussionsScreen(
             factory = LatestDiscussionViewModelFactory((LocalContext.current.applicationContext as App).container),
         ),
 ) {
+    val activityResultLauncher =
+        rememberLauncherForActivityResult(
+            ActivityResultContracts.StartActivityForResult(),
+        ) { result ->
+            if (result.resultCode == RESULT_OK) {
+                result.data?.let { data ->
+                    when {
+                        data.hasExtra(EXTRA_DELETE_DISCUSSION) -> {
+                            val deletedId =
+                                data.getLongExtra(
+                                    EXTRA_DELETE_DISCUSSION,
+                                    DEFAULT_DISCUSSION_ID,
+                                )
+                            if (deletedId != DEFAULT_DISCUSSION_ID) {
+                                viewModel.removeDiscussion(deletedId)
+                            }
+                        }
+
+                        data.hasExtra(EXTRA_WATCHED_DISCUSSION) -> {
+                            data
+                                .getParcelableCompat<SerializationDiscussion>(
+                                    EXTRA_WATCHED_DISCUSSION,
+                                )?.let {
+                                    viewModel.modifyDiscussion(it)
+                                }
+                        }
+                    }
+                }
+            }
+        }
+
     val coroutineScope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
@@ -96,6 +136,14 @@ fun LatestDiscussionsScreen(
         pullToRefreshState = pullToRefreshState,
         onLoadMore = { viewModel.loadLatestDiscussions() },
         onRefresh = viewModel::refreshLatestDiscussions,
+        onClickDiscussion = {
+            activityResultLauncher.launch(
+                DiscussionDetailActivity.Intent(
+                    context = context,
+                    discussionId = it,
+                ),
+            )
+        },
         modifier = modifier,
     )
 }
@@ -109,6 +157,7 @@ fun LatestDiscussionsScreen(
     pullToRefreshState: PullToRefreshState,
     onLoadMore: () -> Unit,
     onRefresh: () -> Unit,
+    onClickDiscussion: (Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     PullToRefreshBox(
@@ -138,6 +187,7 @@ fun LatestDiscussionsScreen(
                     DiscussionCard(
                         uiState = item,
                         discussionCardType = uiState.type,
+                        onClick = { onClickDiscussion(it) },
                         modifier = Modifier.padding(vertical = 2.dp),
                     )
                 }
@@ -200,6 +250,7 @@ private fun DiscussionsScreenPreview(
         pullToRefreshState = rememberPullToRefreshState(),
         onLoadMore = {},
         onRefresh = {},
+        onClickDiscussion = {},
     )
 }
 
@@ -214,6 +265,7 @@ private fun LoadingDiscussionsScreenPreview() {
         pullToRefreshState = rememberPullToRefreshState(),
         onLoadMore = {},
         onRefresh = {},
+        onClickDiscussion = {},
     )
 }
 
@@ -235,5 +287,6 @@ private fun LastPageDiscussionsScreenPreview() {
         pullToRefreshState = rememberPullToRefreshState(),
         onLoadMore = {},
         onRefresh = {},
+        onClickDiscussion = {},
     )
 }

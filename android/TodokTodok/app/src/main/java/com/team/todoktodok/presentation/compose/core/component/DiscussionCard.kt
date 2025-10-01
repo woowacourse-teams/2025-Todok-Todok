@@ -271,6 +271,7 @@ private fun DiscussionCardPreviewDefault(
     DiscussionCard(
         uiState = uiState.first(),
         discussionCardType = DiscussionCardType.Default,
+        onClick = {},
     )
 }
 
@@ -282,6 +283,7 @@ private fun DiscussionCardPreviewHighlighted(
     DiscussionCard(
         uiState = uiState.first(),
         discussionCardType = DiscussionCardType.QueryHighlighting("JPA"),
+        onClick = {},
     )
 }
 
@@ -293,6 +295,7 @@ private fun DiscussionCardPreviewWriterHidden(
     DiscussionCard(
         uiState = uiState.first(),
         discussionCardType = DiscussionCardType.WriterHidden,
+        onClick = {},
     )
 }
 
@@ -304,5 +307,6 @@ private fun DiscussionCardPreviewResizing(
     DiscussionCard(
         uiState = uiState.first(),
         discussionCardType = DiscussionCardType.OpinionVisible,
+        onClick = {},
     )
 }
