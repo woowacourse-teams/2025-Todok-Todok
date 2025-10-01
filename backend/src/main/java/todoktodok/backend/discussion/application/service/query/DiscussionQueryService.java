@@ -142,7 +142,7 @@ public class DiscussionQueryService {
 
         final List<Long> hotDiscussionIds = findHotDiscussions(count, likesByDiscussionId, commentsByDiscussionId, discussionIds);
 
-        return makeResponsesFrom(hotDiscussionIds, likesByDiscussionId, commentsByDiscussionId);
+        return getDiscussionsResponses(hotDiscussionIds, member);
     }
 
     public ActiveDiscussionPageResponse getActiveDiscussions(
@@ -310,6 +310,7 @@ public class DiscussionQueryService {
                     return new DiscussionResponse(discussion, likeCount, commentCount, isLikedByMe);
                 })
                 .toList();
+
     }
 
 
