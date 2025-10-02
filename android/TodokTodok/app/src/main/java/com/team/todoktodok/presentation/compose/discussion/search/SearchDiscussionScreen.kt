@@ -14,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -25,6 +26,7 @@ import com.team.todoktodok.R
 import com.team.todoktodok.presentation.compose.core.component.DiscussionCard
 import com.team.todoktodok.presentation.compose.preview.SearchDiscussionsUiStatePreviewParameterProvider
 import com.team.todoktodok.presentation.compose.theme.Pretendard
+import com.team.todoktodok.presentation.xml.discussiondetail.DiscussionDetailActivity
 
 @Composable
 fun SearchDiscussionScreen(
@@ -75,6 +77,8 @@ private fun SearchResultDiscussions(
     uiState: SearchDiscussionsUiState,
     modifier: Modifier = Modifier,
 ) {
+    val context = LocalContext.current
+
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(15.dp),
         modifier = modifier.padding(horizontal = 10.dp),
@@ -94,6 +98,9 @@ private fun SearchResultDiscussions(
             DiscussionCard(
                 uiState = item,
                 discussionCardType = uiState.type,
+                onClick = {
+                    context.startActivity(DiscussionDetailActivity.Intent(context, it))
+                },
             )
         }
 

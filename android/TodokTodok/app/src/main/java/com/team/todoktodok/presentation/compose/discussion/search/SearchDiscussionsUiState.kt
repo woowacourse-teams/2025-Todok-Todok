@@ -9,6 +9,7 @@ import com.team.domain.model.Discussion
 import com.team.todoktodok.presentation.compose.core.component.DiscussionCardType
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiState
 import com.team.todoktodok.presentation.compose.theme.Green1A
+import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussion
 
 data class SearchDiscussionsUiState(
     val discussions: List<DiscussionUiState> = emptyList(),
@@ -55,12 +56,12 @@ data class SearchDiscussionsUiState(
 
     fun modifyKeyword(keyword: String) = copy(type = type.copy(keyword = keyword))
 
-    fun modify(newDiscussion: Discussion): SearchDiscussionsUiState =
+    fun modify(newDiscussion: SerializationDiscussion): SearchDiscussionsUiState =
         copy(
             discussions =
                 discussions.map {
                     if (it.discussionId == newDiscussion.id) {
-                        DiscussionUiState(newDiscussion)
+                        DiscussionUiState(newDiscussion.toDomain())
                     } else {
                         it
                     }
