@@ -95,7 +95,7 @@ fun MainBottomNavigation(
         BottomNavigationItem(
             selected = selectedDestination.ordinal == MainDestination.My.ordinal,
             onClick = {
-                if (selectedDestination.ordinal != MainDestination.My.ordinal) { 
+                if (selectedDestination.ordinal != MainDestination.My.ordinal) {
                     navController.navigate(MainDestination.My.route) {
                         launchSingleTop = true
                         popUpTo(navController.graph.startDestinationId) { saveState = true }

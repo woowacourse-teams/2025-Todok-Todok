@@ -3,40 +3,71 @@ package com.team.todoktodok.presentation.compose.main
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.team.todoktodok.App
 import com.team.todoktodok.presentation.compose.discussion.component.DiscussionToolbar
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionTabStatus
-import com.team.todoktodok.presentation.compose.discussion.model.DiscussionTabStatus.Companion.DiscussionTabStatus
-import com.team.todoktodok.presentation.xml.book.SelectBookActivity
+import com.team.todoktodok.presentation.compose.discussion.model.DiscussionsUiState
+import com.team.todoktodok.presentation.compose.discussion.vm.DiscussionsViewModel
+import com.team.todoktodok.presentation.compose.discussion.vm.DiscussionsViewModelFactory
 
 @Composable
 fun MainScreen(
-    isUnreadNotification: Boolean,
+    modifier: Modifier = Modifier,
+    viewModel: DiscussionsViewModel =
+        viewModel(
+            factory = DiscussionsViewModelFactory((LocalContext.current.applicationContext as App).container),
+        ),
+) {
+    val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+    val navController = rememberNavController()
+
+    val pagerState =
+        rememberPagerState(initialPage = DiscussionTabStatus.HOT.ordinal) {
+            DiscussionTabStatus.entries.size
+        }
+
+    MainScreenContent(
+        uiState = uiState.value,
+        navController = navController,
+        pagerState = pagerState,
+        onSearch = viewModel::loadSearchedDiscussions,
+        onChangeSearchBarVisibility = viewModel::changeSearchBarVisibility,
+        onChangeBottomNavigationTab = viewModel::changeBottomNavigationTab,
+        onChangeKeyword = viewModel::modifySearchKeyword,
+        modifier = modifier,
+    )
+}
+
+@Composable
+fun MainScreenContent(
+    uiState: DiscussionsUiState,
+    navController: NavHostController,
+    pagerState: PagerState,
+    onSearch: () -> Unit,
+    onChangeSearchBarVisibility: () -> Unit,
+    onChangeBottomNavigationTab: (MainDestination) -> Unit,
+    onChangeKeyword: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val context = LocalContext.current
-    val navController = rememberNavController()
-    val startDestination = MainDestination.Discussion
-    var selectedDestination by rememberSaveable { mutableStateOf(MainDestination.Discussion) }
-    val pagerState =
-        rememberPagerState(initialPage = DiscussionTabStatus.HOT.ordinal) { DiscussionTabStatus.entries.size }
-
     Scaffold(
         topBar = {
             DiscussionToolbar(
-                tab = DiscussionTabStatus(pagerState.currentPage),
-                isExistNotification = isUnreadNotification,
-                onClickSearch = {},
+                isExistNotification = uiState.isUnreadNotification,
+                defaultDiscussionsUiState = uiState,
+                onSearch = onSearch,
+                onChangeSearchBarVisibility = onChangeSearchBarVisibility,
+                onKeywordChange = { onChangeKeyword(it) },
                 modifier =
                     Modifier
                         .fillMaxWidth()
@@ -46,12 +77,9 @@ fun MainScreen(
         bottomBar = {
             MainBottomNavigation(
                 navController = navController,
-                selectedDestination = selectedDestination.ordinal,
-                onSelectedDestinationChanged = { index ->
-                    selectedDestination = MainDestination.of(index)
-                },
-                onClickCreateDiscussion = {
-                    context.startActivity(SelectBookActivity.Intent(context))
+                selectedDestination = uiState.bottomNavigationTab,
+                onSelectedDestinationChanged = {
+                    onChangeBottomNavigationTab(it)
                 },
             )
         },
@@ -60,7 +88,7 @@ fun MainScreen(
         MainNavHost(
             pagerState = pagerState,
             navController = navController,
-            startDestination = startDestination,
+            startDestination = MainDestination.Discussion,
             modifier = Modifier.padding(innerPadding),
         )
     }
@@ -69,5 +97,16 @@ fun MainScreen(
 @Preview
 @Composable
 private fun MainScreenPreview() {
-    MainScreen(isUnreadNotification = true)
+    val pagerState = rememberPagerState(initialPage = 0) { DiscussionTabStatus.entries.size }
+    val navController = rememberNavController()
+
+    MainScreenContent(
+        uiState = DiscussionsUiState(),
+        navController = navController,
+        pagerState = pagerState,
+        onSearch = {},
+        onChangeBottomNavigationTab = {},
+        onChangeKeyword = {},
+        onChangeSearchBarVisibility = {},
+    )
 }
