@@ -1,5 +1,6 @@
 package com.team.todoktodok.presentation.compose.main
 
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -10,6 +11,7 @@ import com.team.todoktodok.presentation.compose.my.MyScreen
 
 @Composable
 fun MainNavHost(
+    pagerState: PagerState,
     navController: NavHostController,
     startDestination: MainDestination,
     modifier: Modifier = Modifier,
@@ -22,7 +24,7 @@ fun MainNavHost(
         MainDestination.entries.forEach { destination ->
             composable(destination.route) {
                 when (destination) {
-                    MainDestination.Discussion -> DiscussionsScreen()
+                    MainDestination.Discussion -> DiscussionsScreen(pagerState)
                     MainDestination.My -> MyScreen()
                 }
             }

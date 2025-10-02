@@ -5,10 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.PagerState
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
@@ -26,7 +23,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.team.todoktodok.App
@@ -35,11 +31,7 @@ import com.team.todoktodok.presentation.compose.LocalUiExceptionHandler
 import com.team.todoktodok.presentation.compose.UiExceptionHandler
 import com.team.todoktodok.presentation.compose.core.ObserveAsEvents
 import com.team.todoktodok.presentation.compose.core.component.AlertSnackBar
-import com.team.todoktodok.presentation.compose.core.component.CloverProgressBar
 import com.team.todoktodok.presentation.compose.discussion.component.DiscussionTab
-import com.team.todoktodok.presentation.compose.discussion.component.SearchDiscussionBar
-import com.team.todoktodok.presentation.compose.discussion.model.Destination
-import com.team.todoktodok.presentation.compose.discussion.model.DiscussionsUiState
 import com.team.todoktodok.presentation.compose.discussion.vm.DiscussionsViewModel
 import com.team.todoktodok.presentation.compose.discussion.vm.DiscussionsViewModelFactory
 import com.team.todoktodok.presentation.compose.theme.White
@@ -51,6 +43,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DiscussionsScreen(
+    pagerState: PagerState,
     modifier: Modifier = Modifier,
     timeoutMillis: Long = 1500L,
     viewModel: DiscussionsViewModel =
@@ -58,8 +51,6 @@ fun DiscussionsScreen(
             factory = DiscussionsViewModelFactory((LocalContext.current.applicationContext as App).container),
         ),
 ) {
-    val pagerState =
-        rememberPagerState(initialPage = Destination.HOT.ordinal) { Destination.entries.size }
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
     val isLoading = viewModel.isLoading.collectAsStateWithLifecycle()
     val coroutineScope = rememberCoroutineScope()
@@ -128,13 +119,8 @@ fun DiscussionsScreen(
             ),
     ) {
         DiscussionsScreen(
-            isLoading = isLoading.value,
-            uiState = uiState.value,
             pagerState = pagerState,
             snackbarHostState = snackbarHostState,
-            onTabChanged = viewModel::modifySearchKeyword,
-            onSearchKeywordChanged = viewModel::modifySearchKeyword,
-            onSearch = viewModel::loadSearchedDiscussions,
             modifier = modifier,
         )
     }
@@ -142,67 +128,25 @@ fun DiscussionsScreen(
 
 @Composable
 private fun DiscussionsScreen(
-    isLoading: Boolean,
-    uiState: DiscussionsUiState,
     pagerState: PagerState,
     snackbarHostState: SnackbarHostState,
-    onSearchKeywordChanged: (String) -> Unit,
-    onTabChanged: (String) -> Unit,
-    onSearch: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier.fillMaxSize(),
     ) {
-        DiscussionsContent(
-            uiState = uiState,
-            pagerState = pagerState,
-            onSearchKeywordChanged = { onSearchKeywordChanged(it) },
-            onTabChanged = { tab -> if (tab != Destination.ALL) onTabChanged("") },
-            onSearch = onSearch,
-            modifier = Modifier.fillMaxSize(),
-        )
-
-        CloverProgressBar(isLoading)
-
+        Column(
+            modifier =
+                Modifier
+                    .background(color = White),
+        ) {
+            DiscussionTab(pagerState = pagerState)
+        }
         SnackbarHost(
             hostState = snackbarHostState,
             snackbar = { AlertSnackBar(snackbarData = it) },
             modifier = Modifier.align(Alignment.BottomCenter),
-        )
-    }
-}
-
-@Composable
-private fun DiscussionsContent(
-    uiState: DiscussionsUiState,
-    pagerState: PagerState,
-    onSearchKeywordChanged: (String) -> Unit,
-    onTabChanged: (Destination) -> Unit,
-    onSearch: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Column(
-        modifier =
-            modifier
-                .background(color = White),
-    ) {
-        SearchDiscussionBar(
-            onSearch = onSearch,
-            searchKeyword = uiState.searchDiscussion.type.keyword,
-            previousKeyword = uiState.searchDiscussion.previousKeyword,
-            onKeywordChange = { onSearchKeywordChanged(it) },
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 12.dp),
-        )
-
-        DiscussionTab(
-            uiState = uiState,
-            pagerState = pagerState,
-            onTabChanged = onTabChanged,
         )
     }
 }
