@@ -21,6 +21,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -50,15 +51,11 @@ fun SearchDiscussionBar(
                 text = stringResource(R.string.discussion_search_bar_hint),
                 fontSize = 14.sp,
                 color = Color.Gray,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1,
+                modifier = Modifier.fillMaxWidth(),
             )
         },
-        modifier =
-            modifier
-                .fillMaxWidth()
-                .background(
-                    color = Green73,
-                    shape = RoundedCornerShape(8.dp),
-                ),
         singleLine = true,
         trailingIcon = {
             if (searchKeyword.isNotEmpty()) {
@@ -112,6 +109,14 @@ fun SearchDiscussionBar(
                     }
                 },
             ),
+        maxLines = 1,
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .background(
+                    color = Green73,
+                    shape = RoundedCornerShape(8.dp),
+                ),
     )
 }
 
