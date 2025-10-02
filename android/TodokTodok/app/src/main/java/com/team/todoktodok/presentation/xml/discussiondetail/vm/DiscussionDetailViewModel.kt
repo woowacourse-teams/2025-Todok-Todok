@@ -161,12 +161,12 @@ class DiscussionDetailViewModel(
             is NetworkResult.Success -> onSuccess(result.data)
             is NetworkResult.Failure -> {
                 onFailure()
-                when {
-                    result.exception is TodokTodokExceptions.HttpExceptions.UnauthorizedException -> {
+                when (result.exception) {
+                    is TodokTodokExceptions.HttpExceptions.UnauthorizedException -> {
                         onUiEvent(DiscussionDetailUiEvent.Unauthorized(result.exception))
                     }
 
-                    result.exception is TodokTodokExceptions.HttpExceptions.NotFoundException -> {
+                    is TodokTodokExceptions.HttpExceptions.NotFoundException -> {
                         onUiEvent(DiscussionDetailUiEvent.NotFoundDiscussion(result.exception))
                     }
 
