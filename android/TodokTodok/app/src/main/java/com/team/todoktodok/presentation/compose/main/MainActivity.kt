@@ -6,50 +6,19 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.result.contract.ActivityResultContracts
 import com.team.todoktodok.presentation.compose.theme.TodoktodokTheme
 import com.team.todoktodok.presentation.core.ext.getParcelableCompat
 import com.team.todoktodok.presentation.view.serialization.SerializationNotificationType
 import com.team.todoktodok.presentation.xml.discussiondetail.DiscussionDetailActivity
-import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussion
 import com.team.todoktodok.presentation.xml.serialization.SerializationFcmNotification
 
 class MainActivity : ComponentActivity() {
-    private val discussionDetailLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == RESULT_OK) {
-                result.data?.let { data ->
-                    when {
-                        data.hasExtra(EXTRA_DELETE_DISCUSSION) -> {
-                            val deletedId =
-                                data.getLongExtra(
-                                    EXTRA_DELETE_DISCUSSION,
-                                    DEFAULT_DISCUSSION_ID,
-                                )
-                            if (deletedId != DEFAULT_DISCUSSION_ID) {
-                            }
-                        }
-
-                        data.hasExtra(EXTRA_WATCHED_DISCUSSION) -> {
-                            data
-                                .getParcelableCompat<SerializationDiscussion>(
-                                    EXTRA_WATCHED_DISCUSSION,
-                                )?.let {
-                                }
-                        }
-                    }
-                }
-            }
-        }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             TodoktodokTheme {
-                MainScreen(
-                    isUnreadNotification = false,
-                )
+                MainScreen()
             }
         }
         handleNotificationDeepLink(intent)

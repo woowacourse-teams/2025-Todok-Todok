@@ -5,6 +5,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -125,7 +126,10 @@ private fun HotDiscussionScreen(
         loadMoreLimitCount = 3,
         contentPadding = PaddingValues(vertical = 10.dp),
         verticalArrangement = Arrangement.spacedBy(15.dp),
-        modifier = modifier.padding(10.dp),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .padding(10.dp),
     ) {
         item {
             PopularDiscussionsScreen(
