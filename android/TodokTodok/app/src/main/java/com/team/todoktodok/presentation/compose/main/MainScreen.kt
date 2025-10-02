@@ -28,13 +28,15 @@ fun MainScreen(
     val navController = rememberNavController()
     val startDestination = MainDestination.Discussion
     var selectedDestination by rememberSaveable { mutableStateOf(MainDestination.Discussion) }
-    val pagerState = rememberPagerState(initialPage = DiscussionTabStatus.HOT.ordinal) { DiscussionTabStatus.entries.size }
+    val pagerState =
+        rememberPagerState(initialPage = DiscussionTabStatus.HOT.ordinal) { DiscussionTabStatus.entries.size }
 
     Scaffold(
         topBar = {
             DiscussionToolbar(
                 tab = DiscussionTabStatus(pagerState.currentPage),
                 isExistNotification = isUnreadNotification,
+                onClickSearch = {},
                 modifier =
                     Modifier
                         .fillMaxWidth()

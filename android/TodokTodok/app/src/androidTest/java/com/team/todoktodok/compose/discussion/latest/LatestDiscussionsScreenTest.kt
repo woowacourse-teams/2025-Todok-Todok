@@ -42,6 +42,7 @@ class LatestDiscussionsScreenTest {
                 pullToRefreshState = rememberPullToRefreshState(),
                 onLoadMore = onLoadMore,
                 onRefresh = onRefresh,
+                onClickDiscussion = {},
             )
         }
     }
