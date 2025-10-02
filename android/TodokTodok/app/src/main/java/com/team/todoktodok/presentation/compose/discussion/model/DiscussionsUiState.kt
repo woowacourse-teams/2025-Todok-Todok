@@ -8,6 +8,7 @@ import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussio
 data class DiscussionsUiState(
     val searchDiscussion: SearchDiscussionsUiState = SearchDiscussionsUiState(),
     val allDiscussionMode: AllDiscussionMode = AllDiscussionMode.LATEST,
+    val discussionTab: DiscussionTabStatus = DiscussionTabStatus.HOT,
     val bottomNavigationTab: MainDestination = MainDestination.Discussion,
     val isUnreadNotification: Boolean = true,
     val searchBarVisible: Boolean = false,
@@ -18,6 +19,7 @@ data class DiscussionsUiState(
     ): DiscussionsUiState =
         copy(
             searchDiscussion = searchDiscussion.add(keyword, newDiscussions),
+            discussionTab = DiscussionTabStatus.ALL,
             allDiscussionMode = AllDiscussionMode.SEARCH,
         )
 

@@ -7,6 +7,7 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -36,6 +37,12 @@ fun MainScreen(
         rememberPagerState(initialPage = DiscussionTabStatus.HOT.ordinal) {
             DiscussionTabStatus.entries.size
         }
+
+    LaunchedEffect(uiState.value.discussionTab) {
+        if (uiState.value.discussionTab == DiscussionTabStatus.ALL) {
+            pagerState.scrollToPage(DiscussionTabStatus.ALL.ordinal)
+        }
+    }
 
     MainScreenContent(
         uiState = uiState.value,
@@ -86,6 +93,7 @@ fun MainScreenContent(
         modifier = modifier,
     ) { innerPadding ->
         MainNavHost(
+            allDiscussionScreenMode = uiState.allDiscussionMode,
             pagerState = pagerState,
             navController = navController,
             startDestination = MainDestination.Discussion,

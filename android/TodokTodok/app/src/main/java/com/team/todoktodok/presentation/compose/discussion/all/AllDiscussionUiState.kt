@@ -4,7 +4,6 @@ import com.team.domain.model.Discussion
 import com.team.domain.model.PageInfo
 import com.team.domain.model.latest.LatestDiscussionPage
 import com.team.todoktodok.presentation.compose.discussion.latest.LatestDiscussionsUiState
-import com.team.todoktodok.presentation.compose.discussion.model.AllDiscussionMode
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiState
 import com.team.todoktodok.presentation.compose.discussion.search.SearchDiscussionsUiState
 import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussion
@@ -12,7 +11,6 @@ import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussio
 data class AllDiscussionUiState(
     val searchDiscussion: SearchDiscussionsUiState = SearchDiscussionsUiState(),
     val latestDiscussion: LatestDiscussionsUiState = LatestDiscussionsUiState(),
-    val mode: AllDiscussionMode = AllDiscussionMode.LATEST,
 ) {
     fun refresh() =
         copy(

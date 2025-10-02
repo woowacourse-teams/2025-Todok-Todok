@@ -20,6 +20,7 @@ import com.team.todoktodok.presentation.compose.LocalUiExceptionHandler
 import com.team.todoktodok.presentation.compose.UiExceptionHandler
 import com.team.todoktodok.presentation.compose.core.component.AlertSnackBar
 import com.team.todoktodok.presentation.compose.discussion.component.DiscussionTab
+import com.team.todoktodok.presentation.compose.discussion.model.AllDiscussionMode
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -28,6 +29,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DiscussionsScreen(
+    allDiscussionScreenMode: AllDiscussionMode,
     pagerState: PagerState,
     modifier: Modifier = Modifier,
 ) {
@@ -58,30 +60,17 @@ fun DiscussionsScreen(
                 messageConverter = ExceptionMessageConverter(),
             ),
     ) {
-        DiscussionsScreen(
-            pagerState = pagerState,
-            snackbarHostState = snackbarHostState,
-            modifier = modifier,
-        )
-    }
-}
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = modifier.fillMaxSize(),
+        ) {
+            DiscussionTab(allDiscussionScreenMode = allDiscussionScreenMode, pagerState = pagerState)
 
-@Composable
-private fun DiscussionsScreen(
-    pagerState: PagerState,
-    snackbarHostState: SnackbarHostState,
-    modifier: Modifier = Modifier,
-) {
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = modifier.fillMaxSize(),
-    ) {
-        DiscussionTab(pagerState = pagerState)
-
-        SnackbarHost(
-            hostState = snackbarHostState,
-            snackbar = { AlertSnackBar(snackbarData = it) },
-            modifier = Modifier.align(Alignment.BottomCenter),
-        )
+            SnackbarHost(
+                hostState = snackbarHostState,
+                snackbar = { AlertSnackBar(snackbarData = it) },
+                modifier = Modifier.align(Alignment.BottomCenter),
+            )
+        }
     }
 }

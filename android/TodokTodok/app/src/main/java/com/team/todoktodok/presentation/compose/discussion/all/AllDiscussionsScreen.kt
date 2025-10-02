@@ -18,6 +18,7 @@ import com.team.todoktodok.presentation.compose.discussion.search.SearchDiscussi
 
 @Composable
 fun AllDiscussionsScreen(
+    allDiscussionScreenMode: AllDiscussionMode,
     modifier: Modifier = Modifier,
     viewModel: AllDiscussionViewModel =
         viewModel(
@@ -32,6 +33,7 @@ fun AllDiscussionsScreen(
 
     AllDiscussionsScreen(
         uiState = uiState.value,
+        allDiscussionScreenMode = allDiscussionScreenMode,
         modifier = modifier,
     )
 }
@@ -39,12 +41,13 @@ fun AllDiscussionsScreen(
 @Composable
 fun AllDiscussionsScreen(
     uiState: AllDiscussionUiState,
+    allDiscussionScreenMode: AllDiscussionMode,
     modifier: Modifier = Modifier,
 ) {
     Box(
         modifier = modifier,
     ) {
-        when (uiState.mode) {
+        when (allDiscussionScreenMode) {
             AllDiscussionMode.LATEST ->
                 LatestDiscussionsScreen(
                     modifier =
@@ -68,5 +71,6 @@ fun AllDiscussionsScreen(
 private fun AllDiscussionsScreenPreview() {
     AllDiscussionsScreen(
         uiState = AllDiscussionUiState(),
+        allDiscussionScreenMode = AllDiscussionMode.LATEST,
     )
 }

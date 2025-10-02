@@ -26,6 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.team.todoktodok.presentation.compose.discussion.all.AllDiscussionsScreen
 import com.team.todoktodok.presentation.compose.discussion.hot.HotDiscussionScreen
+import com.team.todoktodok.presentation.compose.discussion.model.AllDiscussionMode
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionTabStatus
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionTabStatus.Companion.DiscussionTabStatus
 import com.team.todoktodok.presentation.compose.theme.Green1A
@@ -35,6 +36,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun DiscussionTab(
+    allDiscussionScreenMode: AllDiscussionMode,
     pagerState: PagerState,
     modifier: Modifier = Modifier,
 ) {
@@ -99,7 +101,7 @@ fun DiscussionTab(
             ) {
                 when (DiscussionTabStatus(page)) {
                     DiscussionTabStatus.HOT -> HotDiscussionScreen()
-                    DiscussionTabStatus.ALL -> AllDiscussionsScreen()
+                    DiscussionTabStatus.ALL -> AllDiscussionsScreen(allDiscussionScreenMode)
                 }
             }
         }
