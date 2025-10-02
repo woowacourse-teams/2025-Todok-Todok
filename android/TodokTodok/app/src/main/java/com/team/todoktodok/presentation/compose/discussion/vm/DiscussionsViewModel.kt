@@ -8,6 +8,7 @@ import com.team.domain.repository.DiscussionRepository
 import com.team.domain.repository.NotificationRepository
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionsUiEvent
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionsUiState
+import com.team.todoktodok.presentation.compose.main.MainDestination
 import com.team.todoktodok.presentation.core.base.BaseViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -56,6 +57,14 @@ class DiscussionsViewModel(
             },
             handleFailure = { onUiEvent(DiscussionsUiEvent.ShowErrorMessage(it)) },
         )
+    }
+
+    fun changeSearchBarVisibility() {
+        _uiState.update { it.changeSearchBarVisibility() }
+    }
+
+    fun changeBottomNavigationTab(destination: MainDestination) {
+        _uiState.update { it.changeBottomNavigationTab(destination) }
     }
 
     fun clearSearchResult() {

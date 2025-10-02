@@ -2,12 +2,15 @@ package com.team.todoktodok.presentation.compose.discussion.model
 
 import com.team.domain.model.Discussion
 import com.team.todoktodok.presentation.compose.discussion.search.SearchDiscussionsUiState
+import com.team.todoktodok.presentation.compose.main.MainDestination
 import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussion
 
 data class DiscussionsUiState(
     val searchDiscussion: SearchDiscussionsUiState = SearchDiscussionsUiState(),
     val allDiscussionMode: AllDiscussionMode = AllDiscussionMode.LATEST,
     val isUnreadNotification: Boolean = true,
+    val bottomNavigationTab: MainDestination = MainDestination.Discussion,
+    val searchBarVisible: Boolean = false,
 ) {
     fun addSearchDiscussion(
         keyword: String,
@@ -18,14 +21,7 @@ data class DiscussionsUiState(
             allDiscussionMode = AllDiscussionMode.SEARCH,
         )
 
-    fun modifyDiscussion(discussion: SerializationDiscussion): DiscussionsUiState {
-        val newDiscussion = discussion.toDomain()
-        val newSearchDiscussionsUiState = searchDiscussion.modify(newDiscussion)
-
-        return copy(
-            searchDiscussion = newSearchDiscussionsUiState,
-        )
-    }
+    fun modifyDiscussion(discussion: SerializationDiscussion): DiscussionsUiState = DiscussionsUiState()
 
     fun clearSearchDiscussion() =
         copy(
@@ -41,4 +37,8 @@ data class DiscussionsUiState(
     }
 
     fun changeUnreadNotification(isExist: Boolean): DiscussionsUiState = copy(isUnreadNotification = isExist)
+
+    fun changeSearchBarVisibility(): DiscussionsUiState = copy(searchBarVisible = !searchBarVisible)
+
+    fun changeBottomNavigationTab(destination: MainDestination): DiscussionsUiState = copy(bottomNavigationTab = destination)
 }
