@@ -8,8 +8,8 @@ import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussio
 data class DiscussionsUiState(
     val searchDiscussion: SearchDiscussionsUiState = SearchDiscussionsUiState(),
     val allDiscussionMode: AllDiscussionMode = AllDiscussionMode.LATEST,
-    val isUnreadNotification: Boolean = true,
     val bottomNavigationTab: MainDestination = MainDestination.Discussion,
+    val isUnreadNotification: Boolean = true,
     val searchBarVisible: Boolean = false,
 ) {
     fun addSearchDiscussion(
@@ -38,7 +38,11 @@ data class DiscussionsUiState(
 
     fun changeUnreadNotification(isExist: Boolean): DiscussionsUiState = copy(isUnreadNotification = isExist)
 
-    fun changeSearchBarVisibility(): DiscussionsUiState = copy(searchBarVisible = !searchBarVisible)
+    fun changeSearchBarVisibility(): DiscussionsUiState =
+        copy(
+            searchBarVisible = !searchBarVisible,
+            searchDiscussion = if (searchBarVisible) searchDiscussion else searchDiscussion.clear(),
+        )
 
     fun changeBottomNavigationTab(destination: MainDestination): DiscussionsUiState = copy(bottomNavigationTab = destination)
 }
