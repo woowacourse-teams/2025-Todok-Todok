@@ -48,7 +48,7 @@ sealed class TodokTodokExceptions : Throwable() {
         /** 400 Bad Request */
         data object BadRequestException : HttpExceptions()
 
-        /** 401 Bad Request */
+        /** 401 Unauthorized */
         data object UnauthorizedException : HttpExceptions()
 
         /** 403 Forbidden */
