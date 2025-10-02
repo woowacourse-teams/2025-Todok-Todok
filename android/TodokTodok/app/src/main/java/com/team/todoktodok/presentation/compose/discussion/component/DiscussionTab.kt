@@ -24,10 +24,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.team.todoktodok.presentation.compose.discussion.all.AllDiscussionsScreen
 import com.team.todoktodok.presentation.compose.discussion.hot.HotDiscussionScreen
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionTabStatus
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionTabStatus.Companion.DiscussionTabStatus
+import com.team.todoktodok.presentation.compose.my.MyScreen
 import com.team.todoktodok.presentation.compose.theme.Green1A
 import com.team.todoktodok.presentation.compose.theme.Pretendard
 import com.team.todoktodok.presentation.compose.theme.White
@@ -99,7 +99,7 @@ fun DiscussionTab(
             ) {
                 when (DiscussionTabStatus(page)) {
                     DiscussionTabStatus.HOT -> HotDiscussionScreen()
-                    DiscussionTabStatus.ALL -> AllDiscussionsScreen()
+                    DiscussionTabStatus.ALL -> MyScreen()
                 }
             }
         }
