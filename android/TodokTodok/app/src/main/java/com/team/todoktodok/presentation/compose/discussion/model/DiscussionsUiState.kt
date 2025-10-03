@@ -10,7 +10,7 @@ data class DiscussionsUiState(
     val allDiscussionMode: AllDiscussionMode = AllDiscussionMode.LATEST,
     val discussionTab: DiscussionTabStatus = DiscussionTabStatus.HOT,
     val bottomNavigationTab: MainDestination = MainDestination.Discussion,
-    val isUnreadNotification: Boolean = true,
+    val hasUnreadNotification: Boolean = true,
     val searchBarVisible: Boolean = false,
 ) {
     fun addSearchDiscussion(
@@ -38,13 +38,18 @@ data class DiscussionsUiState(
         return copy(newAllDiscussionsUiState)
     }
 
-    fun changeUnreadNotification(isExist: Boolean): DiscussionsUiState = copy(isUnreadNotification = isExist)
+    fun changeUnreadNotification(isExist: Boolean): DiscussionsUiState = copy(hasUnreadNotification = isExist)
 
     fun changeSearchBarVisibility(): DiscussionsUiState =
-        copy(
-            searchBarVisible = !searchBarVisible,
-            searchDiscussion = if (searchBarVisible) searchDiscussion else searchDiscussion.clear(),
-        )
+        if (searchBarVisible) {
+            copy(
+                searchBarVisible = false,
+                allDiscussionMode = AllDiscussionMode.LATEST,
+                searchDiscussion = searchDiscussion.clear(),
+            )
+        } else {
+            copy(searchBarVisible = true)
+        }
 
     fun changeBottomNavigationTab(destination: MainDestination): DiscussionsUiState = copy(bottomNavigationTab = destination)
 }

@@ -8,11 +8,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.team.todoktodok.presentation.compose.discussion.DiscussionsScreen
 import com.team.todoktodok.presentation.compose.discussion.model.AllDiscussionMode
+import com.team.todoktodok.presentation.compose.discussion.search.SearchDiscussionsUiState
 import com.team.todoktodok.presentation.compose.my.MyScreen
 
 @Composable
 fun MainNavHost(
     allDiscussionScreenMode: AllDiscussionMode,
+    searchDiscussionsUiState: SearchDiscussionsUiState,
     pagerState: PagerState,
     navController: NavHostController,
     startDestination: MainDestination,
@@ -27,7 +29,11 @@ fun MainNavHost(
             composable(destination.route) {
                 when (destination) {
                     MainDestination.Discussion ->
-                        DiscussionsScreen(allDiscussionScreenMode, pagerState)
+                        DiscussionsScreen(
+                            searchDiscussionsUiState = searchDiscussionsUiState,
+                            allDiscussionScreenMode = allDiscussionScreenMode,
+                            pagerState = pagerState,
+                        )
 
                     MainDestination.My -> MyScreen()
                 }
