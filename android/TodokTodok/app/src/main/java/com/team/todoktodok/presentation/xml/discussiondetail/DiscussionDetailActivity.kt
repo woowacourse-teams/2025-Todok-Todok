@@ -36,6 +36,7 @@ import com.team.todoktodok.presentation.core.ext.registerPositiveResultListener
 import com.team.todoktodok.presentation.core.ext.registerReportResultListener
 import com.team.todoktodok.presentation.core.ext.toRelativeString
 import com.team.todoktodok.presentation.core.utils.shareDiscussionLink
+import com.team.todoktodok.presentation.xml.auth.AuthActivity
 import com.team.todoktodok.presentation.xml.discussion.create.CreateDiscussionRoomActivity
 import com.team.todoktodok.presentation.xml.discussion.create.SerializationCreateDiscussionRoomMode
 import com.team.todoktodok.presentation.xml.discussiondetail.comments.CommentsFragment
@@ -310,6 +311,24 @@ class DiscussionDetailActivity : AppCompatActivity() {
 
             DiscussionDetailUiEvent.ReloadedDiscussion -> {
                 binding.srlDiscussionContainer.isRefreshing = false
+            }
+
+            is DiscussionDetailUiEvent.NotFoundDiscussion -> {
+                Toast.makeText(this, messageConverter(event.exceptions), Toast.LENGTH_SHORT).show()
+                val intent =
+                    DiscussionsActivity.Intent(this).apply {
+                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    }
+                startActivity(intent)
+            }
+
+            is DiscussionDetailUiEvent.Unauthorized -> {
+                Toast.makeText(this, messageConverter(event.exceptions), Toast.LENGTH_SHORT).show()
+                val intent =
+                    AuthActivity.Intent(this).apply {
+                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    }
+                startActivity(intent)
             }
         }
     }

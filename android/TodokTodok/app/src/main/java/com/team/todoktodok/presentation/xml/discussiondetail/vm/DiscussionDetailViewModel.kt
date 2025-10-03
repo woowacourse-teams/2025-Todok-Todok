@@ -6,6 +6,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.team.domain.model.exception.NetworkResult
+import com.team.domain.model.exception.TodokTodokExceptions
 import com.team.domain.repository.DiscussionRepository
 import com.team.domain.repository.TokenRepository
 import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
@@ -160,10 +161,22 @@ class DiscussionDetailViewModel(
             is NetworkResult.Success -> onSuccess(result.data)
             is NetworkResult.Failure -> {
                 onFailure()
-                onUiEvent(
-                    DiscussionDetailUiEvent.ShowErrorMessage(result.exception),
-                )
-                _uiState.value = _uiState.value?.copy(isLoading = false)
+                when (result.exception) {
+                    is TodokTodokExceptions.HttpExceptions.UnauthorizedException -> {
+                        onUiEvent(DiscussionDetailUiEvent.Unauthorized(result.exception))
+                    }
+
+                    is TodokTodokExceptions.HttpExceptions.NotFoundException -> {
+                        onUiEvent(DiscussionDetailUiEvent.NotFoundDiscussion(result.exception))
+                    }
+
+                    else -> {
+                        onUiEvent(
+                            DiscussionDetailUiEvent.ShowErrorMessage(result.exception),
+                        )
+                        _uiState.value = _uiState.value?.copy(isLoading = false)
+                    }
+                }
             }
         }
     }
