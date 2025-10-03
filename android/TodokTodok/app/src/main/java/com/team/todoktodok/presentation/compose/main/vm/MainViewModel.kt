@@ -1,4 +1,4 @@
-package com.team.todoktodok.presentation.compose.discussion.vm
+package com.team.todoktodok.presentation.compose.main.vm
 
 import androidx.lifecycle.viewModelScope
 import com.team.domain.ConnectivityObserver
@@ -6,8 +6,8 @@ import com.team.domain.model.exception.onFailure
 import com.team.domain.model.exception.onSuccess
 import com.team.domain.repository.DiscussionRepository
 import com.team.domain.repository.NotificationRepository
-import com.team.todoktodok.presentation.compose.discussion.model.DiscussionsUiEvent
-import com.team.todoktodok.presentation.compose.discussion.model.DiscussionsUiState
+import com.team.todoktodok.presentation.compose.main.MainUiEvent
+import com.team.todoktodok.presentation.compose.main.MainUiState
 import com.team.todoktodok.presentation.compose.main.MainDestination
 import com.team.todoktodok.presentation.core.base.BaseViewModel
 import kotlinx.coroutines.channels.Channel
@@ -18,15 +18,15 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class DiscussionsViewModel(
+class MainViewModel(
     private val discussionRepository: DiscussionRepository,
     private val notificationRepository: NotificationRepository,
     networkConnectivityObserver: ConnectivityObserver,
 ) : BaseViewModel(networkConnectivityObserver) {
-    private val _uiState = MutableStateFlow(DiscussionsUiState())
-    val uiState: StateFlow<DiscussionsUiState> get() = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(MainUiState())
+    val uiState: StateFlow<MainUiState> get() = _uiState.asStateFlow()
 
-    private val _uiEvent = Channel<DiscussionsUiEvent>(Channel.BUFFERED)
+    private val _uiEvent = Channel<MainUiEvent>(Channel.BUFFERED)
     val uiEvent get() = _uiEvent.receiveAsFlow()
 
     private val _requestExit = MutableStateFlow(false)
@@ -39,7 +39,7 @@ class DiscussionsViewModel(
                 .onSuccess { isExist ->
                     _uiState.update { it.changeUnreadNotification(isExist) }
                 }.onFailure { exceptions ->
-                    onUiEvent(DiscussionsUiEvent.ShowErrorMessage(exceptions))
+                    onUiEvent(MainUiEvent.ShowErrorMessage(exceptions))
                 }
         }
     }
@@ -53,9 +53,9 @@ class DiscussionsViewModel(
             action = { discussionRepository.getSearchDiscussion(keyword) },
             handleSuccess = { result ->
                 _uiState.update { it.addSearchDiscussion(keyword, result) }
-                onUiEvent(DiscussionsUiEvent.ScrollToAllDiscussion)
+                onUiEvent(MainUiEvent.ScrollToAllDiscussion)
             },
-            handleFailure = { onUiEvent(DiscussionsUiEvent.ShowErrorMessage(it)) },
+            handleFailure = { onUiEvent(MainUiEvent.ShowErrorMessage(it)) },
         )
     }
 
@@ -97,7 +97,7 @@ class DiscussionsViewModel(
         _requestExit.value = false
     }
 
-    private fun onUiEvent(event: DiscussionsUiEvent) {
+    private fun onUiEvent(event: MainUiEvent) {
         viewModelScope.launch {
             _uiEvent.send(event)
         }

@@ -1,11 +1,12 @@
-package com.team.todoktodok.presentation.compose.discussion.model
+package com.team.todoktodok.presentation.compose.main
 
 import com.team.domain.model.Discussion
+import com.team.todoktodok.presentation.compose.discussion.model.AllDiscussionMode
+import com.team.todoktodok.presentation.compose.discussion.model.DiscussionTabStatus
 import com.team.todoktodok.presentation.compose.discussion.search.SearchDiscussionsUiState
-import com.team.todoktodok.presentation.compose.main.MainDestination
 import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussion
 
-data class DiscussionsUiState(
+data class MainUiState(
     val searchDiscussion: SearchDiscussionsUiState = SearchDiscussionsUiState(),
     val allDiscussionMode: AllDiscussionMode = AllDiscussionMode.LATEST,
     val discussionTab: DiscussionTabStatus = DiscussionTabStatus.HOT,
@@ -16,14 +17,14 @@ data class DiscussionsUiState(
     fun addSearchDiscussion(
         keyword: String,
         newDiscussions: List<Discussion>,
-    ): DiscussionsUiState =
+    ): MainUiState =
         copy(
             searchDiscussion = searchDiscussion.add(keyword, newDiscussions),
             discussionTab = DiscussionTabStatus.ALL,
             allDiscussionMode = AllDiscussionMode.SEARCH,
         )
 
-    fun modifyDiscussion(discussion: SerializationDiscussion): DiscussionsUiState = DiscussionsUiState()
+    fun modifyDiscussion(discussion: SerializationDiscussion): MainUiState = MainUiState()
 
     fun clearSearchDiscussion() =
         copy(
@@ -33,14 +34,14 @@ data class DiscussionsUiState(
 
     fun modifySearchKeyword(keyword: String) = copy(searchDiscussion = searchDiscussion.modifyKeyword(keyword))
 
-    fun removeDiscussion(discussionId: Long): DiscussionsUiState {
+    fun removeDiscussion(discussionId: Long): MainUiState {
         val newAllDiscussionsUiState = searchDiscussion.remove(discussionId)
         return copy(newAllDiscussionsUiState)
     }
 
-    fun changeUnreadNotification(isExist: Boolean): DiscussionsUiState = copy(hasUnreadNotification = isExist)
+    fun changeUnreadNotification(isExist: Boolean): MainUiState = copy(hasUnreadNotification = isExist)
 
-    fun changeSearchBarVisibility(): DiscussionsUiState =
+    fun changeSearchBarVisibility(): MainUiState =
         if (searchBarVisible) {
             copy(
                 searchBarVisible = false,
@@ -51,5 +52,5 @@ data class DiscussionsUiState(
             copy(searchBarVisible = true)
         }
 
-    fun changeBottomNavigationTab(destination: MainDestination): DiscussionsUiState = copy(bottomNavigationTab = destination)
+    fun changeBottomNavigationTab(destination: MainDestination): MainUiState = copy(bottomNavigationTab = destination)
 }

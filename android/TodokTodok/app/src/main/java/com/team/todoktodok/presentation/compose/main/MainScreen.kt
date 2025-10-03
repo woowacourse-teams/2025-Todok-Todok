@@ -14,7 +14,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -26,10 +25,8 @@ import com.team.todoktodok.presentation.compose.core.ObserveAsEvents
 import com.team.todoktodok.presentation.compose.core.component.AlertSnackBar
 import com.team.todoktodok.presentation.compose.discussion.component.DiscussionToolbar
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionTabStatus
-import com.team.todoktodok.presentation.compose.discussion.model.DiscussionsUiEvent
-import com.team.todoktodok.presentation.compose.discussion.model.DiscussionsUiState
-import com.team.todoktodok.presentation.compose.discussion.vm.DiscussionsViewModel
-import com.team.todoktodok.presentation.compose.discussion.vm.DiscussionsViewModelFactory
+import com.team.todoktodok.presentation.compose.main.vm.MainViewModel
+import com.team.todoktodok.presentation.compose.main.vm.MainViewModelFactory
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import kotlinx.coroutines.launch
 
@@ -37,9 +34,9 @@ import kotlinx.coroutines.launch
 fun MainScreen(
     messageConverter: ExceptionMessageConverter,
     modifier: Modifier = Modifier,
-    viewModel: DiscussionsViewModel =
+    viewModel: MainViewModel =
         viewModel(
-            factory = DiscussionsViewModelFactory((LocalContext.current.applicationContext as App).container),
+            factory = MainViewModelFactory((LocalContext.current.applicationContext as App).container),
         ),
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -55,7 +52,7 @@ fun MainScreen(
 
     ObserveAsEvents(viewModel.uiEvent) { event ->
         when (event) {
-            DiscussionsUiEvent.ScrollToAllDiscussion -> {
+            MainUiEvent.ScrollToAllDiscussion -> {
                 if (uiState.value.discussionTab == DiscussionTabStatus.HOT) {
                     coroutineScope.launch {
                         pagerState.animateScrollToPage(DiscussionTabStatus.ALL.ordinal)
@@ -63,7 +60,7 @@ fun MainScreen(
                 }
             }
 
-            is DiscussionsUiEvent.ShowErrorMessage -> {
+            is MainUiEvent.ShowErrorMessage -> {
                 snackbarHostState.showSnackbar(
                     message = context.getString(messageConverter(event.exception)),
                 )
@@ -93,7 +90,7 @@ fun MainScreen(
 
 @Composable
 fun MainScreenContent(
-    uiState: DiscussionsUiState,
+    uiState: MainUiState,
     navController: NavHostController,
     pagerState: PagerState,
     onSearch: () -> Unit,
@@ -144,19 +141,3 @@ fun MainScreenContent(
     }
 }
 
-@Preview
-@Composable
-private fun MainScreenPreview() {
-    val pagerState = rememberPagerState(initialPage = 0) { DiscussionTabStatus.entries.size }
-    val navController = rememberNavController()
-
-    MainScreenContent(
-        uiState = DiscussionsUiState(),
-        navController = navController,
-        pagerState = pagerState,
-        onSearch = {},
-        onChangeBottomNavigationTab = {},
-        onChangeKeyword = {},
-        onChangeSearchBarVisibility = {},
-    )
-}

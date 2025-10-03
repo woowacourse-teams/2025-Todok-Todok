@@ -40,7 +40,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.team.todoktodok.R
 import com.team.todoktodok.presentation.compose.core.extension.noRippleClickable
-import com.team.todoktodok.presentation.compose.discussion.model.DiscussionsUiState
+import com.team.todoktodok.presentation.compose.main.MainUiState
 import com.team.todoktodok.presentation.compose.theme.Green1A
 import com.team.todoktodok.presentation.compose.theme.White
 import com.team.todoktodok.presentation.xml.notification.NotificationActivity
@@ -48,7 +48,7 @@ import com.team.todoktodok.presentation.xml.notification.NotificationActivity
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DiscussionToolbar(
-    defaultDiscussionsUiState: DiscussionsUiState,
+    defaultDiscussionsUiState: MainUiState,
     onSearch: () -> Unit,
     onChangeSearchBarVisibility: () -> Unit,
     onKeywordChange: (String) -> Unit,
@@ -186,7 +186,7 @@ fun DiscussionToolbar(
 @Composable
 private fun HotDiscussionToolbarPreview() {
     DiscussionToolbar(
-        defaultDiscussionsUiState = DiscussionsUiState(),
+        defaultDiscussionsUiState = MainUiState(),
         onSearch = {},
         onKeywordChange = {},
         onChangeSearchBarVisibility = {},
@@ -199,7 +199,7 @@ private fun HotDiscussionToolbarPreview() {
 @Composable
 private fun AllDiscussionToolbarPreview2() {
     DiscussionToolbar(
-        defaultDiscussionsUiState = DiscussionsUiState(searchBarVisible = true),
+        defaultDiscussionsUiState = MainUiState(searchBarVisible = true),
         onSearch = {},
         onKeywordChange = {},
         onChangeSearchBarVisibility = {},
