@@ -8,6 +8,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,10 +39,18 @@ fun MainScreen(
             DiscussionTabStatus.entries.size
         }
 
-    LaunchedEffect(uiState.value.discussionTab) {
-        if (uiState.value.discussionTab == DiscussionTabStatus.ALL) {
-            pagerState.scrollToPage(DiscussionTabStatus.ALL.ordinal)
-        }
+    LaunchedEffect(Unit) {
+        snapshotFlow { uiState.value.discussionTab }
+            .collect { tab ->
+                val page =
+                    when (tab) {
+                        DiscussionTabStatus.HOT -> DiscussionTabStatus.HOT.ordinal
+                        DiscussionTabStatus.ALL -> DiscussionTabStatus.ALL.ordinal
+                    }
+                if (pagerState.currentPage != page) {
+                    pagerState.animateScrollToPage(page)
+                }
+            }
     }
 
     MainScreenContent(
@@ -70,7 +79,7 @@ fun MainScreenContent(
     Scaffold(
         topBar = {
             DiscussionToolbar(
-                isExistNotification = uiState.isUnreadNotification,
+                isExistNotification = uiState.hasUnreadNotification,
                 defaultDiscussionsUiState = uiState,
                 onSearch = onSearch,
                 onChangeSearchBarVisibility = onChangeSearchBarVisibility,
@@ -94,6 +103,7 @@ fun MainScreenContent(
     ) { innerPadding ->
         MainNavHost(
             allDiscussionScreenMode = uiState.allDiscussionMode,
+            searchDiscussionsUiState = uiState.searchDiscussion,
             pagerState = pagerState,
             navController = navController,
             startDestination = MainDestination.Discussion,
