@@ -9,6 +9,7 @@ import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussio
 data class HotDiscussionUiState(
     val popularDiscussions: PopularDiscussionsUiState = PopularDiscussionsUiState(),
     val activatedDiscussions: ActivatedDiscussionsUiState = ActivatedDiscussionsUiState(),
+    val isRefreshing: Boolean = false,
 ) {
     val hasNextPage get() = activatedDiscussions.hasNextPage
 
@@ -24,7 +25,7 @@ data class HotDiscussionUiState(
         )
 
     fun appendActivatedDiscussion(page: ActivatedDiscussionPage): HotDiscussionUiState =
-        copy(activatedDiscussions = activatedDiscussions.append(page))
+        copy(activatedDiscussions = activatedDiscussions.append(page), isRefreshing = false)
 
     fun modifyDiscussion(discussion: SerializationDiscussion): HotDiscussionUiState {
         val newDiscussion = discussion.toDomain()
@@ -33,4 +34,11 @@ data class HotDiscussionUiState(
             activatedDiscussions = activatedDiscussions.modify(newDiscussion),
         )
     }
+
+    fun clearForRefresh(): HotDiscussionUiState =
+        copy(
+            popularDiscussions = popularDiscussions.clear(),
+            activatedDiscussions = activatedDiscussions.clear(),
+            isRefreshing = true,
+        )
 }

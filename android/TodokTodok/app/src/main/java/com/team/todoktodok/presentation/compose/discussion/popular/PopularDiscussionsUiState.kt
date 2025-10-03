@@ -19,4 +19,6 @@ data class PopularDiscussionsUiState(
                     if (it.discussionId == discussion.id) DiscussionUiState(discussion) else it
                 },
         )
+
+    fun clear(): PopularDiscussionsUiState = copy(discussions = emptyList())
 }
