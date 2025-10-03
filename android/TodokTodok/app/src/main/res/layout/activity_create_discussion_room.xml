@@ -77,8 +77,15 @@
             android:id="@+id/content_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/gray_ED">
+            android:background="@color/white">
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:background="@drawable/bg_white_radius_16dp"
+                app:layout_constraintBottom_toTopOf="@id/etl_discussion_room_title"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/iv_book_image"
@@ -88,7 +95,6 @@
                 android:layout_marginStart="@dimen/space_24"
                 android:contentDescription="@string/select_book_content_description_book_cover"
                 android:scaleType="centerCrop"
-                app:layout_constraintBottom_toTopOf="@id/etl_discussion_room_title"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:shapeAppearanceOverlay="@style/RoundedImageStyle"
@@ -128,21 +134,24 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/etl_discussion_room_title"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_20"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/bg_white_radius_16dp"
+
+                android:overScrollMode="never"
                 android:paddingVertical="@dimen/space_16"
+                android:scrollbars="none"
                 app:boxBackgroundColor="@color/white"
                 app:boxBackgroundMode="filled"
                 app:boxStrokeWidth="@dimen/space_0"
                 app:boxStrokeWidthFocused="@dimen/space_0"
                 app:counterEnabled="false"
                 app:hintEnabled="false"
+                app:layout_constraintBottom_toTopOf="@id/view_divider"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/iv_book_image">
+                app:layout_constraintTop_toBottomOf="@id/iv_book_image"
+                app:layout_constraintVertical_chainStyle="packed">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_discussion_room_title"
@@ -157,7 +166,6 @@
                     android:inputType="text|textMultiLine"
                     android:maxLength="50"
                     android:nextFocusDown="@id/et_discussion_room_opinion"
-                    android:overScrollMode="ifContentScrolls"
                     android:paddingVertical="@dimen/space_0"
                     android:textColor="@color/black_18"
                     android:textColorHint="@color/gray_76"
@@ -166,26 +174,30 @@
 
             <View
                 android:id="@+id/view_divider"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/gray_D9"
+                app:layout_constraintBottom_toTopOf="@id/etl_discussion_room_opinion"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/etl_discussion_room_title" />
+                app:layout_constraintTop_toBottomOf="@id/etl_discussion_room_title"
+                app:layout_constraintVertical_chainStyle="packed" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/etl_discussion_room_opinion"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:gravity="top|start"
+                android:overScrollMode="never"
+                android:scrollbars="none"
                 app:boxBackgroundColor="@color/white"
                 app:boxBackgroundMode="filled"
                 app:boxStrokeWidth="@dimen/space_0"
                 app:boxStrokeWidthFocused="@dimen/space_0"
                 app:counterEnabled="false"
                 app:hintEnabled="false"
-                app:layout_constraintBottom_toBottomOf="parent"
+
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/view_divider">
@@ -194,7 +206,7 @@
                     android:id="@+id/et_discussion_room_opinion"
                     style="@style/BaseTextStyle"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/space_24"
                     android:fontFamily="@font/pretendard_regular"
                     android:gravity="top|start"
@@ -202,13 +214,10 @@
                     android:imeOptions="actionDone"
                     android:inputType="text|textMultiLine"
                     android:maxLength="2500"
-                    android:overScrollMode="never"
-                    android:scrollbars="none"
                     android:textColor="@color/black_18"
                     android:textColorHint="@color/gray_76"
                     android:textSize="@dimen/font_size_x_large" />
             </com.google.android.material.textfield.TextInputLayout>
-
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 
