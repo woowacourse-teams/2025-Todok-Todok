@@ -1,7 +1,6 @@
 package com.team.todoktodok.compose.discussion.latest
 
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
@@ -38,7 +37,6 @@ class LatestDiscussionsScreenTest {
             LatestDiscussionsScreen(
                 uiState = uiState,
                 isLoading = isLoading,
-                snackbarHostState = SnackbarHostState(),
                 pullToRefreshState = rememberPullToRefreshState(),
                 onLoadMore = onLoadMore,
                 onRefresh = onRefresh,
