@@ -37,7 +37,10 @@ class HotDiscussionViewModel(
             key = KEY_POPULAR_DISCUSSIONS,
             action = { discussionRepository.getHotDiscussion() },
             handleSuccess = { result -> _uiState.update { it.addPopularDiscussions(result) } },
-            handleFailure = { onUiEvent(HotDiscussionUiEvent.ShowErrorMessage(it)) },
+            handleFailure = {
+                _uiState.update { state -> state.copy(isRefreshing = false) }
+                onUiEvent(HotDiscussionUiEvent.ShowErrorMessage(it))
+            },
         )
 
     fun loadActivatedDiscussions(initial: Boolean = false) {
@@ -53,7 +56,10 @@ class HotDiscussionViewModel(
             handleSuccess = { page ->
                 _uiState.update { it.appendActivatedDiscussion(page) }
             },
-            handleFailure = { onUiEvent(HotDiscussionUiEvent.ShowErrorMessage(it)) },
+            handleFailure = {
+                _uiState.update { state -> state.copy(isRefreshing = false) }
+                onUiEvent(HotDiscussionUiEvent.ShowErrorMessage(it))
+            },
         )
     }
 

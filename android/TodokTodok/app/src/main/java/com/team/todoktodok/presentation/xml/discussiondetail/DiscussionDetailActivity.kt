@@ -259,25 +259,27 @@ class DiscussionDetailActivity : AppCompatActivity() {
     private fun setupObserve() {
         viewModel.uiState.observe(this) { value ->
             with(binding) {
-                if (value.isLoading) {
-                    progressBar.show()
-                } else {
-                    progressBar.hide()
-                    val discussion = value.discussion
-                    tvBookTitle.text = discussion.book.title.extractSubtitle()
-                    tvDiscussionTitle.text = discussion.discussionTitle
-                    tvUserNickname.text = discussion.writer.nickname.value
-                    ivUserProfile.loadCircleImage(discussion.writer.profileImage)
-                    ivBookImage.loadImage(discussion.book.image)
-                    tvDiscussionCreateAt.text =
-                        discussion.createAt.toRelativeString(this@DiscussionDetailActivity)
-                    tvDiscussionOpinion.text = discussion.discussionOpinion
-                    ivLike.isSelected = discussion.isLikedByMe
-                    tvLikeCount.text = discussion.likeCount.toString()
-                    tvViewsCount.text = discussion.viewCount.toString()
-                    tvCommentCount.text = discussion.commentCount.toString()
+                if (value != null) {
+                    if (value.isLoading) {
+                        progressBar.show()
+                    } else {
+                        progressBar.hide()
+                        val discussion = value.discussion
+                        tvBookTitle.text = discussion.book.title.extractSubtitle()
+                        tvDiscussionTitle.text = discussion.discussionTitle
+                        tvUserNickname.text = discussion.writer.nickname.value
+                        ivUserProfile.loadCircleImage(discussion.writer.profileImage)
+                        ivBookImage.loadImage(discussion.book.image)
+                        tvDiscussionCreateAt.text =
+                            discussion.createAt.toRelativeString(this@DiscussionDetailActivity)
+                        tvDiscussionOpinion.text = discussion.discussionOpinion
+                        ivLike.isSelected = discussion.isLikedByMe
+                        tvLikeCount.text = discussion.likeCount.toString()
+                        tvViewsCount.text = discussion.viewCount.toString()
+                        tvCommentCount.text = discussion.commentCount.toString()
+                    }
+                    setupPopUpDiscussionClick(value.isMyDiscussion)
                 }
-                setupPopUpDiscussionClick(value.isMyDiscussion)
             }
         }
         viewModel.uiEvent.observe(this) { value ->
