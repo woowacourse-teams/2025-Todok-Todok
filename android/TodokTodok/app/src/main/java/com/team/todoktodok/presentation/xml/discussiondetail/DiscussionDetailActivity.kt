@@ -318,7 +318,7 @@ class DiscussionDetailActivity : AppCompatActivity() {
             is DiscussionDetailUiEvent.NotFoundDiscussion -> {
                 Toast.makeText(this, messageConverter(event.exceptions), Toast.LENGTH_SHORT).show()
                 val intent =
-                    DiscussionsActivity.Intent(this).apply {
+                    MainActivity.Intent(this).apply {
                         flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                     }
                 startActivity(intent)
