@@ -8,11 +8,9 @@ data class PopularDiscussionsUiState(
     val discussions: List<DiscussionUiState> = emptyList(),
     val type: DiscussionCardType = DiscussionCardType.OpinionVisible,
 ) {
-    fun update(discussions: List<Discussion>): PopularDiscussionsUiState =
-        copy(discussions = discussions.map { DiscussionUiState(it) })
+    fun update(discussions: List<Discussion>): PopularDiscussionsUiState = copy(discussions = discussions.map { DiscussionUiState(it) })
 
-    fun remove(discussionId: Long): PopularDiscussionsUiState =
-        copy(discussions = discussions.filter { it.discussionId != discussionId })
+    fun remove(discussionId: Long): PopularDiscussionsUiState = copy(discussions = discussions.filter { it.discussionId != discussionId })
 
     fun modify(discussion: Discussion): PopularDiscussionsUiState =
         copy(

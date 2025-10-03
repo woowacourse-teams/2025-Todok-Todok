@@ -12,8 +12,7 @@ data class LatestDiscussionsUiState(
     val isRefreshing: Boolean = false,
     val latestPage: PageInfo = PageInfo.EMPTY,
 ) {
-    fun clearForRefresh(): LatestDiscussionsUiState =
-        copy(discussions = emptyList(), latestPage = PageInfo.EMPTY, isRefreshing = true)
+    fun clearForRefresh(): LatestDiscussionsUiState = copy(discussions = emptyList(), latestPage = PageInfo.EMPTY, isRefreshing = true)
 
     fun append(page: LatestDiscussionPage): LatestDiscussionsUiState {
         val newDiscussion =
