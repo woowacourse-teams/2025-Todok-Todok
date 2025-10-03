@@ -28,14 +28,10 @@ import com.team.todoktodok.presentation.compose.core.component.InfinityLazyColum
 import com.team.todoktodok.presentation.compose.discussion.activate.ActivatedDiscussionHeader
 import com.team.todoktodok.presentation.compose.discussion.hot.vm.HotDiscussionViewModel
 import com.team.todoktodok.presentation.compose.discussion.hot.vm.HotDiscussionViewModelFactory
+import com.team.todoktodok.presentation.compose.discussion.model.DiscussionResult
 import com.team.todoktodok.presentation.compose.discussion.popular.PopularDiscussionsScreen
-import com.team.todoktodok.presentation.compose.main.MainActivity.Companion.DEFAULT_DISCUSSION_ID
-import com.team.todoktodok.presentation.compose.main.MainActivity.Companion.EXTRA_DELETE_DISCUSSION
-import com.team.todoktodok.presentation.compose.main.MainActivity.Companion.EXTRA_WATCHED_DISCUSSION
 import com.team.todoktodok.presentation.compose.preview.HotDiscussionPreviewParameterProvider
-import com.team.todoktodok.presentation.core.ext.getParcelableCompat
 import com.team.todoktodok.presentation.xml.discussiondetail.DiscussionDetailActivity
-import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussion
 
 @Composable
 fun HotDiscussionScreen(
@@ -54,26 +50,10 @@ fun HotDiscussionScreen(
         ) { result ->
             if (result.resultCode == RESULT_OK) {
                 result.data?.let { data ->
-                    when {
-                        data.hasExtra(EXTRA_DELETE_DISCUSSION) -> {
-                            val deletedId =
-                                data.getLongExtra(
-                                    EXTRA_DELETE_DISCUSSION,
-                                    DEFAULT_DISCUSSION_ID,
-                                )
-                            if (deletedId != DEFAULT_DISCUSSION_ID) {
-                                viewModel.removeDiscussion(deletedId)
-                            }
-                        }
-
-                        data.hasExtra(EXTRA_WATCHED_DISCUSSION) -> {
-                            data
-                                .getParcelableCompat<SerializationDiscussion>(
-                                    EXTRA_WATCHED_DISCUSSION,
-                                )?.let {
-                                    viewModel.modifyDiscussion(it)
-                                }
-                        }
+                    when (val result = DiscussionResult.fromIntent(data)) {
+                        is DiscussionResult.Deleted -> viewModel.removeDiscussion(result.id)
+                        is DiscussionResult.Watched -> viewModel.modifyDiscussion(result.discussion)
+                        DiscussionResult.None -> Unit
                     }
                 }
             }
