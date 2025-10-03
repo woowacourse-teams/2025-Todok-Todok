@@ -65,6 +65,11 @@ class HotDiscussionViewModel(
         _uiState.update { it.removeDiscussion(discussionId) }
     }
 
+    fun refreshHotDiscussions() {
+        _uiState.update { it.clearForRefresh() }
+        loadHotDiscussions()
+    }
+
     private fun onUiEvent(event: HotDiscussionUiEvent) {
         viewModelScope.launch { _uiEvent.send(event) }
     }

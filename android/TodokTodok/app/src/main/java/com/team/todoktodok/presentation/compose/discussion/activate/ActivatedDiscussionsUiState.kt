@@ -30,4 +30,6 @@ data class ActivatedDiscussionsUiState(
                     if (it.discussionId == discussion.id) DiscussionUiState(discussion) else it
                 },
         )
+
+    fun clear() = copy(discussions = emptyList(), pageInfo = PageInfo.EMPTY)
 }
