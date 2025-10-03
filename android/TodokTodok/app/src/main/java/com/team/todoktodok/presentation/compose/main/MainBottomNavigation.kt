@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -29,39 +30,45 @@ import com.team.todoktodok.R
 import com.team.todoktodok.presentation.compose.theme.Gray9F
 import com.team.todoktodok.presentation.compose.theme.Green1A
 import com.team.todoktodok.presentation.compose.theme.WhiteF9
+import com.team.todoktodok.presentation.xml.book.SelectBookActivity
 
 @Composable
 fun MainBottomNavigation(
     navController: NavHostController,
-    selectedDestination: Int,
-    onSelectedDestinationChanged: (Int) -> Unit,
-    onClickCreateDiscussion: () -> Unit,
+    selectedDestination: MainDestination,
+    onSelectedDestinationChanged: (MainDestination) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val context = LocalContext.current
+
     NavigationBar(
         windowInsets = NavigationBarDefaults.windowInsets,
         modifier = modifier,
         containerColor = WhiteF9,
     ) {
         BottomNavigationItem(
-            selected = selectedDestination == 0,
+            selected = selectedDestination.ordinal == MainDestination.Discussion.ordinal,
             onClick = {
-                navController.navigate(MainDestination.Discussion.route) {
-                    launchSingleTop = true
+                if (selectedDestination.ordinal != MainDestination.Discussion.ordinal) {
+                    navController.navigate(MainDestination.Discussion.route) {
+                        launchSingleTop = true
+                        popUpTo(navController.graph.startDestinationId) { saveState = true }
+                        restoreState = true
+                    }
+                    onSelectedDestinationChanged(MainDestination.Discussion)
                 }
-                onSelectedDestinationChanged(MainDestination.Discussion.ordinal)
             },
             icon = {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.MenuBook,
-                    tint = if (selectedDestination == MainDestination.Discussion.ordinal) Green1A else Gray9F,
+                    tint = if (selectedDestination.ordinal == MainDestination.Discussion.ordinal) Green1A else Gray9F,
                     contentDescription = stringResource(MainDestination.Discussion.contentDescription),
                 )
             },
             label = {
                 Text(
                     text = stringResource(MainDestination.Discussion.label),
-                    color = if (selectedDestination == MainDestination.Discussion.ordinal) Green1A else Gray9F,
+                    color = if (selectedDestination.ordinal == MainDestination.Discussion.ordinal) Green1A else Gray9F,
                     style = MaterialTheme.typography.labelMedium,
                 )
             },
@@ -73,7 +80,9 @@ fun MainBottomNavigation(
                     .size(56.dp)
                     .clip(CircleShape)
                     .background(Green1A)
-                    .clickable { onClickCreateDiscussion() },
+                    .clickable {
+                        context.startActivity(SelectBookActivity.Intent(context))
+                    },
             contentAlignment = Alignment.Center,
         ) {
             Image(
@@ -84,24 +93,28 @@ fun MainBottomNavigation(
         }
 
         BottomNavigationItem(
-            selected = selectedDestination == MainDestination.My.ordinal,
+            selected = selectedDestination.ordinal == MainDestination.My.ordinal,
             onClick = {
-                navController.navigate(MainDestination.My.route) {
-                    launchSingleTop = true
+                if (selectedDestination.ordinal != MainDestination.My.ordinal) {
+                    navController.navigate(MainDestination.My.route) {
+                        launchSingleTop = true
+                        popUpTo(navController.graph.startDestinationId) { saveState = true }
+                        restoreState = true
+                    }
+                    onSelectedDestinationChanged(MainDestination.My)
                 }
-                onSelectedDestinationChanged(MainDestination.My.ordinal)
             },
             icon = {
                 Icon(
                     imageVector = Icons.Default.PersonOutline,
-                    tint = if (selectedDestination == MainDestination.My.ordinal) Green1A else Gray9F,
+                    tint = if (selectedDestination.ordinal == MainDestination.My.ordinal) Green1A else Gray9F,
                     contentDescription = stringResource(MainDestination.My.contentDescription),
                 )
             },
             label = {
                 Text(
                     text = stringResource(MainDestination.My.label),
-                    color = if (selectedDestination == MainDestination.My.ordinal) Green1A else Gray9F,
+                    color = if (selectedDestination.ordinal == MainDestination.My.ordinal) Green1A else Gray9F,
                     style = MaterialTheme.typography.labelMedium,
                 )
             },
@@ -114,8 +127,7 @@ fun MainBottomNavigation(
 private fun MainBottomNavigationPreview() {
     MainBottomNavigation(
         navController = rememberNavController(),
-        selectedDestination = 0,
+        selectedDestination = MainDestination.Discussion,
         onSelectedDestinationChanged = {},
-        onClickCreateDiscussion = {},
     )
 }

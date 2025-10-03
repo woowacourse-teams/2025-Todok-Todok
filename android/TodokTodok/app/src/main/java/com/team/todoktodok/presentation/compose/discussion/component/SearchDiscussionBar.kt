@@ -21,6 +21,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -35,7 +36,6 @@ import com.team.todoktodok.presentation.compose.theme.Pretendard
 @Composable
 fun SearchDiscussionBar(
     searchKeyword: String,
-    previousKeyword: String,
     onKeywordChange: (String) -> Unit,
     onSearch: () -> Unit,
     modifier: Modifier = Modifier,
@@ -50,15 +50,11 @@ fun SearchDiscussionBar(
                 text = stringResource(R.string.discussion_search_bar_hint),
                 fontSize = 14.sp,
                 color = Color.Gray,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1,
+                modifier = Modifier.fillMaxWidth(),
             )
         },
-        modifier =
-            modifier
-                .fillMaxWidth()
-                .background(
-                    color = Green73,
-                    shape = RoundedCornerShape(8.dp),
-                ),
         singleLine = true,
         trailingIcon = {
             if (searchKeyword.isNotEmpty()) {
@@ -107,11 +103,19 @@ fun SearchDiscussionBar(
             KeyboardActions(
                 onSearch = {
                     keyboardController?.hide()
-                    if (searchKeyword.isNotBlank() && searchKeyword != previousKeyword) {
+                    if (searchKeyword.isNotBlank()) {
                         onSearch()
                     }
                 },
             ),
+        maxLines = 1,
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .background(
+                    color = Green73,
+                    shape = RoundedCornerShape(8.dp),
+                ),
     )
 }
 
@@ -121,13 +125,11 @@ private fun SearchDiscussionBarPreview() {
     Column {
         SearchDiscussionBar(
             searchKeyword = "코틀린",
-            previousKeyword = "",
             onKeywordChange = {},
             onSearch = {},
         )
         SearchDiscussionBar(
             searchKeyword = "",
-            previousKeyword = "코틀린",
             onKeywordChange = {},
             onSearch = {},
         )

@@ -60,6 +60,7 @@
     <string name="search_clear_keyword">검색어 초기화</string>
 
     <!-- 토론 툴바 !-->
+    <string name="discussions_toolbar_search_close">취소</string>
     <string name="content_description_discussions_toolbar_search">검색 아이콘</string>
     <string name="content_description_discussions_toolbar_notification">알람 아이콘</string>
     <string name="content_description_discussions_toolbar_has_notification">확인하지 않은 알람이 있어요</string>

@@ -1,5 +1,12 @@
 package com.team.todoktodok.presentation.compose.discussion.component
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -7,6 +14,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -15,12 +23,15 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
@@ -29,7 +40,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.team.todoktodok.R
 import com.team.todoktodok.presentation.compose.core.extension.noRippleClickable
-import com.team.todoktodok.presentation.compose.discussion.model.DiscussionTabStatus
+import com.team.todoktodok.presentation.compose.main.MainUiState
 import com.team.todoktodok.presentation.compose.theme.Green1A
 import com.team.todoktodok.presentation.compose.theme.White
 import com.team.todoktodok.presentation.xml.notification.NotificationActivity
@@ -37,15 +48,16 @@ import com.team.todoktodok.presentation.xml.notification.NotificationActivity
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DiscussionToolbar(
-    tab: DiscussionTabStatus,
-    onClickSearch: () -> Unit,
+    defaultDiscussionsUiState: MainUiState,
+    onSearch: () -> Unit,
+    onChangeSearchBarVisibility: () -> Unit,
+    onKeywordChange: (String) -> Unit,
     isExistNotification: Boolean,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
 
     Column(
-        verticalArrangement = Arrangement.spacedBy(10.dp),
         modifier =
             modifier
                 .background(color = White),
@@ -73,13 +85,12 @@ fun DiscussionToolbar(
             },
             actions = {
                 Row {
-                    if (tab == DiscussionTabStatus.ALL) {
-                        Icon(
-                            imageVector = Icons.Default.Search,
-                            contentDescription = stringResource(R.string.content_description_discussions_toolbar_search),
-                            modifier = Modifier.noRippleClickable(onClick = { onClickSearch }),
-                        )
-                    }
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = stringResource(R.string.content_description_discussions_toolbar_search),
+                        modifier =
+                            Modifier.noRippleClickable(onClick = { onChangeSearchBarVisibility() }),
+                    )
 
                     Spacer(modifier = Modifier.width(10.dp))
 
@@ -93,7 +104,11 @@ fun DiscussionToolbar(
                                 Modifier
                                     .noRippleClickable(
                                         onClick = {
-                                            context.startActivity(NotificationActivity.Intent(context))
+                                            context.startActivity(
+                                                NotificationActivity.Intent(
+                                                    context,
+                                                ),
+                                            )
                                         },
                                     ),
                         )
@@ -119,6 +134,49 @@ fun DiscussionToolbar(
                     containerColor = White,
                 ),
         )
+
+        val density = LocalDensity.current
+
+        AnimatedVisibility(
+            visible = defaultDiscussionsUiState.searchBarVisible,
+            enter =
+                slideInVertically {
+                    with(density) { -40.dp.roundToPx() }
+                } +
+                    expandVertically(
+                        expandFrom = Alignment.Top,
+                    ) +
+                    fadeIn(
+                        initialAlpha = 0.3f,
+                    ),
+            exit = slideOutVertically() + shrinkVertically() + fadeOut(),
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(start = 15.dp),
+            ) {
+                SearchDiscussionBar(
+                    onSearch = onSearch,
+                    searchKeyword = defaultDiscussionsUiState.searchDiscussion.type.keyword,
+                    onKeywordChange = { onKeywordChange(it) },
+                    modifier = Modifier.fillMaxWidth(0.8f),
+                )
+
+                Text(
+                    text = stringResource(R.string.discussions_toolbar_search_close),
+                    color = Green1A,
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier =
+                        Modifier
+                            .padding(20.dp)
+                            .noRippleClickable { onChangeSearchBarVisibility() },
+                )
+            }
+        }
     }
 }
 
@@ -127,8 +185,10 @@ fun DiscussionToolbar(
 @Composable
 private fun HotDiscussionToolbarPreview() {
     DiscussionToolbar(
-        tab = DiscussionTabStatus.HOT,
-        onClickSearch = {},
+        defaultDiscussionsUiState = MainUiState(),
+        onSearch = {},
+        onKeywordChange = {},
+        onChangeSearchBarVisibility = {},
         isExistNotification = true,
     )
 }
@@ -138,8 +198,10 @@ private fun HotDiscussionToolbarPreview() {
 @Composable
 private fun AllDiscussionToolbarPreview2() {
     DiscussionToolbar(
-        tab = DiscussionTabStatus.ALL,
-        onClickSearch = {},
+        defaultDiscussionsUiState = MainUiState(searchBarVisible = true),
+        onSearch = {},
+        onKeywordChange = {},
+        onChangeSearchBarVisibility = {},
         isExistNotification = false,
     )
 }

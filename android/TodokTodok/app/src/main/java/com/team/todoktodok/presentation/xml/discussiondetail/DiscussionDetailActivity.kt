@@ -21,9 +21,9 @@ import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivityDiscussionDetailBinding
 import com.team.todoktodok.databinding.MenuExternalDiscussionBinding
 import com.team.todoktodok.databinding.MenuOwnedDiscussionBinding
+import com.team.todoktodok.presentation.compose.discussion.model.DiscussionResult.Companion.EXTRA_DELETE_DISCUSSION
+import com.team.todoktodok.presentation.compose.discussion.model.DiscussionResult.Companion.EXTRA_WATCHED_DISCUSSION
 import com.team.todoktodok.presentation.compose.main.MainActivity
-import com.team.todoktodok.presentation.compose.main.MainActivity.Companion.EXTRA_DELETE_DISCUSSION
-import com.team.todoktodok.presentation.compose.main.MainActivity.Companion.EXTRA_WATCHED_DISCUSSION
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
 import com.team.todoktodok.presentation.core.component.CommonDialog

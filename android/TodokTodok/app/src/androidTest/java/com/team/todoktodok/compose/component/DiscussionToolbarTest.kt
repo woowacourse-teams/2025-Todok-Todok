@@ -5,8 +5,10 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.onNodeWithText
+import com.team.todoktodok.R
 import com.team.todoktodok.presentation.compose.discussion.component.DiscussionToolbar
-import com.team.todoktodok.presentation.compose.discussion.model.DiscussionTabStatus
+import com.team.todoktodok.presentation.compose.main.MainUiState
 import org.junit.Rule
 import org.junit.Test
 
@@ -15,67 +17,78 @@ class DiscussionToolbarTest {
     val composeTestRule = createAndroidComposeRule<ComponentActivity>()
 
     @Test
-    fun `핫한 토론 탭이면 검색 아이콘이 보이지 않는다`() {
+    fun `검색 아이콘이 보인다`() {
         composeTestRule.setContent {
             DiscussionToolbar(
-                tab = DiscussionTabStatus.HOT,
+                defaultDiscussionsUiState = MainUiState(),
                 isExistNotification = false,
-                onClickSearch = { },
+                onSearch = {},
+                onKeywordChange = {},
+                onChangeSearchBarVisibility = {},
             )
         }
 
         composeTestRule
-            .onNodeWithContentDescription("검색 아이콘")
-            .assertIsNotDisplayed()
-    }
-
-    @Test
-    fun `모든 토론 탭이면 검색 아이콘이 보인다`() {
-        composeTestRule.setContent {
-            DiscussionToolbar(
-                tab = DiscussionTabStatus.ALL,
-                isExistNotification = false,
-                onClickSearch = { },
-            )
-        }
-
-        composeTestRule
-            .onNodeWithContentDescription("검색 아이콘")
-            .assertIsDisplayed()
+            .onNodeWithContentDescription(
+                composeTestRule.activity.getString(R.string.content_description_discussions_toolbar_search),
+            ).assertIsDisplayed()
     }
 
     @Test
     fun `알람 아이콘이 화면에 보이고 확인하지 않은 알람이 없으면 뱃지가 보이지 않는다`() {
         composeTestRule.setContent {
             DiscussionToolbar(
-                tab = DiscussionTabStatus.ALL,
+                defaultDiscussionsUiState = MainUiState(),
                 isExistNotification = false,
-                onClickSearch = { },
+                onSearch = {},
+                onKeywordChange = {},
+                onChangeSearchBarVisibility = {},
             )
         }
 
         composeTestRule
-            .onNodeWithContentDescription("알람 아이콘")
-            .assertIsDisplayed()
+            .onNodeWithContentDescription(
+                composeTestRule.activity.getString(R.string.content_description_discussions_toolbar_notification),
+            ).assertIsDisplayed()
 
         composeTestRule
-            .onNodeWithContentDescription("확인하지 않은 알람이 있어요")
-            .assertIsNotDisplayed()
+            .onNodeWithContentDescription(
+                composeTestRule.activity.getString(R.string.content_description_discussions_toolbar_has_notification),
+            ).assertIsNotDisplayed()
     }
 
     @Test
     fun `확인하지 않은 알람이 있으면 뱃지가 보인다`() {
         composeTestRule.setContent {
             DiscussionToolbar(
-                tab = DiscussionTabStatus.ALL,
+                defaultDiscussionsUiState = MainUiState(),
                 isExistNotification = true,
-                onClickSearch = { },
+                onSearch = {},
+                onKeywordChange = {},
+                onChangeSearchBarVisibility = {},
             )
         }
 
         composeTestRule
             .onNodeWithContentDescription(
-                "확인하지 않은 알람이 있어요",
+                composeTestRule.activity.getString(R.string.content_description_discussions_toolbar_has_notification),
             ).assertIsDisplayed()
+    }
+
+    @Test
+    fun `검색 바가 보이면 검색 취소 텍스트가 보인다`() {
+        composeTestRule.setContent {
+            DiscussionToolbar(
+                defaultDiscussionsUiState = MainUiState(searchBarVisible = true),
+                isExistNotification = false,
+                onSearch = {},
+                onKeywordChange = {},
+                onChangeSearchBarVisibility = {},
+            )
+        }
+
+        composeTestRule
+            .onNodeWithText("취소")
+            .assertIsDisplayed()
     }
 }

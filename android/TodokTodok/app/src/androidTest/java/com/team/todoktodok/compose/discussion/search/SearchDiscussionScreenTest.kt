@@ -23,6 +23,8 @@ class SearchDiscussionScreenTest {
         composeTestRule.setContent {
             SearchDiscussionScreen(
                 uiState = state,
+                onCompleteRemoveDiscussion = {},
+                onCompleteModifyDiscussion = {},
             )
         }
 
@@ -41,6 +43,8 @@ class SearchDiscussionScreenTest {
         composeTestRule.setContent {
             SearchDiscussionScreen(
                 uiState = emptyState,
+                onCompleteRemoveDiscussion = {},
+                onCompleteModifyDiscussion = {},
             )
         }
 

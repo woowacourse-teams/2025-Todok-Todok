@@ -41,7 +41,7 @@ class LatestDiscussionViewModel(
     }
 
     fun refreshLatestDiscussions() {
-        _uiState.update { it.refresh() }
+        _uiState.update { it.clearForRefresh() }
         loadLatestDiscussions()
     }
 
