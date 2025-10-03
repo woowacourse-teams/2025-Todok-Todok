@@ -41,6 +41,15 @@
     <string name="all_last_page">마지막 페이지입니다</string>
     <string name="all_create_discussion_room">토론방 생성</string>
 
+    <!-- BottomNavigation !-->
+    <string name="bottom_navigation_discussion">토론방</string>
+    <string name="bottom_navigation_create_discussion">토론방 생성</string>
+    <string name="bottom_navigation_my">MY</string>
+
+    <string name="bottom_navigation_content_description_discussion">모든 토론방</string>
+    <string name="bottom_navigation_content_description_create_discussion">토론방 생성</string>
+    <string name="bottom_navigation_content_description_my">내 토론방</string>
+
     <!--  토론 목록 페이지  -->
     <string name="discussions_hot_discussion_rooms">인기 토론방</string>
     <string name="discussions_activated_discussion_rooms">활성화된 토론방</string>
@@ -49,6 +58,10 @@
     <string name="content_description_comments_user_profile">댓글 유저 이미지 버튼</string>
     <string name="last_discussion_page_guide">마지막 토론이에요</string>
     <string name="search_clear_keyword">검색어 초기화</string>
+
+    <!-- 토론 툴바 !-->
+    <string name="content_description_discussions_toolbar_notification">알람 아이콘</string>
+    <string name="content_description_discussions_toolbar_has_notification">확인하지 않은 알람이 있어요</string>
 
     <!--  상세 토론방 페이지  -->
     <string name="content_description_discussion_detail_back">토론 상세 화면에서 뒤로가는 버튼</string>

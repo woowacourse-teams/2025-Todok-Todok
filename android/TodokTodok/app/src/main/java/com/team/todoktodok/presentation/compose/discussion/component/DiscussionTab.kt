@@ -28,30 +28,24 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.team.todoktodok.presentation.compose.discussion.hot.HotDiscussionScreen
 import com.team.todoktodok.presentation.compose.discussion.latest.LatestDiscussionsScreen
-import com.team.todoktodok.presentation.compose.discussion.latest.vm.LatestDiscussionViewModel
 import com.team.todoktodok.presentation.compose.discussion.model.AllDiscussionMode
 import com.team.todoktodok.presentation.compose.discussion.model.Destination
 import com.team.todoktodok.presentation.compose.discussion.model.Destination.Companion.Destination
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionsUiState
-import com.team.todoktodok.presentation.compose.discussion.my.MyDiscussionsScreen
 import com.team.todoktodok.presentation.compose.discussion.search.SearchDiscussionScreen
 import com.team.todoktodok.presentation.compose.theme.Green1A
 import com.team.todoktodok.presentation.compose.theme.Pretendard
 import com.team.todoktodok.presentation.compose.theme.White
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
-import com.team.todoktodok.presentation.xml.profile.UserProfileTab
 import kotlinx.coroutines.launch
 
 @Composable
 fun DiscussionTab(
-    latestDiscussionViewModel: LatestDiscussionViewModel,
     messageConverter: ExceptionMessageConverter,
     uiState: DiscussionsUiState,
     pagerState: PagerState,
     onActivatedDiscussionLoadMore: () -> Unit,
     onTabChanged: (Destination) -> Unit,
-    onClickDiscussion: (Long) -> Unit,
-    onClickMyDiscussionHeader: (UserProfileTab) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -124,7 +118,6 @@ fun DiscussionTab(
                         HotDiscussionScreen(
                             uiState = uiState.hotDiscussion,
                             onLoadMore = onActivatedDiscussionLoadMore,
-                            onClick = onClickDiscussion,
                             modifier = Modifier.fillMaxSize(),
                         )
 
@@ -132,26 +125,15 @@ fun DiscussionTab(
                         when (uiState.allDiscussionMode) {
                             AllDiscussionMode.LATEST ->
                                 LatestDiscussionsScreen(
-                                    viewModel = latestDiscussionViewModel,
                                     messageConverter = messageConverter,
-                                    onClick = onClickDiscussion,
                                     modifier = Modifier.fillMaxSize(),
                                 )
                             AllDiscussionMode.SEARCH ->
                                 SearchDiscussionScreen(
                                     uiState = uiState.searchDiscussion,
-                                    onClick = onClickDiscussion,
                                     modifier = Modifier.fillMaxSize(),
                                 )
                         }
-
-                    Destination.MY ->
-                        MyDiscussionsScreen(
-                            uiState = uiState.myDiscussion,
-                            onClick = onClickDiscussion,
-                            onClickHeader = onClickMyDiscussionHeader,
-                            modifier = Modifier.fillMaxSize(),
-                        )
                 }
             }
         }

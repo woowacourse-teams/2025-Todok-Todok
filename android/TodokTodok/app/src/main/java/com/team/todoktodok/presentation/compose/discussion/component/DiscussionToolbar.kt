@@ -16,28 +16,32 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.team.todoktodok.R
 import com.team.todoktodok.presentation.compose.core.extension.noRippleClickable
 import com.team.todoktodok.presentation.compose.theme.Green1A
 import com.team.todoktodok.presentation.compose.theme.White
+import com.team.todoktodok.presentation.xml.notification.NotificationActivity
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DiscussionToolbar(
     isExistNotification: Boolean,
-    onClickNotification: () -> Unit,
-    onClickProfile: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val context = LocalContext.current
+
     Column(
         verticalArrangement = Arrangement.spacedBy(10.dp),
         modifier =
             modifier
-                .background(color = White)
-                .padding(end = 8.dp),
+                .background(color = White),
     ) {
         TopAppBar(
             title = {
@@ -62,35 +66,33 @@ fun DiscussionToolbar(
             },
             actions = {
                 Box(
-                    modifier = Modifier.padding(20.dp),
+                    modifier = Modifier.padding(end = 10.dp),
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.ic_notification),
-                        contentDescription = "notification",
+                        contentDescription = stringResource(R.string.content_description_discussions_toolbar_notification),
                         modifier =
                             Modifier
                                 .background(color = White)
-                                .noRippleClickable(onClick = { onClickNotification() }),
+                                .noRippleClickable(onClick = {
+                                    context.startActivity(NotificationActivity.Intent(context))
+                                }),
                     )
                     if (isExistNotification) {
+                        val contentDescription =
+                            stringResource(R.string.content_description_discussions_toolbar_has_notification)
                         Box(
                             modifier =
                                 Modifier
                                     .size(8.dp)
                                     .background(color = Green1A, shape = CircleShape)
-                                    .align(Alignment.TopEnd),
+                                    .align(Alignment.TopEnd)
+                                    .semantics {
+                                        this.contentDescription = contentDescription
+                                    },
                         )
                     }
                 }
-
-                Icon(
-                    painter = painterResource(R.drawable.ic_profile),
-                    contentDescription = "profile",
-                    Modifier
-                        .background(color = White)
-                        .padding(end = 10.dp)
-                        .noRippleClickable(onClick = { onClickProfile() }),
-                )
             },
             colors =
                 TopAppBarDefaults.topAppBarColors(
@@ -106,8 +108,6 @@ fun DiscussionToolbar(
 private fun DiscussionToolbarPreview() {
     DiscussionToolbar(
         isExistNotification = true,
-        onClickNotification = {},
-        onClickProfile = {},
     )
 }
 
@@ -117,7 +117,5 @@ private fun DiscussionToolbarPreview() {
 private fun DiscussionToolbarPreview2() {
     DiscussionToolbar(
         isExistNotification = false,
-        onClickNotification = {},
-        onClickProfile = {},
     )
 }

@@ -2,19 +2,19 @@ package com.team.todoktodok.presentation.compose.discussion.vm
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.team.domain.ConnectivityObserver
-import com.team.domain.repository.DiscussionRepository
-import com.team.domain.repository.MemberRepository
-import com.team.domain.repository.NotificationRepository
+import com.team.todoktodok.AppContainer
 
 class DiscussionsViewModelFactory(
-    private val discussionRepository: DiscussionRepository,
-    private val memberRepository: MemberRepository,
-    private val notificationRepository: NotificationRepository,
-    private val networkConnectivityObserver: ConnectivityObserver,
+    private val appContainer: AppContainer,
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(DiscussionsViewModel::class.java)) {
+            val repositoryModule = appContainer.repositoryModule
+            val discussionRepository = repositoryModule.discussionRepository
+            val memberRepository = repositoryModule.memberRepository
+            val notificationRepository = repositoryModule.notificationRepository
+            val networkConnectivityObserver = appContainer.connectivityObserver
+
             return DiscussionsViewModel(
                 discussionRepository,
                 memberRepository,

@@ -3,6 +3,7 @@ package com.team.todoktodok.presentation.compose.theme
 import androidx.compose.ui.graphics.Color
 
 val White = Color(0xFFFFFFFF)
+val WhiteF9 = Color(0xFFF9FDFB)
 val GreenF0 = Color(0xFFF0F5F2)
 val Green1A = Color(0xFF1AB25D)
 val Green63 = Color(0xFF638773)

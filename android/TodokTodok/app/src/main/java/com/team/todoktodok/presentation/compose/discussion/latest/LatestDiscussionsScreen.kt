@@ -1,6 +1,5 @@
 package com.team.todoktodok.presentation.compose.discussion.latest
 
-import android.widget.ProgressBar
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,7 +27,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.team.domain.model.latest.PageInfo
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.team.domain.model.PageInfo
+import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.presentation.compose.core.ObserveAsEvents
 import com.team.todoktodok.presentation.compose.core.component.AlertSnackBar
@@ -36,6 +37,7 @@ import com.team.todoktodok.presentation.compose.core.component.CloverProgressBar
 import com.team.todoktodok.presentation.compose.core.component.DiscussionCard
 import com.team.todoktodok.presentation.compose.core.component.InfinityLazyColumn
 import com.team.todoktodok.presentation.compose.discussion.latest.vm.LatestDiscussionViewModel
+import com.team.todoktodok.presentation.compose.discussion.latest.vm.LatestDiscussionViewModelFactory
 import com.team.todoktodok.presentation.compose.preview.LatestDiscussionsPreviewParameterProvider
 import com.team.todoktodok.presentation.compose.theme.Green1A
 import com.team.todoktodok.presentation.compose.theme.White
@@ -45,10 +47,12 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LatestDiscussionsScreen(
-    viewModel: LatestDiscussionViewModel,
     messageConverter: ExceptionMessageConverter,
-    onClick: (Long) -> Unit,
     modifier: Modifier = Modifier,
+    viewModel: LatestDiscussionViewModel =
+        viewModel(
+            factory = LatestDiscussionViewModelFactory((LocalContext.current.applicationContext as App).container),
+        ),
 ) {
     val coroutineScope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -88,7 +92,6 @@ fun LatestDiscussionsScreen(
         uiState = uiState.value,
         isLoading = isLoading.value,
         snackbarHostState = snackbarHostState,
-        onClick = onClick,
         pullToRefreshState = pullToRefreshState,
         onLoadMore = { viewModel.loadLatestDiscussions() },
         onRefresh = viewModel::refreshLatestDiscussions,
@@ -104,7 +107,6 @@ fun LatestDiscussionsScreen(
     snackbarHostState: SnackbarHostState,
     pullToRefreshState: PullToRefreshState,
     onLoadMore: () -> Unit,
-    onClick: (Long) -> Unit,
     onRefresh: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -134,7 +136,6 @@ fun LatestDiscussionsScreen(
                 ) { item ->
                     DiscussionCard(
                         uiState = item,
-                        onClick = { onClick(item.discussionId) },
                         discussionCardType = uiState.type,
                         modifier = Modifier.padding(vertical = 2.dp),
                     )
@@ -197,7 +198,6 @@ private fun DiscussionsScreenPreview(
         snackbarHostState = SnackbarHostState(),
         pullToRefreshState = rememberPullToRefreshState(),
         onLoadMore = {},
-        onClick = {},
         onRefresh = {},
     )
 }
@@ -212,7 +212,6 @@ private fun LoadingDiscussionsScreenPreview() {
         snackbarHostState = SnackbarHostState(),
         pullToRefreshState = rememberPullToRefreshState(),
         onLoadMore = {},
-        onClick = {},
         onRefresh = {},
     )
 }
@@ -234,7 +233,6 @@ private fun LastPageDiscussionsScreenPreview() {
         snackbarHostState = SnackbarHostState(),
         pullToRefreshState = rememberPullToRefreshState(),
         onLoadMore = {},
-        onClick = {},
         onRefresh = {},
     )
 }

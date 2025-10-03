@@ -43,7 +43,6 @@ class DiscussionCardTest {
         composeTestRule.setContent {
             DiscussionCard(
                 uiState = baseUiState,
-                onClick = {},
                 discussionCardType = DiscussionCardType.Default,
             )
         }
@@ -64,7 +63,6 @@ class DiscussionCardTest {
         composeTestRule.setContent {
             DiscussionCard(
                 uiState = baseUiState,
-                onClick = {},
                 discussionCardType = DiscussionCardType.WriterHidden,
             )
         }
@@ -86,7 +84,6 @@ class DiscussionCardTest {
         composeTestRule.setContent {
             DiscussionCard(
                 uiState = baseUiState.copy(),
-                onClick = {},
                 discussionCardType = DiscussionCardType.QueryHighlighting("성능"),
             )
         }
@@ -104,7 +101,6 @@ class DiscussionCardTest {
         composeTestRule.setContent {
             DiscussionCard(
                 uiState = baseUiState,
-                onClick = {},
                 discussionCardType = DiscussionCardType.OpinionVisible,
             )
         }

@@ -21,9 +21,9 @@ import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivityDiscussionDetailBinding
 import com.team.todoktodok.databinding.MenuExternalDiscussionBinding
 import com.team.todoktodok.databinding.MenuOwnedDiscussionBinding
-import com.team.todoktodok.presentation.compose.discussion.DiscussionsActivity
-import com.team.todoktodok.presentation.compose.discussion.DiscussionsActivity.Companion.EXTRA_DELETE_DISCUSSION
-import com.team.todoktodok.presentation.compose.discussion.DiscussionsActivity.Companion.EXTRA_WATCHED_DISCUSSION
+import com.team.todoktodok.presentation.compose.main.MainActivity
+import com.team.todoktodok.presentation.compose.main.MainActivity.Companion.EXTRA_DELETE_DISCUSSION
+import com.team.todoktodok.presentation.compose.main.MainActivity.Companion.EXTRA_WATCHED_DISCUSSION
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
 import com.team.todoktodok.presentation.core.component.CommonDialog
@@ -346,7 +346,7 @@ class DiscussionDetailActivity : AppCompatActivity() {
         when (mode) {
             is SerializationCreateDiscussionRoomMode.Create -> {
                 val intent =
-                    DiscussionsActivity.Intent(this).apply {
+                    MainActivity.Intent(this).apply {
                         addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
                     }
                 startActivity(intent)

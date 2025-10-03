@@ -7,11 +7,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -29,22 +27,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.presentation.compose.core.ObserveAsEvents
 import com.team.todoktodok.presentation.compose.core.component.AlertSnackBar
 import com.team.todoktodok.presentation.compose.core.component.CloverProgressBar
-import com.team.todoktodok.presentation.compose.discussion.component.DiscussionFAB
 import com.team.todoktodok.presentation.compose.discussion.component.DiscussionTab
-import com.team.todoktodok.presentation.compose.discussion.component.DiscussionToolbar
 import com.team.todoktodok.presentation.compose.discussion.component.SearchDiscussionBar
-import com.team.todoktodok.presentation.compose.discussion.latest.vm.LatestDiscussionViewModel
 import com.team.todoktodok.presentation.compose.discussion.model.Destination
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionsUiEvent
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionsUiState
 import com.team.todoktodok.presentation.compose.discussion.vm.DiscussionsViewModel
+import com.team.todoktodok.presentation.compose.discussion.vm.DiscussionsViewModelFactory
 import com.team.todoktodok.presentation.compose.theme.White
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
-import com.team.todoktodok.presentation.xml.profile.UserProfileTab
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -52,16 +49,13 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DiscussionsScreen(
-    viewModel: DiscussionsViewModel,
-    latestDiscussionViewModel: LatestDiscussionViewModel,
     exceptionMessageConverter: ExceptionMessageConverter,
-    onClickNotification: () -> Unit,
-    onClickProfile: () -> Unit,
-    onClickCreateDiscussion: () -> Unit,
-    onDiscussionClick: (Long) -> Unit,
-    onClickMyDiscussionHeader: (UserProfileTab) -> Unit,
     modifier: Modifier = Modifier,
     timeoutMillis: Long = 1500L,
+    viewModel: DiscussionsViewModel =
+        viewModel(
+            factory = DiscussionsViewModelFactory((LocalContext.current.applicationContext as App).container),
+        ),
 ) {
     val pagerState =
         rememberPagerState(initialPage = Destination.HOT.ordinal) { Destination.entries.size }
@@ -127,108 +121,65 @@ fun DiscussionsScreen(
     }
 
     DiscussionsScreen(
-        latestDiscussionViewModel = latestDiscussionViewModel,
         exceptionMessageConverter = exceptionMessageConverter,
         isLoading = isLoading.value,
         uiState = uiState.value,
         pagerState = pagerState,
         snackbarHostState = snackbarHostState,
-        onDiscussionClick = onDiscussionClick,
-        onClickNotification = onClickNotification,
-        onClickProfile = onClickProfile,
-        onClickMyDiscussionHeader = onClickMyDiscussionHeader,
         onTabChanged = viewModel::modifySearchKeyword,
         onSearchKeywordChanged = viewModel::modifySearchKeyword,
         onSearch = viewModel::loadSearchedDiscussions,
         onActivatedDiscussionLoadMore = viewModel::loadActivatedDiscussions,
-        onClickCreateDiscussion = onClickCreateDiscussion,
         modifier = modifier,
     )
 }
 
 @Composable
-fun DiscussionsScreen(
-    latestDiscussionViewModel: LatestDiscussionViewModel,
+private fun DiscussionsScreen(
     exceptionMessageConverter: ExceptionMessageConverter,
     isLoading: Boolean,
     uiState: DiscussionsUiState,
     pagerState: PagerState,
     snackbarHostState: SnackbarHostState,
-    onDiscussionClick: (Long) -> Unit,
-    onClickMyDiscussionHeader: (UserProfileTab) -> Unit,
     onSearchKeywordChanged: (String) -> Unit,
-    onClickNotification: () -> Unit,
     onTabChanged: (String) -> Unit,
-    onClickProfile: () -> Unit,
     onSearch: () -> Unit,
     onActivatedDiscussionLoadMore: () -> Unit,
-    onClickCreateDiscussion: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Scaffold(
-        topBar = {
-            DiscussionToolbar(
-                isExistNotification = uiState.isUnreadNotification,
-                onClickNotification = onClickNotification,
-                onClickProfile = onClickProfile,
-                modifier =
-                    modifier
-                        .fillMaxWidth()
-                        .statusBarsPadding(),
-            )
-        },
-    ) { innerPadding ->
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier =
-                Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding),
-        ) {
-            DiscussionsContent(
-                latestDiscussionViewModel,
-                exceptionMessageConverter,
-                uiState = uiState,
-                pagerState = pagerState,
-                onSearchKeywordChanged = { onSearchKeywordChanged(it) },
-                onActivatedDiscussionLoadMore = onActivatedDiscussionLoadMore,
-                onTabChanged = { tab -> if (tab != Destination.ALL) onTabChanged("") },
-                onDiscussionClick = { onDiscussionClick(it) },
-                onClickMyDiscussionHeader = { onClickMyDiscussionHeader(it) },
-                onSearch = onSearch,
-                modifier = Modifier.fillMaxSize(),
-            )
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = modifier.fillMaxSize(),
+    ) {
+        DiscussionsContent(
+            exceptionMessageConverter,
+            uiState = uiState,
+            pagerState = pagerState,
+            onSearchKeywordChanged = { onSearchKeywordChanged(it) },
+            onActivatedDiscussionLoadMore = onActivatedDiscussionLoadMore,
+            onTabChanged = { tab -> if (tab != Destination.ALL) onTabChanged("") },
+            onSearch = onSearch,
+            modifier = Modifier.fillMaxSize(),
+        )
 
-            CloverProgressBar(isLoading)
+        CloverProgressBar(isLoading)
 
-            DiscussionFAB(
-                onClickCreateDiscussion = onClickCreateDiscussion,
-                modifier =
-                    Modifier
-                        .align(Alignment.BottomEnd)
-                        .padding(16.dp),
-            )
-
-            SnackbarHost(
-                hostState = snackbarHostState,
-                snackbar = { AlertSnackBar(snackbarData = it) },
-                modifier = Modifier.align(Alignment.BottomCenter),
-            )
-        }
+        SnackbarHost(
+            hostState = snackbarHostState,
+            snackbar = { AlertSnackBar(snackbarData = it) },
+            modifier = Modifier.align(Alignment.BottomCenter),
+        )
     }
 }
 
 @Composable
 fun DiscussionsContent(
-    latestDiscussionViewModel: LatestDiscussionViewModel,
     exceptionMessageConverter: ExceptionMessageConverter,
     uiState: DiscussionsUiState,
     pagerState: PagerState,
     onSearchKeywordChanged: (String) -> Unit,
     onActivatedDiscussionLoadMore: () -> Unit,
     onTabChanged: (Destination) -> Unit,
-    onDiscussionClick: (Long) -> Unit,
-    onClickMyDiscussionHeader: (UserProfileTab) -> Unit,
     onSearch: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -249,14 +200,11 @@ fun DiscussionsContent(
         )
 
         DiscussionTab(
-            latestDiscussionViewModel = latestDiscussionViewModel,
             messageConverter = exceptionMessageConverter,
             uiState = uiState,
             pagerState = pagerState,
             onActivatedDiscussionLoadMore = { onActivatedDiscussionLoadMore() },
-            onClickDiscussion = onDiscussionClick,
             onTabChanged = onTabChanged,
-            onClickMyDiscussionHeader = onClickMyDiscussionHeader,
         )
     }
 }

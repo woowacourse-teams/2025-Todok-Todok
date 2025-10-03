@@ -36,7 +36,6 @@ import com.team.todoktodok.presentation.xml.profile.UserProfileTab
 fun MyDiscussionsScreen(
     uiState: MyDiscussionUiState,
     onClickHeader: (UserProfileTab) -> Unit,
-    onClick: (Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     if (uiState.isEmpty()) {
@@ -61,7 +60,6 @@ fun MyDiscussionsScreen(
             }
             item {
                 ParticipatedDiscussionsScreen(
-                    onClick = onClick,
                     uiState = participated,
                 )
             }
@@ -89,7 +87,6 @@ fun MyDiscussionsScreen(
             }
             item {
                 CreatedDiscussionScreen(
-                    onClick = onClick,
                     uiState = created,
                 )
             }
@@ -137,7 +134,6 @@ private fun MyDiscussionsScreenPreview(
     uiState: MyDiscussionUiState,
 ) {
     MyDiscussionsScreen(
-        onClick = {},
         onClickHeader = {},
         uiState = uiState,
     )
@@ -147,7 +143,6 @@ private fun MyDiscussionsScreenPreview(
 @Composable
 private fun EmptyMyDiscussionsScreenPreview() {
     MyDiscussionsScreen(
-        onClick = {},
         onClickHeader = {},
         uiState = MyDiscussionUiState(),
     )

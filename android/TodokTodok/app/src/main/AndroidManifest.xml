@@ -42,8 +42,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".presentation.compose.discussion.DiscussionsActivity"
-            android:exported="false"></activity>
+            android:name=".presentation.compose.main.MainActivity"
+            android:exported="false"/>
         <activity
             android:name=".presentation.xml.discussion.create.CreateDiscussionRoomActivity"
             android:exported="false"

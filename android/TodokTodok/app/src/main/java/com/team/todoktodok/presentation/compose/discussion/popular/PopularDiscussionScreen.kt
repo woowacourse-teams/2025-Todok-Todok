@@ -30,7 +30,6 @@ import com.team.todoktodok.presentation.compose.theme.Pretendard
 @Composable
 fun PopularDiscussionsScreen(
     uiState: PopularDiscussionsUiState,
-    onClick: (Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
@@ -43,7 +42,6 @@ fun PopularDiscussionsScreen(
             items(items = uiState.discussions, key = { it.discussionId }) { item ->
                 DiscussionCard(
                     uiState = item,
-                    onClick = { onClick(item.discussionId) },
                     discussionCardType = DiscussionCardType.OpinionVisible,
                     modifier = Modifier.fillParentMaxWidth(0.9f),
                 )
@@ -80,7 +78,6 @@ private fun PopularDiscussionsScreenPreview(
     popularDiscussions: PopularDiscussionsUiState,
 ) {
     PopularDiscussionsScreen(
-        onClick = {},
         uiState = popularDiscussions,
     )
 }

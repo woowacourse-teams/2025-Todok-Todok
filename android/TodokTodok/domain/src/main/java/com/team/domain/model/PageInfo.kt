@@ -1,4 +1,4 @@
-package com.team.domain.model.latest
+package com.team.domain.model
 
 data class PageInfo(
     val hasNext: Boolean,
