@@ -11,13 +11,11 @@ class DiscussionsViewModelFactory(
         if (modelClass.isAssignableFrom(DiscussionsViewModel::class.java)) {
             val repositoryModule = appContainer.repositoryModule
             val discussionRepository = repositoryModule.discussionRepository
-            val memberRepository = repositoryModule.memberRepository
             val notificationRepository = repositoryModule.notificationRepository
             val networkConnectivityObserver = appContainer.connectivityObserver
 
             return DiscussionsViewModel(
                 discussionRepository,
-                memberRepository,
                 notificationRepository,
                 networkConnectivityObserver,
             ) as T

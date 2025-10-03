@@ -17,9 +17,7 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,33 +25,20 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.team.todoktodok.presentation.compose.discussion.hot.HotDiscussionScreen
-import com.team.todoktodok.presentation.compose.discussion.latest.LatestDiscussionsScreen
-import com.team.todoktodok.presentation.compose.discussion.model.AllDiscussionMode
-import com.team.todoktodok.presentation.compose.discussion.model.Destination
-import com.team.todoktodok.presentation.compose.discussion.model.Destination.Companion.Destination
-import com.team.todoktodok.presentation.compose.discussion.model.DiscussionsUiState
-import com.team.todoktodok.presentation.compose.discussion.search.SearchDiscussionScreen
+import com.team.todoktodok.presentation.compose.discussion.model.DiscussionTabStatus
+import com.team.todoktodok.presentation.compose.discussion.model.DiscussionTabStatus.Companion.DiscussionTabStatus
+import com.team.todoktodok.presentation.compose.my.MyScreen
 import com.team.todoktodok.presentation.compose.theme.Green1A
 import com.team.todoktodok.presentation.compose.theme.Pretendard
 import com.team.todoktodok.presentation.compose.theme.White
-import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import kotlinx.coroutines.launch
 
 @Composable
 fun DiscussionTab(
-    messageConverter: ExceptionMessageConverter,
-    uiState: DiscussionsUiState,
     pagerState: PagerState,
-    onActivatedDiscussionLoadMore: () -> Unit,
-    onTabChanged: (Destination) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val coroutineScope = rememberCoroutineScope()
-
-    LaunchedEffect(pagerState) {
-        snapshotFlow { pagerState.currentPage }
-            .collect { page -> onTabChanged(Destination(page)) }
-    }
 
     Column(modifier = modifier.fillMaxSize()) {
         ScrollableTabRow(
@@ -72,12 +57,11 @@ fun DiscussionTab(
             contentColor = Color.Black,
             edgePadding = 0.dp,
         ) {
-            Destination.entries.forEachIndexed { index, tab ->
-                val label = stringResource(tab.label)
+            DiscussionTabStatus.entries.forEachIndexed { index, tab ->
                 Tab(
                     text = {
                         Text(
-                            text = label,
+                            text = stringResource(tab.label),
                             fontFamily = Pretendard,
                             fontWeight = FontWeight.SemiBold,
                         )
@@ -113,27 +97,9 @@ fun DiscussionTab(
                         .background(White),
                 contentAlignment = Alignment.Center,
             ) {
-                when (Destination(page)) {
-                    Destination.HOT ->
-                        HotDiscussionScreen(
-                            uiState = uiState.hotDiscussion,
-                            onLoadMore = onActivatedDiscussionLoadMore,
-                            modifier = Modifier.fillMaxSize(),
-                        )
-
-                    Destination.ALL ->
-                        when (uiState.allDiscussionMode) {
-                            AllDiscussionMode.LATEST ->
-                                LatestDiscussionsScreen(
-                                    messageConverter = messageConverter,
-                                    modifier = Modifier.fillMaxSize(),
-                                )
-                            AllDiscussionMode.SEARCH ->
-                                SearchDiscussionScreen(
-                                    uiState = uiState.searchDiscussion,
-                                    modifier = Modifier.fillMaxSize(),
-                                )
-                        }
+                when (DiscussionTabStatus(page)) {
+                    DiscussionTabStatus.HOT -> HotDiscussionScreen()
+                    DiscussionTabStatus.ALL -> MyScreen()
                 }
             }
         }

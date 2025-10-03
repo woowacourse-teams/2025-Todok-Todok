@@ -9,17 +9,15 @@ import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiSta
 data class ActivatedDiscussionsUiState(
     val discussions: List<DiscussionUiState> = emptyList(),
     val type: DiscussionCardType = DiscussionCardType.Default,
-    val pageInfo: PageInfo? = null,
+    val pageInfo: PageInfo = PageInfo.EMPTY,
 ) {
-    fun update(page: ActivatedDiscussionPage): ActivatedDiscussionsUiState =
-        copy(
-            discussions = page.data.map { DiscussionUiState(it) },
-            pageInfo = page.pageInfo,
-        )
+    val hasNextPage get() = pageInfo.hasNext
+
+    val notHasDiscussion = discussions.isEmpty()
 
     fun append(page: ActivatedDiscussionPage): ActivatedDiscussionsUiState =
         copy(
-            discussions = discussions + page.data.map { DiscussionUiState(it) },
+            discussions = (discussions + page.data.map { DiscussionUiState(it) }).distinctBy { it.discussionId },
             pageInfo = page.pageInfo,
         )
 

@@ -2,7 +2,7 @@ package com.team.todoktodok.presentation.compose.discussion.model
 
 import com.team.todoktodok.R
 
-enum class Destination(
+enum class DiscussionTabStatus(
     val label: Int,
     val contentDescription: Int,
 ) {
@@ -11,6 +11,6 @@ enum class Destination(
     ;
 
     companion object {
-        fun Destination(index: Int): Destination = entries[index]
+        fun DiscussionTabStatus(index: Int): DiscussionTabStatus = entries[index]
     }
 }

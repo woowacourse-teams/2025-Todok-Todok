@@ -8,7 +8,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import com.team.todoktodok.presentation.compose.theme.TodoktodokTheme
-import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.ext.getParcelableCompat
 import com.team.todoktodok.presentation.view.serialization.SerializationNotificationType
 import com.team.todoktodok.presentation.xml.discussiondetail.DiscussionDetailActivity
@@ -46,11 +45,9 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        val exceptionMessageConverter = ExceptionMessageConverter()
         setContent {
             TodoktodokTheme {
                 MainScreen(
-                    messageConverter = exceptionMessageConverter,
                     isUnreadNotification = false,
                 )
             }
@@ -107,7 +104,7 @@ class MainActivity : ComponentActivity() {
     companion object {
         const val EXTRA_DELETE_DISCUSSION = "delete_discussion"
         const val EXTRA_WATCHED_DISCUSSION = "watched_discussion"
-        private const val DEFAULT_DISCUSSION_ID = -1L
+        const val DEFAULT_DISCUSSION_ID = -1L
 
         fun Intent(context: Context) = Intent(context, MainActivity::class.java)
     }
