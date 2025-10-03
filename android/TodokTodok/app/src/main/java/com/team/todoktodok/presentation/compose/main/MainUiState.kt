@@ -24,7 +24,10 @@ data class MainUiState(
             allDiscussionMode = AllDiscussionMode.SEARCH,
         )
 
-    fun modifyDiscussion(discussion: SerializationDiscussion): MainUiState = MainUiState()
+    fun modifyDiscussion(discussion: SerializationDiscussion): MainUiState =
+        copy(
+            searchDiscussion = searchDiscussion.modify(discussion),
+        )
 
     fun clearSearchDiscussion() =
         copy(

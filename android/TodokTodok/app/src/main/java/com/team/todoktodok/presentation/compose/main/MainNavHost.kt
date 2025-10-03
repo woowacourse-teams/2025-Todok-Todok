@@ -10,6 +10,7 @@ import com.team.todoktodok.presentation.compose.discussion.DiscussionsScreen
 import com.team.todoktodok.presentation.compose.discussion.model.AllDiscussionMode
 import com.team.todoktodok.presentation.compose.discussion.search.SearchDiscussionsUiState
 import com.team.todoktodok.presentation.compose.my.MyScreen
+import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussion
 
 @Composable
 fun MainNavHost(
@@ -18,6 +19,8 @@ fun MainNavHost(
     pagerState: PagerState,
     navController: NavHostController,
     startDestination: MainDestination,
+    onCompleteRemoveDiscussion: (Long) -> Unit,
+    onCompleteModifyDiscussion: (SerializationDiscussion) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     NavHost(
@@ -32,6 +35,8 @@ fun MainNavHost(
                         DiscussionsScreen(
                             searchDiscussionsUiState = searchDiscussionsUiState,
                             allDiscussionScreenMode = allDiscussionScreenMode,
+                            onCompleteRemoveDiscussion = onCompleteRemoveDiscussion,
+                            onCompleteModifyDiscussion = onCompleteModifyDiscussion,
                             pagerState = pagerState,
                         )
 

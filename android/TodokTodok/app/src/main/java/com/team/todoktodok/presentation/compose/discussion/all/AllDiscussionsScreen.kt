@@ -9,11 +9,14 @@ import com.team.todoktodok.presentation.compose.discussion.latest.LatestDiscussi
 import com.team.todoktodok.presentation.compose.discussion.model.AllDiscussionMode
 import com.team.todoktodok.presentation.compose.discussion.search.SearchDiscussionScreen
 import com.team.todoktodok.presentation.compose.discussion.search.SearchDiscussionsUiState
+import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussion
 
 @Composable
 fun AllDiscussionsScreen(
     searchDiscussion: SearchDiscussionsUiState,
     allDiscussionScreenMode: AllDiscussionMode,
+    onCompleteRemoveDiscussion: (Long) -> Unit,
+    onCompleteModifyDiscussion: (SerializationDiscussion) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(
@@ -30,6 +33,8 @@ fun AllDiscussionsScreen(
             AllDiscussionMode.SEARCH ->
                 SearchDiscussionScreen(
                     uiState = searchDiscussion,
+                    onCompleteRemoveDiscussion = onCompleteRemoveDiscussion,
+                    onCompleteModifyDiscussion = onCompleteModifyDiscussion,
                     modifier =
                         Modifier
                             .fillMaxSize(),
@@ -44,5 +49,7 @@ private fun AllDiscussionsScreenPreview() {
     AllDiscussionsScreen(
         searchDiscussion = SearchDiscussionsUiState(),
         allDiscussionScreenMode = AllDiscussionMode.LATEST,
+        onCompleteRemoveDiscussion = {},
+        onCompleteModifyDiscussion = {},
     )
 }

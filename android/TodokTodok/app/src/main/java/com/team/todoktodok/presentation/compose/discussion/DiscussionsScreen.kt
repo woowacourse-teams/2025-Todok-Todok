@@ -36,6 +36,7 @@ import com.team.todoktodok.presentation.compose.discussion.search.SearchDiscussi
 import com.team.todoktodok.presentation.compose.theme.Green1A
 import com.team.todoktodok.presentation.compose.theme.Pretendard
 import com.team.todoktodok.presentation.compose.theme.White
+import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussion
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -43,6 +44,8 @@ import kotlinx.coroutines.launch
 fun DiscussionsScreen(
     allDiscussionScreenMode: AllDiscussionMode,
     searchDiscussionsUiState: SearchDiscussionsUiState,
+    onCompleteRemoveDiscussion: (Long) -> Unit,
+    onCompleteModifyDiscussion: (SerializationDiscussion) -> Unit,
     pagerState: PagerState,
     modifier: Modifier = Modifier,
 ) {
@@ -115,6 +118,8 @@ fun DiscussionsScreen(
                             AllDiscussionsScreen(
                                 allDiscussionScreenMode = allDiscussionScreenMode,
                                 searchDiscussion = searchDiscussionsUiState,
+                                onCompleteRemoveDiscussion = onCompleteRemoveDiscussion,
+                                onCompleteModifyDiscussion = onCompleteModifyDiscussion,
                             )
                     }
                 }
@@ -136,5 +141,7 @@ private fun DiscussionsScreenPreview() {
                 previousKeyword = "",
             ),
         pagerState = PagerState { 1 },
+        onCompleteRemoveDiscussion = {},
+        onCompleteModifyDiscussion = {},
     )
 }

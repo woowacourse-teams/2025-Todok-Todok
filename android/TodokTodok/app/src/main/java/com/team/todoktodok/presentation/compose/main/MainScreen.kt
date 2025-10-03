@@ -28,6 +28,7 @@ import com.team.todoktodok.presentation.compose.discussion.model.DiscussionTabSt
 import com.team.todoktodok.presentation.compose.main.vm.MainViewModel
 import com.team.todoktodok.presentation.compose.main.vm.MainViewModelFactory
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
+import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussion
 import kotlinx.coroutines.launch
 
 @Composable
@@ -83,6 +84,8 @@ fun MainScreen(
             onChangeSearchBarVisibility = viewModel::changeSearchBarVisibility,
             onChangeBottomNavigationTab = viewModel::changeBottomNavigationTab,
             onChangeKeyword = viewModel::modifySearchKeyword,
+            onCompleteRemoveDiscussion = viewModel::removeDiscussion,
+            onCompleteModifyDiscussion = viewModel::modifyDiscussion,
             modifier = modifier,
         )
     }
@@ -97,6 +100,8 @@ fun MainScreenContent(
     onChangeSearchBarVisibility: () -> Unit,
     onChangeBottomNavigationTab: (MainDestination) -> Unit,
     onChangeKeyword: (String) -> Unit,
+    onCompleteRemoveDiscussion: (Long) -> Unit,
+    onCompleteModifyDiscussion: (SerializationDiscussion) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -133,6 +138,8 @@ fun MainScreenContent(
         MainNavHost(
             allDiscussionScreenMode = uiState.allDiscussionMode,
             searchDiscussionsUiState = uiState.searchDiscussion,
+            onCompleteRemoveDiscussion = onCompleteRemoveDiscussion,
+            onCompleteModifyDiscussion = onCompleteModifyDiscussion,
             pagerState = pagerState,
             navController = navController,
             startDestination = MainDestination.Discussion,
@@ -140,4 +147,3 @@ fun MainScreenContent(
         )
     }
 }
-

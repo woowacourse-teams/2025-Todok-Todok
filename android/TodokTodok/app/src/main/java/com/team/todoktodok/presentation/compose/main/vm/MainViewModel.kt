@@ -6,10 +6,11 @@ import com.team.domain.model.exception.onFailure
 import com.team.domain.model.exception.onSuccess
 import com.team.domain.repository.DiscussionRepository
 import com.team.domain.repository.NotificationRepository
+import com.team.todoktodok.presentation.compose.main.MainDestination
 import com.team.todoktodok.presentation.compose.main.MainUiEvent
 import com.team.todoktodok.presentation.compose.main.MainUiState
-import com.team.todoktodok.presentation.compose.main.MainDestination
 import com.team.todoktodok.presentation.core.base.BaseViewModel
+import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussion
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -78,6 +79,10 @@ class MainViewModel(
     fun modifySearchKeyword(keyword: String) {
         _uiState.update { it.modifySearchKeyword(keyword) }
         if (keyword.isBlank()) clearSearchResult()
+    }
+
+    fun modifyDiscussion(discussion: SerializationDiscussion) {
+        _uiState.update { it.modifyDiscussion(discussion) }
     }
 
     fun onBackPressed(
