@@ -36,7 +36,6 @@ import com.team.todoktodok.presentation.compose.theme.Pretendard
 @Composable
 fun SearchDiscussionBar(
     searchKeyword: String,
-    previousKeyword: String,
     onKeywordChange: (String) -> Unit,
     onSearch: () -> Unit,
     modifier: Modifier = Modifier,
@@ -104,7 +103,7 @@ fun SearchDiscussionBar(
             KeyboardActions(
                 onSearch = {
                     keyboardController?.hide()
-                    if (searchKeyword.isNotBlank() && searchKeyword != previousKeyword) {
+                    if (searchKeyword.isNotBlank()) {
                         onSearch()
                     }
                 },
@@ -126,13 +125,11 @@ private fun SearchDiscussionBarPreview() {
     Column {
         SearchDiscussionBar(
             searchKeyword = "코틀린",
-            previousKeyword = "",
             onKeywordChange = {},
             onSearch = {},
         )
         SearchDiscussionBar(
             searchKeyword = "",
-            previousKeyword = "코틀린",
             onKeywordChange = {},
             onSearch = {},
         )

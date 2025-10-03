@@ -17,7 +17,6 @@ data class SearchDiscussionsUiState(
         DiscussionCardType.QueryHighlighting(
             EMPTY_SEARCH_KEYWORD,
         ),
-    val previousKeyword: String = EMPTY_SEARCH_KEYWORD,
 ) {
     fun formatNotFoundGuideMessage(defaultFormat: String): AnnotatedString {
         val defaultGuideMessage = defaultFormat.format(type.keyword)
@@ -40,19 +39,15 @@ data class SearchDiscussionsUiState(
         keyword: String,
         newDiscussions: List<Discussion>,
     ): SearchDiscussionsUiState {
-        if (keyword == previousKeyword || keyword.isBlank()) return this
+        if (keyword.isBlank()) return this
         val newDiscussions = newDiscussions.map { DiscussionUiState(it) }
-        return copy(
-            discussions = newDiscussions,
-            previousKeyword = keyword,
-        )
+        return copy(discussions = newDiscussions)
     }
 
     fun clear() =
         copy(
             discussions = emptyList(),
             type = type.copy(keyword = EMPTY_SEARCH_KEYWORD),
-            previousKeyword = EMPTY_SEARCH_KEYWORD,
         )
 
     fun modifyKeyword(keyword: String) = copy(type = type.copy(keyword = keyword))

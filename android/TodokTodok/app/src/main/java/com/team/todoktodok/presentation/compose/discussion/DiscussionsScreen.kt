@@ -138,7 +138,6 @@ private fun DiscussionsScreenPreview() {
             SearchDiscussionsUiState(
                 discussions = emptyList(),
                 type = DiscussionCardType.QueryHighlighting(""),
-                previousKeyword = "",
             ),
         pagerState = PagerState { 1 },
         onCompleteRemoveDiscussion = {},

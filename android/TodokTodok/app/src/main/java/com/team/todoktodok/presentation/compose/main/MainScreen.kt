@@ -25,6 +25,7 @@ import com.team.todoktodok.presentation.compose.core.ObserveAsEvents
 import com.team.todoktodok.presentation.compose.core.component.AlertSnackBar
 import com.team.todoktodok.presentation.compose.discussion.component.DiscussionToolbar
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionTabStatus
+import com.team.todoktodok.presentation.compose.discussion.model.DiscussionTabStatus.Companion.DiscussionTabStatus
 import com.team.todoktodok.presentation.compose.main.vm.MainViewModel
 import com.team.todoktodok.presentation.compose.main.vm.MainViewModelFactory
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
@@ -54,7 +55,7 @@ fun MainScreen(
     ObserveAsEvents(viewModel.uiEvent) { event ->
         when (event) {
             MainUiEvent.ScrollToAllDiscussion -> {
-                if (uiState.value.discussionTab == DiscussionTabStatus.HOT) {
+                if (DiscussionTabStatus(pagerState.currentPage) != DiscussionTabStatus.ALL) {
                     coroutineScope.launch {
                         pagerState.animateScrollToPage(DiscussionTabStatus.ALL.ordinal)
                     }

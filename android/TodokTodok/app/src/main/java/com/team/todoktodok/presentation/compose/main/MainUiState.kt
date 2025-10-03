@@ -2,14 +2,12 @@ package com.team.todoktodok.presentation.compose.main
 
 import com.team.domain.model.Discussion
 import com.team.todoktodok.presentation.compose.discussion.model.AllDiscussionMode
-import com.team.todoktodok.presentation.compose.discussion.model.DiscussionTabStatus
 import com.team.todoktodok.presentation.compose.discussion.search.SearchDiscussionsUiState
 import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussion
 
 data class MainUiState(
     val searchDiscussion: SearchDiscussionsUiState = SearchDiscussionsUiState(),
     val allDiscussionMode: AllDiscussionMode = AllDiscussionMode.LATEST,
-    val discussionTab: DiscussionTabStatus = DiscussionTabStatus.HOT,
     val bottomNavigationTab: MainDestination = MainDestination.Discussion,
     val hasUnreadNotification: Boolean = true,
     val searchBarVisible: Boolean = false,
@@ -20,7 +18,6 @@ data class MainUiState(
     ): MainUiState =
         copy(
             searchDiscussion = searchDiscussion.add(keyword, newDiscussions),
-            discussionTab = DiscussionTabStatus.ALL,
             allDiscussionMode = AllDiscussionMode.SEARCH,
         )
 

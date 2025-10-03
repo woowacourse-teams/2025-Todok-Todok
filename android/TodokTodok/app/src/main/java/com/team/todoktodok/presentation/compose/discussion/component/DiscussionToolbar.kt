@@ -162,7 +162,6 @@ fun DiscussionToolbar(
                 SearchDiscussionBar(
                     onSearch = onSearch,
                     searchKeyword = defaultDiscussionsUiState.searchDiscussion.type.keyword,
-                    previousKeyword = defaultDiscussionsUiState.searchDiscussion.previousKeyword,
                     onKeywordChange = { onKeywordChange(it) },
                     modifier = Modifier.fillMaxWidth(0.8f),
                 )
