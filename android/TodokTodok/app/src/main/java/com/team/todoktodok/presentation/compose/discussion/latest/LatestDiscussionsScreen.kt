@@ -181,12 +181,6 @@ fun LatestDiscussionsScreen(
                 }
             },
         )
-
-        SnackbarHost(
-            hostState = snackbarHostState,
-            snackbar = { AlertSnackBar(snackbarData = it) },
-            modifier = Modifier.align(Alignment.BottomCenter),
-        )
     }
 }
 
