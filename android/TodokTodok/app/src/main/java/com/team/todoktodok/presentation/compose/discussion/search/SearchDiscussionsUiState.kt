@@ -51,6 +51,7 @@ data class SearchDiscussionsUiState(
     fun clear() =
         copy(
             discussions = emptyList(),
+            type = type.copy(keyword = EMPTY_SEARCH_KEYWORD),
             previousKeyword = EMPTY_SEARCH_KEYWORD,
         )
 
