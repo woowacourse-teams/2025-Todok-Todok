@@ -82,7 +82,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:background="@drawable/bg_white_radius_16dp"
+                android:background="@drawable/bg_gray_ed_radius_16dp"
                 app:layout_constraintBottom_toTopOf="@id/etl_discussion_room_title"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
