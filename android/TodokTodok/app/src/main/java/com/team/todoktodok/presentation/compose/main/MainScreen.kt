@@ -135,6 +135,7 @@ fun MainScreenContent(
             onCompleteRemoveDiscussion = onCompleteRemoveDiscussion,
             onCompleteModifyDiscussion = onCompleteModifyDiscussion,
             onChangeSearchBarVisibility = onChangeSearchBarVisibility,
+            onChangeBottomNavigationTab = onChangeBottomNavigationTab,
             modifier = Modifier.padding(innerPadding),
         )
     }

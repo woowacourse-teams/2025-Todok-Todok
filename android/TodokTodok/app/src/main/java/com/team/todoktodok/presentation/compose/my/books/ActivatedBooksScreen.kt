@@ -13,16 +13,21 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import coil3.compose.SubcomposeAsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.team.domain.model.Book
 import com.team.todoktodok.App
+import com.team.todoktodok.R
+import com.team.todoktodok.presentation.compose.core.component.ResourceNotFoundContent
+import com.team.todoktodok.presentation.compose.main.MainDestination
 import com.team.todoktodok.presentation.compose.my.books.vm.MyBooksViewModel
 import com.team.todoktodok.presentation.compose.my.books.vm.MyBooksViewModelFactory
 import com.team.todoktodok.presentation.compose.my.component.BookErrorIllustration
@@ -32,6 +37,8 @@ import com.team.todoktodok.presentation.compose.theme.GrayE0
 
 @Composable
 fun ActivatedBooksScreen(
+    navController: NavHostController,
+    onChangeBottomNavigationTab: (MainDestination) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: MyBooksViewModel =
         viewModel(
@@ -49,6 +56,8 @@ fun ActivatedBooksScreen(
 
     ActivatedBooksScreen(
         uiState = uiState.value,
+        navController = navController,
+        onChangeBottomNavigationTab = onChangeBottomNavigationTab,
         modifier = modifier,
     )
 }
@@ -56,19 +65,37 @@ fun ActivatedBooksScreen(
 @Composable
 fun ActivatedBooksScreen(
     uiState: MyBooksUiState,
+    onChangeBottomNavigationTab: (MainDestination) -> Unit,
     modifier: Modifier = Modifier,
+    navController: NavHostController = NavHostController(LocalContext.current),
 ) {
-    LazyVerticalGrid(
-        verticalArrangement = Arrangement.spacedBy(10.dp),
-        horizontalArrangement = Arrangement.spacedBy(15.dp),
-        columns = GridCells.Fixed(3),
-        modifier =
-            modifier
-                .fillMaxSize()
-                .padding(horizontal = 15.dp, vertical = 5.dp),
-    ) {
-        items(uiState.books, key = { it.id }) { book ->
-            BookCover(book)
+    if (uiState.notHasBooks) {
+        ResourceNotFoundContent(
+            title = stringResource(R.string.profile_not_has_activated_book_title),
+            subtitle = stringResource(R.string.profile_not_has_activated_book_subtitle),
+            actionTitle = stringResource(R.string.profile_action_activated_book),
+            onActionClick = {
+                navController.navigate(MainDestination.Discussion.route) {
+                    launchSingleTop = true
+                    popUpTo(navController.graph.startDestinationId) { saveState = true }
+                    restoreState = true
+                    onChangeBottomNavigationTab(MainDestination.Discussion)
+                }
+            },
+        )
+    } else {
+        LazyVerticalGrid(
+            verticalArrangement = Arrangement.spacedBy(10.dp),
+            horizontalArrangement = Arrangement.spacedBy(15.dp),
+            columns = GridCells.Fixed(3),
+            modifier =
+                modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 15.dp, vertical = 5.dp),
+        ) {
+            items(uiState.books, key = { it.id }) { book ->
+                BookCover(book)
+            }
         }
     }
 }
@@ -103,5 +130,19 @@ private fun ActivatedBooksScreenPreview(
     @PreviewParameter(MyBooksUiStatePreviewParameterProvider::class)
     uiState: MyBooksUiState,
 ) {
-    ActivatedBooksScreen(uiState)
+    ActivatedBooksScreen(
+        navController = NavHostController(LocalContext.current),
+        onChangeBottomNavigationTab = {},
+        uiState = uiState,
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun EmptyActivatedBooksScreenPreview() {
+    ActivatedBooksScreen(
+        navController = NavHostController(LocalContext.current),
+        onChangeBottomNavigationTab = {},
+        uiState = MyBooksUiState(),
+    )
 }

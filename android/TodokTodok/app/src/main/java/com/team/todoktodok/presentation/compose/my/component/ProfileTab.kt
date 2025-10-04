@@ -20,12 +20,15 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.team.todoktodok.R
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionTabStatus
+import com.team.todoktodok.presentation.compose.main.MainDestination
 import com.team.todoktodok.presentation.compose.my.books.ActivatedBooksScreen
 import com.team.todoktodok.presentation.compose.my.liked.LikedDiscussionsScreen
 import com.team.todoktodok.presentation.compose.my.participated.ParticipatedDiscussionsScreen
@@ -52,7 +55,11 @@ enum class ProfileTabDestination(
 }
 
 @Composable
-fun ProfileTab(modifier: Modifier = Modifier) {
+fun ProfileTab(
+    onChangeBottomNavigationTab: (MainDestination) -> Unit,
+    modifier: Modifier = Modifier,
+    navController: NavHostController = NavHostController(LocalContext.current),
+) {
     val pagerState =
         rememberPagerState(initialPage = DiscussionTabStatus.HOT.ordinal) {
             ProfileTabDestination.entries.size
@@ -60,7 +67,11 @@ fun ProfileTab(modifier: Modifier = Modifier) {
 
     Column(modifier = modifier) {
         ProfileTabRow(pagerState)
-        ProfileTabPager(pagerState)
+        ProfileTabPager(
+            navController = navController,
+            onChangeBottomNavigationTab = onChangeBottomNavigationTab,
+            pagerState = pagerState,
+        )
     }
 }
 
@@ -103,7 +114,11 @@ private fun ProfileTabRow(pagerState: PagerState) {
 }
 
 @Composable
-private fun ProfileTabPager(pagerState: PagerState) {
+private fun ProfileTabPager(
+    navController: NavHostController,
+    onChangeBottomNavigationTab: (MainDestination) -> Unit,
+    pagerState: PagerState,
+) {
     HorizontalPager(
         state = pagerState,
         modifier = Modifier.fillMaxSize(),
@@ -116,7 +131,12 @@ private fun ProfileTabPager(pagerState: PagerState) {
             contentAlignment = Alignment.Center,
         ) {
             when (ProfileTabDestination.entries[page]) {
-                ProfileTabDestination.ACTIVATED_BOOKS -> ActivatedBooksScreen()
+                ProfileTabDestination.ACTIVATED_BOOKS ->
+                    ActivatedBooksScreen(
+                        navController = navController,
+                        onChangeBottomNavigationTab = onChangeBottomNavigationTab,
+                    )
+
                 ProfileTabDestination.LIKED_DISCUSSIONS -> LikedDiscussionsScreen()
                 ProfileTabDestination.PARTICIPATED_DISCUSSIONS -> ParticipatedDiscussionsScreen()
             }
@@ -127,5 +147,8 @@ private fun ProfileTabPager(pagerState: PagerState) {
 @Preview
 @Composable
 private fun ProfileTabPreview() {
-    ProfileTab()
+    ProfileTab(
+        navController = NavHostController(LocalContext.current),
+        onChangeBottomNavigationTab = {},
+    )
 }
