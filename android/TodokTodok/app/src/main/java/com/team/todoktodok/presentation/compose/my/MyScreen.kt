@@ -3,6 +3,7 @@ package com.team.todoktodok.presentation.compose.my
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -72,7 +73,13 @@ fun MyScreen(
             profileMessage = uiState.profile.message,
         )
 
-        ProfileTab(modifier = Modifier.padding(top = 10.dp))
+        ProfileTab(
+            modifier =
+                Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+                    .padding(top = 10.dp),
+        )
     }
 }
 
