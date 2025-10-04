@@ -17,13 +17,12 @@ class ActivatedBooksScreenTest {
         // given
         val uiState = MyBooksUiState()
 
-        val actionInvoked = mutableListOf<Boolean>()
 
         // when
         composeTestRule.setContent {
             ActivatedBooksScreen(
                 uiState = uiState,
-                onChangeBottomNavigationTab = { actionInvoked.add(true) },
+                onChangeBottomNavigationTab = {}
             )
         }
 
