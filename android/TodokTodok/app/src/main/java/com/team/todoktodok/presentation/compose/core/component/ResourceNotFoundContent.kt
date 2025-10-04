@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.sp
 import com.team.todoktodok.R
 
 @Composable
-fun ResourceNotFoundView(
+fun ResourceNotFoundContent(
     title: String,
     modifier: Modifier = Modifier,
     subtitle: String? = null,
@@ -73,7 +73,7 @@ fun ResourceNotFoundView(
 @Preview(showBackground = true)
 @Composable
 private fun ResourceNotFoundViewPreview() {
-    ResourceNotFoundView(
+    ResourceNotFoundContent(
         title = "데이터 없음",
         subtitle = "표시할 데이터가 없습니다.",
         actionTitle = "새로 만들기",
