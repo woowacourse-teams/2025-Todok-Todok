@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -226,6 +227,7 @@ private fun DiscussionBottom(
                     placeholder = painterResource(id = R.drawable.img_mascort),
                     error = painterResource(id = R.drawable.img_mascort),
                     fallback = painterResource(id = R.drawable.img_mascort),
+                    contentScale = ContentScale.Crop,
                     modifier =
                         Modifier
                             .clip(CircleShape)
