@@ -2,6 +2,7 @@ package com.team.todoktodok.presentation.compose.my.vm
 
 import androidx.lifecycle.viewModelScope
 import com.team.domain.ConnectivityObserver
+import com.team.domain.model.member.MemberDiscussionType
 import com.team.domain.model.member.MemberId
 import com.team.domain.repository.MemberRepository
 import com.team.todoktodok.presentation.compose.my.model.MyProfileUiEvent
@@ -28,9 +29,10 @@ class MyProfileViewModel(
     fun loadInitialProfile() {
         loadProfile()
         loadMyBooks()
+        loadParticipatedDiscussions()
     }
 
-    fun loadProfile() =
+    private fun loadProfile() =
         runAsync(
             key = KEY_FETCH_PROFILE,
             action = { memberRepository.getProfile(MemberId.Mine) },
@@ -38,11 +40,24 @@ class MyProfileViewModel(
             handleFailure = { onUiEvent(MyProfileUiEvent.ShowErrorMessage(it)) },
         )
 
-    fun loadMyBooks() =
+    private fun loadMyBooks() =
         runAsync(
             key = KEY_FETCH_MY_BOOKS,
             action = { memberRepository.getMemberBooks(MemberId.Mine) },
             handleSuccess = { result -> _uiState.update { it.addActivatedBooks(result) } },
+            handleFailure = { onUiEvent(MyProfileUiEvent.ShowErrorMessage(it)) },
+        )
+
+    private fun loadParticipatedDiscussions() =
+        runAsync(
+            key = KEY_FETCH_PARTICIPATED_DISCUSSIONS,
+            action = {
+                memberRepository.getMemberDiscussionRooms(
+                    id = MemberId.Mine,
+                    type = MemberDiscussionType.PARTICIPATED,
+                )
+            },
+            handleSuccess = { result -> _uiState.update { it.addParticipatedDiscussions(result) } },
             handleFailure = { onUiEvent(MyProfileUiEvent.ShowErrorMessage(it)) },
         )
 
@@ -55,5 +70,6 @@ class MyProfileViewModel(
     companion object {
         private const val KEY_FETCH_PROFILE = "fetch_profile"
         private const val KEY_FETCH_MY_BOOKS = "fetch_my_books"
+        private const val KEY_FETCH_PARTICIPATED_DISCUSSIONS = "fetch_participated_discussions"
     }
 }

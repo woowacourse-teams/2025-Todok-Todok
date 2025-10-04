@@ -17,8 +17,7 @@ class MyProfileUiStatePreviewParameterProvider : PreviewParameterProvider<MyProf
                             profileImage = "",
                         ),
                     activatedBooks = MyBooksUiStatePreviewParameterProvider().values.first(),
-                    participatedDiscussions = emptyList(),
-                    createdDiscussions = emptyList(),
+                    participatedDiscussions = ParticipatedDiscussionPreviewParameterProvider().values.first(),
                 ),
             )
 }
