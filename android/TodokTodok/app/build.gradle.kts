@@ -65,10 +65,10 @@ android {
         }
     }
 
-    packaging {
-        resources {
-            excludes += "META-INF/**"
-            excludes += "win32-x86*/**"
+    androidComponents {
+        onVariants(selector().withBuildType("release")) {
+            it.packaging.resources.excludes
+                .add("META-INF/**")
         }
     }
     buildFeatures {

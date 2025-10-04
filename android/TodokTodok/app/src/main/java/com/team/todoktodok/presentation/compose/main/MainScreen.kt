@@ -1,8 +1,6 @@
 package com.team.todoktodok.presentation.compose.main
 
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Scaffold
@@ -24,7 +22,6 @@ import com.team.todoktodok.presentation.compose.LocalUiExceptionHandler
 import com.team.todoktodok.presentation.compose.UiExceptionHandler
 import com.team.todoktodok.presentation.compose.core.ObserveAsEvents
 import com.team.todoktodok.presentation.compose.core.component.AlertSnackBar
-import com.team.todoktodok.presentation.compose.discussion.component.DiscussionToolbar
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionTabStatus
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionTabStatus.Companion.DiscussionTabStatus
 import com.team.todoktodok.presentation.compose.main.vm.MainViewModel
@@ -111,19 +108,6 @@ fun MainScreenContent(
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
-        topBar = {
-            DiscussionToolbar(
-                isExistNotification = uiState.hasUnreadNotification,
-                defaultDiscussionsUiState = uiState,
-                onSearch = onSearch,
-                onChangeSearchBarVisibility = onChangeSearchBarVisibility,
-                onKeywordChange = { onChangeKeyword(it) },
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .statusBarsPadding(),
-            )
-        },
         bottomBar = {
             MainBottomNavigation(
                 navController = navController,
@@ -142,13 +126,15 @@ fun MainScreenContent(
         modifier = modifier,
     ) { innerPadding ->
         MainNavHost(
-            allDiscussionScreenMode = uiState.allDiscussionMode,
-            searchDiscussionsUiState = uiState.searchDiscussion,
-            onCompleteRemoveDiscussion = onCompleteRemoveDiscussion,
-            onCompleteModifyDiscussion = onCompleteModifyDiscussion,
+            mainUiState = uiState,
             pagerState = pagerState,
             navController = navController,
             startDestination = MainDestination.Discussion,
+            onSearch = onSearch,
+            onChangeKeyword = onChangeKeyword,
+            onCompleteRemoveDiscussion = onCompleteRemoveDiscussion,
+            onCompleteModifyDiscussion = onCompleteModifyDiscussion,
+            onChangeSearchBarVisibility = onChangeSearchBarVisibility,
             modifier = Modifier.padding(innerPadding),
         )
     }

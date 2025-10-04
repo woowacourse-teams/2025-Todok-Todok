@@ -1,17 +1,17 @@
 package com.team.todoktodok.presentation.compose.my.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,46 +35,45 @@ fun MyToolbar(modifier: Modifier = Modifier) {
             modifier
                 .background(color = White),
     ) {
-        TopAppBar(
-            title = {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
+        Row(
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .background(White)
+                    .padding(horizontal = 10.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.img_mascort),
+                    tint = null,
+                    contentDescription = null,
+                )
+                Icon(
+                    painter = painterResource(R.drawable.img_app_name),
+                    tint = null,
+                    contentDescription = null,
+                )
+            }
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Settings,
+                    contentDescription = stringResource(R.string.content_description_discussions_toolbar_setting),
                     modifier =
-                        Modifier
-                            .fillMaxSize(),
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.img_mascort),
-                        tint = null,
-                        contentDescription = null,
-                    )
+                        Modifier.noRippleClickable {
+                            context.startActivity(SettingActivity.Intent(context))
+                        },
+                )
 
-                    Icon(
-                        painter = painterResource(R.drawable.img_app_name),
-                        tint = null,
-                        contentDescription = null,
-                    )
-                }
-            },
-            actions = {
-                Row {
-                    Icon(
-                        imageVector = Icons.Default.Settings,
-                        contentDescription = stringResource(R.string.content_description_discussions_toolbar_setting),
-                        modifier =
-                            Modifier.noRippleClickable(onClick = {
-                                context.startActivity(SettingActivity.Intent(context))
-                            }),
-                    )
-
-                    Spacer(modifier = Modifier.width(10.dp))
-                }
-            },
-            colors =
-                TopAppBarDefaults.topAppBarColors(
-                    containerColor = White,
-                ),
-        )
+                Spacer(modifier = Modifier.width(10.dp))
+            }
+        }
     }
 }
 
