@@ -25,12 +25,20 @@ val Typography =
                 lineHeight = 20.sp,
                 color = Gray68,
             ),
+        labelLarge =
+            TextStyle(
+                fontFamily = Pretendard,
+                fontWeight = FontWeight.Medium,
+                fontSize = 14.sp,
+                lineHeight = 20.sp,
+                color = Gray66,
+            ),
         labelMedium =
             TextStyle(
                 fontFamily = Pretendard,
                 fontWeight = FontWeight.SemiBold,
-                fontSize = 13.sp,
-                lineHeight = 18.sp,
+                fontSize = 16.sp,
+                lineHeight = 16.sp,
                 color = Black21,
             ),
         labelSmall =

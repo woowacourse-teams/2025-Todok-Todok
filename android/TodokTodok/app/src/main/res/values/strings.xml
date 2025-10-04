@@ -64,6 +64,9 @@
     <string name="content_description_discussions_toolbar_search">검색 아이콘</string>
     <string name="content_description_discussions_toolbar_notification">알람 아이콘</string>
     <string name="content_description_discussions_toolbar_has_notification">확인하지 않은 알람이 있어요</string>
+    <string name="content_description_discussions_toolbar_setting">설정 아이콘</string>
+    <string name="content_description_my_profile_image">프로필 사진</string>
+    <string name="content_description_icon_modify_my_profile_image">프로필 사진 수정 아이콘</string>
 
     <!--  상세 토론방 페이지  -->
     <string name="content_description_discussion_detail_back">토론 상세 화면에서 뒤로가는 버튼</string>
@@ -103,8 +106,16 @@
     <!-- 프로필 화면 -->
     <string name="profile_setting">설정</string>
     <string name="profile_active_books">활동 도서</string>
+    <string name="content_description_profile_active_books">활동 도서탭</string>
+
+    <string name="profile_liked_room">좋아요</string>
+    <string name="content_description_profile_liked_room">좋아요한 토론방탭</string>
+
     <string name="profile_created_discussion_room">생성한 토론방</string>
+
     <string name="profile_participated_discussion_room">참여한 토론방</string>
+    <string name="content_description_profile_participated_discussion_room">참여한 토론방탭</string>
+
     <string name="profile_report_dialog_title">해당 회원을 신고하시겠습니까?</string>
     <string name="profile_block_dialog_title">해당 회원을 차단하시겠습니까?</string>
     <string name="profile_complete_report">신고가 완료 되었습니다.</string>
