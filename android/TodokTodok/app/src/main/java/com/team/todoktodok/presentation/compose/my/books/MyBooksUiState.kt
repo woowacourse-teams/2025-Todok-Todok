@@ -4,4 +4,6 @@ import com.team.domain.model.Book
 
 data class MyBooksUiState(
     val books: List<Book> = emptyList(),
-)
+) {
+    val notHasBooks = books.isEmpty()
+}
