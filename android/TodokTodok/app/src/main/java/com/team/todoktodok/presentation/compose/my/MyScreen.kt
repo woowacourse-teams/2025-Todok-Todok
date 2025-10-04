@@ -45,7 +45,7 @@ fun MyScreen(
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
-        viewModel.loadProfile()
+        viewModel.loadInitialProfile()
     }
 
     MyScreen(
@@ -82,6 +82,7 @@ fun MyScreen(
         )
 
         ProfileTab(
+            uiState = uiState,
             navController = navController,
             onChangeBottomNavigationTab = onChangeBottomNavigationTab,
             modifier =

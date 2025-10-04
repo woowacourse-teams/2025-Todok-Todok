@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class MyProfileViewModel(
@@ -24,11 +25,24 @@ class MyProfileViewModel(
     private val _uiEvent = Channel<MyProfileUiEvent>(Channel.BUFFERED)
     val uiEvent get() = _uiEvent.receiveAsFlow()
 
+    fun loadInitialProfile() {
+        loadProfile()
+        loadMyBooks()
+    }
+
     fun loadProfile() =
         runAsync(
             key = KEY_FETCH_PROFILE,
             action = { memberRepository.getProfile(MemberId.Mine) },
             handleSuccess = { _uiState.value = _uiState.value.copy(profile = it) },
+            handleFailure = { onUiEvent(MyProfileUiEvent.ShowErrorMessage(it)) },
+        )
+
+    fun loadMyBooks() =
+        runAsync(
+            key = KEY_FETCH_MY_BOOKS,
+            action = { memberRepository.getMemberBooks(MemberId.Mine) },
+            handleSuccess = { result -> _uiState.update { it.addActivatedBooks(result) } },
             handleFailure = { onUiEvent(MyProfileUiEvent.ShowErrorMessage(it)) },
         )
 
@@ -40,5 +54,6 @@ class MyProfileViewModel(
 
     companion object {
         private const val KEY_FETCH_PROFILE = "fetch_profile"
+        private const val KEY_FETCH_MY_BOOKS = "fetch_my_books"
     }
 }
