@@ -1,6 +1,6 @@
 package com.team.todoktodok.presentation.compose.my.component
 
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
