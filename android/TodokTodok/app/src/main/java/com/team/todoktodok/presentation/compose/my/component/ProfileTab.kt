@@ -145,7 +145,10 @@ private fun ProfileTabPager(
                     )
 
                 ProfileTabDestination.LIKED_DISCUSSIONS -> LikedDiscussionsScreen()
-                ProfileTabDestination.PARTICIPATED_DISCUSSIONS -> ParticipatedDiscussionsScreen()
+                ProfileTabDestination.PARTICIPATED_DISCUSSIONS ->
+                    ParticipatedDiscussionsScreen(
+                        uiState = uiState.participatedDiscussions,
+                    )
             }
         }
     }

@@ -3,8 +3,8 @@ package com.team.todoktodok.presentation.compose.my.model
 import com.team.domain.model.Book
 import com.team.domain.model.Discussion
 import com.team.domain.model.member.Profile
-import com.team.todoktodok.presentation.compose.my.participated.ParticipatedDiscussionsUiState
 import com.team.todoktodok.presentation.compose.my.books.MyBooksUiState
+import com.team.todoktodok.presentation.compose.my.participated.ParticipatedDiscussionsUiState
 
 data class MyProfileUiState(
     val profile: Profile = Profile.EMPTY,
