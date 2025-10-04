@@ -3,7 +3,7 @@ package com.team.todoktodok.presentation.compose.my.model
 import com.team.domain.model.Book
 import com.team.domain.model.Discussion
 import com.team.domain.model.member.Profile
-import com.team.todoktodok.presentation.compose.discussion.participated.ParticipatedDiscussionsUiState
+import com.team.todoktodok.presentation.compose.my.participated.ParticipatedDiscussionsUiState
 import com.team.todoktodok.presentation.compose.my.books.MyBooksUiState
 
 data class MyProfileUiState(
