@@ -1,4 +1,4 @@
-package com.team.todoktodok.compose.discussion.my.component
+package com.team.todoktodok.compose.my.component
 
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.assertIsDisplayed

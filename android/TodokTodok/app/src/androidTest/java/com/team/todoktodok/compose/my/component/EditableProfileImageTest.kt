@@ -1,4 +1,4 @@
-package com.team.todoktodok.compose.discussion.my.component
+package com.team.todoktodok.compose.my.component
 
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription

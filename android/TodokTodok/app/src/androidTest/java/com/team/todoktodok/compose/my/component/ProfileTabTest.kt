@@ -1,4 +1,4 @@
-package com.team.todoktodok.compose.discussion.my.component
+package com.team.todoktodok.compose.my.component
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -15,7 +15,9 @@ class ProfileTabTest {
     fun `활동도서 좋아요 참여한 토론방 탭이 보인다`() {
         // Given
         composeTestRule.setContent {
-            ProfileTab()
+            ProfileTab(
+                onChangeBottomNavigationTab = {},
+            )
         }
 
         composeTestRule.onNodeWithText("활동 도서").assertIsDisplayed()
