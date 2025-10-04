@@ -5,13 +5,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
@@ -54,70 +53,72 @@ enum class ProfileTabDestination(
 
 @Composable
 fun ProfileTab(modifier: Modifier = Modifier) {
-    val coroutineScope = rememberCoroutineScope()
     val pagerState =
         rememberPagerState(initialPage = DiscussionTabStatus.HOT.ordinal) {
             ProfileTabDestination.entries.size
         }
 
     Column(modifier = modifier) {
-        TabRow(
-            selectedTabIndex = pagerState.currentPage,
-            indicator = { tabPositions ->
-                Box(
-                    Modifier
-                        .tabIndicatorOffset(tabPositions[pagerState.currentPage])
-                        .height(4.dp)
-                        .padding(horizontal = 20.dp)
-                        .background(Green1A, RoundedCornerShape(50)),
-                )
-            },
-            divider = {},
-            containerColor = White,
-            contentColor = Color.Black,
-        ) {
-            ProfileTabDestination.entries.forEachIndexed { index, tab ->
-                Tab(
-                    text = {
-                        Text(
-                            text = stringResource(tab.label),
-                            fontFamily = Pretendard,
-                            fontWeight = FontWeight.SemiBold,
-                        )
-                    },
-                    selected = pagerState.currentPage == index,
-                    modifier = Modifier.height(50.dp),
-                    onClick = {
-                        coroutineScope.launch {
-                            pagerState.animateScrollToPage(index)
-                        }
-                    },
-                )
-            }
-        }
+        ProfileTabRow(pagerState)
+        ProfileTabPager(pagerState)
+    }
+}
 
-        HorizontalDivider(
-            modifier = Modifier.fillMaxWidth(),
-            color = Color.LightGray,
-            thickness = 1.dp,
-        )
-
-        HorizontalPager(
-            state = pagerState,
-            modifier = Modifier.fillMaxSize(),
-        ) { page ->
+@Composable
+private fun ProfileTabRow(pagerState: PagerState) {
+    val coroutineScope = rememberCoroutineScope()
+    TabRow(
+        selectedTabIndex = pagerState.currentPage,
+        indicator = { tabPositions ->
             Box(
-                modifier =
-                    Modifier
-                        .fillMaxSize()
-                        .background(White),
-                contentAlignment = Alignment.Center,
-            ) {
-                when (ProfileTabDestination.entries[page]) {
-                    ProfileTabDestination.ACTIVATED_BOOKS -> ActivatedBooksScreen()
-                    ProfileTabDestination.LIKED_DISCUSSIONS -> LikedDiscussionsScreen()
-                    ProfileTabDestination.PARTICIPATED_DISCUSSIONS -> ParticipatedDiscussionsScreen()
-                }
+                Modifier
+                    .tabIndicatorOffset(tabPositions[pagerState.currentPage])
+                    .height(4.dp)
+                    .padding(horizontal = 20.dp)
+                    .background(Green1A, RoundedCornerShape(50)),
+            )
+        },
+        containerColor = White,
+        contentColor = Color.Black,
+    ) {
+        ProfileTabDestination.entries.forEachIndexed { index, tab ->
+            Tab(
+                text = {
+                    Text(
+                        text = stringResource(tab.label),
+                        fontFamily = Pretendard,
+                        fontWeight = FontWeight.SemiBold,
+                    )
+                },
+                selected = pagerState.currentPage == index,
+                modifier = Modifier.height(50.dp),
+                onClick = {
+                    coroutineScope.launch {
+                        pagerState.animateScrollToPage(index)
+                    }
+                },
+            )
+        }
+    }
+}
+
+@Composable
+private fun ProfileTabPager(pagerState: PagerState) {
+    HorizontalPager(
+        state = pagerState,
+        modifier = Modifier.fillMaxSize(),
+    ) { page ->
+        Box(
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .background(White),
+            contentAlignment = Alignment.Center,
+        ) {
+            when (ProfileTabDestination.entries[page]) {
+                ProfileTabDestination.ACTIVATED_BOOKS -> ActivatedBooksScreen()
+                ProfileTabDestination.LIKED_DISCUSSIONS -> LikedDiscussionsScreen()
+                ProfileTabDestination.PARTICIPATED_DISCUSSIONS -> ParticipatedDiscussionsScreen()
             }
         }
     }
