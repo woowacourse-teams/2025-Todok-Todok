@@ -20,7 +20,7 @@ class DiscussionToolbarTest {
     fun `검색 아이콘이 보인다`() {
         composeTestRule.setContent {
             DiscussionToolbar(
-                defaultDiscussionsUiState = MainUiState(),
+                mainUiState = MainUiState(),
                 isExistNotification = false,
                 onSearch = {},
                 onKeywordChange = {},
@@ -38,7 +38,7 @@ class DiscussionToolbarTest {
     fun `알람 아이콘이 화면에 보이고 확인하지 않은 알람이 없으면 뱃지가 보이지 않는다`() {
         composeTestRule.setContent {
             DiscussionToolbar(
-                defaultDiscussionsUiState = MainUiState(),
+                mainUiState = MainUiState(),
                 isExistNotification = false,
                 onSearch = {},
                 onKeywordChange = {},
@@ -61,7 +61,7 @@ class DiscussionToolbarTest {
     fun `확인하지 않은 알람이 있으면 뱃지가 보인다`() {
         composeTestRule.setContent {
             DiscussionToolbar(
-                defaultDiscussionsUiState = MainUiState(),
+                mainUiState = MainUiState(),
                 isExistNotification = true,
                 onSearch = {},
                 onKeywordChange = {},
@@ -79,7 +79,7 @@ class DiscussionToolbarTest {
     fun `검색 바가 보이면 검색 취소 텍스트가 보인다`() {
         composeTestRule.setContent {
             DiscussionToolbar(
-                defaultDiscussionsUiState = MainUiState(searchBarVisible = true),
+                mainUiState = MainUiState(searchBarVisible = true),
                 isExistNotification = false,
                 onSearch = {},
                 onKeywordChange = {},

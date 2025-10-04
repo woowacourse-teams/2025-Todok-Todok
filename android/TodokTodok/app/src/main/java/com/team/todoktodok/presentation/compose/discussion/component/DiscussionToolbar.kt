@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -25,8 +24,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,7 +45,7 @@ import com.team.todoktodok.presentation.xml.notification.NotificationActivity
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DiscussionToolbar(
-    defaultDiscussionsUiState: MainUiState,
+    mainUiState: MainUiState,
     onSearch: () -> Unit,
     onChangeSearchBarVisibility: () -> Unit,
     onKeywordChange: (String) -> Unit,
@@ -56,99 +53,87 @@ fun DiscussionToolbar(
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
+    val density = LocalDensity.current
 
     Column(
         modifier =
             modifier
                 .background(color = White),
     ) {
-        TopAppBar(
-            title = {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier =
-                        Modifier
-                            .fillMaxSize(),
+        Row(
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .background(White)
+                    .padding(horizontal = 10.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.img_mascort),
+                    tint = null,
+                    contentDescription = null,
+                )
+                Icon(
+                    painter = painterResource(R.drawable.img_app_name),
+                    tint = null,
+                    contentDescription = null,
+                )
+            }
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = stringResource(R.string.content_description_discussions_toolbar_search),
+                    modifier = Modifier.noRippleClickable { onChangeSearchBarVisibility() },
+                )
+
+                Spacer(modifier = Modifier.width(10.dp))
+
+                Box(
+                    modifier = Modifier.padding(end = 10.dp),
                 ) {
                     Icon(
-                        painter = painterResource(R.drawable.img_mascort),
-                        tint = null,
-                        contentDescription = null,
-                    )
-
-                    Icon(
-                        painter = painterResource(R.drawable.img_app_name),
-                        tint = null,
-                        contentDescription = null,
-                    )
-                }
-            },
-            actions = {
-                Row {
-                    Icon(
-                        imageVector = Icons.Default.Search,
-                        contentDescription = stringResource(R.string.content_description_discussions_toolbar_search),
+                        painter = painterResource(R.drawable.ic_notification),
+                        contentDescription = stringResource(R.string.content_description_discussions_toolbar_notification),
                         modifier =
-                            Modifier.noRippleClickable(onClick = { onChangeSearchBarVisibility() }),
+                            Modifier.noRippleClickable {
+                                context.startActivity(
+                                    NotificationActivity.Intent(context),
+                                )
+                            },
                     )
-
-                    Spacer(modifier = Modifier.width(10.dp))
-
-                    Box(
-                        modifier = Modifier.padding(end = 10.dp),
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_notification),
-                            contentDescription = stringResource(R.string.content_description_discussions_toolbar_notification),
+                    if (isExistNotification) {
+                        val contentDescription =
+                            stringResource(R.string.content_description_discussions_toolbar_has_notification)
+                        Box(
                             modifier =
                                 Modifier
-                                    .noRippleClickable(
-                                        onClick = {
-                                            context.startActivity(
-                                                NotificationActivity.Intent(
-                                                    context,
-                                                ),
-                                            )
-                                        },
-                                    ),
+                                    .size(8.dp)
+                                    .background(color = Green1A, shape = CircleShape)
+                                    .align(Alignment.TopEnd)
+                                    .semantics {
+                                        this.contentDescription = contentDescription
+                                    },
                         )
-                        if (isExistNotification) {
-                            val contentDescription =
-                                stringResource(R.string.content_description_discussions_toolbar_has_notification)
-                            Box(
-                                modifier =
-                                    Modifier
-                                        .size(8.dp)
-                                        .background(color = Green1A, shape = CircleShape)
-                                        .align(Alignment.TopEnd)
-                                        .semantics {
-                                            this.contentDescription = contentDescription
-                                        },
-                            )
-                        }
                     }
                 }
-            },
-            colors =
-                TopAppBarDefaults.topAppBarColors(
-                    containerColor = White,
-                ),
-        )
-
-        val density = LocalDensity.current
+            }
+        }
 
         AnimatedVisibility(
-            visible = defaultDiscussionsUiState.searchBarVisible,
+            visible = mainUiState.searchBarVisible,
             enter =
                 slideInVertically {
                     with(density) { -40.dp.roundToPx() }
                 } +
-                    expandVertically(
-                        expandFrom = Alignment.Top,
-                    ) +
-                    fadeIn(
-                        initialAlpha = 0.3f,
-                    ),
+                    expandVertically(expandFrom = Alignment.Top) +
+                    fadeIn(initialAlpha = 0.3f),
             exit = slideOutVertically() + shrinkVertically() + fadeOut(),
         ) {
             Row(
@@ -161,7 +146,7 @@ fun DiscussionToolbar(
             ) {
                 SearchDiscussionBar(
                     onSearch = onSearch,
-                    searchKeyword = defaultDiscussionsUiState.searchDiscussion.type.keyword,
+                    searchKeyword = mainUiState.searchDiscussion.type.keyword,
                     onKeywordChange = { onKeywordChange(it) },
                     modifier = Modifier.fillMaxWidth(0.8f),
                 )
@@ -183,9 +168,9 @@ fun DiscussionToolbar(
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
-private fun HotDiscussionToolbarPreview() {
+private fun DiscussionToolbarPreview() {
     DiscussionToolbar(
-        defaultDiscussionsUiState = MainUiState(),
+        mainUiState = MainUiState(),
         onSearch = {},
         onKeywordChange = {},
         onChangeSearchBarVisibility = {},
@@ -196,9 +181,9 @@ private fun HotDiscussionToolbarPreview() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
-private fun AllDiscussionToolbarPreview2() {
+private fun SearchBarExpandedToolbarPreview() {
     DiscussionToolbar(
-        defaultDiscussionsUiState = MainUiState(searchBarVisible = true),
+        mainUiState = MainUiState(searchBarVisible = true),
         onSearch = {},
         onKeywordChange = {},
         onChangeSearchBarVisibility = {},
