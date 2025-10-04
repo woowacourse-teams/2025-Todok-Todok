@@ -29,11 +29,13 @@ import com.team.todoktodok.presentation.compose.theme.White
 @Composable
 fun MyScreen(
     modifier: Modifier = Modifier,
-    viewModel: MyProfileViewModel = viewModel(
-        factory = MyProfileViewModelFactory(
-            (LocalContext.current.applicationContext as App).container
-        )
-    )
+    viewModel: MyProfileViewModel =
+        viewModel(
+            factory =
+                MyProfileViewModelFactory(
+                    (LocalContext.current.applicationContext as App).container,
+                ),
+        ),
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -43,7 +45,7 @@ fun MyScreen(
 
     MyScreen(
         uiState = uiState.value,
-        modifier = modifier
+        modifier = modifier,
     )
 }
 
@@ -53,10 +55,10 @@ fun MyScreen(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(color = White)
-        ,
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(color = White),
     ) {
         MyToolbar()
 
@@ -67,13 +69,12 @@ fun MyScreen(
 
         Information(
             nickname = uiState.profile.nickname,
-            profileMessage = uiState.profile.message
+            profileMessage = uiState.profile.message,
         )
 
         ProfileTab(modifier = Modifier.padding(top = 10.dp))
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable
