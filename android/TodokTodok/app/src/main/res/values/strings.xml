@@ -106,8 +106,16 @@
     <!-- 프로필 화면 -->
     <string name="profile_setting">설정</string>
     <string name="profile_active_books">활동 도서</string>
+    <string name="content_description_profile_active_books">활동 도서탭</string>
+
+    <string name="profile_liked_room">좋아요</string>
+    <string name="content_description_profile_liked_room">좋아요한 토론방탭</string>
+
     <string name="profile_created_discussion_room">생성한 토론방</string>
+
     <string name="profile_participated_discussion_room">참여한 토론방</string>
+    <string name="content_description_profile_participated_discussion_room">참여한 토론방탭</string>
+
     <string name="profile_report_dialog_title">해당 회원을 신고하시겠습니까?</string>
     <string name="profile_block_dialog_title">해당 회원을 차단하시겠습니까?</string>
     <string name="profile_complete_report">신고가 완료 되었습니다.</string>
