@@ -3,7 +3,7 @@ package com.team.todoktodok.presentation.compose.my.component
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.LibraryBooks
+import androidx.compose.material.icons.automirrored.filled.LibraryBooks
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -20,14 +20,14 @@ fun BookErrorIllustration(modifier: Modifier = Modifier) {
         contentAlignment = Alignment.Center,
     ) {
         Icon(
-            imageVector = Icons.Filled.LibraryBooks,
-            contentDescription = "Book Error",
+            imageVector = Icons.AutoMirrored.Filled.LibraryBooks,
+            contentDescription = null,
             tint = MaterialTheme.colorScheme.outline,
             modifier = Modifier.size(64.dp),
         )
         Icon(
             imageVector = Icons.Filled.Warning,
-            contentDescription = "Error",
+            contentDescription = null,
             tint = MaterialTheme.colorScheme.error,
             modifier =
                 Modifier

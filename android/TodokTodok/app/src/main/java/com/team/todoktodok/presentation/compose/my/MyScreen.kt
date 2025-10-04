@@ -15,7 +15,9 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import com.team.todoktodok.App
+import com.team.todoktodok.presentation.compose.main.MainDestination
 import com.team.todoktodok.presentation.compose.my.component.EditableProfileImage
 import com.team.todoktodok.presentation.compose.my.component.Information
 import com.team.todoktodok.presentation.compose.my.component.MyToolbar
@@ -29,6 +31,8 @@ import com.team.todoktodok.presentation.compose.theme.White
 
 @Composable
 fun MyScreen(
+    navController: NavHostController,
+    onChangeBottomNavigationTab: (MainDestination) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: MyProfileViewModel =
         viewModel(
@@ -41,10 +45,12 @@ fun MyScreen(
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
-        viewModel.loadProfile()
+        viewModel.loadInitialProfile()
     }
 
     MyScreen(
+        navController = navController,
+        onChangeBottomNavigationTab = onChangeBottomNavigationTab,
         uiState = uiState.value,
         modifier = modifier,
     )
@@ -52,7 +58,9 @@ fun MyScreen(
 
 @Composable
 fun MyScreen(
+    navController: NavHostController,
     uiState: MyProfileUiState,
+    onChangeBottomNavigationTab: (MainDestination) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -74,6 +82,9 @@ fun MyScreen(
         )
 
         ProfileTab(
+            uiState = uiState,
+            navController = navController,
+            onChangeBottomNavigationTab = onChangeBottomNavigationTab,
             modifier =
                 Modifier
                     .weight(1f)
@@ -89,5 +100,11 @@ private fun MyScreenPreview(
     @PreviewParameter(MyProfileUiStatePreviewParameterProvider::class)
     uiState: MyProfileUiState,
 ) {
-    TodoktodokTheme { MyScreen(uiState) }
+    TodoktodokTheme {
+        MyScreen(
+            navController = NavHostController(LocalContext.current),
+            onChangeBottomNavigationTab = {},
+            uiState = uiState,
+        )
+    }
 }

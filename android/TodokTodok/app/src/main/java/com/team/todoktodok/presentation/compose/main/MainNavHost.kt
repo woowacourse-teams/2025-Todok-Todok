@@ -18,6 +18,7 @@ fun MainNavHost(
     startDestination: MainDestination,
     onCompleteRemoveDiscussion: (Long) -> Unit,
     onCompleteModifyDiscussion: (SerializationDiscussion) -> Unit,
+    onChangeBottomNavigationTab: (MainDestination) -> Unit,
     onSearch: () -> Unit,
     onChangeSearchBarVisibility: () -> Unit,
     onChangeKeyword: (String) -> Unit,
@@ -42,7 +43,11 @@ fun MainNavHost(
                             onChangeKeyword = onChangeKeyword,
                         )
 
-                    MainDestination.My -> MyScreen()
+                    MainDestination.My ->
+                        MyScreen(
+                            navController = navController,
+                            onChangeBottomNavigationTab = onChangeBottomNavigationTab,
+                        )
                 }
             }
         }
