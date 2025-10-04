@@ -64,19 +64,20 @@ android {
             languageVersion.set(JavaLanguageVersion.of(21))
         }
     }
-
-    androidComponents {
-        onVariants(selector().withBuildType("release")) {
-            it.packaging.resources.excludes
-                .add("META-INF/**")
-        }
-    }
     buildFeatures {
         viewBinding = true
         buildConfig = true
         compose = true
     }
 }
+
+androidComponents {
+    onVariants(selector().withBuildType("release")) {
+        it.packaging.resources.excludes
+            .add("META-INF/**")
+    }
+}
+
 
 dependencies {
     implementation(project(":domain"))
