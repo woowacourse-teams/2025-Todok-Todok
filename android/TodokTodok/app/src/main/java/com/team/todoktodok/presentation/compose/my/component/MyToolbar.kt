@@ -1,7 +1,6 @@
 package com.team.todoktodok.presentation.compose.my.component
 
 import android.app.Activity
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -41,7 +40,6 @@ fun MyToolbar(
             ActivityResultContracts.StartActivityForResult(),
         ) {
             if (it.resultCode == Activity.RESULT_OK) {
-                Log.d("dasda", "MyToolbar: ")
                 onRefresh()
             }
         }

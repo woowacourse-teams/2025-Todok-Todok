@@ -19,6 +19,7 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshState
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -74,6 +75,7 @@ fun HotDiscussionScreen(
         }
 
     val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
     val exceptionHandler = LocalUiExceptionHandler.current
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
     val isLoading = viewModel.isLoading.collectAsStateWithLifecycle()
@@ -87,7 +89,7 @@ fun HotDiscussionScreen(
         when (event) {
             is HotDiscussionUiEvent.ShowErrorMessage -> {
                 val message = context.getString(exceptionHandler.messageConverter(event.exception))
-                exceptionHandler.snackbarHostState.showSnackbar(message)
+                exceptionHandler.showErrorMessage(coroutineScope, message)
             }
         }
     }
