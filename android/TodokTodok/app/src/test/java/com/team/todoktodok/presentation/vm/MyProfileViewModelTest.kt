@@ -9,6 +9,7 @@ import com.team.domain.model.member.Nickname
 import com.team.domain.model.member.Profile
 import com.team.domain.model.member.User
 import com.team.domain.repository.MemberRepository
+import com.team.domain.repository.TokenRepository
 import com.team.todoktodok.CoroutinesTestExtension
 import com.team.todoktodok.InstantTaskExecutorExtension
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiState
@@ -30,6 +31,7 @@ import java.time.LocalDateTime
 @ExtendWith(InstantTaskExecutorExtension::class)
 class MyProfileViewModelTest {
     private lateinit var memberRepository: MemberRepository
+    private lateinit var tokenRepository: TokenRepository
     private lateinit var connectivityObserver: ConnectivityObserver
     private lateinit var viewModel: MyProfileViewModel
 
@@ -37,9 +39,10 @@ class MyProfileViewModelTest {
     fun setup() {
         memberRepository = mockk()
         connectivityObserver = mockk()
+        tokenRepository = mockk()
         every { connectivityObserver.subscribe() } returns emptyFlow()
         every { connectivityObserver.value() } returns ConnectivityObserver.Status.Available
-        viewModel = MyProfileViewModel(memberRepository, connectivityObserver)
+        viewModel = MyProfileViewModel(memberRepository, tokenRepository, connectivityObserver)
     }
 
     @Test
@@ -75,6 +78,7 @@ class MyProfileViewModelTest {
                     any(),
                 )
             } returns NetworkResult.Success(discussions)
+            coEvery { tokenRepository.getMemberId() } returns 1
 
             // When
             viewModel.loadInitialProfile()

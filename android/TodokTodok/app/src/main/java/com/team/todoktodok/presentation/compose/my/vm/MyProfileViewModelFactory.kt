@@ -12,6 +12,7 @@ class MyProfileViewModelFactory(
             val repositoryModule = appContainer.repositoryModule
             return MyProfileViewModel(
                 repositoryModule.memberRepository,
+                repositoryModule.tokenRepository,
                 appContainer.connectivityObserver,
             ) as T
         }

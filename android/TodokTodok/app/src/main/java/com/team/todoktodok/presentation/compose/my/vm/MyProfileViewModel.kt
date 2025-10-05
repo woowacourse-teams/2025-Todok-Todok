@@ -5,6 +5,7 @@ import com.team.domain.ConnectivityObserver
 import com.team.domain.model.member.MemberDiscussionType
 import com.team.domain.model.member.MemberId
 import com.team.domain.repository.MemberRepository
+import com.team.domain.repository.TokenRepository
 import com.team.todoktodok.presentation.compose.my.model.MyProfileUiEvent
 import com.team.todoktodok.presentation.compose.my.model.MyProfileUiState
 import com.team.todoktodok.presentation.core.base.BaseViewModel
@@ -18,6 +19,7 @@ import kotlinx.coroutines.launch
 
 class MyProfileViewModel(
     private val memberRepository: MemberRepository,
+    private val tokenRepository: TokenRepository,
     connectivityObserver: ConnectivityObserver,
 ) : BaseViewModel(connectivityObserver) {
     private val _uiState = MutableStateFlow(MyProfileUiState())
@@ -30,6 +32,7 @@ class MyProfileViewModel(
         loadProfile()
         loadMyBooks()
         loadParticipatedDiscussions()
+        loadMyMemberId()
     }
 
     private fun loadProfile() =
@@ -44,7 +47,7 @@ class MyProfileViewModel(
         runAsync(
             key = KEY_FETCH_MY_BOOKS,
             action = { memberRepository.getMemberBooks(MemberId.Mine) },
-            handleSuccess = { result -> _uiState.update { it.addActivatedBooks(result) } },
+            handleSuccess = { result -> _uiState.update { it.setActivatedBooks(result) } },
             handleFailure = { onUiEvent(MyProfileUiEvent.ShowErrorMessage(it)) },
         )
 
@@ -60,6 +63,12 @@ class MyProfileViewModel(
             handleSuccess = { result -> _uiState.update { it.addParticipatedDiscussions(result) } },
             handleFailure = { onUiEvent(MyProfileUiEvent.ShowErrorMessage(it)) },
         )
+
+    private fun loadMyMemberId() {
+        viewModelScope.launch {
+            _uiState.update { it.setMemberId(tokenRepository.getMemberId()) }
+        }
+    }
 
     private fun onUiEvent(event: MyProfileUiEvent) {
         viewModelScope.launch {
