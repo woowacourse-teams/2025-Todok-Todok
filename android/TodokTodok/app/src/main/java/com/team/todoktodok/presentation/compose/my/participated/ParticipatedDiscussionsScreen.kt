@@ -55,7 +55,7 @@ fun ParticipatedDiscussionsScreen(
 }
 
 @Composable
-private fun ParticipatedDiscussionsEmpty() {
+private fun ParticipatedDiscussionsEmpty(modifier: Modifier = Modifier) {
     val context = LocalContext.current
     ResourceNotFoundContent(
         title = stringResource(R.string.profile_not_has_participated_discussions_title),
@@ -64,6 +64,7 @@ private fun ParticipatedDiscussionsEmpty() {
         onActionClick = {
             context.startActivity(SelectBookActivity.Intent(context))
         },
+        modifier = modifier,
     )
 }
 
