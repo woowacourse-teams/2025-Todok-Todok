@@ -62,12 +62,12 @@ fun MyScreen(
 @Composable
 fun MyScreen(
     uiState: MyProfileUiState,
+    navController: NavHostController,
     onChangeBottomNavigationTab: (MainDestination) -> Unit,
     onCompleteModifyDiscussion: (SerializationDiscussion) -> Unit,
     onCompleteRemoveDiscussion: (Long) -> Unit,
     onChangeShowMyDiscussion: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
-    navController: NavHostController,
 ) {
     LazyColumn(
         modifier =
