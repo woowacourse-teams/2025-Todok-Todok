@@ -67,7 +67,7 @@ fun MyScreen(
     onCompleteRemoveDiscussion: (Long) -> Unit,
     onChangeShowMyDiscussion: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
-    navController: NavHostController = NavHostController(LocalContext.current),
+    navController: NavHostController,
 ) {
     LazyColumn(
         modifier =
@@ -127,6 +127,7 @@ private fun MyScreenPreview(
             onChangeShowMyDiscussion = {},
             onCompleteRemoveDiscussion = {},
             onCompleteModifyDiscussion = {},
+            navController = NavHostController(LocalContext.current),
         )
     }
 }

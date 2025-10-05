@@ -31,7 +31,7 @@ fun ActivatedBooksScreen(
     uiState: MyBooksUiModel,
     onChangeBottomNavigationTab: (MainDestination) -> Unit,
     modifier: Modifier = Modifier,
-    navController: NavHostController = NavHostController(LocalContext.current),
+    navController: NavHostController,
 ) {
     if (uiState.notHasBooks) {
         ActivatedBooksEmpty(
@@ -119,6 +119,7 @@ private fun ActivatedBooksScreenPreview(
     ActivatedBooksScreen(
         onChangeBottomNavigationTab = {},
         uiState = uiState,
+        navController = NavHostController(LocalContext.current),
     )
 }
 
@@ -128,5 +129,6 @@ private fun EmptyActivatedBooksScreenPreview() {
     ActivatedBooksScreen(
         onChangeBottomNavigationTab = {},
         uiState = MyBooksUiModel(),
+        navController = NavHostController(LocalContext.current),
     )
 }

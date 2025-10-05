@@ -61,12 +61,12 @@ enum class ProfileTabDestination(
 @Composable
 fun ProfileTab(
     uiState: MyProfileUiState,
+    navController: NavHostController,
     onCompleteRemoveDiscussion: (Long) -> Unit,
     onChangeShowMyDiscussion: (Boolean) -> Unit,
     onCompleteModifyDiscussion: (SerializationDiscussion) -> Unit,
     onChangeBottomNavigationTab: (MainDestination) -> Unit,
     modifier: Modifier = Modifier,
-    navController: NavHostController = NavHostController(LocalContext.current),
 ) {
     val pagerState =
         rememberPagerState(initialPage = DiscussionTabStatus.HOT.ordinal) {
