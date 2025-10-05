@@ -19,13 +19,14 @@ data class UiExceptionHandler(
     ) {
         if (currentJob?.isActive == true) return
 
-        currentJob = scope.launch {
-            try {
-                snackbarHostState.showSnackbar(message)
-            } finally {
-                currentJob = null
+        currentJob =
+            scope.launch {
+                try {
+                    snackbarHostState.showSnackbar(message)
+                } finally {
+                    currentJob = null
+                }
             }
-        }
     }
 }
 
