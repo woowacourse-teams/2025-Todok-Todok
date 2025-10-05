@@ -21,4 +21,6 @@ data class Discussion(
     fun getBookTitle(): String = book.extractSubtitle()
 
     fun getBookAuthor(): String = book.extractAuthor()
+
+    fun modifyWriterProfileImage(profileImage: String): Discussion = copy(writer = writer.copy(profileImage = profileImage))
 }

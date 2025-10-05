@@ -49,6 +49,18 @@ data class ParticipatedDiscussionsUiState(
             discussions
         }
 
+    fun modifyMyDiscussionProfileImage(profileImage: String): ParticipatedDiscussionsUiState =
+        copy(
+            discussions =
+                discussions.map { discussion ->
+                    if (memberId == discussion.writerId) {
+                        discussion.modifyWriterProfileImage(profileImage)
+                    } else {
+                        discussion
+                    }
+                },
+        )
+
     companion object {
         private const val INITIALIZE_MEMBER_ID = -1L
     }
