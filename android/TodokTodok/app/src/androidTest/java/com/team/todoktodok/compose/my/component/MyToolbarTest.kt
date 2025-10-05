@@ -15,7 +15,7 @@ class MyToolbarTest {
     @Test
     fun `설정 아이콘이 보인다`() {
         composeTestRule.setContent {
-            MyToolbar()
+            MyToolbar({})
         }
 
         composeTestRule.onNodeWithContentDescription("설정 아이콘").assertIsDisplayed()
