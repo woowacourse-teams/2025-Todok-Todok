@@ -5,15 +5,15 @@ import com.team.domain.model.Book
 import com.team.domain.model.Discussion
 import com.team.domain.model.member.Nickname
 import com.team.domain.model.member.User
-import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiState
+import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiModel
 import java.time.LocalDateTime
 
-class DiscussionUiStatePreviewParameterProvider : PreviewParameterProvider<List<DiscussionUiState>> {
-    override val values: Sequence<List<DiscussionUiState>>
+class DiscussionUiStatePreviewParameterProvider : PreviewParameterProvider<List<DiscussionUiModel>> {
+    override val values: Sequence<List<DiscussionUiModel>>
         get() =
             sequenceOf(
                 listOf(
-                    DiscussionUiState(
+                    DiscussionUiModel(
                         item =
                             Discussion(
                                 id = 1L,
@@ -31,7 +31,7 @@ class DiscussionUiStatePreviewParameterProvider : PreviewParameterProvider<List<
                                 isLikedByMe = false,
                             ),
                     ),
-                    DiscussionUiState(
+                    DiscussionUiModel(
                         item =
                             Discussion(
                                 id = 2L,
@@ -46,7 +46,7 @@ class DiscussionUiStatePreviewParameterProvider : PreviewParameterProvider<List<
                                 isLikedByMe = true,
                             ),
                     ),
-                    DiscussionUiState(
+                    DiscussionUiModel(
                         item =
                             Discussion(
                                 id = 3L,
@@ -61,7 +61,7 @@ class DiscussionUiStatePreviewParameterProvider : PreviewParameterProvider<List<
                                 isLikedByMe = false,
                             ),
                     ),
-                    DiscussionUiState(
+                    DiscussionUiModel(
                         item =
                             Discussion(
                                 id = 4L,
@@ -76,7 +76,7 @@ class DiscussionUiStatePreviewParameterProvider : PreviewParameterProvider<List<
                                 isLikedByMe = true,
                             ),
                     ),
-                    DiscussionUiState(
+                    DiscussionUiModel(
                         item =
                             Discussion(
                                 id = 5L,
@@ -97,7 +97,7 @@ class DiscussionUiStatePreviewParameterProvider : PreviewParameterProvider<List<
                                 isLikedByMe = false,
                             ),
                     ),
-                    DiscussionUiState(
+                    DiscussionUiModel(
                         item =
                             Discussion(
                                 id = 6L,
@@ -112,7 +112,7 @@ class DiscussionUiStatePreviewParameterProvider : PreviewParameterProvider<List<
                                 isLikedByMe = true,
                             ),
                     ),
-                    DiscussionUiState(
+                    DiscussionUiModel(
                         item =
                             Discussion(
                                 id = 7L,
@@ -127,7 +127,7 @@ class DiscussionUiStatePreviewParameterProvider : PreviewParameterProvider<List<
                                 isLikedByMe = false,
                             ),
                     ),
-                    DiscussionUiState(
+                    DiscussionUiModel(
                         item =
                             Discussion(
                                 id = 8L,

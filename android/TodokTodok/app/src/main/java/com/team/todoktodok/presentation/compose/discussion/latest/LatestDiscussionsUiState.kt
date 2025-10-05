@@ -3,11 +3,11 @@ package com.team.todoktodok.presentation.compose.discussion.latest
 import com.team.domain.model.PageInfo
 import com.team.domain.model.latest.LatestDiscussionPage
 import com.team.todoktodok.presentation.compose.core.component.DiscussionCardType
-import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiState
+import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiModel
 import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussion
 
 data class LatestDiscussionsUiState(
-    val discussions: List<DiscussionUiState> = emptyList(),
+    val discussions: List<DiscussionUiModel> = emptyList(),
     val type: DiscussionCardType = DiscussionCardType.Default,
     val isRefreshing: Boolean = false,
     val latestPage: PageInfo = PageInfo.EMPTY,
@@ -17,7 +17,7 @@ data class LatestDiscussionsUiState(
     fun append(page: LatestDiscussionPage): LatestDiscussionsUiState {
         val newDiscussion =
             discussions.toMutableList().apply {
-                addAll(page.discussions.map { discussion -> DiscussionUiState(discussion) })
+                addAll(page.discussions.map { discussion -> DiscussionUiModel(discussion) })
             }
 
         val pageInfo = page.pageInfo
@@ -31,7 +31,7 @@ data class LatestDiscussionsUiState(
             discussions =
                 discussions.map {
                     if (it.discussionId == newDiscussion.id) {
-                        DiscussionUiState(newDiscussion.toDomain())
+                        DiscussionUiModel(newDiscussion.toDomain())
                     } else {
                         it
                     }

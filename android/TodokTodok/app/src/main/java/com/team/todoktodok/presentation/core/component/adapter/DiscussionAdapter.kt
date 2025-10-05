@@ -2,7 +2,7 @@ package com.team.todoktodok.presentation.core.component.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
-import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiState
+import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiModel
 import com.team.todoktodok.presentation.core.component.adapter.DefaultDiscussionViewHolder.Companion.DefaultDiscussionViewHolder
 import com.team.todoktodok.presentation.core.component.adapter.ResizingDiscussionViewHolder.Companion.ResizingDiscussionViewHolder
 import com.team.todoktodok.presentation.core.component.adapter.WriterHiddenDiscussionViewHolder.Companion.WriterHiddenDiscussionViewHolder
@@ -10,7 +10,7 @@ import com.team.todoktodok.presentation.core.component.adapter.WriterHiddenDiscu
 class DiscussionAdapter(
     private val handler: Handler,
     private val type: BaseDiscussionViewHolder.ViewHolderType,
-) : ListAdapter<DiscussionUiState, BaseDiscussionViewHolder>(DiscussionDiffUtil()) {
+) : ListAdapter<DiscussionUiModel, BaseDiscussionViewHolder>(DiscussionDiffUtil()) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,

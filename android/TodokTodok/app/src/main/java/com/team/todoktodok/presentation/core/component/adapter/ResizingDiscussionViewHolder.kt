@@ -3,13 +3,13 @@ package com.team.todoktodok.presentation.core.component.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.team.todoktodok.databinding.ItemDiscussionBinding
-import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiState
+import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiModel
 
 class ResizingDiscussionViewHolder private constructor(
     binding: ItemDiscussionBinding,
     handler: Handler,
 ) : BaseDiscussionViewHolder(binding, handler) {
-    override fun bindExtra(item: DiscussionUiState) =
+    override fun bindExtra(item: DiscussionUiModel) =
         with(binding) {
             tvDiscussionOpinion.text = item.discussionOpinion
             tvDiscussionOpinion.maxLines = 2

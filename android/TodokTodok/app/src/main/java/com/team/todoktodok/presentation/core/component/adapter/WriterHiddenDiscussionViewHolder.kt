@@ -4,13 +4,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import com.team.todoktodok.databinding.ItemDiscussionBinding
-import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiState
+import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiModel
 
 class WriterHiddenDiscussionViewHolder private constructor(
     binding: ItemDiscussionBinding,
     handler: Handler,
 ) : BaseDiscussionViewHolder(binding, handler) {
-    override fun bindExtra(item: DiscussionUiState) =
+    override fun bindExtra(item: DiscussionUiModel) =
         with(binding) {
             ivWriterProfileImage.isVisible = false
             tvDiscussionWriterNickname.isVisible = false

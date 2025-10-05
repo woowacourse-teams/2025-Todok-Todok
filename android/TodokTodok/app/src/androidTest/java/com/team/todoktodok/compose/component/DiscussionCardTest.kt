@@ -9,7 +9,7 @@ import com.team.domain.model.member.Nickname
 import com.team.domain.model.member.User
 import com.team.todoktodok.presentation.compose.core.component.DiscussionCard
 import com.team.todoktodok.presentation.compose.core.component.DiscussionCardType
-import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiState
+import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiModel
 import org.junit.Rule
 import org.junit.Test
 import java.time.LocalDateTime
@@ -19,7 +19,7 @@ class DiscussionCardTest {
     val composeTestRule = createComposeRule()
 
     private val baseUiState =
-        DiscussionUiState(
+        DiscussionUiModel(
             item =
                 Discussion(
                     id = 1L,

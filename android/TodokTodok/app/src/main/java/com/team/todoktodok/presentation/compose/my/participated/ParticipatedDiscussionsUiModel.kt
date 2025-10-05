@@ -2,11 +2,11 @@ package com.team.todoktodok.presentation.compose.my.participated
 
 import com.team.domain.model.Discussion
 import com.team.todoktodok.presentation.compose.core.component.DiscussionCardType
-import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiState
+import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiModel
 import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussion
 
 data class ParticipatedDiscussionsUiModel(
-    val discussions: List<DiscussionUiState> = emptyList(),
+    val discussions: List<DiscussionUiModel> = emptyList(),
     val type: DiscussionCardType = DiscussionCardType.Default,
     val showMyDiscussion: Boolean = false,
     val memberId: Long = INITIALIZE_MEMBER_ID,
@@ -14,7 +14,7 @@ data class ParticipatedDiscussionsUiModel(
     fun add(discussions: List<Discussion>): ParticipatedDiscussionsUiModel {
         val newDiscussions =
             discussions
-                .map { DiscussionUiState(it) }
+                .map { DiscussionUiModel(it) }
                 .reversed()
         return copy(discussions = newDiscussions)
     }
@@ -27,7 +27,7 @@ data class ParticipatedDiscussionsUiModel(
             discussions =
                 discussions.map {
                     if (discussion.id == it.discussionId) {
-                        DiscussionUiState(
+                        DiscussionUiModel(
                             discussion.toDomain(),
                         )
                     } else {
@@ -42,7 +42,7 @@ data class ParticipatedDiscussionsUiModel(
 
     fun setMemberId(memberId: Long): ParticipatedDiscussionsUiModel = copy(memberId = memberId)
 
-    fun visibleDiscussions(showMyOnly: Boolean): List<DiscussionUiState> =
+    fun visibleDiscussions(showMyOnly: Boolean): List<DiscussionUiModel> =
         if (showMyOnly) {
             discussions.filter { it.writerId == memberId }
         } else {

@@ -12,7 +12,7 @@ import com.team.domain.repository.MemberRepository
 import com.team.domain.repository.TokenRepository
 import com.team.todoktodok.CoroutinesTestExtension
 import com.team.todoktodok.InstantTaskExecutorExtension
-import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiState
+import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiModel
 import com.team.todoktodok.presentation.compose.my.vm.MyProfileViewModel
 import io.mockk.coEvery
 import io.mockk.every
@@ -89,7 +89,7 @@ class MyProfileViewModelTest {
                 assertEquals(profile, item.profile)
                 assertEquals(books, item.activatedBooks.books)
                 assertEquals(
-                    discussions.map { DiscussionUiState(it) },
+                    discussions.map { DiscussionUiModel(it) },
                     item.participatedDiscussions.discussions,
                 )
             }

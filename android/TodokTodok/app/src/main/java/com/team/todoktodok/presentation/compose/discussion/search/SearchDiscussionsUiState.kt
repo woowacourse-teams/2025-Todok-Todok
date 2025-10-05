@@ -7,12 +7,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import com.team.domain.model.Discussion
 import com.team.todoktodok.presentation.compose.core.component.DiscussionCardType
-import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiState
+import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiModel
 import com.team.todoktodok.presentation.compose.theme.Green1A
 import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussion
 
 data class SearchDiscussionsUiState(
-    val discussions: List<DiscussionUiState> = emptyList(),
+    val discussions: List<DiscussionUiModel> = emptyList(),
     val type: DiscussionCardType.QueryHighlighting =
         DiscussionCardType.QueryHighlighting(
             EMPTY_SEARCH_KEYWORD,
@@ -40,7 +40,7 @@ data class SearchDiscussionsUiState(
         newDiscussions: List<Discussion>,
     ): SearchDiscussionsUiState {
         if (keyword.isBlank()) return this
-        val newDiscussions = newDiscussions.map { DiscussionUiState(it) }
+        val newDiscussions = newDiscussions.map { DiscussionUiModel(it) }
         return copy(discussions = newDiscussions)
     }
 
@@ -57,7 +57,7 @@ data class SearchDiscussionsUiState(
             discussions =
                 discussions.map {
                     if (it.discussionId == newDiscussion.id) {
-                        DiscussionUiState(newDiscussion.toDomain())
+                        DiscussionUiModel(newDiscussion.toDomain())
                     } else {
                         it
                     }

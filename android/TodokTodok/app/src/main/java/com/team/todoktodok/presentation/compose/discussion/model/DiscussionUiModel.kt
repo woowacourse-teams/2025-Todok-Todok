@@ -2,7 +2,7 @@ package com.team.todoktodok.presentation.compose.discussion.model
 
 import com.team.domain.model.Discussion
 
-data class DiscussionUiState(
+data class DiscussionUiModel(
     private val item: Discussion,
 ) {
     val bookImage: String get() = item.bookImage

@@ -6,7 +6,7 @@ import com.team.domain.model.Discussion
 import com.team.domain.model.member.Nickname
 import com.team.domain.model.member.User
 import com.team.todoktodok.presentation.compose.core.component.DiscussionCardType
-import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiState
+import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiModel
 import com.team.todoktodok.presentation.compose.discussion.search.SearchDiscussionsUiState
 import java.time.LocalDateTime
 
@@ -14,7 +14,7 @@ class SearchDiscussionsUiStatePreviewParameterProvider : PreviewParameterProvide
     override val values: Sequence<SearchDiscussionsUiState>
         get() {
             val dummyDiscussion1 =
-                DiscussionUiState(
+                DiscussionUiModel(
                     Discussion(
                         id = 1L,
                         book =
@@ -41,7 +41,7 @@ class SearchDiscussionsUiStatePreviewParameterProvider : PreviewParameterProvide
                 )
 
             val dummyDiscussion2 =
-                DiscussionUiState(
+                DiscussionUiModel(
                     Discussion(
                         id = 2L,
                         book =
