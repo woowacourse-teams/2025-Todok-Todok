@@ -56,6 +56,7 @@ fun MyScreen(
         onCompleteRemoveDiscussion = viewModel::removeDiscussion,
         onCompleteModifyDiscussion = viewModel::modifyDiscussion,
         onImageSelected = viewModel::modifyProfileImage,
+        onRefresh = { viewModel.loadInitialProfile() },
         modifier = modifier,
         navController = navController,
     )
@@ -70,6 +71,7 @@ fun MyScreen(
     onCompleteRemoveDiscussion: (Long) -> Unit,
     onChangeShowMyDiscussion: (Boolean) -> Unit,
     onImageSelected: (ImagePayload) -> Unit,
+    onRefresh: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
@@ -80,7 +82,9 @@ fun MyScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         item {
-            MyToolbar()
+            MyToolbar(
+                onRefresh = onRefresh,
+            )
         }
 
         item {
@@ -132,6 +136,7 @@ private fun MyScreenPreview(
             onCompleteRemoveDiscussion = {},
             onCompleteModifyDiscussion = {},
             onImageSelected = {},
+            onRefresh = {},
             navController = NavHostController(LocalContext.current),
         )
     }

@@ -3,6 +3,7 @@ package com.team.todoktodok.presentation.xml.setting
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.addCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.annotation.StringRes
@@ -47,6 +48,10 @@ class SettingActivity : AppCompatActivity() {
 
     private fun initView(binding: ActivitySettingBinding) {
         setUpActionBar(binding)
+
+        onBackPressedDispatcher.addCallback(this) {
+            handleBackPressed()
+        }
     }
 
     private fun setUpActionBar(binding: ActivitySettingBinding) {
@@ -55,12 +60,7 @@ class SettingActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
         binding.toolbar.setNavigationOnClickListener {
-            if (viewModel.uiState.value?.screen == SettingScreen.SETTING_MAIN) {
-                setResult(RESULT_OK)
-                finish()
-            } else {
-                viewModel.changeScreen(SettingScreen.SETTING_MAIN)
-            }
+            handleBackPressed()
         }
     }
 
@@ -91,6 +91,15 @@ class SettingActivity : AppCompatActivity() {
         supportFragmentManager.commit {
             replace(R.id.fcv_setting, fragment)
             addToBackStack(null)
+        }
+    }
+
+    private fun handleBackPressed() {
+        if (viewModel.uiState.value?.screen == SettingScreen.SETTING_MAIN) {
+            setResult(RESULT_OK)
+            finish()
+        } else {
+            viewModel.changeScreen(SettingScreen.SETTING_MAIN)
         }
     }
 

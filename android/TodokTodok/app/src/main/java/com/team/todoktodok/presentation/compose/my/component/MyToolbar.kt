@@ -1,5 +1,9 @@
 package com.team.todoktodok.presentation.compose.my.component
 
+import android.app.Activity
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,8 +31,20 @@ import com.team.todoktodok.presentation.xml.setting.SettingActivity
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyToolbar(modifier: Modifier = Modifier) {
+fun MyToolbar(
+    onRefresh: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     val context = LocalContext.current
+    val activityLauncher =
+        rememberLauncherForActivityResult(
+            ActivityResultContracts.StartActivityForResult(),
+        ) {
+            if (it.resultCode == Activity.RESULT_OK) {
+                Log.d("dasda", "MyToolbar: ")
+                onRefresh()
+            }
+        }
 
     Column(
         modifier =
@@ -68,7 +84,9 @@ fun MyToolbar(modifier: Modifier = Modifier) {
                     contentDescription = stringResource(R.string.content_description_discussions_toolbar_setting),
                     modifier =
                         Modifier.noRippleClickable {
-                            context.startActivity(SettingActivity.Intent(context))
+                            activityLauncher.launch(
+                                SettingActivity.Intent(context),
+                            )
                         },
                 )
 
@@ -81,5 +99,7 @@ fun MyToolbar(modifier: Modifier = Modifier) {
 @Preview
 @Composable
 private fun MyToolbarPreview() {
-    MyToolbar()
+    MyToolbar(
+        onRefresh = {},
+    )
 }
