@@ -41,7 +41,7 @@ fun BookCover(
             contentScale = ContentScale.Crop,
             modifier =
                 Modifier
-                    .weight(4f)
+                    .weight(7f)
                     .fillMaxWidth(),
         )
 
@@ -57,7 +57,7 @@ fun BookCover(
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .heightIn(min = 30.dp),
+                    .heightIn(min = 10.dp),
         )
 
         Text(
@@ -72,7 +72,7 @@ fun BookCover(
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .heightIn(min = 30.dp),
+                    .weight(1f),
         )
     }
 }
