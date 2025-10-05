@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.team.domain.model.ImagePayload
 import com.team.todoktodok.App
 import com.team.todoktodok.presentation.compose.main.MainDestination
 import com.team.todoktodok.presentation.compose.my.component.EditableProfileImage
@@ -54,6 +55,7 @@ fun MyScreen(
         onChangeShowMyDiscussion = viewModel::toggleShowMyDiscussion,
         onCompleteRemoveDiscussion = viewModel::removeDiscussion,
         onCompleteModifyDiscussion = viewModel::modifyDiscussion,
+        onImageSelected = viewModel::modifyProfileImage,
         modifier = modifier,
         navController = navController,
     )
@@ -67,6 +69,7 @@ fun MyScreen(
     onCompleteModifyDiscussion: (SerializationDiscussion) -> Unit,
     onCompleteRemoveDiscussion: (Long) -> Unit,
     onChangeShowMyDiscussion: (Boolean) -> Unit,
+    onImageSelected: (ImagePayload) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
@@ -83,6 +86,7 @@ fun MyScreen(
         item {
             EditableProfileImage(
                 profileImageUrl = uiState.profile.profileImage,
+                onImageSelected = onImageSelected,
             )
         }
 
@@ -127,6 +131,7 @@ private fun MyScreenPreview(
             onChangeShowMyDiscussion = {},
             onCompleteRemoveDiscussion = {},
             onCompleteModifyDiscussion = {},
+            onImageSelected = {},
             navController = NavHostController(LocalContext.current),
         )
     }

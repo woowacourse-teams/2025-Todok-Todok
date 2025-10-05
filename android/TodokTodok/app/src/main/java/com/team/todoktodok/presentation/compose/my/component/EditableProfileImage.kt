@@ -1,7 +1,12 @@
 package com.team.todoktodok.presentation.compose.my.component
 
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -22,16 +27,35 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
+import com.team.domain.model.ImagePayload
 import com.team.todoktodok.R
 import com.team.todoktodok.presentation.compose.theme.Gray75
 import com.team.todoktodok.presentation.compose.theme.GrayE0
+import com.team.todoktodok.presentation.core.ImagePayloadMapper
 
 @Composable
 fun EditableProfileImage(
     profileImageUrl: String,
+    onImageSelected: (ImagePayload) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
+    val contentResolver = context.contentResolver
+    val pickMedia =
+        rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+            if (uri != null) {
+                runCatching { ImagePayloadMapper(contentResolver).from(uri) }
+                    .onSuccess { image -> onImageSelected(image) }
+                    .onFailure { exception ->
+                        Toast
+                            .makeText(
+                                context,
+                                R.string.profile_can_not_load_image,
+                                Toast.LENGTH_SHORT,
+                            ).show()
+                    }
+            }
+        }
 
     Box(modifier = modifier.padding(top = 10.dp)) {
         AsyncImage(
@@ -59,7 +83,10 @@ fun EditableProfileImage(
                     .size(30.dp)
                     .clip(CircleShape)
                     .background(color = GrayE0)
-                    .align(Alignment.BottomEnd),
+                    .align(Alignment.BottomEnd)
+                    .clickable {
+                        pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                    },
         ) {
             Icon(
                 imageVector = Icons.Default.CameraAlt,
@@ -77,5 +104,8 @@ fun EditableProfileImage(
 @Preview
 @Composable
 private fun ProfileImageComponentPreview() {
-    EditableProfileImage(profileImageUrl = "")
+    EditableProfileImage(
+        profileImageUrl = "",
+        onImageSelected = {},
+    )
 }

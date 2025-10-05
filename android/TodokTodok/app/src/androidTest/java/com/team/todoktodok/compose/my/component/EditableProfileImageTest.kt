@@ -14,7 +14,10 @@ class EditableProfileImageTest {
     fun `프로필 이미지가 보인다`() {
         // given
         composeTestRule.setContent {
-            EditableProfileImage(profileImageUrl = "https://example.com/image.png")
+            EditableProfileImage(
+                profileImageUrl = "https://example.com/image.png",
+                onImageSelected = {},
+            )
         }
 
         // then
@@ -28,7 +31,7 @@ class EditableProfileImageTest {
     fun `카메라 아이콘이 보인다`() {
         // given
         composeTestRule.setContent {
-            EditableProfileImage(profileImageUrl = "")
+            EditableProfileImage(profileImageUrl = "", onImageSelected = {})
         }
 
         // then
