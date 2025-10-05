@@ -9,7 +9,6 @@ import com.team.domain.model.exception.BooksExceptions
 import com.team.domain.model.exception.CommentExceptions
 import com.team.domain.model.exception.DiscussionExceptions
 import com.team.domain.model.exception.ISBNException
-import com.team.domain.model.exception.ImageLoadExceptions
 import com.team.domain.model.exception.KeywordException
 import com.team.domain.model.exception.NicknameException
 import com.team.domain.model.exception.ReplyExceptions
@@ -135,7 +134,6 @@ class ExceptionMessageConverter {
 
             SearchedBooksTotalSizeException.InvalidSize -> R.string.select_book_error_searched_book_total_size
 
-            ImageLoadExceptions.UriInputStreamNotFoundException -> R.string.error_uri_input_stream_not_found
             TodokTodokExceptions.HttpExceptions.UnauthorizedException -> R.string.error_missing_location
         }
 }

@@ -2,10 +2,8 @@ package com.team.todoktodok.presentation.xml.profile
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -44,13 +42,6 @@ class ProfileActivity : AppCompatActivity() {
             if (result.resultCode == RESULT_OK) {
                 viewModel.refreshProfile()
             }
-        }
-
-    private val pickImage =
-        registerForActivityResult(
-            ActivityResultContracts.PickVisualMedia(),
-        ) { uri: Uri? ->
-            viewModel.updateProfile(uri, contentResolver)
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -168,10 +159,6 @@ class ProfileActivity : AppCompatActivity() {
                 } else {
                     finish()
                 }
-            }
-
-            override fun onClickProfileImage() {
-                pickImage.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
             }
 
             override fun onClickSupport(type: Support) {

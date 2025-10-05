@@ -1,11 +1,9 @@
 package com.team.todoktodok.presentation.compose.my.books
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -24,14 +22,13 @@ import com.team.todoktodok.presentation.compose.core.component.ResourceNotFoundC
 import com.team.todoktodok.presentation.compose.main.MainDestination
 import com.team.todoktodok.presentation.compose.my.component.BookCover
 import com.team.todoktodok.presentation.compose.preview.MyBooksUiStatePreviewParameterProvider
-import com.team.todoktodok.presentation.compose.theme.GrayE0
 
 @Composable
 fun ActivatedBooksScreen(
     uiState: MyBooksUiModel,
+    navController: NavHostController,
     onChangeBottomNavigationTab: (MainDestination) -> Unit,
     modifier: Modifier = Modifier,
-    navController: NavHostController,
 ) {
     if (uiState.notHasBooks) {
         ActivatedBooksEmpty(
@@ -72,7 +69,7 @@ private fun ActivatedBooksGrid(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        verticalArrangement = Arrangement.spacedBy(10.dp),
+        verticalArrangement = Arrangement.spacedBy(5.dp),
         modifier =
             modifier
                 .fillMaxSize()
@@ -98,9 +95,7 @@ private fun BooksRow(
                 book,
                 modifier =
                     Modifier
-                        .weight(1f)
-                        .aspectRatio(0.75f)
-                        .border(1.dp, GrayE0),
+                        .weight(1f),
             )
         }
 

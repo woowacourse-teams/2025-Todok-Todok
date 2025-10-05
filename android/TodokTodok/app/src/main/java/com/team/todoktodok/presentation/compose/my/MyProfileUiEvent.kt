@@ -4,6 +4,6 @@ import com.team.domain.model.exception.TodokTodokExceptions
 
 sealed interface MyProfileUiEvent {
     data class ShowErrorMessage(
-        val exceptions: TodokTodokExceptions,
+        val exception: TodokTodokExceptions,
     ) : MyProfileUiEvent
 }

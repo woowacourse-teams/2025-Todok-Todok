@@ -20,4 +20,9 @@ data class DiscussionUiModel(
     val viewCount: String get() = item.viewCount.toString()
 
     val isLikedByMe: Boolean get() = item.isLikedByMe
+
+    fun modifyWriterProfileImage(profileImage: String): DiscussionUiModel =
+        copy(
+            item.modifyWriterProfileImage(profileImage),
+        )
 }

@@ -68,6 +68,7 @@
     <string name="content_description_my_profile_image">프로필 사진</string>
     <string name="content_description_icon_modify_my_profile_image">프로필 사진 수정 아이콘</string>
 
+
     <!--  상세 토론방 페이지  -->
     <string name="content_description_discussion_detail_back">토론 상세 화면에서 뒤로가는 버튼</string>
     <string name="content_description_discussion_detail_option">토론방 옵션 버튼</string>
@@ -140,6 +141,7 @@
     <string name="profile_invalid_nickname_length">1자 이상 8자 이하로 입력해주세요.</string>
     <string name="profile_invalid_nickname_same">동일한 닉네임으로 수정할 수 없습니다.</string>
     <string name="profile_invalid_profile_message_same">동일한 메시지로 수정할 수 없습니다.</string>
+    <string name="profile_can_not_load_image">선택한 이미지를 불러올 수 없습니다. 다른 이미지를 선택해 주세요.</string>
 
     <string name="discussion_menu_alarm">알람</string>
     <string name="discussion_menu_profile">내정보</string>

@@ -29,4 +29,10 @@ data class MyProfileUiState(
 
     fun modifyDiscussion(discussion: SerializationDiscussion): MyProfileUiState =
         copy(participatedDiscussions = participatedDiscussions.modify(discussion))
+
+    fun modifyProfileImage(profileImage: String): MyProfileUiState =
+        copy(
+            profile = profile.copy(profileImage = profileImage),
+            participatedDiscussions = participatedDiscussions.modifyMyDiscussionProfileImage(profileImage),
+        )
 }

@@ -87,7 +87,7 @@ fun LatestDiscussionsScreen(
             is LatestDiscussionsUiEvent.ShowErrorMessage -> {
                 val message =
                     context.getString(uiExceptionHandler.messageConverter(event.exception))
-                uiExceptionHandler.snackbarHostState.showSnackbar(message)
+                uiExceptionHandler.showErrorMessage(coroutineScope, message)
             }
         }
     }

@@ -2,6 +2,7 @@ package com.team.todoktodok.presentation.compose.my.vm
 
 import androidx.lifecycle.viewModelScope
 import com.team.domain.ConnectivityObserver
+import com.team.domain.model.ImagePayload
 import com.team.domain.model.member.MemberDiscussionType
 import com.team.domain.model.member.MemberId
 import com.team.domain.repository.MemberRepository
@@ -83,6 +84,14 @@ class MyProfileViewModel(
         _uiState.update { it.modifyDiscussion(discussion) }
     }
 
+    fun modifyProfileImage(imagePayload: ImagePayload) =
+        runAsync(
+            key = KEY_MODIFY_PROFILE_IMAGE,
+            action = { memberRepository.modifyProfileImage(imagePayload) },
+            handleSuccess = { result -> _uiState.update { it.modifyProfileImage(result) } },
+            handleFailure = { onUiEvent(MyProfileUiEvent.ShowErrorMessage(it)) },
+        )
+
     private fun onUiEvent(event: MyProfileUiEvent) {
         viewModelScope.launch {
             _uiEvent.send(event)
@@ -93,5 +102,6 @@ class MyProfileViewModel(
         private const val KEY_FETCH_PROFILE = "fetch_profile"
         private const val KEY_FETCH_MY_BOOKS = "fetch_my_books"
         private const val KEY_FETCH_PARTICIPATED_DISCUSSIONS = "fetch_participated_discussions"
+        private const val KEY_MODIFY_PROFILE_IMAGE = "modify_profile_image"
     }
 }
