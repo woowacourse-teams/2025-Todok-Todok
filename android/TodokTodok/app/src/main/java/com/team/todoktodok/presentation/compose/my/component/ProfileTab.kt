@@ -157,7 +157,7 @@ private fun ProfileTabPager(
                 ProfileTabDestination.LIKED_DISCUSSIONS -> LikedDiscussionsScreen()
                 ProfileTabDestination.PARTICIPATED_DISCUSSIONS ->
                     ParticipatedDiscussionsScreen(
-                        uiModel = uiState.participatedDiscussions,
+                        uiState = uiState.participatedDiscussions,
                         onChangeShowMyDiscussion = { onChangeShowMyDiscussion(it) },
                         onCompleteRemoveDiscussion = onCompleteRemoveDiscussion,
                         onCompleteModifyDiscussion = onCompleteModifyDiscussion,

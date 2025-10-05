@@ -4,13 +4,13 @@ import com.team.domain.model.Book
 import com.team.domain.model.Discussion
 import com.team.domain.model.member.Profile
 import com.team.todoktodok.presentation.compose.my.books.MyBooksUiModel
-import com.team.todoktodok.presentation.compose.my.participated.ParticipatedDiscussionsUiModel
+import com.team.todoktodok.presentation.compose.my.participated.ParticipatedDiscussionsUiState
 import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussion
 
 data class MyProfileUiState(
     val profile: Profile = Profile.EMPTY,
     val activatedBooks: MyBooksUiModel = MyBooksUiModel(),
-    val participatedDiscussions: ParticipatedDiscussionsUiModel = ParticipatedDiscussionsUiModel(),
+    val participatedDiscussions: ParticipatedDiscussionsUiState = ParticipatedDiscussionsUiState(),
 ) {
     fun setMemberId(memberId: Long): MyProfileUiState = copy(participatedDiscussions = participatedDiscussions.setMemberId(memberId))
 

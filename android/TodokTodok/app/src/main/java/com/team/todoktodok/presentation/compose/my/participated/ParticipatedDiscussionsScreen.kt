@@ -35,17 +35,17 @@ import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussio
 
 @Composable
 fun ParticipatedDiscussionsScreen(
-    uiModel: ParticipatedDiscussionsUiModel,
+    uiState: ParticipatedDiscussionsUiState,
     onChangeShowMyDiscussion: (Boolean) -> Unit,
     onCompleteRemoveDiscussion: (Long) -> Unit,
     onCompleteModifyDiscussion: (SerializationDiscussion) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    if (uiModel.isEmpty()) {
+    if (uiState.isEmpty()) {
         ParticipatedDiscussionsEmpty()
     } else {
         ParticipatedDiscussionsContent(
-            uiModel = uiModel,
+            uiState = uiState,
             onChangeShowMyDiscussion = onChangeShowMyDiscussion,
             onCompleteRemoveDiscussion = onCompleteRemoveDiscussion,
             onCompleteModifyDiscussion = onCompleteModifyDiscussion,
@@ -69,7 +69,7 @@ private fun ParticipatedDiscussionsEmpty() {
 
 @Composable
 private fun ParticipatedDiscussionsContent(
-    uiModel: ParticipatedDiscussionsUiModel,
+    uiState: ParticipatedDiscussionsUiState,
     onChangeShowMyDiscussion: (Boolean) -> Unit,
     onCompleteRemoveDiscussion: (Long) -> Unit,
     onCompleteModifyDiscussion: (SerializationDiscussion) -> Unit,
@@ -88,7 +88,7 @@ private fun ParticipatedDiscussionsContent(
 
             Spacer(modifier = Modifier.width(10.dp))
             Switch(
-                checked = uiModel.showMyDiscussion,
+                checked = uiState.showMyDiscussion,
                 onCheckedChange = { isShow -> onChangeShowMyDiscussion(isShow) },
                 colors =
                     SwitchDefaults.colors(
@@ -99,7 +99,7 @@ private fun ParticipatedDiscussionsContent(
         }
 
         DiscussionCards(
-            uiModel = uiModel,
+            uiState = uiState,
             onCompleteRemoveDiscussion = onCompleteRemoveDiscussion,
             onCompleteModifyDiscussion = onCompleteModifyDiscussion,
         )
@@ -108,7 +108,7 @@ private fun ParticipatedDiscussionsContent(
 
 @Composable
 private fun DiscussionCards(
-    uiModel: ParticipatedDiscussionsUiModel,
+    uiState: ParticipatedDiscussionsUiState,
     onCompleteRemoveDiscussion: (Long) -> Unit,
     onCompleteModifyDiscussion: (SerializationDiscussion) -> Unit,
 ) {
@@ -128,10 +128,10 @@ private fun DiscussionCards(
         }
 
     val context = LocalContext.current
-    uiModel.visibleDiscussions(uiModel.showMyDiscussion).forEach { discussion ->
+    uiState.visibleDiscussions(uiState.showMyDiscussion).forEach { discussion ->
         DiscussionCard(
             uiState = discussion,
-            discussionCardType = uiModel.type,
+            discussionCardType = uiState.type,
             modifier = Modifier.padding(top = 10.dp),
             onClick = {
                 activityResultLauncher.launch(
@@ -149,7 +149,7 @@ private fun DiscussionCards(
 @Composable
 private fun EmptyParticipatedDiscussionsScreenPreview() {
     ParticipatedDiscussionsScreen(
-        uiModel = ParticipatedDiscussionsUiModel(),
+        uiState = ParticipatedDiscussionsUiState(),
         onChangeShowMyDiscussion = {},
         onCompleteRemoveDiscussion = {},
         onCompleteModifyDiscussion = {},
@@ -160,10 +160,10 @@ private fun EmptyParticipatedDiscussionsScreenPreview() {
 @Composable
 private fun ParticipatedDiscussionsScreenPreview(
     @PreviewParameter(ParticipatedDiscussionPreviewParameterProvider::class)
-    model: ParticipatedDiscussionsUiModel,
+    uiState: ParticipatedDiscussionsUiState,
 ) {
     ParticipatedDiscussionsScreen(
-        uiModel = model,
+        uiState = uiState,
         onChangeShowMyDiscussion = {},
         onCompleteRemoveDiscussion = {},
         onCompleteModifyDiscussion = {},
@@ -174,10 +174,10 @@ private fun ParticipatedDiscussionsScreenPreview(
 @Composable
 private fun MyParticipatedDiscussionsScreenPreview(
     @PreviewParameter(ParticipatedDiscussionPreviewParameterProvider::class)
-    model: ParticipatedDiscussionsUiModel,
+    uiState: ParticipatedDiscussionsUiState,
 ) {
     ParticipatedDiscussionsScreen(
-        uiModel = model.copy(showMyDiscussion = true, memberId = 1),
+        uiState = uiState.copy(showMyDiscussion = true, memberId = 1),
         onChangeShowMyDiscussion = {},
         onCompleteRemoveDiscussion = {},
         onCompleteModifyDiscussion = {},

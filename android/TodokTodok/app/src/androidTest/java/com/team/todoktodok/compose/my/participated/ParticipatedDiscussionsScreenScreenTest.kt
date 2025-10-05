@@ -9,7 +9,7 @@ import com.team.domain.model.member.Nickname
 import com.team.domain.model.member.User
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiModel
 import com.team.todoktodok.presentation.compose.my.participated.ParticipatedDiscussionsScreen
-import com.team.todoktodok.presentation.compose.my.participated.ParticipatedDiscussionsUiModel
+import com.team.todoktodok.presentation.compose.my.participated.ParticipatedDiscussionsUiState
 import org.junit.Rule
 import org.junit.Test
 import java.time.LocalDateTime
@@ -18,8 +18,8 @@ class ParticipatedDiscussionsScreenScreenTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
-    private val uiModel =
-        ParticipatedDiscussionsUiModel(
+    private val uiState =
+        ParticipatedDiscussionsUiState(
             listOf(
                 DiscussionUiModel(
                     item =
@@ -77,7 +77,7 @@ class ParticipatedDiscussionsScreenScreenTest {
         // When
         composeTestRule.setContent {
             ParticipatedDiscussionsScreen(
-                uiModel = uiModel,
+                uiState = uiState,
                 onChangeShowMyDiscussion = {},
                 onCompleteRemoveDiscussion = {},
                 onCompleteModifyDiscussion = {},
@@ -91,12 +91,12 @@ class ParticipatedDiscussionsScreenScreenTest {
     @Test
     fun `모든_참여한_토론방_목록이_보인다`() {
         // given
-        val testUiModel = uiModel.copy(showMyDiscussion = false)
+        val testUiModel = uiState.copy(showMyDiscussion = false)
 
         // When
         composeTestRule.setContent {
             ParticipatedDiscussionsScreen(
-                uiModel = testUiModel,
+                uiState = testUiModel,
                 onChangeShowMyDiscussion = {},
                 onCompleteRemoveDiscussion = {},
                 onCompleteModifyDiscussion = {},
@@ -112,12 +112,12 @@ class ParticipatedDiscussionsScreenScreenTest {
     @Test
     fun `내가_참여한_토론방_목록만_보인다`() {
         // given
-        val testUiModel = uiModel.copy(showMyDiscussion = true, memberId = 1)
+        val testUiModel = uiState.copy(showMyDiscussion = true, memberId = 1)
 
         // When
         composeTestRule.setContent {
             ParticipatedDiscussionsScreen(
-                uiModel = testUiModel,
+                uiState = testUiModel,
                 onChangeShowMyDiscussion = {},
                 onCompleteRemoveDiscussion = {},
                 onCompleteModifyDiscussion = {},
@@ -131,12 +131,12 @@ class ParticipatedDiscussionsScreenScreenTest {
     @Test
     fun `참여한 토론방이 없을경우 가이드 메시지가 보인다`() {
         // given
-        val testUiModel = uiModel.copy(discussions = emptyList())
+        val testUiModel = uiState.copy(discussions = emptyList())
 
         // When
         composeTestRule.setContent {
             ParticipatedDiscussionsScreen(
-                uiModel = testUiModel,
+                uiState = testUiModel,
                 onChangeShowMyDiscussion = {},
                 onCompleteRemoveDiscussion = {},
                 onCompleteModifyDiscussion = {},
