@@ -224,7 +224,9 @@ public interface DiscussionApiDocs {
                                                 "bookId": 1,
                                                 "bookTitle": "엘레강트 오브젝트 - 새로운 관점에서 바라본 객체지향",
                                                 "bookAuthor": "Yegor Bugayenko (지은이), 조영호 (옮긴이)",
-                                                "bookImage": "https://image.aladin.co.kr/product/25837/40/coversum/k762736538_1.jpg"
+                                                "bookImage": "https://image.aladin.co.kr/product/25837/40/coversum/k762736538_1.jpg",
+                                                "bookPublisher": "지&선(지앤선)",
+                                                "bookSummary": "기본적으로 객체지향 프로그래밍((Object-Oriented Programming, OOP)에 관한 책이다. 이 책은 전통적인 OOP의 모범 사례에 전면적으로 반기를 들고 전통적인 코딩 표준에서 벗어나 훨씬 깨끗한 코드 작성을 위한 조력자임을 자처한다."
                                               },
                                               "member": {
                                                 "memberId": 2,
@@ -322,7 +324,9 @@ public interface DiscussionApiDocs {
                                                         "bookId": 1,
                                                         "bookTitle": "오브젝트",
                                                         "bookAuthor": "조영호",
-                                                        "bookImage": "https://image.png"
+                                                        "bookImage": "https://image.png",
+                                                        "bookPublisher": "위키북스",
+                                                        "bookSummary": "역할, 책임, 협력에 기반해 객체지향 프로그램을 설계하고 구현하는 방법, 응집도와 결합도를 이용해 설계를 트레이드오프하는 방법, 설계를 유연하게 만드는 다양한 의존성 관리 기법, 타입 계층을 위한 상속과 코드 재사용을 위한 합성의 개념, 다양한 설계 원칙과 디자인 패턴 등을 다룬다."
                                                     },
                                                     "member": {
                                                         "memberId": 1,
@@ -343,7 +347,9 @@ public interface DiscussionApiDocs {
                                                         "bookId": 1,
                                                         "bookTitle": "오브젝트",
                                                         "bookAuthor": "조영호",
-                                                        "bookImage": "https://image.png"
+                                                        "bookImage": "https://image.png",
+                                                        "bookPublisher": "위키북스",
+                                                        "bookSummary": "역할, 책임, 협력에 기반해 객체지향 프로그램을 설계하고 구현하는 방법, 응집도와 결합도를 이용해 설계를 트레이드오프하는 방법, 설계를 유연하게 만드는 다양한 의존성 관리 기법, 타입 계층을 위한 상속과 코드 재사용을 위한 합성의 개념, 다양한 설계 원칙과 디자인 패턴 등을 다룬다."
                                                     },
                                                     "member": {
                                                         "memberId": 2,
@@ -447,7 +453,9 @@ public interface DiscussionApiDocs {
                                                     "bookId": 1,
                                                     "bookTitle": "엘레강트 오브젝트 - 새로운 관점에서 바라본 객체지향",
                                                     "bookAuthor": "Yegor Bugayenko (지은이), 조영호 (옮긴이)",
-                                                    "bookImage": "https://image.aladin.co.kr/product/25837/40/coversum/k762736538_1.jpg"
+                                                    "bookImage": "https://image.aladin.co.kr/product/25837/40/coversum/k762736538_1.jpg",
+                                                    "bookPublisher": "지&선(지앤선)",
+                                                    "bookSummary": "기본적으로 객체지향 프로그래밍((Object-Oriented Programming, OOP)에 관한 책이다. 이 책은 전통적인 OOP의 모범 사례에 전면적으로 반기를 들고 전통적인 코딩 표준에서 벗어나 훨씬 깨끗한 코드 작성을 위한 조력자임을 자처한다."
                                                   },
                                                   "member": {
                                                     "memberId": 2,
@@ -468,7 +476,9 @@ public interface DiscussionApiDocs {
                                                     "bookId": 1,
                                                     "bookTitle": "엘레강트 오브젝트 - 새로운 관점에서 바라본 객체지향",
                                                     "bookAuthor": "Yegor Bugayenko (지은이), 조영호 (옮긴이)",
-                                                    "bookImage": "https://image.aladin.co.kr/product/25837/40/coversum/k762736538_1.jpg"
+                                                    "bookImage": "https://image.aladin.co.kr/product/25837/40/coversum/k762736538_1.jpg",
+                                                    "bookPublisher": "지&선(지앤선)",
+                                                    "bookSummary": "기본적으로 객체지향 프로그래밍((Object-Oriented Programming, OOP)에 관한 책이다. 이 책은 전통적인 OOP의 모범 사례에 전면적으로 반기를 들고 전통적인 코딩 표준에서 벗어나 훨씬 깨끗한 코드 작성을 위한 조력자임을 자처한다."
                                                   },
                                                   "member": {
                                                     "memberId": 2,
@@ -560,7 +570,9 @@ public interface DiscussionApiDocs {
                                                      "bookId": 1,
                                                      "bookTitle": "엘레강트 오브젝트 - 새로운 관점에서 바라본 객체지향",
                                                      "bookAuthor": "Yegor Bugayenko (지은이), 조영호 (옮긴이)",
-                                                     "bookImage": "https://image.aladin.co.kr/product/25837/40/coversum/k762736538_1.jpg"
+                                                     "bookImage": "https://image.aladin.co.kr/product/25837/40/coversum/k762736538_1.jpg",
+                                                     "bookPublisher": "지&선(지앤선)",
+                                                     "bookSummary": "기본적으로 객체지향 프로그래밍((Object-Oriented Programming, OOP)에 관한 책이다. 이 책은 전통적인 OOP의 모범 사례에 전면적으로 반기를 들고 전통적인 코딩 표준에서 벗어나 훨씬 깨끗한 코드 작성을 위한 조력자임을 자처한다."
                                                    },
                                                    "member": {
                                                      "memberId": 2,
@@ -581,7 +593,9 @@ public interface DiscussionApiDocs {
                                                      "bookId": 1,
                                                      "bookTitle": "엘레강트 오브젝트 - 새로운 관점에서 바라본 객체지향",
                                                      "bookAuthor": "Yegor Bugayenko (지은이), 조영호 (옮긴이)",
-                                                     "bookImage": "https://image.aladin.co.kr/product/25837/40/coversum/k762736538_1.jpg"
+                                                     "bookImage": "https://image.aladin.co.kr/product/25837/40/coversum/k762736538_1.jpg",
+                                                     "bookPublisher": "지&선(지앤선)",
+                                                     "bookSummary": "기본적으로 객체지향 프로그래밍((Object-Oriented Programming, OOP)에 관한 책이다. 이 책은 전통적인 OOP의 모범 사례에 전면적으로 반기를 들고 전통적인 코딩 표준에서 벗어나 훨씬 깨끗한 코드 작성을 위한 조력자임을 자처한다."
                                                    },
                                                    "member": {
                                                      "memberId": 2,
@@ -958,7 +972,9 @@ public interface DiscussionApiDocs {
                                                         "bookId": 1,
                                                         "bookTitle": "오브젝트",
                                                         "bookAuthor": "조영호",
-                                                        "bookImage": "https://image.png"
+                                                        "bookImage": "https://image.png",
+                                                        "bookPublisher": "위키북스",
+                                                        "bookSummary": "역할, 책임, 협력에 기반해 객체지향 프로그램을 설계하고 구현하는 방법, 응집도와 결합도를 이용해 설계를 트레이드오프하는 방법, 설계를 유연하게 만드는 다양한 의존성 관리 기법, 타입 계층을 위한 상속과 코드 재사용을 위한 합성의 개념, 다양한 설계 원칙과 디자인 패턴 등을 다룬다."
                                                       },
                                                       "member": {
                                                         "memberId": 1,
@@ -980,7 +996,9 @@ public interface DiscussionApiDocs {
                                                         "bookId": 1,
                                                         "bookTitle": "오브젝트",
                                                         "bookAuthor": "조영호",
-                                                        "bookImage": "https://image.png"
+                                                        "bookImage": "https://image.png",
+                                                        "bookPublisher": "위키북스",
+                                                        "bookSummary": "역할, 책임, 협력에 기반해 객체지향 프로그램을 설계하고 구현하는 방법, 응집도와 결합도를 이용해 설계를 트레이드오프하는 방법, 설계를 유연하게 만드는 다양한 의존성 관리 기법, 타입 계층을 위한 상속과 코드 재사용을 위한 합성의 개념, 다양한 설계 원칙과 디자인 패턴 등을 다룬다."
                                                       },
                                                       "member": {
                                                         "memberId": 2,
@@ -1015,7 +1033,9 @@ public interface DiscussionApiDocs {
                                                         "bookId": 1,
                                                         "bookTitle": "오브젝트",
                                                         "bookAuthor": "조영호",
-                                                        "bookImage": "https://image.png"
+                                                        "bookImage": "https://image.png",
+                                                        "bookPublisher": "위키북스",
+                                                        "bookSummary": "역할, 책임, 협력에 기반해 객체지향 프로그램을 설계하고 구현하는 방법, 응집도와 결합도를 이용해 설계를 트레이드오프하는 방법, 설계를 유연하게 만드는 다양한 의존성 관리 기법, 타입 계층을 위한 상속과 코드 재사용을 위한 합성의 개념, 다양한 설계 원칙과 디자인 패턴 등을 다룬다."
                                                       },
                                                       "member": {
                                                         "memberId": 1,
