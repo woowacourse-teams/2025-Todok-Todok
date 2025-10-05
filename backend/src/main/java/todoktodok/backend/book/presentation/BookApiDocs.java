@@ -401,7 +401,7 @@ public interface BookApiDocs {
                             schema = @Schema(implementation = ErrorResponse.class),
                             examples = {
                                     @ExampleObject(
-                                            name = "회원 없음",
+                                            name = "도서 없음",
                                             value = "{\"code\":404, \"message\":\"[ERROR] 해당 도서를 찾을 수 없습니다\"}"
                                     )
                             }
