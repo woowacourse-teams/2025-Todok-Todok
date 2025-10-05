@@ -3,8 +3,8 @@ package com.team.todoktodok.compose.my.component
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
+import com.team.todoktodok.presentation.compose.my.MyProfileUiState
 import com.team.todoktodok.presentation.compose.my.component.ProfileTab
-import com.team.todoktodok.presentation.compose.my.model.MyProfileUiState
 import org.junit.Rule
 import org.junit.Test
 

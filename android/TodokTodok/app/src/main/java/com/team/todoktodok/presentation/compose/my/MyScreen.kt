@@ -22,7 +22,6 @@ import com.team.todoktodok.presentation.compose.my.component.EditableProfileImag
 import com.team.todoktodok.presentation.compose.my.component.Information
 import com.team.todoktodok.presentation.compose.my.component.MyToolbar
 import com.team.todoktodok.presentation.compose.my.component.ProfileTab
-import com.team.todoktodok.presentation.compose.my.model.MyProfileUiState
 import com.team.todoktodok.presentation.compose.my.vm.MyProfileViewModel
 import com.team.todoktodok.presentation.compose.my.vm.MyProfileViewModelFactory
 import com.team.todoktodok.presentation.compose.preview.MyProfileUiStatePreviewParameterProvider

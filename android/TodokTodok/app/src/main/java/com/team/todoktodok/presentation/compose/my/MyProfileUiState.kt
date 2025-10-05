@@ -1,4 +1,4 @@
-package com.team.todoktodok.presentation.compose.my.model
+package com.team.todoktodok.presentation.compose.my
 
 import com.team.domain.model.Book
 import com.team.domain.model.Discussion

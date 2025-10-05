@@ -6,8 +6,8 @@ import com.team.domain.model.member.MemberDiscussionType
 import com.team.domain.model.member.MemberId
 import com.team.domain.repository.MemberRepository
 import com.team.domain.repository.TokenRepository
-import com.team.todoktodok.presentation.compose.my.model.MyProfileUiEvent
-import com.team.todoktodok.presentation.compose.my.model.MyProfileUiState
+import com.team.todoktodok.presentation.compose.my.MyProfileUiEvent
+import com.team.todoktodok.presentation.compose.my.MyProfileUiState
 import com.team.todoktodok.presentation.core.base.BaseViewModel
 import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussion
 import kotlinx.coroutines.channels.Channel
