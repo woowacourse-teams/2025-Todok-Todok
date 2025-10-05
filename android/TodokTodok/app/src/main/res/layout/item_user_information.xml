@@ -22,20 +22,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:shapeAppearanceOverlay="@style/circleImageView" />
 
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/iv_profile_edit"
-        android:layout_width="@dimen/space_24"
-        android:layout_height="@dimen/space_24"
-        android:background="@color/gray_80"
-        android:scaleType="centerInside"
-        android:src="@drawable/ic_user_profile_edit"
-        app:layout_constraintBottom_toBottomOf="@id/iv_profile"
-        app:layout_constraintEnd_toEndOf="@id/iv_profile"
-        app:shapeAppearanceOverlay="@style/circleImageView"
-        app:strokeColor="@color/white"
-        android:elevation="1dp"
-        app:strokeWidth="1dp" />
-
     <TextView
         android:id="@+id/tv_nickname"
         android:layout_width="wrap_content"

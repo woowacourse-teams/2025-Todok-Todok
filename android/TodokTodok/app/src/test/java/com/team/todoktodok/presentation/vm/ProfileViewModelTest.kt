@@ -1,7 +1,5 @@
 package com.team.todoktodok.presentation.vm
 
-import android.content.ContentResolver
-import android.net.Uri
 import com.team.domain.model.Support
 import com.team.domain.model.exception.NetworkResult
 import com.team.domain.model.member.MemberDiscussionType
@@ -19,7 +17,6 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -192,28 +189,5 @@ class ProfileViewModelTest {
                     MemberDiscussionType.CREATED,
                 )
             }
-        }
-
-    @Test
-    fun `프로필 이미지 업데이트 성공 시 uiState의 profileImage가 갱신된다`() =
-        runTest {
-            // given
-            setMockProfileData()
-            viewModel.loadProfile(1)
-            advanceUntilIdle()
-
-            val uri = mockk<Uri>(relaxed = true)
-            val contentResolver = mockk<ContentResolver>(relaxed = true)
-
-            // when
-            viewModel.updateProfile(imageUri = uri, contentResolver = contentResolver)
-            advanceUntilIdle()
-
-            // then
-            val info =
-                viewModel.uiState
-                    .getOrAwaitValue()
-                    .items[1] as ProfileItems.InformationItem
-            info.value.profileImage shouldBe "newImage"
         }
 }

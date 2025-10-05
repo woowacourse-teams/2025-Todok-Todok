@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupWindow
 import androidx.core.graphics.drawable.toDrawable
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.team.domain.model.Support
 import com.team.todoktodok.R
@@ -22,10 +21,6 @@ class UserInformationViewHolder private constructor(
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
         with(binding) {
-            ivProfile.setOnClickListener {
-                handler.onClickProfileImage()
-            }
-
             ivReport.setOnClickListener {
                 showCustomPopupMenu(itemView.context, viewAnchor, binding.root)
             }
@@ -70,7 +65,6 @@ class UserInformationViewHolder private constructor(
             ivReport.visibility = reportButtonVisibility
             ivProfile.loadImage(item.value.profileImage)
             ivProfile.isEnabled = item.isMyProfile
-            ivProfileEdit.isVisible = item.isMyProfile
             tvNickname.text = content.nickname
 
             val message =
@@ -96,8 +90,6 @@ class UserInformationViewHolder private constructor(
     }
 
     interface Handler {
-        fun onClickProfileImage()
-
         fun onClickSupport(type: Support)
     }
 }
