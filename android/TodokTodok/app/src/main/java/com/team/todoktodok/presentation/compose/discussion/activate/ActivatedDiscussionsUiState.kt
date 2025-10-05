@@ -4,10 +4,10 @@ import com.team.domain.model.Discussion
 import com.team.domain.model.PageInfo
 import com.team.domain.model.active.ActivatedDiscussionPage
 import com.team.todoktodok.presentation.compose.core.component.DiscussionCardType
-import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiState
+import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiModel
 
 data class ActivatedDiscussionsUiState(
-    val discussions: List<DiscussionUiState> = emptyList(),
+    val discussions: List<DiscussionUiModel> = emptyList(),
     val type: DiscussionCardType = DiscussionCardType.Default,
     val pageInfo: PageInfo = PageInfo.EMPTY,
 ) {
@@ -17,7 +17,7 @@ data class ActivatedDiscussionsUiState(
 
     fun append(page: ActivatedDiscussionPage): ActivatedDiscussionsUiState =
         copy(
-            discussions = (discussions + page.data.map { DiscussionUiState(it) }).distinctBy { it.discussionId },
+            discussions = (discussions + page.data.map { DiscussionUiModel(it) }).distinctBy { it.discussionId },
             pageInfo = page.pageInfo,
         )
 
@@ -27,7 +27,7 @@ data class ActivatedDiscussionsUiState(
         copy(
             discussions =
                 discussions.map {
-                    if (it.discussionId == discussion.id) DiscussionUiState(discussion) else it
+                    if (it.discussionId == discussion.id) DiscussionUiModel(discussion) else it
                 },
         )
 

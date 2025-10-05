@@ -1,16 +1,17 @@
 package com.team.todoktodok.presentation.compose.preview
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import com.google.common.collect.ImmutableList
 import com.team.domain.model.Book
-import com.team.todoktodok.presentation.compose.my.books.MyBooksUiState
+import com.team.todoktodok.presentation.compose.my.books.MyBooksUiModel
 
-class MyBooksUiStatePreviewParameterProvider : PreviewParameterProvider<MyBooksUiState> {
-    override val values: Sequence<MyBooksUiState>
+class MyBooksUiStatePreviewParameterProvider : PreviewParameterProvider<MyBooksUiModel> {
+    override val values: Sequence<MyBooksUiModel>
         get() =
             sequenceOf(
-                MyBooksUiState(
+                MyBooksUiModel(
                     books =
-                        listOf(
+                        ImmutableList.of(
                             Book(
                                 id = 1,
                                 title = "Effective Kotlin - Best Practices",

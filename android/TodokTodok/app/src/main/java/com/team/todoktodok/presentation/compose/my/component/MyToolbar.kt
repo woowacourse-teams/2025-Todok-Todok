@@ -40,7 +40,8 @@ fun MyToolbar(modifier: Modifier = Modifier) {
                 Modifier
                     .fillMaxWidth()
                     .background(White)
-                    .padding(horizontal = 10.dp, vertical = 12.dp),
+                    .padding(top = 12.dp)
+                    .padding(horizontal = 10.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {

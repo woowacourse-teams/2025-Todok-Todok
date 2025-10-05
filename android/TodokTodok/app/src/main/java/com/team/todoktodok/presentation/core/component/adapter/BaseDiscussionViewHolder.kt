@@ -4,7 +4,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ItemDiscussionBinding
-import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiState
+import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiModel
 import com.team.todoktodok.presentation.core.ext.loadCircleImage
 import com.team.todoktodok.presentation.core.ext.loadImage
 
@@ -18,12 +18,12 @@ abstract class BaseDiscussionViewHolder(
         }
     }
 
-    fun bind(item: DiscussionUiState) {
+    fun bind(item: DiscussionUiModel) {
         bindBase(item)
         bindExtra(item)
     }
 
-    private fun bindBase(item: DiscussionUiState) =
+    private fun bindBase(item: DiscussionUiModel) =
         with(binding) {
             tvDiscussionTitle.text = item.discussionTitle
             tvBookTitle.text = item.bookTitle
@@ -38,7 +38,7 @@ abstract class BaseDiscussionViewHolder(
             drawLikeButton(item.isLikedByMe)
         }
 
-    protected abstract fun bindExtra(item: DiscussionUiState)
+    protected abstract fun bindExtra(item: DiscussionUiModel)
 
     private fun drawLikeButton(isLikedByMe: Boolean) {
         val iconRes = if (isLikedByMe) R.drawable.btn_heart_filled else R.drawable.btn_heart_empty

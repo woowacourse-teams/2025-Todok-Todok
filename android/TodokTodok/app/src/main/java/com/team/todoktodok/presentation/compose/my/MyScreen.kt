@@ -1,10 +1,10 @@
 package com.team.todoktodok.presentation.compose.my
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -22,12 +22,12 @@ import com.team.todoktodok.presentation.compose.my.component.EditableProfileImag
 import com.team.todoktodok.presentation.compose.my.component.Information
 import com.team.todoktodok.presentation.compose.my.component.MyToolbar
 import com.team.todoktodok.presentation.compose.my.component.ProfileTab
-import com.team.todoktodok.presentation.compose.my.model.MyProfileUiState
 import com.team.todoktodok.presentation.compose.my.vm.MyProfileViewModel
 import com.team.todoktodok.presentation.compose.my.vm.MyProfileViewModelFactory
 import com.team.todoktodok.presentation.compose.preview.MyProfileUiStatePreviewParameterProvider
 import com.team.todoktodok.presentation.compose.theme.TodoktodokTheme
 import com.team.todoktodok.presentation.compose.theme.White
+import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussion
 
 @Composable
 fun MyScreen(
@@ -49,48 +49,68 @@ fun MyScreen(
     }
 
     MyScreen(
-        navController = navController,
-        onChangeBottomNavigationTab = onChangeBottomNavigationTab,
         uiState = uiState.value,
+        onChangeBottomNavigationTab = onChangeBottomNavigationTab,
+        onChangeShowMyDiscussion = viewModel::toggleShowMyDiscussion,
+        onCompleteRemoveDiscussion = viewModel::removeDiscussion,
+        onCompleteModifyDiscussion = viewModel::modifyDiscussion,
         modifier = modifier,
+        navController = navController,
     )
 }
 
 @Composable
 fun MyScreen(
-    navController: NavHostController,
     uiState: MyProfileUiState,
     onChangeBottomNavigationTab: (MainDestination) -> Unit,
+    onCompleteModifyDiscussion: (SerializationDiscussion) -> Unit,
+    onCompleteRemoveDiscussion: (Long) -> Unit,
+    onChangeShowMyDiscussion: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
+    navController: NavHostController,
 ) {
-    Column(
+    LazyColumn(
         modifier =
             modifier
                 .fillMaxSize()
                 .background(color = White),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        MyToolbar()
+        item {
+            MyToolbar()
+        }
 
-        EditableProfileImage(
-            profileImageUrl = uiState.profile.profileImage,
-            modifier = Modifier.align(Alignment.CenterHorizontally),
-        )
+        item {
+            EditableProfileImage(
+                profileImageUrl = uiState.profile.profileImage,
+            )
+        }
 
-        Information(
-            nickname = uiState.profile.nickname,
-            profileMessage = uiState.profile.message,
-        )
+        item {
+            Information(
+                nickname = uiState.profile.nickname,
+                profileMessage = uiState.profile.message,
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp),
+            )
+        }
 
-        ProfileTab(
-            uiState = uiState,
-            navController = navController,
-            onChangeBottomNavigationTab = onChangeBottomNavigationTab,
-            modifier =
-                Modifier
-                    .weight(1f)
-                    .fillMaxWidth()
-                    .padding(top = 10.dp),
-        )
+        item {
+            ProfileTab(
+                uiState = uiState,
+                navController = navController,
+                onChangeBottomNavigationTab = onChangeBottomNavigationTab,
+                onChangeShowMyDiscussion = { onChangeShowMyDiscussion(it) },
+                onCompleteRemoveDiscussion = onCompleteRemoveDiscussion,
+                onCompleteModifyDiscussion = onCompleteModifyDiscussion,
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(top = 10.dp),
+            )
+        }
     }
 }
 
@@ -102,9 +122,12 @@ private fun MyScreenPreview(
 ) {
     TodoktodokTheme {
         MyScreen(
-            navController = NavHostController(LocalContext.current),
-            onChangeBottomNavigationTab = {},
             uiState = uiState,
+            onChangeBottomNavigationTab = {},
+            onChangeShowMyDiscussion = {},
+            onCompleteRemoveDiscussion = {},
+            onCompleteModifyDiscussion = {},
+            navController = NavHostController(LocalContext.current),
         )
     }
 }

@@ -17,7 +17,6 @@ data class Discussion(
 ) {
     val bookImage get() = book.image
     val writerNickname get() = writer.nickname.value
-    val writerImage get() = writer.profileImage
 
     fun getBookTitle(): String = book.extractSubtitle()
 

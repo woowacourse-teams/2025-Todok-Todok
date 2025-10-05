@@ -2,7 +2,7 @@ package com.team.todoktodok.presentation.compose.preview
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.team.domain.model.member.Profile
-import com.team.todoktodok.presentation.compose.my.model.MyProfileUiState
+import com.team.todoktodok.presentation.compose.my.MyProfileUiState
 
 class MyProfileUiStatePreviewParameterProvider : PreviewParameterProvider<MyProfileUiState> {
     override val values: Sequence<MyProfileUiState>
@@ -17,8 +17,7 @@ class MyProfileUiStatePreviewParameterProvider : PreviewParameterProvider<MyProf
                             profileImage = "",
                         ),
                     activatedBooks = MyBooksUiStatePreviewParameterProvider().values.first(),
-                    participatedDiscussions = emptyList(),
-                    createdDiscussions = emptyList(),
+                    participatedDiscussions = ParticipatedDiscussionPreviewParameterProvider().values.first(),
                 ),
             )
 }

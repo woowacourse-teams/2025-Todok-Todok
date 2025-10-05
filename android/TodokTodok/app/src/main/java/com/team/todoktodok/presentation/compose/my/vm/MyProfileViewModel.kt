@@ -2,11 +2,14 @@ package com.team.todoktodok.presentation.compose.my.vm
 
 import androidx.lifecycle.viewModelScope
 import com.team.domain.ConnectivityObserver
+import com.team.domain.model.member.MemberDiscussionType
 import com.team.domain.model.member.MemberId
 import com.team.domain.repository.MemberRepository
-import com.team.todoktodok.presentation.compose.my.model.MyProfileUiEvent
-import com.team.todoktodok.presentation.compose.my.model.MyProfileUiState
+import com.team.domain.repository.TokenRepository
+import com.team.todoktodok.presentation.compose.my.MyProfileUiEvent
+import com.team.todoktodok.presentation.compose.my.MyProfileUiState
 import com.team.todoktodok.presentation.core.base.BaseViewModel
+import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussion
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,6 +20,7 @@ import kotlinx.coroutines.launch
 
 class MyProfileViewModel(
     private val memberRepository: MemberRepository,
+    private val tokenRepository: TokenRepository,
     connectivityObserver: ConnectivityObserver,
 ) : BaseViewModel(connectivityObserver) {
     private val _uiState = MutableStateFlow(MyProfileUiState())
@@ -28,9 +32,11 @@ class MyProfileViewModel(
     fun loadInitialProfile() {
         loadProfile()
         loadMyBooks()
+        loadParticipatedDiscussions()
+        loadMyMemberId()
     }
 
-    fun loadProfile() =
+    private fun loadProfile() =
         runAsync(
             key = KEY_FETCH_PROFILE,
             action = { memberRepository.getProfile(MemberId.Mine) },
@@ -38,13 +44,44 @@ class MyProfileViewModel(
             handleFailure = { onUiEvent(MyProfileUiEvent.ShowErrorMessage(it)) },
         )
 
-    fun loadMyBooks() =
+    private fun loadMyBooks() =
         runAsync(
             key = KEY_FETCH_MY_BOOKS,
             action = { memberRepository.getMemberBooks(MemberId.Mine) },
-            handleSuccess = { result -> _uiState.update { it.addActivatedBooks(result) } },
+            handleSuccess = { result -> _uiState.update { it.setActivatedBooks(result) } },
             handleFailure = { onUiEvent(MyProfileUiEvent.ShowErrorMessage(it)) },
         )
+
+    private fun loadParticipatedDiscussions() =
+        runAsync(
+            key = KEY_FETCH_PARTICIPATED_DISCUSSIONS,
+            action = {
+                memberRepository.getMemberDiscussionRooms(
+                    id = MemberId.Mine,
+                    type = MemberDiscussionType.PARTICIPATED,
+                )
+            },
+            handleSuccess = { result -> _uiState.update { it.addParticipatedDiscussions(result) } },
+            handleFailure = { onUiEvent(MyProfileUiEvent.ShowErrorMessage(it)) },
+        )
+
+    private fun loadMyMemberId() {
+        viewModelScope.launch {
+            _uiState.update { it.setMemberId(tokenRepository.getMemberId()) }
+        }
+    }
+
+    fun toggleShowMyDiscussion(isShow: Boolean) {
+        _uiState.update { it.toggleShowMyDiscussion(isShow) }
+    }
+
+    fun removeDiscussion(discussionId: Long) {
+        _uiState.update { it.removeDiscussion(discussionId) }
+    }
+
+    fun modifyDiscussion(discussion: SerializationDiscussion) {
+        _uiState.update { it.modifyDiscussion(discussion) }
+    }
 
     private fun onUiEvent(event: MyProfileUiEvent) {
         viewModelScope.launch {
@@ -55,5 +92,6 @@ class MyProfileViewModel(
     companion object {
         private const val KEY_FETCH_PROFILE = "fetch_profile"
         private const val KEY_FETCH_MY_BOOKS = "fetch_my_books"
+        private const val KEY_FETCH_PARTICIPATED_DISCUSSIONS = "fetch_participated_discussions"
     }
 }

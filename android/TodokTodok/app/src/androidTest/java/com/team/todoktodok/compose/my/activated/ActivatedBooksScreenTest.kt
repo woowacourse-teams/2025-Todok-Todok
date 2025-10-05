@@ -1,10 +1,12 @@
 package com.team.todoktodok.compose.my.activated
 
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
+import androidx.navigation.NavHostController
 import com.team.todoktodok.presentation.compose.my.books.ActivatedBooksScreen
-import com.team.todoktodok.presentation.compose.my.books.MyBooksUiState
+import com.team.todoktodok.presentation.compose.my.books.MyBooksUiModel
 import org.junit.Rule
 import org.junit.Test
 
@@ -15,13 +17,14 @@ class ActivatedBooksScreenTest {
     @Test
     fun `책이 없을 경우 토론방으로 이동 화면이 표시된다`() {
         // given
-        val uiState = MyBooksUiState()
+        val uiState = MyBooksUiModel()
 
         // when
         composeTestRule.setContent {
             ActivatedBooksScreen(
                 uiState = uiState,
                 onChangeBottomNavigationTab = {},
+                navController = NavHostController(LocalContext.current),
             )
         }
 

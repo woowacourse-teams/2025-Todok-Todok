@@ -4,14 +4,14 @@ import com.team.domain.model.Book
 import com.team.domain.model.Discussion
 import com.team.domain.model.member.MemberId
 import com.team.domain.model.member.Profile
-import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiState
+import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiModel
 import com.team.todoktodok.presentation.xml.profile.adapter.ProfileItems
 
 data class ProfileUiState(
     val items: List<ProfileItems> = emptyList(),
     val activatedBooks: List<Book> = emptyList(),
-    val participatedDiscussions: List<DiscussionUiState> = emptyList(),
-    val createdDiscussions: List<DiscussionUiState> = emptyList(),
+    val participatedDiscussions: List<DiscussionUiModel> = emptyList(),
+    val createdDiscussions: List<DiscussionUiModel> = emptyList(),
     val memberId: MemberId = MemberId.Mine,
     val isMyProfilePage: Boolean = false,
     val isLoading: Boolean = false,
@@ -35,8 +35,8 @@ data class ProfileUiState(
     ): ProfileUiState =
         copy(
             activatedBooks = books,
-            participatedDiscussions = joinedDiscussions.map { DiscussionUiState(it) },
-            createdDiscussions = createdDiscussions.map { DiscussionUiState(it) },
+            participatedDiscussions = joinedDiscussions.map { DiscussionUiModel(it) },
+            createdDiscussions = createdDiscussions.map { DiscussionUiModel(it) },
         )
 
     companion object {
@@ -58,8 +58,8 @@ data class ProfileUiState(
             return ProfileUiState(
                 initialItems,
                 books,
-                joinedDiscussions.map { DiscussionUiState(it) },
-                createdDiscussions.map { DiscussionUiState(it) },
+                joinedDiscussions.map { DiscussionUiModel(it) },
+                createdDiscussions.map { DiscussionUiModel(it) },
                 memberId,
                 isMyProfilePage,
             )

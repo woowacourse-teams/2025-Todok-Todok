@@ -35,7 +35,7 @@ import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.team.todoktodok.R
-import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiState
+import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiModel
 import com.team.todoktodok.presentation.compose.preview.DiscussionUiStatePreviewParameterProvider
 import com.team.todoktodok.presentation.compose.theme.Gray75
 import com.team.todoktodok.presentation.compose.theme.RedFF
@@ -55,7 +55,7 @@ sealed interface DiscussionCardType {
 
 @Composable
 fun DiscussionCard(
-    uiState: DiscussionUiState,
+    uiState: DiscussionUiModel,
     discussionCardType: DiscussionCardType,
     modifier: Modifier = Modifier,
     onClick: (Long) -> Unit = {},
@@ -268,7 +268,7 @@ private fun DiscussionBottom(
 @Preview(showBackground = true)
 @Composable
 private fun DiscussionCardPreviewDefault(
-    @PreviewParameter(DiscussionUiStatePreviewParameterProvider::class) uiState: List<DiscussionUiState>,
+    @PreviewParameter(DiscussionUiStatePreviewParameterProvider::class) uiState: List<DiscussionUiModel>,
 ) {
     DiscussionCard(
         uiState = uiState.first(),
@@ -280,7 +280,7 @@ private fun DiscussionCardPreviewDefault(
 @Preview(showBackground = true)
 @Composable
 private fun DiscussionCardPreviewHighlighted(
-    @PreviewParameter(DiscussionUiStatePreviewParameterProvider::class) uiState: List<DiscussionUiState>,
+    @PreviewParameter(DiscussionUiStatePreviewParameterProvider::class) uiState: List<DiscussionUiModel>,
 ) {
     DiscussionCard(
         uiState = uiState.first(),
@@ -292,7 +292,7 @@ private fun DiscussionCardPreviewHighlighted(
 @Preview(showBackground = true)
 @Composable
 private fun DiscussionCardPreviewWriterHidden(
-    @PreviewParameter(DiscussionUiStatePreviewParameterProvider::class) uiState: List<DiscussionUiState>,
+    @PreviewParameter(DiscussionUiStatePreviewParameterProvider::class) uiState: List<DiscussionUiModel>,
 ) {
     DiscussionCard(
         uiState = uiState.first(),
@@ -304,7 +304,7 @@ private fun DiscussionCardPreviewWriterHidden(
 @Preview(showBackground = true)
 @Composable
 private fun DiscussionCardPreviewResizing(
-    @PreviewParameter(DiscussionUiStatePreviewParameterProvider::class) uiState: List<DiscussionUiState>,
+    @PreviewParameter(DiscussionUiStatePreviewParameterProvider::class) uiState: List<DiscussionUiModel>,
 ) {
     DiscussionCard(
         uiState = uiState.first(),

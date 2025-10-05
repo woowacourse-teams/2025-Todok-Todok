@@ -30,14 +30,15 @@ import androidx.navigation.NavHostController
 import com.team.todoktodok.R
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionTabStatus
 import com.team.todoktodok.presentation.compose.main.MainDestination
+import com.team.todoktodok.presentation.compose.my.MyProfileUiState
 import com.team.todoktodok.presentation.compose.my.books.ActivatedBooksScreen
 import com.team.todoktodok.presentation.compose.my.liked.LikedDiscussionsScreen
-import com.team.todoktodok.presentation.compose.my.model.MyProfileUiState
 import com.team.todoktodok.presentation.compose.my.participated.ParticipatedDiscussionsScreen
 import com.team.todoktodok.presentation.compose.preview.MyProfileUiStatePreviewParameterProvider
 import com.team.todoktodok.presentation.compose.theme.Green1A
 import com.team.todoktodok.presentation.compose.theme.Pretendard
 import com.team.todoktodok.presentation.compose.theme.White
+import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussion
 import kotlinx.coroutines.launch
 
 enum class ProfileTabDestination(
@@ -60,9 +61,12 @@ enum class ProfileTabDestination(
 @Composable
 fun ProfileTab(
     uiState: MyProfileUiState,
+    navController: NavHostController,
+    onCompleteRemoveDiscussion: (Long) -> Unit,
+    onChangeShowMyDiscussion: (Boolean) -> Unit,
+    onCompleteModifyDiscussion: (SerializationDiscussion) -> Unit,
     onChangeBottomNavigationTab: (MainDestination) -> Unit,
     modifier: Modifier = Modifier,
-    navController: NavHostController = NavHostController(LocalContext.current),
 ) {
     val pagerState =
         rememberPagerState(initialPage = DiscussionTabStatus.HOT.ordinal) {
@@ -74,8 +78,11 @@ fun ProfileTab(
         ProfileTabPager(
             uiState = uiState,
             navController = navController,
-            onChangeBottomNavigationTab = onChangeBottomNavigationTab,
             pagerState = pagerState,
+            onChangeBottomNavigationTab = onChangeBottomNavigationTab,
+            onChangeShowMyDiscussion = { onChangeShowMyDiscussion(it) },
+            onCompleteRemoveDiscussion = onCompleteRemoveDiscussion,
+            onCompleteModifyDiscussion = onCompleteModifyDiscussion,
         )
     }
 }
@@ -122,8 +129,11 @@ private fun ProfileTabRow(pagerState: PagerState) {
 private fun ProfileTabPager(
     uiState: MyProfileUiState,
     navController: NavHostController,
-    onChangeBottomNavigationTab: (MainDestination) -> Unit,
     pagerState: PagerState,
+    onChangeBottomNavigationTab: (MainDestination) -> Unit,
+    onChangeShowMyDiscussion: (Boolean) -> Unit,
+    onCompleteRemoveDiscussion: (Long) -> Unit,
+    onCompleteModifyDiscussion: (SerializationDiscussion) -> Unit,
 ) {
     HorizontalPager(
         state = pagerState,
@@ -145,7 +155,13 @@ private fun ProfileTabPager(
                     )
 
                 ProfileTabDestination.LIKED_DISCUSSIONS -> LikedDiscussionsScreen()
-                ProfileTabDestination.PARTICIPATED_DISCUSSIONS -> ParticipatedDiscussionsScreen()
+                ProfileTabDestination.PARTICIPATED_DISCUSSIONS ->
+                    ParticipatedDiscussionsScreen(
+                        uiState = uiState.participatedDiscussions,
+                        onChangeShowMyDiscussion = { onChangeShowMyDiscussion(it) },
+                        onCompleteRemoveDiscussion = onCompleteRemoveDiscussion,
+                        onCompleteModifyDiscussion = onCompleteModifyDiscussion,
+                    )
             }
         }
     }
@@ -161,5 +177,8 @@ private fun ProfileTabPreview(
         uiState = uiState,
         navController = NavHostController(LocalContext.current),
         onChangeBottomNavigationTab = {},
+        onChangeShowMyDiscussion = {},
+        onCompleteRemoveDiscussion = {},
+        onCompleteModifyDiscussion = {},
     )
 }
