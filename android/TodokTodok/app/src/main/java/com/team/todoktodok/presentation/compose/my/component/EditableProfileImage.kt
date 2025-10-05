@@ -20,15 +20,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
+import coil3.compose.SubcomposeAsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.team.domain.model.ImagePayload
 import com.team.todoktodok.R
+import com.team.todoktodok.presentation.compose.core.component.CloverProgressBar
 import com.team.todoktodok.presentation.compose.theme.Gray75
 import com.team.todoktodok.presentation.compose.theme.GrayE0
 import com.team.todoktodok.presentation.core.ImagePayloadMapper
@@ -58,7 +58,7 @@ fun EditableProfileImage(
         }
 
     Box(modifier = modifier.padding(top = 10.dp)) {
-        AsyncImage(
+        SubcomposeAsyncImage(
             model =
                 ImageRequest
                     .Builder(context)
@@ -67,9 +67,13 @@ fun EditableProfileImage(
                     .build(),
             contentDescription = stringResource(R.string.content_description_my_profile_image),
             contentScale = ContentScale.Crop,
-            placeholder = painterResource(id = R.drawable.img_mascort),
-            error = painterResource(id = R.drawable.img_mascort),
-            fallback = painterResource(id = R.drawable.img_mascort),
+            loading = {
+                CloverProgressBar(
+                    visible = true,
+                    size = 10.dp,
+                    modifier = Modifier.align(Alignment.Center),
+                )
+            },
             modifier =
                 Modifier
                     .clip(CircleShape)
