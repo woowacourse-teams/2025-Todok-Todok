@@ -79,7 +79,6 @@ fun MyScreen(
         item {
             EditableProfileImage(
                 profileImageUrl = uiState.profile.profileImage,
-                modifier = Modifier.padding(top = 16.dp),
             )
         }
 
@@ -87,7 +86,10 @@ fun MyScreen(
             Information(
                 nickname = uiState.profile.nickname,
                 profileMessage = uiState.profile.message,
-                modifier = Modifier.padding(top = 16.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp),
             )
         }
 

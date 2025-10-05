@@ -102,14 +102,30 @@ class ParticipatedDiscussionsScreenScreenTest {
     @Test
     fun `내가_참여한_토론방_목록만_보인다`() {
         // given
-        val testUiState = uiModel.copy(showMyDiscussion = true, memberId = 1)
+        val testUiModel = uiModel.copy(showMyDiscussion = true, memberId = 1)
 
         // When
         composeTestRule.setContent {
-            ParticipatedDiscussionsScreen(uiModel = testUiState, onChangeShowMyDiscussion = {})
+            ParticipatedDiscussionsScreen(uiModel = testUiModel, onChangeShowMyDiscussion = {})
         }
 
         // Then
         composeTestRule.onNodeWithText("JPA 성능 최적화").assertIsDisplayed()
+    }
+
+    @Test
+    fun `참여한 토론방이 없을경우 가이드 메시지가 보인다`() {
+        // given
+        val testUiModel = uiModel.copy(discussions = emptyList())
+
+        // When
+        composeTestRule.setContent {
+            ParticipatedDiscussionsScreen(uiModel = testUiModel, onChangeShowMyDiscussion = {})
+        }
+
+        // Then
+        composeTestRule.onNodeWithText("아직 참여한 토론방이 없어요 !").assertIsDisplayed()
+        composeTestRule.onNodeWithText("나만의 주제로 토론방을 생성해보세요").assertIsDisplayed()
+        composeTestRule.onNodeWithText("토론방 생성하기 >").assertIsDisplayed()
     }
 }

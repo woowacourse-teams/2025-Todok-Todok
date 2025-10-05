@@ -21,9 +21,11 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.team.todoktodok.R
 import com.team.todoktodok.presentation.compose.core.component.DiscussionCard
+import com.team.todoktodok.presentation.compose.core.component.ResourceNotFoundContent
 import com.team.todoktodok.presentation.compose.preview.ParticipatedDiscussionPreviewParameterProvider
 import com.team.todoktodok.presentation.compose.theme.Green1A
 import com.team.todoktodok.presentation.compose.theme.White
+import com.team.todoktodok.presentation.xml.book.SelectBookActivity
 import com.team.todoktodok.presentation.xml.discussiondetail.DiscussionDetailActivity
 
 @Composable
@@ -32,8 +34,36 @@ fun ParticipatedDiscussionsScreen(
     onChangeShowMyDiscussion: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    if (uiModel.)
+    if (uiModel.isEmpty()) {
+        ParticipatedDiscussionsEmpty()
+    } else {
+        ParticipatedDiscussionsContent(
+            uiModel = uiModel,
+            onChangeShowMyDiscussion = onChangeShowMyDiscussion,
+            modifier = modifier,
+        )
+    }
+}
 
+@Composable
+private fun ParticipatedDiscussionsEmpty() {
+    val context = LocalContext.current
+    ResourceNotFoundContent(
+        title = stringResource(R.string.profile_not_has_participated_discussions_title),
+        subtitle = stringResource(R.string.profile_not_has_created_discussion_subtitle),
+        actionTitle = stringResource(R.string.profile_action_created_discussion),
+        onActionClick = {
+            context.startActivity(SelectBookActivity.Intent(context))
+        },
+    )
+}
+
+@Composable
+private fun ParticipatedDiscussionsContent(
+    uiModel: ParticipatedDiscussionsUiModel,
+    onChangeShowMyDiscussion: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
+) {
     Column(modifier = modifier.padding(10.dp)) {
         Row(
             horizontalArrangement = Arrangement.End,
@@ -83,6 +113,15 @@ private fun DiscussionCards(uiModel: ParticipatedDiscussionsUiModel) {
 
 @Preview(showBackground = true)
 @Composable
+private fun EmptyParticipatedDiscussionsScreenPreview() {
+    ParticipatedDiscussionsScreen(
+        uiModel = ParticipatedDiscussionsUiModel(),
+        onChangeShowMyDiscussion = {},
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
 private fun ParticipatedDiscussionsScreenPreview(
     @PreviewParameter(ParticipatedDiscussionPreviewParameterProvider::class)
     model: ParticipatedDiscussionsUiModel,
@@ -100,8 +139,7 @@ private fun MyParticipatedDiscussionsScreenPreview(
     model: ParticipatedDiscussionsUiModel,
 ) {
     ParticipatedDiscussionsScreen(
-        uiModel = model.copy(showMyDiscussion = true),
+        uiModel = model.copy(showMyDiscussion = true, memberId = 1),
         onChangeShowMyDiscussion = {},
     )
 }
-
