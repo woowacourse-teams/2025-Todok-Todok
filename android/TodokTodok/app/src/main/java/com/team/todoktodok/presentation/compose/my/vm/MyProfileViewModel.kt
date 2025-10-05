@@ -70,6 +70,10 @@ class MyProfileViewModel(
         }
     }
 
+    fun toggleShowMyDiscussion(isShow: Boolean) {
+        _uiState.update { it.toggleShowMyDiscussion(isShow) }
+    }
+
     private fun onUiEvent(event: MyProfileUiEvent) {
         viewModelScope.launch {
             _uiEvent.send(event)

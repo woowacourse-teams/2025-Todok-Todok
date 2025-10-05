@@ -17,8 +17,9 @@ class ProfileTabTest {
         // Given
         composeTestRule.setContent {
             ProfileTab(
-                onChangeBottomNavigationTab = {},
                 uiState = MyProfileUiState(),
+                onChangeBottomNavigationTab = {},
+                onChangeShowMyDiscussion = {},
             )
         }
 

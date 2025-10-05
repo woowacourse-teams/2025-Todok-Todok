@@ -61,6 +61,7 @@ enum class ProfileTabDestination(
 fun ProfileTab(
     uiState: MyProfileUiState,
     onChangeBottomNavigationTab: (MainDestination) -> Unit,
+    onChangeShowMyDiscussion: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
     navController: NavHostController = NavHostController(LocalContext.current),
 ) {
@@ -75,6 +76,7 @@ fun ProfileTab(
             uiState = uiState,
             navController = navController,
             onChangeBottomNavigationTab = onChangeBottomNavigationTab,
+            onChangeShowMyDiscussion = { onChangeShowMyDiscussion(it) },
             pagerState = pagerState,
         )
     }
@@ -123,6 +125,7 @@ private fun ProfileTabPager(
     uiState: MyProfileUiState,
     navController: NavHostController,
     onChangeBottomNavigationTab: (MainDestination) -> Unit,
+    onChangeShowMyDiscussion: (Boolean) -> Unit,
     pagerState: PagerState,
 ) {
     HorizontalPager(
@@ -148,6 +151,7 @@ private fun ProfileTabPager(
                 ProfileTabDestination.PARTICIPATED_DISCUSSIONS ->
                     ParticipatedDiscussionsScreen(
                         uiState = uiState.participatedDiscussions,
+                        onChangeShowMyDiscussion = { onChangeShowMyDiscussion(it) },
                     )
             }
         }
@@ -164,5 +168,6 @@ private fun ProfileTabPreview(
         uiState = uiState,
         navController = NavHostController(LocalContext.current),
         onChangeBottomNavigationTab = {},
+        onChangeShowMyDiscussion = {},
     )
 }

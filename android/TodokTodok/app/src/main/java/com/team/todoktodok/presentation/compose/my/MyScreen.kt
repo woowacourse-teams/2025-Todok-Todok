@@ -1,10 +1,10 @@
 package com.team.todoktodok.presentation.compose.my
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -49,48 +49,60 @@ fun MyScreen(
     }
 
     MyScreen(
+        uiState = uiState.value,
         navController = navController,
         onChangeBottomNavigationTab = onChangeBottomNavigationTab,
-        uiState = uiState.value,
+        onChangeShowMyDiscussion = viewModel::toggleShowMyDiscussion,
         modifier = modifier,
     )
 }
 
 @Composable
 fun MyScreen(
-    navController: NavHostController,
     uiState: MyProfileUiState,
+    navController: NavHostController,
     onChangeBottomNavigationTab: (MainDestination) -> Unit,
+    onChangeShowMyDiscussion: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(
+    LazyColumn(
         modifier =
             modifier
                 .fillMaxSize()
                 .background(color = White),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        MyToolbar()
+        item {
+            MyToolbar()
+        }
 
-        EditableProfileImage(
-            profileImageUrl = uiState.profile.profileImage,
-            modifier = Modifier.align(Alignment.CenterHorizontally),
-        )
+        item {
+            EditableProfileImage(
+                profileImageUrl = uiState.profile.profileImage,
+                modifier = Modifier.padding(top = 16.dp),
+            )
+        }
 
-        Information(
-            nickname = uiState.profile.nickname,
-            profileMessage = uiState.profile.message,
-        )
+        item {
+            Information(
+                nickname = uiState.profile.nickname,
+                profileMessage = uiState.profile.message,
+                modifier = Modifier.padding(top = 16.dp),
+            )
+        }
 
-        ProfileTab(
-            uiState = uiState,
-            navController = navController,
-            onChangeBottomNavigationTab = onChangeBottomNavigationTab,
-            modifier =
-                Modifier
-                    .weight(1f)
-                    .fillMaxWidth()
-                    .padding(top = 10.dp),
-        )
+        item {
+            ProfileTab(
+                uiState = uiState,
+                navController = navController,
+                onChangeBottomNavigationTab = onChangeBottomNavigationTab,
+                onChangeShowMyDiscussion = { onChangeShowMyDiscussion(it) },
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(top = 10.dp),
+            )
+        }
     }
 }
 
@@ -102,9 +114,10 @@ private fun MyScreenPreview(
 ) {
     TodoktodokTheme {
         MyScreen(
-            navController = NavHostController(LocalContext.current),
-            onChangeBottomNavigationTab = {},
             uiState = uiState,
+            onChangeBottomNavigationTab = {},
+            onChangeShowMyDiscussion = {},
+            navController = NavHostController(LocalContext.current),
         )
     }
 }

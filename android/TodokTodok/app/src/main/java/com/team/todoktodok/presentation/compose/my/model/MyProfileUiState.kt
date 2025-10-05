@@ -3,18 +3,23 @@ package com.team.todoktodok.presentation.compose.my.model
 import com.team.domain.model.Book
 import com.team.domain.model.Discussion
 import com.team.domain.model.member.Profile
-import com.team.todoktodok.presentation.compose.my.books.MyBooksUiState
+import com.team.todoktodok.presentation.compose.my.books.MyBooksUiModel
 import com.team.todoktodok.presentation.compose.my.participated.ParticipatedDiscussionsUiState
 
 data class MyProfileUiState(
     val profile: Profile = Profile.EMPTY,
-    val activatedBooks: MyBooksUiState = MyBooksUiState(),
+    val activatedBooks: MyBooksUiModel = MyBooksUiModel(),
     val participatedDiscussions: ParticipatedDiscussionsUiState = ParticipatedDiscussionsUiState(),
 ) {
+    fun setMemberId(memberId: Long): MyProfileUiState = copy(participatedDiscussions = participatedDiscussions.setMemberId(memberId))
+
     fun modifyProfile(updatedProfile: Profile): MyProfileUiState = copy(profile = updatedProfile)
 
-    fun addActivatedBooks(updatedBooks: List<Book>): MyProfileUiState = copy(activatedBooks = activatedBooks.copy(books = updatedBooks))
+    fun setActivatedBooks(updatedBooks: List<Book>): MyProfileUiState = copy(activatedBooks = activatedBooks.setBooks(updatedBooks))
 
     fun addParticipatedDiscussions(updatedDiscussions: List<Discussion>): MyProfileUiState =
         copy(participatedDiscussions = participatedDiscussions.add(updatedDiscussions))
+
+    fun toggleShowMyDiscussion(isShow: Boolean): MyProfileUiState =
+        copy(participatedDiscussions = participatedDiscussions.toggleShowMyDiscussion(isShow))
 }
