@@ -9,7 +9,7 @@ import com.team.domain.model.member.Nickname
 import com.team.domain.model.member.User
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiState
 import com.team.todoktodok.presentation.compose.my.participated.ParticipatedDiscussionsScreen
-import com.team.todoktodok.presentation.compose.my.participated.ParticipatedDiscussionsUiState
+import com.team.todoktodok.presentation.compose.my.participated.ParticipatedDiscussionsUiModel
 import org.junit.Rule
 import org.junit.Test
 import java.time.LocalDateTime
@@ -18,8 +18,8 @@ class ParticipatedDiscussionsScreenScreenTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
-    private val uiState =
-        ParticipatedDiscussionsUiState(
+    private val uiModel =
+        ParticipatedDiscussionsUiModel(
             listOf(
                 DiscussionUiState(
                     item =
@@ -76,7 +76,7 @@ class ParticipatedDiscussionsScreenScreenTest {
     fun `내 토론만 보기 버튼이이_보인다`() {
         // When
         composeTestRule.setContent {
-            ParticipatedDiscussionsScreen(uiState = uiState, onChangeShowMyDiscussion = {})
+            ParticipatedDiscussionsScreen(uiModel = uiModel, onChangeShowMyDiscussion = {})
         }
 
         // Then
@@ -86,11 +86,11 @@ class ParticipatedDiscussionsScreenScreenTest {
     @Test
     fun `모든_참여한_토론방_목록이_보인다`() {
         // given
-        val testUiState = uiState.copy(showMyDiscussion = false)
+        val testUiModel = uiModel.copy(showMyDiscussion = false)
 
         // When
         composeTestRule.setContent {
-            ParticipatedDiscussionsScreen(uiState = testUiState, onChangeShowMyDiscussion = {})
+            ParticipatedDiscussionsScreen(uiModel = testUiModel, onChangeShowMyDiscussion = {})
         }
 
         // Then
@@ -102,11 +102,11 @@ class ParticipatedDiscussionsScreenScreenTest {
     @Test
     fun `내가_참여한_토론방_목록만_보인다`() {
         // given
-        val testUiState = uiState.copy(showMyDiscussion = true, memberId = 1)
+        val testUiState = uiModel.copy(showMyDiscussion = true, memberId = 1)
 
         // When
         composeTestRule.setContent {
-            ParticipatedDiscussionsScreen(uiState = testUiState, onChangeShowMyDiscussion = {})
+            ParticipatedDiscussionsScreen(uiModel = testUiState, onChangeShowMyDiscussion = {})
         }
 
         // Then

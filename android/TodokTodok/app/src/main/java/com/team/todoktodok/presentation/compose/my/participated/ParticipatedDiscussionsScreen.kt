@@ -28,10 +28,12 @@ import com.team.todoktodok.presentation.xml.discussiondetail.DiscussionDetailAct
 
 @Composable
 fun ParticipatedDiscussionsScreen(
-    uiState: ParticipatedDiscussionsUiState,
+    uiModel: ParticipatedDiscussionsUiModel,
     onChangeShowMyDiscussion: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    if (uiModel.)
+
     Column(modifier = modifier.padding(10.dp)) {
         Row(
             horizontalArrangement = Arrangement.End,
@@ -45,7 +47,7 @@ fun ParticipatedDiscussionsScreen(
 
             Spacer(modifier = Modifier.width(10.dp))
             Switch(
-                checked = uiState.showMyDiscussion,
+                checked = uiModel.showMyDiscussion,
                 onCheckedChange = { isShow -> onChangeShowMyDiscussion(isShow) },
                 colors =
                     SwitchDefaults.colors(
@@ -55,17 +57,17 @@ fun ParticipatedDiscussionsScreen(
             )
         }
 
-        DiscussionCards(uiState = uiState)
+        DiscussionCards(uiModel = uiModel)
     }
 }
 
 @Composable
-private fun DiscussionCards(uiState: ParticipatedDiscussionsUiState) {
+private fun DiscussionCards(uiModel: ParticipatedDiscussionsUiModel) {
     val context = LocalContext.current
-    uiState.visibleDiscussions(uiState.showMyDiscussion).forEach { discussion ->
+    uiModel.visibleDiscussions(uiModel.showMyDiscussion).forEach { discussion ->
         DiscussionCard(
             uiState = discussion,
-            discussionCardType = uiState.type,
+            discussionCardType = uiModel.type,
             modifier = Modifier.padding(top = 10.dp),
             onClick = {
                 context.startActivity(
@@ -83,10 +85,23 @@ private fun DiscussionCards(uiState: ParticipatedDiscussionsUiState) {
 @Composable
 private fun ParticipatedDiscussionsScreenPreview(
     @PreviewParameter(ParticipatedDiscussionPreviewParameterProvider::class)
-    uiState: ParticipatedDiscussionsUiState,
+    model: ParticipatedDiscussionsUiModel,
 ) {
     ParticipatedDiscussionsScreen(
-        uiState = uiState,
+        uiModel = model,
         onChangeShowMyDiscussion = {},
     )
 }
+
+@Preview(showBackground = true)
+@Composable
+private fun MyParticipatedDiscussionsScreenPreview(
+    @PreviewParameter(ParticipatedDiscussionPreviewParameterProvider::class)
+    model: ParticipatedDiscussionsUiModel,
+) {
+    ParticipatedDiscussionsScreen(
+        uiModel = model.copy(showMyDiscussion = true),
+        onChangeShowMyDiscussion = {},
+    )
+}
+

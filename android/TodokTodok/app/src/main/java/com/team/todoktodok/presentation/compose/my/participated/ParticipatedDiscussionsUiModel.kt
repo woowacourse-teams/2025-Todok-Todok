@@ -4,13 +4,13 @@ import com.team.domain.model.Discussion
 import com.team.todoktodok.presentation.compose.core.component.DiscussionCardType
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiState
 
-data class ParticipatedDiscussionsUiState(
+data class ParticipatedDiscussionsUiModel(
     val discussions: List<DiscussionUiState> = emptyList(),
     val type: DiscussionCardType = DiscussionCardType.Default,
     val showMyDiscussion: Boolean = false,
     val memberId: Long = INITIALIZE_MEMBER_ID,
 ) {
-    fun add(discussions: List<Discussion>): ParticipatedDiscussionsUiState {
+    fun add(discussions: List<Discussion>): ParticipatedDiscussionsUiModel {
         val newDiscussions =
             discussions
                 .map { DiscussionUiState(it) }
@@ -18,14 +18,14 @@ data class ParticipatedDiscussionsUiState(
         return copy(discussions = newDiscussions)
     }
 
-    fun remove(discussionId: Long): ParticipatedDiscussionsUiState =
+    fun remove(discussionId: Long): ParticipatedDiscussionsUiModel =
         copy(discussions = discussions.filter { it.discussionId != discussionId })
 
     fun isEmpty(): Boolean = discussions.isEmpty()
 
-    fun toggleShowMyDiscussion(isShow: Boolean): ParticipatedDiscussionsUiState = copy(showMyDiscussion = isShow)
+    fun toggleShowMyDiscussion(isShow: Boolean): ParticipatedDiscussionsUiModel = copy(showMyDiscussion = isShow)
 
-    fun setMemberId(memberId: Long): ParticipatedDiscussionsUiState = copy(memberId = memberId)
+    fun setMemberId(memberId: Long): ParticipatedDiscussionsUiModel = copy(memberId = memberId)
 
     fun visibleDiscussions(showMyOnly: Boolean): List<DiscussionUiState> =
         if (showMyOnly) {

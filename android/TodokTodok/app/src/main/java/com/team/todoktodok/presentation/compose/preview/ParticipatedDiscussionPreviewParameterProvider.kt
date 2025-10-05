@@ -1,12 +1,12 @@
 package com.team.todoktodok.presentation.compose.preview
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import com.team.todoktodok.presentation.compose.my.participated.ParticipatedDiscussionsUiState
+import com.team.todoktodok.presentation.compose.my.participated.ParticipatedDiscussionsUiModel
 
-class ParticipatedDiscussionPreviewParameterProvider : PreviewParameterProvider<ParticipatedDiscussionsUiState> {
-    override val values: Sequence<ParticipatedDiscussionsUiState>
+class ParticipatedDiscussionPreviewParameterProvider : PreviewParameterProvider<ParticipatedDiscussionsUiModel> {
+    override val values: Sequence<ParticipatedDiscussionsUiModel>
         get() =
             sequenceOf(
-                ParticipatedDiscussionsUiState(DiscussionUiStatePreviewParameterProvider().values.first()),
+                ParticipatedDiscussionsUiModel(DiscussionUiStatePreviewParameterProvider().values.first()),
             )
 }
