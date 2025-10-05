@@ -28,6 +28,7 @@ import com.team.todoktodok.presentation.compose.my.vm.MyProfileViewModelFactory
 import com.team.todoktodok.presentation.compose.preview.MyProfileUiStatePreviewParameterProvider
 import com.team.todoktodok.presentation.compose.theme.TodoktodokTheme
 import com.team.todoktodok.presentation.compose.theme.White
+import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussion
 
 @Composable
 fun MyScreen(
@@ -50,20 +51,24 @@ fun MyScreen(
 
     MyScreen(
         uiState = uiState.value,
-        navController = navController,
         onChangeBottomNavigationTab = onChangeBottomNavigationTab,
         onChangeShowMyDiscussion = viewModel::toggleShowMyDiscussion,
+        onCompleteRemoveDiscussion = viewModel::removeDiscussion,
+        onCompleteModifyDiscussion = viewModel::modifyDiscussion,
         modifier = modifier,
+        navController = navController,
     )
 }
 
 @Composable
 fun MyScreen(
     uiState: MyProfileUiState,
-    navController: NavHostController,
     onChangeBottomNavigationTab: (MainDestination) -> Unit,
+    onCompleteModifyDiscussion: (SerializationDiscussion) -> Unit,
+    onCompleteRemoveDiscussion: (Long) -> Unit,
     onChangeShowMyDiscussion: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
+    navController: NavHostController = NavHostController(LocalContext.current),
 ) {
     LazyColumn(
         modifier =
@@ -99,6 +104,8 @@ fun MyScreen(
                 navController = navController,
                 onChangeBottomNavigationTab = onChangeBottomNavigationTab,
                 onChangeShowMyDiscussion = { onChangeShowMyDiscussion(it) },
+                onCompleteRemoveDiscussion = onCompleteRemoveDiscussion,
+                onCompleteModifyDiscussion = onCompleteModifyDiscussion,
                 modifier =
                     Modifier
                         .fillMaxWidth()
@@ -119,7 +126,8 @@ private fun MyScreenPreview(
             uiState = uiState,
             onChangeBottomNavigationTab = {},
             onChangeShowMyDiscussion = {},
-            navController = NavHostController(LocalContext.current),
+            onCompleteRemoveDiscussion = {},
+            onCompleteModifyDiscussion = {},
         )
     }
 }

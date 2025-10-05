@@ -1,5 +1,8 @@
 package com.team.todoktodok.presentation.compose.my.participated
 
+import android.app.Activity.RESULT_OK
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,16 +25,20 @@ import androidx.compose.ui.unit.dp
 import com.team.todoktodok.R
 import com.team.todoktodok.presentation.compose.core.component.DiscussionCard
 import com.team.todoktodok.presentation.compose.core.component.ResourceNotFoundContent
+import com.team.todoktodok.presentation.compose.discussion.model.DiscussionResult
 import com.team.todoktodok.presentation.compose.preview.ParticipatedDiscussionPreviewParameterProvider
 import com.team.todoktodok.presentation.compose.theme.Green1A
 import com.team.todoktodok.presentation.compose.theme.White
 import com.team.todoktodok.presentation.xml.book.SelectBookActivity
 import com.team.todoktodok.presentation.xml.discussiondetail.DiscussionDetailActivity
+import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussion
 
 @Composable
 fun ParticipatedDiscussionsScreen(
     uiModel: ParticipatedDiscussionsUiModel,
     onChangeShowMyDiscussion: (Boolean) -> Unit,
+    onCompleteRemoveDiscussion: (Long) -> Unit,
+    onCompleteModifyDiscussion: (SerializationDiscussion) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     if (uiModel.isEmpty()) {
@@ -40,6 +47,8 @@ fun ParticipatedDiscussionsScreen(
         ParticipatedDiscussionsContent(
             uiModel = uiModel,
             onChangeShowMyDiscussion = onChangeShowMyDiscussion,
+            onCompleteRemoveDiscussion = onCompleteRemoveDiscussion,
+            onCompleteModifyDiscussion = onCompleteModifyDiscussion,
             modifier = modifier,
         )
     }
@@ -62,6 +71,8 @@ private fun ParticipatedDiscussionsEmpty() {
 private fun ParticipatedDiscussionsContent(
     uiModel: ParticipatedDiscussionsUiModel,
     onChangeShowMyDiscussion: (Boolean) -> Unit,
+    onCompleteRemoveDiscussion: (Long) -> Unit,
+    onCompleteModifyDiscussion: (SerializationDiscussion) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.padding(10.dp)) {
@@ -87,12 +98,35 @@ private fun ParticipatedDiscussionsContent(
             )
         }
 
-        DiscussionCards(uiModel = uiModel)
+        DiscussionCards(
+            uiModel = uiModel,
+            onCompleteRemoveDiscussion = onCompleteRemoveDiscussion,
+            onCompleteModifyDiscussion = onCompleteModifyDiscussion,
+        )
     }
 }
 
 @Composable
-private fun DiscussionCards(uiModel: ParticipatedDiscussionsUiModel) {
+private fun DiscussionCards(
+    uiModel: ParticipatedDiscussionsUiModel,
+    onCompleteRemoveDiscussion: (Long) -> Unit,
+    onCompleteModifyDiscussion: (SerializationDiscussion) -> Unit,
+) {
+    val activityResultLauncher =
+        rememberLauncherForActivityResult(
+            ActivityResultContracts.StartActivityForResult(),
+        ) { result ->
+            if (result.resultCode == RESULT_OK) {
+                result.data?.let { data ->
+                    when (val result = DiscussionResult.fromIntent(data)) {
+                        is DiscussionResult.Deleted -> onCompleteRemoveDiscussion(result.id)
+                        is DiscussionResult.Watched -> onCompleteModifyDiscussion(result.discussion)
+                        DiscussionResult.None -> Unit
+                    }
+                }
+            }
+        }
+
     val context = LocalContext.current
     uiModel.visibleDiscussions(uiModel.showMyDiscussion).forEach { discussion ->
         DiscussionCard(
@@ -100,7 +134,7 @@ private fun DiscussionCards(uiModel: ParticipatedDiscussionsUiModel) {
             discussionCardType = uiModel.type,
             modifier = Modifier.padding(top = 10.dp),
             onClick = {
-                context.startActivity(
+                activityResultLauncher.launch(
                     DiscussionDetailActivity.Intent(
                         context,
                         discussion.discussionId,
@@ -117,6 +151,8 @@ private fun EmptyParticipatedDiscussionsScreenPreview() {
     ParticipatedDiscussionsScreen(
         uiModel = ParticipatedDiscussionsUiModel(),
         onChangeShowMyDiscussion = {},
+        onCompleteRemoveDiscussion = {},
+        onCompleteModifyDiscussion = {},
     )
 }
 
@@ -129,6 +165,8 @@ private fun ParticipatedDiscussionsScreenPreview(
     ParticipatedDiscussionsScreen(
         uiModel = model,
         onChangeShowMyDiscussion = {},
+        onCompleteRemoveDiscussion = {},
+        onCompleteModifyDiscussion = {},
     )
 }
 
@@ -141,5 +179,7 @@ private fun MyParticipatedDiscussionsScreenPreview(
     ParticipatedDiscussionsScreen(
         uiModel = model.copy(showMyDiscussion = true, memberId = 1),
         onChangeShowMyDiscussion = {},
+        onCompleteRemoveDiscussion = {},
+        onCompleteModifyDiscussion = {},
     )
 }

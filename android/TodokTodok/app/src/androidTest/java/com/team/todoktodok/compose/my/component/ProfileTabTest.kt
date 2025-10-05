@@ -20,6 +20,8 @@ class ProfileTabTest {
                 uiState = MyProfileUiState(),
                 onChangeBottomNavigationTab = {},
                 onChangeShowMyDiscussion = {},
+                onCompleteRemoveDiscussion = {},
+                onCompleteModifyDiscussion = {},
             )
         }
 

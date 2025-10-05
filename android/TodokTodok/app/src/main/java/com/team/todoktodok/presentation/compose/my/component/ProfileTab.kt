@@ -38,6 +38,7 @@ import com.team.todoktodok.presentation.compose.preview.MyProfileUiStatePreviewP
 import com.team.todoktodok.presentation.compose.theme.Green1A
 import com.team.todoktodok.presentation.compose.theme.Pretendard
 import com.team.todoktodok.presentation.compose.theme.White
+import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussion
 import kotlinx.coroutines.launch
 
 enum class ProfileTabDestination(
@@ -60,8 +61,10 @@ enum class ProfileTabDestination(
 @Composable
 fun ProfileTab(
     uiState: MyProfileUiState,
-    onChangeBottomNavigationTab: (MainDestination) -> Unit,
+    onCompleteRemoveDiscussion: (Long) -> Unit,
     onChangeShowMyDiscussion: (Boolean) -> Unit,
+    onCompleteModifyDiscussion: (SerializationDiscussion) -> Unit,
+    onChangeBottomNavigationTab: (MainDestination) -> Unit,
     modifier: Modifier = Modifier,
     navController: NavHostController = NavHostController(LocalContext.current),
 ) {
@@ -75,9 +78,11 @@ fun ProfileTab(
         ProfileTabPager(
             uiState = uiState,
             navController = navController,
+            pagerState = pagerState,
             onChangeBottomNavigationTab = onChangeBottomNavigationTab,
             onChangeShowMyDiscussion = { onChangeShowMyDiscussion(it) },
-            pagerState = pagerState,
+            onCompleteRemoveDiscussion = onCompleteRemoveDiscussion,
+            onCompleteModifyDiscussion = onCompleteModifyDiscussion,
         )
     }
 }
@@ -124,9 +129,11 @@ private fun ProfileTabRow(pagerState: PagerState) {
 private fun ProfileTabPager(
     uiState: MyProfileUiState,
     navController: NavHostController,
+    pagerState: PagerState,
     onChangeBottomNavigationTab: (MainDestination) -> Unit,
     onChangeShowMyDiscussion: (Boolean) -> Unit,
-    pagerState: PagerState,
+    onCompleteRemoveDiscussion: (Long) -> Unit,
+    onCompleteModifyDiscussion: (SerializationDiscussion) -> Unit,
 ) {
     HorizontalPager(
         state = pagerState,
@@ -152,6 +159,8 @@ private fun ProfileTabPager(
                     ParticipatedDiscussionsScreen(
                         uiModel = uiState.participatedDiscussions,
                         onChangeShowMyDiscussion = { onChangeShowMyDiscussion(it) },
+                        onCompleteRemoveDiscussion = onCompleteRemoveDiscussion,
+                        onCompleteModifyDiscussion = onCompleteModifyDiscussion,
                     )
             }
         }
@@ -169,5 +178,7 @@ private fun ProfileTabPreview(
         navController = NavHostController(LocalContext.current),
         onChangeBottomNavigationTab = {},
         onChangeShowMyDiscussion = {},
+        onCompleteRemoveDiscussion = {},
+        onCompleteModifyDiscussion = {},
     )
 }

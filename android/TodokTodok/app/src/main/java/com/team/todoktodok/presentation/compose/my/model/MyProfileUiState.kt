@@ -5,6 +5,7 @@ import com.team.domain.model.Discussion
 import com.team.domain.model.member.Profile
 import com.team.todoktodok.presentation.compose.my.books.MyBooksUiModel
 import com.team.todoktodok.presentation.compose.my.participated.ParticipatedDiscussionsUiModel
+import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussion
 
 data class MyProfileUiState(
     val profile: Profile = Profile.EMPTY,
@@ -22,4 +23,10 @@ data class MyProfileUiState(
 
     fun toggleShowMyDiscussion(isShow: Boolean): MyProfileUiState =
         copy(participatedDiscussions = participatedDiscussions.toggleShowMyDiscussion(isShow))
+
+    fun removeDiscussion(discussionId: Long): MyProfileUiState =
+        copy(participatedDiscussions = participatedDiscussions.remove(discussionId))
+
+    fun modifyDiscussion(discussion: SerializationDiscussion): MyProfileUiState =
+        copy(participatedDiscussions = participatedDiscussions.modify(discussion))
 }

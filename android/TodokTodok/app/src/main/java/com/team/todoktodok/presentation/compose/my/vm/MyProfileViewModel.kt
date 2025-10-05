@@ -9,6 +9,7 @@ import com.team.domain.repository.TokenRepository
 import com.team.todoktodok.presentation.compose.my.model.MyProfileUiEvent
 import com.team.todoktodok.presentation.compose.my.model.MyProfileUiState
 import com.team.todoktodok.presentation.core.base.BaseViewModel
+import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussion
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -72,6 +73,14 @@ class MyProfileViewModel(
 
     fun toggleShowMyDiscussion(isShow: Boolean) {
         _uiState.update { it.toggleShowMyDiscussion(isShow) }
+    }
+
+    fun removeDiscussion(discussionId: Long) {
+        _uiState.update { it.removeDiscussion(discussionId) }
+    }
+
+    fun modifyDiscussion(discussion: SerializationDiscussion) {
+        _uiState.update { it.modifyDiscussion(discussion) }
     }
 
     private fun onUiEvent(event: MyProfileUiEvent) {

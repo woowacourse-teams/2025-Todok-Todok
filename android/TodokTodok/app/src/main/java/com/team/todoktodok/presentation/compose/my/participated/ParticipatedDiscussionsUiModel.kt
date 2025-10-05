@@ -3,6 +3,7 @@ package com.team.todoktodok.presentation.compose.my.participated
 import com.team.domain.model.Discussion
 import com.team.todoktodok.presentation.compose.core.component.DiscussionCardType
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiState
+import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussion
 
 data class ParticipatedDiscussionsUiModel(
     val discussions: List<DiscussionUiState> = emptyList(),
@@ -20,6 +21,20 @@ data class ParticipatedDiscussionsUiModel(
 
     fun remove(discussionId: Long): ParticipatedDiscussionsUiModel =
         copy(discussions = discussions.filter { it.discussionId != discussionId })
+
+    fun modify(discussion: SerializationDiscussion): ParticipatedDiscussionsUiModel =
+        copy(
+            discussions =
+                discussions.map {
+                    if (discussion.id == it.discussionId) {
+                        DiscussionUiState(
+                            discussion.toDomain(),
+                        )
+                    } else {
+                        it
+                    }
+                },
+        )
 
     fun isEmpty(): Boolean = discussions.isEmpty()
 
