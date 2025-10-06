@@ -136,7 +136,7 @@ class ExceptionMessageConverter {
             SearchedBooksTotalSize.InvalidSize -> R.string.select_book_error_searched_book_total_size
 
             ProfileImageExceptions.EmptyContent -> R.string.error_profile_image_empty
-            ProfileImageExceptions.NotImageFile -> R.string.error_uri_input_stream_not_found
+            ProfileImageExceptions.NotImageFile -> R.string.error_profile_image_not_image
             ProfileImageExceptions.OverMaxSize -> R.string.error_profile_image_size
 
             TodokTodokExceptions.HttpExceptions.UnauthorizedException -> R.string.error_missing_location
