@@ -152,7 +152,7 @@ fun DiscussionCard(
 }
 
 @Composable
-private fun DiscussionTop(
+fun DiscussionTop(
     bookTitle: String,
     bookAuthor: String,
     bookImage: String,
@@ -194,7 +194,7 @@ private fun DiscussionTop(
 }
 
 @Composable
-private fun DiscussionBottom(
+fun DiscussionBottom(
     writerNickname: String,
     writerImage: String,
     isLikedByMe: Boolean,

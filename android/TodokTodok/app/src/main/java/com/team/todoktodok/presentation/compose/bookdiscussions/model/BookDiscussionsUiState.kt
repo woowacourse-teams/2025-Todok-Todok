@@ -1,10 +1,7 @@
 package com.team.todoktodok.presentation.compose.bookdiscussions.model
 
-import androidx.compose.runtime.Immutable
-import com.google.common.collect.ImmutableList
-import com.team.domain.model.Book
-import com.team.domain.model.Discussion
 import com.team.domain.model.exception.TodokTodokExceptions
+import kotlinx.collections.immutable.ImmutableList
 
 sealed interface BookDiscussionsUiState {
     object Loading : BookDiscussionsUiState
