@@ -61,7 +61,7 @@ class SelectBookViewModel(
 
     fun isNotPossibleAddSearchedBooks(): Boolean =
         !(_uiState.value?.hasNextPage ?: false) ||
-                _uiState.value?.status == SearchedBookStatus.Loading
+            _uiState.value?.status == SearchedBookStatus.Loading
 
     fun addSearchedBooks() {
         if (isNotPossibleAddSearchedBooks()) return
