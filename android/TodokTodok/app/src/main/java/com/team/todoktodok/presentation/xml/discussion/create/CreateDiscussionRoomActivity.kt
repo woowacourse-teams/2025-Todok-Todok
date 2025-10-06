@@ -208,12 +208,11 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
         binding: ActivityCreateDiscussionRoomBinding,
     ) {
         if (isDraft) {
-            binding.btnBack.setOnClickListener {
-                showDraftDialog()
-            }
-            onBackPressedDispatcher.addCallback {
-                showDraftDialog()
-            }
+            binding.btnBack.setOnClickListener { showDraftDialog() }
+            onBackPressedDispatcher.addCallback { showDraftDialog() }
+        } else {
+            onBackPressedDispatcher.addCallback { navigateToSelectBook() }
+            binding.btnBack.setOnClickListener { navigateToSelectBook() }
         }
     }
 
