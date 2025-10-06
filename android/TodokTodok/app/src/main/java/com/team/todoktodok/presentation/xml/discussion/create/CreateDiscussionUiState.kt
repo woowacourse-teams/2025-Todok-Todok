@@ -12,7 +12,7 @@ data class CreateDiscussionUiState(
     val isCreate: Boolean get() = title.isNotBlank() && opinion.isNotBlank()
 
     val isDraft: Boolean get() = title.isNotBlank() || opinion.isNotBlank()
-    
+
     fun validate(): ErrorCreateDiscussionType? =
         when {
             title.isBlank() && opinion.isBlank() -> ErrorCreateDiscussionType.TITLE_AND_CONTENT_NOT_FOUND

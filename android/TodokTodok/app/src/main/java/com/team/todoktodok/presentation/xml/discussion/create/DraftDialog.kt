@@ -11,7 +11,10 @@ import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ViewDraftDialogBinding
 
 class DraftDialog : DialogFragment(R.layout.view_draft_dialog) {
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
         val binding = ViewDraftDialogBinding.bind(view)
         initView(binding)
@@ -29,7 +32,7 @@ class DraftDialog : DialogFragment(R.layout.view_draft_dialog) {
             btnTempSave.setOnClickListener {
                 setFragmentResult(
                     requestKey = KEY_REQUEST_DRAFT,
-                    result = bundleOf(Pair(KEY_RESULT_DRAFT, true))
+                    result = bundleOf(Pair(KEY_RESULT_DRAFT, true)),
                 )
                 dismiss()
             }
@@ -53,8 +56,10 @@ class DraftDialog : DialogFragment(R.layout.view_draft_dialog) {
         const val TAG = "DRAFT"
         const val KEY_REQUEST_DRAFT = "key_request_draft"
         const val KEY_RESULT_DRAFT = "key_result_draft"
-        fun newInstance(): DraftDialog = DraftDialog().apply {
-            arguments = bundleOf()
-        }
+
+        fun newInstance(): DraftDialog =
+            DraftDialog().apply {
+                arguments = bundleOf()
+            }
     }
 }
