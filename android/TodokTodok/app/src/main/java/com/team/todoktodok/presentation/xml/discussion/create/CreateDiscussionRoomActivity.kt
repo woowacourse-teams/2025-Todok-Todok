@@ -21,12 +21,15 @@ import com.team.domain.model.Book
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivityCreateDiscussionRoomBinding
+import com.team.todoktodok.presentation.compose.main.MainActivity
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
 import com.team.todoktodok.presentation.core.component.CommonDialog
 import com.team.todoktodok.presentation.core.ext.getParcelableCompat
 import com.team.todoktodok.presentation.core.ext.loadImage
 import com.team.todoktodok.presentation.xml.book.SelectBookActivity
+import com.team.todoktodok.presentation.xml.discussion.create.DraftDialog.Companion.KEY_REQUEST_DRAFT
+import com.team.todoktodok.presentation.xml.discussion.create.DraftDialog.Companion.KEY_RESULT_DRAFT
 import com.team.todoktodok.presentation.xml.discussion.create.vm.CreateDiscussionRoomViewModel
 import com.team.todoktodok.presentation.xml.discussion.create.vm.CreateDiscussionRoomViewModelFactory
 import com.team.todoktodok.presentation.xml.discussiondetail.DiscussionDetailActivity
@@ -196,7 +199,39 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
             observeIsCreate(uiState.isCreate, binding)
             observeTitle(uiState.title, binding)
             observeOpinion(uiState.opinion, binding)
+            observeIsDraft(uiState.isDraft, binding)
         }
+    }
+
+    fun observeIsDraft(
+        isDraft: Boolean,
+        binding: ActivityCreateDiscussionRoomBinding,
+    ) {
+        if (isDraft) {
+            binding.btnBack.setOnClickListener {
+                showDraftDialog()
+            }
+            onBackPressedDispatcher.addCallback {
+                showDraftDialog()
+            }
+        }
+    }
+
+    private fun showDraftDialog() {
+        DraftDialog.newInstance().show(supportFragmentManager, DraftDialog.TAG)
+        supportFragmentManager.setFragmentResultListener(KEY_REQUEST_DRAFT, this) { _, bundle ->
+            val isSave = bundle.getBoolean(KEY_RESULT_DRAFT)
+            if (isSave) viewModel.saveDraft()
+            navigateToMain()
+        }
+    }
+
+    private fun navigateToMain() {
+        val intent = MainActivity.Intent(this)
+        intent.apply {
+            flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+        }
+        startActivity(intent)
     }
 
     private fun observeTitle(
