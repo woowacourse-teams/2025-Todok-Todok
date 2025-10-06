@@ -27,6 +27,10 @@ class SelectBookViewModel(
     private val _uiEvent: MutableSingleLiveData<SelectBookUiEvent> = MutableSingleLiveData()
     val uiEvent: SingleLiveData<SelectBookUiEvent> get() = _uiEvent
 
+    fun initPage() {
+        _uiState.value = SelectBookUiState()
+    }
+
     fun changePageSize(size: Int) {
         setState { copy(pageSize = size) }
     }
@@ -57,7 +61,7 @@ class SelectBookViewModel(
 
     fun isNotPossibleAddSearchedBooks(): Boolean =
         !(_uiState.value?.hasNextPage ?: false) ||
-            _uiState.value?.status == SearchedBookStatus.Loading
+                _uiState.value?.status == SearchedBookStatus.Loading
 
     fun addSearchedBooks() {
         if (isNotPossibleAddSearchedBooks()) return
