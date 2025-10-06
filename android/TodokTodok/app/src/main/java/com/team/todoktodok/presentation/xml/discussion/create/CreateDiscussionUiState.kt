@@ -11,10 +11,11 @@ data class CreateDiscussionUiState(
 ) {
     val isCreate: Boolean get() = title.isNotBlank() && opinion.isNotBlank()
 
-    fun validate(): ErrorCreateDiscussionType? = when {
-        title.isBlank() && opinion.isBlank() -> ErrorCreateDiscussionType.TITLE_AND_CONTENT_NOT_FOUND
-        title.isBlank() -> ErrorCreateDiscussionType.TITLE_NOT_FOUND
-        opinion.isBlank() -> ErrorCreateDiscussionType.CONTENT_NOT_FOUND
-        else -> null
-    }
+    fun validate(): ErrorCreateDiscussionType? =
+        when {
+            title.isBlank() && opinion.isBlank() -> ErrorCreateDiscussionType.TITLE_AND_CONTENT_NOT_FOUND
+            title.isBlank() -> ErrorCreateDiscussionType.TITLE_NOT_FOUND
+            opinion.isBlank() -> ErrorCreateDiscussionType.CONTENT_NOT_FOUND
+            else -> null
+        }
 }
