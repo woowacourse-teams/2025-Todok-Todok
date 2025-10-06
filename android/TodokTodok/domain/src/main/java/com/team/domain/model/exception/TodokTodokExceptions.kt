@@ -176,5 +176,6 @@ fun Throwable.toDomain(): TodokTodokExceptions =
         is java.net.SocketException -> TodokTodokExceptions.SocketException
         is java.io.IOException -> TodokTodokExceptions.IOException
         is kotlinx.serialization.MissingFieldException -> TodokTodokExceptions.MissingFieldException
+        is kotlinx.coroutines.CancellationException -> TodokTodokExceptions.CancellationException
         else -> TodokTodokExceptions.UnknownException(this)
     }
