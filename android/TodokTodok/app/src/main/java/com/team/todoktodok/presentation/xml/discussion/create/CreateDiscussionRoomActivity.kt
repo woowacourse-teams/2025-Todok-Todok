@@ -17,7 +17,6 @@ import androidx.core.view.WindowInsetsAnimationCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.core.widget.doAfterTextChanged
-import com.google.android.material.snackbar.Snackbar
 import com.team.domain.model.Book
 import com.team.todoktodok.App
 import com.team.todoktodok.R
@@ -233,20 +232,29 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
         isCreate: Boolean,
         binding: ActivityCreateDiscussionRoomBinding,
     ) {
+        decideBtnCreateColor(binding, isCreate)
         if (isCreate) {
-            binding.btnCreate.isEnabled = true
-            binding.btnCreate.setTextColor(
-                ContextCompat.getColor(
-                    this@CreateDiscussionRoomActivity,
-                    R.color.green_1A,
-                ),
-            )
             if (mode is SerializationCreateDiscussionRoomMode.Create) {
                 binding.btnBack.setOnClickListener {
                     viewModel.checkIsPossibleToSave()
                 }
             }
         }
+        binding.btnCreate.setOnClickListener {
+            viewModel.isPossibleToCreate()
+        }
+    }
+
+    private fun decideBtnCreateColor(
+        binding: ActivityCreateDiscussionRoomBinding,
+        isCreate: Boolean,
+    ) {
+        binding.btnCreate.setTextColor(
+            ContextCompat.getColor(
+                this@CreateDiscussionRoomActivity,
+                if (isCreate) R.color.green_1A else R.color.gray_76,
+            ),
+        )
     }
 
     private fun observeBook(
@@ -267,11 +275,8 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
                         event.mode,
                     )
 
-                is CreateDiscussionUiEvent.ShowToast -> {
-                    Snackbar
-                        .make(binding.root, getString(event.error.id), Snackbar.LENGTH_LONG)
-                        .show()
-                }
+                is CreateDiscussionUiEvent.ShowToast ->
+                    AlertSnackBar(binding.root, event.error.id).show()
 
                 is CreateDiscussionUiEvent.SaveDraft -> {
                     if (event.possible) {

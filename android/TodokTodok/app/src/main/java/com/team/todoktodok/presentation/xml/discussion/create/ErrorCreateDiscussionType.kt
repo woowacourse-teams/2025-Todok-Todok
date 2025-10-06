@@ -13,4 +13,6 @@ enum class ErrorCreateDiscussionType(
     PLEASE_TRY_AGAIN(R.string.error_create_discussion_please_try_again),
     TITLE_LENGTH_OVER(R.string.error_create_discussion_title_length_over),
     OPINION_LENGTH_OVER(R.string.error_create_discussion_opinion_length_over),
+
+    TITLE_AND_CONTENT_NOT_FOUND(R.string.error_create_discussion_title_and_content_not_found),
 }
