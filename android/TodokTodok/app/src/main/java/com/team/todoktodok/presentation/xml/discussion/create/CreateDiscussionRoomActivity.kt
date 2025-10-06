@@ -7,6 +7,7 @@ import android.text.Editable
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.activity.addCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -152,11 +153,13 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
                 is SerializationCreateDiscussionRoomMode.Edit -> settingEditMode(binding)
                 is SerializationCreateDiscussionRoomMode.Draft -> settingCreateMode(binding)
             }
-            btnCreate.isEnabled = false
-            btnBack.setOnClickListener { finish() }
-            btnEdit.setOnClickListener { moveToSelectBook() }
-            etDiscussionRoomTitle.doAfterTextChanged { text: Editable? ->
-                viewModel.updateTitle(text.toString())
+            onBackPressedDispatcher.addCallback { navigateToSelectBook() }
+            btnBack.setOnClickListener { navigateToSelectBook() }
+            etDiscussionRoomTitle.apply {
+                requestFocus()
+                doAfterTextChanged { text: Editable? ->
+                    viewModel.updateTitle(text.toString())
+                }
             }
             etDiscussionRoomOpinion.doAfterTextChanged { text: Editable? ->
                 viewModel.updateOpinion(text.toString())
@@ -177,9 +180,6 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
 
     private fun settingEditMode(binding: ActivityCreateDiscussionRoomBinding) {
         binding.apply {
-            tvCreateDiscussionRoomTitle.text =
-                getString(R.string.edit_discussion_room_title)
-            btnEdit.visibility = View.INVISIBLE
             btnCreate.apply {
                 text = getString(R.string.edit)
                 setOnClickListener {
@@ -194,10 +194,12 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
         }
     }
 
-    private fun moveToSelectBook() {
+    private fun navigateToSelectBook() {
         val intent = SelectBookActivity.Intent(this@CreateDiscussionRoomActivity)
+        intent.apply {
+            flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+        }
         startActivity(intent)
-        finish()
     }
 
     private fun setupUiState(binding: ActivityCreateDiscussionRoomBinding) {

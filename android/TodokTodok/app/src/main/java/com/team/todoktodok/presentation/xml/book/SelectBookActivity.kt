@@ -54,6 +54,11 @@ class SelectBookActivity : AppCompatActivity() {
         calculateItemSize()
     }
 
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        viewModel.initPage()
+    }
+
     private fun calculateItemSize() {
         val windowMetrics = windowManager.currentWindowMetrics
         val bounds = windowMetrics.bounds
@@ -263,7 +268,6 @@ class SelectBookActivity : AppCompatActivity() {
                 SerializationCreateDiscussionRoomMode.Create(serializationBook),
             )
         startActivity(intent)
-        finish()
     }
 
     private fun hideKeyBoard(view: View) {
