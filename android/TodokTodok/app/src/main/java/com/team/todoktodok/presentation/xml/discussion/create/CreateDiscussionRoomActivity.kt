@@ -233,20 +233,29 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
         isCreate: Boolean,
         binding: ActivityCreateDiscussionRoomBinding,
     ) {
+        decideBtnCreateColor(binding, isCreate)
         if (isCreate) {
-            binding.btnCreate.isEnabled = true
-            binding.btnCreate.setTextColor(
-                ContextCompat.getColor(
-                    this@CreateDiscussionRoomActivity,
-                    R.color.green_1A,
-                ),
-            )
             if (mode is SerializationCreateDiscussionRoomMode.Create) {
                 binding.btnBack.setOnClickListener {
                     viewModel.checkIsPossibleToSave()
                 }
             }
         }
+        binding.btnCreate.setOnClickListener {
+            viewModel.isPossibleToCreate()
+        }
+    }
+
+    private fun decideBtnCreateColor(
+        binding: ActivityCreateDiscussionRoomBinding,
+        isCreate: Boolean
+    ) {
+        binding.btnCreate.setTextColor(
+            ContextCompat.getColor(
+                this@CreateDiscussionRoomActivity,
+                if (isCreate) R.color.green_1A else R.color.gray_76,
+            ),
+        )
     }
 
     private fun observeBook(

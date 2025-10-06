@@ -258,6 +258,7 @@
     <!-- 토론방 생성 관련 에러 -->
     <string name="error_create_discussion_book_info_not_found">책 정보가 없습니다</string>
     <string name="error_create_discussion_title_not_found">제목이 없습니다</string>
+    <string name="error_create_discussion_title_and_content_not_found">제목과 내용이 없습니다</string>
     <string name="error_create_discussion_content_not_found">내용이 없습니다</string>
     <string name="error_create_discussion_not_my_discussion_room">내가 작성한 토론방이 아닙니다</string>
     <string name="error_create_discussion_discussion_room_info_not_found">토론방 정보가 없습니다</string>

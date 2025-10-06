@@ -42,6 +42,19 @@ class CreateDiscussionRoomViewModel(
         decideMode()
     }
 
+    fun isPossibleToCreate() {
+        val title = _uiState.value?.title ?: ""
+        val opinion = _uiState.value?.opinion ?: ""
+
+        if (title.isBlank() && opinion.isBlank()) {
+            _uiEvent.setValue(CreateDiscussionUiEvent.ShowToast(ErrorCreateDiscussionType.TITLE_AND_CONTENT_NOT_FOUND))
+        } else if (title.isBlank()) {
+            _uiEvent.setValue(CreateDiscussionUiEvent.ShowToast(ErrorCreateDiscussionType.TITLE_NOT_FOUND))
+        } else if (opinion.isBlank()) {
+            _uiEvent.setValue(CreateDiscussionUiEvent.ShowToast(ErrorCreateDiscussionType.CONTENT_NOT_FOUND))
+        }
+    }
+
     fun checkIsPossibleToSave() {
         viewModelScope.launch {
             val discussion = async { discussionRepository.getDiscussion() }.await()
