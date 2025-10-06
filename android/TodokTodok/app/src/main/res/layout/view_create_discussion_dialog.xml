@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_white_all_radius_16dp"
+    android:gravity="bottom"
+    android:orientation="vertical">
+
+    <TextView
+        style="@style/BaseTextStyle"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:fontFamily="@font/pretendard_medium"
+        android:gravity="center"
+        android:text="작성중인 글을 취소하시겠습니까?\n작성취소 선택시, 작성된 글은 저장되지 않습니다."
+        android:textColor="@color/gray_4d" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray_D9" />
+
+    <TextView
+        android:id="@+id/btn_cancel"
+        style="@style/BaseTextStyle"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:fontFamily="@font/pretendard_medium"
+        android:gravity="center"
+        android:text="작성취소"
+        android:textColor="@color/red_FF"
+        android:textSize="@dimen/font_size_x_large" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray_D9" />
+
+    <TextView
+        android:id="@+id/btn_temp_save"
+        style="@style/BaseTextStyle"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:fontFamily="@font/pretendard_medium"
+        android:gravity="center"
+        android:text="임시저장"
+        android:textColor="@color/black_18"
+        android:textSize="@dimen/font_size_x_large" />
+
+</LinearLayout>

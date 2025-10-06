@@ -289,6 +289,6 @@
     <string name="share_discussion_title">토론방 공유</string>
     <string name="discussion_entry_invalid_message">토론 정보를 불러올 수 없습니다.</string>
     <string name="press_back_again_to_exit">한 번 더 누르면 종료됩니다</string>
-    <string name="create_discussion_temp_save">임시 저장 | %d</string>
+    <string name="create_discussion_temp_save">임시 저장 | 3</string>
 
 </resources>
