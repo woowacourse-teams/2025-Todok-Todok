@@ -50,6 +50,8 @@
     <string name="bottom_navigation_content_description_create_discussion">토론방 생성</string>
     <string name="bottom_navigation_content_description_my">내 토론방</string>
 
+    <string name="bottom_navigation_back_press">뒤로 버튼을 한번 더 누르시면 종료됩니다.</string>
+
     <!--  토론 목록 페이지  -->
     <string name="discussions_hot_discussion_rooms">인기 토론방</string>
     <string name="discussions_activated_discussion_rooms">활성화된 토론방</string>

@@ -30,9 +30,6 @@ class MainViewModel(
     private val _uiEvent = Channel<MainUiEvent>(Channel.BUFFERED)
     val uiEvent get() = _uiEvent.receiveAsFlow()
 
-    private val _requestExit = MutableStateFlow(false)
-    val requestExit: StateFlow<Boolean> get() = _requestExit
-
     fun loadIsUnreadNotification() {
         viewModelScope.launch {
             notificationRepository
@@ -83,23 +80,6 @@ class MainViewModel(
 
     fun modifyDiscussion(discussion: SerializationDiscussion) {
         _uiState.update { it.modifyDiscussion(discussion) }
-    }
-
-    fun onBackPressed(
-        timeoutMillis: Long,
-        lastBackPressed: Long,
-    ): Boolean {
-        val now = System.currentTimeMillis()
-        return if (now - lastBackPressed <= timeoutMillis) {
-            _requestExit.value = true
-            true
-        } else {
-            false
-        }
-    }
-
-    fun resetExitRequest() {
-        _requestExit.value = false
     }
 
     private fun onUiEvent(event: MainUiEvent) {
