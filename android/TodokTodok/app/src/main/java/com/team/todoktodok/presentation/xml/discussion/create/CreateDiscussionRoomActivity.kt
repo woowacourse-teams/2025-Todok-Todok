@@ -35,7 +35,7 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
     private val mode by lazy {
         intent.getParcelableCompat<SerializationCreateDiscussionRoomMode>(
             EXTRA_MODE,
-        ) ?: throw IllegalStateException(MODE_NOT_EXIST)
+        )
     }
     private val viewModel by viewModels<CreateDiscussionRoomViewModel> {
         val repositoryModule = (application as App).container.repositoryModule
@@ -336,7 +336,6 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
         private const val EXTRA_SELECTED_BOOK = "discussionBook"
         private const val EXTRA_DISCUSSION_ROOM_ID = "discussionRoomId"
         private const val EXTRA_MODE = "mode"
-        private const val MODE_NOT_EXIST = "mode가 존재하지 않습니다."
 
         fun Intent(
             context: Context,

@@ -23,7 +23,6 @@ class MainActivity : ComponentActivity() {
                 MainScreen(messageConverter)
             }
         }
-        handleNotificationDeepLink(intent)
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -33,46 +32,46 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun handleNotificationDeepLink(intent: Intent) {
-        val notification: SerializationFcmNotification? =
-            intent.getParcelableCompat<SerializationFcmNotification>("notification") as? SerializationFcmNotification
+        val notification: SerializationFcmNotification =
+            intent.getParcelableCompat<SerializationFcmNotification>(KEY_NOTIFICATION)
 
         triggerToMoveDiscussionDetail(notification)
     }
 
-    private fun MainActivity.triggerToMoveDiscussionDetail(notification: SerializationFcmNotification?) {
-        if (notification != null) {
-            when (notification.type) {
-                SerializationNotificationType.LIKE -> {
-                    val detailIntent =
-                        DiscussionDetailActivity.Companion.Intent(
-                            this,
-                            notification.discussionId,
-                        )
-                    startActivity(detailIntent)
-                }
+    private fun MainActivity.triggerToMoveDiscussionDetail(notification: SerializationFcmNotification) {
+        when (notification.type) {
+            SerializationNotificationType.LIKE -> {
+                val detailIntent =
+                    DiscussionDetailActivity.Companion.Intent(
+                        this,
+                        notification.discussionId,
+                    )
+                startActivity(detailIntent)
+            }
 
-                SerializationNotificationType.COMMENT -> {
-                    val detailIntent =
-                        DiscussionDetailActivity.Companion.Intent(
-                            this,
-                            notification.discussionId,
-                        )
-                    startActivity(detailIntent)
-                }
+            SerializationNotificationType.COMMENT -> {
+                val detailIntent =
+                    DiscussionDetailActivity.Companion.Intent(
+                        this,
+                        notification.discussionId,
+                    )
+                startActivity(detailIntent)
+            }
 
-                SerializationNotificationType.REPLY -> {
-                    val detailIntent =
-                        DiscussionDetailActivity.Companion.Intent(
-                            this,
-                            notification.discussionId,
-                        )
-                    startActivity(detailIntent)
-                }
+            SerializationNotificationType.REPLY -> {
+                val detailIntent =
+                    DiscussionDetailActivity.Companion.Intent(
+                        this,
+                        notification.discussionId,
+                    )
+                startActivity(detailIntent)
             }
         }
     }
 
     companion object {
+        private const val KEY_NOTIFICATION = "notification"
+
         fun Intent(context: Context) = Intent(context, MainActivity::class.java)
     }
 }
