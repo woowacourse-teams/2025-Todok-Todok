@@ -43,11 +43,11 @@
         </activity>
         <activity
             android:name=".presentation.compose.main.MainActivity"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".presentation.xml.discussion.create.CreateDiscussionRoomActivity"
             android:exported="false"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
+            android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity
             android:name=".presentation.xml.setting.SettingActivity"
             android:exported="false" />

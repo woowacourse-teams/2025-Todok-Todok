@@ -153,12 +153,13 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
                 is SerializationCreateDiscussionRoomMode.Edit -> settingEditMode(binding)
                 is SerializationCreateDiscussionRoomMode.Draft -> settingCreateMode(binding)
             }
-            btnCreate.isEnabled = false
             onBackPressedDispatcher.addCallback { navigateToSelectBook() }
             btnBack.setOnClickListener { navigateToSelectBook() }
-            btnEdit.setOnClickListener { navigateToSelectBook() }
-            etDiscussionRoomTitle.doAfterTextChanged { text: Editable? ->
-                viewModel.updateTitle(text.toString())
+            etDiscussionRoomTitle.apply {
+                requestFocus()
+                doAfterTextChanged { text: Editable? ->
+                    viewModel.updateTitle(text.toString())
+                }
             }
             etDiscussionRoomOpinion.doAfterTextChanged { text: Editable? ->
                 viewModel.updateOpinion(text.toString())
@@ -179,9 +180,6 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
 
     private fun settingEditMode(binding: ActivityCreateDiscussionRoomBinding) {
         binding.apply {
-            tvCreateDiscussionRoomTitle.text =
-                getString(R.string.edit_discussion_room_title)
-            btnEdit.visibility = View.INVISIBLE
             btnCreate.apply {
                 text = getString(R.string.edit)
                 setOnClickListener {
