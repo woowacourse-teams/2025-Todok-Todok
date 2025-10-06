@@ -1,5 +1,7 @@
 package com.team.todoktodok.presentation.compose.main
 
+import android.app.Activity
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
@@ -18,6 +20,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.team.todoktodok.App
+import com.team.todoktodok.R
 import com.team.todoktodok.presentation.compose.LocalUiExceptionHandler
 import com.team.todoktodok.presentation.compose.UiExceptionHandler
 import com.team.todoktodok.presentation.compose.core.ObserveAsEvents
@@ -79,6 +82,7 @@ fun MainScreen(
                 messageConverter = messageConverter,
             ),
     ) {
+        BackPressToExit()
         MainScreenContent(
             uiState = uiState.value,
             navController = navController,
@@ -138,5 +142,25 @@ fun MainScreenContent(
             onChangeBottomNavigationTab = onChangeBottomNavigationTab,
             modifier = Modifier.padding(innerPadding),
         )
+    }
+}
+
+@Composable
+fun BackPressToExit() {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val localUiExceptionHandler = LocalUiExceptionHandler.current
+    var backPressedTime: Long = 0
+
+    BackHandler(enabled = true) {
+        if (System.currentTimeMillis() - backPressedTime < 2000) {
+            (context as Activity).finish()
+        } else {
+            localUiExceptionHandler.showErrorMessage(
+                scope = scope,
+                message = context.getString(R.string.bottom_navigation_back_press),
+            )
+            backPressedTime = System.currentTimeMillis()
+        }
     }
 }
