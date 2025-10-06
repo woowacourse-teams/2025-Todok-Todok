@@ -325,4 +325,7 @@
     <string name="share_discussion_title">토론방 공유</string>
     <string name="discussion_entry_invalid_message">토론 정보를 불러올 수 없습니다.</string>
     <string name="press_back_again_to_exit">한 번 더 누르면 종료됩니다</string>
+    <string name="create_discussion_room_draft_dialog_content">작성중인 글을 취소하시겠습니까?\n작성취소 선택시, 작성된 글은 저장되지 않습니다.</string>
+    <string name="create_discussion_room_draft_dialog_cancel">작성취소</string>
+    <string name="create_discussion_room_draft_dialog_save">임시저장</string>
 </resources>
