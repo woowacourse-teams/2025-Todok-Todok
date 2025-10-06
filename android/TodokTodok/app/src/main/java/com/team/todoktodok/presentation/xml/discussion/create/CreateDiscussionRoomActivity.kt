@@ -248,7 +248,7 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
 
     private fun decideBtnCreateColor(
         binding: ActivityCreateDiscussionRoomBinding,
-        isCreate: Boolean
+        isCreate: Boolean,
     ) {
         binding.btnCreate.setTextColor(
             ContextCompat.getColor(
