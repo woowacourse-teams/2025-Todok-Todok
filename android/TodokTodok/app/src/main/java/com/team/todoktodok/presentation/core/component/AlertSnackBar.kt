@@ -1,5 +1,6 @@
 package com.team.todoktodok.presentation.core.component
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,7 +33,7 @@ class AlertSnackBar private constructor(
                 parent.setBackgroundColor(0)
                 parent.addView(binding.root, 0)
             }
-
+            Log.d("test", "$messageRes")
             binding.tvSnackBarMessage.text = context.getString(messageRes)
             binding.ivIconSnackBar.setImageResource(iconRes)
 

@@ -17,7 +17,6 @@ import androidx.core.view.WindowInsetsAnimationCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.core.widget.doAfterTextChanged
-import com.google.android.material.snackbar.Snackbar
 import com.team.domain.model.Book
 import com.team.todoktodok.App
 import com.team.todoktodok.R
@@ -276,11 +275,8 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
                         event.mode,
                     )
 
-                is CreateDiscussionUiEvent.ShowToast -> {
-                    Snackbar
-                        .make(binding.root, getString(event.error.id), Snackbar.LENGTH_LONG)
-                        .show()
-                }
+                is CreateDiscussionUiEvent.ShowToast ->
+                    AlertSnackBar(binding.root, event.error.id).show()
 
                 is CreateDiscussionUiEvent.SaveDraft -> {
                     if (event.possible) {
