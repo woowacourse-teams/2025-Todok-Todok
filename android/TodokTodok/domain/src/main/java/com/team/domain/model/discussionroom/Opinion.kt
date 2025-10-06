@@ -14,3 +14,5 @@ value class Opinion(
         private const val MAX_VALUE: Int = 2500
     }
 }
+
+fun Opinion.isNotBlank(): Boolean = value.isNotBlank()

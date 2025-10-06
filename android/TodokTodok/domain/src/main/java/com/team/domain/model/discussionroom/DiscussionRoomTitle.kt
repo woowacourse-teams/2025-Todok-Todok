@@ -14,3 +14,6 @@ value class DiscussionRoomTitle(
         private const val MAX_VALUE: Int = 50
     }
 }
+
+fun DiscussionRoomTitle.isNotBlank(): Boolean = value.isNotBlank()
+

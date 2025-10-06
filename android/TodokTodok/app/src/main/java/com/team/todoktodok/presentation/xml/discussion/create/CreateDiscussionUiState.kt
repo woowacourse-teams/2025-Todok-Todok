@@ -10,4 +10,6 @@ data class CreateDiscussionUiState(
     val discussionRoomId: Long? = null,
 ) {
     val isCreate: Boolean get() = title.isNotBlank() && opinion.isNotBlank()
+
+    val isSave: Boolean get() = title.isNotBlank() || opinion.isNotBlank()
 }

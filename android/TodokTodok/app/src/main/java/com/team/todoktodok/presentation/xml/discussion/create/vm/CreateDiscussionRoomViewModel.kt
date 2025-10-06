@@ -37,7 +37,6 @@ class CreateDiscussionRoomViewModel(
         }
     }
 
-    fun back() {}
     fun save() {
         _uiState.value?.book ?: run {
             _uiEvent.setValue(CreateDiscussionUiEvent.ShowToast(ErrorCreateDiscussionType.BOOK_INFO_NOT_FOUND))

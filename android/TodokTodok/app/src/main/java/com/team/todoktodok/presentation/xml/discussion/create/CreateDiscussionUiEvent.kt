@@ -5,7 +5,6 @@ import com.team.domain.model.exception.TodokTodokExceptions
 sealed interface CreateDiscussionUiEvent {
     data class NavigateToDiscussionDetail(
         val discussionRoomId: Long,
-        val mode: SerializationCreateDiscussionRoomMode,
     ) : CreateDiscussionUiEvent
 
     data class ShowToast(

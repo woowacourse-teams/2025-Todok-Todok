@@ -7,6 +7,7 @@ import android.text.Editable
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.activity.addCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -19,10 +20,13 @@ import com.team.domain.model.Book
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivityCreateDiscussionRoomBinding
+import com.team.todoktodok.presentation.compose.discussion.DiscussionsActivity
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
 import com.team.todoktodok.presentation.core.ext.getParcelableCompat
 import com.team.todoktodok.presentation.core.ext.loadImage
+import com.team.todoktodok.presentation.xml.book.SelectBookActivity
+import com.team.todoktodok.presentation.xml.discussion.create.TempSaveDialog.Companion.KEY_TEMP_SAVE
 import com.team.todoktodok.presentation.xml.discussion.create.vm.CreateDiscussionRoomViewModel
 import com.team.todoktodok.presentation.xml.discussion.create.vm.CreateDiscussionRoomViewModelFactory
 import com.team.todoktodok.presentation.xml.discussiondetail.DiscussionDetailActivity
@@ -83,21 +87,74 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
             etDiscussionRoomOpinion.doAfterTextChanged { text: Editable? ->
                 viewModel.updateOpinion(text.toString())
             }
+            btnBack.setOnClickListener {
+                val intent = SelectBookActivity.Intent(this@CreateDiscussionRoomActivity)
+                intent.apply {
+                    flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                }
+                startActivity(intent)
+            }
+            onBackPressedDispatcher.addCallback {
+                val intent = SelectBookActivity.Intent(this@CreateDiscussionRoomActivity)
+                intent.apply {
+                    flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                }
+                startActivity(intent)
+            }
+            contentContainer.setOnClickListener {
+                etDiscussionRoomOpinion.requestFocus()
+
+                val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.showSoftInput(etDiscussionRoomOpinion, InputMethodManager.SHOW_IMPLICIT)
+            }
+            btnSave.setOnClickListener {
+
+            }
         }
     }
 
     private fun setupUiState(binding: ActivityCreateDiscussionRoomBinding) {
         viewModel.uiState.observe(this@CreateDiscussionRoomActivity) { uiState: CreateDiscussionUiState ->
             observeBook(uiState.book, binding)
-            observeIsCreate(uiState.isCreate, binding)
+            observeIsCreate(uiState.title, uiState.opinion, binding)
+            observeIsSave(uiState.isSave, binding)
+        }
+    }
+
+    private fun observeIsSave(
+        isSave: Boolean,
+        binding: ActivityCreateDiscussionRoomBinding,
+    ) {
+        if (isSave) {
+            binding.btnBack.setOnClickListener {
+                TempSaveDialog.newInstance().show(supportFragmentManager, "temp_save")
+                supportFragmentManager.setFragmentResultListener(KEY_TEMP_SAVE, this) { _, bundle ->
+                    val tempSave = bundle.getBoolean(KEY_TEMP_SAVE)
+                    if (tempSave) {
+                        viewModel.save()
+                    }
+                    val intent = Intent(
+                        this@CreateDiscussionRoomActivity,
+                        DiscussionsActivity::class.java
+                    ).apply {
+                        flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                    }
+                    startActivity(intent)
+                }
+            }
+
+            onBackPressedDispatcher.addCallback {
+                TempSaveDialog.newInstance().show(supportFragmentManager, "temp_save")
+            }
         }
     }
 
     private fun observeIsCreate(
-        isCreate: Boolean,
+        title: String,
+        opinion: String,
         binding: ActivityCreateDiscussionRoomBinding,
     ) {
-        if (isCreate) {
+        if (title.isNotBlank() && opinion.isNotBlank()) {
             binding.apply {
                 btnCreate.setTextColor(
                     ContextCompat.getColor(
@@ -105,6 +162,24 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
                         R.color.green_1A,
                     ),
                 )
+            }
+        } else {
+            binding.apply {
+                btnCreate.setTextColor(
+                    ContextCompat.getColor(
+                        this@CreateDiscussionRoomActivity,
+                        R.color.gray_76,
+                    ),
+                )
+            }
+        }
+        binding.btnCreate.setOnClickListener {
+            if (title.isBlank() && opinion.isBlank()) {
+                Snackbar.make(binding.root, "제목과 본문을 입력해주세요", Snackbar.LENGTH_SHORT).show()
+            } else if (title.isBlank()) {
+                Snackbar.make(binding.root, "제목을 입력해주세요", Snackbar.LENGTH_SHORT).show()
+            } else if (opinion.isBlank()) {
+                Snackbar.make(binding.root, "본문을 입력해주세요", Snackbar.LENGTH_SHORT).show()
             }
         }
     }
@@ -159,6 +234,7 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
             this.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
+
 
     companion object {
         private const val EXTRA_SELECTED_BOOK = "discussionBook"

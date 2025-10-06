@@ -98,7 +98,7 @@ class DiscussionsActivity : ComponentActivity() {
             }
         }
         collectRequestExit()
-        handleNotificationDeepLink(intent)
+//        handleNotificationDeepLink(intent)
     }
 
     override fun onNewIntent(intent: Intent) {

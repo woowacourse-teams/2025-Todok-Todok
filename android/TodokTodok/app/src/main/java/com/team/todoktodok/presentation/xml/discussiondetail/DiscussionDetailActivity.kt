@@ -37,7 +37,6 @@ import com.team.todoktodok.presentation.core.ext.registerReportResultListener
 import com.team.todoktodok.presentation.core.ext.toRelativeString
 import com.team.todoktodok.presentation.core.utils.shareDiscussionLink
 import com.team.todoktodok.presentation.xml.auth.AuthActivity
-import com.team.todoktodok.presentation.xml.discussion.create.CreateDiscussionRoomActivity
 import com.team.todoktodok.presentation.xml.discussion.create.SerializationCreateDiscussionRoomMode
 import com.team.todoktodok.presentation.xml.discussiondetail.comments.CommentsFragment
 import com.team.todoktodok.presentation.xml.discussiondetail.vm.DiscussionDetailViewModel
@@ -365,12 +364,12 @@ class DiscussionDetailActivity : AppCompatActivity() {
     }
 
     private fun moveToCreateDiscussion(discussionId: Long) {
-        val intent =
-            CreateDiscussionRoomActivity.Intent(
-                this@DiscussionDetailActivity,
-                SerializationCreateDiscussionRoomMode.Edit(discussionId),
-            )
-        startActivity(intent)
+//        val intent =
+//            CreateDiscussionRoomActivity.Intent(
+//                this@DiscussionDetailActivity,
+//                SerializationCreateDiscussionRoomMode.Edit(discussionId),
+//            )
+//        startActivity(intent)
     }
 
     private fun moveToProfile(memberId: Long) {
