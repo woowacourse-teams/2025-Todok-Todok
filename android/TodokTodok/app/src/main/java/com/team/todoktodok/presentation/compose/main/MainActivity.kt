@@ -28,7 +28,9 @@ class MainActivity : ComponentActivity() {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
-        handleNotificationDeepLink(intent)
+        if (intent.extras != null) {
+            handleNotificationDeepLink(intent)
+        }
     }
 
     private fun handleNotificationDeepLink(intent: Intent) {
