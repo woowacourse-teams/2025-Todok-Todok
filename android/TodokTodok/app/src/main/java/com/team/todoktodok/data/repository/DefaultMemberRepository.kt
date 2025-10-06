@@ -35,7 +35,7 @@ class DefaultMemberRepository(
     override suspend fun signUp(nickname: Nickname): NetworkResult<Unit> =
         cachedGoogleIdToken?.let {
             remoteMemberRemoteDataSource.signUp(SignUpRequest(nickname.value, it))
-        } ?: NetworkResult.Failure(SignUpException.InvalidTokenException)
+        } ?: NetworkResult.Failure(SignUpException.InvalidToken)
 
     override suspend fun getProfile(id: MemberId): NetworkResult<Profile> =
         remoteMemberRemoteDataSource.fetchProfile(id).map { it.toDomain() }

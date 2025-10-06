@@ -14,7 +14,7 @@ import com.team.domain.model.exception.NicknameException
 import com.team.domain.model.exception.ProfileImageExceptions
 import com.team.domain.model.exception.ReplyExceptions
 import com.team.domain.model.exception.ReportException
-import com.team.domain.model.exception.SearchedBooksTotalSizeException
+import com.team.domain.model.exception.SearchedBooksTotalSize
 import com.team.domain.model.exception.SignUpException
 import com.team.domain.model.exception.TodokTodokExceptions
 import com.team.todoktodok.R
@@ -22,25 +22,25 @@ import com.team.todoktodok.R
 class ExceptionMessageConverter {
     operator fun invoke(exception: TodokTodokExceptions): Int =
         when (exception) {
-            is NicknameException.DuplicateNicknameException ->
+            is NicknameException.DuplicateNickname ->
                 R.string.error_duplicate_nickname
 
-            is NicknameException.InvalidNicknameLengthException ->
+            is NicknameException.InvalidNicknameLength ->
                 R.string.error_invalid_nickname_length
 
-            is NicknameException.EmptyNicknameLengthException ->
+            is NicknameException.EmptyNicknameLength ->
                 R.string.error_empty_nickname
 
-            is SignUpException.DuplicateEmailException ->
+            is SignUpException.DuplicateEmail ->
                 R.string.error_duplicate_email
 
-            is SignUpException.InvalidTokenException ->
+            is SignUpException.InvalidToken ->
                 R.string.error_invalid_token
 
-            is SignUpException.InvalidFormatEmailException ->
+            is SignUpException.InvalidFormatEmail ->
                 R.string.error_invalid_email_format
 
-            is SignUpException.ProfileImageNotExistException ->
+            is SignUpException.ProfileImageNotExist ->
                 R.string.error_profile_image_not_exist
 
             is TodokTodokExceptions.HttpExceptions.AuthorizationException ->
@@ -88,10 +88,10 @@ class ExceptionMessageConverter {
             TodokTodokExceptions.EmptyBodyException ->
                 R.string.error_empty_body
 
-            BlockException.AlreadyBlockedException ->
+            BlockException.AlreadyBlocked ->
                 R.string.error_already_blocked
 
-            ReportException.AlreadyReportedException ->
+            ReportException.AlreadyReported ->
                 R.string.error_already_reported
 
             DiscussionExceptions.AlreadyReported -> R.string.error_already_reported
@@ -101,8 +101,8 @@ class ExceptionMessageConverter {
             DiscussionExceptions.EmptyContent -> R.string.error_empty_content
             DiscussionExceptions.EmptyTitle -> R.string.error_empty_title
 
-            BooksExceptions.EmptyKeywordException -> R.string.select_book_error_empty_keyword
-            BooksExceptions.EmptyISBNException -> R.string.select_book_error_empty_isbn
+            BooksExceptions.EmptyKeyword -> R.string.select_book_error_empty_keyword
+            BooksExceptions.EmptyISBN -> R.string.select_book_error_empty_isbn
 
             CommentExceptions.AlreadyReported -> R.string.error_comment_already_reported
             CommentExceptions.CannotDeleteWithReplies -> R.string.error_comment_cannot_delete_with_replies
@@ -121,8 +121,8 @@ class ExceptionMessageConverter {
             ReplyExceptions.OnlyOwnerCanModifyOrDelete -> R.string.error_reply_only_owner_can_modify_or_delete
 
             BookAuthorException.EmptyBookAuthor -> R.string.select_book_error_empty_author
-            BookException.EmptyISBNException -> R.string.select_book_error_empty_isbn
-            BookException.EmptyKeywordException -> R.string.select_book_error_empty_keyword
+            BookException.EmptyISBN -> R.string.select_book_error_empty_isbn
+            BookException.EmptyKeyword -> R.string.select_book_error_empty_keyword
             BookException.EmptySelectedBook -> R.string.select_book_error_no_selected_book
             BookImageException.InvalidUrl -> R.string.select_book_error_invalid_url
             BookTitleException.EmptyBookTitle -> R.string.select_book_error_empty_book_title
@@ -133,7 +133,7 @@ class ExceptionMessageConverter {
             KeywordException.BlankKeyword -> R.string.select_book_error_blank_keyword
             KeywordException.EmptyKeyword -> R.string.select_book_error_empty_keyword
 
-            SearchedBooksTotalSizeException.InvalidSize -> R.string.select_book_error_searched_book_total_size
+            SearchedBooksTotalSize.InvalidSize -> R.string.select_book_error_searched_book_total_size
 
             ProfileImageExceptions.EmptyContent -> R.string.error_profile_image_empty
             ProfileImageExceptions.NotImageFile -> R.string.error_uri_input_stream_not_found

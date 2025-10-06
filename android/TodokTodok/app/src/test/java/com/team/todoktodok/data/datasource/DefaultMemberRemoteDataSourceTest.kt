@@ -221,7 +221,7 @@ class DefaultMemberRemoteDataSourceTest {
             val request = MemberId.OtherUser(memberId)
             val type = Support.REPORT
 
-            val exception = ReportException.AlreadyReportedException
+            val exception = ReportException.AlreadyReported
 
             coEvery {
                 memberService.report(
@@ -265,7 +265,7 @@ class DefaultMemberRemoteDataSourceTest {
             val request = MemberId.OtherUser(memberId)
             val type = Support.BLOCK
 
-            val exception = BlockException.AlreadyBlockedException
+            val exception = BlockException.AlreadyBlocked
 
             coEvery { memberService.block(memberId) } returns NetworkResult.Failure(exception)
 

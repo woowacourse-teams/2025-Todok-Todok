@@ -84,21 +84,21 @@ sealed class TodokTodokExceptions : Throwable() {
         private fun fromTokdokTodokExceptions(message: String?): TodokTodokExceptions =
             when (message) {
                 // 닉네임 관련 예외
-                NicknameException.DuplicateNicknameException.message -> NicknameException.DuplicateNicknameException
-                NicknameException.InvalidNicknameLengthException.message -> NicknameException.InvalidNicknameLengthException
-                NicknameException.EmptyNicknameLengthException.message -> NicknameException.EmptyNicknameLengthException
+                NicknameException.DuplicateNickname.message -> NicknameException.DuplicateNickname
+                NicknameException.InvalidNicknameLength.message -> NicknameException.InvalidNicknameLength
+                NicknameException.EmptyNicknameLength.message -> NicknameException.EmptyNicknameLength
 
                 // 회원가입 관련 예외
-                SignUpException.DuplicateEmailException.message -> SignUpException.DuplicateEmailException
-                SignUpException.InvalidTokenException.message -> SignUpException.InvalidTokenException
-                SignUpException.InvalidFormatEmailException.message -> SignUpException.InvalidFormatEmailException
-                SignUpException.ProfileImageNotExistException.message -> SignUpException.ProfileImageNotExistException
+                SignUpException.DuplicateEmail.message -> SignUpException.DuplicateEmail
+                SignUpException.InvalidToken.message -> SignUpException.InvalidToken
+                SignUpException.InvalidFormatEmail.message -> SignUpException.InvalidFormatEmail
+                SignUpException.ProfileImageNotExist.message -> SignUpException.ProfileImageNotExist
 
                 // 신고 관련 예외
-                ReportException.AlreadyReportedException.message -> ReportException.AlreadyReportedException
+                ReportException.AlreadyReported.message -> ReportException.AlreadyReported
 
                 // 차단 관련 예외
-                BlockException.AlreadyBlockedException.message -> BlockException.AlreadyBlockedException
+                BlockException.AlreadyBlocked.message -> BlockException.AlreadyBlocked
 
                 // 토론 관련 예외
                 DiscussionExceptions.AlreadyReported.message -> DiscussionExceptions.AlreadyReported
@@ -109,8 +109,8 @@ sealed class TodokTodokExceptions : Throwable() {
                 DiscussionExceptions.EmptyContent.message -> DiscussionExceptions.EmptyContent
 
                 // 도서 관련 예외
-                BookException.EmptyKeywordException.message -> BookException.EmptyKeywordException
-                BookException.EmptyISBNException.message -> BookException.EmptyISBNException
+                BookException.EmptyKeyword.message -> BookException.EmptyKeyword
+                BookException.EmptyISBN.message -> BookException.EmptyISBN
                 BookException.EmptySelectedBook.message -> BookException.EmptySelectedBook
 
                 // 도서 저자 관련 예외
@@ -131,7 +131,7 @@ sealed class TodokTodokExceptions : Throwable() {
                 KeywordException.EmptyKeyword.message -> KeywordException.EmptyKeyword
 
                 // 책 검색 사이즈 예외
-                SearchedBooksTotalSizeException.InvalidSize.message -> SearchedBooksTotalSizeException.InvalidSize
+                SearchedBooksTotalSize.InvalidSize.message -> SearchedBooksTotalSize.InvalidSize
 
                 // 댓글 관련 예외
                 CommentExceptions.EmptyContent.message -> CommentExceptions.EmptyContent
