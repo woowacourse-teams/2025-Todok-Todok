@@ -28,19 +28,18 @@ class MainActivity : ComponentActivity() {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
-        if (intent.extras != null) {
-            handleNotificationDeepLink(intent)
-        }
+        handleNotificationDeepLink(intent)
     }
 
     private fun handleNotificationDeepLink(intent: Intent) {
-        val notification: SerializationFcmNotification =
-            intent.getParcelableCompat<SerializationFcmNotification>(KEY_NOTIFICATION)
+        val notification: SerializationFcmNotification? =
+            intent.getParcelableCompat<SerializationFcmNotification>(KEY_NOTIFICATION) as? SerializationFcmNotification
 
         triggerToMoveDiscussionDetail(notification)
     }
 
-    private fun MainActivity.triggerToMoveDiscussionDetail(notification: SerializationFcmNotification) {
+    private fun MainActivity.triggerToMoveDiscussionDetail(notification: SerializationFcmNotification?) {
+        if (notification == null) return
         when (notification.type) {
             SerializationNotificationType.LIKE -> {
                 val detailIntent =
