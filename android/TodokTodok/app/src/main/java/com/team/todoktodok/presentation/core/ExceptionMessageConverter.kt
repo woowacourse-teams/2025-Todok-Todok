@@ -11,6 +11,7 @@ import com.team.domain.model.exception.DiscussionExceptions
 import com.team.domain.model.exception.ISBNException
 import com.team.domain.model.exception.KeywordException
 import com.team.domain.model.exception.NicknameException
+import com.team.domain.model.exception.ProfileImageExceptions
 import com.team.domain.model.exception.ReplyExceptions
 import com.team.domain.model.exception.ReportException
 import com.team.domain.model.exception.SearchedBooksTotalSizeException
@@ -133,6 +134,10 @@ class ExceptionMessageConverter {
             KeywordException.EmptyKeyword -> R.string.select_book_error_empty_keyword
 
             SearchedBooksTotalSizeException.InvalidSize -> R.string.select_book_error_searched_book_total_size
+
+            ProfileImageExceptions.EmptyContent -> R.string.error_profile_image_empty
+            ProfileImageExceptions.NotImageFile -> R.string.error_uri_input_stream_not_found
+            ProfileImageExceptions.OverMaxSize -> R.string.error_profile_image_size
 
             TodokTodokExceptions.HttpExceptions.UnauthorizedException -> R.string.error_missing_location
         }

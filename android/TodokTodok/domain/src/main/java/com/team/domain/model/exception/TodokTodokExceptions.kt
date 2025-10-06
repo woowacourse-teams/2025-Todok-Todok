@@ -151,6 +151,11 @@ sealed class TodokTodokExceptions : Throwable() {
                 ReplyExceptions.ReplyNotBelongToComment.message -> ReplyExceptions.ReplyNotBelongToComment
                 ReplyExceptions.OnlyOwnerCanModifyOrDelete.message -> ReplyExceptions.OnlyOwnerCanModifyOrDelete
 
+                // 프로필 이미지 수정 관련 예와
+                ProfileImageExceptions.EmptyContent.message -> ProfileImageExceptions.EmptyContent
+                ProfileImageExceptions.OverMaxSize.message -> ProfileImageExceptions.OverMaxSize
+                ProfileImageExceptions.NotImageFile.message -> ProfileImageExceptions.NotImageFile
+
                 else -> HttpExceptions.BadRequestException
             }
     }
