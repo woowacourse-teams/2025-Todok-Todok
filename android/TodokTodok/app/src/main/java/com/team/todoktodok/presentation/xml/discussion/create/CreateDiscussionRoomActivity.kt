@@ -7,6 +7,7 @@ import android.text.Editable
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.activity.addCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -153,8 +154,9 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
                 is SerializationCreateDiscussionRoomMode.Draft -> settingCreateMode(binding)
             }
             btnCreate.isEnabled = false
-            btnBack.setOnClickListener { finish() }
-            btnEdit.setOnClickListener { moveToSelectBook() }
+            onBackPressedDispatcher.addCallback { navigateToSelectBook() }
+            btnBack.setOnClickListener { navigateToSelectBook() }
+            btnEdit.setOnClickListener { navigateToSelectBook() }
             etDiscussionRoomTitle.doAfterTextChanged { text: Editable? ->
                 viewModel.updateTitle(text.toString())
             }
@@ -194,10 +196,12 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
         }
     }
 
-    private fun moveToSelectBook() {
+    private fun navigateToSelectBook() {
         val intent = SelectBookActivity.Intent(this@CreateDiscussionRoomActivity)
+        intent.apply {
+            flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+        }
         startActivity(intent)
-        finish()
     }
 
     private fun setupUiState(binding: ActivityCreateDiscussionRoomBinding) {
