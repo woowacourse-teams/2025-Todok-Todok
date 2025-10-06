@@ -10,7 +10,6 @@ enum class ErrorCreateDiscussionType(
     CONTENT_NOT_FOUND(R.string.error_create_discussion_content_not_found),
     NOT_MY_DISCUSSION_ROOM(R.string.error_create_discussion_not_my_discussion_room),
     DISCUSSION_ROOM_INFO_NOT_FOUND(R.string.error_create_discussion_discussion_room_info_not_found),
-    PLEASE_TRY_AGAIN(R.string.error_create_discussion_please_try_again),
     TITLE_LENGTH_OVER(R.string.error_create_discussion_title_length_over),
     OPINION_LENGTH_OVER(R.string.error_create_discussion_opinion_length_over),
 
