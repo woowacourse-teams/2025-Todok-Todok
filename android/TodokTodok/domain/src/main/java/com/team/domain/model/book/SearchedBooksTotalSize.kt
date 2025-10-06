@@ -1,13 +1,13 @@
 package com.team.domain.model.book
 
-import com.team.domain.model.exception.SearchedBooksTotalSizeException
+import com.team.domain.model.exception.SearchedBooksTotalSize
 
 @JvmInline
 value class SearchedBooksTotalSize(
     val value: Int,
 ) {
     init {
-        require(value in MIN_SEARCHED_BOOKS_SIZE..MAX_SEARCHED_BOOKS_SIZE) { SearchedBooksTotalSizeException.InvalidSize.message }
+        require(value in MIN_SEARCHED_BOOKS_SIZE..MAX_SEARCHED_BOOKS_SIZE) { SearchedBooksTotalSize.InvalidSize.message }
     }
 
     companion object {

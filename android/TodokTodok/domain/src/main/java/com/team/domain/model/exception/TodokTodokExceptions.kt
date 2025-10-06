@@ -2,12 +2,6 @@ package com.team.domain.model.exception
 
 import kotlinx.serialization.ExperimentalSerializationApi
 
-/**
- * 애플리케이션에서 발생할 수 있는 네트워크/도메인 예외를 정의한 sealed class.
- *
- * - 서버 HTTP 상태 코드 및 서버에서 내려주는 메시지를 기반으로 도메인 레이어에서 처리
- * - 화면에서는 이 예외를 기반으로 UI 메시지를 표시하거나 로직을 분기 처리 가능
- */
 sealed class TodokTodokExceptions : Throwable() {
     data object ConnectException : TodokTodokExceptions()
 
@@ -23,7 +17,6 @@ sealed class TodokTodokExceptions : Throwable() {
 
     data object RefreshTokenNotReceivedException : TodokTodokExceptions()
 
-    /** 알 수 없는 예외 발생 */
     data class UnknownException(
         val e: Throwable?,
     ) : TodokTodokExceptions() {
@@ -74,12 +67,12 @@ sealed class TodokTodokExceptions : Throwable() {
             message: String?,
         ): TodokTodokExceptions =
             when (statusCode) {
-                400 -> fromTokdokTodokExceptions(message) // 400 Bad Request: 서버 메시지에 따라 도메인 예외 매핑
-                401 -> HttpExceptions.UnauthorizedException // 401 UnauthorizedException: 토큰 없이 접근 했을 경우
-                403 -> HttpExceptions.AuthorizationException // 403 Forbidden
-                404 -> HttpExceptions.NotFoundException // 404 Not Found
-                in 500..599 -> HttpExceptions.ServerException // 서버 5xx 에러
-                else -> HttpExceptions.BadRequestException // 그 외는 BadRequest 예외로 처리
+                400 -> fromTokdokTodokExceptions(message)
+                401 -> HttpExceptions.UnauthorizedException
+                403 -> HttpExceptions.AuthorizationException
+                404 -> HttpExceptions.NotFoundException
+                in 500..599 -> HttpExceptions.ServerException
+                else -> HttpExceptions.BadRequestException
             }
 
         /**
@@ -91,21 +84,21 @@ sealed class TodokTodokExceptions : Throwable() {
         private fun fromTokdokTodokExceptions(message: String?): TodokTodokExceptions =
             when (message) {
                 // 닉네임 관련 예외
-                NicknameException.DuplicateNicknameException.message -> NicknameException.DuplicateNicknameException
-                NicknameException.InvalidNicknameLengthException.message -> NicknameException.InvalidNicknameLengthException
-                NicknameException.EmptyNicknameLengthException.message -> NicknameException.EmptyNicknameLengthException
+                NicknameException.DuplicateNickname.message -> NicknameException.DuplicateNickname
+                NicknameException.InvalidNicknameLength.message -> NicknameException.InvalidNicknameLength
+                NicknameException.EmptyNicknameLength.message -> NicknameException.EmptyNicknameLength
 
                 // 회원가입 관련 예외
-                SignUpException.DuplicateEmailException.message -> SignUpException.DuplicateEmailException
-                SignUpException.InvalidTokenException.message -> SignUpException.InvalidTokenException
-                SignUpException.InvalidFormatEmailException.message -> SignUpException.InvalidFormatEmailException
-                SignUpException.ProfileImageNotExistException.message -> SignUpException.ProfileImageNotExistException
+                SignUpException.DuplicateEmail.message -> SignUpException.DuplicateEmail
+                SignUpException.InvalidToken.message -> SignUpException.InvalidToken
+                SignUpException.InvalidFormatEmail.message -> SignUpException.InvalidFormatEmail
+                SignUpException.ProfileImageNotExist.message -> SignUpException.ProfileImageNotExist
 
                 // 신고 관련 예외
-                ReportException.AlreadyReportedException.message -> ReportException.AlreadyReportedException
+                ReportException.AlreadyReported.message -> ReportException.AlreadyReported
 
                 // 차단 관련 예외
-                BlockException.AlreadyBlockedException.message -> BlockException.AlreadyBlockedException
+                BlockException.AlreadyBlocked.message -> BlockException.AlreadyBlocked
 
                 // 토론 관련 예외
                 DiscussionExceptions.AlreadyReported.message -> DiscussionExceptions.AlreadyReported
@@ -116,8 +109,8 @@ sealed class TodokTodokExceptions : Throwable() {
                 DiscussionExceptions.EmptyContent.message -> DiscussionExceptions.EmptyContent
 
                 // 도서 관련 예외
-                BookException.EmptyKeywordException.message -> BookException.EmptyKeywordException
-                BookException.EmptyISBNException.message -> BookException.EmptyISBNException
+                BookException.EmptyKeyword.message -> BookException.EmptyKeyword
+                BookException.EmptyISBN.message -> BookException.EmptyISBN
                 BookException.EmptySelectedBook.message -> BookException.EmptySelectedBook
 
                 // 도서 저자 관련 예외
@@ -138,7 +131,7 @@ sealed class TodokTodokExceptions : Throwable() {
                 KeywordException.EmptyKeyword.message -> KeywordException.EmptyKeyword
 
                 // 책 검색 사이즈 예외
-                SearchedBooksTotalSizeException.InvalidSize.message -> SearchedBooksTotalSizeException.InvalidSize
+                SearchedBooksTotalSize.InvalidSize.message -> SearchedBooksTotalSize.InvalidSize
 
                 // 댓글 관련 예외
                 CommentExceptions.EmptyContent.message -> CommentExceptions.EmptyContent
@@ -158,7 +151,11 @@ sealed class TodokTodokExceptions : Throwable() {
                 ReplyExceptions.ReplyNotBelongToComment.message -> ReplyExceptions.ReplyNotBelongToComment
                 ReplyExceptions.OnlyOwnerCanModifyOrDelete.message -> ReplyExceptions.OnlyOwnerCanModifyOrDelete
 
-                // 서버 메시지와 일치하지 않으면 기본 BadRequest 예외 반환
+                // 프로필 이미지 수정 관련 예와
+                ProfileImageExceptions.EmptyContent.message -> ProfileImageExceptions.EmptyContent
+                ProfileImageExceptions.OverMaxSize.message -> ProfileImageExceptions.OverMaxSize
+                ProfileImageExceptions.NotImageFile.message -> ProfileImageExceptions.NotImageFile
+
                 else -> HttpExceptions.BadRequestException
             }
     }
@@ -173,12 +170,12 @@ sealed class TodokTodokExceptions : Throwable() {
 @OptIn(ExperimentalSerializationApi::class)
 fun Throwable.toDomain(): TodokTodokExceptions =
     when (this) {
-        is java.net.ConnectException -> TodokTodokExceptions.ConnectException // 서버 연결 실패
-        is java.util.concurrent.TimeoutException -> TodokTodokExceptions.TimeoutError // 요청 시간 초과
-        is java.net.UnknownHostException -> TodokTodokExceptions.UnknownHostError // 호스트를 찾을 수 없음
-        is java.net.SocketException -> TodokTodokExceptions.SocketException // 소켓 오류
-        is java.io.IOException -> TodokTodokExceptions.IOException // 일반 IO 예외
-        is kotlin.coroutines.cancellation.CancellationException -> TodokTodokExceptions.CancellationException // 코루틴/작업 취소
-        is kotlinx.serialization.MissingFieldException -> TodokTodokExceptions.MissingFieldException // Json 직렬화 오류
-        else -> TodokTodokExceptions.UnknownException(this) // 그 외 알 수 없는 예외
+        is java.net.ConnectException -> TodokTodokExceptions.ConnectException
+        is java.util.concurrent.TimeoutException -> TodokTodokExceptions.TimeoutError
+        is java.net.UnknownHostException -> TodokTodokExceptions.UnknownHostError
+        is java.net.SocketException -> TodokTodokExceptions.SocketException
+        is java.io.IOException -> TodokTodokExceptions.IOException
+        is kotlinx.serialization.MissingFieldException -> TodokTodokExceptions.MissingFieldException
+        is kotlinx.coroutines.CancellationException -> TodokTodokExceptions.CancellationException
+        else -> TodokTodokExceptions.UnknownException(this)
     }

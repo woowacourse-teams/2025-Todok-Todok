@@ -306,6 +306,11 @@
     <string name="discussions_content_description_notificition">알림 페이지로 이동합니다</string>
     <string name="notification_icon">아이콘</string>
 
+    <!-- 프로필 이미지 수정 관련 예외 -->
+    <string name="error_profile_image_empty">이미지가 비어 있어요. 다시 선택해 주세요.</string>
+    <string name="error_profile_image_size">5MB 이하의 이미지를 등록해주세요.</string>
+    <string name="error_profile_image_not_image">이미지 파일만 등록할 수 있어요.</string>
+
     <string name="network_try_connection">네트워크 연결을 재시도중입니다.</string>
     <string name="progress_description">로딩 중</string>
 
