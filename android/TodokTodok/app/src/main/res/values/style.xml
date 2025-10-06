@@ -65,4 +65,11 @@
         <item name="android:textColor">@color/black_18</item>
         <item name="android:textSize">@dimen/font_size_normal</item>
     </style>
+
+    <style name="draftDialog" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:layout_marginHorizontal">@dimen/space_12</item>
+        <item name="android:windowMinWidthMajor">95%</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
 </resources>

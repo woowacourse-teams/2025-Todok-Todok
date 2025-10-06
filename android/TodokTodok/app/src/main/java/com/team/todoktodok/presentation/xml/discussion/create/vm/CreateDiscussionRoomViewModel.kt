@@ -43,15 +43,15 @@ class CreateDiscussionRoomViewModel(
     }
 
     fun isPossibleToCreate() {
-        val title = _uiState.value?.title ?: ""
-        val opinion = _uiState.value?.opinion ?: ""
-
-        if (title.isBlank() && opinion.isBlank()) {
-            _uiEvent.setValue(CreateDiscussionUiEvent.ShowToast(ErrorCreateDiscussionType.TITLE_AND_CONTENT_NOT_FOUND))
-        } else if (title.isBlank()) {
-            _uiEvent.setValue(CreateDiscussionUiEvent.ShowToast(ErrorCreateDiscussionType.TITLE_NOT_FOUND))
-        } else if (opinion.isBlank()) {
-            _uiEvent.setValue(CreateDiscussionUiEvent.ShowToast(ErrorCreateDiscussionType.CONTENT_NOT_FOUND))
+        val error = _uiState.value?.validate()
+        if (error != null) {
+            _uiEvent.setValue(CreateDiscussionUiEvent.ShowToast(error))
+            return
+        }
+        when (mode) {
+            is SerializationCreateDiscussionRoomMode.Create -> createDiscussionRoom()
+            is SerializationCreateDiscussionRoomMode.Draft -> createDiscussionRoom()
+            is SerializationCreateDiscussionRoomMode.Edit -> editDiscussionRoom()
         }
     }
 
@@ -136,7 +136,7 @@ class CreateDiscussionRoomViewModel(
         }
     }
 
-    fun createDiscussionRoom() {
+    private fun createDiscussionRoom() {
         val book =
             _uiState.value?.book
                 ?: run {
@@ -199,7 +199,7 @@ class CreateDiscussionRoomViewModel(
         }
     }
 
-    fun editDiscussionRoom() {
+    private fun editDiscussionRoom() {
         val discussionRoomId =
             _uiState.value?.discussionRoomId ?: run {
                 updateErrorCreateDiscussion(
