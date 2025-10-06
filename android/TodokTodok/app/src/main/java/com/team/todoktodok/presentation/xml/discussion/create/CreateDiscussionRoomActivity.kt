@@ -169,9 +169,6 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
 
     private fun settingCreateMode(binding: ActivityCreateDiscussionRoomBinding) {
         binding.apply {
-            btnCreate.setOnClickListener {
-                viewModel.createDiscussionRoom()
-            }
             etDiscussionRoomTitle.setText(viewModel.uiState.value?.title)
             etDiscussionRoomOpinion.setText(viewModel.uiState.value?.opinion)
         }
@@ -179,17 +176,9 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
 
     private fun settingEditMode(binding: ActivityCreateDiscussionRoomBinding) {
         binding.apply {
-            btnCreate.apply {
-                text = getString(R.string.edit)
-                setOnClickListener {
-                    viewModel.editDiscussionRoom()
-                }
-                etDiscussionRoomTitle.setText(viewModel.uiState.value?.title)
-                etDiscussionRoomOpinion.setText(viewModel.uiState.value?.opinion)
-                btnCreate.setOnClickListener {
-                    viewModel.editDiscussionRoom()
-                }
-            }
+            etDiscussionRoomTitle.setText(viewModel.uiState.value?.title)
+            etDiscussionRoomOpinion.setText(viewModel.uiState.value?.opinion)
+            btnCreate.text = getString(R.string.edit)
         }
     }
 
