@@ -4,8 +4,9 @@ import androidx.compose.runtime.Immutable
 
 @Immutable
 data class DiscussionItem(
+    val discussionId: Long,
     val bookImage: String,
-    val bookName: String,
+    val bookTitle: String,
     val bookAuthor: String,
     val discussionTitle: String,
     val writerProfile: String,
