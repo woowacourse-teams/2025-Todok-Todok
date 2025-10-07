@@ -17,6 +17,7 @@ import todoktodok.backend.book.infrastructure.aladin.AladinRestClient;
 public class BookQueryService {
 
     private static final String ISBN13_PATTERN = "\\d{13}";
+    private static final int MIN_SIZE = 1;
     private static final int MAX_SIZE = 200;
 
     private final AladinRestClient aladinRestClient;
@@ -66,7 +67,7 @@ public class BookQueryService {
     }
 
     private void validatePageSize(final int size) {
-        if (size > MAX_SIZE) {
+        if (size < MIN_SIZE || size > MAX_SIZE) {
             throw new IllegalArgumentException(
                     String.format("유효하지 않은 페이지 사이즈입니다: size = %d", size));
         }
