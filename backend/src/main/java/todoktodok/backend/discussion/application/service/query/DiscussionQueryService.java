@@ -118,7 +118,7 @@ public class DiscussionQueryService {
         final Member member = findMember(memberId);
 
         final Pageable pageable = PageRequest.of(0, size, Direction.DESC, "id");
-        Slice<Long> discussionIdsSlice = sliceDiscussionsByBook(bookId, cursor, pageable);
+        final Slice<Long> discussionIdsSlice = sliceDiscussionsByBook(bookId, cursor, pageable);
 
         return createPageResponse(discussionIdsSlice, member);
     }
@@ -385,7 +385,11 @@ public class DiscussionQueryService {
         return activeDiscussionCursor.toEncoded();
     }
 
-    private Slice<Long> sliceDiscussionsByBook(Long bookId, String cursor, Pageable pageable) {
+    private Slice<Long> sliceDiscussionsByBook(
+            final Long bookId,
+            final String cursor,
+            final Pageable pageable
+    ) {
         if (cursor == null || cursor.isBlank()) {
             return discussionRepository.findIdsByBookId(bookId, pageable);
         }
