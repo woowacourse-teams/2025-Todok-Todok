@@ -268,6 +268,7 @@ class SelectBookActivity : AppCompatActivity() {
                 SerializationCreateDiscussionRoomMode.Create(serializationBook),
             )
         startActivity(intent)
+        finish()
     }
 
     private fun hideKeyBoard(view: View) {

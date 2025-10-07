@@ -187,10 +187,8 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
 
     private fun navigateToSelectBook() {
         val intent = SelectBookActivity.Intent(this@CreateDiscussionRoomActivity)
-        intent.apply {
-            flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-        }
         startActivity(intent)
+        finish()
     }
 
     private fun setupUiState(binding: ActivityCreateDiscussionRoomBinding) {
