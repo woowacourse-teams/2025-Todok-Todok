@@ -1,7 +1,6 @@
 package todoktodok.backend.discussion.application.service.query;
 
 import jakarta.annotation.Nullable;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Base64;
@@ -13,12 +12,12 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
-
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.comment.domain.repository.CommentRepository;
@@ -96,14 +95,7 @@ public class DiscussionQueryService {
 
         final Slice<Long> discussionIdsSlice = sliceDiscussionsBy(cursor, size);
 
-        final List<Long> discussionIds = discussionIdsSlice.getContent();
-        final boolean hasNextPage = discussionIdsSlice.hasNext();
-        final String nextCursor = findNextCursor(hasNextPage, discussionIds);
-
-        return new LatestDiscussionPageResponse(
-                getDiscussionsResponses(discussionIds, member),
-                new PageInfo(hasNextPage, nextCursor)
-        );
+        return createPageResponse(discussionIdsSlice, member);
     }
 
     public List<DiscussionResponse> getDiscussionsByKeyword(
@@ -114,6 +106,21 @@ public class DiscussionQueryService {
 
         final Member member = findMember(memberId);
         return getDiscussionsByKeyword(keyword, member);
+    }
+
+    public LatestDiscussionPageResponse getDiscussionsByBook(
+            final Long memberId,
+            final Long bookId,
+            final int size,
+            @Nullable final String cursor
+    ) {
+        validatePageSize(size);
+        final Member member = findMember(memberId);
+
+        final Pageable pageable = PageRequest.of(0, size, Direction.DESC, "id");
+        Slice<Long> discussionIdsSlice = sliceDiscussionsByBook(bookId, cursor, pageable);
+
+        return createPageResponse(discussionIdsSlice, member);
     }
 
     public List<DiscussionResponse> getHotDiscussions(
@@ -376,6 +383,29 @@ public class DiscussionQueryService {
 
         final ActiveDiscussionCursor activeDiscussionCursor = new ActiveDiscussionCursor(lastDiscussionLatestCommentId);
         return activeDiscussionCursor.toEncoded();
+    }
+
+    private Slice<Long> sliceDiscussionsByBook(Long bookId, String cursor, Pageable pageable) {
+        if (cursor == null || cursor.isBlank()) {
+            return discussionRepository.findIdsByBookId(bookId, pageable);
+        }
+
+        final Long cursorId = decodeCursor(cursor);
+        return discussionRepository.findIdsByBookIdLessThan(bookId, cursorId, pageable);
+    }
+
+    private LatestDiscussionPageResponse createPageResponse(
+            final Slice<Long> discussionIdsSlice,
+            final Member member
+    ) {
+        final List<Long> discussionIds = discussionIdsSlice.getContent();
+        final boolean hasNextPage = discussionIdsSlice.hasNext();
+        final String nextCursor = findNextCursor(hasNextPage, discussionIds);
+
+        return new LatestDiscussionPageResponse(
+                getDiscussionsResponses(discussionIds, member),
+                new PageInfo(hasNextPage, nextCursor)
+        );
     }
 
     private void validateKeywordNotBlank(final String keyword) {

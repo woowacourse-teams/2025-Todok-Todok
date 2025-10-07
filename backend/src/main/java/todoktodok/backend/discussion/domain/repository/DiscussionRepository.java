@@ -2,7 +2,6 @@ package todoktodok.backend.discussion.domain.repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -109,6 +108,27 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
     List<Long> findActiveDiscussionsByCursor(
             @Param("periodStart") final LocalDateTime periodStart,
             @Param("lastDiscussionLatestCommentId") final Long lastDiscussionLatestCommentId,
+            final Pageable pageable
+    );
+
+    @Query("""
+        SELECT d.id
+        FROM Discussion d
+        WHERE d.book.id = :bookId
+    """)
+    Slice<Long> findIdsByBookId(
+            @Param("bookId") final Long bookId,
+            final Pageable pageable
+    );
+
+    @Query("""
+        SELECT d.id
+        FROM Discussion d
+        WHERE d.book.id = :bookId AND d.id < :cursorId
+""")
+    Slice<Long> findIdsByBookIdLessThan(
+            @Param("bookId") final Long bookId,
+            @Param("cursorId") final Long cursorId,
             final Pageable pageable
     );
 }

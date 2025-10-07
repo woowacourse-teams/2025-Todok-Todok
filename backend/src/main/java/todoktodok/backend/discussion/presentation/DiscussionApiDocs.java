@@ -430,6 +430,139 @@ public interface DiscussionApiDocs {
             ) final String cursor
     );
 
+    @Operation(summary = "도서별 토론방 최신순 전체 조회 API")
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "도서별 토론방 최신순 조회 성공",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = LatestDiscussionPageResponse.class),
+                            examples = @ExampleObject(
+                                    value = """
+                                            {
+                                              "items": [
+                                                  {
+                                                    "discussionId": 2,
+                                                    "book": {
+                                                        "bookId": 1,
+                                                        "bookTitle": "오브젝트",
+                                                        "bookAuthor": "조영호",
+                                                        "bookImage": "https://image.png"
+                                                    },
+                                                    "member": {
+                                                        "memberId": 1,
+                                                        "nickname": "듀이",
+                                                        "profileImage": "https://example.com/image1.png"
+                                                    },
+                                                    "createdAt": "2025-08-14T10:00:00",
+                                                    "discussionTitle": "토론방 제목1",
+                                                    "discussionOpinion": "토론방 내용1",
+                                                    "viewCount": 2,
+                                                    "likeCount": 10,
+                                                    "commentCount": 5,
+                                                    "isLikedByMe": true
+                                                  },
+                                                  {
+                                                    "discussionId": 1,
+                                                    "book": {
+                                                        "bookId": 1,
+                                                        "bookTitle": "오브젝트",
+                                                        "bookAuthor": "조영호",
+                                                        "bookImage": "https://image.png"
+                                                    },
+                                                    "member": {
+                                                        "memberId": 2,
+                                                        "nickname": "모다",
+                                                        "profileImage": "https://example.com/image2.png"
+                                                    },
+                                                    "createdAt": "2025-08-14T10:05:00",
+                                                    "discussionTitle": "토론방 제목2",
+                                                    "discussionOpinion": "토론방 내용2",
+                                                    "viewCount": 2,
+                                                    "likeCount": 5,
+                                                    "commentCount": 3,
+                                                    "isLikedByMe": false
+                                                  }
+                                              ],
+                                              "pageInfo": {
+                                                "hasNext": true,
+                                                "nextCursor": "Mw=="
+                                              }
+                                            }
+                                            """
+                            )
+                    )),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "토큰 인증 오류",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "JWT 오류",
+                                    value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
+                            )
+                    )),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "액세스 토큰 만료 오류",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "액세스 토큰 만료 오류",
+                                    value = "{\"code\":401, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
+                            )
+                    )),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "존재하지 않는 리소스",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "회원 없음",
+                                    value = "{\"code\":404, \"message\":\"[ERROR] 해당 회원을 찾을 수 없습니다\"}"
+                            )
+                    )),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "서버 오류",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "서버 오류",
+                                    value = "{\"code\":500, \"message\":\"[ERROR] 서버 내부 오류가 발생했습니다\"}"
+                            )
+                    ))
+    })
+    ResponseEntity<LatestDiscussionPageResponse> getDiscussionsByBook(
+            @Parameter(hidden = true) final Long memberId,
+            @Parameter(
+                    description = "토론방 관련 책 ID",
+                    content = @Content(
+                            schema = @Schema(implementation = Long.class),
+                            examples = @ExampleObject(value = "1")
+                    )
+            ) final Long bookId,
+            @Parameter(
+                    description = "페이지 사이즈",
+                    content = @Content(
+                            schema = @Schema(implementation = Integer.class),
+                            examples = @ExampleObject(value = "20")
+                    )
+            ) final int size,
+            @Parameter(
+                    description = "페이지 커서",
+                    content = @Content(
+                            schema = @Schema(implementation = String.class),
+                            examples = @ExampleObject(value = "NA==")
+                    )
+            ) final String cursor
+    );
+
     @Operation(summary = "토론방 필터링 조회 API")
     @ApiResponses({
             @ApiResponse(
