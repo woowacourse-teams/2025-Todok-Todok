@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.provider.ValueSources;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -183,16 +184,16 @@ public class BookQueryServiceTest {
                     .hasMessageContaining("검색어는 1자 이상이어야 합니다");
         }
 
-        @Test
+        @ParameterizedTest
+        @ValueSource(ints = {0, 201})
         @DisplayName("도서 검색 시 유효하지 않은 페이지 사이즈가 입력되면 예외가 발생한다")
-        void searchByPagingTest_sizeIsNotValidate() {
+        void searchByPagingTest_sizeIsNotValidate(final int invalidSize) {
             // given
-            final int overMaxSize = 201;
             final String cursor = null;
             final String keyword = "오브젝트";
 
             // when - then
-            assertThatThrownBy(() -> bookQueryService.searchByPaging(overMaxSize, cursor, keyword))
+            assertThatThrownBy(() -> bookQueryService.searchByPaging(invalidSize, cursor, keyword))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessageContaining("유효하지 않은 페이지 사이즈입니다");
         }
