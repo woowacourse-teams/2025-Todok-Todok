@@ -26,7 +26,7 @@
             android:layout_width="@dimen/space_24"
             android:layout_height="@dimen/space_24"
             android:contentDescription="@string/notification_icon"
-            android:src="@drawable/ic_edit"
+            android:src="@drawable/ic_alarm"
             app:layout_constraintBottom_toTopOf="@id/tv_nickname"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
