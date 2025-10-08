@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  performance:
+    container_name: "performance_${ENV_ID}"
+    image: woowajeff/todoktodok:performance
+    ports:
+      - "80:8080"
+    volumes:
+      - ../log:/log
+    environment:
+      - SPRING_PROFILES_ACTIVE=performance
+    restart: always
+
+  promtail:
+    container_name: "promtail_performance_${ENV_ID}"
+    image: grafana/promtail:latest
+    volumes:
+      - ../config/promtail-config-performance.yml:/etc/promtail/promtail.yml
+      - ../log:/log
+      - ../promtail_data:/var/log/promtail
+    command: -config.file=/etc/promtail/promtail.yml
+    restart: always
+
+volumes:
+  promtail_positions:
