@@ -57,7 +57,7 @@ jobs:
 
   cd:
     needs: ci
-    runs-on: [self-hosted, performance]
+    runs-on: [self-hosted, perform]
     steps:
       - name: Cleanup backend log and promtail data directory before checkout
         run: |
