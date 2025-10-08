@@ -56,6 +56,8 @@ class DefaultDiscussionRepository(
 
     override suspend fun getDiscussion(): DiscussionRoom? = discussionLocalDataSource.getDiscussion()?.discussionRoomEntity?.toDomain()
 
+    override suspend fun getDraftDiscussionCount(): Int = discussionLocalDataSource.getDiscussionCount()
+
     override suspend fun saveDiscussionRoom(
         bookId: Long,
         discussionTitle: String,

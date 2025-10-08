@@ -22,4 +22,6 @@ class DefaultDiscussionLocalDataSource(
     override suspend fun getBook(): BookEntity = dao.getBook()
 
     override suspend fun deleteDiscussion() = dao.deleteDiscussion()
+
+    override suspend fun getDiscussionCount(): Int = dao.getDraftDiscussionCount()
 }

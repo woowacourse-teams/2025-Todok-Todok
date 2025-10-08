@@ -17,4 +17,6 @@ interface DiscussionLocalDataSource {
     suspend fun getBook(): BookEntity
 
     suspend fun deleteDiscussion()
+
+    suspend fun getDiscussionCount(): Int
 }

@@ -56,6 +56,8 @@ interface DiscussionRepository {
 
     suspend fun getDiscussion(): DiscussionRoom?
 
+    suspend fun getDraftDiscussionCount(): Int
+
     suspend fun reportDiscussion(
         discussionId: Long,
         reason: String,

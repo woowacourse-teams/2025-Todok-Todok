@@ -60,4 +60,7 @@ interface DiscussionDao {
 """,
     )
     suspend fun getBook(): BookEntity
+
+    @Query("SELECT COUNT(*) FROM discussion")
+    suspend fun getDraftDiscussionCount(): Int
 }
