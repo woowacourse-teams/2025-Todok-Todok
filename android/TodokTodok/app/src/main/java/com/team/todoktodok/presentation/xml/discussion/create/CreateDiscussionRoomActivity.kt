@@ -200,6 +200,8 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
     ) {
         if (draftCount == 0) {
             binding.btnSave.visibility = View.GONE
+        } else {
+            binding.btnSave.visibility = View.VISIBLE
         }
         binding.btnSave.text = this.getString(R.string.create_discussion_temp_save, draftCount)
     }
