@@ -30,6 +30,7 @@ import com.team.todoktodok.presentation.core.ext.loadImage
 import com.team.todoktodok.presentation.xml.book.SelectBookActivity
 import com.team.todoktodok.presentation.xml.discussion.create.DraftDialog.Companion.KEY_REQUEST_DRAFT
 import com.team.todoktodok.presentation.xml.discussion.create.DraftDialog.Companion.KEY_RESULT_DRAFT
+import com.team.todoktodok.presentation.xml.discussion.create.draft.DraftsActivity
 import com.team.todoktodok.presentation.xml.discussion.create.vm.CreateDiscussionRoomViewModel
 import com.team.todoktodok.presentation.xml.discussion.create.vm.CreateDiscussionRoomViewModelFactory
 import com.team.todoktodok.presentation.xml.discussiondetail.DiscussionDetailActivity
@@ -138,23 +139,13 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
     }
 
     private fun initView(binding: ActivityCreateDiscussionRoomBinding) {
-        supportFragmentManager.setFragmentResultListener(
-            CommonDialog.REQUEST_KEY_COMMON_DIALOG,
-            this,
-        ) { _, bundle ->
-            val confirmed = bundle.getBoolean(CommonDialog.RESULT_KEY_COMMON_DIALOG)
-            if (confirmed) {
-                viewModel.saveDraft()
-                return@setFragmentResultListener
-            }
-            viewModel.finish()
-        }
         binding.apply {
             when (mode) {
                 is SerializationCreateDiscussionRoomMode.Create -> settingCreateMode(binding)
                 is SerializationCreateDiscussionRoomMode.Edit -> settingEditMode(binding)
                 is SerializationCreateDiscussionRoomMode.Draft -> settingCreateMode(binding)
             }
+            btnSave.setOnClickListener { showDraftsListDialog() }
             onBackPressedDispatcher.addCallback { navigateToSelectBook() }
             btnBack.setOnClickListener { navigateToSelectBook() }
             etDiscussionRoomTitle.apply {
@@ -163,6 +154,7 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
                     viewModel.updateTitle(text.toString())
                 }
             }
+
             etDiscussionRoomOpinion.doAfterTextChanged { text: Editable? ->
                 viewModel.updateOpinion(text.toString())
             }
@@ -198,7 +190,18 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
             observeTitle(uiState.title, binding)
             observeOpinion(uiState.opinion, binding)
             observeIsDraft(uiState.isDraft, binding)
+            observeDraftCount(uiState.draftDiscussionCount, binding)
         }
+    }
+
+    fun observeDraftCount(
+        draftCount: Int,
+        binding: ActivityCreateDiscussionRoomBinding,
+    ) {
+        if (draftCount == 0) {
+            binding.btnSave.visibility = View.GONE
+        }
+        binding.btnSave.text = this.getString(R.string.create_discussion_temp_save, draftCount)
     }
 
     fun observeIsDraft(
@@ -221,6 +224,11 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
             if (isSave) viewModel.saveDraft()
             navigateToMain()
         }
+    }
+
+    private fun showDraftsListDialog() {
+        val intent = DraftsActivity.Intent(this)
+        startActivity(intent)
     }
 
     private fun navigateToMain() {

@@ -8,6 +8,7 @@ data class CreateDiscussionUiState(
     val opinion: String = "",
     val book: Book? = null,
     val discussionRoomId: Long? = null,
+    val draftDiscussionCount: Int = 0,
 ) {
     val isCreate: Boolean get() = title.isNotBlank() && opinion.isNotBlank()
 

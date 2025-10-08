@@ -40,6 +40,14 @@ class CreateDiscussionRoomViewModel(
 
     init {
         decideMode()
+        getDraftDiscussionCount()
+    }
+
+    fun getDraftDiscussionCount() {
+        viewModelScope.launch {
+            val count = discussionRepository.getDraftDiscussionCount()
+            _uiState.value = _uiState.value?.copy(draftDiscussionCount = count)
+        }
     }
 
     fun isPossibleToCreate() {
