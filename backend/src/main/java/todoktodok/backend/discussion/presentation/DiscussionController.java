@@ -158,6 +158,11 @@ public class DiscussionController implements DiscussionApiDocs {
                 .build();
     }
 
+    @GetMapping("/health")
+    public ResponseEntity<Void> checkHealth() {
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
     private URI createUri(final Long id) {
         return ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")

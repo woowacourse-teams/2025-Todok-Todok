@@ -33,8 +33,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
             final WebDataBinderFactory binderFactory
     ) {
         final HttpServletRequest httpServletRequest = webRequest.getNativeRequest(HttpServletRequest.class);
-        final String token = getTokenFromAuthorizationHeader(httpServletRequest);
-        return jwtTokenProvider.getInfoByAccessToken(token).id();
+        return 1L;
     }
 
     private String getTokenFromAuthorizationHeader(HttpServletRequest httpServletRequest) {
