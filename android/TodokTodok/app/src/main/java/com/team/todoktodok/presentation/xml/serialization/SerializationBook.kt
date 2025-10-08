@@ -11,8 +11,10 @@ data class SerializationBook(
     val title: String,
     val author: String,
     val image: String,
+    val publisher: String,
+    val summary: String,
 ) : Parcelable {
-    fun toDomain(): Book = Book(id, title, author, image)
+    fun toDomain(): Book = Book(id, title, author, image, publisher, summary)
 }
 
 fun Book.toSerialization(): SerializationBook =
@@ -21,6 +23,8 @@ fun Book.toSerialization(): SerializationBook =
         title = title,
         author = author,
         image = image,
+        publisher = publisher,
+        summary = summary,
     )
 
 fun SearchedBook.toSerialization(): SerializationBook =
@@ -29,4 +33,6 @@ fun SearchedBook.toSerialization(): SerializationBook =
         title = mainTitle,
         author = author,
         image = image,
+        publisher = publisher,
+        summary = summary,
     )

@@ -74,12 +74,11 @@ fun ExpandableSection(
     title: String,
     body: String,
     modifier: Modifier = Modifier,
-    collapsedLines: Int = 3,
+    collapsedLines: Int = 0,
     expandedInitial: Boolean = false,
     sectionId: String? = null,
 ) {
     var expanded by rememberSaveable(listOf(sectionId)) { mutableStateOf(expandedInitial) }
-    val collapsed = collapsedLines.coerceAtLeast(1)
     val rotation by animateFloatAsState(if (expanded) 180f else 0f, label = "arrow")
     Column(
         modifier =
@@ -93,8 +92,7 @@ fun ExpandableSection(
                     .semantics {
                         role = Role.Button
                         stateDescription = if (expanded) "확장됨" else "접힘"
-                    }
-                    .toggleable(value = expanded, role = Role.Button) { expanded = it },
+                    }.toggleable(value = expanded, role = Role.Button) { expanded = it },
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(text = title)
@@ -109,7 +107,7 @@ fun ExpandableSection(
         }
         Text(
             text = body,
-            maxLines = if (expanded) 10 else collapsed,
+            maxLines = if (expanded) 10 else collapsedLines,
             overflow = TextOverflow.Ellipsis,
         )
     }
