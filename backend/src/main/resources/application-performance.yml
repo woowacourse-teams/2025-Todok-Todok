@@ -38,6 +38,11 @@ spring:
       - submodule/security/database.yml
       - submodule/security/firebase.yml
 
+server:
+  tomcat:
+    mbeanregistry:
+      enabled: true
+
 auth:
   mode: google
 
