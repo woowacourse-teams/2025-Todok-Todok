@@ -1,0 +1,65 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${database.performance.url}
+    username: ${database.performance.username}
+    password: ${database.performance.password}
+  sql:
+    init:
+      mode: never
+      schema-locations:
+      data-locations:
+  jpa:
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+    hibernate:
+      ddl-auto: validate
+    defer-datasource-initialization: false
+
+  flyway:
+    enabled: true
+    user: ${database.performance.username}
+    password: ${database.performance.password}
+    locations: classpath:db/migration_dev
+    baseline-on-migrate: true
+    validate-on-migrate: true
+    clean-disabled: true
+    out-of-order: false
+    encoding: UTF-8
+
+  config:
+    activate:
+      on-profile: performance
+    import:
+      - submodule/security/database.yml
+      - submodule/security/firebase.yml
+
+auth:
+  mode: google
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+  metrics:
+    distribution:
+      percentiles-histogram:
+        http:
+          server:
+            requests: true
+
+firebase:
+  enabled: true
+  account:
+    path: ${firebase.account.path}
+
+jwt:
+  access-token:
+    expire-mills: ${jwt.access-token.dev.expire-mills}
