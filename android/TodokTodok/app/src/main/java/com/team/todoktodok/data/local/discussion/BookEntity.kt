@@ -12,6 +12,8 @@ data class BookEntity(
     @ColumnInfo(name = "book_title") val bookTitle: String,
     @ColumnInfo(name = "book_author") val bookAuthor: String,
     @ColumnInfo(name = "book_image") val bookImage: String,
+    @ColumnInfo(name = "book_publisher") val bookPublisher: String,
+    @ColumnInfo(name = "book_summary") val bookSummary: String,
 )
 
 fun SearchedBook.toEntity() =
@@ -20,6 +22,8 @@ fun SearchedBook.toEntity() =
         bookTitle = title,
         bookAuthor = author,
         bookImage = image,
+        bookPublisher = publisher,
+        bookSummary = summary,
     )
 
 fun BookEntity.toDomain() =
@@ -28,4 +32,6 @@ fun BookEntity.toDomain() =
         title = bookTitle,
         author = bookAuthor,
         image = bookImage,
+        publisher = bookPublisher,
+        summary = bookSummary,
     )
