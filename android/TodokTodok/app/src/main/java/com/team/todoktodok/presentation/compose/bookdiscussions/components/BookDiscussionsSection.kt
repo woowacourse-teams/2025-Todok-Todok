@@ -34,6 +34,7 @@ fun BookDiscussionsSection(
             items = discussionItems.toList(),
         ) {
             DiscussionCard(it)
+            Spacer(Modifier.height(20.dp))
         }
     }
 }
@@ -47,13 +48,13 @@ fun DiscussionCard(
     ElevatedCard(
         onClick = { onClick(uiState.discussionId) },
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier,
     ) {
         Column(
             modifier =
                 Modifier
                     .background(White)
-                    .padding(12.dp),
+                    .padding(top = 20.dp, bottom = 12.dp, start = 12.dp, end = 12.dp),
         ) {
             DiscussionTop(
                 bookTitle = uiState.bookTitle,
