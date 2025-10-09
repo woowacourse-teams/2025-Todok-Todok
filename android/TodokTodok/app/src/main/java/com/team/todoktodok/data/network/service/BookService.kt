@@ -3,9 +3,11 @@ package com.team.todoktodok.data.network.service
 import com.team.domain.model.exception.NetworkResult
 import com.team.todoktodok.data.network.request.BookRequest
 import com.team.todoktodok.data.network.response.book.SearchedBookResultResponse
+import com.team.todoktodok.data.network.response.discussion.BookResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface BookService {
@@ -15,6 +17,11 @@ interface BookService {
         @Query("cursor") cursor: String?,
         @Query("keyword") keyword: String,
     ): NetworkResult<SearchedBookResultResponse>
+
+    @POST("v1/books/{bookId}")
+    suspend fun fetchBook(
+        @Path("bookId") bookId: Long,
+    ): NetworkResult<BookResponse>
 
     @POST("v1/books")
     suspend fun saveBook(
