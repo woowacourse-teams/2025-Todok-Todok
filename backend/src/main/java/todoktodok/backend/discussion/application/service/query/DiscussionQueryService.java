@@ -202,17 +202,20 @@ public class DiscussionQueryService {
         validatePageSize(requestedSize);
         Member member = findMember(memberId);
         Long cursorId = (cursor != null && !cursor.isBlank()) ? decodeCursor(cursor) : null;
-        Pageable pageable = PageRequest.of(0, requestedSize + 1, Sort.by(Sort.Order.desc("id")));
+        Pageable pageable = PageRequest.of(0, requestedSize, Sort.by(Sort.Order.desc("id")));
 
-        List<Long> likedIds = discussionLikeRepository.findLikedDiscussionIdsByMemberAndCursor(member, cursorId, pageable);
+        Slice<Long> likedIdSlice = discussionLikeRepository.findLikedDiscussionIdsByMemberAndCursor(
+                member, cursorId, pageable
+        );
 
-        boolean hasNext = likedIds.size() > requestedSize;
-        if (hasNext) {
-            likedIds.remove(likedIds.size() - 1);
-        }
+        List<Long> likedIds = likedIdSlice.getContent();
+        boolean hasNext = likedIdSlice.hasNext();
+
+        String nextCursor = hasNext && !likedIds.isEmpty()
+                ? encodeCursorId(likedIds.get(likedIds.size() - 1))
+                : null;
 
         List<DiscussionResponse> responses = getDiscussionsResponses(likedIds, member);
-        String nextCursor = hasNext && !likedIds.isEmpty() ? encodeCursorId(likedIds.get(likedIds.size() - 1)) : null;
 
         return new LikedDiscussionPageResponse(responses, new PageInfo(hasNext, nextCursor));
     }
