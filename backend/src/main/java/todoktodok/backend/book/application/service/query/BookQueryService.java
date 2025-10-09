@@ -17,8 +17,9 @@ import todoktodok.backend.book.infrastructure.aladin.AladinRestClient;
 public class BookQueryService {
 
     private static final String ISBN13_PATTERN = "\\d{13}";
-    private static final int MIN_SIZE = 1;
-    private static final int MAX_SIZE = 200;
+    private static final int MIN_PAGE_SIZE = 1;
+    private static final int MAX_PAGE_SIZE = 50;
+    private static final int MAX_CURSOR_SIZE = 200;
 
     private final AladinRestClient aladinRestClient;
 
@@ -67,7 +68,7 @@ public class BookQueryService {
     }
 
     private void validatePageSize(final int size) {
-        if (size < MIN_SIZE || size > MAX_SIZE) {
+        if (size < MIN_PAGE_SIZE || size > MAX_PAGE_SIZE) {
             throw new IllegalArgumentException(
                     String.format("유효하지 않은 페이지 사이즈입니다: size = %d", size));
         }
@@ -88,7 +89,7 @@ public class BookQueryService {
 
     private int getTotalSize(final AladinItemResponses aladinItemResponses) {
         final int totalResultsFromAladin = aladinItemResponses.totalResults();
-        return Math.min(totalResultsFromAladin, MAX_SIZE);
+        return Math.min(totalResultsFromAladin, MAX_PAGE_SIZE);
     }
 
     private PageInfo createNextCursor(
@@ -100,11 +101,11 @@ public class BookQueryService {
         final int currentSize = searchedBooks.size();
         final int fetchedItemSize = aladinItemResponses.item().size();
 
-        if (fetchedItemSize < requestedSize || page == MAX_SIZE / requestedSize) {
+        if (fetchedItemSize < requestedSize || page == MAX_CURSOR_SIZE / requestedSize) {
             return new PageInfo(false, null, currentSize);
         }
 
-        if (page > MAX_SIZE / requestedSize) {
+        if (page > MAX_CURSOR_SIZE / requestedSize) {
             final String nextCursor = encodeCursorId(2);
             return new PageInfo(true, nextCursor, currentSize);
         }

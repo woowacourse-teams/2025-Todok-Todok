@@ -184,7 +184,28 @@ public class BookQueryServiceTest {
         }
 
         @ParameterizedTest
-        @ValueSource(ints = {0, 201})
+        @ValueSource(ints = {1, 50})
+        @DisplayName("도서 검색 시 유효한 페이지 사이즈가 입력되면 예외가 발생하지 않는다")
+        void searchByPagingTest_sizeIsValidate(final int validSize) {
+            // given
+            final String cursor = null;
+            final String keyword = "자바";
+
+            // when
+            final LatestAladinBookPageResponse searchedBooks = bookQueryService.searchByPaging(validSize, cursor, keyword);
+
+            // then
+            assertAll(
+                    () -> assertThat(searchedBooks.items()).hasSizeGreaterThanOrEqualTo(1),
+                    () -> assertThat(searchedBooks.pageInfo().hasNext()).isTrue(),
+                    () -> assertThat(searchedBooks.pageInfo().nextCursor()).isNotNull(),
+                    () -> assertThat(searchedBooks.pageInfo().currentSize()).isLessThanOrEqualTo(validSize),
+                    () -> assertThat(searchedBooks.totalSize()).isGreaterThan(1)
+            );
+        }
+
+        @ParameterizedTest
+        @ValueSource(ints = {0, 51})
         @DisplayName("도서 검색 시 유효하지 않은 페이지 사이즈가 입력되면 예외가 발생한다")
         void searchByPagingTest_sizeIsNotValidate(final int invalidSize) {
             // given
