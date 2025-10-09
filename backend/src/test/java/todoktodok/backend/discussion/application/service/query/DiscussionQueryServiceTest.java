@@ -477,7 +477,7 @@ class DiscussionQueryServiceTest {
 
     @Nested
     @DisplayName("도서별 토론방 조회 테스트")
-    class getDiscussionsByBookTest {
+    class GetDiscussionsByBookTest {
 
         @Test
         @DisplayName("도서별 토론방 최신순 조회 시 cursor 값에 맞는 토론방의 생성일시 이후에 생성된 토론방 중 최신순으로 조회한다")
@@ -937,7 +937,7 @@ class DiscussionQueryServiceTest {
 
     @Nested
     @DisplayName("활성화 된 토론방 무한 스크롤 조회")
-    class getActiveDiscussions {
+    class GetActiveDiscussions {
 
         private LocalDateTime baseTime;
 

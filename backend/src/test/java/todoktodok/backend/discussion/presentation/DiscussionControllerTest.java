@@ -200,7 +200,7 @@ class DiscussionControllerTest {
 
     @Nested
     @DisplayName("도서별 토론방을 조회한다")
-    class getDiscussionsByBookTest {
+    class GetDiscussionsByBookTest {
 
         @Test
         @DisplayName("도서별 토론방을 최신순 조회한다 - 첫 페이지 조회")
