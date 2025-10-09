@@ -242,11 +242,12 @@ public class BookControllerTest {
                     .then().log().all()
                     .statusCode(HttpStatus.OK.value())
                     .body("items.size()", greaterThanOrEqualTo(1))
+                    .body("pageInfo.hasNext", is(false))
                     .body("pageInfo.nextCursor", nullValue());
         }
 
         @Test
-        @DisplayName("검색어로 도서를 검색한다 - cursor가 20보다 클 때 첫 페이지 응답")
+        @DisplayName("검색어로 도서를 검색한다 - cursor가 20보다 클 때")
         void searchByPagingTest_upperTwentyPage() {
             // given
             given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
@@ -258,7 +259,6 @@ public class BookControllerTest {
             final String keyword = "자바";
 
             final String cursorMeaningTwentyOne = "MjE=";
-            final String cursorMeaningTwo = "Mg==";
 
             // when - then
             RestAssured.given().log().all()
@@ -271,8 +271,8 @@ public class BookControllerTest {
                     .then().log().all()
                     .statusCode(HttpStatus.OK.value())
                     .body("items.size()", greaterThanOrEqualTo(1))
-                    .body("pageInfo.hasNext", is(true))
-                    .body("pageInfo.nextCursor", is(cursorMeaningTwo));
+                    .body("pageInfo.hasNext", is(false))
+                    .body("pageInfo.nextCursor", nullValue());
         }
     }
 
