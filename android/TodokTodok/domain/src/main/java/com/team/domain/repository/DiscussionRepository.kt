@@ -27,6 +27,11 @@ interface DiscussionRepository {
         cursor: String? = null,
     ): NetworkResult<LatestDiscussionPage>
 
+    suspend fun getBookDiscussions(
+        discussionId: Long,
+        size: Int,
+    ): NetworkResult<List<Discussion>>
+
     suspend fun getDiscussion(id: Long): NetworkResult<Discussion>
 
     suspend fun saveDiscussionRoom(
