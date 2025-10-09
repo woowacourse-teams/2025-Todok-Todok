@@ -82,8 +82,8 @@ public interface DiscussionApiDocs {
                                             value = "{\"code\":404, \"message\":\"[ERROR] 해당 회원을 찾을 수 없습니다\"}"
                                     ),
                                     @ExampleObject(
-                                            name = "책 없음",
-                                            value = "{\"code\":404, \"message\":\"[ERROR] 해당 책을 찾을 수 없습니다\"}"
+                                            name = "도서 없음",
+                                            value = "{\"code\":404, \"message\":\"[ERROR] 해당 도서를 찾을 수 없습니다\"}"
                                     )
                             }
                     )),
@@ -430,7 +430,7 @@ public interface DiscussionApiDocs {
             ) final String cursor
     );
 
-    @Operation(summary = "도서별 토론방 최신순 전체 조회 API")
+    @Operation(summary = "도서별 토론방 최신순 조회 API")
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
@@ -471,7 +471,7 @@ public interface DiscussionApiDocs {
                                                         "bookId": 1,
                                                         "bookTitle": "오브젝트",
                                                         "bookAuthor": "조영호",
-                                                        "bookImage": "https://image.png"
+                                                        "bookImage": "https://image.png",
                                                         "bookPublisher": "위키북스",
                                                         "bookSummary": "역할, 책임, 협력에 기반해 객체지향 프로그램을 설계하고 구현하는 방법, 응집도와 결합도를 이용해 설계를 트레이드오프하는 방법, 설계를 유연하게 만드는 다양한 의존성 관리 기법, 타입 계층을 위한 상속과 코드 재사용을 위한 합성의 개념, 다양한 설계 원칙과 디자인 패턴 등을 다룬다."
                                                     },
@@ -545,7 +545,7 @@ public interface DiscussionApiDocs {
     ResponseEntity<LatestDiscussionPageResponse> getDiscussionsByBook(
             @Parameter(hidden = true) final Long memberId,
             @Parameter(
-                    description = "토론방 관련 책 ID",
+                    description = "토론방 관련 도서 ID",
                     content = @Content(
                             schema = @Schema(implementation = Long.class),
                             examples = @ExampleObject(value = "1")
