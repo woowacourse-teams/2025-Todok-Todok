@@ -44,6 +44,12 @@ interface DiscussionService {
         @Query("cursor") cursor: String?,
     ): NetworkResult<LatestDiscussionsResponse>
 
+    @GET("v1/discussions")
+    suspend fun fetchBookDiscussions(
+        @Query("discussionId") discussionId: Long,
+        @Query("size") size: Int,
+    ): NetworkResult<List<DiscussionResponse>>
+
     @GET("v1/discussions/{discussionId}")
     suspend fun fetchDiscussion(
         @Path("discussionId") discussionId: Long,

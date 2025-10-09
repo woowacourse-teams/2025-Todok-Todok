@@ -12,6 +12,8 @@ import com.team.todoktodok.data.network.response.discussion.page.ActivatedDiscus
 import com.team.todoktodok.data.network.response.latest.LatestDiscussionsResponse
 import com.team.todoktodok.data.network.service.DiscussionService
 import retrofit2.Response
+import retrofit2.http.GET
+import retrofit2.http.Query
 
 class DefaultDiscussionRemoteDataSource(
     private val discussionService: DiscussionService,
@@ -36,6 +38,11 @@ class DefaultDiscussionRemoteDataSource(
         size: Int,
         cursor: String?,
     ): NetworkResult<LatestDiscussionsResponse> = discussionService.fetchLatestDiscussions(size, cursor)
+
+    override suspend fun fetchBookDiscussions(
+        discussionId: Long,
+        size: Int,
+    ): NetworkResult<List<DiscussionResponse>> = discussionService.fetchBookDiscussions(discussionId, size)
 
     override suspend fun fetchDiscussion(id: Long): NetworkResult<DiscussionResponse> = discussionService.fetchDiscussion(id)
 

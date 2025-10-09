@@ -14,6 +14,7 @@ import com.team.todoktodok.data.local.discussion.DiscussionRoomEntity
 import com.team.todoktodok.data.local.discussion.toDomain
 import com.team.todoktodok.data.local.discussion.toEntity
 import com.team.todoktodok.data.network.model.toStatus
+import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
 import com.team.todoktodok.data.network.response.discussion.toDomain
 
 class DefaultDiscussionRepository(
@@ -54,6 +55,14 @@ class DefaultDiscussionRepository(
         discussionRemoteDataSource
             .getLatestDiscussions(size, cursor)
             .map { discussions -> discussions.toDomain() }
+
+    override suspend fun getBookDiscussions(
+        discussionId: Long,
+        size: Int,
+    ): NetworkResult<List<Discussion>> =
+        discussionRemoteDataSource
+            .fetchBookDiscussions(discussionId, size)
+            .map { discussions -> discussions.map { it.toDomain() } }
 
     override suspend fun getDiscussion(id: Long): NetworkResult<Discussion> =
         discussionRemoteDataSource.fetchDiscussion(id).map { it.toDomain() }
