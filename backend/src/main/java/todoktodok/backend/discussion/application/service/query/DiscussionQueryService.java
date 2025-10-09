@@ -225,7 +225,7 @@ public class DiscussionQueryService {
     }
 
     private Slice<Long> sliceDiscussionsBy(
-            final String cursor,
+            @Nullable final String cursor,
             final int size
     ) {
         final Pageable pageable = PageRequest.of(0, size, Sort.Direction.DESC, "id");
@@ -238,7 +238,7 @@ public class DiscussionQueryService {
         return discussionRepository.findIdsLessThan(cursorId, pageable);
     }
 
-    private String processBlankCursor(final String cursor) {
+    private String processBlankCursor(@Nullable final String cursor) {
         if (cursor == null || cursor.isBlank()) {
             return null;
         }
@@ -255,7 +255,7 @@ public class DiscussionQueryService {
         return encodeCursorId(discussionIds.getLast());
     }
 
-    private Long decodeCursor(final String cursor) {
+    private Long decodeCursor(@Nullable final String cursor) {
         try {
             if (cursor == null || cursor.isBlank()) {
                 return null;
@@ -386,7 +386,7 @@ public class DiscussionQueryService {
 
     private Slice<Long> sliceDiscussionsByBook(
             final Long bookId,
-            final String cursor,
+            @Nullable final String cursor,
             final Pageable pageable
     ) {
         if (cursor == null || cursor.isBlank()) {
