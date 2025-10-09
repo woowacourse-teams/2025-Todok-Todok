@@ -161,7 +161,6 @@ public class DiscussionQueryService {
         validateDiscussionPeriod(period);
         validatePageSize(requestedSize);
 
-        validatePageSize(requestedSize);
         final Member member = findMember(memberId);
         final LocalDateTime periodStart = LocalDateTime.now().minusDays(period);
         final String normalizedCursor = processBlankCursor(cursor);
