@@ -1,6 +1,7 @@
 package com.team.todoktodok.presentation.compose.bookdiscussions.model
 
 import androidx.compose.runtime.Immutable
+import com.team.domain.model.Discussion
 
 @Immutable
 data class DiscussionItem(
@@ -13,6 +14,21 @@ data class DiscussionItem(
     val writerName: String,
     val isLikedByMe: Boolean,
     val likeCount: Long,
-    val viewsCount: Long,
+    val viewCount: Long,
     val commentCount: Long,
 )
+
+fun Discussion.toDiscussionItem() =
+    DiscussionItem(
+        discussionId = id,
+        bookImage = book.image,
+        bookTitle = book.title,
+        bookAuthor = book.author,
+        discussionTitle = discussionTitle,
+        writerProfile = writer.profileImage,
+        writerName = writer.nickname.value,
+        isLikedByMe = isLikedByMe,
+        likeCount = likeCount,
+        viewCount = viewCount,
+        commentCount = commentCount,
+    )

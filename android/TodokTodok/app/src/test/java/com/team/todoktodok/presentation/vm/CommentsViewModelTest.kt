@@ -209,7 +209,8 @@ class CommentsViewModelTest {
                 NetworkResult.Failure(exception)
 
             // when
-            val state = SavedStateHandle(mapOf(CommentsViewModel.KEY_DISCUSSION_ID to DISCUSSION_ID))
+            val state =
+                SavedStateHandle(mapOf(CommentsViewModel.KEY_DISCUSSION_ID to DISCUSSION_ID))
             val failedViewModel = CommentsViewModel(state, commentRepository, tokenRepository)
             val event = failedViewModel.uiEvent.getOrAwaitValue()
             advanceUntilIdle()

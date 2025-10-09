@@ -13,9 +13,9 @@ class SerializationDiscussion(
     val discussionOpinion: String,
     val writer: SerializationUser,
     val createAt: LocalDateTime,
-    val likeCount: Int,
-    val commentCount: Int,
-    val viewCount: Int = 0,
+    val likeCount: Long,
+    val commentCount: Long,
+    val viewCount: Long = 0,
     val isLikedByMe: Boolean,
 ) : Parcelable {
     fun toDomain(): Discussion =
