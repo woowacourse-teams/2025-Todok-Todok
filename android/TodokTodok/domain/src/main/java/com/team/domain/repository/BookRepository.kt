@@ -11,5 +11,7 @@ interface BookRepository {
         keyword: Keyword,
     ): NetworkResult<SearchedBooksResult>
 
+    suspend fun fetchBook(bookId: Long): NetworkResult<Book>
+
     suspend fun saveBook(book: SearchedBook): NetworkResult<Long>
 }

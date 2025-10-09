@@ -9,6 +9,7 @@ import com.team.domain.repository.BookRepository
 import com.team.todoktodok.data.datasource.book.BookRemoteDataSource
 import com.team.todoktodok.data.network.request.toRequest
 import com.team.todoktodok.data.network.response.book.toDomain
+import com.team.todoktodok.data.network.response.discussion.toDomain
 
 class DefaultBookRepository(
     private val bookRemoteDataSource: BookRemoteDataSource,
@@ -40,4 +41,5 @@ class DefaultBookRepository(
     }
 
     override suspend fun saveBook(book: SearchedBook): NetworkResult<Long> = bookRemoteDataSource.saveBook(book.toRequest())
+    override suspend fun fetchBook(bookId: Long): NetworkResult<Book> = bookRemoteDataSource.fetchBook(bookId).map { it.toDomain() }
 }
