@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.DatabaseInitializer;
 import todoktodok.backend.InitializerTimer;
 import todoktodok.backend.book.application.dto.response.AladinBookResponse;
+import todoktodok.backend.book.application.dto.response.BookResponse;
 import todoktodok.backend.book.application.dto.response.LatestAladinBookPageResponse;
 
 @ActiveProfiles("test")
@@ -210,5 +212,47 @@ public class BookQueryServiceTest {
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessageContaining("Base64로 디코드할 수 없는 cursor 값입니다");
         }
+    }
+
+    @Test
+    @DisplayName("도서 아이디로 도서를 단일 조회한다")
+    void getBookTest() {
+        // given
+        final String bookTitle = "오브젝트";
+        final String bookSummary = "오브젝트 설명";
+        final String bookAuthor = "조영호";
+        final String bookPublisher = "위키북스";
+        final String bookIsbn = "9791158391409";
+        final String bookImage = "https://image.png";
+        databaseInitializer.setBookInfo(bookTitle, bookSummary, bookAuthor, bookPublisher, bookIsbn, bookImage);
+
+        final Long bookId = 1L;
+
+        // when
+        final BookResponse bookResponse = bookQueryService.getBook(bookId);
+
+        // then
+        assertAll(
+                () -> assertThat(bookResponse.bookId()).isEqualTo(bookId),
+                () -> assertThat(bookResponse.bookTitle()).isEqualTo(bookTitle),
+                () -> assertThat(bookResponse.bookSummary()).isEqualTo(bookSummary),
+                () -> assertThat(bookResponse.bookAuthor()).isEqualTo(bookAuthor),
+                () -> assertThat(bookResponse.bookPublisher()).isEqualTo(bookPublisher),
+                () -> assertThat(bookResponse.bookImage()).isEqualTo(bookImage)
+        );
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 도서 아이디로 도서를 조회하면 예외가 발생한다")
+    void getBookTest_notExist_bookId() {
+        // given
+        databaseInitializer.setDefaultBookInfo();
+
+        final Long notExistBookId = 999L;
+
+        // when - then
+        assertThatThrownBy(() -> bookQueryService.getBook(notExistBookId))
+                .isInstanceOf(NoSuchElementException.class)
+                .hasMessageContaining("해당 도서를 찾을 수 없습니다");
     }
 }

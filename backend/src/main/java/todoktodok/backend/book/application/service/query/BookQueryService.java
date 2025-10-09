@@ -2,12 +2,16 @@ package todoktodok.backend.book.application.service.query;
 
 import java.util.Base64;
 import java.util.List;
+import java.util.NoSuchElementException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.book.application.dto.response.AladinBookResponse;
+import todoktodok.backend.book.application.dto.response.BookResponse;
 import todoktodok.backend.book.application.dto.response.LatestAladinBookPageResponse;
 import todoktodok.backend.book.application.dto.response.PageInfo;
+import todoktodok.backend.book.domain.Book;
+import todoktodok.backend.book.domain.repository.BookRepository;
 import todoktodok.backend.book.infrastructure.aladin.AladinItemResponses;
 import todoktodok.backend.book.infrastructure.aladin.AladinRestClient;
 
@@ -20,6 +24,7 @@ public class BookQueryService {
     private static final int MAX_SIZE = 200;
 
     private final AladinRestClient aladinRestClient;
+    private final BookRepository bookRepository;
 
     public List<AladinBookResponse> search(final String keyword) {
         validateKeyword(keyword);
@@ -57,6 +62,12 @@ public class BookQueryService {
         final int totalSize = getTotalSize(aladinItemResponses);
 
         return new LatestAladinBookPageResponse(searchedBooks, pageInfo, totalSize);
+    }
+
+    public BookResponse getBook(final Long bookId) {
+        final Book book = findBook(bookId);
+
+        return new BookResponse(book);
     }
 
     private void validateKeyword(final String keyword) {
@@ -114,5 +125,13 @@ public class BookQueryService {
 
     private String encodeCursorId(final Integer id) {
         return Base64.getUrlEncoder().encodeToString(id.toString().getBytes());
+    }
+
+    private Book findBook(final Long bookId) {
+        return bookRepository.findById(bookId)
+                .orElseThrow(() -> new NoSuchElementException(
+                                String.format("해당 도서를 찾을 수 없습니다: bookId = %s", bookId)
+                        )
+                );
     }
 }
