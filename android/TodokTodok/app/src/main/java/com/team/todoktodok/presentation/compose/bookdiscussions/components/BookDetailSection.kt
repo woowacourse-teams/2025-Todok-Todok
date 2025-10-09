@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.toggleable
@@ -74,7 +73,7 @@ fun ExpandableSection(
     title: String,
     body: String,
     modifier: Modifier = Modifier,
-    collapsedLines: Int = 0,
+    collapsedLines: Int = 1,
     expandedInitial: Boolean = false,
     sectionId: String? = null,
 ) {
@@ -92,7 +91,8 @@ fun ExpandableSection(
                     .semantics {
                         role = Role.Button
                         stateDescription = if (expanded) "확장됨" else "접힘"
-                    }.toggleable(value = expanded, role = Role.Button) { expanded = it },
+                    }
+                    .toggleable(value = expanded, role = Role.Button) { expanded = it },
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(text = title)

@@ -20,6 +20,7 @@ import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivityDiscussionDetailBinding
 import com.team.todoktodok.databinding.MenuExternalDiscussionBinding
 import com.team.todoktodok.databinding.MenuOwnedDiscussionBinding
+import com.team.todoktodok.presentation.compose.bookdiscussions.BookDiscussionsActivity
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionResult.Companion.EXTRA_DELETE_DISCUSSION
 import com.team.todoktodok.presentation.compose.main.MainActivity
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
@@ -173,15 +174,18 @@ class DiscussionDetailActivity : AppCompatActivity() {
                 viewModel.navigateToProfile()
             }
             ivDiscussionShare.setOnClickListener {
-                viewModel.uiState.value?.discussion?.let { discussion ->
-                    this@DiscussionDetailActivity.shareDiscussionLink(
-                        discussion.id,
-                        discussion.discussionTitle,
-                    )
-                }
+                viewModel.shareDiscussion()
             }
             tvDiscussionOpinion.setOnClickListener {
                 behavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            }
+
+            ivBookImage.setOnClickListener {
+                viewModel.navigateToBookDiscussion()
+            }
+
+            tvBookTitle.setOnClickListener {
+                viewModel.navigateToBookDiscussion()
             }
             setupLikeClick()
         }
@@ -259,10 +263,10 @@ class DiscussionDetailActivity : AppCompatActivity() {
     private fun setupObserve() {
         viewModel.uiState.observe(this) { value ->
             with(binding) {
-                if (value != null) {
-                    if (value.isLoading) {
-                        progressBar.show()
-                    } else {
+                when (value) {
+                    is DiscussionDetailUiState.Failure -> {}
+                    DiscussionDetailUiState.Loading -> progressBar.show()
+                    is DiscussionDetailUiState.Success -> {
                         progressBar.hide()
                         val discussion = value.discussion
                         tvBookTitle.text = discussion.book.title.extractSubtitle()
@@ -277,8 +281,8 @@ class DiscussionDetailActivity : AppCompatActivity() {
                         tvLikeCount.text = discussion.likeCount.toString()
                         tvViewsCount.text = discussion.viewCount.toString()
                         tvCommentCount.text = discussion.commentCount.toString()
+                        setupPopUpDiscussionClick(value.isMyDiscussion)
                     }
-                    setupPopUpDiscussionClick(value.isMyDiscussion)
                 }
             }
         }
@@ -327,6 +331,18 @@ class DiscussionDetailActivity : AppCompatActivity() {
                     AuthActivity.Intent(this).apply {
                         flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                     }
+                startActivity(intent)
+            }
+
+            is DiscussionDetailUiEvent.ShareDiscussion -> {
+                this@DiscussionDetailActivity.shareDiscussionLink(
+                    event.discussionId,
+                    event.discussionTitle,
+                )
+            }
+
+            is DiscussionDetailUiEvent.NavigateToBookDiscussions -> {
+                val intent = BookDiscussionsActivity.intent(this, event.bookId)
                 startActivity(intent)
             }
         }

@@ -23,10 +23,8 @@ class BookDiscussionsActivity : AppCompatActivity() {
         fun intent(
             context: Context,
             bookId: Long,
-        ) {
-            Intent(context, BookDiscussionsActivity::class.java).apply {
-                getLongExtra(BOOK_ID_KEY, bookId)
-            }
+        ) = Intent(context, BookDiscussionsActivity::class.java).apply {
+            getLongExtra(BOOK_ID_KEY, bookId)
         }
     }
 }

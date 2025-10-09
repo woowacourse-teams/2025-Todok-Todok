@@ -10,9 +10,9 @@ data class Discussion(
     val discussionOpinion: String,
     val writer: User,
     val createAt: LocalDateTime,
-    val likeCount: Int,
-    val commentCount: Int,
-    val viewCount: Int,
+    val likeCount: Long,
+    val commentCount: Long,
+    val viewCount: Long,
     val isLikedByMe: Boolean,
 ) {
     val bookImage get() = book.image

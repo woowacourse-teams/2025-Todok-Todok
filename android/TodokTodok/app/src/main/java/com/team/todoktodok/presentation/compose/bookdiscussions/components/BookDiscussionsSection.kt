@@ -77,7 +77,7 @@ fun DiscussionCard(
                 writerImage = uiState.writerProfile,
                 isLikedByMe = uiState.isLikedByMe,
                 likeCount = uiState.likeCount.toString(),
-                viewCount = uiState.viewsCount.toString(),
+                viewCount = uiState.viewCount.toString(),
                 commentCount = uiState.commentCount.toString(),
                 writerHidden = false,
                 modifier = Modifier.padding(top = 10.dp),
@@ -101,7 +101,7 @@ private fun BookDiscussionsSectionPreview() {
                 writerName = "토독",
                 isLikedByMe = true,
                 likeCount = 233,
-                viewsCount = 323,
+                viewCount = 323,
                 commentCount = 12,
             )
         }.toImmutableList()
