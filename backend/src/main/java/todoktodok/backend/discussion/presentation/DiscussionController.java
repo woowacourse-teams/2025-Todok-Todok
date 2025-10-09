@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -29,13 +30,14 @@ import todoktodok.backend.global.resolver.LoginMember;
 
 @RestController
 @AllArgsConstructor
+@RequestMapping("/api/v1/discussions")
 public class DiscussionController implements DiscussionApiDocs {
 
     private final DiscussionCommandService discussionCommandService;
     private final DiscussionQueryService discussionQueryService;
 
     @Auth(value = Role.USER)
-    @PostMapping("/api/v1/discussions")
+    @PostMapping
     public ResponseEntity<Void> createDiscussion(
             @LoginMember final Long memberId,
             @RequestBody @Valid final DiscussionRequest discussionRequest
@@ -48,7 +50,7 @@ public class DiscussionController implements DiscussionApiDocs {
     }
 
     @Auth(Role.USER)
-    @PostMapping("/api/v1/discussions/{discussionId}/report")
+    @PostMapping("/{discussionId}/report")
     public ResponseEntity<Void> report(
             @LoginMember final Long memberId,
             @PathVariable final Long discussionId,
@@ -61,7 +63,7 @@ public class DiscussionController implements DiscussionApiDocs {
     }
 
     @Auth(Role.USER)
-    @GetMapping("/api/v1/discussions/{discussionId}")
+    @GetMapping("/{discussionId}")
     public ResponseEntity<DiscussionResponse> getDiscussion(
             @LoginMember final Long memberId,
             @PathVariable final Long discussionId
@@ -71,7 +73,7 @@ public class DiscussionController implements DiscussionApiDocs {
     }
 
     @Auth(value = Role.USER)
-    @GetMapping("/api/v1/discussions")
+    @GetMapping
     public ResponseEntity<LatestDiscussionPageResponse> getDiscussions(
             @LoginMember final Long memberId,
             @RequestParam final int size,
@@ -82,7 +84,7 @@ public class DiscussionController implements DiscussionApiDocs {
     }
 
     @Auth(value = Role.USER)
-    @GetMapping("/api/v1/discussions/search")
+    @GetMapping("/search")
     public ResponseEntity<List<DiscussionResponse>> getDiscussionsByKeyword(
             @LoginMember final Long memberId,
             @RequestParam final String keyword
@@ -92,7 +94,7 @@ public class DiscussionController implements DiscussionApiDocs {
     }
 
     @Auth(value = Role.USER)
-    @GetMapping("/api/v1/discussions/hot")
+    @GetMapping("/hot")
     public ResponseEntity<List<DiscussionResponse>> getHotDiscussions(
             @LoginMember final Long memberId,
             @RequestParam final int period,
@@ -103,7 +105,7 @@ public class DiscussionController implements DiscussionApiDocs {
     }
 
     @Auth(value = Role.USER)
-    @GetMapping("/api/v1/discussions/active")
+    @GetMapping("/active")
     public ResponseEntity<ActiveDiscussionPageResponse> getActiveDiscussions(
             @LoginMember final Long memberId,
             @RequestParam final int period,
@@ -115,7 +117,7 @@ public class DiscussionController implements DiscussionApiDocs {
     }
 
     @Auth(value = Role.USER)
-    @PatchMapping("/api/v1/discussions/{discussionId}")
+    @PatchMapping("/{discussionId}")
     public ResponseEntity<Void> updateDiscussion(
             @LoginMember final Long memberId,
             @PathVariable final Long discussionId,
@@ -129,7 +131,7 @@ public class DiscussionController implements DiscussionApiDocs {
     }
 
     @Auth(value = Role.USER)
-    @DeleteMapping("/api/v1/discussions/{discussionId}")
+    @DeleteMapping("/{discussionId}")
     public ResponseEntity<Void> deleteDiscussion(
             @LoginMember final Long memberId,
             @PathVariable final Long discussionId
@@ -141,7 +143,7 @@ public class DiscussionController implements DiscussionApiDocs {
     }
 
     @Auth(value = Role.USER)
-    @PostMapping("/api/v1/discussions/{discussionId}/like")
+    @PostMapping("/{discussionId}/like")
     public ResponseEntity<Void> toggleLike(
             @LoginMember final Long memberId,
             @PathVariable final Long discussionId
