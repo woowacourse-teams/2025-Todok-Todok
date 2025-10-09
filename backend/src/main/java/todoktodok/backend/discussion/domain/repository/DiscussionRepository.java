@@ -124,7 +124,8 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
     @Query("""
         SELECT d.id
         FROM Discussion d
-        WHERE d.book.id = :bookId AND d.id < :cursorId
+        WHERE d.book.id = :bookId 
+        AND (:cursorId IS NULL OR d.id < :cursorId)
 """)
     Slice<Long> findIdsByBookIdLessThan(
             @Param("bookId") final Long bookId,
