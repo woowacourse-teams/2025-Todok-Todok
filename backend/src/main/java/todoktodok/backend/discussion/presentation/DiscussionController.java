@@ -22,6 +22,7 @@ import todoktodok.backend.discussion.application.dto.request.DiscussionUpdateReq
 import todoktodok.backend.discussion.application.dto.response.ActiveDiscussionPageResponse;
 import todoktodok.backend.discussion.application.dto.response.DiscussionResponse;
 import todoktodok.backend.discussion.application.dto.response.LatestDiscussionPageResponse;
+import todoktodok.backend.discussion.application.dto.response.LikedDiscussionPageResponse;
 import todoktodok.backend.discussion.application.service.command.DiscussionCommandService;
 import todoktodok.backend.discussion.application.service.query.DiscussionQueryService;
 import todoktodok.backend.global.auth.Auth;
@@ -114,6 +115,17 @@ public class DiscussionController implements DiscussionApiDocs {
     ) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(discussionQueryService.getActiveDiscussions(memberId, period, size, cursor));
+    }
+
+    @Auth(value = Role.USER)
+    @GetMapping("/liked")
+    public ResponseEntity<LikedDiscussionPageResponse> getLikedDiscussions(
+            @LoginMember final Long memberId,
+            @RequestParam(defaultValue = "10") final int size,
+            @RequestParam(required = false) final String cursor
+    ) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(discussionQueryService.getLikedDiscussions(memberId, size, cursor));
     }
 
     @Auth(value = Role.USER)
