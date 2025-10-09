@@ -66,5 +66,27 @@ private fun bookDiscussionsUiState(
                 viewCount = 10,
                 isLikedByMe = false,
             ),
+            Discussion(
+                id = 2L,
+                discussionTitle = "JPA 성능 최적화",
+                book =
+                    Book(
+                        1L,
+                        "자바 ORM 표준 JPA 프로그래밍",
+                        "김영한",
+                        "",
+                        "테스트",
+                        "테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트",
+                    ),
+                writer = User(1L, Nickname("홍길동"), ""),
+                createAt = LocalDateTime.of(2025, 7, 12, 12, 0),
+                discussionOpinion =
+                    "응집도와 결합도가 어떤 차이를 가지는 지에 대한 다른 분들의 생각이 궁금합니다." +
+                        "응집도는 내부에 얼마나 비슷한 책임들이 모여있는가. 얼마나 연관있는 멤버들이 똘똘 뭉쳐있는가",
+                likeCount = 12,
+                commentCount = 3,
+                viewCount = 10,
+                isLikedByMe = false,
+            ),
         ).map { it.toDiscussionItem() }.toImmutableList(),
     )

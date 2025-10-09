@@ -5,16 +5,32 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import com.team.todoktodok.presentation.compose.main.MainActivity
 import com.team.todoktodok.presentation.compose.theme.TodoktodokTheme
+import com.team.todoktodok.presentation.xml.profile.ProfileActivity
 
 class BookDiscussionsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             TodoktodokTheme {
-                BookDetailNavHost(intent.getLongExtra(BOOK_ID_KEY, -1L))
+                BookDetailNavHost(
+                    intent.getLongExtra(BOOK_ID_KEY, -1L),
+                    ::navigateToMain,
+                    ::navigateToProfile,
+                )
             }
         }
+    }
+
+    fun navigateToMain() {
+        val intent = MainActivity.Intent(this)
+        startActivity(intent)
+    }
+
+    fun navigateToProfile() {
+        val intent = MainActivity.Intent(this)
+        startActivity(intent)
     }
 
     companion object {

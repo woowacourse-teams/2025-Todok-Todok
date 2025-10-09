@@ -18,12 +18,19 @@ data class BookDetailRoute(
 @Composable
 fun BookDetailNavHost(
     startBookId: Long,
+    onNavigateToMain: () -> Unit,
+    onNavigateToMyProfile: () -> Unit,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
 ) {
     NavHost(navController, startDestination = BookDetailRoute(startBookId)) {
         composable<BookDetailRoute> { backStackEntry ->
-            BookDetailEntry(backStackEntry, modifier)
+            BookDetailEntry(
+                backStackEntry,
+                onNavigateToMain,
+                onNavigateToMyProfile,
+                modifier,
+            )
         }
     }
 }

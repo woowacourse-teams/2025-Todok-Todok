@@ -3,6 +3,7 @@ package com.team.todoktodok.presentation.compose.theme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
@@ -56,5 +57,10 @@ fun TodoktodokTheme(content: @Composable () -> Unit) {
     MaterialTheme(
         typography = Typography,
         content = content,
+        colorScheme =
+            MaterialTheme.colorScheme.copy(
+                surface = Color.White,
+                background = Color.White,
+            ),
     )
 }

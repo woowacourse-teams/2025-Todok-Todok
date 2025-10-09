@@ -25,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
@@ -78,7 +79,7 @@ fun ExpandableSection(
     sectionId: String? = null,
 ) {
     var expanded by rememberSaveable(listOf(sectionId)) { mutableStateOf(expandedInitial) }
-    val rotation by animateFloatAsState(if (expanded) 180f else 0f, label = "arrow")
+    val rotation by animateFloatAsState(if (expanded) 0f else 180f, label = "arrow")
     Column(
         modifier =
             modifier
@@ -91,13 +92,12 @@ fun ExpandableSection(
                     .semantics {
                         role = Role.Button
                         stateDescription = if (expanded) "확장됨" else "접힘"
-                    }
-                    .toggleable(value = expanded, role = Role.Button) { expanded = it },
+                    }.toggleable(value = expanded, role = Role.Button) { expanded = it },
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(text = title)
             Icon(
-                imageVector = Icons.Default.ArrowDropUp,
+                painter = painterResource(R.drawable.btn_toggle_bottom_arrow),
                 contentDescription = null,
                 modifier =
                     Modifier
