@@ -302,4 +302,100 @@ public class BookControllerTest {
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
     }
+
+    @Nested
+    @DisplayName("도서별 토론방을 조회한다")
+    class GetDiscussionsByBookTest {
+
+        @Test
+        @DisplayName("도서별 토론방을 최신순 조회한다 - 첫 페이지 조회")
+        void getSlicedDiscussionsByBook_firstPage() {
+            // given
+            given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+
+            databaseInitializer.setDefaultUserInfo();
+            databaseInitializer.setDefaultBookInfo();
+
+            databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
+            databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
+            databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
+            databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
+            databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
+
+            final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
+            final String cursorMeaningThree = "Mw==";
+
+            // when - then
+            RestAssured.given().log().all()
+                    .header("Authorization", token)
+                    .contentType(ContentType.JSON)
+                    .when().get("/api/v1/books/1/discussions?size=3")
+                    .then().log().all()
+                    .statusCode(HttpStatus.OK.value())
+                    .body("items.size()", is(3))
+                    .body("pageInfo.hasNext", is(true))
+                    .body("pageInfo.nextCursor", is(cursorMeaningThree));
+        }
+
+        @Test
+        @DisplayName("도서별 토론방을 최신순 조회한다 - 중간 페이지 조회")
+        void getSlicedDiscussionsByBook_middlePage() {
+            // given
+            given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+
+            databaseInitializer.setDefaultUserInfo();
+            databaseInitializer.setDefaultBookInfo();
+
+            databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
+            databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
+            databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
+            databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
+            databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
+
+            final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
+            final String cursorMeaningFive = "NQ==";
+            final String cursorMeaningTwo = "Mg==";
+
+            // when - then
+            RestAssured.given().log().all()
+                    .header("Authorization", token)
+                    .contentType(ContentType.JSON)
+                    .when().get(String.format("/api/v1/books/1/discussions?size=3&cursor=%s", cursorMeaningFive))
+                    .then().log().all()
+                    .statusCode(HttpStatus.OK.value())
+                    .body("items.size()", is(3))
+                    .body("pageInfo.hasNext", is(true))
+                    .body("pageInfo.nextCursor", is(cursorMeaningTwo));
+        }
+
+        @Test
+        @DisplayName("도서별 토론방을 최신순 조회한다 - 마지막 페이지 조회")
+        void getSlicedDiscussionsByBook_lastPage() {
+            // given
+            given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+
+            databaseInitializer.setDefaultUserInfo();
+            databaseInitializer.setDefaultBookInfo();
+
+            databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
+            databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
+            databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
+            databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
+            databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
+
+            final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
+            final String cursorMeaningFour = "NA==";
+
+            // when - then
+            RestAssured.given().log().all()
+                    .header("Authorization", token)
+                    .contentType(ContentType.JSON)
+                    .when().get(String.format("/api/v1/books/1/discussions?size=3&cursor=%s", cursorMeaningFour))
+                    .then().log().all()
+                    .statusCode(HttpStatus.OK.value())
+                    .body("items.size()", is(3))
+                    .body("pageInfo.hasNext", is(false))
+                    .body("pageInfo.nextCursor", nullValue());
+        }
+    }
 }

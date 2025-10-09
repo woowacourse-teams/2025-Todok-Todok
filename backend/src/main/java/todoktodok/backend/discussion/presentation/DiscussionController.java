@@ -82,18 +82,6 @@ public class DiscussionController implements DiscussionApiDocs {
     }
 
     @Auth(value = Role.USER)
-    @GetMapping("/api/v1/books/{bookId}/discussions")
-    public ResponseEntity<LatestDiscussionPageResponse> getDiscussionsByBook(
-            @LoginMember final Long memberId,
-            @PathVariable final Long bookId,
-            @RequestParam final int size,
-            @RequestParam(required = false) final String cursor
-    ) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(discussionQueryService.getDiscussionsByBook(memberId, bookId, size, cursor));
-    }
-
-    @Auth(value = Role.USER)
     @GetMapping("/api/v1/discussions/search")
     public ResponseEntity<List<DiscussionResponse>> getDiscussionsByKeyword(
             @LoginMember final Long memberId,
