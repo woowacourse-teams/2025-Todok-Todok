@@ -497,6 +497,28 @@ public interface BookApiDocs {
                             )
                     )),
             @ApiResponse(
+                    responseCode = "400",
+                    description = "페이지 사이즈 오류",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "유효하지 않은 페이지 사이즈",
+                                    value = "{\"code\":400, \"message\":\"[ERROR] 유효하지 않은 페이지 사이즈입니다. 1 이상 50 이하의 페이징을 시도해주세요\"}"
+                            )
+                    )),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "커서 디코딩 오류",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "디코드할 수 없는 cursor",
+                                    value = "{\"code\":400, \"message\":\"[ERROR] Base64로 디코드할 수 없는 cursor 값입니다\"}"
+                            )
+                    )),
+            @ApiResponse(
                     responseCode = "401",
                     description = "토큰 인증 오류",
                     content = @Content(
