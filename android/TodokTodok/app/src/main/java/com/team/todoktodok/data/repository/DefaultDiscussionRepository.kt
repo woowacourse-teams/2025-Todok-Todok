@@ -62,8 +62,7 @@ class DefaultDiscussionRepository(
         return result.map { it.discussionRoomEntity.toDomain() }
     }
 
-    override suspend fun getDraftDiscussionCount(): Int =
-        discussionLocalDataSource.getDiscussionCount()
+    override suspend fun getDraftDiscussionCount(): Int = discussionLocalDataSource.getDiscussionCount()
 
     override suspend fun saveDiscussionRoom(
         bookId: Long,
@@ -110,8 +109,7 @@ class DefaultDiscussionRepository(
 
     override suspend fun hasDiscussion(): Boolean = discussionLocalDataSource.hasDiscussion()
 
-    override suspend fun getBook(id: Long): SearchedBook =
-        discussionLocalDataSource.getBook(id).toDomain()
+    override suspend fun getBook(id: Long): SearchedBook = discussionLocalDataSource.getBook(id).toDomain()
 
     override suspend fun saveDiscussionRoom(
         book: SearchedBook,

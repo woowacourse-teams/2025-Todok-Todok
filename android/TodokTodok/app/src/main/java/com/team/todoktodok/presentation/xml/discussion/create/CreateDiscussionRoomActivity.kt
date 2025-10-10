@@ -238,7 +238,7 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
         DraftDialog.newInstance().show(supportFragmentManager, DraftDialog.TAG)
         supportFragmentManager.setFragmentResultListener(KEY_REQUEST_DRAFT, this) { _, bundle ->
             val isSave = bundle.getBoolean(KEY_RESULT_DRAFT)
-            Log.d("test", "${isSave}")
+            Log.d("test", "$isSave")
             if (isSave) viewModel.saveDraft()
             navigateToMain()
         }

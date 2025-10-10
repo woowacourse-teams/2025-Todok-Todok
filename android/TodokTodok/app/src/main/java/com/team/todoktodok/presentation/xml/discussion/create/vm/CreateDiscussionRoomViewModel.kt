@@ -1,6 +1,5 @@
 package com.team.todoktodok.presentation.xml.discussion.create.vm
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -75,6 +74,15 @@ class CreateDiscussionRoomViewModel(
             _uiEvent.setValue(CreateDiscussionUiEvent.ShowToast(error))
             return
         }
+        if (_uiState.value
+                ?.draftBook
+                ?.isbn
+                .toString()
+                .length != 13
+        ) {
+            editDiscussionRoom()
+            return
+        }
         when (mode) {
             is SerializationCreateDiscussionRoomMode.Create -> createDiscussionRoom()
             is SerializationCreateDiscussionRoomMode.Draft -> createDiscussionRoom()
@@ -116,16 +124,16 @@ class CreateDiscussionRoomViewModel(
         val book =
             if (editBook == null) {
                 _uiState.value?.editBook ?: _uiState.value?.draftBook ?: _uiState.value?.book
-                ?: run {
-                    _uiEvent.setValue(CreateDiscussionUiEvent.ShowToast(ErrorCreateDiscussionType.BOOK_INFO_NOT_FOUND))
-                    return
-                }
+                    ?: run {
+                        _uiEvent.setValue(CreateDiscussionUiEvent.ShowToast(ErrorCreateDiscussionType.BOOK_INFO_NOT_FOUND))
+                        return
+                    }
             } else {
                 SearchedBook.Companion.SearchedBook(
                     isbn = editBook.id,
                     title = editBook.title,
                     author = editBook.author,
-                    image = editBook.image
+                    image = editBook.image,
                 )
             }
         val title =
@@ -142,7 +150,7 @@ class CreateDiscussionRoomViewModel(
             discussionRepository.saveDiscussionRoom(
                 book = book as SearchedBook,
                 title,
-                opinion
+                opinion,
             )
         }
         _uiEvent.setValue(CreateDiscussionUiEvent.Finish)
@@ -167,7 +175,6 @@ class CreateDiscussionRoomViewModel(
     }
 
     private fun createDiscussionRoom() {
-        Log.d("test", "${_uiState.value}")
         val book =
             _uiState.value?.book ?: _uiState.value?.draftBook ?: run {
                 updateErrorCreateDiscussion(ErrorCreateDiscussionType.BOOK_INFO_NOT_FOUND)
