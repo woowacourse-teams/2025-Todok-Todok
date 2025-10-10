@@ -43,24 +43,28 @@ interface DiscussionDao {
     @Query(
         """
     SELECT * FROM discussion
-    ORDER BY id DESC
+    WHERE id = :id
     LIMIT 1
 """,
     )
-    suspend fun getDiscussionWithBook(): DiscussionWithBook?
+    suspend fun getDiscussionWithBook(id: Long): DiscussionWithBook?
 
     @Query(
         """
     SELECT * FROM book
     WHERE id = (
         SELECT book_id FROM discussion
-        ORDER BY id DESC
+        WHERE id = :id
         LIMIT 1
     )
-""",
+"""
     )
-    suspend fun getBook(): BookEntity
+    suspend fun getBook(id: Long): BookEntity
 
     @Query("SELECT COUNT(*) FROM discussion")
     suspend fun getDraftDiscussionCount(): Int
+
+    @Transaction
+    @Query("SELECT * FROM discussion ORDER BY id DESC")
+    suspend fun getDiscussions(): List<DiscussionWithBook>
 }

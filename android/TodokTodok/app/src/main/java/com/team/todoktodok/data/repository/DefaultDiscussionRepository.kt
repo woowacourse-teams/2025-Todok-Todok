@@ -54,9 +54,16 @@ class DefaultDiscussionRepository(
     override suspend fun getDiscussion(id: Long): NetworkResult<Discussion> =
         discussionRemoteDataSource.fetchDiscussion(id).map { it.toDomain() }
 
-    override suspend fun getDiscussion(): DiscussionRoom? = discussionLocalDataSource.getDiscussion()?.discussionRoomEntity?.toDomain()
+    override suspend fun getDraftDiscussion(id: Long): DiscussionRoom? =
+        discussionLocalDataSource.getDiscussion(id)?.discussionRoomEntity?.toDomain()
 
-    override suspend fun getDraftDiscussionCount(): Int = discussionLocalDataSource.getDiscussionCount()
+    override suspend fun getDiscussions(): List<DiscussionRoom> {
+        val result = discussionLocalDataSource.getDiscussions()
+        return result.map { it.discussionRoomEntity.toDomain() }
+    }
+
+    override suspend fun getDraftDiscussionCount(): Int =
+        discussionLocalDataSource.getDiscussionCount()
 
     override suspend fun saveDiscussionRoom(
         bookId: Long,
@@ -103,7 +110,7 @@ class DefaultDiscussionRepository(
 
     override suspend fun hasDiscussion(): Boolean = discussionLocalDataSource.hasDiscussion()
 
-    override suspend fun getBook(): Book = discussionLocalDataSource.getBook().toDomain()
+    override suspend fun getBook(id: Long): Book = discussionLocalDataSource.getBook(id).toDomain()
 
     override suspend fun saveDiscussionRoom(
         book: Book,

@@ -52,9 +52,9 @@ interface DiscussionRepository {
 
     suspend fun hasDiscussion(): Boolean
 
-    suspend fun getBook(): Book
+    suspend fun getBook(id: Long): Book
 
-    suspend fun getDiscussion(): DiscussionRoom?
+    suspend fun getDraftDiscussion(id: Long): DiscussionRoom?
 
     suspend fun getDraftDiscussionCount(): Int
 
@@ -64,6 +64,8 @@ interface DiscussionRepository {
     ): NetworkResult<Unit>
 
     suspend fun deleteDiscussionRoom()
+
+    suspend fun getDiscussions(): List<DiscussionRoom>
 
     companion object {
         private const val PAGING_SIZE = 15
