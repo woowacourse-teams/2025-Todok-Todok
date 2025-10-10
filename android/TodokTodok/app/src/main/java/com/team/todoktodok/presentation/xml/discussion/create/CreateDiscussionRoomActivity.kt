@@ -32,10 +32,10 @@ import com.team.todoktodok.presentation.core.ext.loadImage
 import com.team.todoktodok.presentation.xml.book.SelectBookActivity
 import com.team.todoktodok.presentation.xml.discussion.create.DraftDialog.Companion.KEY_REQUEST_DRAFT
 import com.team.todoktodok.presentation.xml.discussion.create.DraftDialog.Companion.KEY_RESULT_DRAFT
-import com.team.todoktodok.presentation.xml.discussion.create.draft.DraftsActivity
 import com.team.todoktodok.presentation.xml.discussion.create.vm.CreateDiscussionRoomViewModel
 import com.team.todoktodok.presentation.xml.discussion.create.vm.CreateDiscussionRoomViewModelFactory
 import com.team.todoktodok.presentation.xml.discussiondetail.DiscussionDetailActivity
+import com.team.todoktodok.presentation.xml.draft.DraftsActivity
 
 class CreateDiscussionRoomActivity : AppCompatActivity() {
     private val mode by lazy {
@@ -50,7 +50,8 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
         ) { result ->
             if (result.resultCode == RESULT_OK) {
                 val data = result.data
-                val selectedValue = data?.getLongExtra("selected_draft", -1L) ?: error("잠시 오류가 있습니다")
+                val selectedValue =
+                    data?.getLongExtra("selected_draft", -1L) ?: error("잠시 오류가 있습니다")
                 viewModel.getDraft(selectedValue)
             }
         }

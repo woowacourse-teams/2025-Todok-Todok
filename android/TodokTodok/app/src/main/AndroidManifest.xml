@@ -18,7 +18,7 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".presentation.xml.discussion.create.draft.DraftsActivity"
+            android:name=".presentation.xml.draft.DraftsActivity"
             android:exported="false" />
         <activity
             android:name=".presentation.xml.notification.NotificationActivity"

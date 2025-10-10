@@ -1,4 +1,4 @@
-package com.team.todoktodok.presentation.xml.discussion.create.draft.vm
+package com.team.todoktodok.presentation.xml.draft.vm
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

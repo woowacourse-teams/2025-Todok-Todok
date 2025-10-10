@@ -1,4 +1,4 @@
-package com.team.todoktodok.presentation.xml.discussion.create.draft
+package com.team.todoktodok.presentation.xml.draft
 
 import android.content.Context
 import android.content.Intent
@@ -10,9 +10,9 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.team.todoktodok.App
 import com.team.todoktodok.databinding.ActivityDraftsBinding
-import com.team.todoktodok.presentation.xml.discussion.create.draft.adapter.DraftsAdapter
-import com.team.todoktodok.presentation.xml.discussion.create.draft.vm.DraftsViewModel
-import com.team.todoktodok.presentation.xml.discussion.create.draft.vm.DraftsViewModelFactory
+import com.team.todoktodok.presentation.xml.draft.adapter.DraftsAdapter
+import com.team.todoktodok.presentation.xml.draft.vm.DraftsViewModel
+import com.team.todoktodok.presentation.xml.draft.vm.DraftsViewModelFactory
 
 class DraftsActivity : AppCompatActivity() {
     private val viewModel by viewModels<DraftsViewModel> {

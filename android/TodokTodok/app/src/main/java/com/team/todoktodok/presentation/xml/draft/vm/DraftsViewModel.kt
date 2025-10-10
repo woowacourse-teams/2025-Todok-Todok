@@ -1,4 +1,4 @@
-package com.team.todoktodok.presentation.xml.discussion.create.draft.vm
+package com.team.todoktodok.presentation.xml.draft.vm
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,7 +8,7 @@ import com.team.domain.model.discussionroom.DiscussionRoom
 import com.team.domain.repository.DiscussionRepository
 import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
 import com.team.todoktodok.presentation.core.event.SingleLiveData
-import com.team.todoktodok.presentation.xml.discussion.create.draft.DraftUiEvent
+import com.team.todoktodok.presentation.xml.draft.DraftUiEvent
 import kotlinx.coroutines.launch
 
 class DraftsViewModel(

@@ -1,4 +1,4 @@
-package com.team.todoktodok.presentation.xml.discussion.create.draft.adapter
+package com.team.todoktodok.presentation.xml.draft.adapter
 
 import androidx.recyclerview.widget.DiffUtil
 import com.team.domain.model.discussionroom.DiscussionRoom

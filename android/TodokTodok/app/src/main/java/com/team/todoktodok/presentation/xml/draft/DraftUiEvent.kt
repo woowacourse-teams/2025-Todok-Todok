@@ -1,4 +1,4 @@
-package com.team.todoktodok.presentation.xml.discussion.create.draft
+package com.team.todoktodok.presentation.xml.draft
 
 sealed interface DraftUiEvent {
     data class NavigateToCreateDiscussionRoom(
