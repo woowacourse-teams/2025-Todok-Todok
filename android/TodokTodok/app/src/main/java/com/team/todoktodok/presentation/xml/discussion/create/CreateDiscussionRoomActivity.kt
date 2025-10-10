@@ -9,6 +9,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.addCallback
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -17,6 +18,7 @@ import androidx.core.view.WindowInsetsAnimationCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.core.widget.doAfterTextChanged
+import com.team.domain.model.Book
 import com.team.domain.model.book.SearchedBook
 import com.team.todoktodok.App
 import com.team.todoktodok.R
@@ -40,6 +42,16 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
         intent.getParcelableCompat<SerializationCreateDiscussionRoomMode>(
             EXTRA_MODE,
         ) ?: throw IllegalStateException(MODE_NOT_EXIST)
+    }
+
+    private val launcher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            val data = result.data
+            val selectedValue = data?.getLongExtra("selected_draft", -1L) ?: error("잠시 오류가 있습니다")
+            viewModel.getDraft(selectedValue)
+        }
     }
     private val viewModel by viewModels<CreateDiscussionRoomViewModel> {
         val repositoryModule = (application as App).container.repositoryModule
@@ -185,7 +197,7 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
 
     private fun setupUiState(binding: ActivityCreateDiscussionRoomBinding) {
         viewModel.uiState.observe(this@CreateDiscussionRoomActivity) { uiState: CreateDiscussionUiState ->
-            observeBook(uiState.book, binding)
+            observeBook(uiState.draftBook, uiState.book, binding)
             observeIsCreate(uiState.isCreate, binding)
             observeTitle(uiState.title, binding)
             observeOpinion(uiState.opinion, binding)
@@ -229,8 +241,9 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
     }
 
     private fun showDraftsListDialog() {
+
         val intent = DraftsActivity.Intent(this)
-        startActivity(intent)
+        launcher.launch(intent)
     }
 
     private fun navigateToMain() {
@@ -289,12 +302,13 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
     }
 
     private fun observeBook(
+        draftBook: Book?,
         book: SearchedBook?,
         binding: ActivityCreateDiscussionRoomBinding,
     ) {
-        binding.tvBookTitle.text = book?.mainTitle
-        binding.tvBookAuthor.text = book?.author
-        binding.ivBookImage.loadImage(book?.image)
+        binding.tvBookTitle.text = book?.mainTitle ?: draftBook?.title
+        binding.tvBookAuthor.text = book?.author ?: draftBook?.author
+        binding.ivBookImage.loadImage(book?.image ?: draftBook?.image)
     }
 
     private fun setupUiEvent(binding: ActivityCreateDiscussionRoomBinding) {
