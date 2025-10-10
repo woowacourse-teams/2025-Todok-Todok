@@ -401,9 +401,7 @@ class DiscussionQueryServiceTest {
         }
 
         @Test
-        @DisplayName("""
-                마지막 토론방 최신순 조회 시 남은 토론방 개수는 size 이하이다
-                """)
+        @DisplayName("마지막 토론방 최신순 조회 시 남은 토론방 개수는 size 이하이다")
         void getDiscussionsFromNewestTest_lastDiscussions() {
             // given
             databaseInitializer.setDefaultUserInfo();
@@ -635,9 +633,7 @@ class DiscussionQueryServiceTest {
         }
 
         @Test
-        @DisplayName("""
-                마지막 페이지의 도서별 토론방 최신순 조회 시 남은 토론방 개수는 size 이하이다
-                """)
+        @DisplayName("마지막 페이지의 도서별 토론방 최신순 조회 시 남은 토론방 개수는 size 이하이다")
         void getDiscussionsByBookFromNewestTest_lastDiscussions() {
             // given
             databaseInitializer.setDefaultUserInfo();
