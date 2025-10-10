@@ -8,7 +8,8 @@ data class CreateDiscussionUiState(
     val title: String = "",
     val opinion: String = "",
     val book: SearchedBook? = null,
-    val draftBook: Book? = null,
+    val draftBook: SearchedBook? = null,
+    val editBook: Book? = null,
     val discussionRoomId: Long? = null,
     val draftDiscussionCount: Int = 0,
 ) {

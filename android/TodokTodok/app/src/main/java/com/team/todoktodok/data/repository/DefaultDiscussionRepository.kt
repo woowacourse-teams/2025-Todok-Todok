@@ -1,9 +1,9 @@
 package com.team.todoktodok.data.repository
 
-import com.team.domain.model.Book
 import com.team.domain.model.Discussion
 import com.team.domain.model.LikeStatus
 import com.team.domain.model.active.ActivatedDiscussionPage
+import com.team.domain.model.book.SearchedBook
 import com.team.domain.model.discussionroom.DiscussionRoom
 import com.team.domain.model.exception.NetworkResult
 import com.team.domain.model.exception.map
@@ -62,7 +62,8 @@ class DefaultDiscussionRepository(
         return result.map { it.discussionRoomEntity.toDomain() }
     }
 
-    override suspend fun getDraftDiscussionCount(): Int = discussionLocalDataSource.getDiscussionCount()
+    override suspend fun getDraftDiscussionCount(): Int =
+        discussionLocalDataSource.getDiscussionCount()
 
     override suspend fun saveDiscussionRoom(
         bookId: Long,
@@ -109,10 +110,11 @@ class DefaultDiscussionRepository(
 
     override suspend fun hasDiscussion(): Boolean = discussionLocalDataSource.hasDiscussion()
 
-    override suspend fun getBook(id: Long): Book = discussionLocalDataSource.getBook(id).toDomain()
+    override suspend fun getBook(id: Long): SearchedBook =
+        discussionLocalDataSource.getBook(id).toDomain()
 
     override suspend fun saveDiscussionRoom(
-        book: Book,
+        book: SearchedBook,
         discussionTitle: String,
         discussionOpinion: String,
     ) {
@@ -121,7 +123,7 @@ class DefaultDiscussionRepository(
                 DiscussionRoomEntity(
                     title = discussionTitle,
                     opinion = discussionOpinion,
-                    bookId = book.id,
+                    bookId = book.isbn,
                 ),
             bookEntity = book.toEntity(),
         )

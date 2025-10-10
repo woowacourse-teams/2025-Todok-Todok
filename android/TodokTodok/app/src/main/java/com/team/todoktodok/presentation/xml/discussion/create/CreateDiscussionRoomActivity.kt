@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -199,7 +200,7 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
 
     private fun setupUiState(binding: ActivityCreateDiscussionRoomBinding) {
         viewModel.uiState.observe(this@CreateDiscussionRoomActivity) { uiState: CreateDiscussionUiState ->
-            observeBook(uiState.draftBook, uiState.book, binding)
+            observeBook(uiState.editBook, uiState.draftBook, uiState.book, binding)
             observeIsCreate(uiState.isCreate, binding)
             observeTitle(uiState.title, binding)
             observeOpinion(uiState.opinion, binding)
@@ -237,6 +238,7 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
         DraftDialog.newInstance().show(supportFragmentManager, DraftDialog.TAG)
         supportFragmentManager.setFragmentResultListener(KEY_REQUEST_DRAFT, this) { _, bundle ->
             val isSave = bundle.getBoolean(KEY_RESULT_DRAFT)
+            Log.d("test", "${isSave}")
             if (isSave) viewModel.saveDraft()
             navigateToMain()
         }
@@ -303,13 +305,14 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
     }
 
     private fun observeBook(
-        draftBook: Book?,
+        editBook: Book?,
+        draftBook: SearchedBook?,
         book: SearchedBook?,
         binding: ActivityCreateDiscussionRoomBinding,
     ) {
-        binding.tvBookTitle.text = book?.mainTitle ?: draftBook?.title
-        binding.tvBookAuthor.text = book?.author ?: draftBook?.author
-        binding.ivBookImage.loadImage(book?.image ?: draftBook?.image)
+        binding.tvBookTitle.text = book?.mainTitle ?: draftBook?.title ?: editBook?.title
+        binding.tvBookAuthor.text = book?.author ?: draftBook?.author ?: editBook?.author
+        binding.ivBookImage.loadImage(book?.image ?: draftBook?.image ?: editBook?.image)
     }
 
     private fun setupUiEvent(binding: ActivityCreateDiscussionRoomBinding) {

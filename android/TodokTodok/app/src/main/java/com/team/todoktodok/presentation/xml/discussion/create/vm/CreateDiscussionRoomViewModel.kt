@@ -1,10 +1,10 @@
 package com.team.todoktodok.presentation.xml.discussion.create.vm
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.team.domain.model.Book
 import com.team.domain.model.book.SearchedBook
 import com.team.domain.model.discussionroom.DiscussionRoom
 import com.team.domain.model.exception.onFailure
@@ -50,7 +50,7 @@ class CreateDiscussionRoomViewModel(
                     async { discussionRepository.getBook(id) },
                     async { discussionRepository.getDraftDiscussion(id) },
                 )
-            val bookResult = book as Book
+            val bookResult = book as SearchedBook
             val discussionResult = discussion as DiscussionRoom
             _uiState.value =
                 _uiState.value?.copy(
@@ -84,6 +84,11 @@ class CreateDiscussionRoomViewModel(
 
     fun checkIsPossibleToSave() {
         viewModelScope.launch {
+            val discussion = async { discussionRepository.getDiscussions() }.await()
+            if (discussion == null) {
+                _uiEvent.setValue(CreateDiscussionUiEvent.SaveDraft(true))
+                return@launch
+            }
             _uiEvent.setValue(CreateDiscussionUiEvent.SaveDraft(false))
         }
     }
@@ -108,7 +113,7 @@ class CreateDiscussionRoomViewModel(
 
     fun saveDraft() {
         val book =
-            _uiState.value?.draftBook ?: run {
+            _uiState.value?.draftBook ?: _uiState.value?.book ?: run {
                 _uiEvent.setValue(CreateDiscussionUiEvent.ShowToast(ErrorCreateDiscussionType.BOOK_INFO_NOT_FOUND))
                 return
             }
@@ -145,15 +150,12 @@ class CreateDiscussionRoomViewModel(
     }
 
     private fun createDiscussionRoom() {
-        val draftBook =
-            SearchedBook.Companion.SearchedBook(
-                _uiState.value?.draftBook?.id ?: 0L,
-                _uiState.value?.draftBook?.title ?: "",
-                _uiState.value?.draftBook?.author ?: "",
-                _uiState.value?.draftBook?.image ?: "",
-            )
+        Log.d("test", "${_uiState.value}")
         val book =
-            _uiState.value?.book ?: draftBook
+            _uiState.value?.book ?: _uiState.value?.draftBook ?: run {
+                updateErrorCreateDiscussion(ErrorCreateDiscussionType.BOOK_INFO_NOT_FOUND)
+                return
+            }
         val title =
             _uiState.value?.title
                 ?: run {
@@ -202,7 +204,7 @@ class CreateDiscussionRoomViewModel(
                 }
                 _uiState.value =
                     _uiState.value?.copy(
-                        draftBook = result.book,
+                        editBook = result.book,
                         title = result.discussionTitle,
                         opinion = result.discussionOpinion,
                     )
