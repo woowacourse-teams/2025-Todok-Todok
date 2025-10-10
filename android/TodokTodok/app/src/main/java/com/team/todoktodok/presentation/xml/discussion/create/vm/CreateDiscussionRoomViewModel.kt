@@ -112,10 +112,21 @@ class CreateDiscussionRoomViewModel(
     }
 
     fun saveDraft() {
+        val editBook = _uiState.value?.editBook
         val book =
-            _uiState.value?.draftBook ?: _uiState.value?.book ?: run {
-                _uiEvent.setValue(CreateDiscussionUiEvent.ShowToast(ErrorCreateDiscussionType.BOOK_INFO_NOT_FOUND))
-                return
+            if (editBook == null) {
+                _uiState.value?.editBook ?: _uiState.value?.draftBook ?: _uiState.value?.book
+                ?: run {
+                    _uiEvent.setValue(CreateDiscussionUiEvent.ShowToast(ErrorCreateDiscussionType.BOOK_INFO_NOT_FOUND))
+                    return
+                }
+            } else {
+                SearchedBook.Companion.SearchedBook(
+                    isbn = editBook.id,
+                    title = editBook.title,
+                    author = editBook.author,
+                    image = editBook.image
+                )
             }
         val title =
             _uiState.value?.title ?: run {
@@ -127,7 +138,13 @@ class CreateDiscussionRoomViewModel(
                 _uiEvent.setValue(CreateDiscussionUiEvent.ShowToast(ErrorCreateDiscussionType.CONTENT_NOT_FOUND))
                 return
             }
-        viewModelScope.launch { discussionRepository.saveDiscussionRoom(book, title, opinion) }
+        viewModelScope.launch {
+            discussionRepository.saveDiscussionRoom(
+                book = book as SearchedBook,
+                title,
+                opinion
+            )
+        }
         _uiEvent.setValue(CreateDiscussionUiEvent.Finish)
     }
 
