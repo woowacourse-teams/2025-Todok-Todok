@@ -6,32 +6,14 @@ positions:
   filename: /var/log/promtail/positions-performance.yaml
 
 clients:
-  - url: http://10.0.0.72:80/loki/api/v1/push
+  - url: http://10.0.0.72:3100/loki/api/v1/push
 
 scrape_configs:
-  - job_name: spring-logs-info
+  - job_name: spring-logs
     static_configs:
       - targets:
           - localhost
         labels:
           job: varlogs
           env: performance
-          __path__: /log/info/**/*.log
-
-  - job_name: spring-logs-warn
-    static_configs:
-      - targets:
-          - localhost
-        labels:
-          job: varlogs
-          env: performance
-          __path__: /log/warn/**/*.log
-
-  - job_name: spring-logs-error
-    static_configs:
-      - targets:
-          - localhost
-        labels:
-          job: varlogs
-          env: performance
-          __path__: /log/error/**/*.log
+          __path__: /log/**/*.log
