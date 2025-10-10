@@ -1,7 +1,7 @@
 package com.team.todoktodok.data.repository
 
-import com.team.domain.model.Book
 import com.team.domain.model.book.Keyword
+import com.team.domain.model.book.SearchedBook
 import com.team.domain.model.book.SearchedBooksResult
 import com.team.domain.model.exception.NetworkResult
 import com.team.domain.model.exception.map
@@ -39,5 +39,6 @@ class DefaultBookRepository(
         }
     }
 
-    override suspend fun saveBook(book: Book): NetworkResult<Long> = bookRemoteDataSource.saveBook(book.toRequest())
+    override suspend fun saveBook(book: SearchedBook): NetworkResult<Long> =
+        bookRemoteDataSource.saveBook(book.toRequest())
 }

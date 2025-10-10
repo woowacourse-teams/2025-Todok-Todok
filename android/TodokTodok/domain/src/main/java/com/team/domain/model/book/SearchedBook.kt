@@ -8,6 +8,7 @@ data class SearchedBook(
 ) {
     val isbn: Long get() = _isbn.value
 
+    val title: String get() = _title.value
     val mainTitle: String get() = _title.mainTitle
 
     val author: String get() = _author.value

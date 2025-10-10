@@ -97,7 +97,7 @@ class CreateDiscussionRoomViewModel(
                     val discussionResult = discussion as DiscussionRoom
                     _uiState.value =
                         _uiState.value?.copy(
-                            book = bookResult,
+                            draftBook = bookResult,
                             title = discussionResult.title,
                             opinion = discussionResult.opinion,
                         )
@@ -108,7 +108,7 @@ class CreateDiscussionRoomViewModel(
 
     fun saveDraft() {
         val book =
-            _uiState.value?.book ?: run {
+            _uiState.value?.draftBook ?: run {
                 _uiEvent.setValue(CreateDiscussionUiEvent.ShowToast(ErrorCreateDiscussionType.BOOK_INFO_NOT_FOUND))
                 return
             }
@@ -199,7 +199,7 @@ class CreateDiscussionRoomViewModel(
                 }
                 _uiState.value =
                     _uiState.value?.copy(
-                        book = result.book,
+                        draftBook = result.book,
                         title = result.discussionTitle,
                         opinion = result.discussionOpinion,
                     )

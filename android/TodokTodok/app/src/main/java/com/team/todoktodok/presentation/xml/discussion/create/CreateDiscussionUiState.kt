@@ -1,12 +1,14 @@
 package com.team.todoktodok.presentation.xml.discussion.create
 
 import com.team.domain.model.Book
+import com.team.domain.model.book.SearchedBook
 
 data class CreateDiscussionUiState(
     val isLoading: Boolean = false,
     val title: String = "",
     val opinion: String = "",
-    val book: Book? = null,
+    val book: SearchedBook? = null,
+    val draftBook: Book? = null,
     val discussionRoomId: Long? = null,
     val draftDiscussionCount: Int = 0,
 ) {

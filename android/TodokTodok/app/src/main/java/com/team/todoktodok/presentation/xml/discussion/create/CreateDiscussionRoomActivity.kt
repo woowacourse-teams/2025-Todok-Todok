@@ -17,7 +17,7 @@ import androidx.core.view.WindowInsetsAnimationCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.core.widget.doAfterTextChanged
-import com.team.domain.model.Book
+import com.team.domain.model.book.SearchedBook
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivityCreateDiscussionRoomBinding
@@ -289,10 +289,10 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
     }
 
     private fun observeBook(
-        book: Book?,
+        book: SearchedBook?,
         binding: ActivityCreateDiscussionRoomBinding,
     ) {
-        binding.tvBookTitle.text = book?.title
+        binding.tvBookTitle.text = book?.mainTitle
         binding.tvBookAuthor.text = book?.author
         binding.ivBookImage.loadImage(book?.image)
     }

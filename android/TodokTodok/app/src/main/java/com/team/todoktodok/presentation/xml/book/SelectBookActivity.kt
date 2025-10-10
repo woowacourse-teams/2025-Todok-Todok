@@ -29,7 +29,7 @@ import com.team.todoktodok.presentation.xml.book.vm.SelectBookViewModel
 import com.team.todoktodok.presentation.xml.book.vm.SelectBookViewModelFactory
 import com.team.todoktodok.presentation.xml.discussion.create.CreateDiscussionRoomActivity
 import com.team.todoktodok.presentation.xml.discussion.create.SerializationCreateDiscussionRoomMode
-import com.team.todoktodok.presentation.xml.serialization.SerializationBook
+import com.team.todoktodok.presentation.xml.serialization.SerializationSearchedBook
 import com.team.todoktodok.presentation.xml.serialization.toSerialization
 
 class SelectBookActivity : AppCompatActivity() {
@@ -261,7 +261,7 @@ class SelectBookActivity : AppCompatActivity() {
     }
 
     private fun navigateToCreateDiscussionRoom(book: SearchedBook) {
-        val serializationBook: SerializationBook = book.toSerialization()
+        val serializationBook: SerializationSearchedBook = book.toSerialization()
         val intent =
             CreateDiscussionRoomActivity.Intent(
                 this,
