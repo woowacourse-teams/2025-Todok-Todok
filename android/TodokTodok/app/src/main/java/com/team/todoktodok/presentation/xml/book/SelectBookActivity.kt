@@ -78,7 +78,7 @@ class SelectBookActivity : AppCompatActivity() {
             val imeBottom = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
 
             initSystemBarPadding(v, binding, systemBars)
-            initSystmeBarRvPadding(binding, imeBottom)
+            initSystemBarRvPadding(binding, imeBottom)
             initSystemBarEmptyViewPadding(binding, imeBottom)
             insets
         }
@@ -96,7 +96,7 @@ class SelectBookActivity : AppCompatActivity() {
         )
     }
 
-    private fun initSystmeBarRvPadding(
+    private fun initSystemBarRvPadding(
         binding: ActivitySelectBookBinding,
         imeBottom: Int,
     ) {
