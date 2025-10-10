@@ -24,7 +24,10 @@ import todoktodok.backend.member.domain.repository.MemberRepository;
 public class BookQueryService {
 
     private static final String ISBN13_PATTERN = "\\d{13}";
-    private static final int MAX_SIZE = 200;
+    private static final int MIN_PAGE_SIZE = 1;
+    private static final int MAX_PAGE_SIZE = 50;
+    private static final int MAX_CURSOR_SIZE = 20;
+    private static final int MAX_SEARCHED_BOOK_SIZE = 200;
 
     private final AladinRestClient aladinRestClient;
     private final BookRepository bookRepository;
@@ -50,18 +53,18 @@ public class BookQueryService {
         validatePageSize(size);
         validateKeyword(keyword);
 
-        final int page = decodeCursor(cursor);
+        final int decodedCursor = decodeCursor(cursor);
         final String cleanKeyword = keyword.trim();
 
         final AladinItemResponses aladinItemResponses =
-                aladinRestClient.searchBooksByKeywordWithPaging(cleanKeyword, page, size);
+                aladinRestClient.searchBooksByKeywordWithPaging(cleanKeyword, decodedCursor, size);
 
         final List<AladinBookResponse> searchedBooks = aladinItemResponses.item().stream()
                 .filter(book -> book.isbn13() != null && !book.isbn13().isEmpty())
                 .filter(book -> book.isbn13().matches(ISBN13_PATTERN))
                 .map(AladinBookResponse::new)
                 .toList();
-        final PageInfo pageInfo = createNextCursor(aladinItemResponses, searchedBooks, page, size);
+        final PageInfo pageInfo = createNextCursor(aladinItemResponses, searchedBooks, decodedCursor, size);
         final int totalSize = getTotalSize(aladinItemResponses);
 
         return new LatestAladinBookPageResponse(searchedBooks, pageInfo, totalSize);
@@ -80,7 +83,7 @@ public class BookQueryService {
     }
 
     private void validatePageSize(final int size) {
-        if (size > MAX_SIZE) {
+        if (size < MIN_PAGE_SIZE || size > MAX_PAGE_SIZE) {
             throw new IllegalArgumentException(
                     String.format("유효하지 않은 페이지 사이즈입니다: size = %d", size));
         }
@@ -101,28 +104,23 @@ public class BookQueryService {
 
     private int getTotalSize(final AladinItemResponses aladinItemResponses) {
         final int totalResultsFromAladin = aladinItemResponses.totalResults();
-        return Math.min(totalResultsFromAladin, MAX_SIZE);
+        return Math.min(totalResultsFromAladin, MAX_SEARCHED_BOOK_SIZE);
     }
 
     private PageInfo createNextCursor(
             final AladinItemResponses aladinItemResponses,
             final List<AladinBookResponse> searchedBooks,
-            final int page,
+            final int cursor,
             final int requestedSize
     ) {
         final int currentSize = searchedBooks.size();
         final int fetchedItemSize = aladinItemResponses.item().size();
 
-        if (fetchedItemSize < requestedSize || page == MAX_SIZE / requestedSize) {
+        if (fetchedItemSize < requestedSize || cursor >= MAX_CURSOR_SIZE) {
             return new PageInfo(false, null, currentSize);
         }
 
-        if (page > MAX_SIZE / requestedSize) {
-            final String nextCursor = encodeCursorId(2);
-            return new PageInfo(true, nextCursor, currentSize);
-        }
-
-        final String nextCursor = encodeCursorId(page + 1);
+        final String nextCursor = encodeCursorId(cursor + 1);
         return new PageInfo(true, nextCursor, currentSize);
     }
 
