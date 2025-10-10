@@ -44,15 +44,16 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
         ) ?: throw IllegalStateException(MODE_NOT_EXIST)
     }
 
-    private val launcher = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        if (result.resultCode == RESULT_OK) {
-            val data = result.data
-            val selectedValue = data?.getLongExtra("selected_draft", -1L) ?: error("잠시 오류가 있습니다")
-            viewModel.getDraft(selectedValue)
+    private val launcher =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult(),
+        ) { result ->
+            if (result.resultCode == RESULT_OK) {
+                val data = result.data
+                val selectedValue = data?.getLongExtra("selected_draft", -1L) ?: error("잠시 오류가 있습니다")
+                viewModel.getDraft(selectedValue)
+            }
         }
-    }
     private val viewModel by viewModels<CreateDiscussionRoomViewModel> {
         val repositoryModule = (application as App).container.repositoryModule
         CreateDiscussionRoomViewModelFactory(
@@ -241,7 +242,6 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
     }
 
     private fun showDraftsListDialog() {
-
         val intent = DraftsActivity.Intent(this)
         launcher.launch(intent)
     }

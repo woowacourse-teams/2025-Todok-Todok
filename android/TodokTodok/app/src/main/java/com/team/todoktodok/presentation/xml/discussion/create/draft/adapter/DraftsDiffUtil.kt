@@ -6,11 +6,11 @@ import com.team.domain.model.discussionroom.DiscussionRoom
 class DraftsDiffUtil : DiffUtil.ItemCallback<DiscussionRoom>() {
     override fun areItemsTheSame(
         oldItem: DiscussionRoom,
-        newItem: DiscussionRoom
+        newItem: DiscussionRoom,
     ): Boolean = oldItem.id == newItem.id
 
     override fun areContentsTheSame(
         oldItem: DiscussionRoom,
-        newItem: DiscussionRoom
+        newItem: DiscussionRoom,
     ): Boolean = oldItem.title == newItem.title
 }

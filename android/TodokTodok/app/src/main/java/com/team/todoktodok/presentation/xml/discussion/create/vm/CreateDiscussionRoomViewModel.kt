@@ -101,7 +101,6 @@ class CreateDiscussionRoomViewModel(
 
             is SerializationCreateDiscussionRoomMode.Draft -> {
                 viewModelScope.launch {
-
                 }
             }
         }
@@ -146,12 +145,13 @@ class CreateDiscussionRoomViewModel(
     }
 
     private fun createDiscussionRoom() {
-        val draftBook = SearchedBook.Companion.SearchedBook(
-            _uiState.value?.draftBook?.id ?: 0L,
-            _uiState.value?.draftBook?.title ?: "",
-            _uiState.value?.draftBook?.author ?: "",
-            _uiState.value?.draftBook?.image ?: "",
-        )
+        val draftBook =
+            SearchedBook.Companion.SearchedBook(
+                _uiState.value?.draftBook?.id ?: 0L,
+                _uiState.value?.draftBook?.title ?: "",
+                _uiState.value?.draftBook?.author ?: "",
+                _uiState.value?.draftBook?.image ?: "",
+            )
         val book =
             _uiState.value?.book ?: draftBook
         val title =

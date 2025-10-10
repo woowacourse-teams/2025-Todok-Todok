@@ -15,8 +15,7 @@ class DefaultDiscussionLocalDataSource(
         dao.saveDiscussionWithBook(discussionEntity, bookEntity)
     }
 
-    override suspend fun getDiscussion(id: Long): DiscussionWithBook? =
-        dao.getDiscussionWithBook(id)
+    override suspend fun getDiscussion(id: Long): DiscussionWithBook? = dao.getDiscussionWithBook(id)
 
     override suspend fun hasDiscussion(): Boolean = dao.hasDiscussion()
 
@@ -25,5 +24,6 @@ class DefaultDiscussionLocalDataSource(
     override suspend fun deleteDiscussion() = dao.deleteDiscussion()
 
     override suspend fun getDiscussionCount(): Int = dao.getDraftDiscussionCount()
+
     override suspend fun getDiscussions(): List<DiscussionWithBook> = dao.getDiscussions()
 }

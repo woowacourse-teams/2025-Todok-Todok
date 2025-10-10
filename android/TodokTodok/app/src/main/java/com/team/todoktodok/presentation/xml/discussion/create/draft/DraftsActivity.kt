@@ -37,9 +37,10 @@ class DraftsActivity : AppCompatActivity() {
         viewModel.uiEvent.observe(this) { event ->
             when (event) {
                 is DraftUiEvent.NavigateToCreateDiscussionRoom -> {
-                    val data = Intent().apply {
-                        putExtra("selected_draft", event.id)
-                    }
+                    val data =
+                        Intent().apply {
+                            putExtra("selected_draft", event.id)
+                        }
                     setResult(RESULT_OK, data)
                     finish()
                 }
@@ -61,11 +62,13 @@ class DraftsActivity : AppCompatActivity() {
         }
     }
 
-    private fun initView(binding: ActivityDraftsBinding, adapter: DraftsAdapter) {
+    private fun initView(
+        binding: ActivityDraftsBinding,
+        adapter: DraftsAdapter,
+    ) {
         binding.btnBack.setOnClickListener { finish() }
         binding.rvDrafts.adapter = adapter
     }
-
 
     companion object {
         fun Intent(context: Context): Intent = Intent(context, DraftsActivity::class.java)

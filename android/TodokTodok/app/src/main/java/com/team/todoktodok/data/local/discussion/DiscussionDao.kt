@@ -57,7 +57,7 @@ interface DiscussionDao {
         WHERE id = :id
         LIMIT 1
     )
-"""
+""",
     )
     suspend fun getBook(id: Long): BookEntity
 

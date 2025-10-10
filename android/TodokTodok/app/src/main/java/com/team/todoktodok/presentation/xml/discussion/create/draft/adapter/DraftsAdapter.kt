@@ -9,11 +9,11 @@ class DraftsAdapter(
 ) : ListAdapter<DiscussionRoom, DraftsViewHolder>(DraftsDiffUtil()) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
-        viewType: Int
+        viewType: Int,
     ): DraftsViewHolder = DraftsViewHolder.Companion.DraftsViewHolder(parent, selectDraft)
 
     override fun onBindViewHolder(
         holder: DraftsViewHolder,
-        position: Int
+        position: Int,
     ) = holder.bind(getItem(position))
 }

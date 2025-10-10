@@ -39,6 +39,5 @@ class DefaultBookRepository(
         }
     }
 
-    override suspend fun saveBook(book: SearchedBook): NetworkResult<Long> =
-        bookRemoteDataSource.saveBook(book.toRequest())
+    override suspend fun saveBook(book: SearchedBook): NetworkResult<Long> = bookRemoteDataSource.saveBook(book.toRequest())
 }
