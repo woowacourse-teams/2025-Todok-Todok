@@ -1,6 +1,5 @@
 package todoktodok.backend.discussion.application.service.query;
 
-import jakarta.annotation.Nullable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Base64;
@@ -88,7 +87,7 @@ public class DiscussionQueryService {
     public LatestDiscussionPageResponse getDiscussions(
             final Long memberId,
             final int size,
-            @Nullable final String cursor
+            final String cursor
     ) {
         validatePageSize(size);
         final Member member = findMember(memberId);
@@ -112,7 +111,7 @@ public class DiscussionQueryService {
             final Long memberId,
             final Long bookId,
             final int size,
-            @Nullable final String cursor
+            final String cursor
     ) {
         validatePageSize(size);
         final Member member = findMember(memberId);
@@ -156,7 +155,7 @@ public class DiscussionQueryService {
             final Long memberId,
             final int period,
             final int requestedSize,
-            @Nullable final String cursor
+            final String cursor
     ) {
         validateDiscussionPeriod(period);
         validatePageSize(requestedSize);
@@ -225,7 +224,7 @@ public class DiscussionQueryService {
     }
 
     private Slice<Long> sliceDiscussionsBy(
-            @Nullable final String cursor,
+            final String cursor,
             final int size
     ) {
         final Pageable pageable = PageRequest.of(0, size, Sort.Direction.DESC, "id");
@@ -238,7 +237,7 @@ public class DiscussionQueryService {
         return discussionRepository.findIdsLessThan(cursorId, pageable);
     }
 
-    private String processBlankCursor(@Nullable final String cursor) {
+    private String processBlankCursor(final String cursor) {
         if (cursor == null || cursor.isBlank()) {
             return null;
         }
@@ -255,7 +254,7 @@ public class DiscussionQueryService {
         return encodeCursorId(discussionIds.getLast());
     }
 
-    private Long decodeCursor(@Nullable final String cursor) {
+    private Long decodeCursor(final String cursor) {
         try {
             if (cursor == null || cursor.isBlank()) {
                 return null;
@@ -386,7 +385,7 @@ public class DiscussionQueryService {
 
     private Slice<Long> sliceDiscussionsByBook(
             final Long bookId,
-            @Nullable final String cursor,
+            final String cursor,
             final Pageable pageable
     ) {
         if (cursor == null || cursor.isBlank()) {
