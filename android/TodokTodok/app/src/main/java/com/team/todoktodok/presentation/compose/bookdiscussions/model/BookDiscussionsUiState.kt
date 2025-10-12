@@ -7,8 +7,8 @@ sealed interface BookDiscussionsUiState {
     object Loading : BookDiscussionsUiState
 
     data class Success(
-        val book: BookDetailUiState,
-        val discussions: ImmutableList<DiscussionItem>,
+        val book: BookDetailSectionUiState,
+        val bookDiscussionsSectionUiState: BookDiscussionsSectionUiState,
     ) : BookDiscussionsUiState
 
     data class Failure(

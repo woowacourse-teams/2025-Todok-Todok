@@ -9,11 +9,10 @@ import com.team.todoktodok.data.network.request.EditDiscussionRoomRequest
 import com.team.todoktodok.data.network.request.ReportRequest
 import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
 import com.team.todoktodok.data.network.response.discussion.page.ActiveDiscussionPageResponse
+import com.team.todoktodok.data.network.response.discussion.page.BookDiscussionPageResponse
 import com.team.todoktodok.data.network.response.latest.LatestDiscussionsResponse
 import com.team.todoktodok.data.network.service.DiscussionService
 import retrofit2.Response
-import retrofit2.http.GET
-import retrofit2.http.Query
 
 class DefaultDiscussionRemoteDataSource(
     private val discussionService: DiscussionService,
@@ -38,9 +37,10 @@ class DefaultDiscussionRemoteDataSource(
     ): NetworkResult<LatestDiscussionsResponse> = discussionService.fetchLatestDiscussions(size, cursor)
 
     override suspend fun fetchBookDiscussions(
-        discussionId: Long,
+        bookId: Long,
         size: Int,
-    ): NetworkResult<List<DiscussionResponse>> = discussionService.fetchBookDiscussions(discussionId, size)
+        cursor: String?,
+    ): NetworkResult<BookDiscussionPageResponse> = discussionService.fetchBookDiscussions(bookId, size, cursor)
 
     override suspend fun fetchDiscussion(id: Long): NetworkResult<DiscussionResponse> = discussionService.fetchDiscussion(id)
 
