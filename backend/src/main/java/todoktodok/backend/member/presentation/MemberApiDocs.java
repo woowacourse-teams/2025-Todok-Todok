@@ -16,7 +16,12 @@ import org.springframework.web.multipart.MultipartFile;
 import todoktodok.backend.book.application.dto.response.BookResponse;
 import todoktodok.backend.discussion.application.dto.response.DiscussionResponse;
 import todoktodok.backend.global.exception.ErrorResponse;
-import todoktodok.backend.member.application.dto.request.*;
+import todoktodok.backend.member.application.dto.request.LoginRequest;
+import todoktodok.backend.member.application.dto.request.MemberReportRequest;
+import todoktodok.backend.member.application.dto.request.ProfileUpdateRequest;
+import todoktodok.backend.member.application.dto.request.RefreshTokenRequest;
+import todoktodok.backend.member.application.dto.request.SignupRequest;
+import todoktodok.backend.member.application.dto.request.SignupRequestLegacy;
 import todoktodok.backend.member.application.dto.response.BlockMemberResponse;
 import todoktodok.backend.member.application.dto.response.ProfileImageUpdateResponse;
 import todoktodok.backend.member.application.dto.response.ProfileResponse;
@@ -465,21 +470,16 @@ public interface MemberApiDocs {
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(
-                                    name = "JWT 오류",
-                                    value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
-                            )
-                    )),
-            @ApiResponse(
-                    responseCode = "401",
-                    description = "액세스 토큰 만료 오류",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(
-                                    name = "액세스 토큰 만료 오류",
-                                    value = "{\"code\":401, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
-                            )
+                            examples = {
+                                    @ExampleObject(
+                                            name = "JWT 오류",
+                                            value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
+                                    ),
+                                    @ExampleObject(
+                                            name = "액세스 토큰 만료 오류",
+                                            value = "{\"code\":401, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
+                                    )
+                            }
                     )),
             @ApiResponse(
                     responseCode = "404",
@@ -550,21 +550,16 @@ public interface MemberApiDocs {
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(
-                                    name = "JWT 오류",
-                                    value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
-                            )
-                    )),
-            @ApiResponse(
-                    responseCode = "401",
-                    description = "액세스 토큰 만료 오류",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(
-                                    name = "액세스 토큰 만료 오류",
-                                    value = "{\"code\":401, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
-                            )
+                            examples = {
+                                    @ExampleObject(
+                                            name = "JWT 오류",
+                                            value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
+                                    ),
+                                    @ExampleObject(
+                                            name = "액세스 토큰 만료 오류",
+                                            value = "{\"code\":401, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
+                                    )
+                            }
                     )),
             @ApiResponse(
                     responseCode = "404",
@@ -636,21 +631,16 @@ public interface MemberApiDocs {
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(
-                                    name = "JWT 오류",
-                                    value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
-                            )
-                    )),
-            @ApiResponse(
-                    responseCode = "401",
-                    description = "액세스 토큰 만료 오류",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(
-                                    name = "액세스 토큰 만료 오류",
-                                    value = "{\"code\":401, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
-                            )
+                            examples = {
+                                    @ExampleObject(
+                                            name = "JWT 오류",
+                                            value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
+                                    ),
+                                    @ExampleObject(
+                                            name = "액세스 토큰 만료 오류",
+                                            value = "{\"code\":401, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
+                                    )
+                            }
                     )),
             @ApiResponse(
                     responseCode = "404",
@@ -752,21 +742,16 @@ public interface MemberApiDocs {
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(
-                                    name = "JWT 오류",
-                                    value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
-                            )
-                    )),
-            @ApiResponse(
-                    responseCode = "401",
-                    description = "액세스 토큰 만료 오류",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(
-                                    name = "액세스 토큰 만료 오류",
-                                    value = "{\"code\":401, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
-                            )
+                            examples = {
+                                    @ExampleObject(
+                                            name = "JWT 오류",
+                                            value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
+                                    ),
+                                    @ExampleObject(
+                                            name = "액세스 토큰 만료 오류",
+                                            value = "{\"code\":401, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
+                                    )
+                            }
                     )),
             @ApiResponse(
                     responseCode = "404",
@@ -834,21 +819,16 @@ public interface MemberApiDocs {
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(
-                                    name = "JWT 오류",
-                                    value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
-                            )
-                    )),
-            @ApiResponse(
-                    responseCode = "401",
-                    description = "액세스 토큰 만료 오류",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(
-                                    name = "액세스 토큰 만료 오류",
-                                    value = "{\"code\":401, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
-                            )
+                            examples = {
+                                    @ExampleObject(
+                                            name = "JWT 오류",
+                                            value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
+                                    ),
+                                    @ExampleObject(
+                                            name = "액세스 토큰 만료 오류",
+                                            value = "{\"code\":401, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
+                                    )
+                            }
                     )),
             @ApiResponse(
                     responseCode = "500",
@@ -909,21 +889,16 @@ public interface MemberApiDocs {
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(
-                                    name = "JWT 오류",
-                                    value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
-                            )
-                    )),
-            @ApiResponse(
-                    responseCode = "401",
-                    description = "액세스 토큰 만료 오류",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(
-                                    name = "액세스 토큰 만료 오류",
-                                    value = "{\"code\":401, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
-                            )
+                            examples = {
+                                    @ExampleObject(
+                                            name = "JWT 오류",
+                                            value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
+                                    ),
+                                    @ExampleObject(
+                                            name = "액세스 토큰 만료 오류",
+                                            value = "{\"code\":401, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
+                                    )
+                            }
                     )),
             @ApiResponse(
                     responseCode = "500",
@@ -988,21 +963,16 @@ public interface MemberApiDocs {
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(
-                                    name = "JWT 오류",
-                                    value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
-                            )
-                    )),
-            @ApiResponse(
-                    responseCode = "401",
-                    description = "액세스 토큰 만료 오류",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(
-                                    name = "액세스 토큰 만료 오류",
-                                    value = "{\"code\":401, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
-                            )
+                            examples = {
+                                    @ExampleObject(
+                                            name = "JWT 오류",
+                                            value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
+                                    ),
+                                    @ExampleObject(
+                                            name = "액세스 토큰 만료 오류",
+                                            value = "{\"code\":401, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
+                                    )
+                            }
                     )),
             @ApiResponse(
                     responseCode = "500",
@@ -1051,21 +1021,16 @@ public interface MemberApiDocs {
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(
-                                    name = "JWT 오류",
-                                    value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
-                            )
-                    )),
-            @ApiResponse(
-                    responseCode = "401",
-                    description = "액세스 토큰 만료 오류",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(
-                                    name = "액세스 토큰 만료 오류",
-                                    value = "{\"code\":401, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
-                            )
+                            examples = {
+                                    @ExampleObject(
+                                            name = "JWT 오류",
+                                            value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
+                                    ),
+                                    @ExampleObject(
+                                            name = "액세스 토큰 만료 오류",
+                                            value = "{\"code\":401, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
+                                    )
+                            }
                     )),
             @ApiResponse(
                     responseCode = "404",
@@ -1131,21 +1096,16 @@ public interface MemberApiDocs {
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(
-                                    name = "JWT 오류",
-                                    value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
-                            )
-                    )),
-            @ApiResponse(
-                    responseCode = "401",
-                    description = "액세스 토큰 만료 오류",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(
-                                    name = "액세스 토큰 만료 오류",
-                                    value = "{\"code\":401, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
-                            )
+                            examples = {
+                                    @ExampleObject(
+                                            name = "JWT 오류",
+                                            value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
+                                    ),
+                                    @ExampleObject(
+                                            name = "액세스 토큰 만료 오류",
+                                            value = "{\"code\":401, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
+                                    )
+                            }
                     )),
             @ApiResponse(
                     responseCode = "404",

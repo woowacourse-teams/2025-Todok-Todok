@@ -14,9 +14,6 @@ import todoktodok.backend.book.domain.Book;
 import todoktodok.backend.book.domain.repository.BookRepository;
 import todoktodok.backend.book.infrastructure.aladin.AladinItemResponses;
 import todoktodok.backend.book.infrastructure.aladin.AladinRestClient;
-import todoktodok.backend.discussion.domain.Discussion;
-import todoktodok.backend.member.domain.Member;
-import todoktodok.backend.member.domain.repository.MemberRepository;
 
 @Service
 @Transactional(readOnly = true)

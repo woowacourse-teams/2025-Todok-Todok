@@ -18,6 +18,8 @@ import todoktodok.backend.book.application.dto.response.BookResponse;
 import todoktodok.backend.book.application.dto.response.LatestAladinBookPageResponse;
 import todoktodok.backend.book.application.service.command.BookCommandService;
 import todoktodok.backend.book.application.service.query.BookQueryService;
+import todoktodok.backend.discussion.application.dto.response.LatestDiscussionPageResponse;
+import todoktodok.backend.discussion.application.service.query.DiscussionQueryService;
 import todoktodok.backend.global.auth.Auth;
 import todoktodok.backend.global.auth.Role;
 import todoktodok.backend.global.resolver.LoginMember;
@@ -29,6 +31,7 @@ public class BookController implements BookApiDocs {
 
     private final BookCommandService bookCommandService;
     private final BookQueryService bookQueryService;
+    private final DiscussionQueryService discussionQueryService;
 
     @Auth(value = Role.USER)
     @PostMapping
@@ -69,5 +72,17 @@ public class BookController implements BookApiDocs {
     ) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(bookQueryService.getBook(bookId));
+    }
+
+    @Auth(value = Role.USER)
+    @GetMapping("/{bookId}/discussions")
+    public ResponseEntity<LatestDiscussionPageResponse> getDiscussionsByBook(
+            @LoginMember final Long memberId,
+            @PathVariable final Long bookId,
+            @RequestParam final int size,
+            @RequestParam(required = false) final String cursor
+    ) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(discussionQueryService.getDiscussionsByBook(memberId, bookId, size, cursor));
     }
 }
