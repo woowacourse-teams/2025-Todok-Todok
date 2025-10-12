@@ -9,7 +9,6 @@ import todoktodok.backend.member.application.dto.request.LoginRequest;
 import todoktodok.backend.member.application.dto.response.TokenResponse;
 import todoktodok.backend.member.domain.Member;
 
-@Component
 public class MemberFixture {
 
     public static Member create(
@@ -24,7 +23,7 @@ public class MemberFixture {
                 .build();
     }
 
-    public String getAccessToken(final String email) {
+    public static String getAccessToken(final String email) {
         return RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(new LoginRequest(email))
@@ -34,7 +33,7 @@ public class MemberFixture {
                 .extract().header("Authorization");
     }
 
-    public TokenResponse getAccessAndRefreshToken(final String email) {
+    public static TokenResponse getAccessAndRefreshToken(final String email) {
         final Response response = RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(new LoginRequest(email))

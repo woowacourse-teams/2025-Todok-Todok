@@ -28,9 +28,6 @@ import todoktodok.backend.member.presentation.fixture.MemberFixture;
 class NotificationControllerTest {
 
     @Autowired
-    private MemberFixture memberFixture;
-
-    @Autowired
     private DatabaseInitializer databaseInitializer;
 
     @LocalServerPort
@@ -49,7 +46,7 @@ class NotificationControllerTest {
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultCommentNotification();
 
-        final String token = memberFixture.getAccessToken("user@gmail.com");
+        final String token = MemberFixture.getAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -69,7 +66,7 @@ class NotificationControllerTest {
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultCommentNotification();
 
-        final String token = memberFixture.getAccessToken("user@gmail.com");
+        final String token = MemberFixture.getAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -87,7 +84,7 @@ class NotificationControllerTest {
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultCommentNotification();
 
-        final String token = memberFixture.getAccessToken("user@gmail.com");
+        final String token = MemberFixture.getAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -105,7 +102,7 @@ class NotificationControllerTest {
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultCommentNotification();
 
-        final String token = memberFixture.getAccessToken("user@gmail.com");
+        final String token = MemberFixture.getAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()

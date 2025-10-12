@@ -1,8 +1,6 @@
 package todoktodok.backend.comment.presentation;
 
 import static org.hamcrest.Matchers.is;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.BDDMockito.given;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -28,9 +26,6 @@ import todoktodok.backend.member.presentation.fixture.MemberFixture;
 public class CommentControllerTest {
 
     @Autowired
-    private MemberFixture memberFixture;
-    
-    @Autowired
     private DatabaseInitializer databaseInitializer;
 
     @LocalServerPort
@@ -52,7 +47,7 @@ public class CommentControllerTest {
 
         final CommentRequest commentRequest = new CommentRequest("상속의 핵심 목적은 타입 계층의 구축입니다!");
 
-        final String token = memberFixture.getAccessToken("user@gmail.com");
+        final String token = MemberFixture.getAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -73,7 +68,7 @@ public class CommentControllerTest {
         databaseInitializer.setDefaultDiscussionInfo();
         databaseInitializer.setDefaultCommentInfo();
 
-        final String token = memberFixture.getAccessToken("user@gmail.com");
+        final String token = MemberFixture.getAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -94,7 +89,7 @@ public class CommentControllerTest {
         databaseInitializer.setDefaultCommentInfo();
         databaseInitializer.setCommentLikeInfo(1L, 1L);
 
-        final String token = memberFixture.getAccessToken("user@gmail.com");
+        final String token = MemberFixture.getAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -116,7 +111,7 @@ public class CommentControllerTest {
         databaseInitializer.setDefaultDiscussionInfo();
         databaseInitializer.setCommentInfo("상속의 핵심 목적은 타입 계층의 구축입니다!", 2L, 1L);
 
-        final String token = memberFixture.getAccessToken("user@gmail.com");
+        final String token = MemberFixture.getAccessToken("user@gmail.com");
         final CommentReportRequest commentReportRequest = new CommentReportRequest("토론 주제와 무관한 내용");
 
         // when - then
@@ -139,7 +134,7 @@ public class CommentControllerTest {
 
         databaseInitializer.setCommentInfo("상속의 핵심 목적은 타입 계층의 구축입니다!", 1L, 1L);
 
-        final String token = memberFixture.getAccessToken("user@gmail.com");
+        final String token = MemberFixture.getAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -161,7 +156,7 @@ public class CommentControllerTest {
         databaseInitializer.setCommentInfo("상속의 핵심 목적은 타입 계층의 구축입니다!", 1L, 1L);
         databaseInitializer.setCommentInfo("조합은 재사용이 목적입니다!", 1L, 1L);
 
-        final String token = memberFixture.getAccessToken("user@gmail.com");
+        final String token = MemberFixture.getAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -188,7 +183,7 @@ public class CommentControllerTest {
                 updatedContent
         );
 
-        final String token = memberFixture.getAccessToken("user@gmail.com");
+        final String token = MemberFixture.getAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -210,7 +205,7 @@ public class CommentControllerTest {
 
         databaseInitializer.setCommentInfo("상속의 핵심 목적은 타입 계층의 구축입니다!", 1L, 1L);
 
-        final String token = memberFixture.getAccessToken("user@gmail.com");
+        final String token = MemberFixture.getAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
