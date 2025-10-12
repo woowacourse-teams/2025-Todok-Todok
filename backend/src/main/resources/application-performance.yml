@@ -42,6 +42,9 @@ server:
   tomcat:
     mbeanregistry:
       enabled: true
+    threads:
+      max: 250
+#    accept-count:
 
 auth:
   mode: google
