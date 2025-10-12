@@ -6,6 +6,8 @@ import com.team.todoktodok.data.network.request.EditDiscussionRoomRequest
 import com.team.todoktodok.data.network.request.ReportRequest
 import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
 import com.team.todoktodok.data.network.response.discussion.page.ActivatedDiscussionPageResponse
+import com.team.todoktodok.data.network.response.discussion.page.ActiveDiscussionPageResponse
+import com.team.todoktodok.data.network.response.discussion.page.BookDiscussionPageResponse
 import com.team.todoktodok.data.network.response.latest.LatestDiscussionsResponse
 import retrofit2.Response
 import retrofit2.http.Body
@@ -46,9 +48,10 @@ interface DiscussionService {
 
     @GET("v1/discussions")
     suspend fun fetchBookDiscussions(
-        @Query("discussionId") discussionId: Long,
+        @Query("bookId") bookId: Long,
         @Query("size") size: Int,
-    ): NetworkResult<List<DiscussionResponse>>
+        @Query("cursor") cursor: String?,
+    ): NetworkResult<BookDiscussionPageResponse>
 
     @GET("v1/discussions/{discussionId}")
     suspend fun fetchDiscussion(

@@ -13,8 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.toggleable
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -36,11 +34,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.team.todoktodok.R
-import com.team.todoktodok.presentation.compose.bookdiscussions.model.BookDetailUiState
+import com.team.todoktodok.presentation.compose.bookdiscussions.model.BookDetailSectionUiState
 
 @Composable
 fun BookDetailSection(
-    bookDetailUiState: BookDetailUiState,
+    bookDetailSectionUiState: BookDetailSectionUiState,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier) {
@@ -50,7 +48,7 @@ fun BookDetailSection(
                 .height(100.dp),
         ) {
             AsyncImage(
-                model = bookDetailUiState.bookImage,
+                model = bookDetailSectionUiState.bookImage,
                 contentDescription = stringResource(R.string.book_image),
                 modifier =
                     Modifier
@@ -59,13 +57,13 @@ fun BookDetailSection(
             )
             Spacer(Modifier.width(20.dp))
             FlowColumn(Modifier.fillMaxHeight(), verticalArrangement = Arrangement.SpaceAround) {
-                Text(bookDetailUiState.bookTitle)
-                Text(bookDetailUiState.bookAuthor)
-                Text(bookDetailUiState.bookPublisher)
+                Text(bookDetailSectionUiState.bookTitle)
+                Text(bookDetailSectionUiState.bookAuthor)
+                Text(bookDetailSectionUiState.bookPublisher)
             }
         }
         Spacer(Modifier.height(20.dp))
-        ExpandableSection("도서 소개", bookDetailUiState.bookSummary)
+        ExpandableSection("도서 소개", bookDetailSectionUiState.bookSummary)
     }
 }
 
@@ -116,8 +114,8 @@ fun ExpandableSection(
 @Preview(showBackground = true)
 @Composable
 private fun BookDetailSectionPreview() {
-    val bookDetailUiState =
-        BookDetailUiState(
+    val bookDetailSectionUiState =
+        BookDetailSectionUiState(
             bookTitle = "오브젝트 - 코드로 이해하는 객체지향 설계",
             bookAuthor = "조영호",
             bookImage = "https://dummyimage.com/200x300/cccccc/000000.png&text=Clean+Code",
@@ -125,5 +123,5 @@ private fun BookDetailSectionPreview() {
             bookSummary =
                 "역할, 책임, 협력에 기반해 객체지향 프로그램을 설계하고 구현하는 방법, 응집도와 결합도를 이용해 설계를 트레이드오프하는 방법, 설계를 유연하게 만드는 다양한 의존성 관리 기법, 타입 계층을 위한 상속과 코드 재사용을 위한 합성의 개념 등을 다룬다.",
         )
-    BookDetailSection(bookDetailUiState, modifier = Modifier.height(300.dp))
+    BookDetailSection(bookDetailSectionUiState, modifier = Modifier.height(300.dp))
 }

@@ -35,6 +35,7 @@ fun BookDetailEntry(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     BookDetailScreen(
         uiState,
+        viewModel::loadMoreItems,
         onNavigateToMain,
         onNavigateToMyProfile,
         modifier,
@@ -44,6 +45,7 @@ fun BookDetailEntry(
 @Composable
 fun BookDetailScreen(
     uiState: BookDiscussionsUiState,
+    loadMoreItems: () -> Unit,
     onNavigateToMain: () -> Unit,
     onNavigateToMyProfile: () -> Unit,
     modifier: Modifier = Modifier,
@@ -60,7 +62,8 @@ fun BookDetailScreen(
             is BookDiscussionsUiState.Success ->
                 BookDiscussionsContent(
                     uiState.book,
-                    uiState.discussions,
+                    uiState.bookDiscussionsSectionUiState,
+                    loadMoreItems,
                     Modifier.padding(innerPadding),
                 )
 

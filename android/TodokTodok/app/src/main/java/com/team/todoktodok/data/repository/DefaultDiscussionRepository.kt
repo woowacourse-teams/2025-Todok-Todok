@@ -5,6 +5,7 @@ import com.team.domain.model.DiscussionPage
 import com.team.domain.model.LikeStatus
 import com.team.domain.model.book.SearchedBook
 import com.team.domain.model.discussionroom.DiscussionRoom
+import com.team.domain.model.discussionroom.page.BookDiscussionsPage
 import com.team.domain.model.exception.NetworkResult
 import com.team.domain.model.exception.map
 import com.team.domain.repository.DiscussionRepository
@@ -14,7 +15,7 @@ import com.team.todoktodok.data.local.discussion.DiscussionRoomEntity
 import com.team.todoktodok.data.local.discussion.toDomain
 import com.team.todoktodok.data.local.discussion.toEntity
 import com.team.todoktodok.data.network.model.toStatus
-import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
+import com.team.todoktodok.data.network.response.discussion.page.toDomain
 import com.team.todoktodok.data.network.response.discussion.toDomain
 
 class DefaultDiscussionRepository(
@@ -57,12 +58,13 @@ class DefaultDiscussionRepository(
             .map { discussions -> discussions.toDomain() }
 
     override suspend fun getBookDiscussions(
-        discussionId: Long,
+        bookId: Long,
         size: Int,
-    ): NetworkResult<List<Discussion>> =
+        cursor: String?,
+    ): NetworkResult<BookDiscussionsPage> =
         discussionRemoteDataSource
-            .fetchBookDiscussions(discussionId, size)
-            .map { discussions -> discussions.map { it.toDomain() } }
+            .fetchBookDiscussions(bookId, size, cursor)
+            .map { discussions -> discussions.toDomain() }
 
     override suspend fun getDiscussion(id: Long): NetworkResult<Discussion> =
         discussionRemoteDataSource.fetchDiscussion(id).map { it.toDomain() }
