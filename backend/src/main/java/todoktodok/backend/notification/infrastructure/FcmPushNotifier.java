@@ -42,29 +42,32 @@ public class FcmPushNotifier {
                 .map(NotificationToken::getToken)
                 .toList();
 
-        final MulticastMessage multicastMessage = MulticastMessage.builder()
-                .addAllTokens(tokens)
-                .putData("notificationId", fcmMessagePayload.notificationId())
-                .putData("title", fcmMessagePayload.title())
-                .putData("body", fcmMessagePayload.body())
-                .putData("image", TODOKTODOK_LOGO_URL)
-                .putData("discussionId", fcmMessagePayload.discussionId())
-                .putData("commentId", fcmMessagePayload.commentId())
-                .putData("replyId", fcmMessagePayload.replyId())
-                .putData("memberNickname", fcmMessagePayload.memberNickname())
-                .putData("discussionTitle", fcmMessagePayload.discussionTitle())
-                .putData("content", fcmMessagePayload.content())
-                .putData("type", fcmMessagePayload.type())
-                .putData("target", fcmMessagePayload.target())
-                .build();
-
         try {
+            final MulticastMessage multicastMessage = MulticastMessage.builder()
+                    .addAllTokens(tokens)
+                    .putData("notificationId", fcmMessagePayload.notificationId())
+                    .putData("title", fcmMessagePayload.title())
+                    .putData("body", fcmMessagePayload.body())
+                    .putData("image", TODOKTODOK_LOGO_URL)
+                    .putData("discussionId", fcmMessagePayload.discussionId())
+                    .putData("commentId", fcmMessagePayload.commentId())
+                    .putData("replyId", fcmMessagePayload.replyId())
+                    .putData("memberNickname", fcmMessagePayload.memberNickname())
+                    .putData("discussionTitle", fcmMessagePayload.discussionTitle())
+                    .putData("content", fcmMessagePayload.content())
+                    .putData("type", fcmMessagePayload.type())
+                    .putData("target", fcmMessagePayload.target())
+                    .build();
+
             final BatchResponse batchResponse = FirebaseMessaging.getInstance()
                     .sendEachForMulticast(multicastMessage);
 
             handleResponses(batchResponse, tokens);
         } catch (final FirebaseMessagingException e) {
-            log.error("Fail sending message to FCM");
+            log.error("Fail sending message to FCM : code = {}, message = {}", e.getMessagingErrorCode(), e.getMessage());
+        } catch (final RuntimeException e) {
+            final String cause = FcmMulticastMessageExceptionType.toMessage(e);
+            log.warn("Wrong FCM message : cause = {}, recipientId = {}", cause, recipientId);
         }
     }
 
@@ -81,7 +84,7 @@ public class FcmPushNotifier {
 
             if (sendResponse.isSuccessful()) {
                 log.info(
-                        String.format("푸시 요청을 성공적으로 보냈습니다: token= %s", token)
+                        String.format("푸시 요청을 성공적으로 보냈습니다: token= %s", maskToken(token))
                 );
                 continue;
             }
