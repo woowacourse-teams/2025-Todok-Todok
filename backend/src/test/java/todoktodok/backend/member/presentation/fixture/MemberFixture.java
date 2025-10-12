@@ -4,7 +4,6 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
 import todoktodok.backend.member.application.dto.request.LoginRequest;
 import todoktodok.backend.member.application.dto.response.TokenResponse;
 import todoktodok.backend.member.domain.Member;
@@ -23,7 +22,7 @@ public class MemberFixture {
                 .build();
     }
 
-    public static String getAccessToken(final String email) {
+    public static String getTestAccessToken(final String email) {
         return RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(new LoginRequest(email))
@@ -33,7 +32,7 @@ public class MemberFixture {
                 .extract().header("Authorization");
     }
 
-    public static TokenResponse getAccessAndRefreshToken(final String email) {
+    public static TokenResponse getTestAccessAndRefreshToken(final String email) {
         final Response response = RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(new LoginRequest(email))

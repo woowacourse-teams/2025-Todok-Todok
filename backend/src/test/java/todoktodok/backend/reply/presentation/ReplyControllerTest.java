@@ -48,7 +48,7 @@ public class ReplyControllerTest {
 
         final ReplyRequest replyRequest = new ReplyRequest("저도 그 의견에 동의합니다!");
 
-        final String token = MemberFixture.getAccessToken("user@gmail.com");
+        final String token = MemberFixture.getTestAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -73,7 +73,7 @@ public class ReplyControllerTest {
 
         databaseInitializer.setReplyInfo("저도 같은 의견입니다!", 2L, 1L);
 
-        final String token = MemberFixture.getAccessToken("user@gmail.com");
+        final String token = MemberFixture.getTestAccessToken("user@gmail.com");
         final ReplyReportRequest replyReportRequest = new ReplyReportRequest("토론 주제와 무관한 내용");
 
         // when - then
@@ -99,7 +99,7 @@ public class ReplyControllerTest {
         databaseInitializer.setReplyInfo("왜냐면 캡슐화는 짱이거든요.", 1L, 1L);
         databaseInitializer.setReplyInfo("맞아요, 상속은 짱이에요..", 1L, 2L);
 
-        final String token = MemberFixture.getAccessToken("user@gmail.com");
+        final String token = MemberFixture.getTestAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -127,7 +127,7 @@ public class ReplyControllerTest {
                 updatedContent
         );
 
-        final String token = MemberFixture.getAccessToken("user@gmail.com");
+        final String token = MemberFixture.getTestAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -149,7 +149,7 @@ public class ReplyControllerTest {
         databaseInitializer.setDefaultCommentInfo();
         databaseInitializer.setDefaultReplyInfo();
 
-        final String token = MemberFixture.getAccessToken("user@gmail.com");
+        final String token = MemberFixture.getTestAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -170,7 +170,7 @@ public class ReplyControllerTest {
         databaseInitializer.setDefaultCommentInfo();
         databaseInitializer.setDefaultReplyInfo();
 
-        final String token = MemberFixture.getAccessToken("user@gmail.com");
+        final String token = MemberFixture.getTestAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -192,7 +192,7 @@ public class ReplyControllerTest {
         databaseInitializer.setDefaultReplyInfo();
         databaseInitializer.setReplyLikeInfo(1L, 1L);
 
-        final String token = MemberFixture.getAccessToken("user@gmail.com");
+        final String token = MemberFixture.getTestAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()

@@ -52,7 +52,7 @@ public class BookControllerTest {
             databaseInitializer.setDefaultUserInfo();
             databaseInitializer.setDefaultBookInfo();
 
-            final String token = MemberFixture.getAccessToken("user@gmail.com");
+            final String token = MemberFixture.getTestAccessToken("user@gmail.com");
             final String keyword = "오브젝트";
 
             // when - then
@@ -73,7 +73,7 @@ public class BookControllerTest {
             databaseInitializer.setDefaultUserInfo();
             databaseInitializer.setDefaultBookInfo();
 
-            final String token = MemberFixture.getAccessToken("user@gmail.com");
+            final String token = MemberFixture.getTestAccessToken("user@gmail.com");
             final String keyword = "";
 
             // when - then
@@ -93,7 +93,7 @@ public class BookControllerTest {
             databaseInitializer.setDefaultUserInfo();
             databaseInitializer.setDefaultBookInfo();
 
-            final String token = MemberFixture.getAccessToken("user@gmail.com");
+            final String token = MemberFixture.getTestAccessToken("user@gmail.com");
 
             // when - then
             RestAssured.given().log().all()
@@ -116,7 +116,7 @@ public class BookControllerTest {
             databaseInitializer.setDefaultUserInfo();
             databaseInitializer.setDefaultBookInfo();
 
-            final String token = MemberFixture.getAccessToken("user@gmail.com");
+            final String token = MemberFixture.getTestAccessToken("user@gmail.com");
             final String keyword = "클린";
 
             final String cursorMeaningTwo = "Mg==";
@@ -143,7 +143,7 @@ public class BookControllerTest {
             databaseInitializer.setDefaultUserInfo();
             databaseInitializer.setDefaultBookInfo();
 
-            final String token = MemberFixture.getAccessToken("user@gmail.com");
+            final String token = MemberFixture.getTestAccessToken("user@gmail.com");
             final String keyword = "클린";
 
             final String cursorMeaningTwo = "Mg==";
@@ -172,7 +172,7 @@ public class BookControllerTest {
             databaseInitializer.setDefaultUserInfo();
             databaseInitializer.setDefaultBookInfo();
 
-            final String token = MemberFixture.getAccessToken("user@gmail.com");
+            final String token = MemberFixture.getTestAccessToken("user@gmail.com");
             final String keyword = "클린";
 
             final String cursorMeaningSix = "Ng==";
@@ -200,7 +200,7 @@ public class BookControllerTest {
             databaseInitializer.setDefaultUserInfo();
             databaseInitializer.setDefaultBookInfo();
 
-            final String token = MemberFixture.getAccessToken("user@gmail.com");
+            final String token = MemberFixture.getTestAccessToken("user@gmail.com");
             final String keyword = "자바";
 
             final String cursorMeaningTwenty = "MjA=";
@@ -226,7 +226,7 @@ public class BookControllerTest {
             databaseInitializer.setDefaultUserInfo();
             databaseInitializer.setDefaultBookInfo();
 
-            final String token = MemberFixture.getAccessToken("user@gmail.com");
+            final String token = MemberFixture.getTestAccessToken("user@gmail.com");
             final String keyword = "자바";
 
             final String cursorMeaningTwentyOne = "MjE=";
@@ -254,7 +254,7 @@ public class BookControllerTest {
         // given
         databaseInitializer.setDefaultUserInfo();
 
-        final String token = MemberFixture.getAccessToken("user@gmail.com");
+        final String token = MemberFixture.getTestAccessToken("user@gmail.com");
 
         final BookRequest bookRequest = new BookRequest(
                 "9791158391409",

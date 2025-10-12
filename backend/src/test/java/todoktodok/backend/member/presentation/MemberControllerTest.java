@@ -48,7 +48,7 @@ class MemberControllerTest {
     void refreshTest() {
         // given
         databaseInitializer.setDefaultUserInfo();
-        final TokenResponse tokens = MemberFixture.getAccessAndRefreshToken("user@gmail.com");
+        final TokenResponse tokens = MemberFixture.getTestAccessAndRefreshToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -67,7 +67,7 @@ class MemberControllerTest {
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setUserInfo("user2@gmail.com", "user2", "https://user2.png", "user");
 
-        final String token = MemberFixture.getAccessToken("user@gmail.com");
+        final String token = MemberFixture.getTestAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -85,7 +85,7 @@ class MemberControllerTest {
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setUserInfo("user2@gmail.com", "user2", "https://user2.png", "user");
 
-        final String token = MemberFixture.getAccessToken("user@gmail.com");
+        final String token = MemberFixture.getTestAccessToken("user@gmail.com");
         final MemberReportRequest memberReportRequest = new MemberReportRequest("욕설/인신공격");
 
         // when - then
@@ -106,7 +106,7 @@ class MemberControllerTest {
         databaseInitializer.setUserInfo("user@gmail.com", "user", "https://user.png", "user");
         databaseInitializer.setUserInfo("user2@gmail.com", "user2", "https://user2.png", "user2");
 
-        final String token = MemberFixture.getAccessToken("user@gmail.com");
+        final String token = MemberFixture.getTestAccessToken("user@gmail.com");
 
         // when
         final String uri = String.format("/api/v1/members/%d/profile", memberId);
@@ -126,7 +126,7 @@ class MemberControllerTest {
         // given
         databaseInitializer.setUserInfo("user@gmail.com", "user", "https://user.png", "user");
 
-        final String token = MemberFixture.getAccessToken("user@gmail.com");
+        final String token = MemberFixture.getTestAccessToken("user@gmail.com");
         final String newNickname = "newUser";
         final String profileMessage = "user";
 
@@ -147,7 +147,7 @@ class MemberControllerTest {
         // given
         databaseInitializer.setUserInfo("user@gmail.com", "user", "https://user.png", "user");
 
-        final String token = MemberFixture.getAccessToken("user@gmail.com");
+        final String token = MemberFixture.getTestAccessToken("user@gmail.com");
         final String nickname = "user";
         final String newProfileMessage = "newProfileMessage";
 
@@ -184,7 +184,7 @@ class MemberControllerTest {
         databaseInitializer.setCommentInfo("user2가 user2에 단 댓글", 2L, 3L);
         databaseInitializer.setReplyInfo("저도 자바좋아해요", 1L, 2L);
 
-        final String token = MemberFixture.getAccessToken("user@gmail.com");
+        final String token = MemberFixture.getTestAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -204,7 +204,7 @@ class MemberControllerTest {
         databaseInitializer.setDefaultBookInfo();
         databaseInitializer.setDefaultDiscussionInfo();
 
-        final String token = MemberFixture.getAccessToken("user@gmail.com");
+        final String token = MemberFixture.getTestAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -239,7 +239,7 @@ class MemberControllerTest {
         databaseInitializer.setCommentInfo("user2가 user2에 단 댓글", 2L, 3L);
         databaseInitializer.setReplyInfo("저도 자바좋아해요", 1L, 2L);
 
-        final String token = MemberFixture.getAccessToken("user@gmail.com");
+        final String token = MemberFixture.getTestAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -259,7 +259,7 @@ class MemberControllerTest {
         databaseInitializer.setDefaultBookInfo();
         databaseInitializer.setDefaultDiscussionInfo();
 
-        final String token = MemberFixture.getAccessToken("user@gmail.com");
+        final String token = MemberFixture.getTestAccessToken("user@gmail.com");
         final String uri = "/api/v1/members/1/discussions";
 
         // when - then
@@ -279,7 +279,7 @@ class MemberControllerTest {
         databaseInitializer.setDefaultBookInfo();
         databaseInitializer.setDefaultDiscussionInfo();
 
-        final String token = MemberFixture.getAccessToken("user@gmail.com");
+        final String token = MemberFixture.getTestAccessToken("user@gmail.com");
         final String uri = "/api/v1/members/1/discussions?type=HELLO";
 
         // when - then
@@ -297,7 +297,7 @@ class MemberControllerTest {
         // given
         databaseInitializer.setUserInfo("user@gmail.com", "user", "https://image.png", "user");
 
-        final TokenResponse tokenResponse = MemberFixture.getAccessAndRefreshToken("user@gmail.com");
+        final TokenResponse tokenResponse = MemberFixture.getTestAccessAndRefreshToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -320,7 +320,7 @@ class MemberControllerTest {
         databaseInitializer.setBlockInfo(1L, 2L);
         databaseInitializer.setBlockInfo(1L, 3L);
 
-        final String token = MemberFixture.getAccessToken("user@gmail.com");
+        final String token = MemberFixture.getTestAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -341,7 +341,7 @@ class MemberControllerTest {
 
         databaseInitializer.setBlockInfo(1L, 2L);
 
-        final String token = MemberFixture.getAccessToken("user@gmail.com");
+        final String token = MemberFixture.getTestAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()

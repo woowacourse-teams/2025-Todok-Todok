@@ -1,8 +1,6 @@
 package todoktodok.backend.notification.presentation;
 
 import static org.hamcrest.Matchers.equalTo;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.BDDMockito.given;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -16,10 +14,8 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import todoktodok.backend.DatabaseInitializer;
 import todoktodok.backend.InitializerTimer;
-import todoktodok.backend.member.infrastructure.AuthClient;
 import todoktodok.backend.member.presentation.fixture.MemberFixture;
 
 @ActiveProfiles("test")
@@ -46,7 +42,7 @@ class NotificationControllerTest {
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultCommentNotification();
 
-        final String token = MemberFixture.getAccessToken("user@gmail.com");
+        final String token = MemberFixture.getTestAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -66,7 +62,7 @@ class NotificationControllerTest {
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultCommentNotification();
 
-        final String token = MemberFixture.getAccessToken("user@gmail.com");
+        final String token = MemberFixture.getTestAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -84,7 +80,7 @@ class NotificationControllerTest {
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultCommentNotification();
 
-        final String token = MemberFixture.getAccessToken("user@gmail.com");
+        final String token = MemberFixture.getTestAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -102,7 +98,7 @@ class NotificationControllerTest {
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultCommentNotification();
 
-        final String token = MemberFixture.getAccessToken("user@gmail.com");
+        final String token = MemberFixture.getTestAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
