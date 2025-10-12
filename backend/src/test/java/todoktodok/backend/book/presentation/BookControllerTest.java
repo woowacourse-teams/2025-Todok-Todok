@@ -45,11 +45,9 @@ public class BookControllerTest {
     @DisplayName("도서를 생성한다")
     void createBook() {
         // given
-        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
-
         databaseInitializer.setDefaultUserInfo();
 
-        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
+        final String token = MemberFixture.getTestAccessToken("user@gmail.com");
 
         final BookRequest bookRequest = new BookRequest(
                 "9791158391409",
@@ -308,8 +306,6 @@ public class BookControllerTest {
         @DisplayName("도서별 토론방을 최신순 조회한다 - 첫 페이지 조회")
         void getSlicedDiscussionsByBook_firstPage() {
             // given
-            given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
-
             databaseInitializer.setDefaultUserInfo();
             databaseInitializer.setDefaultBookInfo();
 
@@ -319,7 +315,7 @@ public class BookControllerTest {
             databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
             databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
 
-            final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
+            final String token = MemberFixture.getTestAccessToken("user@gmail.com");
             final String cursorMeaningThree = "Mw==";
 
             // when - then
@@ -338,8 +334,6 @@ public class BookControllerTest {
         @DisplayName("도서별 토론방을 최신순 조회한다 - 중간 페이지 조회")
         void getSlicedDiscussionsByBook_middlePage() {
             // given
-            given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
-
             databaseInitializer.setDefaultUserInfo();
             databaseInitializer.setDefaultBookInfo();
 
@@ -349,7 +343,7 @@ public class BookControllerTest {
             databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
             databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
 
-            final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
+            final String token = MemberFixture.getTestAccessToken("user@gmail.com");
             final String cursorMeaningFive = "NQ==";
             final String cursorMeaningTwo = "Mg==";
 
@@ -369,8 +363,6 @@ public class BookControllerTest {
         @DisplayName("도서별 토론방을 최신순 조회한다 - 마지막 페이지 조회")
         void getSlicedDiscussionsByBook_lastPage() {
             // given
-            given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
-
             databaseInitializer.setDefaultUserInfo();
             databaseInitializer.setDefaultBookInfo();
 
@@ -380,7 +372,7 @@ public class BookControllerTest {
             databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
             databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
 
-            final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
+            final String token = MemberFixture.getTestAccessToken("user@gmail.com");
             final String cursorMeaningFour = "NA==";
 
             // when - then
