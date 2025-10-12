@@ -64,10 +64,10 @@ public class FcmPushNotifier {
 
             handleResponses(batchResponse, tokens);
         } catch (final FirebaseMessagingException e) {
-            log.error("Fail sending message to FCM : code = {}, message = {}", e.getMessagingErrorCode(), e.getMessage());
+            log.error("FCM fails sending message : code = {}, message = {}", e.getMessagingErrorCode(), e.getMessage());
         } catch (final RuntimeException e) {
-            final String cause = FcmMulticastMessageExceptionType.toMessage(e);
-            log.warn("Wrong FCM message : cause = {}, recipientId = {}", cause, recipientId);
+            final String cause = FcmMulticastMessageBuildExceptionType.toMessage(e);
+            log.warn("Fail sending message to FCM : cause = {}, recipientId = {}", cause, recipientId);
         }
     }
 
