@@ -45,7 +45,7 @@ server:
     mbeanregistry:
       enabled: true
     threads:
-      max: 30
+      max: 40
 
 auth:
   mode: google
