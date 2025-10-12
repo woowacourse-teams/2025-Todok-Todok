@@ -2,12 +2,16 @@ package todoktodok.backend.book.application.service.query;
 
 import java.util.Base64;
 import java.util.List;
+import java.util.NoSuchElementException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.book.application.dto.response.AladinBookResponse;
+import todoktodok.backend.book.application.dto.response.BookResponse;
 import todoktodok.backend.book.application.dto.response.LatestAladinBookPageResponse;
 import todoktodok.backend.book.application.dto.response.PageInfo;
+import todoktodok.backend.book.domain.Book;
+import todoktodok.backend.book.domain.repository.BookRepository;
 import todoktodok.backend.book.infrastructure.aladin.AladinItemResponses;
 import todoktodok.backend.book.infrastructure.aladin.AladinRestClient;
 
@@ -17,9 +21,13 @@ import todoktodok.backend.book.infrastructure.aladin.AladinRestClient;
 public class BookQueryService {
 
     private static final String ISBN13_PATTERN = "\\d{13}";
-    private static final int MAX_SIZE = 200;
+    private static final int MIN_PAGE_SIZE = 1;
+    private static final int MAX_PAGE_SIZE = 50;
+    private static final int MAX_CURSOR_SIZE = 20;
+    private static final int MAX_SEARCHED_BOOK_SIZE = 200;
 
     private final AladinRestClient aladinRestClient;
+    private final BookRepository bookRepository;
 
     public List<AladinBookResponse> search(final String keyword) {
         validateKeyword(keyword);
@@ -42,21 +50,27 @@ public class BookQueryService {
         validatePageSize(size);
         validateKeyword(keyword);
 
-        final int page = decodeCursor(cursor);
+        final int decodedCursor = decodeCursor(cursor);
         final String cleanKeyword = keyword.trim();
 
         final AladinItemResponses aladinItemResponses =
-                aladinRestClient.searchBooksByKeywordWithPaging(cleanKeyword, page, size);
+                aladinRestClient.searchBooksByKeywordWithPaging(cleanKeyword, decodedCursor, size);
 
         final List<AladinBookResponse> searchedBooks = aladinItemResponses.item().stream()
                 .filter(book -> book.isbn13() != null && !book.isbn13().isEmpty())
                 .filter(book -> book.isbn13().matches(ISBN13_PATTERN))
                 .map(AladinBookResponse::new)
                 .toList();
-        final PageInfo pageInfo = createNextCursor(aladinItemResponses, searchedBooks, page, size);
+        final PageInfo pageInfo = createNextCursor(aladinItemResponses, searchedBooks, decodedCursor, size);
         final int totalSize = getTotalSize(aladinItemResponses);
 
         return new LatestAladinBookPageResponse(searchedBooks, pageInfo, totalSize);
+    }
+
+    public BookResponse getBook(final Long bookId) {
+        final Book book = findBook(bookId);
+
+        return new BookResponse(book);
     }
 
     private void validateKeyword(final String keyword) {
@@ -66,7 +80,7 @@ public class BookQueryService {
     }
 
     private void validatePageSize(final int size) {
-        if (size > MAX_SIZE) {
+        if (size < MIN_PAGE_SIZE || size > MAX_PAGE_SIZE) {
             throw new IllegalArgumentException(
                     String.format("유효하지 않은 페이지 사이즈입니다: size = %d", size));
         }
@@ -87,32 +101,35 @@ public class BookQueryService {
 
     private int getTotalSize(final AladinItemResponses aladinItemResponses) {
         final int totalResultsFromAladin = aladinItemResponses.totalResults();
-        return Math.min(totalResultsFromAladin, MAX_SIZE);
+        return Math.min(totalResultsFromAladin, MAX_SEARCHED_BOOK_SIZE);
     }
 
     private PageInfo createNextCursor(
             final AladinItemResponses aladinItemResponses,
             final List<AladinBookResponse> searchedBooks,
-            final int page,
+            final int cursor,
             final int requestedSize
     ) {
         final int currentSize = searchedBooks.size();
         final int fetchedItemSize = aladinItemResponses.item().size();
 
-        if (fetchedItemSize < requestedSize || page == MAX_SIZE / requestedSize) {
+        if (fetchedItemSize < requestedSize || cursor >= MAX_CURSOR_SIZE) {
             return new PageInfo(false, null, currentSize);
         }
 
-        if (page > MAX_SIZE / requestedSize) {
-            final String nextCursor = encodeCursorId(2);
-            return new PageInfo(true, nextCursor, currentSize);
-        }
-
-        final String nextCursor = encodeCursorId(page + 1);
+        final String nextCursor = encodeCursorId(cursor + 1);
         return new PageInfo(true, nextCursor, currentSize);
     }
 
     private String encodeCursorId(final Integer id) {
         return Base64.getUrlEncoder().encodeToString(id.toString().getBytes());
+    }
+
+    private Book findBook(final Long bookId) {
+        return bookRepository.findById(bookId)
+                .orElseThrow(() -> new NoSuchElementException(
+                                String.format("해당 도서를 찾을 수 없습니다: bookId = %s", bookId)
+                        )
+                );
     }
 }
