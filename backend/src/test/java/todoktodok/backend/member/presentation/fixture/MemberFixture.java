@@ -27,7 +27,7 @@ public class MemberFixture {
     public String getAccessToken(final String email) {
         return RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(new LoginRequest("fakeIdToken"))
+                .body(new LoginRequest(email))
                 .when().post("/api/v1/members/login")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
@@ -37,7 +37,7 @@ public class MemberFixture {
     public TokenResponse getAccessAndRefreshToken(final String email) {
         final Response response = RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(new LoginRequest("fakeToken"))
+                .body(new LoginRequest(email))
                 .when().post("/api/v1/members/login")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())

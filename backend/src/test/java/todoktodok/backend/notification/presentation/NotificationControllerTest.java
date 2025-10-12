@@ -27,11 +27,6 @@ import todoktodok.backend.member.presentation.fixture.MemberFixture;
 @ContextConfiguration(initializers = InitializerTimer.class)
 class NotificationControllerTest {
 
-    private static final String DEFAULT_EMAIL = "user@gmail.com";
-
-    @MockitoBean
-    private AuthClient authClient;
-
     @Autowired
     private MemberFixture memberFixture;
 
@@ -51,12 +46,10 @@ class NotificationControllerTest {
     @DisplayName("알림 목록을 조회한다")
     void getNotifications() {
         // given
-        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
-
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultCommentNotification();
 
-        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
+        final String token = memberFixture.getAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -73,12 +66,10 @@ class NotificationControllerTest {
     @DisplayName("알림을 읽음 처리한다")
     void readNotification() {
         // given
-        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
-
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultCommentNotification();
 
-        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
+        final String token = memberFixture.getAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -93,12 +84,10 @@ class NotificationControllerTest {
     @DisplayName("특정 알림을 삭제한다")
     void deleteNotification() {
         // given
-        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
-
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultCommentNotification();
 
-        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
+        final String token = memberFixture.getAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -113,12 +102,10 @@ class NotificationControllerTest {
     @DisplayName("안 읽은 알림 유무를 조회한다")
     void hasUnreadNotifications() {
         // given
-        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
-
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultCommentNotification();
 
-        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
+        final String token = memberFixture.getAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
