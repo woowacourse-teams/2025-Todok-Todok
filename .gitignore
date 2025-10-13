@@ -1,1 +1,24 @@
-# 토독토독
+# macOS
+.DS_Store
+backend/.DS_Store
+android/.DS_Store
+backend/src/.DS_Store
+
+# IntelliJ / IDEA
+.idea/
+
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Logs
+log/
+backend/log/
+
+# OS/Tool artifacts
+.github/.DS_Store
+
+# Do NOT ignore these (Gradle wrapper scripts should be tracked)
+# gradlew
+# gradlew.bat
