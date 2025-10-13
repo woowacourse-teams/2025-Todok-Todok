@@ -1,0 +1,9 @@
+<resources>
+
+    <style name="Base.Theme.TodokTodok" parent="Theme.Material3.Light.NoActionBar">
+        <item name="android:windowBackground">@color/white</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+    <style name="Theme.TodokTodok" parent="Base.Theme.TodokTodok" />
+</resources>

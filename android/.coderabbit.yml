@@ -1,0 +1,250 @@
+# CodeRabbit이 사용할 언어 설정 (한국어)
+language: ko-KR
+
+# AI 코치의 성격과 리뷰 스타일을 정의하는 지침
+tone_instructions: >
+  우아한테크코스 코치처럼 문제의 원인과 개선 방법을 명확히 제시하고, 교육적 관점에서 리뷰하세요. 
+  비판보다 개선 중심이며, 관련 문서 추천과 위트 있는 칭찬, P1~P5 우선순위 표시를 지킵니다.
+# 코드 리뷰 설정
+reviews:
+  profile: chill                      # 리뷰 스타일: 편안하고 친근한 톤
+  request_changes_workflow: false     # Request Change 요청시 병합 비활성화 해제
+  high_level_summary: true            # PR 전체 요약 제공
+  changed_files_summary: false        # 개별 파일 요약은 비활성화 (중복 방지)
+  sequence_diagrams: false            # 시퀀스 다이어그램 생성 비활성화
+  assess_linked_issues: true          # 연결된 이슈 분석 활성화
+  related_issues: false               # 관련 이슈 추천 비활성화
+  related_prs: false                  # 관련 PR 추천 비활성화
+  suggested_labels: false             # 라벨 추천 비활성화
+  auto_apply_labels: false            # 자동 라벨 적용 비활성화
+  suggested_reviewers: false          # 리뷰어 추천 비활성화
+  auto_assign_reviewers: false        # 자동 리뷰어 할당 비활성화
+  poem: true                          # 리뷰 완료 후 시 작성 활성화 (재미 요소)
+
+  # 특정 경로별 상세 리뷰 지침 설정
+  path_instructions:
+    - path: android/app/src/main/java/**           # 안드로이드 메인 소스코드 경로
+      instructions: |
+        **안드로이드 Kotlin 코드 리뷰 가이드라인**
+        1. **코드 품질 및 컨벤션 검토**
+           - 팀 코드 컨벤션(docs/android-code-convention.md) 준수
+           - Kotlin 공식 스타일 가이드 및 안드로이드 권장사항 반영
+           - 네이밍 컨벤션 (camelCase, PascalCase 등) 일관성
+           - 들여쓰기, 공백, 줄바꿈 등 포맷팅 통일성
+        2. **안드로이드 아키텍처 및 설계**
+           - MVVM, MVP 등 아키텍처 패턴 적절성
+           - Repository Pattern, Use Case 구조 검토
+           - Dependency Injection (Hilt/Dagger) 사용법
+           - Clean Architecture 원칙 준수
+        3. **성능 및 메모리 최적화**
+           - 메모리 누수 방지 (Context, Listener 해제)
+           - RecyclerView ViewHolder 패턴 적절성
+           - 불필요한 객체 생성 최소화
+           - 백그라운드 작업 최적화 (Coroutines, WorkManager)
+        4. **UI/UX 구현**
+           - Material Design 가이드라인 준수
+           - 접근성 (Accessibility) 고려사항
+           - 다양한 화면 크기 대응 (Responsive Design)
+           - Custom View 구현 시 성능 고려
+        5. **데이터 처리 및 네트워킹**
+           - Retrofit, OkHttp 사용법 적절성
+           - JSON 파싱 효율성 (Gson, Moshi 등)
+           - 로컬 데이터베이스 (Room) 설계
+           - 캐싱 전략 및 오프라인 대응
+        6. **예외 처리 및 안정성**
+           - try-catch 블록 적절한 사용
+           - Null Safety 확보 (Safe Call, Elvis Operator)
+           - 네트워크 오류, 타임아웃 처리
+           - Crash 방지를 위한 방어 코드
+        7. **테스트 가능성**
+           - Unit Test 작성 용이성
+           - Testable한 코드 구조
+           - Mock 객체 활용 가능성
+           - Integration Test 고려사항
+        **안드로이드 특화 검토 사항 적용 시 Pn 그라운드 룰 준수**
+        각 리뷰 포인트별로 문제점과 대안, 장단점을 논리적으로 제시하고, 필요한 경우 예시 코드도 추가해 주세요.
+    - path: android/app/src/test/**                 # 단위 테스트 코드 경로
+      instructions: |
+        **안드로이드 테스트 코드 리뷰 가이드라인**
+        1. **테스트 구조 및 품질**
+           - Given-When-Then 패턴 준수
+           - 테스트 메서드명 명확성 (shouldReturn_WhenGiven 형식)
+           - Arrange-Act-Assert 구조 명확성
+           - 테스트 코드 가독성 및 유지보수성
+        2. **테스트 커버리지**
+           - 핵심 비즈니스 로직 테스트 완료 여부
+           - Edge Case 및 예외 상황 테스트
+           - Happy Path와 Sad Path 모두 커버
+           - 누락된 테스트 케이스 식별 및 제안
+        3. **Mock 및 Stub 활용**
+           - Mockito, MockK 적절한 사용
+           - 외부 의존성 격리 (Repository, API 등)
+           - Fake 객체 vs Mock 객체 선택 적절성
+        **누락된 테스트 케이스 제안 예시:**
+        - Repository 계층: 데이터 저장/조회/수정/삭제 테스트
+        - ViewModel: 상태 변화 및 이벤트 처리 테스트
+        - UseCase: 비즈니스 로직 및 예외 처리 테스트
+        - UI: 사용자 상호작용 및 화면 전환 테스트
+    - path: android/app/src/main/res/**   # 안드로이드 리소스 파일 경로 (레이아웃, 이미지, 문자열 등)
+      instructions: |
+        **리소스 파일 리뷰 가이드라인**
+        1. **레이아웃 (XML)**
+           - ConstraintLayout 효율적 사용
+           - 불필요한 중첩 레이아웃 최소화
+           - 접근성 속성 (contentDescription 등) 누락 확인
+           - 다국어 지원을 위한 하드코딩 문자열 제거
+        2. **스타일 및 테마**
+           - Material Design 컴포넌트 활용
+           - 색상, 폰트 일관성 유지
+           - Dark Mode 지원 고려
+        3. **이미지 리소스**
+           - 벡터 드로어블 vs 비트맵 적절한 선택
+           - 다양한 밀도 지원 (hdpi, xhdpi 등)
+           - 파일 크기 최적화
+    - path: backend/src/**   # 백엔드 코드
+      instructions: |
+        - 1. 기본적으로 우아한테크코스 자바 스타일 가이드를 우선적으로 반영해주세요.
+        - 2. 팀 컨벤션, 가독성, 예외처리, 테스트/확장/유지보수성, 모듈화, API/DB/보안 설계 기준을 기반으로 리뷰해주세요.
+        - 3. 최신 트렌드, 불필요한 로직, 클린코드, 리팩터링, 서비스/도메인 설계, 공통 예외 처리, 확장성도 함께 확인해주세요.
+        - 4. 각 피드백은 문제점, 대안, 장단점을 짧고 논리적으로 제시하고, 예시 코드가 있다면 간결히 포함해주세요.
+        - 5. 팀 내 스타일 통일성도 확인해주세요.
+        - 6. 리뷰를 남겨주는 부분은 해당 라인의 범위의 코멘트에 작성해주세요.
+        - 7. 미작성한 테스트 코드 케이스가 있다면, 어떤 테스트가 필요한지 제안해주세요. (예: 컨트롤러는 E2E테스트, 나머지는 단위 테스트)
+        - 8. 리뷰가 너무 많아서 피로감을 줄 수 있으니, 꼭 필요한 부분에 집중해주세요.
+        - 9. 보안 상 치명적이거나, 추후 문제가 발생할 가능성이 높은 부분에 리뷰를 집중해주세요.
+  # 자동 리뷰 기능 설정
+  abort_on_close: true               # PR이 닫히면 리뷰 중지
+  disable_cache: false               # 빠르고 효율적인 리뷰를 위해 캐시 기능 활성화
+  auto_review:
+    enabled: true                    # 자동 리뷰 활성화
+    auto_incremental_review: false    # 증분 리뷰 활성화 (새로 바뀐 부분만 리뷰 활성화)
+    base_branches: ["an", "be"]
+
+  # 코드 분석 도구(Tools)
+  tools:
+    hadolint: # Dockerfile 분석
+      enabled: true
+    gitleaks: # 민감정보 포함여부 확인
+      enabled: true
+    sqlfluff: # SQL 분석
+      enabled: true
+
+# 채팅 및 상호작용 설정
+chat:
+  auto_reply: true                    # 질문 시 자동 응답 활성화
+
+# 지식 베이스 설정 (CodeRabbit이 참고할 문서들)
+knowledge_base:
+  opt_out: false                      # 지식베이스 사용 허용 (프로젝트의 리뷰들 확인)
+
+  web_search:
+    enabled: true                     # 웹 검색을 통한 최신 정보 활용
+
+  code_guidelines:
+    enabled: true                     # 팀 코드 가이드라인 참조 활성화
+    filePatterns:                     # 참조할 팀 문서들
+      - docs/an-code-convention.md    # 안드로이드 코드 컨벤션 문서 (an 브랜치용)
+      - docs/be-code-convention.md         # 백엔드 코드 컨벤션 문서 (be 브랜치용)
+      - docs/wooteco-java-style-guide.md   # 우테코 자바 스타일 가이드 문서 (be 브랜치용)
+
+  learnings:
+    scope: local                      # 학습 데이터를 현재 저장소로 제한
+
+  issues:
+    scope: local                      # 이슈 참조를 현재 저장소로 제한
+
+  pull_requests:
+    scope: local                      # PR 참조를 현재 저장소로 제한
+
+# 우아한테크코스 공통 그라운드 룰 (Backend, Android 공통)
+common_ground_rules:
+  # Pn 그라운드 룰 (Backend, Android 공통) - 리뷰 우선순위 시스템
+  priority_system:
+    P1:
+      description: "꼭 반영해주세요 (Request changes)"
+      criteria: "앱 크래시, 보안 이슈, 메모리 누수 등 서비스에 중대한 오류를 발생시킬 수 있는 문제"
+      action: "리뷰 요청자는 반드시 반영하거나 합리적인 반박 의견 제시 필요"
+
+    P2:
+      description: "적극적으로 고려해주세요 (Request changes)"
+      criteria: "성능 저하, 아키텍처 위반, 유지보수성에 영향을 주는 문제"
+      action: "수용하거나 적합한 의견으로 토론 권장"
+
+    P3:
+      description: "웬만하면 반영해 주세요 (Comment)"
+      criteria: "코드 컨벤션, 가독성 개선, 리팩토링 제안"
+      action: "수용하거나 반영 불가 사유 설명, 향후 계획 명시 권장"
+
+    P4:
+      description: "반영해도 좋고 넘어가도 좋습니다 (Approve)"
+      criteria: "사소한 개선사항, 선택적 적용 가능한 제안"
+      action: "고민해보는 정도면 충분, 무시해도 무관"
+
+    P5:
+      description: "그냥 사소한 의견입니다 (Approve)"
+      criteria: "개인 취향, 참고용 의견"
+      action: "무시해도 무관"
+
+  # 작업 목표 설정 (Backend, Android 공통) - 효율적인 개발 프로세스를 위한 규칙
+  work_guidelines:
+    goal_setting:                     # 작업 계획 및 범위 설정
+      - "이슈 티켓 발행 시 목표 명확히 설정"
+      - "큰 작업은 여러 개의 작은 티켓으로 분할"
+      - "PR은 최대 500 Line 제한"                    # 리뷰 품질 유지를 위한 크기 제한
+      - "주요 변경사항이나 새로운 패턴 도입 시 반드시 사전 논의"
+
+    deadline:                         # 리뷰 프로세스 시간 관리
+      - "리뷰 완료 기준 24시간 이내"                   # 빠른 피드백 사이클 유지
+      - "피드백 마감기한을 팀과 설정하여 준수"
+
+  # 리뷰어 자세와 원칙 (Backend, Android 공통) - 건설적인 리뷰 문화 조성
+  reviewer_principles:
+    basic_rules:                      # 리뷰의 기본 원칙
+      - "피드백은 코드, 프로세스, 사양만을 대상으로 함"     # 개인 공격 방지
+      - "리뷰이와 리뷰어의 인격과는 분리"
+      - "언어 폭력이나 비난이 섞인 지적 금지"
+      - "시간에 쫓겨 리뷰 품질을 낮추지 말 것"
+
+    reviewer_attitude:                # 리뷰어가 가져야 할 마음가짐
+      - "리뷰는 모두를 위한 것 (나 자신, 팀, 서비스)"
+      - "적절한 시간 분배로 피드백 마감기한 준수"
+      - "우선순위를 정해 필요한 부분만 간단히 리뷰"
+
+    feedback_method:                  # 효과적인 피드백 방법
+      constructive:                   # 건설적인 표현 방법
+        good: "이 부분을 다음과 같이 개선할 수 있을 것 같습니다"
+        bad: "이 코드는 잘못되었다"
+      specific:                       # 구체적인 제안 방법
+        good: "RecyclerView 대신 LazyColumn을 사용하면 성능이 향상될 것 같습니다"
+        bad: "성능이 안 좋다"
+      discussion:                     # 토론 방식
+        - "토론을 하되, 납득할 수 있는 이유와 근거 충분히 제시"
+
+    mindset:                          # 리뷰 문화에 대한 기본 마인드셋
+      - "리뷰는 모두를 위한 것"
+      - "사람은 누구나 실수한다 - 빠르게 인정하고 열린 마음으로 토론"
+      - "칭찬도 좋은 코드 리뷰 - 특별한 의견이 없다면 칭찬하기"
+      - "실수 지적받았을 때 방어적이 되지 않기"
+      - "리뷰를 위한 리뷰는 자제 - 의미 있는 피드백에 집중"
+
+# 코드 생성
+code_generation:
+  docstrings:
+    language: ko-KR
+    path_instructions:
+      - path: backend/**
+        instructions: |
+          - JavaDoc 공식 형식으로, 한글로 Docstring을 작성해주세요.
+          - 메서드 목적, 파라미터, 반환값, 예외 정보를 명확하게 기술해 주세요.
+          - 외부 API 등 공개 메서드는 상세히, 내부용은 핵심만 요약해 주세요.
+      - path: android/**
+        instructions: |
+          - 모든 public 함수에 대해 KDoc 양식을 따라 한글로 간결하게 Docstring을 작성해주세요.
+          - 함수 목적, 파라미터, 반환값, 예외를 명확하게 기술해 주세요.
+          - 샘플 코드/사용 예시는 필요한 경우에만 포함해 주세요.
+  unit_tests:
+    path_instructions:
+      - path: backend/**
+        instructions: |
+          - Controller는 인수테스트(API 엔드포인트 통합 테스트) 나머지 영역은 함수/클래스 단위의 단위 테스트
+          - given-when-then 패턴을 적용
