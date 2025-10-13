@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@drawable/btn_green_1a_oval" />
-
-    <item
-        android:drawable="@drawable/btn_comment_arrow"
-        android:gravity="center" />
-</layer-list>
