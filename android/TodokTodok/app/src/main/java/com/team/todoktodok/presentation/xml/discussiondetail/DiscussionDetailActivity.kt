@@ -13,7 +13,6 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.marginTop
 import androidx.fragment.app.commit
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.team.todoktodok.App
@@ -70,8 +69,8 @@ class DiscussionDetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        initView()
         setContentView(binding.root)
+        initView()
         setupOnClick()
         setupObserve()
         setUpRefresh()
@@ -136,13 +135,12 @@ class DiscussionDetailActivity : AppCompatActivity() {
     }
 
     private fun initView() {
-        enableEdgeToEdge()
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.srlDiscussionContainer) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(
-                binding.root.paddingLeft,
-                binding.root.marginTop,
-                binding.root.paddingRight,
+                binding.srlDiscussionContainer.paddingLeft,
+                systemBars.top,
+                binding.srlDiscussionContainer.paddingRight,
                 systemBars.bottom,
             )
             insets
@@ -390,6 +388,7 @@ class DiscussionDetailActivity : AppCompatActivity() {
         val sheetView = binding.bottomSheetContainer
         val behavior = BottomSheetBehavior.from(sheetView)
 
+        behavior.isHideable = false
         behavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
         behavior.setPeekHeight(
             resources.getDimensionPixelSize(R.dimen.item_discussion_detail_bottom_sheet_min_height),
