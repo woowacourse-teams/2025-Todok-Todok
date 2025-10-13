@@ -16,6 +16,10 @@ build/
 log/
 backend/log/
 
+# local
+backend/local.properties
+android/TodokTodok/local.properties
+
 # OS/Tool artifacts
 .github/.DS_Store
 
