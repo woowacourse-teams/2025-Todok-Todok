@@ -73,6 +73,16 @@ public interface DiscussionLikeRepository extends JpaRepository<DiscussionLike, 
 
     boolean existsByMemberAndDiscussion(final Member member, final Discussion discussion);
 
-    @Query("SELECT dl.discussion.id FROM DiscussionLike dl WHERE dl.member = :member AND (:cursorId IS NULL OR dl.discussion.id < :cursorId) ORDER BY dl.discussion.id DESC")
-    Slice<Long> findLikedDiscussionIdsByMemberAndCursor(@Param("member") Member member, @Param("cursorId") Long cursorId, Pageable pageable);
+    @Query("""
+                SELECT dl.discussion.id
+                FROM DiscussionLike dl
+                WHERE dl.member = :member
+                AND (:cursorId IS NULL OR dl.discussion.id < :cursorId)
+                ORDER BY dl.discussion.id DESC
+            """)
+    Slice<Long> findLikedDiscussionIdsByMemberAndCursor(
+            @Param("member") final Member member,
+            @Param("cursorId") final Long cursorId,
+            final Pageable pageable
+    );
 }
