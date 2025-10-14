@@ -218,10 +218,7 @@ public class DiscussionQueryService {
 
         final List<Long> likedIds = likedIdSlice.getContent();
         final boolean hasNext = likedIdSlice.hasNext();
-
-        final String nextCursor = hasNext && !likedIds.isEmpty()
-                ? encodeCursorId(likedIds.get(likedIds.size() - 1))
-                : null;
+        final String nextCursor = findNextCursor(hasNext, likedIds);
 
         final List<DiscussionResponse> responses = getDiscussionsResponses(likedIds, member);
 
