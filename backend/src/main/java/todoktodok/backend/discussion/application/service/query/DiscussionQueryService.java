@@ -210,7 +210,7 @@ public class DiscussionQueryService {
 
         final Member member = findMember(memberId);
         final Long cursorId = (cursor != null && !cursor.isBlank()) ? decodeCursor(cursor) : null;
-        final Pageable pageable = PageRequest.of(0, requestedSize);
+        final Pageable pageable = PageRequest.of(0, requestedSize, Sort.Direction.DESC, "id");
 
         final Slice<Long> likedIdSlice = discussionLikeRepository.findLikedDiscussionIdsByMemberAndCursor(
                 member, cursorId, pageable
