@@ -55,7 +55,7 @@ logging:
         tomcat:
           util:
             net:
-              NioEndpoint=DEBUG
+              NioEndpoint: DEBUG
 
 auth:
   mode: google
