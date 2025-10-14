@@ -48,6 +48,15 @@ server:
       max: 3
     accept-count: 50
 
+logging:
+  level:
+    org:
+      apache:
+        tomcat:
+          util:
+            net:
+              NioEndpoint=DEBUG
+
 auth:
   mode: google
 
