@@ -488,7 +488,7 @@ class DiscussionControllerTest {
 
         final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
 
-        String nextCursor = RestAssured.given().log().all()
+        final String nextCursor = RestAssured.given().log().all()
                 .header("Authorization", token)
                 .contentType(ContentType.JSON)
                 .when().get("/api/v1/discussions/liked?size=2")
