@@ -46,6 +46,7 @@ server:
       enabled: true
     threads:
       max: 3
+    accept-count: 50
 
 auth:
   mode: google
