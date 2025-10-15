@@ -61,7 +61,6 @@ class NotificationActivity : AppCompatActivity() {
                 is NotificationUiEvent.NavigateToDiscussionRoom -> {
                     val intent = DiscussionDetailActivity.Intent(this, uiEvent.discussionRoomId)
                     startActivity(intent)
-                    finish()
                 }
 
                 is NotificationUiEvent.ShowException -> {
