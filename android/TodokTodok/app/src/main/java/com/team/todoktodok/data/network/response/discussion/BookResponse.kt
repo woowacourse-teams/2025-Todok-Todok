@@ -9,6 +9,8 @@ data class BookResponse(
     val bookId: Long,
     val bookImage: String,
     val bookTitle: String,
+    val bookPublisher: String = "",
+    val bookSummary: String = "",
 )
 
 fun BookResponse.toDomain() =
@@ -17,4 +19,6 @@ fun BookResponse.toDomain() =
         title = bookTitle,
         author = bookAuthor,
         image = bookImage,
+        publisher = bookPublisher,
+        summary = bookSummary,
     )

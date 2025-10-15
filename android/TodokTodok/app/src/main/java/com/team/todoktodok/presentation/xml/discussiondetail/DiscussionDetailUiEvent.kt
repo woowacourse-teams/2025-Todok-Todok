@@ -22,6 +22,10 @@ sealed interface DiscussionDetailUiEvent {
         val discussion: SerializationDiscussion,
     ) : DiscussionDetailUiEvent
 
+    data class NavigateToBookDiscussions(
+        val bookId: Long,
+    ) : DiscussionDetailUiEvent
+
     data object ShowReportDiscussionSuccessMessage : DiscussionDetailUiEvent
 
     data object ReloadedDiscussion : DiscussionDetailUiEvent
@@ -36,5 +40,10 @@ sealed interface DiscussionDetailUiEvent {
 
     data class Unauthorized(
         val exceptions: TodokTodokExceptions,
+    ) : DiscussionDetailUiEvent
+
+    data class ShareDiscussion(
+        val discussionId: Long,
+        val discussionTitle: String,
     ) : DiscussionDetailUiEvent
 }

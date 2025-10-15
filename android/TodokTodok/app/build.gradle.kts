@@ -31,7 +31,11 @@ android {
         versionName = "1.0.1"
 
         buildConfigField("String", "BASE_URL", "\"${properties.getProperty("base_url")}\"")
-        buildConfigField("String", "GOOGLE_CLIENT_ID", "\"${properties.getProperty("google_client_id")}\"")
+        buildConfigField(
+            "String",
+            "GOOGLE_CLIENT_ID",
+            "\"${properties.getProperty("google_client_id")}\"",
+        )
         buildConfigField("String", "FEEDBACK_URL", "\"${properties.getProperty("feedback_url")}\"")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -87,6 +91,7 @@ dependencies {
     implementation(libs.bundles.google)
     implementation(libs.bundles.glide)
     implementation(libs.bundles.logging)
+    implementation(libs.kotlinx.collections.immutable)
 
     testImplementation(libs.bundles.test)
     testImplementation(libs.androidx.core.testing)
