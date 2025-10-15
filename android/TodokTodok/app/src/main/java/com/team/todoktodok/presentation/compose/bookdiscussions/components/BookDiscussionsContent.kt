@@ -11,8 +11,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.team.todoktodok.presentation.compose.bookdiscussions.model.BookDetailSectionUiState
 import com.team.todoktodok.presentation.compose.bookdiscussions.model.BookDiscussionsSectionUiState
-import com.team.todoktodok.presentation.compose.bookdiscussions.model.DiscussionItem
-import kotlinx.collections.immutable.ImmutableList
 
 @SuppressLint("ComposeModifierReused")
 @Composable
