@@ -3,7 +3,6 @@ package com.team.todoktodok.presentation.xml.discussiondetail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupWindow
@@ -343,7 +342,6 @@ class DiscussionDetailActivity : AppCompatActivity() {
             }
 
             is DiscussionDetailUiEvent.NavigateToBookDiscussions -> {
-                Log.d("12345", event.bookId.toString())
                 val intent = BookDiscussionsActivity.intent(this, event.bookId)
                 startActivity(intent)
             }
