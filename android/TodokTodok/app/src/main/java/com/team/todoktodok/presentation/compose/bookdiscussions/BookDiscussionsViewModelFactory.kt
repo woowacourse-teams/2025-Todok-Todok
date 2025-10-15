@@ -14,9 +14,11 @@ class BookDiscussionsViewModelFactory(
         extras: CreationExtras,
     ): T {
         val module = appContainer.repositoryModule
+        val networkConnectivityObserver = appContainer.connectivityObserver
         return BookDiscussionsViewModel(
             extras.createSavedStateHandle(),
             module.bookRepository,
+            networkConnectivityObserver,
         ) as T
     }
 }

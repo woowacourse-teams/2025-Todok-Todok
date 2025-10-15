@@ -1,16 +1,15 @@
 package com.team.todoktodok.presentation.compose.bookdiscussions.model
 
-import com.team.domain.model.exception.TodokTodokExceptions
-
 sealed interface BookDiscussionsUiState {
-    object Loading : BookDiscussionsUiState
+    object Empty : BookDiscussionsUiState
 
     data class Success(
-        val book: BookDetailSectionUiState,
+        val bookDetailSectionUiState: BookDetailSectionUiState,
         val bookDiscussionsSectionUiState: BookDiscussionsSectionUiState,
-    ) : BookDiscussionsUiState
+    ) : BookDiscussionsUiState {
+        fun updateBookDiscussions(transform: (BookDiscussionsSectionUiState) -> BookDiscussionsSectionUiState): Success =
+            copy(bookDiscussionsSectionUiState = transform(bookDiscussionsSectionUiState))
 
-    data class Failure(
-        val exception: TodokTodokExceptions,
-    ) : BookDiscussionsUiState
+        val isLoadingBookDiscussions get() = bookDiscussionsSectionUiState.isPagingLoading
+    }
 }

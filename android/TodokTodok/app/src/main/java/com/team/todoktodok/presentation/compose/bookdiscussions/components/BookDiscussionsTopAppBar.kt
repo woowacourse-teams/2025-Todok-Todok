@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import com.team.todoktodok.R
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -30,13 +31,13 @@ fun BookDiscussionsTopAppBar(
                 Icon(
                     painter = painterResource(R.drawable.img_mascort),
                     tint = null,
-                    contentDescription = "토론방 목록 화면 이동 버튼 이미지",
+                    contentDescription = stringResource(R.string.bookdiscussions_content_description_navigate_to_discussions),
                 )
 
                 Icon(
                     painter = painterResource(R.drawable.img_app_name),
                     tint = null,
-                    contentDescription = "토론방 목록 화면 이동 버튼 텍스트",
+                    contentDescription = stringResource(R.string.bookdiscussions_content_description_navigate_to_discussions),
                 )
             }
         },

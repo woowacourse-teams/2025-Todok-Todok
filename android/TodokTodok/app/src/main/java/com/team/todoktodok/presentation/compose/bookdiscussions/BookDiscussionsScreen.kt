@@ -1,7 +1,5 @@
 package com.team.todoktodok.presentation.compose.bookdiscussions
 
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -57,16 +55,14 @@ fun BookDetailScreen(
         )
     }) { innerPadding ->
         when (uiState) {
-            BookDiscussionsUiState.Loading -> CloverProgressBar(LocalContext.current)
+            BookDiscussionsUiState.Empty -> CloverProgressBar(LocalContext.current)
             is BookDiscussionsUiState.Success ->
                 BookDiscussionsContent(
-                    uiState.book,
+                    uiState.bookDetailSectionUiState,
                     uiState.bookDiscussionsSectionUiState,
                     loadMoreItems,
                     Modifier.padding(innerPadding),
                 )
-
-            is BookDiscussionsUiState.Failure -> (LocalActivity.current as ComponentActivity).onBackPressedDispatcher.onBackPressed()
         }
     }
 }

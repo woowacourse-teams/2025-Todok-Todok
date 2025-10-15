@@ -15,6 +15,6 @@ sealed interface DiscussionDetailUiState {
     }
 
     data class Failure(
-        val exception: TodokTodokExceptions,
+        val exceptions: TodokTodokExceptions,
     ) : DiscussionDetailUiState
 }
