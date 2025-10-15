@@ -7,7 +7,6 @@ import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import com.team.todoktodok.presentation.compose.main.MainActivity
 import com.team.todoktodok.presentation.compose.theme.TodoktodokTheme
-import com.team.todoktodok.presentation.xml.profile.ProfileActivity
 
 class BookDiscussionsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,7 +39,7 @@ class BookDiscussionsActivity : AppCompatActivity() {
             context: Context,
             bookId: Long,
         ) = Intent(context, BookDiscussionsActivity::class.java).apply {
-            getLongExtra(BOOK_ID_KEY, bookId)
+            putExtra(BOOK_ID_KEY, bookId)
         }
     }
 }

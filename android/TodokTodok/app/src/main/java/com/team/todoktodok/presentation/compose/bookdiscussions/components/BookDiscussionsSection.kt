@@ -39,13 +39,9 @@ fun BookDiscussionsSection(
     modifier: Modifier = Modifier,
 ) {
     val listState = rememberLazyListState()
-    val threshold = 5
+    val threshold = 2
 
-    val shouldLoadMore by remember(
-        listState,
-        bookDiscussionsSectionUiState.isPagingLoading,
-        bookDiscussionsSectionUiState.discussionItems,
-    ) {
+    val shouldLoadMore by remember(bookDiscussionsSectionUiState) {
         derivedStateOf {
             val layoutInfo = listState.layoutInfo
             val total = layoutInfo.totalItemsCount
@@ -55,9 +51,14 @@ fun BookDiscussionsSection(
     }
 
     LaunchedEffect(shouldLoadMore) {
-        if (shouldLoadMore) loadMoreItems()
+        if (shouldLoadMore) {
+            loadMoreItems()
+        }
     }
-    LazyColumn(modifier) {
+    LazyColumn(
+        state = listState,
+        modifier = modifier,
+    ) {
         items(
             items = bookDiscussionsSectionUiState.discussionItems,
         ) {

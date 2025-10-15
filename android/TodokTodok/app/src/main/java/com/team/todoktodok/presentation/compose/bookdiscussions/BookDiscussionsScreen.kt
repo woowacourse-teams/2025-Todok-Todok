@@ -2,13 +2,11 @@ package com.team.todoktodok.presentation.compose.bookdiscussions
 
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.LocalActivity
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -33,6 +31,7 @@ fun BookDetailEntry(
         ),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
     BookDetailScreen(
         uiState,
         viewModel::loadMoreItems,

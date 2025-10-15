@@ -7,7 +7,6 @@ import androidx.navigation.toRoute
 import com.team.domain.model.PageInfo
 import com.team.domain.model.exception.NetworkResult
 import com.team.domain.repository.BookRepository
-import com.team.domain.repository.DiscussionRepository
 import com.team.todoktodok.presentation.compose.bookdiscussions.model.BookDiscussionsSectionUiState
 import com.team.todoktodok.presentation.compose.bookdiscussions.model.BookDiscussionsUiEvent
 import com.team.todoktodok.presentation.compose.bookdiscussions.model.BookDiscussionsUiState
@@ -24,7 +23,6 @@ import kotlinx.coroutines.launch
 class BookDiscussionsViewModel(
     private val savedStateHandle: SavedStateHandle,
     private val bookRepository: BookRepository,
-    private val discussionRepository: DiscussionRepository,
 ) : ViewModel() {
     private val route: BookDetailRoute = savedStateHandle.toRoute()
     private val bookId: Long = route.bookId
@@ -45,7 +43,7 @@ class BookDiscussionsViewModel(
         viewModelScope.launch {
             val bookResultDeferred = async { bookRepository.fetchBook(bookId) }
             val discussionsResultDeferred =
-                async { discussionRepository.getBookDiscussions(bookId, 20, null) }
+                async { bookRepository.getBookDiscussions(bookId, 5, null) }
 
             val bookResult = bookResultDeferred.await()
             val discussionsResult = discussionsResultDeferred.await()
@@ -104,7 +102,7 @@ class BookDiscussionsViewModel(
 
             when (
                 val result =
-                    discussionRepository.getBookDiscussions(bookId, 20, currentPage?.nextCursor)
+                    bookRepository.getBookDiscussions(bookId, 5, currentPage?.nextCursor)
             ) {
                 is NetworkResult.Success -> {
                     val newDiscussionsPage = result.data
