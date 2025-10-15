@@ -4,6 +4,7 @@ import com.team.domain.model.exception.NetworkResult
 import com.team.todoktodok.data.network.request.BookRequest
 import com.team.todoktodok.data.network.response.book.SearchedBookResultResponse
 import com.team.todoktodok.data.network.response.discussion.BookResponse
+import com.team.todoktodok.data.network.response.discussion.page.BookDiscussionPageResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -18,10 +19,17 @@ interface BookService {
         @Query("keyword") keyword: String,
     ): NetworkResult<SearchedBookResultResponse>
 
-    @POST("v1/books/{bookId}")
+    @GET("v1/books/{bookId}")
     suspend fun fetchBook(
         @Path("bookId") bookId: Long,
     ): NetworkResult<BookResponse>
+
+    @GET("v1/books/{bookId}/discussions")
+    suspend fun fetchBookDiscussions(
+        @Path("bookId") bookId: Long,
+        @Query("size") size: Int,
+        @Query("cursor") cursor: String?,
+    ): NetworkResult<BookDiscussionPageResponse>
 
     @POST("v1/books")
     suspend fun saveBook(

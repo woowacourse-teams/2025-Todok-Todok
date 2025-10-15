@@ -5,7 +5,6 @@ import com.team.domain.model.DiscussionPage
 import com.team.domain.model.LikeStatus
 import com.team.domain.model.book.SearchedBook
 import com.team.domain.model.discussionroom.DiscussionRoom
-import com.team.domain.model.discussionroom.page.BookDiscussionsPage
 import com.team.domain.model.exception.NetworkResult
 
 interface DiscussionRepository {
@@ -28,12 +27,6 @@ interface DiscussionRepository {
         size: Int = PAGING_SIZE,
         cursor: String? = null,
     ): NetworkResult<DiscussionPage>
-
-    suspend fun getBookDiscussions(
-        bookId: Long,
-        size: Int,
-        cursor: String?,
-    ): NetworkResult<BookDiscussionsPage>
 
     suspend fun getDiscussion(id: Long): NetworkResult<Discussion>
 

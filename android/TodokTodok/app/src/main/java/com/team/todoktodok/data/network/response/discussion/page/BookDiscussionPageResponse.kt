@@ -8,12 +8,12 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class BookDiscussionPageResponse(
-    val discussionResponses: List<DiscussionResponse>,
-    val pageInfoResponse: PageInfoResponse,
+    val items: List<DiscussionResponse>,
+    val pageInfo: PageInfoResponse,
 )
 
 fun BookDiscussionPageResponse.toDomain() =
     BookDiscussionsPage(
-        discussionResponses.map { it.toDomain() },
-        pageInfoResponse.toDomain(),
+        items.map { it.toDomain() },
+        pageInfo.toDomain(),
     )

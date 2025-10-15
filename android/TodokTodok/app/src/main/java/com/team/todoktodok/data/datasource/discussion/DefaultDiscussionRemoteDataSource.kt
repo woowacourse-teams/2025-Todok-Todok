@@ -10,7 +10,6 @@ import com.team.todoktodok.data.network.request.ReportRequest
 import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
 import com.team.todoktodok.data.network.response.discussion.page.ActivatedDiscussionPageResponse
 import com.team.todoktodok.data.network.response.discussion.page.ActiveDiscussionPageResponse
-import com.team.todoktodok.data.network.response.discussion.page.BookDiscussionPageResponse
 import com.team.todoktodok.data.network.response.latest.LatestDiscussionsResponse
 import com.team.todoktodok.data.network.service.DiscussionService
 import retrofit2.Response
@@ -40,12 +39,6 @@ class DefaultDiscussionRemoteDataSource(
         size: Int,
         cursor: String?,
     ): NetworkResult<LatestDiscussionsResponse> = discussionService.fetchLatestDiscussions(size, cursor)
-
-    override suspend fun fetchBookDiscussions(
-        bookId: Long,
-        size: Int,
-        cursor: String?,
-    ): NetworkResult<BookDiscussionPageResponse> = discussionService.fetchBookDiscussions(bookId, size, cursor)
 
     override suspend fun fetchDiscussion(id: Long): NetworkResult<DiscussionResponse> = discussionService.fetchDiscussion(id)
 

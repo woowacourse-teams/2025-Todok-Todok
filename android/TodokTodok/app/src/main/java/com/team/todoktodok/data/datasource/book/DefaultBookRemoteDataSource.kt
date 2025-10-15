@@ -4,6 +4,7 @@ import com.team.domain.model.exception.NetworkResult
 import com.team.todoktodok.data.network.request.BookRequest
 import com.team.todoktodok.data.network.response.book.SearchedBookResultResponse
 import com.team.todoktodok.data.network.response.discussion.BookResponse
+import com.team.todoktodok.data.network.response.discussion.page.BookDiscussionPageResponse
 import com.team.todoktodok.data.network.service.BookService
 
 class DefaultBookRemoteDataSource(
@@ -16,6 +17,12 @@ class DefaultBookRemoteDataSource(
     ): NetworkResult<SearchedBookResultResponse> = bookService.fetchBooks(size, cursor, keyword)
 
     override suspend fun fetchBook(bookId: Long): NetworkResult<BookResponse> = bookService.fetchBook(bookId)
+
+    override suspend fun fetchBookDiscussions(
+        bookId: Long,
+        size: Int,
+        cursor: String?,
+    ): NetworkResult<BookDiscussionPageResponse> = bookService.fetchBookDiscussions(bookId, size, cursor)
 
     override suspend fun saveBook(bookRequest: BookRequest): NetworkResult<Long> = bookService.saveBook(bookRequest)
 }

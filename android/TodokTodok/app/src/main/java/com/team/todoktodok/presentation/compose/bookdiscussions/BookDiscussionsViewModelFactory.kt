@@ -17,7 +17,6 @@ class BookDiscussionsViewModelFactory(
         return BookDiscussionsViewModel(
             extras.createSavedStateHandle(),
             module.bookRepository,
-            module.discussionRepository,
         ) as T
     }
 }
