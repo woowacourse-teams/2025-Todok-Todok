@@ -59,7 +59,9 @@ jobs:
     needs: ci
     name: Backend CD Prod 1
     uses: ./.github/workflows/backend-cd-prod-1.yml
+    secrets: inherit
   prod_2:
     needs: prod_1
     name: Backend CD Prod 2
     uses: ./.github/workflows/backend-cd-prod-2.yml
+    secrets: inherit
