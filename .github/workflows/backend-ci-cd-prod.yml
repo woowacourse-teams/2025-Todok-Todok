@@ -40,8 +40,8 @@ jobs:
       - name: Clean Project
         run: ./gradlew clean
 
-#      - name: Run Unit Tests
-#        run: ./gradlew test
+      - name: Run Unit Tests
+        run: ./gradlew test
 
       - name: Assemble Build
         run: ./gradlew build
