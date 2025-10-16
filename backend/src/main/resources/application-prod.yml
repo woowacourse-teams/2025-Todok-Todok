@@ -44,7 +44,6 @@ management:
     web:
       exposure:
         include: [prometheus, health]
-      base-path: /management
       path-mapping:
         health: health_check
   prometheus:
