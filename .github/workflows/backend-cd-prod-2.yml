@@ -27,8 +27,8 @@ jobs:
     steps:
       - name: Fix permissions
         run: |
-          sudo chown -R ubuntu:ubuntu backend/promtail_data
-          sudo chown -R ubuntu:ubuntu backend/log
+          sudo chown -R ubuntu:ubuntu promtail_data
+          sudo chown -R ubuntu:ubuntu log
 
       - name: Cleanup backend log and promtail data directory before checkout
         run: |
@@ -116,8 +116,8 @@ jobs:
     steps:
       - name: Fix permissions
         run: |
-          sudo chown -R ubuntu:ubuntu backend/promtail_data
-          sudo chown -R ubuntu:ubuntu backend/log
+          sudo chown -R ubuntu:ubuntu promtail_data
+          sudo chown -R ubuntu:ubuntu log
 
       - name: Cleanup backend log and promtail data directory before checkout
         run: |
