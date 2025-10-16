@@ -25,6 +25,11 @@ jobs:
         working-directory: ./backend
 
     steps:
+      - name: Fix permissions
+        run: |
+          sudo chown -R ubuntu:ubuntu backend/promtail_data
+          sudo chown -R ubuntu:ubuntu backend/log
+
       - name: Cleanup backend log and promtail data directory before checkout
         run: |
           sudo rm -rf backend/promtail_data || true
@@ -78,6 +83,8 @@ jobs:
     steps:
       - name: Send Health Check Request
         run: |
+          sleep 15
+          
           for i in {1..5}; do
           response=$(curl -s http://localhost:80/management/health_check)
           echo "Attempt $i: Response Body: $response"
@@ -107,6 +114,11 @@ jobs:
     if: failure()
 
     steps:
+      - name: Fix permissions
+        run: |
+          sudo chown -R ubuntu:ubuntu backend/promtail_data
+          sudo chown -R ubuntu:ubuntu backend/log
+
       - name: Cleanup backend log and promtail data directory before checkout
         run: |
           sudo rm -rf backend/promtail_data || true
@@ -146,6 +158,8 @@ jobs:
     steps:
       - name: Send Health Check Request
         run: |
+          sleep 15
+          
           for i in {1..5}; do
           response=$(curl -s http://localhost:80/management/health_check)
           echo "Attempt $i: Response Body: $response"
