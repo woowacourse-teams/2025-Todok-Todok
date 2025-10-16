@@ -435,6 +435,79 @@ class DiscussionControllerTest {
                 .body("pageInfo.nextCursor", nullValue());
     }
 
+    @Test
+    @DisplayName("좋아요한 토론방을 첫 페이지로 조회한다")
+    void getLikedDiscussions_firstPage() {
+        // given
+        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+
+        // 좋아요한 토론방 3개 생성
+        databaseInitializer.setDiscussionInfo("좋아요 토론1", "내용1", 1L, 1L);
+        databaseInitializer.setDiscussionLikeInfo(1L, 1L);
+
+        databaseInitializer.setDiscussionInfo("좋아요 토론2", "내용2", 1L, 1L);
+        databaseInitializer.setDiscussionLikeInfo(1L, 2L);
+
+        databaseInitializer.setDiscussionInfo("좋아요 토론3", "내용3", 1L, 1L);
+        databaseInitializer.setDiscussionLikeInfo(1L, 3L);
+
+        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
+
+        // when - then
+        RestAssured.given().log().all()
+                .header("Authorization", token)
+                .contentType(ContentType.JSON)
+                .when().get("/api/v1/discussions/liked?size=2")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("items.size()", is(2))
+                .body("pageInfo.hasNext", is(true))
+                .body("pageInfo.nextCursor", notNullValue());
+    }
+
+    @Test
+    @DisplayName("좋아요한 토론방을 커서로 다음 페이지를 조회한다")
+    void getLikedDiscussions_nextPage() {
+        // given
+        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+
+        databaseInitializer.setDiscussionInfo("좋아요 토론1", "내용1", 1L, 1L);
+        databaseInitializer.setDiscussionLikeInfo(1L, 1L);
+
+        databaseInitializer.setDiscussionInfo("좋아요 토론2", "내용2", 1L, 1L);
+        databaseInitializer.setDiscussionLikeInfo(1L, 2L);
+
+        databaseInitializer.setDiscussionInfo("좋아요 토론3", "내용3", 1L, 1L);
+        databaseInitializer.setDiscussionLikeInfo(1L, 3L);
+
+        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
+
+        final String nextCursor = RestAssured.given().log().all()
+                .header("Authorization", token)
+                .contentType(ContentType.JSON)
+                .when().get("/api/v1/discussions/liked?size=2")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .extract().jsonPath().getString("pageInfo.nextCursor");
+
+        // when - then
+        RestAssured.given().log().all()
+                .header("Authorization", token)
+                .contentType(ContentType.JSON)
+                .when().get("/api/v1/discussions/liked?size=2&cursor=" + nextCursor)
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("items.size()", is(1))
+                .body("pageInfo.hasNext", is(false))
+                .body("pageInfo.nextCursor", nullValue());
+    }
+
     @Disabled
     @Nested
     @DisplayName("토론방 필터링 조회 테스트")
