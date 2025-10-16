@@ -1,4 +1,4 @@
-package todoktodok.backend.discussion.application.service.eventhandler;
+package todoktodok.backend.discussion.application.service.event;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
