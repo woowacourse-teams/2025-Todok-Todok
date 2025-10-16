@@ -129,7 +129,6 @@ jobs:
           ENV_ID: ${{ github.sha }}
           BACKEND_APP_IMAGE_NAME: ${{ needs.find_previous_image_version.outputs.previousImageVersion }}
         run: |
-          cd backend
           echo "ENV_ID: $ENV_ID"
           docker compose -f config/docker-compose-prod.yml pull
           docker compose -f config/docker-compose-prod.yml up -d --no-build
