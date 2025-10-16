@@ -27,6 +27,8 @@ jobs:
     steps:
       - name: Fix permissions
         run: |
+          pwd
+          ls -l
           sudo chown -R ubuntu:ubuntu promtail_data
           sudo chown -R ubuntu:ubuntu log
 
@@ -116,6 +118,8 @@ jobs:
     steps:
       - name: Fix permissions
         run: |
+          pwd
+          ls -l
           sudo chown -R ubuntu:ubuntu promtail_data
           sudo chown -R ubuntu:ubuntu log
 
