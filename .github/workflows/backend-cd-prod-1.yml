@@ -88,7 +88,7 @@ jobs:
           sleep 15
           
           for i in {1..5}; do
-          response=$(curl -s http://localhost:80/management/health_check)
+          response=$(curl -s http://localhost:80/actuator/health_check)
           echo "Attempt $i: Response Body: $response"
         
           if [[ "$response" == *"\"status\":\"UP\""* ]]; then
@@ -163,7 +163,7 @@ jobs:
           sleep 15
           
           for i in {1..5}; do
-          response=$(curl -s http://localhost:80/management/health_check)
+          response=$(curl -s http://localhost:80/actuator/health_check)
           echo "Attempt $i: Response Body: $response"
 
           if [[ "$response" == *"\"status\":\"UP\""* ]]; then
