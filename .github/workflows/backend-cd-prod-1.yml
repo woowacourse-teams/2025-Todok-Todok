@@ -79,7 +79,7 @@ jobs:
       - name: Send Health Check Request
         run: |
           for i in {1..5}; do
-          response=$(curl -s http://localhost:8080/management/health_check)
+          response=$(curl -s http://localhost:80/management/health_check)
           echo "Attempt $i: Response Body: $response"
         
           if [[ "$response" == *"\"status\":\"UP\""* ]]; then
@@ -147,7 +147,7 @@ jobs:
       - name: Send Health Check Request
         run: |
           for i in {1..5}; do
-          response=$(curl -s http://localhost:8080/management/health_check)
+          response=$(curl -s http://localhost:80/management/health_check)
           echo "Attempt $i: Response Body: $response"
 
           if [[ "$response" == *"\"status\":\"UP\""* ]]; then
