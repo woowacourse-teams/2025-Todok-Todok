@@ -44,9 +44,10 @@ jobs:
       - name: Stop running Container (without removing)
         run: |
           echo "prod 컨테이너 중지 중..."
-          docker stop prod && echo "prod 컨테이너 중지 완료" || echo "prod 컨테이너 없음"
+          docker ps -q --filter "name=^prod_" | xargs -r docker stop
           echo "promtail_prod 컨테이너 중지 중..."
-          docker stop promtail_prod && echo "promtail_prod 컨테이너 중지 완료" || echo "promtail_prod 컨테이너 없음"
+          docker ps -q --filter "name=^promtail_prod_" | xargs -r docker stop
+          echo "prod/promtail 컨테이너 중지 완료"
 
       - name: Docker Compose Pull & Up (no-build)
         env:
