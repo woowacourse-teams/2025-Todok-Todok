@@ -1,0 +1,165 @@
+name: Backend CD Prod 1
+on:
+  workflow_call
+
+jobs:
+  find_previous_image_version:
+    runs-on: [self-hosted, prod-1]
+
+    outputs:
+      previousImageVersion: ${{steps.find_version.outputs.name}}
+
+    steps:
+      - id: find_version
+        run: |
+          PREVIOUS_IMAGE_NAME=$(docker ps -f "name=prod_*" --format "{{.Image}}" | head -n 1)
+          echo "name=$PREVIOUS_IMAGE_NAME" >> $GITHUB_OUTPUT
+          echo $PREVIOUS_IMAGE_NAME
+
+  cd:
+    runs-on: [self-hosted, prod-1]
+
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./backend
+
+    steps:
+      - name: Cleanup backend log and promtail data directory before checkout
+        run: |
+          sudo rm -rf backend/promtail_data || true
+          sudo rm -rf backend/log || true
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.SECRETS_SUBMODULE_ACCESS_TOKEN }}
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3.3.0
+        with:
+          username: ${{ secrets.DOCKERHUB_DEPLOY_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_DEPLOY_TOKEN }}
+
+      - name: Stop running Container (without removing)
+        run: |
+          echo "prod 컨테이너 중지 중..."
+          docker stop prod && echo "prod 컨테이너 중지 완료" || echo "prod 컨테이너 없음"
+          echo "promtail_prod 컨테이너 중지 중..."
+          docker stop promtail_prod && echo "promtail_prod 컨테이너 중지 완료" || echo "promtail_prod 컨테이너 없음"
+
+      - name: Docker Compose Pull & Up (no-build)
+        env:
+          ENV_ID: ${{ github.sha }}
+          BACKEND_APP_IMAGE_NAME: woowajeff/todoktodok:prod-${{ github.sha }}
+        run: |
+          cd backend
+          echo "ENV_ID: $ENV_ID"
+          docker compose -f config/docker-compose-prod.yml pull
+          docker compose -f config/docker-compose-prod.yml up -d --no-build
+          echo "docker compose-prod up"
+          
+      - name: Docker image Prune
+        run: |
+          echo "24시간 이상 사용되지 않은 Docker 이미지 정리 중..."
+          sudo docker image prune -f --filter "until=24h"
+          echo "이미지 정리 완료"
+
+  health_check_prod_1:
+    runs-on: [self-hosted, prod-1]
+
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./backend
+
+    needs: cd
+
+    steps:
+      - name: Send Health Check Request
+        run: |
+          for i in {1..5}; do
+          response=$(curl -s http://localhost:8080/management/health_check)
+          echo "Attempt $i: Response Body: $response"
+        
+          if [[ "$response" == *"\"status\":\"UP\""* ]]; then
+          echo "Health check passed."
+          exit 0
+          fi
+        
+          if [ "$i" -eq 5 ]; then
+          echo "Health check failed after 5 attempts."
+          exit 1
+          fi
+        
+          sleep 5
+          done
+
+  roll-back_prod_1:
+    runs-on: [self-hosted, prod-1]
+
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./backend
+
+    needs: [health_check_prod_1, find_previous_image_version]
+    if: failure()
+
+    steps:
+      - name: Cleanup backend log and promtail data directory before checkout
+        run: |
+          sudo rm -rf backend/promtail_data || true
+          sudo rm -rf backend/log || true
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.SECRETS_SUBMODULE_ACCESS_TOKEN }}
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3.3.0
+        with:
+          username: ${{ secrets.DOCKERHUB_DEPLOY_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_DEPLOY_TOKEN }}
+
+      - name: Docker Compose Pull & Up (no-build)
+        env:
+          ENV_ID: ${{ github.sha }}
+          BACKEND_APP_IMAGE_NAME: ${{ needs.find_previous_image_version.outputs.previousImageVersion }}
+        run: |
+          cd backend
+          echo "ENV_ID: $ENV_ID"
+          docker compose -f config/docker-compose-prod.yml pull
+          docker compose -f config/docker-compose-prod.yml up -d --no-build
+          echo "docker compose-prod up"
+
+  health_check_a_after_roll-back:
+    runs-on: [self-hosted, prod-1]
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./backend
+
+    needs: roll-back_prod_1
+    if: ${{always() && needs.roll-back_prod_1.result != 'skipped'}}
+
+    steps:
+      - name: Send Health Check Request
+        run: |
+          for i in {1..5}; do
+          response=$(curl -s http://localhost:8080/management/health_check)
+          echo "Attempt $i: Response Body: $response"
+
+          if [[ "$response" == *"\"status\":\"UP\""* ]]; then
+          echo "Health check passed."
+          exit 0
+          fi
+
+          if [ "$i" -eq 5 ]; then
+          echo "Health check failed after 5 attempts."
+          exit 1
+          fi
+
+          sleep 5
+          done
