@@ -53,9 +53,37 @@ public class BookControllerTest {
         databaseInitializer.clear();
     }
 
+    @Test
+    @DisplayName("도서를 생성한다")
+    void createBook() {
+        // given
+        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+
+        databaseInitializer.setDefaultUserInfo();
+
+        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
+
+        final BookRequest bookRequest = new BookRequest(
+                "9791158391409",
+                "오브젝트",
+                "조영호",
+                "image.png"
+        );
+
+        // when - then
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .header("Authorization", token)
+                .body(bookRequest)
+                .when().post("/api/v1/books")
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value());
+    }
+
     @Nested
     @DisplayName("도서 검색 테스트")
     class SearchTest {
+
 
         @Test
         @DisplayName("검색어로 도서를 검색한다")
@@ -101,7 +129,6 @@ public class BookControllerTest {
                     .then().log().all()
                     .statusCode(HttpStatus.BAD_REQUEST.value());
         }
-
         @Test
         @DisplayName("검색어 파라미터가 없으면 예외가 발생한다")
         void searchTestFailEmptyParam() {
@@ -121,11 +148,12 @@ public class BookControllerTest {
                     .then().log().all()
                     .statusCode(HttpStatus.BAD_REQUEST.value());
         }
-    }
 
+    }
     @Nested
     @DisplayName("도서 검색 테스트 - 페이지네이션 적용")
     class SearchByPagingTest {
+
 
         @Test
         @DisplayName("검색어로 도서를 검색한다 - 첫 페이지 조회")
@@ -242,11 +270,11 @@ public class BookControllerTest {
                     .then().log().all()
                     .statusCode(HttpStatus.OK.value())
                     .body("items.size()", greaterThanOrEqualTo(1))
+                    .body("pageInfo.hasNext", is(false))
                     .body("pageInfo.nextCursor", nullValue());
         }
-
         @Test
-        @DisplayName("검색어로 도서를 검색한다 - cursor가 20보다 클 때 첫 페이지 응답")
+        @DisplayName("검색어로 도서를 검색한다 - cursor가 20보다 클 때")
         void searchByPagingTest_upperTwentyPage() {
             // given
             given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
@@ -258,7 +286,6 @@ public class BookControllerTest {
             final String keyword = "자바";
 
             final String cursorMeaningTwentyOne = "MjE=";
-            final String cursorMeaningTwo = "Mg==";
 
             // when - then
             RestAssured.given().log().all()
@@ -271,35 +298,131 @@ public class BookControllerTest {
                     .then().log().all()
                     .statusCode(HttpStatus.OK.value())
                     .body("items.size()", greaterThanOrEqualTo(1))
-                    .body("pageInfo.hasNext", is(true))
-                    .body("pageInfo.nextCursor", is(cursorMeaningTwo));
+                    .body("pageInfo.hasNext", is(false))
+                    .body("pageInfo.nextCursor", nullValue());
         }
     }
 
     @Test
-    @DisplayName("도서를 생성한다")
-    void createBook() {
+    @DisplayName("도서를 단일 조회한다")
+    void getBookTest() {
         // given
         given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
 
         databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setBookInfo(
+                "오브젝트",
+                "오브젝트 설명",
+                "조영호",
+                "위키북스",
+                "9791158391409",
+                "https://image.png"
+        );
 
         final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
-
-        final BookRequest bookRequest = new BookRequest(
-                "9791158391409",
-                "오브젝트",
-                "조영호",
-                "image.png"
-        );
 
         // when - then
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .header("Authorization", token)
-                .body(bookRequest)
-                .when().post("/api/v1/books")
+                .when().get("/api/v1/books/1")
                 .then().log().all()
-                .statusCode(HttpStatus.CREATED.value());
+                .statusCode(HttpStatus.OK.value());
+    }
+
+    @Nested
+    @DisplayName("도서별 토론방을 조회한다")
+    class GetDiscussionsByBookTest {
+
+        @Test
+        @DisplayName("도서별 토론방을 최신순 조회한다 - 첫 페이지 조회")
+        void getSlicedDiscussionsByBook_firstPage() {
+            // given
+            given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+
+            databaseInitializer.setDefaultUserInfo();
+            databaseInitializer.setDefaultBookInfo();
+
+            databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
+            databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
+            databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
+            databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
+            databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
+
+            final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
+            final String cursorMeaningThree = "Mw==";
+
+            // when - then
+            RestAssured.given().log().all()
+                    .header("Authorization", token)
+                    .contentType(ContentType.JSON)
+                    .when().get("/api/v1/books/1/discussions?size=3")
+                    .then().log().all()
+                    .statusCode(HttpStatus.OK.value())
+                    .body("items.size()", is(3))
+                    .body("pageInfo.hasNext", is(true))
+                    .body("pageInfo.nextCursor", is(cursorMeaningThree));
+        }
+
+        @Test
+        @DisplayName("도서별 토론방을 최신순 조회한다 - 중간 페이지 조회")
+        void getSlicedDiscussionsByBook_middlePage() {
+            // given
+            given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+
+            databaseInitializer.setDefaultUserInfo();
+            databaseInitializer.setDefaultBookInfo();
+
+            databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
+            databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
+            databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
+            databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
+            databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
+
+            final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
+            final String cursorMeaningFive = "NQ==";
+            final String cursorMeaningTwo = "Mg==";
+
+            // when - then
+            RestAssured.given().log().all()
+                    .header("Authorization", token)
+                    .contentType(ContentType.JSON)
+                    .when().get(String.format("/api/v1/books/1/discussions?size=3&cursor=%s", cursorMeaningFive))
+                    .then().log().all()
+                    .statusCode(HttpStatus.OK.value())
+                    .body("items.size()", is(3))
+                    .body("pageInfo.hasNext", is(true))
+                    .body("pageInfo.nextCursor", is(cursorMeaningTwo));
+        }
+
+        @Test
+        @DisplayName("도서별 토론방을 최신순 조회한다 - 마지막 페이지 조회")
+        void getSlicedDiscussionsByBook_lastPage() {
+            // given
+            given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+
+            databaseInitializer.setDefaultUserInfo();
+            databaseInitializer.setDefaultBookInfo();
+
+            databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
+            databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
+            databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
+            databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
+            databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
+
+            final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
+            final String cursorMeaningFour = "NA==";
+
+            // when - then
+            RestAssured.given().log().all()
+                    .header("Authorization", token)
+                    .contentType(ContentType.JSON)
+                    .when().get(String.format("/api/v1/books/1/discussions?size=3&cursor=%s", cursorMeaningFour))
+                    .then().log().all()
+                    .statusCode(HttpStatus.OK.value())
+                    .body("items.size()", is(3))
+                    .body("pageInfo.hasNext", is(false))
+                    .body("pageInfo.nextCursor", nullValue());
+        }
     }
 }
