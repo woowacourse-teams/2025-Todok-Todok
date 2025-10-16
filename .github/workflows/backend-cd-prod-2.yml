@@ -135,7 +135,7 @@ jobs:
           docker compose -f config/docker-compose-prod.yml up -d --no-build
           echo "docker compose-prod up"
 
-  health_check_a_after_roll-back:
+  health_check_2_after_roll-back:
     runs-on: [self-hosted, prod-2]
     defaults:
       run:
