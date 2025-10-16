@@ -43,7 +43,10 @@ management:
   endpoints:
     web:
       exposure:
-        include: prometheus
+        include: prometheus, health
+      base-path: /management
+      path-mapping:
+        health: health_check
   prometheus:
     metrics:
       export:
