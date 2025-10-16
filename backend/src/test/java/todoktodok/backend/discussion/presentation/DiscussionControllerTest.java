@@ -3,17 +3,20 @@ package todoktodok.backend.discussion.presentation;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
-import static org.hamcrest.Matchers.nullValue;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.time.LocalDateTime;
-
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -429,6 +432,79 @@ class DiscussionControllerTest {
                 .body("items.size()", equalTo(1))
                 .body("items[0].discussionId", equalTo(4))
                 .body("pageInfo.hasNext", equalTo(false))
+                .body("pageInfo.nextCursor", nullValue());
+    }
+
+    @Test
+    @DisplayName("좋아요한 토론방을 첫 페이지로 조회한다")
+    void getLikedDiscussions_firstPage() {
+        // given
+        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+
+        // 좋아요한 토론방 3개 생성
+        databaseInitializer.setDiscussionInfo("좋아요 토론1", "내용1", 1L, 1L);
+        databaseInitializer.setDiscussionLikeInfo(1L, 1L);
+
+        databaseInitializer.setDiscussionInfo("좋아요 토론2", "내용2", 1L, 1L);
+        databaseInitializer.setDiscussionLikeInfo(1L, 2L);
+
+        databaseInitializer.setDiscussionInfo("좋아요 토론3", "내용3", 1L, 1L);
+        databaseInitializer.setDiscussionLikeInfo(1L, 3L);
+
+        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
+
+        // when - then
+        RestAssured.given().log().all()
+                .header("Authorization", token)
+                .contentType(ContentType.JSON)
+                .when().get("/api/v1/discussions/liked?size=2")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("items.size()", is(2))
+                .body("pageInfo.hasNext", is(true))
+                .body("pageInfo.nextCursor", notNullValue());
+    }
+
+    @Test
+    @DisplayName("좋아요한 토론방을 커서로 다음 페이지를 조회한다")
+    void getLikedDiscussions_nextPage() {
+        // given
+        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
+
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+
+        databaseInitializer.setDiscussionInfo("좋아요 토론1", "내용1", 1L, 1L);
+        databaseInitializer.setDiscussionLikeInfo(1L, 1L);
+
+        databaseInitializer.setDiscussionInfo("좋아요 토론2", "내용2", 1L, 1L);
+        databaseInitializer.setDiscussionLikeInfo(1L, 2L);
+
+        databaseInitializer.setDiscussionInfo("좋아요 토론3", "내용3", 1L, 1L);
+        databaseInitializer.setDiscussionLikeInfo(1L, 3L);
+
+        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
+
+        final String nextCursor = RestAssured.given().log().all()
+                .header("Authorization", token)
+                .contentType(ContentType.JSON)
+                .when().get("/api/v1/discussions/liked?size=2")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .extract().jsonPath().getString("pageInfo.nextCursor");
+
+        // when - then
+        RestAssured.given().log().all()
+                .header("Authorization", token)
+                .contentType(ContentType.JSON)
+                .when().get("/api/v1/discussions/liked?size=2&cursor=" + nextCursor)
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("items.size()", is(1))
+                .body("pageInfo.hasNext", is(false))
                 .body("pageInfo.nextCursor", nullValue());
     }
 

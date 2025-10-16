@@ -6,15 +6,19 @@ public record BookResponse(
         Long bookId,
         String bookTitle,
         String bookAuthor,
-        String bookImage
+        String bookImage,
+        String bookPublisher,
+        String bookSummary
 ) {
 
-    public BookResponse(Book book) {
+    public BookResponse(final Book book) {
         this(
                 book.getId(),
                 book.getTitle(),
                 book.getAuthor(),
-                book.getImage()
+                book.getImage(),
+                book.getPublisher(),
+                book.getSummary()
         );
     }
 }

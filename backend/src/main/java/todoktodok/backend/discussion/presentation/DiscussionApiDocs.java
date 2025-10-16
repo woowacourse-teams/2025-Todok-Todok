@@ -18,6 +18,7 @@ import todoktodok.backend.discussion.application.dto.request.DiscussionUpdateReq
 import todoktodok.backend.discussion.application.dto.response.ActiveDiscussionPageResponse;
 import todoktodok.backend.discussion.application.dto.response.DiscussionResponse;
 import todoktodok.backend.discussion.application.dto.response.LatestDiscussionPageResponse;
+import todoktodok.backend.discussion.application.dto.response.LikedDiscussionPageResponse;
 import todoktodok.backend.global.auth.Auth;
 import todoktodok.backend.global.auth.Role;
 import todoktodok.backend.global.exception.ErrorResponse;
@@ -54,21 +55,16 @@ public interface DiscussionApiDocs {
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(
-                                    name = "JWT 오류",
-                                    value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
-                            )
-                    )),
-            @ApiResponse(
-                    responseCode = "401",
-                    description = "액세스 토큰 만료 오류",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(
-                                    name = "액세스 토큰 만료 오류",
-                                    value = "{\"code\":401, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
-                            )
+                            examples = {
+                                    @ExampleObject(
+                                            name = "JWT 오류",
+                                            value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
+                                    ),
+                                    @ExampleObject(
+                                            name = "액세스 토큰 만료 오류",
+                                            value = "{\"code\":401, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
+                                    )
+                            }
                     )),
             @ApiResponse(
                     responseCode = "404",
@@ -82,8 +78,8 @@ public interface DiscussionApiDocs {
                                             value = "{\"code\":404, \"message\":\"[ERROR] 해당 회원을 찾을 수 없습니다\"}"
                                     ),
                                     @ExampleObject(
-                                            name = "책 없음",
-                                            value = "{\"code\":404, \"message\":\"[ERROR] 해당 책을 찾을 수 없습니다\"}"
+                                            name = "도서 없음",
+                                            value = "{\"code\":404, \"message\":\"[ERROR] 해당 도서를 찾을 수 없습니다\"}"
                                     )
                             }
                     )),
@@ -142,21 +138,16 @@ public interface DiscussionApiDocs {
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(
-                                    name = "JWT 오류",
-                                    value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
-                            )
-                    )),
-            @ApiResponse(
-                    responseCode = "401",
-                    description = "액세스 토큰 만료 오류",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(
-                                    name = "액세스 토큰 만료 오류",
-                                    value = "{\"code\":401, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
-                            )
+                            examples = {
+                                    @ExampleObject(
+                                            name = "JWT 오류",
+                                            value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
+                                    ),
+                                    @ExampleObject(
+                                            name = "액세스 토큰 만료 오류",
+                                            value = "{\"code\":401, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
+                                    )
+                            }
                     )),
             @ApiResponse(
                     responseCode = "404",
@@ -224,7 +215,9 @@ public interface DiscussionApiDocs {
                                                 "bookId": 1,
                                                 "bookTitle": "엘레강트 오브젝트 - 새로운 관점에서 바라본 객체지향",
                                                 "bookAuthor": "Yegor Bugayenko (지은이), 조영호 (옮긴이)",
-                                                "bookImage": "https://image.aladin.co.kr/product/25837/40/coversum/k762736538_1.jpg"
+                                                "bookImage": "https://image.aladin.co.kr/product/25837/40/coversum/k762736538_1.jpg",
+                                                "bookPublisher": "지&선(지앤선)",
+                                                "bookSummary": "기본적으로 객체지향 프로그래밍((Object-Oriented Programming, OOP)에 관한 책이다. 이 책은 전통적인 OOP의 모범 사례에 전면적으로 반기를 들고 전통적인 코딩 표준에서 벗어나 훨씬 깨끗한 코드 작성을 위한 조력자임을 자처한다."
                                               },
                                               "member": {
                                                 "memberId": 2,
@@ -248,21 +241,16 @@ public interface DiscussionApiDocs {
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(
-                                    name = "JWT 오류",
-                                    value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
-                            )
-                    )),
-            @ApiResponse(
-                    responseCode = "401",
-                    description = "액세스 토큰 만료 오류",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(
-                                    name = "액세스 토큰 만료 오류",
-                                    value = "{\"code\":401, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
-                            )
+                            examples = {
+                                    @ExampleObject(
+                                            name = "JWT 오류",
+                                            value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
+                                    ),
+                                    @ExampleObject(
+                                            name = "액세스 토큰 만료 오류",
+                                            value = "{\"code\":401, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
+                                    )
+                            }
                     )),
             @ApiResponse(
                     responseCode = "404",
@@ -322,7 +310,9 @@ public interface DiscussionApiDocs {
                                                         "bookId": 1,
                                                         "bookTitle": "오브젝트",
                                                         "bookAuthor": "조영호",
-                                                        "bookImage": "https://image.png"
+                                                        "bookImage": "https://image.png",
+                                                        "bookPublisher": "위키북스",
+                                                        "bookSummary": "역할, 책임, 협력에 기반해 객체지향 프로그램을 설계하고 구현하는 방법, 응집도와 결합도를 이용해 설계를 트레이드오프하는 방법, 설계를 유연하게 만드는 다양한 의존성 관리 기법, 타입 계층을 위한 상속과 코드 재사용을 위한 합성의 개념, 다양한 설계 원칙과 디자인 패턴 등을 다룬다."
                                                     },
                                                     "member": {
                                                         "memberId": 1,
@@ -343,7 +333,9 @@ public interface DiscussionApiDocs {
                                                         "bookId": 1,
                                                         "bookTitle": "오브젝트",
                                                         "bookAuthor": "조영호",
-                                                        "bookImage": "https://image.png"
+                                                        "bookImage": "https://image.png",
+                                                        "bookPublisher": "위키북스",
+                                                        "bookSummary": "역할, 책임, 협력에 기반해 객체지향 프로그램을 설계하고 구현하는 방법, 응집도와 결합도를 이용해 설계를 트레이드오프하는 방법, 설계를 유연하게 만드는 다양한 의존성 관리 기법, 타입 계층을 위한 상속과 코드 재사용을 위한 합성의 개념, 다양한 설계 원칙과 디자인 패턴 등을 다룬다."
                                                     },
                                                     "member": {
                                                         "memberId": 2,
@@ -368,26 +360,38 @@ public interface DiscussionApiDocs {
                             )
                     )),
             @ApiResponse(
+                    responseCode = "400",
+                    description = "페이지 사이즈 오류",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = {
+                                    @ExampleObject(
+                                            name = "유효하지 않은 페이지 사이즈",
+                                            value = "{\"code\":400, \"message\":\"[ERROR] 유효하지 않은 페이지 사이즈입니다. 1 이상 50 이하의 페이징을 시도해주세요\"}"
+                                    ),
+                                    @ExampleObject(
+                                            name = "디코드할 수 없는 cursor",
+                                            value = "{\"code\":400, \"message\":\"[ERROR] Base64로 디코드할 수 없는 cursor 값입니다\"}"
+                                    )
+                            }
+                    )),
+            @ApiResponse(
                     responseCode = "401",
                     description = "토큰 인증 오류",
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(
-                                    name = "JWT 오류",
-                                    value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
-                            )
-                    )),
-            @ApiResponse(
-                    responseCode = "401",
-                    description = "액세스 토큰 만료 오류",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(
-                                    name = "액세스 토큰 만료 오류",
-                                    value = "{\"code\":401, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
-                            )
+                            examples = {
+                                    @ExampleObject(
+                                            name = "JWT 오류",
+                                            value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
+                                    ),
+                                    @ExampleObject(
+                                            name = "액세스 토큰 만료 오류",
+                                            value = "{\"code\":401, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
+                                    )
+                            }
                     )),
             @ApiResponse(
                     responseCode = "404",
@@ -447,7 +451,9 @@ public interface DiscussionApiDocs {
                                                     "bookId": 1,
                                                     "bookTitle": "엘레강트 오브젝트 - 새로운 관점에서 바라본 객체지향",
                                                     "bookAuthor": "Yegor Bugayenko (지은이), 조영호 (옮긴이)",
-                                                    "bookImage": "https://image.aladin.co.kr/product/25837/40/coversum/k762736538_1.jpg"
+                                                    "bookImage": "https://image.aladin.co.kr/product/25837/40/coversum/k762736538_1.jpg",
+                                                    "bookPublisher": "지&선(지앤선)",
+                                                    "bookSummary": "기본적으로 객체지향 프로그래밍((Object-Oriented Programming, OOP)에 관한 책이다. 이 책은 전통적인 OOP의 모범 사례에 전면적으로 반기를 들고 전통적인 코딩 표준에서 벗어나 훨씬 깨끗한 코드 작성을 위한 조력자임을 자처한다."
                                                   },
                                                   "member": {
                                                     "memberId": 2,
@@ -468,7 +474,9 @@ public interface DiscussionApiDocs {
                                                     "bookId": 1,
                                                     "bookTitle": "엘레강트 오브젝트 - 새로운 관점에서 바라본 객체지향",
                                                     "bookAuthor": "Yegor Bugayenko (지은이), 조영호 (옮긴이)",
-                                                    "bookImage": "https://image.aladin.co.kr/product/25837/40/coversum/k762736538_1.jpg"
+                                                    "bookImage": "https://image.aladin.co.kr/product/25837/40/coversum/k762736538_1.jpg",
+                                                    "bookPublisher": "지&선(지앤선)",
+                                                    "bookSummary": "기본적으로 객체지향 프로그래밍((Object-Oriented Programming, OOP)에 관한 책이다. 이 책은 전통적인 OOP의 모범 사례에 전면적으로 반기를 들고 전통적인 코딩 표준에서 벗어나 훨씬 깨끗한 코드 작성을 위한 조력자임을 자처한다."
                                                   },
                                                   "member": {
                                                     "memberId": 2,
@@ -493,21 +501,16 @@ public interface DiscussionApiDocs {
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(
-                                    name = "JWT 오류",
-                                    value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
-                            )
-                    )),
-            @ApiResponse(
-                    responseCode = "401",
-                    description = "액세스 토큰 만료 오류",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(
-                                    name = "액세스 토큰 만료 오류",
-                                    value = "{\"code\":401, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
-                            )
+                            examples = {
+                                    @ExampleObject(
+                                            name = "JWT 오류",
+                                            value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
+                                    ),
+                                    @ExampleObject(
+                                            name = "액세스 토큰 만료 오류",
+                                            value = "{\"code\":401, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
+                                    )
+                            }
                     )),
             @ApiResponse(
                     responseCode = "404",
@@ -560,7 +563,9 @@ public interface DiscussionApiDocs {
                                                      "bookId": 1,
                                                      "bookTitle": "엘레강트 오브젝트 - 새로운 관점에서 바라본 객체지향",
                                                      "bookAuthor": "Yegor Bugayenko (지은이), 조영호 (옮긴이)",
-                                                     "bookImage": "https://image.aladin.co.kr/product/25837/40/coversum/k762736538_1.jpg"
+                                                     "bookImage": "https://image.aladin.co.kr/product/25837/40/coversum/k762736538_1.jpg",
+                                                     "bookPublisher": "지&선(지앤선)",
+                                                     "bookSummary": "기본적으로 객체지향 프로그래밍((Object-Oriented Programming, OOP)에 관한 책이다. 이 책은 전통적인 OOP의 모범 사례에 전면적으로 반기를 들고 전통적인 코딩 표준에서 벗어나 훨씬 깨끗한 코드 작성을 위한 조력자임을 자처한다."
                                                    },
                                                    "member": {
                                                      "memberId": 2,
@@ -581,7 +586,9 @@ public interface DiscussionApiDocs {
                                                      "bookId": 1,
                                                      "bookTitle": "엘레강트 오브젝트 - 새로운 관점에서 바라본 객체지향",
                                                      "bookAuthor": "Yegor Bugayenko (지은이), 조영호 (옮긴이)",
-                                                     "bookImage": "https://image.aladin.co.kr/product/25837/40/coversum/k762736538_1.jpg"
+                                                     "bookImage": "https://image.aladin.co.kr/product/25837/40/coversum/k762736538_1.jpg",
+                                                     "bookPublisher": "지&선(지앤선)",
+                                                     "bookSummary": "기본적으로 객체지향 프로그래밍((Object-Oriented Programming, OOP)에 관한 책이다. 이 책은 전통적인 OOP의 모범 사례에 전면적으로 반기를 들고 전통적인 코딩 표준에서 벗어나 훨씬 깨끗한 코드 작성을 위한 조력자임을 자처한다."
                                                    },
                                                    "member": {
                                                      "memberId": 2,
@@ -623,21 +630,16 @@ public interface DiscussionApiDocs {
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(
-                                    name = "JWT 오류",
-                                    value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
-                            )
-                    )),
-            @ApiResponse(
-                    responseCode = "401",
-                    description = "액세스 토큰 만료 오류",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(
-                                    name = "액세스 토큰 만료 오류",
-                                    value = "{\"code\":401, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
-                            )
+                            examples = {
+                                    @ExampleObject(
+                                            name = "JWT 오류",
+                                            value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
+                                    ),
+                                    @ExampleObject(
+                                            name = "액세스 토큰 만료 오류",
+                                            value = "{\"code\":401, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
+                                    )
+                            }
                     )),
             @ApiResponse(
                     responseCode = "404",
@@ -715,21 +717,16 @@ public interface DiscussionApiDocs {
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(
-                                    name = "JWT 오류",
-                                    value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
-                            )
-                    )),
-            @ApiResponse(
-                    responseCode = "401",
-                    description = "액세스 토큰 만료 오류",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(
-                                    name = "액세스 토큰 만료 오류",
-                                    value = "{\"code\":401, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
-                            )
+                            examples = {
+                                    @ExampleObject(
+                                            name = "JWT 오류",
+                                            value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
+                                    ),
+                                    @ExampleObject(
+                                            name = "액세스 토큰 만료 오류",
+                                            value = "{\"code\":401, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
+                                    )
+                            }
                     )),
             @ApiResponse(
                     responseCode = "404",
@@ -810,21 +807,16 @@ public interface DiscussionApiDocs {
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(
-                                    name = "JWT 오류",
-                                    value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
-                            )
-                    )),
-            @ApiResponse(
-                    responseCode = "401",
-                    description = "액세스 토큰 만료 오류",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(
-                                    name = "액세스 토큰 만료 오류",
-                                    value = "{\"code\":401, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
-                            )
+                            examples = {
+                                    @ExampleObject(
+                                            name = "JWT 오류",
+                                            value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
+                                    ),
+                                    @ExampleObject(
+                                            name = "액세스 토큰 만료 오류",
+                                            value = "{\"code\":401, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
+                                    )
+                            }
                     )),
             @ApiResponse(
                     responseCode = "404",
@@ -882,21 +874,16 @@ public interface DiscussionApiDocs {
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(
-                                    name = "JWT 오류",
-                                    value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
-                            )
-                    )),
-            @ApiResponse(
-                    responseCode = "401",
-                    description = "액세스 토큰 만료 오류",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(
-                                    name = "액세스 토큰 만료 오류",
-                                    value = "{\"code\":401, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
-                            )
+                            examples = {
+                                    @ExampleObject(
+                                            name = "JWT 오류",
+                                            value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
+                                    ),
+                                    @ExampleObject(
+                                            name = "액세스 토큰 만료 오류",
+                                            value = "{\"code\":401, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
+                                    )
+                            }
                     )),
             @ApiResponse(
                     responseCode = "404",
@@ -958,7 +945,9 @@ public interface DiscussionApiDocs {
                                                         "bookId": 1,
                                                         "bookTitle": "오브젝트",
                                                         "bookAuthor": "조영호",
-                                                        "bookImage": "https://image.png"
+                                                        "bookImage": "https://image.png",
+                                                        "bookPublisher": "위키북스",
+                                                        "bookSummary": "역할, 책임, 협력에 기반해 객체지향 프로그램을 설계하고 구현하는 방법, 응집도와 결합도를 이용해 설계를 트레이드오프하는 방법, 설계를 유연하게 만드는 다양한 의존성 관리 기법, 타입 계층을 위한 상속과 코드 재사용을 위한 합성의 개념, 다양한 설계 원칙과 디자인 패턴 등을 다룬다."
                                                       },
                                                       "member": {
                                                         "memberId": 1,
@@ -980,7 +969,9 @@ public interface DiscussionApiDocs {
                                                         "bookId": 1,
                                                         "bookTitle": "오브젝트",
                                                         "bookAuthor": "조영호",
-                                                        "bookImage": "https://image.png"
+                                                        "bookImage": "https://image.png",
+                                                        "bookPublisher": "위키북스",
+                                                        "bookSummary": "역할, 책임, 협력에 기반해 객체지향 프로그램을 설계하고 구현하는 방법, 응집도와 결합도를 이용해 설계를 트레이드오프하는 방법, 설계를 유연하게 만드는 다양한 의존성 관리 기법, 타입 계층을 위한 상속과 코드 재사용을 위한 합성의 개념, 다양한 설계 원칙과 디자인 패턴 등을 다룬다."
                                                       },
                                                       "member": {
                                                         "memberId": 2,
@@ -1015,7 +1006,9 @@ public interface DiscussionApiDocs {
                                                         "bookId": 1,
                                                         "bookTitle": "오브젝트",
                                                         "bookAuthor": "조영호",
-                                                        "bookImage": "https://image.png"
+                                                        "bookImage": "https://image.png",
+                                                        "bookPublisher": "위키북스",
+                                                        "bookSummary": "역할, 책임, 협력에 기반해 객체지향 프로그램을 설계하고 구현하는 방법, 응집도와 결합도를 이용해 설계를 트레이드오프하는 방법, 설계를 유연하게 만드는 다양한 의존성 관리 기법, 타입 계층을 위한 상속과 코드 재사용을 위한 합성의 개념, 다양한 설계 원칙과 디자인 패턴 등을 다룬다."
                                                       },
                                                       "member": {
                                                         "memberId": 1,
@@ -1044,41 +1037,39 @@ public interface DiscussionApiDocs {
             ),
             @ApiResponse(
                     responseCode = "400",
-                    description = "잘못된 요청",
+                    description = "페이지 사이즈 오류",
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class),
                             examples = {
                                     @ExampleObject(
-                                            name = "유효하지 않은 size",
-                                            value = "{\"code\":400, \"message\":\"[ERROR] size는 1 이상이어야 합니다\"}"
+                                            name = "유효하지 않은 페이지 사이즈",
+                                            value = "{\"code\":400, \"message\":\"[ERROR] 유효하지 않은 페이지 사이즈입니다. 1 이상 50 이하의 페이징을 시도해주세요\"}"
+                                    ),
+                                    @ExampleObject(
+                                            name = "디코드할 수 없는 cursor",
+                                            value = "{\"code\":400, \"message\":\"[ERROR] Base64로 디코드할 수 없는 cursor 값입니다\"}"
                                     )
                             }
-                    )
-            ),
+                    )),
             @ApiResponse(
                     responseCode = "401",
                     description = "토큰 인증 오류",
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(
-                                    name = "JWT 오류",
-                                    value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
-                            )
+                            examples = {
+                                    @ExampleObject(
+                                            name = "JWT 오류",
+                                            value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
+                                    ),
+                                    @ExampleObject(
+                                            name = "액세스 토큰 만료 오류",
+                                            value = "{\"code\":401, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
+                                    )
+                            }
                     )
             ),
-            @ApiResponse(
-                    responseCode = "401",
-                    description = "액세스 토큰 만료 오류",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(
-                                    name = "액세스 토큰 만료 오류",
-                                    value = "{\"code\":401, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
-                            )
-                    )),
             @ApiResponse(
                     responseCode = "500",
                     description = "서버 오류",
@@ -1105,6 +1096,176 @@ public interface DiscussionApiDocs {
             @Parameter(
                     description = "직전 응답의 nextCursor (첫 페이지면 null)",
                     schema = @Schema(implementation = String.class, example = "MjAyNS0wOC0yMFQxNDo1MDowMF8z")
+            ) final String cursor
+    );
+
+    @Operation(summary = "좋아요한 토론방 조회 API(커서 기반)")
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "좋아요한 토론방 목록 조회 성공",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = LikedDiscussionPageResponse.class),
+                            examples = {
+                                    @ExampleObject(
+                                            name = "첫 페이지 예시",
+                                            value = """
+                                            {
+                                              "items": [
+                                                {
+                                                  "discussionId": 5,
+                                                  "book": {
+                                                    "bookId": 2,
+                                                    "bookTitle": "클린 코드",
+                                                    "bookAuthor": "로버트 C. 마틴",
+                                                    "bookImage": "https://image-clean-code.png",
+                                                    "bookPublisher": "인사이트",
+                                                    "bookSummary": "클린 코드는 소프트웨어 개발에서 좋은 코드 작성 원칙과 실천 방법을 다루는 책이다."
+                                                  },
+                                                  "member": {
+                                                    "memberId": 3,
+                                                    "nickname": "마틴",
+                                                    "profileImage": "https://example.com/image3.png"
+                                                  },
+                                                  "createdAt": "2025-09-10T15:00:00",
+                                                  "discussionTitle": "토론방5",
+                                                  "discussionOpinion": "좋은 코드 작성 방법 토론",
+                                                  "viewCount": 10,
+                                                  "likeCount": 5,
+                                                  "commentCount": 2,
+                                                  "isLikedByMe": true,
+                                                  "lastCommentedAt": "2025-09-12T12:00:00"
+                                                },
+                                                {
+                                                  "discussionId": 6,
+                                                  "book": {
+                                                    "bookId": 3,
+                                                    "bookTitle": "도메인 주도 설계",
+                                                    "bookAuthor": "에릭 에반스",
+                                                    "bookImage": "https://image-ddd.png",
+                                                    "bookPublisher": "에이콘출판",
+                                                    "bookSummary": "도메인 주도 설계는 복잡한 소프트웨어 프로젝트를 효과적으로 관리하는 설계 전략을 설명한다."
+                                                  },
+                                                  "member": {
+                                                    "memberId": 4,
+                                                    "nickname": "에릭",
+                                                    "profileImage": "https://example.com/image4.png"
+                                                  },
+                                                  "createdAt": "2025-09-11T18:30:00",
+                                                  "discussionTitle": "토론방6",
+                                                  "discussionOpinion": "DDD 적용 사례 공유",
+                                                  "viewCount": 7,
+                                                  "likeCount": 3,
+                                                  "commentCount": 4,
+                                                  "isLikedByMe": true,
+                                                  "lastCommentedAt": "2025-09-12T13:00:00"
+                                                }
+                                              ],
+                                              "pageInfo": {
+                                                "hasNext": true,
+                                                "nextCursor": "MjAyNS0wOS0xMlQxMzowMDowMF82"
+                                              }
+                                            }
+                                            """
+                                    ),
+                                    @ExampleObject(
+                                            name = "마지막 페이지 예시",
+                                            value = """
+                                            {
+                                              "items": [
+                                                {
+                                                  "discussionId": 7,
+                                                  "book": {
+                                                    "bookId": 4,
+                                                    "bookTitle": "리팩토링",
+                                                    "bookAuthor": "마틴 파울러",
+                                                    "bookImage": "https://image-refactoring.png",
+                                                    "bookPublisher": "에이콘출판",
+                                                    "bookSummary": "리팩토링은 기존 코드의 구조를 개선하여 유지보수성을 높이는 방법을 소개한다."
+                                                  },
+                                                  "member": {
+                                                    "memberId": 5,
+                                                    "nickname": "파울러",
+                                                    "profileImage": "https://example.com/image5.png"
+                                                  },
+                                                  "createdAt": "2025-09-12T10:00:00",
+                                                  "discussionTitle": "토론방7",
+                                                  "discussionOpinion": "리팩토링 경험 공유",
+                                                  "viewCount": 5,
+                                                  "likeCount": 4,
+                                                  "commentCount": 1,
+                                                  "isLikedByMe": true,
+                                                  "lastCommentedAt": "2025-09-12T14:00:00"
+                                                }
+                                              ],
+                                              "pageInfo": {
+                                                "hasNext": false,
+                                                "nextCursor": null
+                                              }
+                                            }
+                                            """
+                                    )
+                            }
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "페이지 사이즈 오류",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = {
+                                    @ExampleObject(
+                                            name = "유효하지 않은 페이지 사이즈",
+                                            value = "{\"code\":400, \"message\":\"[ERROR] 유효하지 않은 페이지 사이즈입니다. 1 이상 50 이하의 페이징을 시도해주세요\"}"
+                                    ),
+                                    @ExampleObject(
+                                            name = "디코드할 수 없는 cursor",
+                                            value = "{\"code\":400, \"message\":\"[ERROR] Base64로 디코드할 수 없는 cursor 값입니다\"}"
+                                    )
+                            }
+                    )),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "토큰 인증 오류",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = {
+                                    @ExampleObject(
+                                            name = "JWT 오류",
+                                            value = "{\"code\":401, \"message\":\"[ERROR] 잘못된 로그인 시도입니다. 다시 시도해 주세요\"}"
+                                    ),
+                                    @ExampleObject(
+                                            name = "액세스 토큰 만료 오류",
+                                            value = "{\"code\":401, \"message\":\"[ERROR] 액세스 토큰이 만료되었습니다\"}"
+                                    )
+                            }
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "서버 오류",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "서버 오류",
+                                    value = "{\"code\":500, \"message\":\"[ERROR] 서버 내부 오류가 발생했습니다\"}"
+                            )
+                    )
+            )
+    })
+    ResponseEntity<LikedDiscussionPageResponse> getLikedDiscussions(
+            @Parameter(hidden = true) final Long memberId,
+            @Parameter(
+                    description = "페이지 크기(요청 개수)",
+                    schema = @Schema(implementation = Integer.class, example = "10")
+            ) final int size,
+            @Parameter(
+                    description = "직전 응답의 nextCursor (첫 페이지면 null)",
+                    schema = @Schema(implementation = String.class, example = "MjAyNS0wOS0xMlQxMzowMDowMF82")
             ) final String cursor
     );
 }

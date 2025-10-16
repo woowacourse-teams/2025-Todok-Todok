@@ -3,7 +3,7 @@ version: '3.8'
 services:
   prod:
     container_name: "prod_${ENV_ID}"
-    image: woowajeff/todoktodok:prod
+    image: ${BACKEND_APP_IMAGE_NAME}
     ports:
       - "80:8080"
     volumes:
