@@ -28,7 +28,7 @@ spring:
       - submodule/security/firebase.yml
 
 auth:
-  mode: bypass
+  mode: google
 
 firebase:
   enabled: false
