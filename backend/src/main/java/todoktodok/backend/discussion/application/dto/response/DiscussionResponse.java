@@ -59,7 +59,8 @@ public record DiscussionResponse(
                 viewCount,
                 likeCount,
                 commentCount,
-                isLikedByMe
+                isLikedByMe,
+                fakeLastCommentedAt
         );
     }
 }
