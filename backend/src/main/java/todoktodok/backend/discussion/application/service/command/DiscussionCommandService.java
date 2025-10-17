@@ -118,6 +118,7 @@ public class DiscussionCommandService {
         }
 
         if (discussionMemberView.get().isModifiedDatePassedFrom(VIEW_THRESHOLD)) {
+            discussionMemberViewRepository.updateModifiedAtById(discussionMemberView.get().getId());
             discussionRepository.increaseViewCount(discussionId);
         }
     }
