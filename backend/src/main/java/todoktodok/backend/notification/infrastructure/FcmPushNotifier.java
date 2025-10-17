@@ -67,7 +67,7 @@ public class FcmPushNotifier {
             log.error("FCM fails sending message : code = {}, message = {}", e.getMessagingErrorCode(), e.getMessage());
         } catch (final RuntimeException e) {
             final String cause = FcmMulticastMessageBuildExceptionType.toMessage(e);
-            log.warn("Fail sending message to FCM : cause = {}, recipientId = {}", cause, recipientId);
+            log.error("Fail sending message to FCM : cause = {}, recipientId = {}", cause, recipientId);
         }
     }
 

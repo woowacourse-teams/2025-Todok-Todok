@@ -1,6 +1,7 @@
 package todoktodok.backend.notification.infrastructure;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 public enum FcmMulticastMessageBuildExceptionType {
     NO_TOKEN("at least one token must be specified", "해당 회원에게 전송할 fcmToken이 없습니다"),
@@ -18,10 +19,12 @@ public enum FcmMulticastMessageBuildExceptionType {
 
     public static String toMessage(final RuntimeException exception) {
         if (exception == null) {
-            return "FcmMultiMessage 빌드 중 오류가 발생했습니다";
+            return "FcmMultiMessage 빌드 중 오류가 발생했습니다 (예외타입 없음)";
         }
 
-        final String exceptionMessage = exception.getMessage();
+        final String exceptionMessage = Optional.ofNullable(exception.getMessage())
+                .orElse("FcmMultiMessage 빌드 중 오류가 발생했습니다 (예외메세지 없음)");
+
         return Arrays.stream(values())
                 .filter(ex -> ex.exception.equals(exceptionMessage))
                 .findFirst()
