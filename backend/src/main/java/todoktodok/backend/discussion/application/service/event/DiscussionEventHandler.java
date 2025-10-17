@@ -1,9 +1,13 @@
 package todoktodok.backend.discussion.application.service.event;
 
+import java.util.NoSuchElementException;
 import lombok.AllArgsConstructor;
+import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
+import todoktodok.backend.discussion.application.service.command.DiscussionCommandService;
 import todoktodok.backend.discussion.application.service.command.DiscussionLikeCreated;
 import todoktodok.backend.notification.application.service.command.CreateNotificationRequest;
 import todoktodok.backend.notification.application.service.command.NotificationCommandService;
@@ -21,6 +25,7 @@ public class DiscussionEventHandler {
 
     private final FcmPushNotifier fcmPushNotifier;
     private final NotificationCommandService notificationCommandService;
+    private final DiscussionCommandService discussionCommandService;
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void sendPushOn(final DiscussionLikeCreated discussionLikeCreated) {
@@ -71,5 +76,10 @@ public class DiscussionEventHandler {
         );
 
         fcmPushNotifier.sendPush(recipientId, fcmMessagePayload);
+    }
+
+    @EventListener
+    public void handleDiscussionView(final DiscussionViewEvent discussionViewEvent) {
+        discussionCommandService.updateDiscussionMemberView(discussionViewEvent.memberId(), discussionViewEvent.discussionId());
     }
 }
