@@ -12,6 +12,7 @@ import java.util.Optional;
 import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -26,10 +27,9 @@ import todoktodok.backend.discussion.application.dto.response.DiscussionResponse
 import todoktodok.backend.discussion.application.dto.response.LatestDiscussionPageResponse;
 import todoktodok.backend.discussion.application.dto.response.LikedDiscussionPageResponse;
 import todoktodok.backend.discussion.application.dto.response.PageInfo;
+import todoktodok.backend.discussion.application.service.event.DiscussionViewEvent;
 import todoktodok.backend.discussion.domain.Discussion;
-import todoktodok.backend.discussion.domain.DiscussionMemberView;
 import todoktodok.backend.discussion.domain.repository.DiscussionLikeRepository;
-import todoktodok.backend.discussion.domain.repository.DiscussionMemberViewRepository;
 import todoktodok.backend.discussion.domain.repository.DiscussionRepository;
 import todoktodok.backend.member.domain.Member;
 import todoktodok.backend.member.domain.repository.MemberRepository;
@@ -44,46 +44,31 @@ public class DiscussionQueryService {
     private static final int MAX_DISCUSSION_PERIOD = 7;
     private static final int MAX_PAGE_SIZE = 50;
     private static final int MIN_PAGE_SIZE = 1;
-    private static final int VIEW_THRESHOLD = 10;
 
     private final DiscussionRepository discussionRepository;
     private final DiscussionLikeRepository discussionLikeRepository;
     private final MemberRepository memberRepository;
     private final CommentRepository commentRepository;
-    private final DiscussionMemberViewRepository discussionMemberViewRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
-    @Transactional
     public DiscussionResponse getDiscussion(
             final Long memberId,
             final Long discussionId
     ) {
         final Member member = findMember(memberId);
         final Discussion discussion = findDiscussion(discussionId);
+        final DiscussionViewEvent discussionViewEvent = new DiscussionViewEvent(member.getId(), discussion.getId());
 
         final DiscussionLikeSummaryDto likeSummary = discussionLikeRepository.findLikeSummaryByDiscussionId(member,
                 discussionId);
         final DiscussionCommentCountDto commentSummary = commentRepository.findCommentCountByDiscussionId(discussionId);
         final int commentCount = commentSummary.commentCount() + commentSummary.replyCount();
 
-        Optional<DiscussionMemberView> discussionMemberView = discussionMemberViewRepository.findByMemberAndDiscussion(
-                member, discussion);
+        eventPublisher.publishEvent(discussionViewEvent);
+        final Long viewCount = discussionRepository.findViewCountByDiscussionId(discussionId);
+        final int viewCountInt = Math.toIntExact(viewCount);
 
-        if (discussionMemberView.isEmpty()) {
-            discussionMemberView = Optional.ofNullable(DiscussionMemberView.builder()
-                    .discussion(discussion)
-                    .member(member)
-                    .build());
-            discussionMemberViewRepository.save(discussionMemberView.get());
-            discussion.updateViewCount();
-
-            return new DiscussionResponse(discussion, likeSummary.likeCount(), commentCount, likeSummary.isLikedByMe());
-        }
-
-        if (discussionMemberView.get().isModifiedDatePassedFrom(VIEW_THRESHOLD)) {
-            discussion.updateViewCount();
-        }
-
-        return new DiscussionResponse(discussion, likeSummary.likeCount(), commentCount, likeSummary.isLikedByMe());
+        return new DiscussionResponse(discussion, viewCountInt, likeSummary.likeCount(), commentCount, likeSummary.isLikedByMe());
     }
 
     public LatestDiscussionPageResponse getDiscussions(

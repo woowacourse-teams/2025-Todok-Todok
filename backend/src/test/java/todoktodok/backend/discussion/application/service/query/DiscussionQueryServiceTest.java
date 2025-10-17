@@ -23,7 +23,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.DatabaseInitializer;
 import todoktodok.backend.InitializerTimer;
 import todoktodok.backend.discussion.application.dto.response.ActiveDiscussionPageResponse;
@@ -33,7 +32,6 @@ import todoktodok.backend.discussion.application.dto.response.LikedDiscussionPag
 import todoktodok.backend.discussion.application.dto.response.PageInfo;
 
 @ActiveProfiles("test")
-@Transactional
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
 @ContextConfiguration(initializers = InitializerTimer.class)
 class DiscussionQueryServiceTest {
@@ -132,6 +130,28 @@ class DiscussionQueryServiceTest {
 
         // then
         assertThat(discussionResponse.viewCount()).isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("토론방 조회 시 예외가 발생하면 조회수가 증가하지 않고 예외를 반환한다")
+    void getDiscussion_ifThrowException_notIncrementViewCount() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+
+        final Long memberId = 1L;
+        final Long existsDiscussionId = 1L;
+        final Long notExistsDiscussionId = 999L;
+
+        // when
+        assertThatThrownBy(() -> discussionQueryService.getDiscussion(memberId, notExistsDiscussionId))
+                .isInstanceOf(NoSuchElementException.class)
+                .hasMessageContaining("해당 토론방을 찾을 수 없습니다");
+
+        // then
+        final DiscussionResponse discussionResponse = discussionQueryService.getDiscussion(memberId, existsDiscussionId);
+        assertThat(discussionResponse.viewCount()).isEqualTo(1);
     }
 
     @Test
