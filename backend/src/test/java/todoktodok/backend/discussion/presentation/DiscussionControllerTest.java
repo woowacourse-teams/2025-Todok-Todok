@@ -401,8 +401,6 @@ class DiscussionControllerTest {
     @DisplayName("좋아요한 토론방을 첫 페이지로 조회한다")
     void getLikedDiscussions_firstPage() {
         // given
-        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
-
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
 
@@ -416,7 +414,7 @@ class DiscussionControllerTest {
         databaseInitializer.setDiscussionInfo("좋아요 토론3", "내용3", 1L, 1L);
         databaseInitializer.setDiscussionLikeInfo(1L, 3L);
 
-        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
+        final String token = MemberFixture.getTestAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -434,8 +432,6 @@ class DiscussionControllerTest {
     @DisplayName("좋아요한 토론방을 커서로 다음 페이지를 조회한다")
     void getLikedDiscussions_nextPage() {
         // given
-        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
-
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
 
@@ -448,7 +444,7 @@ class DiscussionControllerTest {
         databaseInitializer.setDiscussionInfo("좋아요 토론3", "내용3", 1L, 1L);
         databaseInitializer.setDiscussionLikeInfo(1L, 3L);
 
-        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
+        final String token = MemberFixture.getTestAccessToken("user@gmail.com");
 
         final String nextCursor = RestAssured.given().log().all()
                 .header("Authorization", token)

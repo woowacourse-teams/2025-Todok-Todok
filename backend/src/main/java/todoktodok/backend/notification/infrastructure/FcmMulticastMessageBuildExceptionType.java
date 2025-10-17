@@ -19,7 +19,7 @@ public enum FcmMulticastMessageBuildExceptionType {
 
     public static String toMessage(final RuntimeException exception) {
         if (exception == null) {
-            return "FcmMultiMessage 빌드 중 오류가 발생했습니다 (예외타입 없음)";
+            return "FcmMultiMessage 빌 중 오류가 발생했습니다 (예외타입 없음)";
         }
 
         final String exceptionMessage = Optional.ofNullable(exception.getMessage())
