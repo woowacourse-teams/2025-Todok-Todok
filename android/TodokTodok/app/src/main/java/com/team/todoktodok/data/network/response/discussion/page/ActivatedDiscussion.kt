@@ -8,7 +8,7 @@ import com.team.todoktodok.data.network.response.discussion.toDomain
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ActiveDiscussion(
+data class ActivatedDiscussion(
     val discussionId: Long,
     val book: BookResponse,
     val member: MemberResponse,

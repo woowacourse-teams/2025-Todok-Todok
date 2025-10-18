@@ -146,4 +146,109 @@ class DefaultDiscussionRepositoryTest {
             assertThat(ok).isInstanceOf(NetworkResult.Success::class.java)
             assertThat(bad).isInstanceOf(NetworkResult.Failure::class.java)
         }
+
+    @Test
+    fun `활성 토론을 페이지 단위로 가져온다`() =
+        runTest {
+            // given
+            val pageSize = 2
+            val period = 7
+            val firstCursor: String? = null
+
+            // when
+            val firstPageResult = defaultDiscussionRepository.getActivatedDiscussion(period, pageSize, firstCursor)
+
+            // then
+            firstPageResult.onSuccess { page ->
+                assertThat(page.discussions.size).isEqualTo(pageSize)
+                assertThat(page.pageInfo.hasNext).isTrue()
+            }
+
+            // given
+            val nextCursor = (firstPageResult as NetworkResult.Success).data.pageInfo.nextCursor
+            // when
+            val secondPageResult = defaultDiscussionRepository.getActivatedDiscussion(period, pageSize, nextCursor)
+            // then
+            secondPageResult.onSuccess { page ->
+                assertThat(page.discussions.size).isEqualTo(2)
+            }
+
+            // given
+            val lastCursor = (secondPageResult as NetworkResult.Success).data.pageInfo.nextCursor
+            // when
+            val lastPageResult = defaultDiscussionRepository.getActivatedDiscussion(period, pageSize, lastCursor)
+            // then
+            lastPageResult.onSuccess { page ->
+                assertThat(page.pageInfo.hasNext).isFalse()
+            }
+        }
+
+    @Test
+    fun `좋아요 누른 토론만 페이지 단위로 가져온다`() =
+        runTest {
+            // given
+            val targetIds = listOf(1L, 3L, 5L)
+            targetIds.forEach { defaultDiscussionRepository.toggleLike(it) }
+
+            val pageSize = 2
+            val firstCursor: String? = null
+
+            // when
+            val firstPageResult = defaultDiscussionRepository.getLikedDiscussion(pageSize, firstCursor)
+
+            // then
+            firstPageResult.onSuccess { page ->
+                assertThat(page.discussions.size).isEqualTo(pageSize)
+                assertThat(page.discussions.all { it.isLikedByMe }).isTrue()
+                assertThat(page.pageInfo.hasNext).isTrue()
+            }
+
+            // given
+            val nextCursor = (firstPageResult as NetworkResult.Success).data.pageInfo.nextCursor
+
+            // when
+            val secondPageResult = defaultDiscussionRepository.getLikedDiscussion(pageSize, nextCursor)
+
+            // then
+            secondPageResult.onSuccess { page ->
+                assertThat(page.discussions.size).isEqualTo(1)
+                assertThat(page.discussions.all { it.isLikedByMe }).isTrue()
+                assertThat(page.pageInfo.hasNext).isFalse()
+            }
+        }
+
+    @Test
+    fun `키워드로 토론방을 검색하면 해당 키워드 포함 토론만 반환한다`() =
+        runTest {
+            // given
+            val keyword = "코루틴"
+
+            // when
+            val result = defaultDiscussionRepository.getSearchDiscussion(keyword)
+
+            // then
+            result.onSuccess { discussions ->
+                assertThat(discussions).isNotEmpty
+                assertThat(
+                    discussions.all {
+                        it.discussionTitle.contains(keyword) || it.discussionOpinion.contains(keyword)
+                    },
+                ).isTrue()
+            }
+        }
+
+    @Test
+    fun `키워드가 없으면 빈 리스트를 반환한다`() =
+        runTest {
+            // given
+            val keyword = "에베베베"
+
+            // when
+            val result = defaultDiscussionRepository.getSearchDiscussion(keyword)
+
+            // then
+            result.onSuccess { discussions ->
+                assertThat(discussions).isEmpty()
+            }
+        }
 }

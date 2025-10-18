@@ -7,14 +7,16 @@ import com.team.todoktodok.data.network.model.LikeAction
 import com.team.todoktodok.data.network.response.discussion.BookResponse
 import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
 import com.team.todoktodok.data.network.response.discussion.MemberResponse
-import com.team.todoktodok.data.network.response.discussion.page.ActiveDiscussionPageResponse
+import com.team.todoktodok.data.network.response.discussion.liked.LikedDiscussionPageResponse
+import com.team.todoktodok.data.network.response.discussion.page.ActivatedDiscussion
+import com.team.todoktodok.data.network.response.discussion.page.ActivatedDiscussionPageResponse
 import com.team.todoktodok.data.network.response.latest.LatestDiscussionsResponse
 import com.team.todoktodok.data.network.response.latest.PageInfoResponse
 import com.team.todoktodok.fixture.LATEST_DISCUSSIONS_RESPONSE
 import retrofit2.Response
 
 class FakeDiscussionRemoteDataSource : DiscussionRemoteDataSource {
-    private val _discussionResponses: MutableList<DiscussionResponse> =
+    private val discussionResponses: MutableList<DiscussionResponse> =
         mutableListOf(
             DiscussionResponse(
                 discussionId = 1,
@@ -77,26 +79,78 @@ class FakeDiscussionRemoteDataSource : DiscussionRemoteDataSource {
                 isLikedByMe = false,
             ),
         )
-    val discussionResponses = _discussionResponses.map { it.copy() }
 
     override suspend fun getSearchDiscussion(keyword: String): NetworkResult<List<DiscussionResponse>> {
-        TODO("Not yet implemented")
+        val filtered =
+            discussionResponses.filter {
+                it.discussionTitle.contains(keyword, ignoreCase = true) ||
+                    it.discussionOpinion.contains(keyword, ignoreCase = true)
+            }
+        return NetworkResult.Success(filtered)
     }
 
     override suspend fun getActivatedDiscussion(
         period: Int,
         size: Int,
         cursor: String?,
-    ): NetworkResult<ActiveDiscussionPageResponse> {
-        TODO("Not yet implemented")
+    ): NetworkResult<ActivatedDiscussionPageResponse> {
+        val startIndex = cursor?.toIntOrNull() ?: 0
+        val endIndex = (startIndex + size).coerceAtMost(discussionResponses.size)
+        val pageDiscussions =
+            discussionResponses.subList(startIndex, endIndex).map {
+                ActivatedDiscussion(
+                    discussionId = it.discussionId,
+                    book = it.book,
+                    member = it.member,
+                    createdAt = it.createdAt,
+                    discussionTitle = it.discussionTitle,
+                    discussionOpinion = it.discussionOpinion,
+                    viewCount = it.viewCount,
+                    likeCount = it.likeCount,
+                    commentCount = it.commentCount,
+                    isLikedByMe = it.isLikedByMe,
+                )
+            }
+
+        val hasNext = endIndex < discussionResponses.size
+        val nextCursor = if (hasNext) endIndex.toString() else ""
+
+        val pageInfo = PageInfoResponse(hasNext, nextCursor)
+        val page =
+            ActivatedDiscussionPageResponse(
+                items = pageDiscussions,
+                pageInfo = pageInfo,
+            )
+
+        return NetworkResult.Success(page)
+    }
+
+    override suspend fun getLikedDiscussion(
+        size: Int,
+        cursor: String?,
+    ): NetworkResult<LikedDiscussionPageResponse> {
+        val likedDiscussions = discussionResponses.filter { it.isLikedByMe }
+
+        val startIndex = cursor?.toIntOrNull() ?: 0
+
+        val endIndex = (startIndex + size).coerceAtMost(likedDiscussions.size)
+        val pageDiscussions = likedDiscussions.subList(startIndex, endIndex)
+
+        val hasNext = endIndex < likedDiscussions.size
+        val nextCursor = if (hasNext) endIndex.toString() else ""
+        val pageResponse =
+            LikedDiscussionPageResponse(
+                items = pageDiscussions,
+                pageInfo = PageInfoResponse(hasNext, nextCursor),
+            )
+
+        return NetworkResult.Success(pageResponse)
     }
 
     override suspend fun getHotDiscussion(
         period: Int,
         count: Int,
-    ): NetworkResult<List<DiscussionResponse>> {
-        TODO("Not yet implemented")
-    }
+    ): NetworkResult<List<DiscussionResponse>> = NetworkResult.Success(discussionResponses)
 
     override suspend fun getLatestDiscussions(
         size: Int,
@@ -117,7 +171,7 @@ class FakeDiscussionRemoteDataSource : DiscussionRemoteDataSource {
 
     override suspend fun fetchDiscussion(id: Long): NetworkResult<DiscussionResponse> =
         NetworkResult.Success(
-            _discussionResponses.find { id == it.discussionId }
+            discussionResponses.find { id == it.discussionId }
                 ?: throw IllegalArgumentException(),
         )
 
@@ -125,33 +179,27 @@ class FakeDiscussionRemoteDataSource : DiscussionRemoteDataSource {
         bookId: Long,
         discussionTitle: String,
         discussionOpinion: String,
-    ): Response<Unit> {
-        TODO("Not yet implemented")
-    }
+    ): Response<Unit> = Response.success(Unit)
 
     override suspend fun editDiscussionRoom(
         discussionId: Long,
         discussionTitle: String,
         discussionOpinion: String,
-    ): NetworkResult<Unit> {
-        TODO("Not yet implemented")
-    }
+    ): NetworkResult<Unit> = NetworkResult.Success(Unit)
 
-    override suspend fun deleteDiscussion(discussionId: Long): NetworkResult<Unit> {
-        TODO("Not yet implemented")
-    }
+    override suspend fun deleteDiscussion(discussionId: Long): NetworkResult<Unit> = NetworkResult.Success(Unit)
 
     override suspend fun toggleLike(discussionId: Long): NetworkResult<LikeAction> {
-        val idx = _discussionResponses.indexOfFirst { it.discussionId == discussionId }
+        val idx = discussionResponses.indexOfFirst { it.discussionId == discussionId }
         if (idx < 0) {
             return NetworkResult.Failure(TodokTodokExceptions.EmptyBodyException)
         }
-        val cur = _discussionResponses[idx]
+        val cur = discussionResponses[idx]
         val likeAction = if (!cur.isLikedByMe) LikeAction.LIKE else LikeAction.UNLIKE
         val nowLiked = !cur.isLikedByMe
         val newCount = (cur.likeCount + if (nowLiked) 1 else -1).coerceAtLeast(0)
 
-        _discussionResponses[idx] =
+        discussionResponses[idx] =
             cur.copy(
                 isLikedByMe = nowLiked,
                 likeCount = newCount,
@@ -163,7 +211,7 @@ class FakeDiscussionRemoteDataSource : DiscussionRemoteDataSource {
         discussionId: Long,
         reason: String,
     ): NetworkResult<Unit> {
-        val discussionResponse = _discussionResponses.find { it.discussionId == discussionId }
+        val discussionResponse = discussionResponses.find { it.discussionId == discussionId }
         return if (discussionResponse != null) {
             NetworkResult.Success(Unit)
         } else {
