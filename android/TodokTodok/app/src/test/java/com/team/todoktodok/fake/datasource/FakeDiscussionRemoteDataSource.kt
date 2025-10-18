@@ -81,7 +81,11 @@ class FakeDiscussionRemoteDataSource : DiscussionRemoteDataSource {
         )
 
     override suspend fun getSearchDiscussion(keyword: String): NetworkResult<List<DiscussionResponse>> {
-        TODO("Not yet implemented")
+        val filtered = discussionResponses.filter {
+            it.discussionTitle.contains(keyword, ignoreCase = true) ||
+                    it.discussionOpinion.contains(keyword, ignoreCase = true)
+        }
+        return NetworkResult.Success(filtered)
     }
 
     override suspend fun getActivatedDiscussion(
