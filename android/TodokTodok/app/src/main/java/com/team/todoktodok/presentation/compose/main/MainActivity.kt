@@ -71,6 +71,7 @@ class MainActivity : ComponentActivity() {
     }
 
     companion object {
+        const val KEY_REFRESH_NOTIFICATION = "refresh_notification"
         private const val KEY_NOTIFICATION = "notification"
 
         fun Intent(context: Context) = Intent(context, MainActivity::class.java)

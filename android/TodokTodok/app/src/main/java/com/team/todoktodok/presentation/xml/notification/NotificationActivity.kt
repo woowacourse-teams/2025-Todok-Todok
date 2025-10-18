@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.team.todoktodok.App
 import com.team.todoktodok.databinding.ActivityNotificationBinding
+import com.team.todoktodok.presentation.compose.main.MainActivity.Companion.KEY_REFRESH_NOTIFICATION
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
 import com.team.todoktodok.presentation.xml.discussiondetail.DiscussionDetailActivity
@@ -96,7 +98,15 @@ class NotificationActivity : AppCompatActivity() {
         adapter: NotificationAdapter,
     ) {
         binding.apply {
-            btnBack.setOnClickListener { finish() }
+            btnBack.setOnClickListener { navigationToMain() }
+            onBackPressedDispatcher.addCallback(
+                this@NotificationActivity,
+                object : OnBackPressedCallback(true) {
+                    override fun handleOnBackPressed() {
+                        navigationToMain()
+                    }
+                })
+
             rvNotifications.adapter = adapter
             val touchHelper =
                 ItemTouchHelper(
@@ -151,6 +161,14 @@ class NotificationActivity : AppCompatActivity() {
                 )
             touchHelper.attachToRecyclerView(rvNotifications)
         }
+    }
+
+    private fun navigationToMain() {
+        val intent = Intent().apply {
+            putExtra(KEY_REFRESH_NOTIFICATION, true)
+        }
+        setResult(RESULT_OK, intent)
+        finish()
     }
 
     private fun initSystemBar(binding: ActivityNotificationBinding) {

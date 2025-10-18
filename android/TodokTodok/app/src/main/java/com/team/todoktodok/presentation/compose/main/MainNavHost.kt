@@ -21,6 +21,7 @@ fun MainNavHost(
     onChangeBottomNavigationTab: (MainDestination) -> Unit,
     onSearch: () -> Unit,
     onChangeSearchBarVisibility: () -> Unit,
+    onChangeIsExistNotification: () -> Unit,
     onChangeKeyword: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -40,6 +41,7 @@ fun MainNavHost(
                             onCompleteModifyDiscussion = onCompleteModifyDiscussion,
                             onSearch = onSearch,
                             onChangeSearchBarVisibility = onChangeSearchBarVisibility,
+                            onChangeIsExistNotification = onChangeIsExistNotification,
                             onChangeKeyword = onChangeKeyword,
                         )
 

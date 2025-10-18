@@ -30,6 +30,14 @@ class MainViewModel(
     private val _uiEvent = Channel<MainUiEvent>(Channel.BUFFERED)
     val uiEvent get() = _uiEvent.receiveAsFlow()
 
+    fun sendPushNotificationToken() {
+        viewModelScope.launch {
+            notificationRepository.registerPushNotification().onFailure { exceptions ->
+                onUiEvent(MainUiEvent.ShowErrorMessage(exceptions))
+            }
+        }
+    }
+
     fun loadIsUnreadNotification() {
         viewModelScope.launch {
             notificationRepository

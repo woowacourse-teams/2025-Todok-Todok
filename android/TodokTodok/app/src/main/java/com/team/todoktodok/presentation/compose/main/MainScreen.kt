@@ -77,10 +77,10 @@ fun MainScreen(
 
     CompositionLocalProvider(
         LocalUiExceptionHandler provides
-            UiExceptionHandler(
-                snackbarHostState = snackbarHostState,
-                messageConverter = messageConverter,
-            ),
+                UiExceptionHandler(
+                    snackbarHostState = snackbarHostState,
+                    messageConverter = messageConverter,
+                ),
     ) {
         BackPressToExit()
         MainScreenContent(
@@ -91,6 +91,7 @@ fun MainScreen(
             onChangeSearchBarVisibility = viewModel::changeSearchBarVisibility,
             onChangeBottomNavigationTab = viewModel::changeBottomNavigationTab,
             onChangeKeyword = viewModel::modifySearchKeyword,
+            onChangeIsExistNotification = viewModel::loadIsUnreadNotification,
             onCompleteRemoveDiscussion = viewModel::removeDiscussion,
             onCompleteModifyDiscussion = viewModel::modifyDiscussion,
             modifier = modifier,
@@ -107,6 +108,7 @@ fun MainScreenContent(
     onChangeSearchBarVisibility: () -> Unit,
     onChangeBottomNavigationTab: (MainDestination) -> Unit,
     onChangeKeyword: (String) -> Unit,
+    onChangeIsExistNotification: () -> Unit,
     onCompleteRemoveDiscussion: (Long) -> Unit,
     onCompleteModifyDiscussion: (SerializationDiscussion) -> Unit,
     modifier: Modifier = Modifier,
@@ -140,6 +142,7 @@ fun MainScreenContent(
             onCompleteModifyDiscussion = onCompleteModifyDiscussion,
             onChangeSearchBarVisibility = onChangeSearchBarVisibility,
             onChangeBottomNavigationTab = onChangeBottomNavigationTab,
+            onChangeIsExistNotification = onChangeIsExistNotification,
             modifier = Modifier.padding(innerPadding),
         )
     }
