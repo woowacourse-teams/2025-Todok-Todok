@@ -155,11 +155,6 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
 
     private fun initView(binding: ActivityCreateDiscussionRoomBinding) {
         binding.apply {
-            when (mode) {
-                is SerializationCreateDiscussionRoomMode.Create -> settingCreateMode(binding)
-                is SerializationCreateDiscussionRoomMode.Edit -> settingEditMode(binding)
-                is SerializationCreateDiscussionRoomMode.Draft -> settingCreateMode(binding)
-            }
             btnSave.setOnClickListener { showDraftsListDialog() }
             onBackPressedDispatcher.addCallback { navigateToSelectBook() }
             btnBack.setOnClickListener { navigateToSelectBook() }
@@ -169,11 +164,15 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
                     viewModel.updateTitle(text.toString())
                 }
             }
-
             etDiscussionRoomOpinion.doAfterTextChanged { text: Editable? ->
                 viewModel.updateOpinion(text.toString())
             }
             etDiscussionRoomTitle.requestFocus()
+            when (mode) {
+                is SerializationCreateDiscussionRoomMode.Create -> settingCreateMode(binding)
+                is SerializationCreateDiscussionRoomMode.Edit -> settingEditMode(binding)
+                is SerializationCreateDiscussionRoomMode.Draft -> settingCreateMode(binding)
+            }
         }
     }
 
@@ -189,6 +188,9 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
             etDiscussionRoomTitle.setText(viewModel.uiState.value?.title)
             etDiscussionRoomOpinion.setText(viewModel.uiState.value?.opinion)
             btnCreate.text = getString(R.string.edit)
+            btnBack.setOnClickListener {
+                finish()
+            }
         }
     }
 
@@ -225,6 +227,8 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
         isDraft: Boolean,
         binding: ActivityCreateDiscussionRoomBinding,
     ) {
+        if (mode !is SerializationCreateDiscussionRoomMode.Create) return
+
         if (isDraft) {
             binding.btnBack.setOnClickListener { showDraftDialog() }
             onBackPressedDispatcher.addCallback { showDraftDialog() }
