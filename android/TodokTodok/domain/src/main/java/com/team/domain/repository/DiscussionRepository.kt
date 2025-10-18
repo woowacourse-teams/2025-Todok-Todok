@@ -2,6 +2,7 @@ package com.team.domain.repository
 
 import com.team.domain.model.Book
 import com.team.domain.model.Discussion
+import com.team.domain.model.DiscussionPage
 import com.team.domain.model.LikeStatus
 import com.team.domain.model.active.ActivatedDiscussionPage
 import com.team.domain.model.discussionroom.DiscussionRoom
@@ -16,6 +17,11 @@ interface DiscussionRepository {
         size: Int = PAGING_SIZE,
         cursor: String? = null,
     ): NetworkResult<ActivatedDiscussionPage>
+
+    suspend fun getLikedDiscussion(
+        size: Int = PAGING_SIZE,
+        cursor: String? = null,
+    ): NetworkResult<DiscussionPage>
 
     suspend fun getHotDiscussion(
         period: Int = DEFAULT_HOT_DISCUSSION_PERIOD,

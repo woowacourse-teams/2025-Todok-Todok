@@ -2,6 +2,7 @@ package com.team.todoktodok.data.repository
 
 import com.team.domain.model.Book
 import com.team.domain.model.Discussion
+import com.team.domain.model.DiscussionPage
 import com.team.domain.model.LikeStatus
 import com.team.domain.model.active.ActivatedDiscussionPage
 import com.team.domain.model.discussionroom.DiscussionRoom
@@ -33,6 +34,14 @@ class DefaultDiscussionRepository(
     ): NetworkResult<ActivatedDiscussionPage> =
         discussionRemoteDataSource
             .getActivatedDiscussion(period, size, cursor)
+            .map { it.toDomain() }
+
+    override suspend fun getLikedDiscussion(
+        size: Int,
+        cursor: String?,
+    ): NetworkResult<DiscussionPage> =
+        discussionRemoteDataSource
+            .getLikedDiscussion(size, cursor)
             .map { it.toDomain() }
 
     override suspend fun getHotDiscussion(

@@ -7,6 +7,7 @@ import com.team.todoktodok.data.network.model.LikeAction
 import com.team.todoktodok.data.network.response.discussion.BookResponse
 import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
 import com.team.todoktodok.data.network.response.discussion.MemberResponse
+import com.team.todoktodok.data.network.response.discussion.liked.LikedDiscussionPageResponse
 import com.team.todoktodok.data.network.response.discussion.page.ActiveDiscussionPageResponse
 import com.team.todoktodok.data.network.response.latest.LatestDiscussionsResponse
 import com.team.todoktodok.data.network.response.latest.PageInfoResponse
@@ -89,6 +90,28 @@ class FakeDiscussionRemoteDataSource : DiscussionRemoteDataSource {
         cursor: String?,
     ): NetworkResult<ActiveDiscussionPageResponse> {
         TODO("Not yet implemented")
+    }
+
+    override suspend fun getLikedDiscussion(
+        size: Int,
+        cursor: String?,
+    ): NetworkResult<LikedDiscussionPageResponse> {
+        val likedDiscussions = _discussionResponses.filter { it.isLikedByMe }
+
+        val startIndex = cursor?.toIntOrNull() ?: 0
+
+        val endIndex = (startIndex + size).coerceAtMost(likedDiscussions.size)
+        val pageDiscussions = likedDiscussions.subList(startIndex, endIndex)
+
+        val hasNext = endIndex < likedDiscussions.size
+        val nextCursor = if (hasNext) endIndex.toString() else ""
+        val pageResponse =
+            LikedDiscussionPageResponse(
+                items = pageDiscussions,
+                pageInfo = PageInfoResponse(hasNext, nextCursor),
+            )
+
+        return NetworkResult.Success(pageResponse)
     }
 
     override suspend fun getHotDiscussion(

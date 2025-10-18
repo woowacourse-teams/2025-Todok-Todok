@@ -146,4 +146,38 @@ class DefaultDiscussionRepositoryTest {
             assertThat(ok).isInstanceOf(NetworkResult.Success::class.java)
             assertThat(bad).isInstanceOf(NetworkResult.Failure::class.java)
         }
+
+    @Test
+    fun `좋아요 누른 토론만 페이지 단위로 가져온다`() =
+        runTest {
+            // given
+            val targetIds = listOf(1L, 3L, 5L)
+            targetIds.forEach { defaultDiscussionRepository.toggleLike(it) }
+
+            val pageSize = 2
+            val firstCursor: String? = null
+
+            // when
+            val firstPageResult = defaultDiscussionRepository.getLikedDiscussion(pageSize, firstCursor)
+
+            // then
+            firstPageResult.onSuccess { page ->
+                assertThat(page.discussions.size).isEqualTo(pageSize)
+                assertThat(page.discussions.all { it.isLikedByMe }).isTrue()
+                assertThat(page.pageInfo.hasNext).isTrue()
+            }
+
+            // given
+            val nextCursor = (firstPageResult as NetworkResult.Success).data.pageInfo.nextCursor
+
+            // when
+            val secondPageResult = defaultDiscussionRepository.getLikedDiscussion(pageSize, nextCursor)
+
+            // then
+            secondPageResult.onSuccess { page ->
+                assertThat(page.discussions.size).isEqualTo(1)
+                assertThat(page.discussions.all { it.isLikedByMe }).isTrue()
+                assertThat(page.pageInfo.hasNext).isFalse()
+            }
+        }
 }
