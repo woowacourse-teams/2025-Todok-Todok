@@ -1,9 +1,9 @@
 package com.team.domain.repository
 
-import com.team.domain.model.Book
 import com.team.domain.model.Discussion
 import com.team.domain.model.LikeStatus
 import com.team.domain.model.active.ActivatedDiscussionPage
+import com.team.domain.model.book.SearchedBook
 import com.team.domain.model.discussionroom.DiscussionRoom
 import com.team.domain.model.exception.NetworkResult
 import com.team.domain.model.latest.LatestDiscussionPage
@@ -45,16 +45,18 @@ interface DiscussionRepository {
     suspend fun toggleLike(discussionId: Long): NetworkResult<LikeStatus>
 
     suspend fun saveDiscussionRoom(
-        book: Book,
+        book: SearchedBook,
         discussionTitle: String,
         discussionOpinion: String,
     )
 
     suspend fun hasDiscussion(): Boolean
 
-    suspend fun getBook(): Book
+    suspend fun getBook(id: Long): SearchedBook
 
-    suspend fun getDiscussion(): DiscussionRoom?
+    suspend fun getDraftDiscussion(id: Long): DiscussionRoom?
+
+    suspend fun getDraftDiscussionCount(): Int
 
     suspend fun reportDiscussion(
         discussionId: Long,
@@ -62,6 +64,8 @@ interface DiscussionRepository {
     ): NetworkResult<Unit>
 
     suspend fun deleteDiscussionRoom()
+
+    suspend fun getDiscussions(): List<DiscussionRoom>
 
     companion object {
         private const val PAGING_SIZE = 15

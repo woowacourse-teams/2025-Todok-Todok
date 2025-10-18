@@ -10,11 +10,15 @@ interface DiscussionLocalDataSource {
         bookEntity: BookEntity,
     )
 
-    suspend fun getDiscussion(): DiscussionWithBook?
+    suspend fun getDiscussion(id: Long): DiscussionWithBook?
 
     suspend fun hasDiscussion(): Boolean
 
-    suspend fun getBook(): BookEntity
+    suspend fun getBook(id: Long): BookEntity
 
     suspend fun deleteDiscussion()
+
+    suspend fun getDiscussionCount(): Int
+
+    suspend fun getDiscussions(): List<DiscussionWithBook>
 }

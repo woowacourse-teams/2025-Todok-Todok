@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import com.team.domain.model.discussionroom.DiscussionRoom.Companion.DiscussionRoom
+import com.team.domain.model.discussionroom.DiscussionRoom
 
 @Entity(
     tableName = "discussion",
@@ -26,6 +26,7 @@ data class DiscussionRoomEntity(
 
 fun DiscussionRoomEntity.toDomain() =
     DiscussionRoom(
+        id = id,
         title = title,
         opinion = opinion,
     )

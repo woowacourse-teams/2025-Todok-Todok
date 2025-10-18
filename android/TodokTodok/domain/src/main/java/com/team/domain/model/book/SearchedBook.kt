@@ -1,13 +1,12 @@
 package com.team.domain.model.book
 
 data class SearchedBook(
-    private val _isbn: ISBN,
+    val isbn: Long,
     private val _title: BookTitle,
     private val _author: BookAuthor,
     private val _image: BookImage,
 ) {
-    val isbn: Long get() = _isbn.value
-
+    val title: String get() = _title.value
     val mainTitle: String get() = _title.mainTitle
 
     val author: String get() = _author.value
@@ -22,7 +21,7 @@ data class SearchedBook(
             image: String,
         ): SearchedBook =
             SearchedBook(
-                _isbn = ISBN(isbn),
+                isbn = isbn,
                 _title = BookTitle(title),
                 _author = BookAuthor(author),
                 _image = BookImage(image),
