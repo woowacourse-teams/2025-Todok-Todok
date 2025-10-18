@@ -1,0 +1,59 @@
+name: Android CI [ an ]
+
+on:
+  push:
+    branches: 
+      - "an"
+      - "an-user-test"
+  pull_request:
+    branches: 
+      - "an"
+      - "an-user-test"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./android/TodokTodok
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: Create local.properties
+        run: |
+          echo "sdk.dir=$ANDROID_SDK_ROOT" > local.properties
+          echo "base_url=${{ secrets.BASE_URL }}" >> local.properties          
+
+      - name: Grant execute permission to gradlew
+        run: chmod +x gradlew
+   
+      - name: Create google-services.json
+        run: echo '${{ secrets.GOOGLE_SERVICES_JSON }}' > ./app/google-services.json
+        
+      - name: Clean Project
+        run: ./gradlew clean
+
+      - name: Run ktlint Check
+        run: ./gradlew ktlintCheck
+
+      - name: Run Unit Tests
+        run: ./gradlew test
+
+      - name: Assemble Build
+        run: ./gradlew build

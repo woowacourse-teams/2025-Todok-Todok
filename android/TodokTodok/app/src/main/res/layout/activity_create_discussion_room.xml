@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".presentation.xml.discussion.create.CreateDiscussionRoomActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/topBar_create_discussion_room"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/space_56"
+        android:layout_marginHorizontal="@dimen/space_24"
+        android:background="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/view_divider1"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/gray_D9"
+        app:layout_constraintBottom_toTopOf="@id/scroll_container"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/topBar_create_discussion_room"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <ImageView
+        android:id="@+id/btn_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_back"
+        android:contentDescription="@string/select_book_content_description_btn_back"
+        app:layout_constraintBottom_toBottomOf="@id/topBar_create_discussion_room"
+        app:layout_constraintStart_toStartOf="@id/topBar_create_discussion_room"
+        app:layout_constraintTop_toTopOf="@id/topBar_create_discussion_room" />
+
+    <TextView
+        android:id="@+id/btn_save"
+        style="@style/HeaderTitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/space_32"
+        android:layout_marginEnd="@dimen/space_24"
+        android:background="@drawable/bg_radius_16dp"
+        android:fontFamily="@font/pretendard_regular"
+        android:gravity="center"
+        android:paddingHorizontal="@dimen/space_16"
+        android:text="@string/create_discussion_temp_save"
+        android:textColor="@color/gray_76"
+        android:textSize="@dimen/font_size_large"
+        app:layout_constraintBottom_toBottomOf="@id/topBar_create_discussion_room"
+        app:layout_constraintEnd_toStartOf="@id/btn_create"
+        app:layout_constraintTop_toTopOf="@id/topBar_create_discussion_room" />
+
+    <TextView
+        android:id="@+id/btn_create"
+        style="@style/HeaderTitleText"
+        android:layout_width="@dimen/space_56"
+        android:layout_height="@dimen/space_32"
+        android:background="@drawable/bg_radius_16dp"
+        android:fontFamily="@font/pretendard_regular"
+        android:gravity="center"
+        android:text="@string/create"
+        android:textColor="@color/gray_76"
+        android:textSize="@dimen/font_size_large"
+        app:layout_constraintBottom_toBottomOf="@id/topBar_create_discussion_room"
+        app:layout_constraintEnd_toEndOf="@id/topBar_create_discussion_room"
+        app:layout_constraintTop_toTopOf="@id/topBar_create_discussion_room" />
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scroll_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:descendantFocusability="afterDescendants"
+        android:fillViewport="true"
+        android:focusableInTouchMode="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/topBar_create_discussion_room">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/content_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:background="@drawable/bg_gray_ed_radius_16dp"
+                app:layout_constraintBottom_toTopOf="@id/etl_discussion_room_title"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/iv_book_image"
+                android:layout_width="80dp"
+                android:layout_height="100dp"
+                android:layout_marginVertical="@dimen/space_16"
+                android:layout_marginStart="@dimen/space_24"
+                android:contentDescription="@string/select_book_content_description_book_cover"
+                android:scaleType="centerCrop"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:shapeAppearanceOverlay="@style/RoundedImageStyle"
+                tools:src="@drawable/img_mascort" />
+
+            <TextView
+                android:id="@+id/tv_book_title"
+                style="@style/BaseTextStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_16"
+                android:layout_marginEnd="@dimen/space_24"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toTopOf="@id/tv_book_author"
+                app:layout_constraintEnd_toEndOf="@id/content_container"
+                app:layout_constraintStart_toEndOf="@id/iv_book_image"
+                app:layout_constraintTop_toTopOf="@id/iv_book_image"
+                app:layout_constraintVertical_chainStyle="packed"
+                tools:text="나무처럼 생각하기 : 나무처럼 자연의 질서 속에서 다시 살아가는 방법에 대하여" />
+
+            <TextView
+                android:id="@+id/tv_book_author"
+                style="@style/BaseTextStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/space_24"
+                android:ellipsize="end"
+                android:fontFamily="@font/pretendard_medium"
+                android:maxLines="1"
+                android:textColor="@color/gray_66"
+                android:textSize="@dimen/font_size_normal"
+                app:layout_constraintBottom_toBottomOf="@id/iv_book_image"
+                app:layout_constraintEnd_toEndOf="@id/content_container"
+                app:layout_constraintStart_toStartOf="@id/tv_book_title"
+                app:layout_constraintTop_toBottomOf="@id/tv_book_title"
+                tools:text="조슈아 블로쉬" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/etl_discussion_room_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_20"
+
+                android:overScrollMode="never"
+                android:paddingVertical="@dimen/space_16"
+                android:scrollbars="none"
+                app:boxBackgroundColor="@color/white"
+                app:boxBackgroundMode="filled"
+                app:boxStrokeWidth="@dimen/space_0"
+                app:boxStrokeWidthFocused="@dimen/space_0"
+                app:counterEnabled="false"
+                app:hintEnabled="false"
+                app:layout_constraintBottom_toTopOf="@id/view_divider"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/iv_book_image"
+                app:layout_constraintVertical_chainStyle="packed">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_discussion_room_title"
+                    style="@style/BaseTextStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/space_24"
+                    android:fontFamily="@font/pretendard_regular"
+                    android:gravity="top|start"
+                    android:hint="@string/hint_discussion_room_title"
+                    android:imeOptions="actionNext"
+                    android:inputType="text|textMultiLine"
+                    android:maxLength="50"
+                    android:nextFocusDown="@id/et_discussion_room_opinion"
+                    android:paddingVertical="@dimen/space_0"
+                    android:textColor="@color/black_18"
+                    android:textColorHint="@color/gray_76"
+                    android:textSize="@dimen/font_size_2x_large" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <View
+                android:id="@+id/view_divider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/gray_D9"
+                app:layout_constraintBottom_toTopOf="@id/etl_discussion_room_opinion"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/etl_discussion_room_title"
+                app:layout_constraintVertical_chainStyle="packed" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/etl_discussion_room_opinion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:gravity="top|start"
+                android:overScrollMode="never"
+                android:scrollbars="none"
+                app:boxBackgroundColor="@color/white"
+                app:boxBackgroundMode="filled"
+                app:boxStrokeWidth="@dimen/space_0"
+                app:boxStrokeWidthFocused="@dimen/space_0"
+                app:counterEnabled="false"
+                app:hintEnabled="false"
+
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/view_divider">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_discussion_room_opinion"
+                    style="@style/BaseTextStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/space_24"
+                    android:fontFamily="@font/pretendard_regular"
+                    android:gravity="top|start"
+                    android:hint="@string/hint_discussion_room_opinion"
+                    android:imeOptions="actionDone"
+                    android:inputType="text|textMultiLine"
+                    android:maxLength="2500"
+                    android:textColor="@color/black_18"
+                    android:textColorHint="@color/gray_76"
+                    android:textSize="@dimen/font_size_x_large" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
