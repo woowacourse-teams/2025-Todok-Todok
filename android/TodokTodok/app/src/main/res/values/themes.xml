@@ -9,6 +9,6 @@
 
     <style name="text_selection_colors_black18" parent="ThemeOverlay.Material3.TextInputEditText">
         <item name="colorControlActivated">@color/black_18</item>
-        <item name="colorControlHighlight">@color/black_18</item>
+        <item name="android:textColorHighlight">@color/green_CF</item>
     </style>
 </resources>
