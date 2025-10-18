@@ -24,7 +24,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="top|start"
-        android:inputType="text"
         android:theme="@style/text_selection_colors_black18"
         app:counterEnabled="true"
         app:counterMaxLength="8"
@@ -42,6 +41,7 @@
             android:layout_height="match_parent"
             android:background="@drawable/bg_green_f0_radius_8dp"
             android:imeOptions="actionNext"
+            android:inputType="text"
             android:maxLines="1"
             android:textColor="@color/black_18" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -64,7 +64,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:imeOptions="actionNext"
-        android:inputType="textMultiLine"
         android:theme="@style/text_selection_colors_black18"
         app:counterEnabled="true"
         app:counterMaxLength="40"
