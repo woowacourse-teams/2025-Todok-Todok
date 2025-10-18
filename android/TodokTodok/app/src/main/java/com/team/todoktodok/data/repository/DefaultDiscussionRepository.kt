@@ -4,11 +4,9 @@ import com.team.domain.model.Book
 import com.team.domain.model.Discussion
 import com.team.domain.model.DiscussionPage
 import com.team.domain.model.LikeStatus
-import com.team.domain.model.active.ActivatedDiscussionPage
 import com.team.domain.model.discussionroom.DiscussionRoom
 import com.team.domain.model.exception.NetworkResult
 import com.team.domain.model.exception.map
-import com.team.domain.model.latest.LatestDiscussionPage
 import com.team.domain.repository.DiscussionRepository
 import com.team.todoktodok.data.datasource.discussion.DiscussionLocalDataSource
 import com.team.todoktodok.data.datasource.discussion.DiscussionRemoteDataSource
@@ -31,7 +29,7 @@ class DefaultDiscussionRepository(
         period: Int,
         size: Int,
         cursor: String?,
-    ): NetworkResult<ActivatedDiscussionPage> =
+    ): NetworkResult<DiscussionPage> =
         discussionRemoteDataSource
             .getActivatedDiscussion(period, size, cursor)
             .map { it.toDomain() }
@@ -55,7 +53,7 @@ class DefaultDiscussionRepository(
     override suspend fun getLatestDiscussions(
         size: Int,
         cursor: String?,
-    ): NetworkResult<LatestDiscussionPage> =
+    ): NetworkResult<DiscussionPage> =
         discussionRemoteDataSource
             .getLatestDiscussions(size, cursor)
             .map { discussions -> discussions.toDomain() }

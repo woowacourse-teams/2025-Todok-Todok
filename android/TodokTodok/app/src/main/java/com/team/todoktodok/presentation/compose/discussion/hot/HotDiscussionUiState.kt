@@ -1,7 +1,7 @@
 package com.team.todoktodok.presentation.compose.discussion.hot
 
 import com.team.domain.model.Discussion
-import com.team.domain.model.active.ActivatedDiscussionPage
+import com.team.domain.model.DiscussionPage
 import com.team.todoktodok.presentation.compose.discussion.activate.ActivatedDiscussionsUiState
 import com.team.todoktodok.presentation.compose.discussion.popular.PopularDiscussionsUiState
 import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussion
@@ -24,7 +24,7 @@ data class HotDiscussionUiState(
             activatedDiscussions = activatedDiscussions.remove(discussionId),
         )
 
-    fun appendActivatedDiscussion(page: ActivatedDiscussionPage): HotDiscussionUiState =
+    fun appendActivatedDiscussion(page: DiscussionPage): HotDiscussionUiState =
         copy(activatedDiscussions = activatedDiscussions.append(page), isRefreshing = false)
 
     fun modifyDiscussion(discussion: SerializationDiscussion): HotDiscussionUiState {

@@ -1,8 +1,8 @@
 package com.team.todoktodok.presentation.compose.discussion.activate
 
 import com.team.domain.model.Discussion
+import com.team.domain.model.DiscussionPage
 import com.team.domain.model.PageInfo
-import com.team.domain.model.active.ActivatedDiscussionPage
 import com.team.todoktodok.presentation.compose.core.component.DiscussionCardType
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiModel
 
@@ -15,9 +15,9 @@ data class ActivatedDiscussionsUiState(
 
     val notHasDiscussion = discussions.isEmpty()
 
-    fun append(page: ActivatedDiscussionPage): ActivatedDiscussionsUiState =
+    fun append(page: DiscussionPage): ActivatedDiscussionsUiState =
         copy(
-            discussions = (discussions + page.data.map { DiscussionUiModel(it) }).distinctBy { it.discussionId },
+            discussions = (discussions + page.discussions.map { DiscussionUiModel(it) }).distinctBy { it.discussionId },
             pageInfo = page.pageInfo,
         )
 

@@ -1,7 +1,7 @@
 package com.team.todoktodok.presentation.compose.discussion.latest
 
+import com.team.domain.model.DiscussionPage
 import com.team.domain.model.PageInfo
-import com.team.domain.model.latest.LatestDiscussionPage
 import com.team.todoktodok.presentation.compose.core.component.DiscussionCardType
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiModel
 import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussion
@@ -14,7 +14,7 @@ data class LatestDiscussionsUiState(
 ) {
     fun clearForRefresh(): LatestDiscussionsUiState = copy(discussions = emptyList(), latestPage = PageInfo.EMPTY, isRefreshing = true)
 
-    fun append(page: LatestDiscussionPage): LatestDiscussionsUiState {
+    fun append(page: DiscussionPage): LatestDiscussionsUiState {
         val newDiscussion =
             discussions.toMutableList().apply {
                 addAll(page.discussions.map { discussion -> DiscussionUiModel(discussion) })
