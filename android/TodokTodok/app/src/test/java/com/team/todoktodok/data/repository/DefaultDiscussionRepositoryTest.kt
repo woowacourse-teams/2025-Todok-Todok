@@ -148,6 +148,42 @@ class DefaultDiscussionRepositoryTest {
         }
 
     @Test
+    fun `활성 토론을 페이지 단위로 가져온다`() =
+        runTest {
+            // given
+            val pageSize = 2
+            val period = 7
+            val firstCursor: String? = null
+
+            // when
+            val firstPageResult = defaultDiscussionRepository.getActivatedDiscussion(period, pageSize, firstCursor)
+
+            // then
+            firstPageResult.onSuccess { page ->
+                assertThat(page.discussions.size).isEqualTo(pageSize)
+                assertThat(page.pageInfo.hasNext).isTrue()
+            }
+
+            // given
+            val nextCursor = (firstPageResult as NetworkResult.Success).data.pageInfo.nextCursor
+            // when
+            val secondPageResult = defaultDiscussionRepository.getActivatedDiscussion(period, pageSize, nextCursor)
+            // then
+            secondPageResult.onSuccess { page ->
+                assertThat(page.discussions.size).isEqualTo(2)
+            }
+
+            // given
+            val lastCursor = (secondPageResult as NetworkResult.Success).data.pageInfo.nextCursor
+            // when
+            val lastPageResult = defaultDiscussionRepository.getActivatedDiscussion(period, pageSize, lastCursor)
+            // then
+            lastPageResult.onSuccess { page ->
+                assertThat(page.pageInfo.hasNext).isFalse()
+            }
+        }
+
+    @Test
     fun `좋아요 누른 토론만 페이지 단위로 가져온다`() =
         runTest {
             // given
