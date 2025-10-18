@@ -6,8 +6,8 @@ import com.team.todoktodok.data.network.response.latest.PageInfoResponse
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ActiveDiscussionPageResponse(
-    val items: List<ActiveDiscussion>,
+data class ActivatedDiscussionPageResponse(
+    val items: List<ActivatedDiscussion>,
     val pageInfo: PageInfoResponse,
 ) {
     fun toDomain(): DiscussionPage {
