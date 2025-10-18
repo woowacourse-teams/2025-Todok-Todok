@@ -331,7 +331,7 @@
 
     <string name="notification_count_description">개 읽지 않은 알람</string>
     <string name="notification_dialog_title">알림을 켜고 소통을 시작하세요!</string>
-    <string name="notification_dialog_subtitle">내 글에 새로운 \'좋아요\'나 \'답글\'이 달리면 바로 알려드릴게요.\n다른 독자들과의 흥미로운 토론을 이어가 보세요.</string>
+    <string name="notification_dialog_subtitle">내 글에 새로운 \'좋아요\'나 \'답글\'이 달리면 바로 알려드릴게요. 다른 독자들과의 흥미로운 토론을 이어가 보세요.</string>
     <string name="notification_dialog_cancel">괜찮아요</string>
     <string name="notification_dialog_okay">네, 알려주세요</string>
 </resources>

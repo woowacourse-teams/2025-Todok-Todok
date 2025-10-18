@@ -1,5 +1,6 @@
 package com.team.todoktodok.presentation.compose.main.vm
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.team.domain.ConnectivityObserver
 import com.team.domain.model.exception.onFailure
@@ -32,9 +33,10 @@ class MainViewModel(
 
     fun sendPushNotificationToken() {
         viewModelScope.launch {
-            notificationRepository.registerPushNotification().onFailure { exceptions ->
-                onUiEvent(MainUiEvent.ShowErrorMessage(exceptions))
-            }
+            notificationRepository.registerPushNotification().onSuccess { Log.d("test", "성공함") }
+                .onFailure { exceptions ->
+                    onUiEvent(MainUiEvent.ShowErrorMessage(exceptions))
+                }
         }
     }
 
