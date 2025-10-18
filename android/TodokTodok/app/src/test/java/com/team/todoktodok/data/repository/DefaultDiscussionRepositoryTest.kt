@@ -218,34 +218,37 @@ class DefaultDiscussionRepositoryTest {
         }
 
     @Test
-    fun `키워드로 토론방을 검색하면 해당 키워드 포함 토론만 반환한다`() = runTest {
-        // given
-        val keyword = "코루틴"
+    fun `키워드로 토론방을 검색하면 해당 키워드 포함 토론만 반환한다`() =
+        runTest {
+            // given
+            val keyword = "코루틴"
 
-        // when
-        val result = defaultDiscussionRepository.getSearchDiscussion(keyword)
+            // when
+            val result = defaultDiscussionRepository.getSearchDiscussion(keyword)
 
-        // then
-        result.onSuccess { discussions ->
-            assertThat(discussions).isNotEmpty
-            assertThat(discussions.all {
-                it.discussionTitle.contains(keyword) || it.discussionOpinion.contains(keyword)
-            }).isTrue()
+            // then
+            result.onSuccess { discussions ->
+                assertThat(discussions).isNotEmpty
+                assertThat(
+                    discussions.all {
+                        it.discussionTitle.contains(keyword) || it.discussionOpinion.contains(keyword)
+                    },
+                ).isTrue()
+            }
         }
-    }
 
     @Test
-    fun `키워드가 없으면 빈 리스트를 반환한다`() = runTest {
-        // given
-        val keyword = "에베베베"
+    fun `키워드가 없으면 빈 리스트를 반환한다`() =
+        runTest {
+            // given
+            val keyword = "에베베베"
 
-        // when
-        val result = defaultDiscussionRepository.getSearchDiscussion(keyword)
+            // when
+            val result = defaultDiscussionRepository.getSearchDiscussion(keyword)
 
-        // then
-        result.onSuccess { discussions ->
-            assertThat(discussions).isEmpty()
+            // then
+            result.onSuccess { discussions ->
+                assertThat(discussions).isEmpty()
+            }
         }
-    }
-
 }

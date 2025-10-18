@@ -81,10 +81,11 @@ class FakeDiscussionRemoteDataSource : DiscussionRemoteDataSource {
         )
 
     override suspend fun getSearchDiscussion(keyword: String): NetworkResult<List<DiscussionResponse>> {
-        val filtered = discussionResponses.filter {
-            it.discussionTitle.contains(keyword, ignoreCase = true) ||
+        val filtered =
+            discussionResponses.filter {
+                it.discussionTitle.contains(keyword, ignoreCase = true) ||
                     it.discussionOpinion.contains(keyword, ignoreCase = true)
-        }
+            }
         return NetworkResult.Success(filtered)
     }
 
@@ -149,9 +150,7 @@ class FakeDiscussionRemoteDataSource : DiscussionRemoteDataSource {
     override suspend fun getHotDiscussion(
         period: Int,
         count: Int,
-    ): NetworkResult<List<DiscussionResponse>> {
-        TODO("Not yet implemented")
-    }
+    ): NetworkResult<List<DiscussionResponse>> = NetworkResult.Success(discussionResponses)
 
     override suspend fun getLatestDiscussions(
         size: Int,
@@ -180,21 +179,15 @@ class FakeDiscussionRemoteDataSource : DiscussionRemoteDataSource {
         bookId: Long,
         discussionTitle: String,
         discussionOpinion: String,
-    ): Response<Unit> {
-        TODO("Not yet implemented")
-    }
+    ): Response<Unit> = Response.success(Unit)
 
     override suspend fun editDiscussionRoom(
         discussionId: Long,
         discussionTitle: String,
         discussionOpinion: String,
-    ): NetworkResult<Unit> {
-        TODO("Not yet implemented")
-    }
+    ): NetworkResult<Unit> = NetworkResult.Success(Unit)
 
-    override suspend fun deleteDiscussion(discussionId: Long): NetworkResult<Unit> {
-        TODO("Not yet implemented")
-    }
+    override suspend fun deleteDiscussion(discussionId: Long): NetworkResult<Unit> = NetworkResult.Success(Unit)
 
     override suspend fun toggleLike(discussionId: Long): NetworkResult<LikeAction> {
         val idx = discussionResponses.indexOfFirst { it.discussionId == discussionId }
