@@ -22,10 +22,10 @@ import com.team.todoktodok.presentation.compose.theme.White
 fun DiscussionCard(
     uiState: DiscussionItem,
     modifier: Modifier = Modifier,
-    onClick: (Long) -> Unit = {},
+    onActionClick: (Long) -> Unit = {},
 ) {
     ElevatedCard(
-        onClick = { onClick(uiState.discussionId) },
+        onClick = { onActionClick(uiState.discussionId) },
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         modifier = modifier,
     ) {

@@ -1,6 +1,5 @@
 package com.team.todoktodok.presentation.compose.bookdiscussions.components
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,14 +15,15 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.team.todoktodok.presentation.compose.bookdiscussions.model.BookDetailSectionUiState
 import com.team.todoktodok.presentation.compose.bookdiscussions.model.BookDiscussionsSectionUiState
 import com.team.todoktodok.presentation.compose.bookdiscussions.model.DiscussionItem
+import com.team.todoktodok.presentation.xml.discussiondetail.DiscussionDetailActivity
 import kotlinx.collections.immutable.toImmutableList
 
-@SuppressLint("ComposeModifierReused")
 @Composable
 fun BookDiscussionsContent(
     bookDetailSectionUiState: BookDetailSectionUiState,
@@ -31,6 +31,7 @@ fun BookDiscussionsContent(
     loadMoreItems: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val context = LocalContext.current
     val listState = rememberLazyListState()
     val threshold = 2
 
@@ -59,16 +60,21 @@ fun BookDiscussionsContent(
             BookDetailSection(bookDetailSectionUiState, Modifier.fillMaxWidth())
             Spacer(Modifier.height(20.dp))
         }
-        bookDiscussionsSectionItems(bookDiscussionsSectionUiState)
+        bookDiscussionsSectionItems(bookDiscussionsSectionUiState) {
+            context.startActivity(DiscussionDetailActivity.Intent(context, it))
+        }
     }
 }
 
-fun LazyListScope.bookDiscussionsSectionItems(uiState: BookDiscussionsSectionUiState) {
+fun LazyListScope.bookDiscussionsSectionItems(
+    uiState: BookDiscussionsSectionUiState,
+    onActionClick: (Long) -> Unit = {},
+) {
     items(
         items = uiState.discussionItems,
         key = { it.discussionId },
     ) { item ->
-        DiscussionCard(item)
+        DiscussionCard(item, Modifier, onActionClick)
         Spacer(Modifier.height(20.dp))
     }
     if (uiState.isPagingLoading) {
@@ -83,11 +89,6 @@ fun LazyListScope.bookDiscussionsSectionItems(uiState: BookDiscussionsSectionUiS
             }
         }
     }
-}
-
-@Preview
-@Composable
-private fun BookContentPreview() {
 }
 
 @Preview(showBackground = true)
