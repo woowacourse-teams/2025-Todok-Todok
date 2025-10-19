@@ -1,5 +1,6 @@
 package com.team.todoktodok.presentation.compose.my.component
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,8 +27,14 @@ import com.team.todoktodok.presentation.compose.theme.Pretendard
 fun BookCover(
     book: Book,
     modifier: Modifier = Modifier,
+    onActionClick: (Long) -> Unit = {},
 ) {
-    Column(modifier = modifier.aspectRatio(0.5f)) {
+    Column(
+        modifier =
+            modifier.aspectRatio(0.5f).clickable {
+                onActionClick(book.id)
+            },
+    ) {
         SubcomposeAsyncImage(
             model =
                 ImageRequest
