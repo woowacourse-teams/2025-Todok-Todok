@@ -1,15 +1,11 @@
 package com.team.todoktodok.presentation.compose.bookdiscussions.model
 
-sealed interface BookDiscussionsUiState {
-    object Empty : BookDiscussionsUiState
+data class BookDiscussionsUiState(
+    val bookDetailSectionUiState: BookDetailSectionUiState = BookDetailSectionUiState(),
+    val bookDiscussionsSectionUiState: BookDiscussionsSectionUiState = BookDiscussionsSectionUiState(),
+) {
+    fun updateBookDiscussions(transform: (BookDiscussionsSectionUiState) -> BookDiscussionsSectionUiState) =
+        copy(bookDiscussionsSectionUiState = transform(bookDiscussionsSectionUiState))
 
-    data class Success(
-        val bookDetailSectionUiState: BookDetailSectionUiState,
-        val bookDiscussionsSectionUiState: BookDiscussionsSectionUiState,
-    ) : BookDiscussionsUiState {
-        fun updateBookDiscussions(transform: (BookDiscussionsSectionUiState) -> BookDiscussionsSectionUiState): Success =
-            copy(bookDiscussionsSectionUiState = transform(bookDiscussionsSectionUiState))
-
-        val isLoadingBookDiscussions get() = bookDiscussionsSectionUiState.isPagingLoading
-    }
+    val isLoadingBookDiscussions get() = bookDiscussionsSectionUiState.isPagingLoading
 }

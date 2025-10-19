@@ -16,20 +16,13 @@ class BookDiscussionsActivity : AppCompatActivity() {
                 BookDetailNavHost(
                     intent.getLongExtra(BOOK_ID_KEY, -1L),
                     ::navigateToMain,
-                    ::navigateToProfile,
                 )
             }
         }
     }
 
     fun navigateToMain() {
-        val intent = MainActivity.Intent(this)
-        startActivity(intent)
-    }
-
-    fun navigateToProfile() {
-        val intent = MainActivity.Intent(this)
-        startActivity(intent)
+        onBackPressedDispatcher.onBackPressed()
     }
 
     companion object {

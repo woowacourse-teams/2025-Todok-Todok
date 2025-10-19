@@ -2,52 +2,49 @@ package com.team.todoktodok.presentation.compose.bookdiscussions.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import com.team.domain.model.book.BookTitle
 import com.team.todoktodok.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BookDiscussionsTopAppBar(
-    onAppIconClick: () -> Unit,
-    onProfileClick: () -> Unit,
+    bookTitle: String,
+    onNavigationIcon: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    TopAppBar(
-        title = {},
+    CenterAlignedTopAppBar(
+        title = { Title(bookTitle) },
         modifier = modifier,
         navigationIcon = {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier =
-                    Modifier.clickable(onClick = onAppIconClick),
+                    Modifier.clickable(onClick = onNavigationIcon),
             ) {
                 Icon(
-                    painter = painterResource(R.drawable.img_mascort),
-                    tint = null,
-                    contentDescription = stringResource(R.string.bookdiscussions_content_description_navigate_to_discussions),
-                )
-
-                Icon(
-                    painter = painterResource(R.drawable.img_app_name),
+                    painter = painterResource(R.drawable.btn_back),
                     tint = null,
                     contentDescription = stringResource(R.string.bookdiscussions_content_description_navigate_to_discussions),
                 )
             }
         },
-        actions = {
-            Icon(
-                painter = painterResource(R.drawable.ic_profile),
-                tint = null,
-                contentDescription = "프로필 화면 이동 버튼",
-                modifier = Modifier.clickable(onClick = onProfileClick),
-            )
-        },
     )
+}
+
+@Composable
+private fun Title(
+    bookTitle: String,
+    modifier: Modifier = Modifier,
+) {
+    Text(bookTitle)
 }

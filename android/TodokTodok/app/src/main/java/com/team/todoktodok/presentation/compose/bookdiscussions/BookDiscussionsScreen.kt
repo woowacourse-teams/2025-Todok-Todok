@@ -14,13 +14,11 @@ import com.team.todoktodok.App
 import com.team.todoktodok.presentation.compose.bookdiscussions.components.BookDiscussionsContent
 import com.team.todoktodok.presentation.compose.bookdiscussions.components.BookDiscussionsTopAppBar
 import com.team.todoktodok.presentation.compose.bookdiscussions.model.BookDiscussionsUiState
-import com.team.todoktodok.presentation.core.component.CloverProgressBar
 
 @Composable
 fun BookDetailEntry(
     backStackEntry: NavBackStackEntry,
     onNavigateToMain: () -> Unit,
-    onNavigateToMyProfile: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: BookDiscussionsViewModel =
         viewModel(
@@ -34,7 +32,6 @@ fun BookDetailEntry(
         uiState,
         viewModel::loadMoreItems,
         onNavigateToMain,
-        onNavigateToMyProfile,
         modifier,
     )
 }
@@ -44,25 +41,20 @@ fun BookDetailScreen(
     uiState: BookDiscussionsUiState,
     loadMoreItems: () -> Unit,
     onNavigateToMain: () -> Unit,
-    onNavigateToMyProfile: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(modifier, topBar = {
         BookDiscussionsTopAppBar(
+            uiState.bookDetailSectionUiState.bookTitle,
             onNavigateToMain,
-            onNavigateToMyProfile,
             Modifier.padding(horizontal = 24.dp),
         )
     }) { innerPadding ->
-        when (uiState) {
-            BookDiscussionsUiState.Empty -> CloverProgressBar(LocalContext.current)
-            is BookDiscussionsUiState.Success ->
-                BookDiscussionsContent(
-                    uiState.bookDetailSectionUiState,
-                    uiState.bookDiscussionsSectionUiState,
-                    loadMoreItems,
-                    Modifier.padding(innerPadding),
-                )
-        }
+        BookDiscussionsContent(
+            uiState.bookDetailSectionUiState,
+            uiState.bookDiscussionsSectionUiState,
+            loadMoreItems,
+            Modifier.padding(innerPadding),
+        )
     }
 }

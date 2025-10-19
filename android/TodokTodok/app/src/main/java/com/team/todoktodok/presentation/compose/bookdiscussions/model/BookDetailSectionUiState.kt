@@ -5,11 +5,11 @@ import com.team.domain.model.Book
 
 @Immutable
 data class BookDetailSectionUiState(
-    val bookTitle: String,
-    val bookAuthor: String,
-    val bookImage: String,
-    val bookPublisher: String,
-    val bookSummary: String,
+    val bookTitle: String = "",
+    val bookAuthor: String = "",
+    val bookImage: String = "",
+    val bookPublisher: String = "",
+    val bookSummary: String = "",
 )
 
 fun Book.toBookDetailUiState() =

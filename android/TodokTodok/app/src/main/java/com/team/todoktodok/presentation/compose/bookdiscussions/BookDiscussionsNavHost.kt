@@ -19,7 +19,6 @@ data class BookDetailRoute(
 fun BookDetailNavHost(
     startBookId: Long,
     onNavigateToMain: () -> Unit,
-    onNavigateToMyProfile: () -> Unit,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
 ) {
@@ -28,7 +27,6 @@ fun BookDetailNavHost(
             BookDetailEntry(
                 backStackEntry,
                 onNavigateToMain,
-                onNavigateToMyProfile,
                 modifier,
             )
         }

@@ -2,12 +2,13 @@ package com.team.todoktodok.presentation.compose.bookdiscussions.model
 
 import androidx.compose.runtime.Immutable
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 
 @Immutable
 data class BookDiscussionsSectionUiState(
-    val isPagingLoading: Boolean,
-    val discussionItems: ImmutableList<DiscussionItem>,
+    val isPagingLoading: Boolean = false,
+    val discussionItems: ImmutableList<DiscussionItem> = persistentListOf(),
 ) {
     fun update(
         isPagingLoading: Boolean = this.isPagingLoading,

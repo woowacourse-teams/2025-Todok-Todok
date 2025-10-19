@@ -10,11 +10,9 @@ import com.team.domain.model.PageInfo
 import com.team.domain.repository.BookRepository
 import com.team.todoktodok.presentation.compose.bookdiscussions.model.BookDiscussionsUiEvent
 import com.team.todoktodok.presentation.compose.bookdiscussions.model.BookDiscussionsUiState
-import com.team.todoktodok.presentation.compose.bookdiscussions.model.BookDiscussionsUiState.Empty
 import com.team.todoktodok.presentation.compose.bookdiscussions.model.toBookDetailUiState
 import com.team.todoktodok.presentation.compose.bookdiscussions.model.toDiscussionItem
 import com.team.todoktodok.presentation.core.base.BaseViewModel
-import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -30,10 +28,10 @@ class BookDiscussionsViewModel(
     private val route: BookDetailRoute = savedStateHandle.toRoute()
     private val bookId: Long = route.bookId
     private val _uiState: MutableStateFlow<BookDiscussionsUiState> =
-        MutableStateFlow(Empty)
+        MutableStateFlow(BookDiscussionsUiState())
     val uiState: StateFlow<BookDiscussionsUiState> = _uiState
 
-    private val _uiEvent = MutableSharedFlow<BookDiscussionsUiEvent>()
+    private val _uiEvent = MutableSharedFlow<BookDiscussionsUiEvent>(extraBufferCapacity = 1)
     val uiEvent: SharedFlow<BookDiscussionsUiEvent> = _uiEvent
 
     private var currentPage: PageInfo? = null
@@ -69,59 +67,37 @@ class BookDiscussionsViewModel(
     }
 
     private fun updateBook(book: Book) {
-        _uiState.update {
-            when (it) {
-                Empty -> return
-                is BookDiscussionsUiState.Success -> it.copy(bookDetailSectionUiState = book.toBookDetailUiState())
-            }
+        _uiState.update { currentUiState ->
+            currentUiState.copy(book.toBookDetailUiState())
         }
     }
 
     private fun updateBookDiscussionsPage(discussions: List<Discussion>) {
-        _uiState.update { uiState ->
-            when (uiState) {
-                Empty -> return
-                is BookDiscussionsUiState.Success ->
-                    uiState.updateBookDiscussions { bookDiscussions ->
-                        bookDiscussions.update(
-                            discussionItems =
-                                discussions
-                                    .map { it.toDiscussionItem() }
-                                    .toImmutableList(),
-                        )
-                    }
+        _uiState.update { currentUiState ->
+            currentUiState.updateBookDiscussions { currentBookDiscussions ->
+                currentBookDiscussions.update(discussionItems = discussions.map { it.toDiscussionItem() })
             }
         }
     }
 
     fun loadMoreItems() {
-        when (val currentUiState = _uiState.value) {
-            Empty -> return
-            is BookDiscussionsUiState.Success -> {
-                val hasNext = currentPage?.hasNext ?: return
-                if (currentUiState.isLoadingBookDiscussions || !hasNext) return
-                runAsync(
-                    LOAD_MORE_BOOK_DISCUSSIONS_KEY,
-                    { bookRepository.getBookDiscussions(bookId, 5, currentPage?.nextCursor) },
-                    { bookDiscussionsPage ->
-                        currentPage = bookDiscussionsPage.pageInfo
-                        addDiscussionItems(bookDiscussionsPage.discussions)
-                    },
-                    { onUiEvent(BookDiscussionsUiEvent.ShowError(it)) },
-                )
-            }
-        }
+        val hasNext = currentPage?.hasNext ?: return
+        if (_uiState.value.isLoadingBookDiscussions || !hasNext) return
+        runAsync(
+            LOAD_MORE_BOOK_DISCUSSIONS_KEY,
+            { bookRepository.getBookDiscussions(bookId, 5, currentPage?.nextCursor) },
+            { bookDiscussionsPage ->
+                currentPage = bookDiscussionsPage.pageInfo
+                addDiscussionItems(bookDiscussionsPage.discussions)
+            },
+            { onUiEvent(BookDiscussionsUiEvent.ShowError(it)) },
+        )
     }
 
     private fun addDiscussionItems(discussions: List<Discussion>) {
         _uiState.update { uiState ->
-            when (uiState) {
-                Empty -> return
-                is BookDiscussionsUiState.Success -> {
-                    uiState.updateBookDiscussions { bookDiscussionsUiState ->
-                        bookDiscussionsUiState.addDiscussionItems(discussions.map { it.toDiscussionItem() })
-                    }
-                }
+            uiState.updateBookDiscussions { bookDiscussionsUiState ->
+                bookDiscussionsUiState.addDiscussionItems(discussions.map { it.toDiscussionItem() })
             }
         }
     }
