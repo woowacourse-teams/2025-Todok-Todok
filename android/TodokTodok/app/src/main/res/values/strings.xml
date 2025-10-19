@@ -239,6 +239,8 @@
 
     <!-- 도서별 토론방 관련 -->
     <string name="bookdiscussions_content_description_navigate_to_discussions">토론방 목록 화면 이동 버튼 이미지</string>
+    <string name="book_info_message">%1$s\n도서 정보: 알라딘</string>
+    <string name="book_discussions_title">도서별 토론방</string>
 
     <!-- HTTP 예외 -->
     <string name="error_authorization">권한이 없는 요청입니다.</string>
@@ -351,5 +353,4 @@
     <string name="drafts_no_title">제목 없음</string>
     <string name="drafts_no_description">내용 없음</string>
     <string name="drafts_no_exist">잠시 오류가 생겼습니다. 다시 선택해주세요</string>
-
 </resources>

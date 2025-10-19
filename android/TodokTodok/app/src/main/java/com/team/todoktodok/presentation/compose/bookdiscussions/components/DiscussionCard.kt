@@ -17,6 +17,7 @@ import com.team.todoktodok.presentation.compose.bookdiscussions.model.Discussion
 import com.team.todoktodok.presentation.compose.core.component.DiscussionBottom
 import com.team.todoktodok.presentation.compose.core.component.DiscussionTop
 import com.team.todoktodok.presentation.compose.theme.White
+import com.team.todoktodok.presentation.core.ext.extractAuthor
 
 @Composable
 fun DiscussionCard(
@@ -37,7 +38,7 @@ fun DiscussionCard(
         ) {
             DiscussionTop(
                 bookTitle = uiState.bookTitle,
-                bookAuthor = uiState.bookAuthor,
+                bookAuthor = uiState.bookAuthor.extractAuthor(),
                 bookImage = uiState.bookImage,
             )
 

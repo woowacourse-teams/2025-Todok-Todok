@@ -28,7 +28,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -38,6 +37,9 @@ import com.team.todoktodok.R
 import com.team.todoktodok.presentation.compose.bookdiscussions.model.BookDetailSectionUiState
 import com.team.todoktodok.presentation.compose.theme.Black18
 import com.team.todoktodok.presentation.compose.theme.Gray66
+
+private const val COLLAPSED_LINES = 1
+private const val EXPENDED_LINES = 10
 
 @Composable
 fun BookDetailSection(
@@ -60,9 +62,24 @@ fun BookDetailSection(
             )
             Spacer(Modifier.width(20.dp))
             FlowColumn(Modifier.fillMaxHeight(), verticalArrangement = Arrangement.SpaceAround) {
-                Text(bookDetailSectionUiState.bookTitle, fontSize = 16.sp, color = Black18)
-                Text(bookDetailSectionUiState.bookAuthor, fontSize = 16.sp, color = Gray66)
-                Text(bookDetailSectionUiState.bookPublisher, fontSize = 16.sp, color = Gray66)
+                Text(
+                    bookDetailSectionUiState.bookTitle,
+                    fontSize = 16.sp,
+                    color = Black18,
+                    maxLines = 2,
+                )
+                Text(
+                    bookDetailSectionUiState.bookAuthor,
+                    fontSize = 16.sp,
+                    color = Gray66,
+                    maxLines = 1,
+                )
+                Text(
+                    bookDetailSectionUiState.bookPublisher,
+                    fontSize = 16.sp,
+                    color = Gray66,
+                    maxLines = 1,
+                )
             }
         }
         Spacer(Modifier.height(20.dp))
@@ -75,12 +92,12 @@ fun ExpandableSection(
     title: String,
     body: String,
     modifier: Modifier = Modifier,
-    collapsedLines: Int = 1,
+    collapsedLines: Int = COLLAPSED_LINES,
     expandedInitial: Boolean = false,
     sectionId: String? = null,
 ) {
     var expanded by rememberSaveable(listOf(sectionId)) { mutableStateOf(expandedInitial) }
-    val rotation by animateFloatAsState(if (expanded) 0f else 180f, label = "arrow")
+    val rotation by animateFloatAsState(if (expanded) 0f else 180f)
     Column(
         modifier =
             modifier
@@ -92,7 +109,6 @@ fun ExpandableSection(
                 Modifier
                     .semantics {
                         role = Role.Button
-                        stateDescription = if (expanded) "확장됨" else "접힘"
                     }.toggleable(value = expanded, role = Role.Button) { expanded = it },
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -106,9 +122,10 @@ fun ExpandableSection(
                         .rotate(rotation),
             )
         }
+
         Text(
-            text = body,
-            maxLines = if (expanded) 10 else collapsedLines,
+            text = stringResource(R.string.book_info_message).format(body),
+            maxLines = if (expanded) EXPENDED_LINES else collapsedLines,
             overflow = TextOverflow.Ellipsis,
             fontSize = 16.sp,
             color = Gray66,

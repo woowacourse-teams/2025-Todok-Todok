@@ -45,7 +45,6 @@ fun BookDetailScreen(
 ) {
     Scaffold(modifier, topBar = {
         BookDiscussionsTopAppBar(
-            uiState.bookDetailSectionUiState.bookTitle,
             onNavigateToMain,
             Modifier.padding(horizontal = 24.dp),
         )

@@ -24,6 +24,9 @@ import com.team.todoktodok.presentation.compose.bookdiscussions.model.Discussion
 import com.team.todoktodok.presentation.xml.discussiondetail.DiscussionDetailActivity
 import kotlinx.collections.immutable.toImmutableList
 
+private const val LOAD_MORE_THRESHOLD = 2
+private const val INVALID_INDEX = -1
+
 @Composable
 fun BookDiscussionsContent(
     bookDetailSectionUiState: BookDetailSectionUiState,
@@ -33,7 +36,6 @@ fun BookDiscussionsContent(
 ) {
     val context = LocalContext.current
     val listState = rememberLazyListState()
-    val threshold = 2
 
     LaunchedEffect(
         listState,
@@ -42,11 +44,14 @@ fun BookDiscussionsContent(
     ) {
         snapshotFlow {
             val info = listState.layoutInfo
-            val last = info.visibleItemsInfo.lastOrNull()?.index ?: -1
+            val last = info.visibleItemsInfo.lastOrNull()?.index ?: INVALID_INDEX
             val total = info.totalItemsCount
             last to total
         }.collect { (last, total) ->
-            if (last >= total - 1 - threshold && !bookDiscussionsSectionUiState.isPagingLoading) {
+            val isNearListEnd = last >= total - 1 - LOAD_MORE_THRESHOLD
+            val isNotLoading = !bookDiscussionsSectionUiState.isPagingLoading
+
+            if (isNearListEnd && isNotLoading) {
                 loadMoreItems()
             }
         }
