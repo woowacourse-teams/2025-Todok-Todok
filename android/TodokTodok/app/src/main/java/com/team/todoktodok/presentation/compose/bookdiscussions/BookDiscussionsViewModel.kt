@@ -57,7 +57,7 @@ class BookDiscussionsViewModel(
     private fun loadBookDiscussions() {
         runAsync(
             LOAD_BOOK_DISCUSSIONS_KEY,
-            { bookRepository.getBookDiscussions(bookId, 5, null) },
+            { bookRepository.getBookDiscussions(bookId, BOOK_DISCUSSIONS_PAGING_SIZE, null) },
             {
                 currentPage = it.pageInfo
                 updateBookDiscussionsPage(it.discussions)
@@ -85,7 +85,13 @@ class BookDiscussionsViewModel(
         if (_uiState.value.isLoadingBookDiscussions || !hasNext) return
         runAsync(
             LOAD_MORE_BOOK_DISCUSSIONS_KEY,
-            { bookRepository.getBookDiscussions(bookId, 5, currentPage?.nextCursor) },
+            {
+                bookRepository.getBookDiscussions(
+                    bookId,
+                    BOOK_DISCUSSIONS_PAGING_SIZE,
+                    currentPage?.nextCursor,
+                )
+            },
             { bookDiscussionsPage ->
                 currentPage = bookDiscussionsPage.pageInfo
                 addDiscussionItems(bookDiscussionsPage.discussions)
@@ -109,6 +115,7 @@ class BookDiscussionsViewModel(
     }
 
     companion object {
+        private const val BOOK_DISCUSSIONS_PAGING_SIZE = 15
         private const val LOAD_BOOK_KEY = "LOAD_BOOK_KEY"
         private const val LOAD_BOOK_DISCUSSIONS_KEY = "load_book_discussions_key"
         private const val LOAD_MORE_BOOK_DISCUSSIONS_KEY = "load_more_book_discussions_key"

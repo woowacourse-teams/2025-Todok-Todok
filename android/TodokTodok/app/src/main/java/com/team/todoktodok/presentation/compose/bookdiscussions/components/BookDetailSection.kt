@@ -32,9 +32,12 @@ import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.team.todoktodok.R
 import com.team.todoktodok.presentation.compose.bookdiscussions.model.BookDetailSectionUiState
+import com.team.todoktodok.presentation.compose.theme.Black18
+import com.team.todoktodok.presentation.compose.theme.Gray66
 
 @Composable
 fun BookDetailSection(
@@ -57,9 +60,9 @@ fun BookDetailSection(
             )
             Spacer(Modifier.width(20.dp))
             FlowColumn(Modifier.fillMaxHeight(), verticalArrangement = Arrangement.SpaceAround) {
-                Text(bookDetailSectionUiState.bookTitle)
-                Text(bookDetailSectionUiState.bookAuthor)
-                Text(bookDetailSectionUiState.bookPublisher)
+                Text(bookDetailSectionUiState.bookTitle, fontSize = 16.sp, color = Black18)
+                Text(bookDetailSectionUiState.bookAuthor, fontSize = 16.sp, color = Gray66)
+                Text(bookDetailSectionUiState.bookPublisher, fontSize = 16.sp, color = Gray66)
             }
         }
         Spacer(Modifier.height(20.dp))
@@ -93,7 +96,7 @@ fun ExpandableSection(
                     }.toggleable(value = expanded, role = Role.Button) { expanded = it },
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text(text = title)
+            Text(text = title, fontSize = 16.sp, color = Black18)
             Icon(
                 painter = painterResource(R.drawable.btn_toggle_bottom_arrow),
                 contentDescription = null,
@@ -107,6 +110,8 @@ fun ExpandableSection(
             text = body,
             maxLines = if (expanded) 10 else collapsedLines,
             overflow = TextOverflow.Ellipsis,
+            fontSize = 16.sp,
+            color = Gray66,
         )
     }
 }
