@@ -245,7 +245,10 @@ class CreateDiscussionRoomViewModel(
                 )
                 return
             }
+        getDiscussionRoom(discussionRoomId, title, opinion)
+    }
 
+    private fun getDiscussionRoom(discussionRoomId: Long, title: String, opinion: String) {
         val discussionRoom = DiscussionRoom(discussionRoomId, title, opinion)
         viewModelScope.launch {
             discussionRepository
