@@ -13,10 +13,10 @@ import com.team.todoktodok.presentation.compose.bookdiscussions.model.BookDiscus
 import com.team.todoktodok.presentation.compose.bookdiscussions.model.toBookDetailUiState
 import com.team.todoktodok.presentation.compose.bookdiscussions.model.toDiscussionItem
 import com.team.todoktodok.presentation.core.base.BaseViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -31,8 +31,8 @@ class BookDiscussionsViewModel(
         MutableStateFlow(BookDiscussionsUiState())
     val uiState: StateFlow<BookDiscussionsUiState> = _uiState
 
-    private val _uiEvent = MutableSharedFlow<BookDiscussionsUiEvent>(extraBufferCapacity = 1)
-    val uiEvent: SharedFlow<BookDiscussionsUiEvent> = _uiEvent
+    private val _uiEvent = Channel<BookDiscussionsUiEvent>(Channel.BUFFERED)
+    val uiEvent = _uiEvent.receiveAsFlow()
 
     private var currentPage: PageInfo? = null
 
@@ -109,9 +109,7 @@ class BookDiscussionsViewModel(
     }
 
     private fun onUiEvent(event: BookDiscussionsUiEvent) {
-        viewModelScope.launch {
-            _uiEvent.emit(event)
-        }
+        viewModelScope.launch { _uiEvent.send(event) }
     }
 
     companion object {
