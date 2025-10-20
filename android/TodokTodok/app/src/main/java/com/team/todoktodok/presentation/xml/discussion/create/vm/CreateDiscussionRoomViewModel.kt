@@ -83,12 +83,9 @@ class CreateDiscussionRoomViewModel(
 
     fun checkIsPossibleToSave() {
         viewModelScope.launch {
-            val discussion = async { discussionRepository.getDiscussions() }.await()
-            if (discussion == null) {
-                _uiEvent.setValue(CreateDiscussionUiEvent.SaveDraft(true))
-                return@launch
-            }
-            _uiEvent.setValue(CreateDiscussionUiEvent.SaveDraft(false))
+            discussionRepository.getDiscussions()
+            _uiEvent.setValue(CreateDiscussionUiEvent.SaveDraft(true))
+            return@launch
         }
     }
 
