@@ -12,5 +12,5 @@ class DraftsDiffUtil : DiffUtil.ItemCallback<DiscussionRoom>() {
     override fun areContentsTheSame(
         oldItem: DiscussionRoom,
         newItem: DiscussionRoom,
-    ): Boolean = oldItem.title == newItem.title
+    ): Boolean = oldItem == newItem
 }
