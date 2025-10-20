@@ -65,6 +65,7 @@
         android:layout_height="wrap_content"
         android:imeOptions="actionNext"
         android:theme="@style/text_selection_colors_black18"
+        app:cursorColor="@color/black_18"
         app:counterEnabled="true"
         app:counterMaxLength="40"
         app:endIconMode="clear_text"
