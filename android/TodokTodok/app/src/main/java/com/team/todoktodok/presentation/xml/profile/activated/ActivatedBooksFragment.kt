@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import com.team.domain.model.Book
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentActivatedBooksBinding
+import com.team.todoktodok.presentation.compose.bookdiscussions.BookDiscussionsActivity
 import com.team.todoktodok.presentation.xml.profile.BaseProfileFragment
 import com.team.todoktodok.presentation.xml.profile.activated.adapter.BooksAdapter
 
@@ -16,7 +17,10 @@ class ActivatedBooksFragment : BaseProfileFragment(R.layout.fragment_activated_b
 
     val bookAdapterHandler =
         object : BooksAdapter.Handler {
-            override fun onSelectBook(index: Int) {}
+            override fun onSelectBook(bookId: Long) {
+                val intent = BookDiscussionsActivity.intent(requireContext(), bookId)
+                startActivity(intent)
+            }
         }
 
     private val booksAdapter by lazy {
