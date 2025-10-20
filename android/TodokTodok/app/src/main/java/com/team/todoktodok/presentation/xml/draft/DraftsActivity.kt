@@ -36,16 +36,18 @@ class DraftsActivity : AppCompatActivity() {
     private fun setUpUiEvent() {
         viewModel.uiEvent.observe(this) { event ->
             when (event) {
-                is DraftUiEvent.NavigateToCreateDiscussionRoom -> {
-                    val data =
-                        Intent().apply {
-                            putExtra("selected_draft", event.id)
-                        }
-                    setResult(RESULT_OK, data)
-                    finish()
-                }
+                is DraftUiEvent.NavigateToCreateDiscussionRoom -> navigateToSelectedDraft(event)
             }
         }
+    }
+
+    private fun navigateToSelectedDraft(event: DraftUiEvent.NavigateToCreateDiscussionRoom) {
+        val data =
+            Intent().apply {
+                putExtra(KEY_SELECTED_DRAFTS, event.id)
+            }
+        setResult(RESULT_OK, data)
+        finish()
     }
 
     private fun setUpUiState(adapter: DraftsAdapter) {
@@ -71,6 +73,7 @@ class DraftsActivity : AppCompatActivity() {
     }
 
     companion object {
+        const val KEY_SELECTED_DRAFTS: String = "selected_draft"
         fun Intent(context: Context): Intent = Intent(context, DraftsActivity::class.java)
     }
 }
