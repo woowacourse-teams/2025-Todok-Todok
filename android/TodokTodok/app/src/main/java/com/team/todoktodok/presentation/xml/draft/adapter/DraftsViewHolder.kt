@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.team.domain.model.discussionroom.DiscussionRoom
+import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ItemDraftBinding
 
 class DraftsViewHolder private constructor(
@@ -19,8 +20,9 @@ class DraftsViewHolder private constructor(
     fun bind(discussionRoom: DiscussionRoom) {
         binding.apply {
             tvDiscussionTitle.text =
-                discussionRoom.title.ifBlank { "제목 없음" }
-            tvOpinion.text = discussionRoom.opinion.ifBlank { "내용 없음" }
+                discussionRoom.title.ifBlank { binding.root.context.getString(R.string.drafts_no_title) }
+            tvOpinion.text =
+                discussionRoom.opinion.ifBlank { binding.root.context.getString(R.string.drafts_no_description) }
         }
     }
 
