@@ -3,7 +3,7 @@ package com.team.todoktodok.data.local.discussion
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.team.domain.model.Book
+import com.team.domain.model.book.SearchedBook
 
 @Entity(tableName = "book")
 data class BookEntity(
@@ -14,17 +14,17 @@ data class BookEntity(
     @ColumnInfo(name = "book_image") val bookImage: String,
 )
 
-fun Book.toEntity() =
+fun SearchedBook.toEntity() =
     BookEntity(
-        bookId = id,
+        bookId = isbn,
         bookTitle = title,
         bookAuthor = author,
         bookImage = image,
     )
 
 fun BookEntity.toDomain() =
-    Book(
-        id = bookId,
+    SearchedBook.Companion.SearchedBook(
+        isbn = bookId,
         title = bookTitle,
         author = bookAuthor,
         image = bookImage,
