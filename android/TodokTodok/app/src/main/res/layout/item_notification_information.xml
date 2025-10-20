@@ -15,6 +15,7 @@
         android:text="최근 30일 동안의 알림만 확인할 수 있습니다."
         android:textColor="@color/gray_66"
         android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

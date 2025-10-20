@@ -1,6 +1,6 @@
 package com.team.todoktodok.data.network.request
 
-import com.team.domain.model.Book
+import com.team.domain.model.book.SearchedBook
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -11,9 +11,9 @@ data class BookRequest(
     val bookImage: String,
 )
 
-fun Book.toRequest() =
+fun SearchedBook.toRequest() =
     BookRequest(
-        bookIsbn = id,
+        bookIsbn = isbn,
         bookTitle = title,
         bookAuthor = author,
         bookImage = image,

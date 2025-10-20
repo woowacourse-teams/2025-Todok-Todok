@@ -195,7 +195,7 @@
     <string name="overload">덮어쓰기</string>
     <string name="error_empty_content">토론방 내용을 입력해주세요</string>
     <string name="error_empty_title">토론방 제목을 입력해주세요</string>
-    <string name="create_discussion_temp_save">임시 저장 | 3</string>
+    <string name="create_discussion_temp_save">임시 저장 | %d</string>
 
     <!-- 설정 화면 -->
     <string name="setting_modify_profile">프로필 정보 수정</string>
@@ -334,4 +334,16 @@
     <string name="notification_dialog_subtitle">내 글에 새로운 \'좋아요\'나 \'답글\'이 달리면 바로 알려드릴게요. 다른 독자들과의 흥미로운 토론을 이어가 보세요.</string>
     <string name="notification_dialog_cancel">괜찮아요</string>
     <string name="notification_dialog_okay">네, 알려주세요</string>
+
+    <string name="drafts">임시저장 글</string>
+    <string name="content_description_drafts_back">토론방 생성 페이지로 이동합니다</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+    <string name="drafts_no_title">제목 없음</string>
+    <string name="drafts_no_description">내용 없음</string>
+    <string name="drafts_no_exist">잠시 오류가 생겼습니다. 다시 선택해주세요</string>
+
 </resources>
