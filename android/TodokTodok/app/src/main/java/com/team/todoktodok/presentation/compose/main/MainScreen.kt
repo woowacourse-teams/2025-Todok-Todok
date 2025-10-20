@@ -6,6 +6,8 @@ import android.app.Activity
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.activity.compose.BackHandler
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
@@ -48,7 +50,6 @@ import kotlinx.coroutines.launch
 @Composable
 fun MainScreen(
     messageConverter: ExceptionMessageConverter,
-    askPermission: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: MainViewModel =
         viewModel(
@@ -62,10 +63,37 @@ fun MainScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     var showNotificationSheet by remember { mutableStateOf(false) }
 
+    val requestPermissionLauncher =
+        rememberLauncherForActivityResult(
+            ActivityResultContracts.RequestPermission(),
+        ) { isGranted: Boolean ->
+            if (isGranted) {
+                viewModel.sendPushNotificationToken()
+            }
+        }
+
+    fun askNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.POST_NOTIFICATIONS,
+                ) ==
+                PackageManager.PERMISSION_GRANTED
+            ) {
+                viewModel.sendPushNotificationToken()
+            } else {
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }
+        } else {
+            viewModel.sendPushNotificationToken()
+        }
+    }
+
     LaunchedEffect(Unit) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
             ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)
-            != PackageManager.PERMISSION_GRANTED) {
+            != PackageManager.PERMISSION_GRANTED
+        ) {
             showNotificationSheet = true
         }
     }
@@ -78,9 +106,9 @@ fun MainScreen(
             NotificationBottomSheet(
                 onCancel = { showNotificationSheet = false },
                 onConfirm = {
-                    askPermission()
+                    askNotificationPermission()
                     showNotificationSheet = false
-                }
+                },
             )
         }
     }
@@ -114,10 +142,10 @@ fun MainScreen(
 
     CompositionLocalProvider(
         LocalUiExceptionHandler provides
-                UiExceptionHandler(
-                    snackbarHostState = snackbarHostState,
-                    messageConverter = messageConverter,
-                ),
+            UiExceptionHandler(
+                snackbarHostState = snackbarHostState,
+                messageConverter = messageConverter,
+            ),
     ) {
         BackPressToExit()
         MainScreenContent(

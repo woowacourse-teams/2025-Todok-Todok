@@ -60,16 +60,17 @@ fun DiscussionToolbar(
     val context = LocalContext.current
     val density = LocalDensity.current
 
-    val notificationLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            val isRefresh = result.data?.getBooleanExtra(KEY_REFRESH_NOTIFICATION, false) ?: false
-            if (isRefresh) {
-                onChangeIsExistNotification()
+    val notificationLauncher =
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.StartActivityForResult(),
+        ) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val isRefresh = result.data?.getBooleanExtra(KEY_REFRESH_NOTIFICATION, false) ?: false
+                if (isRefresh) {
+                    onChangeIsExistNotification()
+                }
             }
         }
-    }
 
     Column(
         modifier =
@@ -147,8 +148,8 @@ fun DiscussionToolbar(
                 slideInVertically {
                     with(density) { -40.dp.roundToPx() }
                 } +
-                        expandVertically(expandFrom = Alignment.Top) +
-                        fadeIn(initialAlpha = 0.3f),
+                    expandVertically(expandFrom = Alignment.Top) +
+                    fadeIn(initialAlpha = 0.3f),
             exit = slideOutVertically() + shrinkVertically() + fadeOut(),
         ) {
             Row(

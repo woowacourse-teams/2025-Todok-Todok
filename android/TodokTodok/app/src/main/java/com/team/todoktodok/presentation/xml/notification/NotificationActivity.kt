@@ -105,7 +105,8 @@ class NotificationActivity : AppCompatActivity() {
                     override fun handleOnBackPressed() {
                         navigationToMain()
                     }
-                })
+                },
+            )
 
             rvNotifications.adapter = adapter
             val touchHelper =
@@ -164,9 +165,10 @@ class NotificationActivity : AppCompatActivity() {
     }
 
     private fun navigationToMain() {
-        val intent = Intent().apply {
-            putExtra(KEY_REFRESH_NOTIFICATION, true)
-        }
+        val intent =
+            Intent().apply {
+                putExtra(KEY_REFRESH_NOTIFICATION, true)
+            }
         setResult(RESULT_OK, intent)
         finish()
     }

@@ -28,12 +28,13 @@ import com.team.todoktodok.presentation.compose.theme.Pretendard
 fun NotificationBottomSheet(
     onCancel: () -> Unit,
     onConfirm: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier
-            .background(Color.White, shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
-            .padding(horizontal = 24.dp, vertical = 24.dp)
+        modifier =
+            modifier
+                .background(Color.White, shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
+                .padding(horizontal = 24.dp, vertical = 24.dp),
     ) {
         Text(
             text = stringResource(R.string.notification_dialog_title),
@@ -41,9 +42,10 @@ fun NotificationBottomSheet(
             fontWeight = FontWeight.SemiBold,
             color = Color.Black,
             textAlign = TextAlign.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 8.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp),
         )
 
         Text(
@@ -52,14 +54,15 @@ fun NotificationBottomSheet(
             fontWeight = FontWeight.Medium,
             color = Color.Black,
             textAlign = TextAlign.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 24.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 24.dp),
         )
 
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
                 text = stringResource(R.string.notification_dialog_cancel),
@@ -67,17 +70,17 @@ fun NotificationBottomSheet(
                 fontWeight = FontWeight.Medium,
                 color = Color.Black,
                 textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .weight(0.4f)
-                    .height(55.dp)
-                    .border(
-                        width = 1.dp,
-                        color = Color.Gray,
-                        shape = RoundedCornerShape(28.dp)
-                    )
-                    .background(Color.White, shape = RoundedCornerShape(28.dp))
-                    .clickable { onCancel() }
-                    .wrapContentHeight(Alignment.CenterVertically)
+                modifier =
+                    Modifier
+                        .weight(0.4f)
+                        .height(55.dp)
+                        .border(
+                            width = 1.dp,
+                            color = Color.Gray,
+                            shape = RoundedCornerShape(28.dp),
+                        ).background(Color.White, shape = RoundedCornerShape(28.dp))
+                        .clickable { onCancel() }
+                        .wrapContentHeight(Alignment.CenterVertically),
             )
 
             Spacer(modifier = Modifier.width(16.dp))
@@ -88,12 +91,13 @@ fun NotificationBottomSheet(
                 fontWeight = FontWeight.SemiBold,
                 color = Color.White,
                 textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .weight(0.4f)
-                    .height(55.dp)
-                    .background(Color(0xFF1AAB00), shape = RoundedCornerShape(28.dp))
-                    .clickable { onConfirm() }
-                    .wrapContentHeight(Alignment.CenterVertically)
+                modifier =
+                    Modifier
+                        .weight(0.4f)
+                        .height(55.dp)
+                        .background(Color(0xFF1AAB00), shape = RoundedCornerShape(28.dp))
+                        .clickable { onConfirm() }
+                        .wrapContentHeight(Alignment.CenterVertically),
             )
         }
     }

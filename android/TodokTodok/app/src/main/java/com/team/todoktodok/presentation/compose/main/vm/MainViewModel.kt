@@ -33,7 +33,9 @@ class MainViewModel(
 
     fun sendPushNotificationToken() {
         viewModelScope.launch {
-            notificationRepository.registerPushNotification().onSuccess { Log.d("test", "성공함") }
+            notificationRepository
+                .registerPushNotification()
+                .onSuccess { Log.d("test", "성공함") }
                 .onFailure { exceptions ->
                     onUiEvent(MainUiEvent.ShowErrorMessage(exceptions))
                 }
