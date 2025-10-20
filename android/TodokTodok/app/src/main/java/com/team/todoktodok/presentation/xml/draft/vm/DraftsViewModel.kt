@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.team.domain.model.discussionroom.DiscussionRoom
 import com.team.domain.repository.DiscussionRepository
+import com.team.todoktodok.R
 import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
 import com.team.todoktodok.presentation.core.event.SingleLiveData
 import com.team.todoktodok.presentation.xml.draft.DraftUiEvent
@@ -31,7 +32,11 @@ class DraftsViewModel(
     }
 
     fun selectDraft(position: Int) {
-        val id = _drafts.value?.get(position)?.id ?: error("잠시 오류가 생겼습니다. 다시 선택해주세요")
+        val id = _drafts.value?.getOrNull(position)?.id
+        if (id == null) {
+            _uiEvent.setValue(DraftUiEvent.ShowToast(R.string.drafts_no_exist))
+            return
+        }
         _uiEvent.setValue(DraftUiEvent.NavigateToCreateDiscussionRoom(id))
     }
 }

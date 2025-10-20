@@ -337,5 +337,6 @@
     <string name="previous">Previous</string>
     <string name="drafts_no_title">제목 없음</string>
     <string name="drafts_no_description">내용 없음</string>
+    <string name="drafts_no_exist">잠시 오류가 생겼습니다. 다시 선택해주세요</string>
 
 </resources>

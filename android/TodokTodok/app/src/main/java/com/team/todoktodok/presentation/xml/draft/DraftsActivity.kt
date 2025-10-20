@@ -10,6 +10,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.team.todoktodok.App
 import com.team.todoktodok.databinding.ActivityDraftsBinding
+import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
 import com.team.todoktodok.presentation.xml.draft.adapter.DraftsAdapter
 import com.team.todoktodok.presentation.xml.draft.vm.DraftsViewModel
 import com.team.todoktodok.presentation.xml.draft.vm.DraftsViewModelFactory
@@ -30,13 +31,14 @@ class DraftsActivity : AppCompatActivity() {
         initSystemBar(binding)
         initView(binding, adapter)
         setUpUiState(adapter)
-        setUpUiEvent()
+        setUpUiEvent(binding)
     }
 
-    private fun setUpUiEvent() {
+    private fun setUpUiEvent(binding: ActivityDraftsBinding) {
         viewModel.uiEvent.observe(this) { event ->
             when (event) {
                 is DraftUiEvent.NavigateToCreateDiscussionRoom -> navigateToSelectedDraft(event)
+                is DraftUiEvent.ShowToast -> AlertSnackBar(binding.root, event.error).show()
             }
         }
     }
