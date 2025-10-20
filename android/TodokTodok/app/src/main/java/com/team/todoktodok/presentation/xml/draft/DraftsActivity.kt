@@ -76,6 +76,7 @@ class DraftsActivity : AppCompatActivity() {
 
     companion object {
         const val KEY_SELECTED_DRAFTS: String = "selected_draft"
+
         fun Intent(context: Context): Intent = Intent(context, DraftsActivity::class.java)
     }
 }

@@ -112,10 +112,10 @@ class CreateDiscussionRoomViewModel(
         val book =
             if (editBook == null) {
                 _uiState.value?.editBook ?: _uiState.value?.draftBook ?: _uiState.value?.book
-                ?: run {
-                    _uiEvent.setValue(CreateDiscussionUiEvent.ShowToast(ErrorCreateDiscussionType.BOOK_INFO_NOT_FOUND))
-                    return
-                }
+                    ?: run {
+                        _uiEvent.setValue(CreateDiscussionUiEvent.ShowToast(ErrorCreateDiscussionType.BOOK_INFO_NOT_FOUND))
+                        return
+                    }
             } else {
                 SearchedBook.Companion.SearchedBook(
                     isbn = editBook.id,
@@ -248,7 +248,11 @@ class CreateDiscussionRoomViewModel(
         getDiscussionRoom(discussionRoomId, title, opinion)
     }
 
-    private fun getDiscussionRoom(discussionRoomId: Long, title: String, opinion: String) {
+    private fun getDiscussionRoom(
+        discussionRoomId: Long,
+        title: String,
+        opinion: String,
+    ) {
         val discussionRoom = DiscussionRoom(discussionRoomId, title, opinion)
         viewModelScope.launch {
             discussionRepository
