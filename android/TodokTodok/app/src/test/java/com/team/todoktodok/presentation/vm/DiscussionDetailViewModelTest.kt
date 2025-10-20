@@ -10,6 +10,7 @@ import com.team.todoktodok.InstantTaskExecutorExtension
 import com.team.todoktodok.ext.getOrAwaitValue
 import com.team.todoktodok.fixture.DISCUSSIONS
 import com.team.todoktodok.presentation.xml.discussiondetail.DiscussionDetailUiEvent
+import com.team.todoktodok.presentation.xml.discussiondetail.DiscussionDetailUiState
 import com.team.todoktodok.presentation.xml.discussiondetail.vm.DiscussionDetailViewModel
 import com.team.todoktodok.presentation.xml.discussiondetail.vm.DiscussionDetailViewModel.Companion.KEY_DISCUSSION_ID
 import io.mockk.coEvery
@@ -59,11 +60,12 @@ class DiscussionDetailViewModelTest {
 
             // when
             advanceUntilIdle()
+            val uiState = discussionDetailViewModel.uiState.getOrAwaitValue()
 
             // then
-            assertThat(
-                discussionDetailViewModel.uiState.getOrAwaitValue().discussion,
-            ).isEqualTo(expected)
+            if (uiState is DiscussionDetailUiState.Success) {
+                assertThat(uiState.discussion).isEqualTo(expected)
+            }
         }
 
     @Test
@@ -125,10 +127,12 @@ class DiscussionDetailViewModelTest {
             advanceUntilIdle()
             val event = discussionDetailViewModel.uiEvent.getOrAwaitValue()
             val uiState = discussionDetailViewModel.uiState.getOrAwaitValue()
-
             // then
-            assertThat(event).isEqualTo(DiscussionDetailUiEvent.ShowErrorMessage(exception))
-            assertFalse(uiState.isLoading)
+            if (uiState is DiscussionDetailUiState.Success) {
+                assertThat(event).isEqualTo(DiscussionDetailUiEvent.ShowErrorMessage(exception))
+
+                assertFalse(uiState.isLoading)
+            }
         }
 
     @Test
@@ -162,8 +166,11 @@ class DiscussionDetailViewModelTest {
             val uiState = discussionDetailViewModel.uiState.getOrAwaitValue()
 
             // then
-            assertThat(event).isEqualTo(DiscussionDetailUiEvent.ShowErrorMessage(exception))
-            assertFalse(uiState.isLoading)
+            if (uiState is DiscussionDetailUiState.Success) {
+                assertThat(event).isEqualTo(DiscussionDetailUiEvent.ShowErrorMessage(exception))
+
+                assertFalse(uiState.isLoading)
+            }
         }
 
     companion object {

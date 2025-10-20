@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import com.team.todoktodok.presentation.compose.main.MainActivity
 import com.team.todoktodok.presentation.compose.theme.TodoktodokTheme
 
 class BookDiscussionsActivity : AppCompatActivity() {

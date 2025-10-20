@@ -8,6 +8,8 @@ import com.team.todoktodok.data.datasource.book.BookRemoteDataSource
 import com.team.todoktodok.data.network.request.BookRequest
 import com.team.todoktodok.data.network.response.book.SearchedBookResponse
 import com.team.todoktodok.data.network.response.book.SearchedBookResultResponse
+import com.team.todoktodok.data.network.response.discussion.BookResponse
+import com.team.todoktodok.data.network.response.discussion.page.BookDiscussionPageResponse
 import com.team.todoktodok.data.network.response.latest.PageInfoResponse
 import com.team.todoktodok.fixture.SearchedBooksFixtures
 
@@ -57,6 +59,18 @@ class StubBookRemoteDataSource : BookRemoteDataSource {
                 totalSize = 10,
             ),
         )
+    }
+
+    override suspend fun fetchBook(bookId: Long): NetworkResult<BookResponse> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun fetchBookDiscussions(
+        bookId: Long,
+        size: Int,
+        cursor: String?,
+    ): NetworkResult<BookDiscussionPageResponse> {
+        TODO("Not yet implemented")
     }
 
     override suspend fun saveBook(bookRequest: BookRequest): NetworkResult<Long> {
