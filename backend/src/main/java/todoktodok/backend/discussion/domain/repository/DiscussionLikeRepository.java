@@ -77,11 +77,7 @@ public interface DiscussionLikeRepository extends JpaRepository<DiscussionLike, 
                 SELECT dl.discussion.id
                 FROM DiscussionLike dl
                 WHERE dl.member = :member
-                AND (:cursorId IS NULL OR dl.discussion.id < :cursorId)
+                ORDER BY dl.discussion.id DESC
             """)
-    Slice<Long> findLikedDiscussionIdsByMemberAndCursor(
-            @Param("member") final Member member,
-            @Param("cursorId") final Long cursorId,
-            final Pageable pageable
-    );
+    List<Long> findLikedDiscussionIdsByMember(@Param("member") final Member member);
 }
