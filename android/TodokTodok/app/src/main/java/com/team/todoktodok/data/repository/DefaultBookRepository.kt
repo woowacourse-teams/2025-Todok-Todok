@@ -1,5 +1,6 @@
 package com.team.todoktodok.data.repository
 
+import com.team.domain.model.book.BookDetail
 import com.team.domain.model.book.Keyword
 import com.team.domain.model.book.SearchedBook
 import com.team.domain.model.book.SearchedBooksResult
@@ -43,7 +44,9 @@ class DefaultBookRepository(
     }
 
     override suspend fun saveBook(book: SearchedBook): NetworkResult<Long> = bookRemoteDataSource.saveBook(book.toRequest())
-    override suspend fun fetchBook(bookId: Long): NetworkResult<Book> = bookRemoteDataSource.fetchBook(bookId).map { it.toDomain() }
+
+    override suspend fun getBookDetail(bookId: Long): NetworkResult<BookDetail> =
+        bookRemoteDataSource.fetchBook(bookId).map { it.toDomain() }
 
     override suspend fun getBookDiscussions(
         bookId: Long,
@@ -53,5 +56,4 @@ class DefaultBookRepository(
         bookRemoteDataSource
             .fetchBookDiscussions(bookId, size, cursor)
             .map { discussions -> discussions.toDomain() }
-
 }

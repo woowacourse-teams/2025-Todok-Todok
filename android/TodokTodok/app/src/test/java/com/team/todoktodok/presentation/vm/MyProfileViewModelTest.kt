@@ -61,15 +61,15 @@ class MyProfileViewModelTest {
             val profile = Profile(1, "페토", "안녕하세요", "")
             val books =
                 listOf(
-                    Book(1, "Book1", "페토", "", "키움", "키워드"),
-                    Book(2, "Book2", "정페토", "", "키움", "키워드"),
+                    Book(1, "Book1", "페토", ""),
+                    Book(2, "Book2", "정페토", ""),
                 )
             val discussions =
                 listOf(
                     Discussion(
                         id = 1L,
                         discussionTitle = "JPA 성능 최적화",
-                        book = Book(1L, "자바 ORM 표준 JPA 프로그래밍", "김영한", "", "키움", "키워드"),
+                        book = Book(1L, "자바 ORM 표준 JPA 프로그래밍", "김영한", ""),
                         writer = User(1L, Nickname("홍길동"), ""),
                         createAt = LocalDateTime.of(2025, 7, 12, 12, 0),
                         discussionOpinion =

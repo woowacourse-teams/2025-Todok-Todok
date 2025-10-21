@@ -7,6 +7,7 @@ import com.team.domain.ConnectivityObserver
 import com.team.domain.model.Book
 import com.team.domain.model.Discussion
 import com.team.domain.model.PageInfo
+import com.team.domain.model.book.BookDetail
 import com.team.domain.repository.BookRepository
 import com.team.todoktodok.presentation.compose.bookdiscussions.model.BookDiscussionsUiEvent
 import com.team.todoktodok.presentation.compose.bookdiscussions.model.BookDiscussionsUiState
@@ -48,7 +49,7 @@ class BookDiscussionsViewModel(
     private fun loadBook() {
         runAsync(
             LOAD_BOOK_KEY,
-            { bookRepository.fetchBook(bookId) },
+            { bookRepository.getBookDetail(bookId) },
             { updateBook(it) },
             { onUiEvent(BookDiscussionsUiEvent.ShowError(it)) },
         )
@@ -66,7 +67,7 @@ class BookDiscussionsViewModel(
         )
     }
 
-    private fun updateBook(book: Book) {
+    private fun updateBook(book: BookDetail) {
         _uiState.update { currentUiState ->
             currentUiState.copy(book.toBookDetailUiState())
         }

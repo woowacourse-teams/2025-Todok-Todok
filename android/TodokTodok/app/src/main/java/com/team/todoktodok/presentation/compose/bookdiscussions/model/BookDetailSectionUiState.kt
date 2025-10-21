@@ -2,6 +2,7 @@ package com.team.todoktodok.presentation.compose.bookdiscussions.model
 
 import androidx.compose.runtime.Immutable
 import com.team.domain.model.Book
+import com.team.domain.model.book.BookDetail
 
 @Immutable
 data class BookDetailSectionUiState(
@@ -12,7 +13,7 @@ data class BookDetailSectionUiState(
     val bookSummary: String = "",
 )
 
-fun Book.toBookDetailUiState() =
+fun BookDetail.toBookDetailUiState() =
     BookDetailSectionUiState(
         title,
         author,

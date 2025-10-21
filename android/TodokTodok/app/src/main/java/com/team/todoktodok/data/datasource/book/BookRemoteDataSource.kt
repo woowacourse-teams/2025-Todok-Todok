@@ -3,7 +3,7 @@ package com.team.todoktodok.data.datasource.book
 import com.team.domain.model.exception.NetworkResult
 import com.team.todoktodok.data.network.request.BookRequest
 import com.team.todoktodok.data.network.response.book.SearchedBookResultResponse
-import com.team.todoktodok.data.network.response.discussion.BookResponse
+import com.team.todoktodok.data.network.response.discussion.BookDetailResponse
 import com.team.todoktodok.data.network.response.discussion.page.BookDiscussionPageResponse
 
 interface BookRemoteDataSource {
@@ -13,7 +13,7 @@ interface BookRemoteDataSource {
         keyword: String,
     ): NetworkResult<SearchedBookResultResponse>
 
-    suspend fun fetchBook(bookId: Long): NetworkResult<BookResponse>
+    suspend fun fetchBook(bookId: Long): NetworkResult<BookDetailResponse>
 
     suspend fun fetchBookDiscussions(
         bookId: Long,

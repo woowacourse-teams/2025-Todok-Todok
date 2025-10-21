@@ -5,8 +5,6 @@ data class Book(
     val title: String,
     val author: String,
     val image: String,
-    val publisher: String,
-    val summary: String,
 ) {
     fun extractSubtitle(): String = title.split(SUBTITLE_SEPARATOR).first().trim()
 

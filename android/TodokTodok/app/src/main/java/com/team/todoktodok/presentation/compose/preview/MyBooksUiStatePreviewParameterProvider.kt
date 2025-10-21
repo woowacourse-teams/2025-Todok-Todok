@@ -19,8 +19,6 @@ class MyBooksUiStatePreviewParameterProvider : PreviewParameterProvider<MyBooksU
                                 image =
                                     "https://search2.kakaocdn.net/thumb/R120x174.q85/" +
                                         "?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F1467038",
-                                "",
-                                "",
                             ),
                             Book(
                                 id = 2,
@@ -29,8 +27,6 @@ class MyBooksUiStatePreviewParameterProvider : PreviewParameterProvider<MyBooksU
                                 image =
                                     "https://search2.kakaocdn.net/thumb/R120x174.q85/" +
                                         "?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F1467038",
-                                "",
-                                "",
                             ),
                             Book(
                                 id = 3,
@@ -39,8 +35,6 @@ class MyBooksUiStatePreviewParameterProvider : PreviewParameterProvider<MyBooksU
                                 image =
                                     "https://search2.kakaocdn.net/thumb/R120x174.q85/" +
                                         "?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F1467038",
-                                "",
-                                "",
                             ),
                             Book(
                                 id = 4,
@@ -49,8 +43,6 @@ class MyBooksUiStatePreviewParameterProvider : PreviewParameterProvider<MyBooksU
                                 image =
                                     "https://search2.kakaocdn.net/thumb/R120x174.q85/" +
                                         "?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F1467038",
-                                "",
-                                "",
                             ),
                             Book(
                                 id = 5,
@@ -59,8 +51,6 @@ class MyBooksUiStatePreviewParameterProvider : PreviewParameterProvider<MyBooksU
                                 image =
                                     "https://search2.kakaocdn.net/thumb/R120x174.q85/" +
                                         "?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F1467038",
-                                "",
-                                "",
                             ),
                             Book(
                                 id = 6,
@@ -69,8 +59,6 @@ class MyBooksUiStatePreviewParameterProvider : PreviewParameterProvider<MyBooksU
                                 image =
                                     "https://search2.kakaocdn.net/thumb/R120x174.q85/" +
                                         "?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F1467038",
-                                "",
-                                "",
                             ),
                             Book(
                                 id = 7,
@@ -79,8 +67,6 @@ class MyBooksUiStatePreviewParameterProvider : PreviewParameterProvider<MyBooksU
                                 image =
                                     "https://search2.kakaocdn.net/thumb/R120x174.q85/" +
                                         "?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F1467038",
-                                "",
-                                "",
                             ),
                             Book(
                                 id = 8,
@@ -89,8 +75,6 @@ class MyBooksUiStatePreviewParameterProvider : PreviewParameterProvider<MyBooksU
                                 image =
                                     "https://search2.kakaocdn.net/thumb/R120x174.q85/" +
                                         "?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F1467038",
-                                "",
-                                "",
                             ),
                             Book(
                                 id = 9,
@@ -99,8 +83,6 @@ class MyBooksUiStatePreviewParameterProvider : PreviewParameterProvider<MyBooksU
                                 image =
                                     "https://search2.kakaocdn.net/thumb/R120x174.q85/" +
                                         "?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F1467038",
-                                "",
-                                "",
                             ),
                             Book(
                                 id = 10,
@@ -109,8 +91,6 @@ class MyBooksUiStatePreviewParameterProvider : PreviewParameterProvider<MyBooksU
                                 image =
                                     "https://search2.kakaocdn.net/thumb/R120x174.q85/" +
                                         "?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F1467038",
-                                "",
-                                "",
                             ),
                         ),
                 ),

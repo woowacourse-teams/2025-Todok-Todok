@@ -8,7 +8,7 @@ import com.team.todoktodok.data.datasource.book.BookRemoteDataSource
 import com.team.todoktodok.data.network.request.BookRequest
 import com.team.todoktodok.data.network.response.book.SearchedBookResponse
 import com.team.todoktodok.data.network.response.book.SearchedBookResultResponse
-import com.team.todoktodok.data.network.response.discussion.BookResponse
+import com.team.todoktodok.data.network.response.discussion.BookDetailResponse
 import com.team.todoktodok.data.network.response.discussion.page.BookDiscussionPageResponse
 import com.team.todoktodok.data.network.response.latest.PageInfoResponse
 import com.team.todoktodok.fixture.SearchedBooksFixtures
@@ -61,7 +61,7 @@ class StubBookRemoteDataSource : BookRemoteDataSource {
         )
     }
 
-    override suspend fun fetchBook(bookId: Long): NetworkResult<BookResponse> {
+    override suspend fun fetchBook(bookId: Long): NetworkResult<BookDetailResponse> {
         TODO("Not yet implemented")
     }
 

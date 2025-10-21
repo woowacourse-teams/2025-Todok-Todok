@@ -31,9 +31,11 @@ fun BookCover(
 ) {
     Column(
         modifier =
-            modifier.aspectRatio(0.5f).clickable {
-                onActionClick(book.id)
-            },
+            modifier
+                .aspectRatio(0.5f)
+                .clickable {
+                    onActionClick(book.id)
+                },
     ) {
         SubcomposeAsyncImage(
             model =
@@ -93,8 +95,6 @@ private fun BookCoverPreview() {
             title = "The Hitchhiker's Guide to the Galaxy",
             author = "Douglas Adams",
             image = "https://search2.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F1467038",
-            "",
-            "",
         )
     BookCover(book)
 }

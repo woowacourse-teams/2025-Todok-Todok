@@ -3,6 +3,7 @@ package com.team.todoktodok.data.network.service
 import com.team.domain.model.exception.NetworkResult
 import com.team.todoktodok.data.network.request.BookRequest
 import com.team.todoktodok.data.network.response.book.SearchedBookResultResponse
+import com.team.todoktodok.data.network.response.discussion.BookDetailResponse
 import com.team.todoktodok.data.network.response.discussion.BookResponse
 import com.team.todoktodok.data.network.response.discussion.page.BookDiscussionPageResponse
 import retrofit2.http.Body
@@ -22,7 +23,7 @@ interface BookService {
     @GET("v1/books/{bookId}")
     suspend fun fetchBook(
         @Path("bookId") bookId: Long,
-    ): NetworkResult<BookResponse>
+    ): NetworkResult<BookDetailResponse>
 
     @GET("v1/books/{bookId}/discussions")
     suspend fun fetchBookDiscussions(

@@ -1,5 +1,6 @@
 package com.team.domain.repository
 
+import com.team.domain.model.book.BookDetail
 import com.team.domain.model.book.Keyword
 import com.team.domain.model.book.SearchedBook
 import com.team.domain.model.book.SearchedBooksResult
@@ -12,7 +13,7 @@ interface BookRepository {
         keyword: Keyword,
     ): NetworkResult<SearchedBooksResult>
 
-    suspend fun fetchBook(bookId: Long): NetworkResult<Book>
+    suspend fun getBookDetail(bookId: Long): NetworkResult<BookDetail>
 
     suspend fun getBookDiscussions(
         bookId: Long,

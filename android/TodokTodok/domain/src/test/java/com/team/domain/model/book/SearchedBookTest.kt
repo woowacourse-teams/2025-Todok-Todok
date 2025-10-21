@@ -14,8 +14,6 @@ class SearchedBookTest {
                 BookTitle("오브젝트 - 코드로 이해하는 객체지향 설계"),
                 BookAuthor("조영호 (지은이)"),
                 BookImage("https://image.aladin.co.kr/product/19368/10/coversum/k972635015_1.jpg"),
-                "",
-                "",
             )
 
         // when
@@ -47,8 +45,6 @@ class SearchedBookTest {
                 "오브젝트 - 코드로 이해하는 객체지향 설계",
                 "조영호 (지은이)",
                 "https://image.aladin.co.kr/product/19368/10/coversum/k972635015_1.jpg",
-                "",
-                "",
             )
 
         // when

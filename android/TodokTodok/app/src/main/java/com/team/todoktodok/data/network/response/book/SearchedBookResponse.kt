@@ -26,6 +26,4 @@ fun SearchedBookResponse.toDomain() =
         title = title,
         author = author,
         image = image,
-        publisher = publisher,
-        summary = summary,
     )
