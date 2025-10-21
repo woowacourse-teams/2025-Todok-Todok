@@ -31,27 +31,28 @@ public class S3ImageUploadClient {
     }
 
     public ProfileImageResponse uploadImage(final MultipartFile file) {
-        try {
-            final String contentType = file.getContentType();
-            final String extension = ImageType.getExtension(contentType);
-
-            final String key = String.format("%s%s%s", keyPrefix, UUID.randomUUID(), extension);
-            final PutObjectRequest putObj = PutObjectRequest.builder()
-                    .bucket(bucketName)
-                    .key(key)
-                    .contentType(contentType)
-                    .build();
-            s3Client.putObject(putObj, RequestBody.fromBytes(file.getBytes()));
-
-            final String downloadUrl = String.format("https://%s.s3.%s.amazonaws.com/%s", bucketName, region.id(), key);
-
-            return new ProfileImageResponse(downloadUrl);
-        } catch (final S3Exception e) { // S3 API 서버 측 오류
-            throw new AwsApiException(e.getMessage());
-        } catch (final SdkClientException e) { // AWS 입장에서 클라이언트 측(==우리 서버)에서 발생한 오류
-            throw new AwsApiException(e.getMessage());
-        } catch (final Exception e) { // 그 외 오류
-            throw new AwsApiException(e.getMessage());
-        }
+        return new ProfileImageResponse("");
+//        try {
+//            final String contentType = file.getContentType();
+//            final String extension = ImageType.getExtension(contentType);
+//
+//            final String key = String.format("%s%s%s", keyPrefix, UUID.randomUUID(), extension);
+//            final PutObjectRequest putObj = PutObjectRequest.builder()
+//                    .bucket(bucketName)
+//                    .key(key)
+//                    .contentType(contentType)
+//                    .build();
+//            s3Client.putObject(putObj, RequestBody.fromBytes(file.getBytes()));
+//
+//            final String downloadUrl = String.format("https://%s.s3.%s.amazonaws.com/%s", bucketName, region.id(), key);
+//
+//            return new ProfileImageResponse(downloadUrl);
+//        } catch (final S3Exception e) { // S3 API 서버 측 오류
+//            throw new AwsApiException(e.getMessage());
+//        } catch (final SdkClientException e) { // AWS 입장에서 클라이언트 측(==우리 서버)에서 발생한 오류
+//            throw new AwsApiException(e.getMessage());
+//        } catch (final Exception e) { // 그 외 오류
+//            throw new AwsApiException(e.getMessage());
+//        }
     }
 }

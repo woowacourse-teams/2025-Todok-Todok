@@ -37,35 +37,36 @@ public class FcmPushNotifier {
             final Long recipientId,
             final FcmMessagePayload fcmMessagePayload
     ) {
-        final List<NotificationToken> notificationTokens = notificationTokenRepository.findAllByMemberId(recipientId);
-        final List<String> tokens = notificationTokens.stream()
-                .map(NotificationToken::getToken)
-                .toList();
-
-        final MulticastMessage multicastMessage = MulticastMessage.builder()
-                .addAllTokens(tokens)
-                .putData("notificationId", fcmMessagePayload.notificationId())
-                .putData("title", fcmMessagePayload.title())
-                .putData("body", fcmMessagePayload.body())
-                .putData("image", TODOKTODOK_LOGO_URL)
-                .putData("discussionId", fcmMessagePayload.discussionId())
-                .putData("commentId", fcmMessagePayload.commentId())
-                .putData("replyId", fcmMessagePayload.replyId())
-                .putData("memberNickname", fcmMessagePayload.memberNickname())
-                .putData("discussionTitle", fcmMessagePayload.discussionTitle())
-                .putData("content", fcmMessagePayload.content())
-                .putData("type", fcmMessagePayload.type())
-                .putData("target", fcmMessagePayload.target())
-                .build();
-
-        try {
-            final BatchResponse batchResponse = FirebaseMessaging.getInstance()
-                    .sendEachForMulticast(multicastMessage);
-
-            handleResponses(batchResponse, tokens);
-        } catch (final FirebaseMessagingException e) {
-            log.error("Fail sending message to FCM");
-        }
+        log.info("fake send push to {}", recipientId);
+//        final List<NotificationToken> notificationTokens = notificationTokenRepository.findAllByMemberId(recipientId);
+//        final List<String> tokens = notificationTokens.stream()
+//                .map(NotificationToken::getToken)
+//                .toList();
+//
+//        final MulticastMessage multicastMessage = MulticastMessage.builder()
+//                .addAllTokens(tokens)
+//                .putData("notificationId", fcmMessagePayload.notificationId())
+//                .putData("title", fcmMessagePayload.title())
+//                .putData("body", fcmMessagePayload.body())
+//                .putData("image", TODOKTODOK_LOGO_URL)
+//                .putData("discussionId", fcmMessagePayload.discussionId())
+//                .putData("commentId", fcmMessagePayload.commentId())
+//                .putData("replyId", fcmMessagePayload.replyId())
+//                .putData("memberNickname", fcmMessagePayload.memberNickname())
+//                .putData("discussionTitle", fcmMessagePayload.discussionTitle())
+//                .putData("content", fcmMessagePayload.content())
+//                .putData("type", fcmMessagePayload.type())
+//                .putData("target", fcmMessagePayload.target())
+//                .build();
+//
+//        try {
+//            final BatchResponse batchResponse = FirebaseMessaging.getInstance()
+//                    .sendEachForMulticast(multicastMessage);
+//
+//            handleResponses(batchResponse, tokens);
+//        } catch (final FirebaseMessagingException e) {
+//            log.error("Fail sending message to FCM");
+//        }
     }
 
     private void handleResponses(

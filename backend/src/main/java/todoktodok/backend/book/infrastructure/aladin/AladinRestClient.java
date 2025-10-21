@@ -1,6 +1,8 @@
 package todoktodok.backend.book.infrastructure.aladin;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -109,10 +111,14 @@ public class AladinRestClient {
         final URI requestUri = uri.apply(UriComponentsBuilder.newInstance());
 
         try {
-            final AladinItemResponses response = restClient.get()
-                    .uri(requestUri)
-                    .retrieve()
-                    .body(AladinItemResponses.class);
+            final AladinItemResponses response = new AladinItemResponses(
+                    new ArrayList<>(),
+                    0
+            );
+//            final AladinItemResponses response = restClient.get()
+//                    .uri(requestUri)
+//                    .retrieve()
+//                    .body(AladinItemResponses.class);
 
             if (response == null || response.item() == null) {
                 throw new AladinApiException(

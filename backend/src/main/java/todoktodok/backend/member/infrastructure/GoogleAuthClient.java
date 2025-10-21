@@ -22,11 +22,12 @@ public class GoogleAuthClient implements AuthClient{
     }
 
     public GoogleAuthMemberDto resolveVerifiedEmailAndNicknameFrom(final String idTokenRequest) {
-        final GoogleIdToken.Payload payload = getVerifiedPayload(idTokenRequest);
-        return new GoogleAuthMemberDto(
-                payload.getEmail(),
-                (String) payload.get("picture")
-        );
+        return null;
+//        final GoogleIdToken.Payload payload = getVerifiedPayload(idTokenRequest);
+//        return new GoogleAuthMemberDto(
+//                payload.getEmail(),
+//                (String) payload.get("picture")
+//        );
     }
 
     private GoogleIdToken.Payload getVerifiedPayload(final String idTokenRequest) {

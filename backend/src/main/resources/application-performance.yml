@@ -58,7 +58,7 @@ logging:
               NioEndpoint: DEBUG
 
 auth:
-  mode: google
+  mode: bypass
 
 management:
   endpoints:
@@ -77,7 +77,7 @@ management:
             requests: true
 
 firebase:
-  enabled: true
+  enabled: false
   account:
     path: ${firebase.account.path}
 
