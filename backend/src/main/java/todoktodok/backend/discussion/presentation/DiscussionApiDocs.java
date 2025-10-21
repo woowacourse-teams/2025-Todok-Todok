@@ -1203,7 +1203,7 @@ public interface DiscussionApiDocs {
                     )
             )
     })
-    ResponseEntity<List<DiscussionResponse>> getLikedDiscussions(
+    ResponseEntity<List<DiscussionResponse>> getLikedDiscussionsByMe(
             @Parameter(hidden = true) final Long memberId
     );
 }

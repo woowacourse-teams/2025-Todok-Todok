@@ -24,7 +24,6 @@ import todoktodok.backend.discussion.application.dto.ActiveDiscussionCursor;
 import todoktodok.backend.discussion.application.dto.response.ActiveDiscussionPageResponse;
 import todoktodok.backend.discussion.application.dto.response.DiscussionResponse;
 import todoktodok.backend.discussion.application.dto.response.LatestDiscussionPageResponse;
-import todoktodok.backend.discussion.application.dto.response.LikedDiscussionPageResponse;
 import todoktodok.backend.discussion.application.dto.response.PageInfo;
 import todoktodok.backend.discussion.domain.Discussion;
 import todoktodok.backend.discussion.domain.DiscussionMemberView;
@@ -201,7 +200,7 @@ public class DiscussionQueryService {
         );
     }
 
-    public List<DiscussionResponse> getLikedDiscussions(final Long memberId) {
+    public List<DiscussionResponse> getLikedDiscussionsByMe(final Long memberId) {
         final Member member = findMember(memberId);
         final List<Long> likedIds = discussionLikeRepository.findLikedDiscussionIdsByMember(member);
 

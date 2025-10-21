@@ -399,7 +399,7 @@ class DiscussionControllerTest {
 
     @Test
     @DisplayName("좋아요한 토론방을 전체 조회한다")
-    void getLikedDiscussions() {
+    void getLikedDiscussionsByMe() {
         // given
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();

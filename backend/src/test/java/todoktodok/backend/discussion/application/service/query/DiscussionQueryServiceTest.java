@@ -1202,7 +1202,7 @@ class DiscussionQueryServiceTest {
             final Long memberId = 1L;
 
             // when
-            final List<DiscussionResponse> response = discussionQueryService.getLikedDiscussions(memberId);
+            final List<DiscussionResponse> response = discussionQueryService.getLikedDiscussionsByMe(memberId);
 
             // then
             assertAll(
@@ -1224,7 +1224,7 @@ class DiscussionQueryServiceTest {
             final Long memberId = 1L;
 
             // when
-            final List<DiscussionResponse> response = discussionQueryService.getLikedDiscussions(memberId);
+            final List<DiscussionResponse> response = discussionQueryService.getLikedDiscussionsByMe(memberId);
 
             // then
             assertThat(response).isEmpty();
