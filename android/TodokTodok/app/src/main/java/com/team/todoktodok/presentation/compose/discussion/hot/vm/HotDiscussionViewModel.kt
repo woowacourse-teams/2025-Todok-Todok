@@ -6,7 +6,6 @@ import com.team.domain.repository.DiscussionRepository
 import com.team.todoktodok.presentation.compose.discussion.hot.HotDiscussionUiEvent
 import com.team.todoktodok.presentation.compose.discussion.hot.HotDiscussionUiState
 import com.team.todoktodok.presentation.core.base.BaseViewModel
-import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussion
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -36,7 +35,7 @@ class HotDiscussionViewModel(
         runAsync(
             key = KEY_POPULAR_DISCUSSIONS,
             action = { discussionRepository.getHotDiscussion() },
-            handleSuccess = { result -> _uiState.update { it.addPopularDiscussions(result) } },
+            handleSuccess = { result -> _uiState.update { it.setPopularDiscussions(result) } },
             handleFailure = {
                 _uiState.update { state -> state.copy(isRefreshing = false) }
                 onUiEvent(HotDiscussionUiEvent.ShowErrorMessage(it))
@@ -45,7 +44,7 @@ class HotDiscussionViewModel(
 
     fun loadActivatedDiscussions(initial: Boolean = false) {
         val current = _uiState.value
-
+        if (initial && !current.activatedDiscussions.notHasDiscussion) _uiState.update { it.clearForRefresh() }
         if (!initial && (!current.hasNextPage || current.activatedDiscussions.notHasDiscussion)) return
 
         val cursor = if (initial) null else current.activatedDiscussions.pageInfo.nextCursor
@@ -61,14 +60,6 @@ class HotDiscussionViewModel(
                 onUiEvent(HotDiscussionUiEvent.ShowErrorMessage(it))
             },
         )
-    }
-
-    fun modifyDiscussion(discussion: SerializationDiscussion) {
-        _uiState.update { it.modifyDiscussion(discussion) }
-    }
-
-    fun removeDiscussion(discussionId: Long) {
-        _uiState.update { it.removeDiscussion(discussionId) }
     }
 
     fun refreshHotDiscussions() {

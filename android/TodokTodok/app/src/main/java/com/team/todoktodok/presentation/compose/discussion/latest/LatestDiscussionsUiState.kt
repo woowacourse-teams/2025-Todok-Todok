@@ -4,7 +4,6 @@ import com.team.domain.model.DiscussionPage
 import com.team.domain.model.PageInfo
 import com.team.todoktodok.presentation.compose.core.component.DiscussionCardType
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiModel
-import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussion
 
 data class LatestDiscussionsUiState(
     val discussions: List<DiscussionUiModel> = emptyList(),
@@ -14,7 +13,7 @@ data class LatestDiscussionsUiState(
 ) {
     fun clearForRefresh(): LatestDiscussionsUiState = copy(discussions = emptyList(), latestPage = PageInfo.EMPTY, isRefreshing = true)
 
-    fun append(page: DiscussionPage): LatestDiscussionsUiState {
+    fun appendDiscussion(page: DiscussionPage): LatestDiscussionsUiState {
         val newDiscussion =
             discussions.toMutableList().apply {
                 addAll(page.discussions.map { discussion -> DiscussionUiModel(discussion) })
@@ -24,23 +23,6 @@ data class LatestDiscussionsUiState(
         val newLatestPage = latestPage.copy(pageInfo.hasNext, pageInfo.nextCursor)
 
         return copy(discussions = newDiscussion, isRefreshing = false, latestPage = newLatestPage)
-    }
-
-    fun modify(newDiscussion: SerializationDiscussion): LatestDiscussionsUiState =
-        copy(
-            discussions =
-                discussions.map {
-                    if (it.discussionId == newDiscussion.id) {
-                        DiscussionUiModel(newDiscussion.toDomain())
-                    } else {
-                        it
-                    }
-                },
-        )
-
-    fun remove(discussionId: Long): LatestDiscussionsUiState {
-        val newItems = discussions.filter { it.discussionId != discussionId }
-        return copy(discussions = newItems)
     }
 
     val hasNext get() = latestPage.hasNext

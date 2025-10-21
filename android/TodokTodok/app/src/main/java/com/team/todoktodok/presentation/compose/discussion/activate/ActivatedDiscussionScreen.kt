@@ -1,5 +1,8 @@
 package com.team.todoktodok.presentation.compose.discussion.activate
 
+import android.app.Activity.RESULT_OK
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.SemiBold
@@ -24,14 +28,25 @@ import com.team.todoktodok.presentation.compose.core.component.InfinityLazyColum
 import com.team.todoktodok.presentation.compose.preview.ActivatedDiscussionsUiStatePreviewParameterProvider
 import com.team.todoktodok.presentation.compose.theme.Black18
 import com.team.todoktodok.presentation.compose.theme.Pretendard
+import com.team.todoktodok.presentation.xml.discussiondetail.DiscussionDetailActivity
 
 @Composable
 fun ActivatedDiscussionScreen(
     uiState: ActivatedDiscussionsUiState,
     onLoadMore: () -> Unit,
-    onClickDiscussion: (Long) -> Unit,
+    onCompleteShowDiscussion: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val context = LocalContext.current
+    val activityResultLauncher =
+        rememberLauncherForActivityResult(
+            ActivityResultContracts.StartActivityForResult(),
+        ) { result ->
+            if (result.resultCode == RESULT_OK) {
+                onCompleteShowDiscussion()
+            }
+        }
+
     Column(modifier = modifier) {
         ActivatedDiscussionHeader()
 
@@ -50,7 +65,14 @@ fun ActivatedDiscussionScreen(
                     DiscussionCard(
                         uiState = item,
                         discussionCardType = uiState.type,
-                        onClick = { onClickDiscussion(it) },
+                        onClick = {
+                            activityResultLauncher.launch(
+                                DiscussionDetailActivity.Intent(
+                                    context = context,
+                                    discussionId = it,
+                                ),
+                            )
+                        },
                     )
                 }
             },
@@ -89,6 +111,6 @@ private fun ActivatedDiscussionScreenPreview(
     ActivatedDiscussionScreen(
         uiState = activatedDiscussions,
         onLoadMore = {},
-        onClickDiscussion = {},
+        onCompleteShowDiscussion = {},
     )
 }
