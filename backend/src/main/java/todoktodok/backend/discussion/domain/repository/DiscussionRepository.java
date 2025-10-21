@@ -134,7 +134,7 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
             final Pageable pageable
     );
 
-    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Modifying(clearAutomatically = true)
     @Query("""
                 UPDATE Discussion d
                 SET d.viewCount = d.viewCount + 1
