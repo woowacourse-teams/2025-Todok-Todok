@@ -63,7 +63,7 @@ public class CommentCommandService {
         final Comment comment = findComment(commentId);
         final Discussion discussion = findDiscussion(discussionId);
 
-        comment.validateMatchWithDiscussion(discussion);
+//        comment.validateMatchWithDiscussion(discussion);
 
         final Optional<CommentLike> commentLikeOrEmpty = commentLikeRepository.findByMemberAndComment(member, comment);
         if (commentLikeOrEmpty.isPresent()) {
@@ -93,8 +93,8 @@ public class CommentCommandService {
         final Discussion discussion = findDiscussion(discussionId);
         final ContentReportReason reportReason = ContentReportReason.fromDescription(reason);
 
-        comment.validateMatchWithDiscussion(discussion);
-        comment.validateSelfReport(member);
+//        comment.validateMatchWithDiscussion(discussion);
+//        comment.validateSelfReport(member);
 
         validateDuplicatedReport(member, comment);
 
@@ -117,8 +117,8 @@ public class CommentCommandService {
         final Member member = findMember(memberId);
         final Discussion discussion = findDiscussion(discussionId);
 
-        validateCommentMember(comment, member);
-        comment.validateMatchWithDiscussion(discussion);
+//        validateCommentMember(comment, member);
+//        comment.validateMatchWithDiscussion(discussion);
 
         comment.updateContent(commentRequest.content());
     }
@@ -132,9 +132,9 @@ public class CommentCommandService {
         final Member member = findMember(memberId);
         final Discussion discussion = findDiscussion(discussionId);
 
-        validateHasReply(comment);
-        validateCommentMember(comment, member);
-        comment.validateMatchWithDiscussion(discussion);
+//        validateHasReply(comment);
+//        validateCommentMember(comment, member);
+//        comment.validateMatchWithDiscussion(discussion);
 
         commentRepository.delete(comment);
     }

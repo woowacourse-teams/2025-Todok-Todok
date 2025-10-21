@@ -45,7 +45,7 @@ public class ReplyCommandService {
         final Discussion discussion = findDiscussion(discussionId);
         final Comment comment = findComment(commentId);
 
-        comment.validateMatchWithDiscussion(discussion);
+//        comment.validateMatchWithDiscussion(discussion);
 
         final Reply reply = Reply.builder()
                 .content(replyRequest.content())
@@ -72,11 +72,11 @@ public class ReplyCommandService {
         final Reply reply = findReply(replyId);
         final ContentReportReason reportReason = ContentReportReason.fromDescription(reason);
 
-        reply.validateMatchWithComment(comment);
-        reply.validateSelfReport(member);
-        comment.validateMatchWithDiscussion(discussion);
+//        reply.validateMatchWithComment(comment);
+//        reply.validateSelfReport(member);
+//        comment.validateMatchWithDiscussion(discussion);
 
-        validateDuplicatedReport(member, reply);
+//        validateDuplicatedReport(member, reply);
 
         final ReplyReport replyReport = ReplyReport.builder()
                 .reply(reply)
@@ -99,9 +99,9 @@ public class ReplyCommandService {
         final Comment comment = findComment(commentId);
         final Reply reply = findReply(replyId);
 
-        comment.validateMatchWithDiscussion(discussion);
-        reply.validateMatchWithComment(comment);
-        validateReplyMember(reply, member);
+//        comment.validateMatchWithDiscussion(discussion);
+//        reply.validateMatchWithComment(comment);
+//        validateReplyMember(reply, member);
 
         reply.updateContent(replyRequest.content());
     }
@@ -117,9 +117,9 @@ public class ReplyCommandService {
         final Discussion discussion = findDiscussion(discussionId);
         final Reply reply = findReply(replyId);
 
-        validateReplyMember(reply, member);
-        comment.validateMatchWithDiscussion(discussion);
-        reply.validateMatchWithComment(comment);
+//        validateReplyMember(reply, member);
+//        comment.validateMatchWithDiscussion(discussion);
+//        reply.validateMatchWithComment(comment);
 
         replyRepository.delete(reply);
     }
@@ -135,8 +135,8 @@ public class ReplyCommandService {
         final Comment comment = findComment(commentId);
         final Reply reply = findReply(replyId);
 
-        comment.validateMatchWithDiscussion(discussion);
-        reply.validateMatchWithComment(comment);
+//        comment.validateMatchWithDiscussion(discussion);
+//        reply.validateMatchWithComment(comment);
 
         final Optional<ReplyLike> replyLikeOrEmpty = replyLikeRepository.findByMemberAndReply(member, reply);
         if (replyLikeOrEmpty.isPresent()) {

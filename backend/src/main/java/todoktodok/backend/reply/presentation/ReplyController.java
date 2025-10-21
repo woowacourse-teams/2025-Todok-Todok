@@ -55,7 +55,7 @@ public class ReplyController implements ReplyApiDocs {
             @PathVariable final Long commentId,
             @PathVariable final Long replyId,
             @RequestBody final ReplyReportRequest replyReportRequest
-            ) {
+    ) {
         replyCommandService.report(memberId, discussionId, commentId, replyId, replyReportRequest.reason());
 
         return ResponseEntity.status(HttpStatus.CREATED)

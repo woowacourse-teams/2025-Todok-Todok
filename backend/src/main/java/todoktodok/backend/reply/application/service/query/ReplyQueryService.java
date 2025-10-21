@@ -36,7 +36,7 @@ public class ReplyQueryService {
         final Comment comment = findComment(commentId);
 
         final Member member = findMember(memberId);
-        comment.validateMatchWithDiscussion(discussion);
+//        comment.validateMatchWithDiscussion(discussion);
 
         final List<Reply> replies = replyRepository.findRepliesByComment(comment);
         final List<Long> replyIds = replies.stream()

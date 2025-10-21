@@ -34,7 +34,7 @@ public class CommentQueryService {
         final Comment comment = findComment(commentId);
 
         validateIsExistMember(memberId);
-        comment.validateMatchWithDiscussion(discussion);
+//        comment.validateMatchWithDiscussion(discussion);
 
         final int likeCount = commentLikeRepository.findLikeCountsByCommentIds(List.of(comment.getId()))
                 .getFirst()
