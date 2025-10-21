@@ -4,11 +4,13 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.addCallback
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -18,6 +20,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.core.widget.doAfterTextChanged
 import com.team.domain.model.Book
+import com.team.domain.model.book.SearchedBook
 import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivityCreateDiscussionRoomBinding
@@ -33,6 +36,7 @@ import com.team.todoktodok.presentation.xml.discussion.create.DraftDialog.Compan
 import com.team.todoktodok.presentation.xml.discussion.create.vm.CreateDiscussionRoomViewModel
 import com.team.todoktodok.presentation.xml.discussion.create.vm.CreateDiscussionRoomViewModelFactory
 import com.team.todoktodok.presentation.xml.discussiondetail.DiscussionDetailActivity
+import com.team.todoktodok.presentation.xml.draft.DraftsActivity
 
 class CreateDiscussionRoomActivity : AppCompatActivity() {
     private val mode by lazy {
@@ -40,6 +44,18 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
             EXTRA_MODE,
         ) ?: throw IllegalStateException(MODE_NOT_EXIST)
     }
+
+    private val launcher =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult(),
+        ) { result ->
+            if (result.resultCode == RESULT_OK) {
+                val data = result.data
+                val selectedValue =
+                    data?.getLongExtra("selected_draft", -1L) ?: error("잠시 오류가 있습니다")
+                viewModel.getDraft(selectedValue)
+            }
+        }
     private val viewModel by viewModels<CreateDiscussionRoomViewModel> {
         val repositoryModule = (application as App).container.repositoryModule
         CreateDiscussionRoomViewModelFactory(
@@ -138,23 +154,8 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
     }
 
     private fun initView(binding: ActivityCreateDiscussionRoomBinding) {
-        supportFragmentManager.setFragmentResultListener(
-            CommonDialog.REQUEST_KEY_COMMON_DIALOG,
-            this,
-        ) { _, bundle ->
-            val confirmed = bundle.getBoolean(CommonDialog.RESULT_KEY_COMMON_DIALOG)
-            if (confirmed) {
-                viewModel.saveDraft()
-                return@setFragmentResultListener
-            }
-            viewModel.finish()
-        }
         binding.apply {
-            when (mode) {
-                is SerializationCreateDiscussionRoomMode.Create -> settingCreateMode(binding)
-                is SerializationCreateDiscussionRoomMode.Edit -> settingEditMode(binding)
-                is SerializationCreateDiscussionRoomMode.Draft -> settingCreateMode(binding)
-            }
+            btnSave.setOnClickListener { showDraftsListDialog() }
             onBackPressedDispatcher.addCallback { navigateToSelectBook() }
             btnBack.setOnClickListener { navigateToSelectBook() }
             etDiscussionRoomTitle.apply {
@@ -167,6 +168,11 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
                 viewModel.updateOpinion(text.toString())
             }
             etDiscussionRoomTitle.requestFocus()
+            when (mode) {
+                is SerializationCreateDiscussionRoomMode.Create -> settingCreateMode(binding)
+                is SerializationCreateDiscussionRoomMode.Edit -> settingEditMode(binding)
+                is SerializationCreateDiscussionRoomMode.Draft -> settingCreateMode(binding)
+            }
         }
     }
 
@@ -182,31 +188,47 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
             etDiscussionRoomTitle.setText(viewModel.uiState.value?.title)
             etDiscussionRoomOpinion.setText(viewModel.uiState.value?.opinion)
             btnCreate.text = getString(R.string.edit)
+            btnBack.setOnClickListener {
+                finish()
+            }
         }
     }
 
     private fun navigateToSelectBook() {
         val intent = SelectBookActivity.Intent(this@CreateDiscussionRoomActivity)
-        intent.apply {
-            flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-        }
         startActivity(intent)
+        finish()
     }
 
     private fun setupUiState(binding: ActivityCreateDiscussionRoomBinding) {
         viewModel.uiState.observe(this@CreateDiscussionRoomActivity) { uiState: CreateDiscussionUiState ->
-            observeBook(uiState.book, binding)
+            observeBook(uiState.editBook, uiState.draftBook, uiState.book, binding)
             observeIsCreate(uiState.isCreate, binding)
             observeTitle(uiState.title, binding)
             observeOpinion(uiState.opinion, binding)
             observeIsDraft(uiState.isDraft, binding)
+            observeDraftCount(uiState.draftDiscussionCount, binding)
         }
+    }
+
+    fun observeDraftCount(
+        draftCount: Int,
+        binding: ActivityCreateDiscussionRoomBinding,
+    ) {
+        if (draftCount == 0) {
+            binding.btnSave.visibility = View.GONE
+        } else {
+            binding.btnSave.visibility = View.VISIBLE
+        }
+        binding.btnSave.text = this.getString(R.string.create_discussion_temp_save, draftCount)
     }
 
     fun observeIsDraft(
         isDraft: Boolean,
         binding: ActivityCreateDiscussionRoomBinding,
     ) {
+        if (mode !is SerializationCreateDiscussionRoomMode.Create) return
+
         if (isDraft) {
             binding.btnBack.setOnClickListener { showDraftDialog() }
             onBackPressedDispatcher.addCallback { showDraftDialog() }
@@ -220,9 +242,15 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
         DraftDialog.newInstance().show(supportFragmentManager, DraftDialog.TAG)
         supportFragmentManager.setFragmentResultListener(KEY_REQUEST_DRAFT, this) { _, bundle ->
             val isSave = bundle.getBoolean(KEY_RESULT_DRAFT)
+            Log.d("test", "$isSave")
             if (isSave) viewModel.saveDraft()
             navigateToMain()
         }
+    }
+
+    private fun showDraftsListDialog() {
+        val intent = DraftsActivity.Intent(this)
+        launcher.launch(intent)
     }
 
     private fun navigateToMain() {
@@ -281,12 +309,14 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
     }
 
     private fun observeBook(
-        book: Book?,
+        editBook: Book?,
+        draftBook: SearchedBook?,
+        book: SearchedBook?,
         binding: ActivityCreateDiscussionRoomBinding,
     ) {
-        binding.tvBookTitle.text = book?.title
-        binding.tvBookAuthor.text = book?.author
-        binding.ivBookImage.loadImage(book?.image)
+        binding.tvBookTitle.text = book?.mainTitle ?: draftBook?.title ?: editBook?.title
+        binding.tvBookAuthor.text = book?.author ?: draftBook?.author ?: editBook?.author
+        binding.ivBookImage.loadImage(book?.image ?: draftBook?.image ?: editBook?.image)
     }
 
     private fun setupUiEvent(binding: ActivityCreateDiscussionRoomBinding) {

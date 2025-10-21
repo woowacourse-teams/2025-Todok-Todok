@@ -87,6 +87,7 @@
     <!-- 로그인 페이지 -->
     <string name="login_fail_to_login">로그인에 실패했어요. 다시 시도해주세요</string>
     <string name="login_cancelled">구글 로그인이 취소 되었습니다.</string>
+    <string name="login_read_write_discussion">읽고, 쓰고, 토론하자</string>
 
     <!-- 닉네임 입력 페이지 -->
     <string name="signup_text">닉네임 설정</string>
@@ -195,7 +196,7 @@
     <string name="overload">덮어쓰기</string>
     <string name="error_empty_content">토론방 내용을 입력해주세요</string>
     <string name="error_empty_title">토론방 제목을 입력해주세요</string>
-    <string name="create_discussion_temp_save">임시 저장 | 3</string>
+    <string name="create_discussion_temp_save">임시 저장 | %d</string>
 
     <!-- 설정 화면 -->
     <string name="setting_modify_profile">프로필 정보 수정</string>
@@ -328,4 +329,15 @@
     <string name="create_discussion_room_draft_dialog_content">작성중인 글을 취소하시겠습니까?\n작성취소 선택시, 작성된 글은 저장되지 않습니다.</string>
     <string name="create_discussion_room_draft_dialog_cancel">작성취소</string>
     <string name="create_discussion_room_draft_dialog_save">임시저장</string>
+    <string name="drafts">임시저장 글</string>
+    <string name="content_description_drafts_back">토론방 생성 페이지로 이동합니다</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+    <string name="drafts_no_title">제목 없음</string>
+    <string name="drafts_no_description">내용 없음</string>
+    <string name="drafts_no_exist">잠시 오류가 생겼습니다. 다시 선택해주세요</string>
+
 </resources>
