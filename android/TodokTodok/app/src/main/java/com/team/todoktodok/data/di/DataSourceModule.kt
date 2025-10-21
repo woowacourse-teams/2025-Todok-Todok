@@ -10,8 +10,8 @@ import com.team.todoktodok.data.datasource.discussion.DefaultDiscussionLocalData
 import com.team.todoktodok.data.datasource.discussion.DefaultDiscussionRemoteDataSource
 import com.team.todoktodok.data.datasource.discussion.DiscussionLocalDataSource
 import com.team.todoktodok.data.datasource.discussion.DiscussionRemoteDataSource
-import com.team.todoktodok.data.datasource.member.DefaultMemberRemoteDataSource
-import com.team.todoktodok.data.datasource.member.MemberRemoteDataSource
+import com.team.todoktodok.data.datasource.discussion.member.DefaultMemberRemoteDataSource
+import com.team.todoktodok.data.datasource.discussion.member.MemberRemoteDataSource
 import com.team.todoktodok.data.datasource.notification.DefaultNotificationLocalDataSource
 import com.team.todoktodok.data.datasource.notification.DefaultNotificationRemoteDataSource
 import com.team.todoktodok.data.datasource.notification.NotificationLocalDataSource

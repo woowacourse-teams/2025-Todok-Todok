@@ -15,7 +15,6 @@ import com.team.todoktodok.data.di.RetrofitModule
 import com.team.todoktodok.data.di.ServiceModule
 import com.team.todoktodok.data.network.auth.AuthInterceptor
 import com.team.todoktodok.data.network.auth.TokenAuthenticator
-import com.team.todoktodok.data.network.auth.TokenRefreshDelegate
 import com.team.todoktodok.data.network.auth.TokenRefreshDelegator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -33,11 +32,10 @@ class AppContainer(
     val tokenAuthenticator: TokenAuthenticator by lazy {
         TokenAuthenticator(
             tokenRefreshDelegate = { refreshTokenHandler },
-            scope = ProcessLifecycleOwner.get().lifecycleScope,
         )
     }
 
-    private val refreshTokenHandler: TokenRefreshDelegate by lazy {
+    private val refreshTokenHandler: TokenRefreshDelegator by lazy {
         TokenRefreshDelegator(
             serviceModule.refreshService,
             tokenLocalDataSource,

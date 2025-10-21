@@ -9,7 +9,7 @@ import com.team.domain.model.member.MemberDiscussionType
 import com.team.domain.model.member.MemberId
 import com.team.domain.model.member.MemberType
 import com.team.todoktodok.data.core.JwtParser
-import com.team.todoktodok.data.datasource.member.DefaultMemberRemoteDataSource
+import com.team.todoktodok.data.datasource.discussion.member.DefaultMemberRemoteDataSource
 import com.team.todoktodok.data.datasource.token.TokenLocalDataSource
 import com.team.todoktodok.data.network.request.LoginRequest
 import com.team.todoktodok.data.network.request.ModifyProfileRequest

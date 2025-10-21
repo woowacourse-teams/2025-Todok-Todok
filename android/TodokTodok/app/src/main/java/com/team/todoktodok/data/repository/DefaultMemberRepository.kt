@@ -16,7 +16,7 @@ import com.team.domain.model.member.Profile
 import com.team.domain.model.member.ProfileMessage
 import com.team.domain.repository.MemberRepository
 import com.team.todoktodok.data.core.ext.toMultipartPart
-import com.team.todoktodok.data.datasource.member.MemberRemoteDataSource
+import com.team.todoktodok.data.datasource.discussion.member.MemberRemoteDataSource
 import com.team.todoktodok.data.network.request.ModifyProfileRequest
 import com.team.todoktodok.data.network.request.ProfileImageRequest
 import com.team.todoktodok.data.network.request.SignUpRequest

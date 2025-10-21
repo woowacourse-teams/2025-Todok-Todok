@@ -10,8 +10,8 @@ import com.team.todoktodok.data.network.service.RefreshService
 class TokenRefreshDelegator(
     private val refreshService: RefreshService,
     private val tokenLocalDataSource: TokenDataSource,
-) : TokenRefreshDelegate {
-    override suspend fun refresh(): String? {
+) {
+    suspend fun refresh(): String? {
         val response =
             refreshService.refresh(
                 RefreshRequest(tokenLocalDataSource.getRefreshToken()),

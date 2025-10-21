@@ -1,4 +1,4 @@
-package com.team.todoktodok.data.datasource.member
+package com.team.todoktodok.data.datasource.discussion.member
 
 import com.team.domain.model.Support
 import com.team.domain.model.exception.NetworkResult
