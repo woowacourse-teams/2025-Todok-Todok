@@ -117,6 +117,15 @@ public class DiscussionController implements DiscussionApiDocs {
     }
 
     @Auth(value = Role.USER)
+    @GetMapping("/liked")
+    public ResponseEntity<List<DiscussionResponse>> getLikedDiscussionsByMe(
+            @LoginMember final Long memberId
+    ) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(discussionQueryService.getLikedDiscussionsByMe(memberId));
+    }
+
+    @Auth(value = Role.USER)
     @PatchMapping("/{discussionId}")
     public ResponseEntity<Void> updateDiscussion(
             @LoginMember final Long memberId,

@@ -82,7 +82,7 @@ public class FcmPushNotifier {
 
             if (sendResponse.isSuccessful()) {
                 log.info(
-                        String.format("푸시 요청을 성공적으로 보냈습니다: token= %s", token)
+                        String.format("푸시 요청을 성공적으로 보냈습니다: token= %s", maskToken(token))
                 );
                 continue;
             }

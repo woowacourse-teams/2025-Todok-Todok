@@ -55,12 +55,12 @@ public class AladinRestClient {
 
     public AladinItemResponses searchBooksByKeywordWithPaging(
             final String searchBookKeyword,
-            final int page,
+            final int cursor,
             final int size
     ) {
         return getAladinItemResponses(
-            createSearchBooksUriByPaging(searchBookKeyword, page, size),
-            String.format("searchBookKeyword= %s, page= %d, size= %d", searchBookKeyword, page, size)
+            createSearchBooksUriByPaging(searchBookKeyword, cursor, size),
+            String.format("searchBookKeyword= %s, cursor= %d, size= %d", searchBookKeyword, cursor, size)
         );
     }
 
@@ -89,14 +89,14 @@ public class AladinRestClient {
 
     private Function<UriBuilder, URI> createSearchBooksUriByPaging(
             final String searchBookKeyword,
-            final int page,
+            final int cursor,
             final int size
     ) {
         return uriBuilder -> uriBuilder
                 .path(aladinItemSearchUri)
                 .queryParam("ttbkey", aladinApiKey)
                 .queryParam("Query", searchBookKeyword)
-                .queryParam("Start", page)
+                .queryParam("Start", cursor)
                 .queryParam("MaxResults", size)
                 .queryParam("CategoryId", DOMESTIC_COMPUTER_CATEGORY_ID)
                 .queryParam("Output", OUTPUT)

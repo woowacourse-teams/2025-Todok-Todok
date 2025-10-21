@@ -18,7 +18,6 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import todoktodok.backend.DatabaseInitializer;
@@ -32,7 +31,6 @@ import todoktodok.backend.member.application.dto.request.*;
 import todoktodok.backend.member.application.dto.response.MemberResponse;
 import todoktodok.backend.member.application.dto.response.ProfileUpdateResponse;
 import todoktodok.backend.member.application.dto.response.TokenResponse;
-import todoktodok.backend.member.infrastructure.AuthClient;
 
 @Disabled
 @ActiveProfiles("test")
@@ -50,9 +48,6 @@ class MemberCommandServiceTest {
     @Autowired
     private DiscussionQueryService discussionQueryService;
 
-    @MockitoBean
-    private AuthClient authClient;
-
     @Autowired
     private DatabaseInitializer databaseInitializer;
 
@@ -68,10 +63,7 @@ class MemberCommandServiceTest {
         databaseInitializer.setDefaultUserInfo();
 
         final String email = "user@gmail.com";
-        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(email);
-
-        final String fakeToken = "fakeToken_willNotUse";
-        final LoginRequest fakeLoginRequest = new LoginRequest(fakeToken);
+        final LoginRequest fakeLoginRequest = new LoginRequest(email);
 
         // when
         final TokenResponse tokenResponse = memberCommandService.login(fakeLoginRequest);
@@ -90,10 +82,7 @@ class MemberCommandServiceTest {
     void loginTempUserTest() {
         // given
         final String email = "user@gmail.com";
-        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(email);
-
-        final String fakeToken = "fakeToken_willNotUse";
-        final LoginRequest fakeLoginRequest = new LoginRequest(fakeToken);
+        final LoginRequest fakeLoginRequest = new LoginRequest(email);
 
         // when
         final TokenResponse tokenResponse = memberCommandService.login(fakeLoginRequest);
@@ -111,11 +100,7 @@ class MemberCommandServiceTest {
     void signUpTest() {
         // given
         final String email = "user@gmail.com";
-        final String fakeIdToken = "fakeIdToken_willNotUse";
-        final SignupRequest signupRequest = new SignupRequest("user", fakeIdToken);
-
-        given(authClient.resolveVerifiedEmailAndNicknameFrom(anyString()))
-                .willReturn(new GoogleAuthMemberDto(email, ""));
+        final SignupRequest signupRequest = new SignupRequest("user", email);
 
         // when
         final TokenResponse tokenResponse = memberCommandService.signup(signupRequest, email);
@@ -139,10 +124,7 @@ class MemberCommandServiceTest {
         final String profileMessage = "profileMessage";
         databaseInitializer.setUserInfo(email, nickname, profileImage, profileMessage);
 
-        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(email);
-
-        final String fakeToken = "fakeToken_willNotUse";
-        final LoginRequest fakeLoginRequest = new LoginRequest(fakeToken);
+        final LoginRequest fakeLoginRequest = new LoginRequest(email);
 
         final TokenResponse oldTokenResponse = memberCommandService.login(fakeLoginRequest);
         final String oldRefreshToken = oldTokenResponse.refreshToken();
@@ -189,14 +171,10 @@ class MemberCommandServiceTest {
         databaseInitializer.setUserInfo("user@gmail.com", nickname, "", "");
 
         final String loginMemberEmail = "user22@gmail.com";
-        final String fakeIdToken = "fakeIdToken_willNotUse";
-        final SignupRequest signupRequest = new SignupRequest(nickname, fakeIdToken);
-
-        given(authClient.resolveVerifiedEmailAndNicknameFrom(anyString()))
-                .willReturn(new GoogleAuthMemberDto(loginMemberEmail, ""));
+        final SignupRequest fakeSignupRequest = new SignupRequest(nickname, loginMemberEmail);
 
         // when - then
-        assertThatThrownBy(() -> memberCommandService.signup(signupRequest, loginMemberEmail))
+        assertThatThrownBy(() -> memberCommandService.signup(fakeSignupRequest, loginMemberEmail))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("이미 존재하는 닉네임입니다");
     }
@@ -209,14 +187,10 @@ class MemberCommandServiceTest {
 
         databaseInitializer.setUserInfo(email, "user", "", "");
 
-        final String fakeIdToken = "fakeIdToken_willNotUse";
-        final SignupRequest signupRequest = new SignupRequest("user22", fakeIdToken);
-
-        given(authClient.resolveVerifiedEmailAndNicknameFrom(anyString()))
-                .willReturn(new GoogleAuthMemberDto(email, ""));
+        final SignupRequest fakeSignupRequest = new SignupRequest("user22", email);
 
         // when - then
-        assertThatThrownBy(() -> memberCommandService.signup(signupRequest, email))
+        assertThatThrownBy(() -> memberCommandService.signup(fakeSignupRequest, email))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("이미 가입된 이메일입니다");
     }
@@ -228,13 +202,10 @@ class MemberCommandServiceTest {
         final String fakeIdToken = "fakeIdToken_willNotUse";
         final SignupRequest signupRequest = new SignupRequest("user", fakeIdToken);
 
-        given(authClient.resolveVerifiedEmailAndNicknameFrom(anyString()))
-                .willThrow(new IllegalArgumentException("유효하지 않은 토큰입니다"));
-
         // when - then
         assertThatThrownBy(() -> memberCommandService.signup(signupRequest, "notLoginUser@gmail.com"))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("유효하지 않은 토큰입니다");
+                .hasMessageContaining("소셜 로그인을 하지 않은 이메일입니다");
     }
 
     @Test
@@ -464,10 +435,7 @@ class MemberCommandServiceTest {
             databaseInitializer.setUserInfo(email, "user", "https://user.png", "");
             databaseInitializer.setUserInfo("user2@gmail.com", "user2", "https://user.png", "");
 
-            given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(email);
-
-            final String fakeToken = "fakeToken_willNotUse";
-            final LoginRequest fakeLoginRequest = new LoginRequest(fakeToken);
+            final LoginRequest fakeLoginRequest = new LoginRequest(email);
 
             final TokenResponse tokenResponse = memberCommandService.login(fakeLoginRequest);
             final Long memberId = 1L;
@@ -496,10 +464,7 @@ class MemberCommandServiceTest {
             databaseInitializer.setUserInfo(email, "user", "", "");
             databaseInitializer.deleteUserInfo(email);
 
-            given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(email);
-
-            final String fakeToken = "fakeToken_willNotUse";
-            final LoginRequest fakeLoginRequest = new LoginRequest(fakeToken);
+            final LoginRequest fakeLoginRequest = new LoginRequest(email);
 
             // when
             final TokenResponse tokenResponse = memberCommandService.login(fakeLoginRequest);
@@ -521,10 +486,7 @@ class MemberCommandServiceTest {
 
             databaseInitializer.setUserInfo(email, "user", "https://user.png", "");
 
-            given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(email);
-
-            final String fakeToken = "fakeToken_willNotUse";
-            final LoginRequest fakeLoginRequest = new LoginRequest(fakeToken);
+            final LoginRequest fakeLoginRequest = new LoginRequest(email);
 
             final TokenResponse tokenResponse = memberCommandService.login(fakeLoginRequest);
             final Long wrongMemberId = 999L;

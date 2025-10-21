@@ -1,8 +1,6 @@
 package todoktodok.backend.comment.presentation;
 
 import static org.hamcrest.Matchers.is;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.BDDMockito.given;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -17,12 +15,10 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import todoktodok.backend.DatabaseInitializer;
 import todoktodok.backend.InitializerTimer;
 import todoktodok.backend.comment.application.dto.request.CommentReportRequest;
 import todoktodok.backend.comment.application.dto.request.CommentRequest;
-import todoktodok.backend.member.infrastructure.AuthClient;
 import todoktodok.backend.member.presentation.fixture.MemberFixture;
 
 @Disabled
@@ -31,14 +27,6 @@ import todoktodok.backend.member.presentation.fixture.MemberFixture;
 @ContextConfiguration(initializers = InitializerTimer.class)
 public class CommentControllerTest {
 
-    private static final String DEFAULT_EMAIL = "user@gmail.com";
-
-    @MockitoBean
-    private AuthClient authClient;
-
-    @Autowired
-    private MemberFixture memberFixture;
-    
     @Autowired
     private DatabaseInitializer databaseInitializer;
 
@@ -55,15 +43,13 @@ public class CommentControllerTest {
     @DisplayName("댓글을 생성한다")
     void createCommentTest() {
         // given
-        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
-
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
         databaseInitializer.setDefaultDiscussionInfo();
 
         final CommentRequest commentRequest = new CommentRequest("상속의 핵심 목적은 타입 계층의 구축입니다!");
 
-        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
+        final String token = MemberFixture.getTestAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -79,14 +65,12 @@ public class CommentControllerTest {
     @DisplayName("댓글 좋아요를 생성한다")
     void createCommentToggleLikeTest() {
         // given
-        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
-
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
         databaseInitializer.setDefaultDiscussionInfo();
         databaseInitializer.setDefaultCommentInfo();
 
-        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
+        final String token = MemberFixture.getTestAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -101,15 +85,13 @@ public class CommentControllerTest {
     @DisplayName("댓글 좋아요를 삭제한다")
     void deleteCommentToggleLikeTest() {
         // given
-        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
-
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
         databaseInitializer.setDefaultDiscussionInfo();
         databaseInitializer.setDefaultCommentInfo();
         databaseInitializer.setCommentLikeInfo(1L, 1L);
 
-        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
+        final String token = MemberFixture.getTestAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -124,8 +106,6 @@ public class CommentControllerTest {
     @DisplayName("댓글을 신고한다")
     void reportTest() {
         // given
-        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
-
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setUserInfo("user2@gmail.com", "user2", "https://user2.png", "user");
 
@@ -133,7 +113,7 @@ public class CommentControllerTest {
         databaseInitializer.setDefaultDiscussionInfo();
         databaseInitializer.setCommentInfo("상속의 핵심 목적은 타입 계층의 구축입니다!", 2L, 1L);
 
-        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
+        final String token = MemberFixture.getTestAccessToken("user@gmail.com");
         final CommentReportRequest commentReportRequest = new CommentReportRequest("토론 주제와 무관한 내용");
 
         // when - then
@@ -150,15 +130,13 @@ public class CommentControllerTest {
     @DisplayName("댓글을 단일 조회한다")
     void getCommentTest() {
         // given
-        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
-
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
         databaseInitializer.setDefaultDiscussionInfo();
 
         databaseInitializer.setCommentInfo("상속의 핵심 목적은 타입 계층의 구축입니다!", 1L, 1L);
 
-        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
+        final String token = MemberFixture.getTestAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -173,8 +151,6 @@ public class CommentControllerTest {
     @DisplayName("토론방별 댓글을 조회한다")
     void getCommentsTest() {
         // given
-        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
-
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
         databaseInitializer.setDefaultDiscussionInfo();
@@ -182,7 +158,7 @@ public class CommentControllerTest {
         databaseInitializer.setCommentInfo("상속의 핵심 목적은 타입 계층의 구축입니다!", 1L, 1L);
         databaseInitializer.setCommentInfo("조합은 재사용이 목적입니다!", 1L, 1L);
 
-        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
+        final String token = MemberFixture.getTestAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -198,8 +174,6 @@ public class CommentControllerTest {
     @DisplayName("댓글을 수정한다")
     void updateCommentTest() {
         // given
-        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
-
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
         databaseInitializer.setDefaultDiscussionInfo();
@@ -211,7 +185,7 @@ public class CommentControllerTest {
                 updatedContent
         );
 
-        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
+        final String token = MemberFixture.getTestAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -227,15 +201,13 @@ public class CommentControllerTest {
     @DisplayName("댓글을 삭제한다")
     void deleteCommentTest() {
         // given
-        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
-
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
         databaseInitializer.setDefaultDiscussionInfo();
 
         databaseInitializer.setCommentInfo("상속의 핵심 목적은 타입 계층의 구축입니다!", 1L, 1L);
 
-        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
+        final String token = MemberFixture.getTestAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
