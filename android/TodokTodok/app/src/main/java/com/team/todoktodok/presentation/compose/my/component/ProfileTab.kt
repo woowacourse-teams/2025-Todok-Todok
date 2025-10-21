@@ -19,16 +19,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import com.team.todoktodok.R
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionTabStatus
-import com.team.todoktodok.presentation.compose.main.MainDestination
 import com.team.todoktodok.presentation.compose.my.MyProfileUiState
 import com.team.todoktodok.presentation.compose.my.books.ActivatedBooksScreen
 import com.team.todoktodok.presentation.compose.my.liked.LikedDiscussionsScreen
@@ -59,10 +56,9 @@ enum class ProfileTabDestination(
 @Composable
 fun ProfileTab(
     uiState: MyProfileUiState,
-    navController: NavHostController,
+    navigateToDiscussion: () -> Unit,
     onCompleteShowDiscussionDetail: () -> Unit,
     onChangeShowMyDiscussion: (Boolean) -> Unit,
-    onChangeBottomNavigationTab: (MainDestination) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val pagerState =
@@ -74,9 +70,8 @@ fun ProfileTab(
         ProfileTabRow(pagerState)
         ProfileTabPager(
             uiState = uiState,
-            navController = navController,
             pagerState = pagerState,
-            onChangeBottomNavigationTab = onChangeBottomNavigationTab,
+            navigateToDiscussion = navigateToDiscussion,
             onCompleteShowDiscussionDetail = onCompleteShowDiscussionDetail,
             onChangeShowMyDiscussion = onChangeShowMyDiscussion,
         )
@@ -124,9 +119,8 @@ private fun ProfileTabRow(pagerState: PagerState) {
 @Composable
 private fun ProfileTabPager(
     uiState: MyProfileUiState,
-    navController: NavHostController,
     pagerState: PagerState,
-    onChangeBottomNavigationTab: (MainDestination) -> Unit,
+    navigateToDiscussion: () -> Unit,
     onChangeShowMyDiscussion: (Boolean) -> Unit,
     onCompleteShowDiscussionDetail: () -> Unit,
 ) {
@@ -144,14 +138,14 @@ private fun ProfileTabPager(
                 ProfileTabDestination.ACTIVATED_BOOKS ->
                     ActivatedBooksScreen(
                         uiState = uiState.activatedBooks,
-                        navController = navController,
-                        onChangeBottomNavigationTab = onChangeBottomNavigationTab,
+                        navigateToDiscussion = navigateToDiscussion,
                     )
 
                 ProfileTabDestination.LIKED_DISCUSSIONS -> {
                     LikedDiscussionsScreen(
                         uiState = uiState.likedDiscussions,
                         onCompleteShowDiscussionDetail = onCompleteShowDiscussionDetail,
+                        navigateToDiscussion = navigateToDiscussion,
                     )
                 }
 
@@ -174,9 +168,8 @@ private fun ProfileTabPreview(
 ) {
     ProfileTab(
         uiState = uiState,
-        navController = NavHostController(LocalContext.current),
-        onChangeBottomNavigationTab = {},
-        onChangeShowMyDiscussion = {},
+        navigateToDiscussion = {},
         onCompleteShowDiscussionDetail = {},
+        onChangeShowMyDiscussion = {},
     )
 }

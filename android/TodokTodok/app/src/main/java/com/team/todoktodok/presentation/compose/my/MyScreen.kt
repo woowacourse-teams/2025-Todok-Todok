@@ -17,13 +17,11 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
 import com.team.domain.model.ImagePayload
 import com.team.todoktodok.App
 import com.team.todoktodok.presentation.compose.LocalUiExceptionHandler
 import com.team.todoktodok.presentation.compose.core.ObserveAsEvents
 import com.team.todoktodok.presentation.compose.core.component.CloverProgressBar
-import com.team.todoktodok.presentation.compose.main.MainDestination
 import com.team.todoktodok.presentation.compose.my.component.EditableProfileImage
 import com.team.todoktodok.presentation.compose.my.component.Information
 import com.team.todoktodok.presentation.compose.my.component.MyToolbar
@@ -36,8 +34,7 @@ import com.team.todoktodok.presentation.compose.theme.White
 
 @Composable
 fun MyScreen(
-    navController: NavHostController,
-    onChangeBottomNavigationTab: (MainDestination) -> Unit,
+    navigateToDiscussion: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: MyProfileViewModel =
         viewModel(
@@ -70,13 +67,12 @@ fun MyScreen(
     MyScreen(
         uiState = uiState.value,
         isLoading = isLoading.value,
-        onChangeBottomNavigationTab = onChangeBottomNavigationTab,
+        navigateToDiscussion = navigateToDiscussion,
         onChangeShowMyDiscussion = viewModel::toggleShowMyDiscussion,
         onCompleteShowDiscussionDetail = viewModel::loadDiscussions,
         onImageSelected = viewModel::modifyProfileImage,
         onRefresh = { viewModel.loadInitialProfile() },
         modifier = modifier,
-        navController = navController,
     )
 }
 
@@ -84,8 +80,7 @@ fun MyScreen(
 fun MyScreen(
     uiState: MyProfileUiState,
     isLoading: Boolean,
-    navController: NavHostController,
-    onChangeBottomNavigationTab: (MainDestination) -> Unit,
+    navigateToDiscussion: () -> Unit,
     onCompleteShowDiscussionDetail: () -> Unit,
     onChangeShowMyDiscussion: (Boolean) -> Unit,
     onImageSelected: (ImagePayload) -> Unit,
@@ -126,8 +121,7 @@ fun MyScreen(
         item {
             ProfileTab(
                 uiState = uiState,
-                navController = navController,
-                onChangeBottomNavigationTab = onChangeBottomNavigationTab,
+                navigateToDiscussion = navigateToDiscussion,
                 onChangeShowMyDiscussion = { onChangeShowMyDiscussion(it) },
                 onCompleteShowDiscussionDetail = onCompleteShowDiscussionDetail,
                 modifier =
@@ -163,12 +157,11 @@ private fun MyScreenPreview(
         MyScreen(
             uiState = uiState,
             isLoading = true,
-            onChangeBottomNavigationTab = {},
             onChangeShowMyDiscussion = {},
-            onCompleteShowDiscussionDetail = {},
+            navigateToDiscussion = {},
             onImageSelected = {},
             onRefresh = {},
-            navController = NavHostController(LocalContext.current),
+            onCompleteShowDiscussionDetail = { },
         )
     }
 }

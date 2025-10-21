@@ -16,12 +16,12 @@ fun MainNavHost(
     pagerState: PagerState,
     navController: NavHostController,
     startDestination: MainDestination,
+    onSearch: () -> Unit,
     onCompleteRemoveDiscussion: (Long) -> Unit,
     onCompleteModifyDiscussion: (SerializationDiscussion) -> Unit,
-    onChangeBottomNavigationTab: (MainDestination) -> Unit,
-    onSearch: () -> Unit,
     onChangeSearchBarVisibility: () -> Unit,
     onChangeKeyword: (String) -> Unit,
+    navigateToDiscussion: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     NavHost(
@@ -43,11 +43,7 @@ fun MainNavHost(
                             onChangeKeyword = onChangeKeyword,
                         )
 
-                    MainDestination.My ->
-                        MyScreen(
-                            navController = navController,
-                            onChangeBottomNavigationTab = onChangeBottomNavigationTab,
-                        )
+                    MainDestination.My -> MyScreen(navigateToDiscussion = navigateToDiscussion)
                 }
             }
         }

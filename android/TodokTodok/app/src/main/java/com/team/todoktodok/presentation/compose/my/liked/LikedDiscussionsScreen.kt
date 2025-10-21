@@ -17,17 +17,20 @@ import com.team.todoktodok.presentation.compose.core.component.DiscussionCard
 import com.team.todoktodok.presentation.compose.core.component.ResourceNotFoundContent
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiModel
 import com.team.todoktodok.presentation.compose.preview.LikedDiscussionsUiStatePreviewParameterProvider
-import com.team.todoktodok.presentation.xml.book.SelectBookActivity
 import com.team.todoktodok.presentation.xml.discussiondetail.DiscussionDetailActivity
 
 @Composable
 fun LikedDiscussionsScreen(
     uiState: LikedDiscussionsUiState,
     onCompleteShowDiscussionDetail: () -> Unit,
+    navigateToDiscussion: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     if (uiState.discussions.isEmpty()) {
-        EmptyLikedDiscussionsContent(modifier)
+        EmptyLikedDiscussionsContent(
+            onClickAction = navigateToDiscussion,
+            modifier = modifier,
+        )
     } else {
         LikedDiscussionsContent(
             uiState = uiState,
@@ -75,15 +78,15 @@ private fun LikedDiscussionsContent(
 }
 
 @Composable
-private fun EmptyLikedDiscussionsContent(modifier: Modifier = Modifier) {
-    val context = LocalContext.current
+private fun EmptyLikedDiscussionsContent(
+    onClickAction: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     ResourceNotFoundContent(
         title = stringResource(R.string.profile_not_has_liked_discussion_title),
         subtitle = stringResource(R.string.profile_not_has_liked_discussion_subtitle),
         actionTitle = stringResource(R.string.profile_action_activated_book),
-        onActionClick = {
-            context.startActivity(SelectBookActivity.Intent(context))
-        },
+        onActionClick = onClickAction,
         modifier = modifier,
     )
 }
@@ -103,5 +106,7 @@ private fun LikedDiscussionsScreen_HasData_Preview(
 @Preview(showBackground = true)
 @Composable
 private fun LikedDiscussionsScreen_Empty_Preview() {
-    EmptyLikedDiscussionsContent()
+    EmptyLikedDiscussionsContent(
+        onClickAction = {},
+    )
 }

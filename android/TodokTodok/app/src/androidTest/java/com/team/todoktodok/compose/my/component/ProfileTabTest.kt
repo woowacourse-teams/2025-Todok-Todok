@@ -1,10 +1,8 @@
 package com.team.todoktodok.compose.my.component
 
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
-import androidx.navigation.NavHostController
 import com.team.todoktodok.presentation.compose.my.MyProfileUiState
 import com.team.todoktodok.presentation.compose.my.component.ProfileTab
 import org.junit.Rule
@@ -20,10 +18,9 @@ class ProfileTabTest {
         composeTestRule.setContent {
             ProfileTab(
                 uiState = MyProfileUiState(),
-                onChangeBottomNavigationTab = {},
-                onChangeShowMyDiscussion = {},
+                navigateToDiscussion = {},
                 onCompleteShowDiscussionDetail = {},
-                navController = NavHostController(LocalContext.current),
+                onChangeShowMyDiscussion = {},
             )
         }
 

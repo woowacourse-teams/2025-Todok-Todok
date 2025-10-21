@@ -63,9 +63,7 @@ class MyProfileViewModel(
         runAsync(
             key = KEY_FETCH_LIKED_DISCUSSIONS,
             action = { discussionRepository.getLikedDiscussion() },
-            handleSuccess = { result ->
-                // _uiState.update { it.setLikedDiscussions(result) }
-            },
+            handleSuccess = { result -> _uiState.update { it.setLikedDiscussions(result) } },
             handleFailure = { onUiEvent(MyProfileUiEvent.ShowErrorMessage(it)) },
         )
 

@@ -9,32 +9,25 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import com.google.common.collect.ImmutableList
 import com.team.domain.model.Book
 import com.team.todoktodok.R
 import com.team.todoktodok.presentation.compose.core.component.ResourceNotFoundContent
-import com.team.todoktodok.presentation.compose.main.MainDestination
 import com.team.todoktodok.presentation.compose.my.component.BookCover
 import com.team.todoktodok.presentation.compose.preview.MyBooksUiStatePreviewParameterProvider
 
 @Composable
 fun ActivatedBooksScreen(
     uiState: MyBooksUiModel,
-    navController: NavHostController,
-    onChangeBottomNavigationTab: (MainDestination) -> Unit,
+    navigateToDiscussion: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     if (uiState.notHasBooks) {
-        ActivatedBooksEmpty(
-            onChangeBottomNavigationTab = onChangeBottomNavigationTab,
-            navController = navController,
-        )
+        ActivatedBooksEmpty(navigateToDiscussion)
     } else {
         ActivatedBooksGrid(
             uiState = uiState,
@@ -44,22 +37,12 @@ fun ActivatedBooksScreen(
 }
 
 @Composable
-private fun ActivatedBooksEmpty(
-    onChangeBottomNavigationTab: (MainDestination) -> Unit,
-    navController: NavHostController,
-) {
+private fun ActivatedBooksEmpty(onClickAction: () -> Unit) {
     ResourceNotFoundContent(
         title = stringResource(R.string.profile_not_has_activated_book_title),
         subtitle = stringResource(R.string.profile_not_has_activated_book_subtitle),
         actionTitle = stringResource(R.string.profile_action_activated_book),
-        onActionClick = {
-            navController.navigate(MainDestination.Discussion.route) {
-                launchSingleTop = true
-                popUpTo(navController.graph.startDestinationId) { saveState = true }
-                restoreState = true
-                onChangeBottomNavigationTab(MainDestination.Discussion)
-            }
-        },
+        onActionClick = { onClickAction },
     )
 }
 
@@ -112,9 +95,8 @@ private fun ActivatedBooksScreenPreview(
     uiState: MyBooksUiModel,
 ) {
     ActivatedBooksScreen(
-        onChangeBottomNavigationTab = {},
         uiState = uiState,
-        navController = NavHostController(LocalContext.current),
+        navigateToDiscussion = {},
     )
 }
 
@@ -122,8 +104,7 @@ private fun ActivatedBooksScreenPreview(
 @Composable
 private fun EmptyActivatedBooksScreenPreview() {
     ActivatedBooksScreen(
-        onChangeBottomNavigationTab = {},
         uiState = MyBooksUiModel(),
-        navController = NavHostController(LocalContext.current),
+        navigateToDiscussion = {},
     )
 }
