@@ -65,6 +65,9 @@ logger = "2.2.0"
 # room
 room-runtime = "2.7.2"
 
+# hilt
+hilt = "2.57.2"
+
 # Test
 androidx-espresso-core = "3.6.1"
 androidx-test-ext-junit = "1.2.1"
@@ -138,6 +141,12 @@ google-firebase-messaging = { module = "com.google.firebase:firebase-messaging",
 
 # Glide
 glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
+
+# Hilt
+hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
+hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
+hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
+hilt-android-testing = { module = "com.google.dagger:hilt-android-testing", version.ref = "hilt" }
 
 # logging
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
@@ -263,3 +272,4 @@ android-junit5 = { id = "de.mannodermaus.android-junit5", version.ref = "android
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "google-firebase-crashlytics-plugin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 android-library = { id = "com.android.library", version.ref = "agp" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }

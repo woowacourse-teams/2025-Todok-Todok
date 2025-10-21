@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.serialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.hilt)
     id("kotlin-parcelize")
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
@@ -31,7 +32,11 @@ android {
         versionName = "1.0.1"
 
         buildConfigField("String", "BASE_URL", "\"${properties.getProperty("base_url")}\"")
-        buildConfigField("String", "GOOGLE_CLIENT_ID", "\"${properties.getProperty("google_client_id")}\"")
+        buildConfigField(
+            "String",
+            "GOOGLE_CLIENT_ID",
+            "\"${properties.getProperty("google_client_id")}\"",
+        )
         buildConfigField("String", "FEEDBACK_URL", "\"${properties.getProperty("feedback_url")}\"")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -93,6 +98,14 @@ dependencies {
     androidTestImplementation(libs.bundles.android.test)
     androidTestRuntimeOnly(libs.mannodermaus.junit5.runner)
     ksp(libs.androidx.room.compiler)
+
+    // Hilt
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+
+    androidTestImplementation(libs.hilt.android.testing)
+    testImplementation(libs.hilt.android.testing)
+    ksp(libs.hilt.android.compiler)
 
     // Compose
     implementation(platform(libs.compose.bom))
