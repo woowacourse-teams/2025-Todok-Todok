@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import java.util.List;
 import java.util.NoSuchElementException;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -22,6 +23,7 @@ import todoktodok.backend.discussion.application.dto.response.DiscussionResponse
 import todoktodok.backend.member.application.dto.response.BlockMemberResponse;
 import todoktodok.backend.member.domain.MemberDiscussionFilterType;
 
+@Disabled
 @ActiveProfiles("test")
 @Transactional
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)

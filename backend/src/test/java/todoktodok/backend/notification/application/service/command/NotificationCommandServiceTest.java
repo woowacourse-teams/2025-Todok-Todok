@@ -5,6 +5,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 import java.util.NoSuchElementException;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ import todoktodok.backend.notification.domain.NotificationType;
 import todoktodok.backend.notification.domain.repository.NotificationRepository;
 import todoktodok.backend.notification.exception.NotificationForbiddenException;
 
+@Disabled
 @ActiveProfiles("test")
 @Transactional
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)

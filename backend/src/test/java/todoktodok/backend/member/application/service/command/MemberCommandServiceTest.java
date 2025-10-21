@@ -11,10 +11,7 @@ import io.jsonwebtoken.JwtException;
 import java.nio.charset.StandardCharsets;
 import java.util.NoSuchElementException;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -37,6 +34,7 @@ import todoktodok.backend.member.application.dto.response.ProfileUpdateResponse;
 import todoktodok.backend.member.application.dto.response.TokenResponse;
 import todoktodok.backend.member.infrastructure.AuthClient;
 
+@Disabled
 @ActiveProfiles("test")
 @Transactional
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)

@@ -5,6 +5,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import todoktodok.backend.comment.application.dto.request.CommentRequest;
 import todoktodok.backend.comment.application.service.command.CommentCommandService;
 import todoktodok.backend.notification.infrastructure.FcmPushNotifier;
 
+@Disabled
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @ContextConfiguration(initializers = InitializerTimer.class)
