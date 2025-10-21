@@ -41,26 +41,4 @@ public record DiscussionResponse(
                 fakeLastCommentedAt
         );
     }
-
-    public DiscussionResponse(
-            final Discussion discussion,
-            final int viewCount,
-            final int likeCount,
-            final int commentCount,
-            final boolean isLikedByMe
-    ) {
-        this(
-                discussion.getId(),
-                new BookResponse(discussion.getBook()),
-                new MemberResponse(discussion.getMember()),
-                discussion.getCreatedAt(),
-                discussion.getTitle(),
-                discussion.getContent(),
-                viewCount,
-                likeCount,
-                commentCount,
-                isLikedByMe,
-                fakeLastCommentedAt
-        );
-    }
 }

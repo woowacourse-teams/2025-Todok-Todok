@@ -65,10 +65,8 @@ public class DiscussionQueryService {
         final int commentCount = commentSummary.commentCount() + commentSummary.replyCount();
 
         eventPublisher.publishEvent(discussionViewEvent);
-        final Long viewCount = discussionRepository.findViewCountByDiscussionId(discussionId);
-        final int viewCountInt = Math.toIntExact(viewCount);
 
-        return new DiscussionResponse(discussion, viewCountInt, likeSummary.likeCount(), commentCount, likeSummary.isLikedByMe());
+        return new DiscussionResponse(discussion, likeSummary.likeCount(), commentCount, likeSummary.isLikedByMe());
     }
 
     public LatestDiscussionPageResponse getDiscussions(
