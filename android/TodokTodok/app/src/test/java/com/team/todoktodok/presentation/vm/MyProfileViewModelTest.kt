@@ -87,6 +87,9 @@ class MyProfileViewModelTest {
                     any(),
                 )
             } returns NetworkResult.Success(discussions)
+            coEvery {
+                discussionRepository.getLikedDiscussion()
+            } returns NetworkResult.Success(discussions)
             coEvery { tokenRepository.getMemberId() } returns 1
 
             // When
@@ -100,6 +103,10 @@ class MyProfileViewModelTest {
                 assertEquals(
                     discussions.map { DiscussionUiModel(it) },
                     item.participatedDiscussions.discussions,
+                )
+                assertEquals(
+                    discussions.map { DiscussionUiModel(it) },
+                    item.likedDiscussions.discussions,
                 )
             }
         }
