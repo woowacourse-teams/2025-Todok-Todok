@@ -1,7 +1,6 @@
 package com.team.todoktodok.presentation.compose.discussion.search
 
 import android.app.Activity.RESULT_OK
-import android.content.Intent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
