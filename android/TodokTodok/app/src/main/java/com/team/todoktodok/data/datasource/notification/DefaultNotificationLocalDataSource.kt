@@ -1,10 +1,13 @@
 package com.team.todoktodok.data.datasource.notification
 
-import com.team.todoktodok.data.local.notification.NotificationDataStore
+import android.content.Context
+import com.team.todoktodok.data.local.notification.DefaultNotificationDataStore
 
 class DefaultNotificationLocalDataSource(
-    private val dataStore: NotificationDataStore,
+    context: Context,
 ) : NotificationLocalDataSource {
+    private val dataStore = DefaultNotificationDataStore(context)
+
     override suspend fun getFcmToken(): String? = dataStore.getFcmToken()
 
     override suspend fun getFId(): String? = dataStore.getFId()
