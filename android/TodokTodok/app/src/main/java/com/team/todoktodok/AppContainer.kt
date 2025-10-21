@@ -14,16 +14,12 @@ import com.team.todoktodok.data.di.ServiceModule
 import com.team.todoktodok.data.network.auth.AuthInterceptor
 import com.team.todoktodok.data.network.auth.TokenAuthenticator
 import com.team.todoktodok.data.network.auth.TokenRefreshDelegator
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 
 class AppContainer(
     context: Context,
 ) {
-    val appScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
     val connectivityObserver: ConnectivityObserver by lazy {
-        NetworkConnectivityObserver(appScope, context)
+        NetworkConnectivityObserver(context)
     }
 
     val tokenAuthenticator: TokenAuthenticator by lazy {
