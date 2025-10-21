@@ -87,6 +87,7 @@
     <!-- 로그인 페이지 -->
     <string name="login_fail_to_login">로그인에 실패했어요. 다시 시도해주세요</string>
     <string name="login_cancelled">구글 로그인이 취소 되었습니다.</string>
+    <string name="login_read_write_discussion">읽고, 쓰고, 토론하자</string>
 
     <!-- 닉네임 입력 페이지 -->
     <string name="signup_text">닉네임 설정</string>
