@@ -1,0 +1,61 @@
+package com.team.todoktodok.data.di
+
+import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import com.team.todoktodok.BuildConfig
+import com.team.todoktodok.data.network.adapter.TodokTodokCallAdapterFactory
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.json.Json
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.OkHttpClient
+import retrofit2.Retrofit
+import javax.inject.Singleton
+
+private val json =
+    Json {
+        ignoreUnknownKeys = true
+    }
+
+@Module
+@InstallIn(SingletonComponent::class)
+object RetrofitModuleHilt {
+    private val builder: Retrofit.Builder =
+        Retrofit
+            .Builder()
+            .baseUrl(BuildConfig.BASE_URL)
+            .addCallAdapterFactory(TodokTodokCallAdapterFactory())
+            .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
+
+    @OptIn(ExperimentalSerializationApi::class)
+    @Provides
+    @Singleton
+    fun provideDefaultRetrofit(): Retrofit.Builder =
+        Retrofit
+            .Builder()
+            .baseUrl(BuildConfig.BASE_URL)
+            .addCallAdapterFactory(TodokTodokCallAdapterFactory())
+            .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
+
+    @Provides
+    @Auth
+    @Singleton
+    fun authRetrofit(
+        @Auth okHttpClient: OkHttpClient,
+    ): Retrofit =
+        builder
+            .client(okHttpClient)
+            .build()
+
+    @Provides
+    @Client
+    @Singleton
+    fun retrofit(
+        @Client okHttpClient: OkHttpClient,
+    ): Retrofit =
+        builder
+            .client(okHttpClient)
+            .build()
+}

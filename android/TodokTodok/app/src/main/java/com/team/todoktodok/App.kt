@@ -6,8 +6,10 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.orhanobut.logger.AndroidLogAdapter
 import com.orhanobut.logger.Logger
 import com.team.todoktodok.log.ReleaseCrashlyticsTree
+import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 
+@HiltAndroidApp
 class App : Application() {
     val container: AppContainer by lazy {
         AppContainer(applicationContext)
