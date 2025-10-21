@@ -3,7 +3,6 @@ package com.team.todoktodok.data.repository
 import com.team.domain.model.Discussion
 import com.team.domain.model.DiscussionPage
 import com.team.domain.model.LikeStatus
-import com.team.domain.model.active.ActivatedDiscussionPage
 import com.team.domain.model.book.SearchedBook
 import com.team.domain.model.discussionroom.DiscussionRoom
 import com.team.domain.model.exception.NetworkResult
