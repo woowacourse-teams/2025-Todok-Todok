@@ -5,6 +5,7 @@ import com.team.todoktodok.data.network.request.DiscussionRoomRequest
 import com.team.todoktodok.data.network.request.EditDiscussionRoomRequest
 import com.team.todoktodok.data.network.request.ReportRequest
 import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
+import com.team.todoktodok.data.network.response.discussion.DiscussionsResponse
 import com.team.todoktodok.data.network.response.discussion.page.ActivatedDiscussionPageResponse
 import com.team.todoktodok.data.network.response.latest.LatestDiscussionsResponse
 import retrofit2.Response
@@ -30,7 +31,7 @@ interface DiscussionService {
     ): NetworkResult<ActivatedDiscussionPageResponse>
 
     @GET("v1/discussions/liked")
-    suspend fun fetchLikedDiscussions(): NetworkResult<List<DiscussionResponse>>
+    suspend fun fetchLikedDiscussions(): NetworkResult<DiscussionsResponse>
 
     @GET("v1/discussions/hot")
     suspend fun fetchHotDiscussions(
