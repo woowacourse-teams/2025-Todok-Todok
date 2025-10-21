@@ -78,8 +78,7 @@ fun MainScreen(
             if (ContextCompat.checkSelfPermission(
                     context,
                     Manifest.permission.POST_NOTIFICATIONS,
-                ) ==
-                PackageManager.PERMISSION_GRANTED
+                ) == PackageManager.PERMISSION_GRANTED
             ) {
                 viewModel.sendPushNotificationToken()
             } else {
@@ -103,7 +102,7 @@ fun MainScreen(
         ModalBottomSheet(
             onDismissRequest = { showNotificationSheet = false },
             sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
-            containerColor = Color.White
+            containerColor = Color.White,
         ) {
             NotificationBottomSheet(
                 onCancel = { showNotificationSheet = false },
@@ -144,10 +143,10 @@ fun MainScreen(
 
     CompositionLocalProvider(
         LocalUiExceptionHandler provides
-                UiExceptionHandler(
-                    snackbarHostState = snackbarHostState,
-                    messageConverter = messageConverter,
-                ),
+            UiExceptionHandler(
+                snackbarHostState = snackbarHostState,
+                messageConverter = messageConverter,
+            ),
     ) {
         BackPressToExit()
         MainScreenContent(
