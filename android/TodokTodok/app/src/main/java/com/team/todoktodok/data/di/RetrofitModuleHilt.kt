@@ -42,7 +42,7 @@ object RetrofitModuleHilt {
     @Provides
     @Auth
     @Singleton
-    fun authRetrofit(
+    fun provideAuthRetrofit(
         @Auth okHttpClient: OkHttpClient,
     ): Retrofit =
         builder
@@ -52,7 +52,7 @@ object RetrofitModuleHilt {
     @Provides
     @Client
     @Singleton
-    fun retrofit(
+    fun provideRetrofit(
         @Client okHttpClient: OkHttpClient,
     ): Retrofit =
         builder

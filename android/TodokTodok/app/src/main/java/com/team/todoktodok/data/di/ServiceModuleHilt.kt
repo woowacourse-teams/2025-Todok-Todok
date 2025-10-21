@@ -20,49 +20,49 @@ object ServiceModuleHilt {
     @Auth
     @Provides
     @Singleton
-    fun discussionService(
+    fun provideDiscussionService(
         @Auth retrofit: Retrofit,
     ): DiscussionService = retrofit.create(DiscussionService::class.java)
 
     @Auth
     @Provides
     @Singleton
-    fun memberService(
+    fun provideMemberService(
         @Auth retrofit: Retrofit,
     ): MemberService = retrofit.create(MemberService::class.java)
 
     @Auth
     @Provides
     @Singleton
-    fun commentService(
+    fun provideCommentService(
         @Auth retrofit: Retrofit,
     ): CommentService = retrofit.create(CommentService::class.java)
 
     @Auth
     @Provides
     @Singleton
-    fun bookService(
+    fun provideBookService(
         @Auth retrofit: Retrofit,
     ): BookService = retrofit.create(BookService::class.java)
 
     @Auth
     @Provides
     @Singleton
-    fun replyService(
+    fun provideReplyService(
         @Auth retrofit: Retrofit,
     ): ReplyService = retrofit.create(ReplyService::class.java)
 
     @Client
     @Provides
     @Singleton
-    fun refreshService(
+    fun provideRefreshService(
         @Client retrofit: Retrofit,
     ): RefreshService = retrofit.create(RefreshService::class.java)
 
     @Auth
     @Provides
     @Singleton
-    fun notificationService(
+    fun provideNotificationService(
         @Auth retrofit: Retrofit,
     ): NotificationService = retrofit.create(NotificationService::class.java)
 }
