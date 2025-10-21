@@ -4,8 +4,10 @@ import static java.time.temporal.ChronoUnit.MICROS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
+import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -66,16 +68,20 @@ class DiscussionQueryServiceTest {
 
         final Long discussionId = 1L;
 
-        // when
-        final DiscussionResponse discussionResponse = discussionQueryService.getDiscussion(memberId, discussionId);
+        // when - then
+        await().atMost(Duration.ofSeconds(5))
+                .pollDelay(Duration.ofMillis(200))
+                .pollInterval(Duration.ofMillis(300))
+                .untilAsserted(() -> {
+                    final DiscussionResponse discussionResponse = discussionQueryService.getDiscussion(memberId, discussionId);
 
-        // then
-        assertAll(
-                () -> assertThat(discussionResponse.discussionId()).isEqualTo(discussionId),
-                () -> assertThat(discussionResponse.discussionTitle()).isEqualTo("클린코드에 대해 논의해볼까요"),
-                () -> assertThat(discussionResponse.discussionOpinion()).isEqualTo("클린코드만세"),
-                () -> assertThat(discussionResponse.viewCount()).isEqualTo(1)
-        );
+                    assertAll(
+                            () -> assertThat(discussionResponse.discussionId()).isEqualTo(discussionId),
+                            () -> assertThat(discussionResponse.discussionTitle()).isEqualTo("클린코드에 대해 논의해볼까요"),
+                            () -> assertThat(discussionResponse.discussionOpinion()).isEqualTo("클린코드만세"),
+                            () -> assertThat(discussionResponse.viewCount()).isEqualTo(1)
+                    );
+                });
     }
 
     @Test
@@ -98,11 +104,14 @@ class DiscussionQueryServiceTest {
 
         databaseInitializer.setDiscussionMemberViewInfo(memberId, discussionId, 10);
 
-        // when
-        final DiscussionResponse discussionResponse = discussionQueryService.getDiscussion(memberId, discussionId);
-
-        // then
-        assertThat(discussionResponse.viewCount()).isEqualTo(1);
+        // when - then
+        await().atMost(Duration.ofSeconds(5))
+                .pollDelay(Duration.ofMillis(200))
+                .pollInterval(Duration.ofMillis(300))
+                .untilAsserted(() -> {
+                    final DiscussionResponse discussionResponse = discussionQueryService.getDiscussion(memberId, discussionId);
+                    assertThat(discussionResponse.viewCount()).isEqualTo(1);
+                });
     }
 
     @Test
@@ -125,11 +134,14 @@ class DiscussionQueryServiceTest {
 
         databaseInitializer.setDiscussionMemberViewInfo(memberId, discussionId, 9);
 
-        // when
-        final DiscussionResponse discussionResponse = discussionQueryService.getDiscussion(memberId, discussionId);
-
-        // then
-        assertThat(discussionResponse.viewCount()).isEqualTo(0);
+        // when - then
+        await().atMost(Duration.ofSeconds(5))
+                .pollDelay(Duration.ofMillis(200))
+                .pollInterval(Duration.ofMillis(300))
+                .untilAsserted(() -> {
+                    final DiscussionResponse discussionResponse = discussionQueryService.getDiscussion(memberId, discussionId);
+                    assertThat(discussionResponse.viewCount()).isEqualTo(0);
+                });
     }
 
     @Test
@@ -151,7 +163,7 @@ class DiscussionQueryServiceTest {
 
         // then
         final DiscussionResponse discussionResponse = discussionQueryService.getDiscussion(memberId, existsDiscussionId);
-        assertThat(discussionResponse.viewCount()).isEqualTo(1);
+        assertThat(discussionResponse.viewCount()).isEqualTo(0);
     }
 
     @Test

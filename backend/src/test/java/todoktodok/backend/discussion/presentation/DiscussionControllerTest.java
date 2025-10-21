@@ -1,5 +1,6 @@
 package todoktodok.backend.discussion.presentation;
 
+import static org.awaitility.Awaitility.await;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
@@ -9,6 +10,7 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -83,12 +85,16 @@ class DiscussionControllerTest {
         final String token = MemberFixture.getTestAccessToken("user@gmail.com");
 
         // when - then
-        RestAssured.given().log().all()
-                .header("Authorization", token)
-                .contentType(ContentType.JSON)
-                .when().get("/api/v1/discussions/1")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+        await().atMost(Duration.ofSeconds(5))
+                .pollDelay(Duration.ofMillis(200))
+                .pollInterval(Duration.ofMillis(300))
+                .untilAsserted(() -> RestAssured.given()
+                        .header("Authorization", token)
+                        .contentType(ContentType.JSON)
+                        .when().get("/api/v1/discussions/1")
+                        .then()
+                        .statusCode(HttpStatus.OK.value())
+                        .body("viewCount", is(1)));
     }
 
     @Test

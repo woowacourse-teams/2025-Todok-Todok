@@ -237,7 +237,7 @@ public class DatabaseInitializer {
         em.createNativeQuery(
                         """
                                 INSERT INTO DISCUSSION_MEMBER_VIEW (discussion_id, member_id, created_at, modified_at)
-                                VALUES 
+                                VALUES
                                 (:discussionId, :memberId, :createdAt, :modifiedAt)
                                 """
                 )
@@ -246,6 +246,9 @@ public class DatabaseInitializer {
                 .setParameter("createdAt", now)
                 .setParameter("modifiedAt", before)
                 .executeUpdate();
+
+        em.flush();
+        em.clear();
     }
 
     @Transactional

@@ -1,8 +1,10 @@
 package todoktodok.backend.discussion.application.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -82,11 +84,17 @@ public class DiscussionViewConcurrencyTest {
         start.countDown();
         done.await();
 
-        // then : 최종 조회수
-        final Discussion discussion = discussionRepository.findById(discussionId).orElseThrow();
-        assertAll(
-                () -> assertThat(discussion.getViewCount()).isEqualTo(threads),
-                () -> assertThat(errors).isEmpty()
-        );
+        // then : 비동기 이벤트 핸들러 완료 대기 후 최종 조회수 검증
+        await().atMost(Duration.ofSeconds(5))
+                .pollDelay(Duration.ofMillis(200))
+                .pollInterval(Duration.ofMillis(300))
+                .untilAsserted(() -> {
+                      final Discussion discussion = discussionRepository.findById(discussionId).orElseThrow();
+
+                      assertAll(
+                              () -> assertThat(discussion.getViewCount()).isEqualTo(threads),
+                              () -> assertThat(errors).isEmpty()
+                      );
+                });
     }
 }
