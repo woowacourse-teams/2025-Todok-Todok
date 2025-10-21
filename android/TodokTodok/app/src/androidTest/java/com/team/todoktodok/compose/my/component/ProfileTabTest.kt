@@ -16,18 +16,18 @@ class ProfileTabTest {
 
     @Test
     fun `활동도서 좋아요 참여한 토론방 탭이 보인다`() {
-        // Given
+        // given
         composeTestRule.setContent {
             ProfileTab(
                 uiState = MyProfileUiState(),
                 onChangeBottomNavigationTab = {},
                 onChangeShowMyDiscussion = {},
-                onCompleteRemoveDiscussion = {},
-                onCompleteModifyDiscussion = {},
+                onCompleteShowDiscussionDetail = {},
                 navController = NavHostController(LocalContext.current),
             )
         }
 
+        // then
         composeTestRule.onNodeWithText("활동 도서").assertIsDisplayed()
         composeTestRule.onNodeWithText("좋아요").assertIsDisplayed()
         composeTestRule.onNodeWithText("참여한 토론방").assertIsDisplayed()

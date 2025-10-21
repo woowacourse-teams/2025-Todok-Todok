@@ -33,7 +33,6 @@ import com.team.todoktodok.presentation.compose.my.vm.MyProfileViewModelFactory
 import com.team.todoktodok.presentation.compose.preview.MyProfileUiStatePreviewParameterProvider
 import com.team.todoktodok.presentation.compose.theme.TodoktodokTheme
 import com.team.todoktodok.presentation.compose.theme.White
-import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussion
 
 @Composable
 fun MyScreen(
@@ -73,8 +72,7 @@ fun MyScreen(
         isLoading = isLoading.value,
         onChangeBottomNavigationTab = onChangeBottomNavigationTab,
         onChangeShowMyDiscussion = viewModel::toggleShowMyDiscussion,
-        onCompleteRemoveDiscussion = viewModel::removeDiscussion,
-        onCompleteModifyDiscussion = viewModel::modifyDiscussion,
+        onCompleteShowDiscussionDetail = viewModel::loadDiscussions,
         onImageSelected = viewModel::modifyProfileImage,
         onRefresh = { viewModel.loadInitialProfile() },
         modifier = modifier,
@@ -88,8 +86,7 @@ fun MyScreen(
     isLoading: Boolean,
     navController: NavHostController,
     onChangeBottomNavigationTab: (MainDestination) -> Unit,
-    onCompleteModifyDiscussion: (SerializationDiscussion) -> Unit,
-    onCompleteRemoveDiscussion: (Long) -> Unit,
+    onCompleteShowDiscussionDetail: () -> Unit,
     onChangeShowMyDiscussion: (Boolean) -> Unit,
     onImageSelected: (ImagePayload) -> Unit,
     onRefresh: () -> Unit,
@@ -132,8 +129,7 @@ fun MyScreen(
                 navController = navController,
                 onChangeBottomNavigationTab = onChangeBottomNavigationTab,
                 onChangeShowMyDiscussion = { onChangeShowMyDiscussion(it) },
-                onCompleteRemoveDiscussion = onCompleteRemoveDiscussion,
-                onCompleteModifyDiscussion = onCompleteModifyDiscussion,
+                onCompleteShowDiscussionDetail = onCompleteShowDiscussionDetail,
                 modifier =
                     Modifier
                         .fillMaxWidth()
@@ -169,8 +165,7 @@ private fun MyScreenPreview(
             isLoading = true,
             onChangeBottomNavigationTab = {},
             onChangeShowMyDiscussion = {},
-            onCompleteRemoveDiscussion = {},
-            onCompleteModifyDiscussion = {},
+            onCompleteShowDiscussionDetail = {},
             onImageSelected = {},
             onRefresh = {},
             navController = NavHostController(LocalContext.current),

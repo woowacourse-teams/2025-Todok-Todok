@@ -17,7 +17,6 @@ import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -38,7 +37,6 @@ import com.team.todoktodok.presentation.compose.preview.MyProfileUiStatePreviewP
 import com.team.todoktodok.presentation.compose.theme.Green1A
 import com.team.todoktodok.presentation.compose.theme.Pretendard
 import com.team.todoktodok.presentation.compose.theme.White
-import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussion
 import kotlinx.coroutines.launch
 
 enum class ProfileTabDestination(
@@ -62,9 +60,8 @@ enum class ProfileTabDestination(
 fun ProfileTab(
     uiState: MyProfileUiState,
     navController: NavHostController,
-    onCompleteRemoveDiscussion: (Long) -> Unit,
+    onCompleteShowDiscussionDetail: () -> Unit,
     onChangeShowMyDiscussion: (Boolean) -> Unit,
-    onCompleteModifyDiscussion: (SerializationDiscussion) -> Unit,
     onChangeBottomNavigationTab: (MainDestination) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -80,9 +77,8 @@ fun ProfileTab(
             navController = navController,
             pagerState = pagerState,
             onChangeBottomNavigationTab = onChangeBottomNavigationTab,
-            onChangeShowMyDiscussion = { onChangeShowMyDiscussion(it) },
-            onCompleteRemoveDiscussion = onCompleteRemoveDiscussion,
-            onCompleteModifyDiscussion = onCompleteModifyDiscussion,
+            onCompleteShowDiscussionDetail = onCompleteShowDiscussionDetail,
+            onChangeShowMyDiscussion = onChangeShowMyDiscussion,
         )
     }
 }
@@ -132,19 +128,17 @@ private fun ProfileTabPager(
     pagerState: PagerState,
     onChangeBottomNavigationTab: (MainDestination) -> Unit,
     onChangeShowMyDiscussion: (Boolean) -> Unit,
-    onCompleteRemoveDiscussion: (Long) -> Unit,
-    onCompleteModifyDiscussion: (SerializationDiscussion) -> Unit,
+    onCompleteShowDiscussionDetail: () -> Unit,
 ) {
     HorizontalPager(
         state = pagerState,
         modifier = Modifier.fillMaxSize(),
     ) { page ->
-        Box(
+        Column(
             modifier =
                 Modifier
                     .fillMaxSize()
                     .background(White),
-            contentAlignment = Alignment.Center,
         ) {
             when (ProfileTabDestination.entries[page]) {
                 ProfileTabDestination.ACTIVATED_BOOKS ->
@@ -154,13 +148,18 @@ private fun ProfileTabPager(
                         onChangeBottomNavigationTab = onChangeBottomNavigationTab,
                     )
 
-                ProfileTabDestination.LIKED_DISCUSSIONS -> LikedDiscussionsScreen()
+                ProfileTabDestination.LIKED_DISCUSSIONS -> {
+                    LikedDiscussionsScreen(
+                        uiState = uiState.likedDiscussions,
+                        onCompleteShowDiscussionDetail = onCompleteShowDiscussionDetail,
+                    )
+                }
+
                 ProfileTabDestination.PARTICIPATED_DISCUSSIONS ->
                     ParticipatedDiscussionsScreen(
                         uiState = uiState.participatedDiscussions,
                         onChangeShowMyDiscussion = { onChangeShowMyDiscussion(it) },
-                        onCompleteRemoveDiscussion = onCompleteRemoveDiscussion,
-                        onCompleteModifyDiscussion = onCompleteModifyDiscussion,
+                        onCompleteShowDiscussionDetail = onCompleteShowDiscussionDetail,
                     )
             }
         }
@@ -178,7 +177,6 @@ private fun ProfileTabPreview(
         navController = NavHostController(LocalContext.current),
         onChangeBottomNavigationTab = {},
         onChangeShowMyDiscussion = {},
-        onCompleteRemoveDiscussion = {},
-        onCompleteModifyDiscussion = {},
+        onCompleteShowDiscussionDetail = {},
     )
 }
