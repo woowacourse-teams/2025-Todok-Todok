@@ -5,6 +5,10 @@ import com.team.domain.model.exception.NetworkResult
 import com.team.domain.model.exception.onSuccess
 import com.team.todoktodok.data.datasource.discussion.DiscussionLocalDataSource
 import com.team.todoktodok.data.datasource.discussion.DiscussionRemoteDataSource
+import com.team.todoktodok.data.network.response.discussion.BookResponse
+import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
+import com.team.todoktodok.data.network.response.discussion.MemberResponse
+import com.team.todoktodok.data.network.response.discussion.toDomain
 import com.team.todoktodok.fake.datasource.FakeDiscussionRemoteDataSource
 import com.team.todoktodok.fixture.DISCUSSIONS
 import io.mockk.mockk
@@ -184,36 +188,25 @@ class DefaultDiscussionRepositoryTest {
         }
 
     @Test
-    fun `좋아요 누른 토론만 페이지 단위로 가져온다`() =
+    fun `내가 좋아요 누른 토론만 가져온다`() =
         runTest {
-            // given
-            val targetIds = listOf(1L, 3L, 5L)
-            targetIds.forEach { defaultDiscussionRepository.toggleLike(it) }
+            val lickedDiscussion =
+                DiscussionResponse(
+                    discussionId = 4,
+                    discussionTitle = "클린 코드란 무엇인가?",
+                    book = BookResponse("Robert C. Martin", 4, "", "Clean Code"),
+                    discussionOpinion = "의도를 드러내는 코드가 중요합니다.",
+                    createdAt = "2025-07-15T12:00:00",
+                    member = MemberResponse(4, "이클린", ""),
+                    likeCount = 0,
+                    viewCount = 0,
+                    commentCount = 0,
+                    isLikedByMe = true,
+                ).toDomain()
 
-            val pageSize = 2
-            val firstCursor: String? = null
-
-            // when
-            val firstPageResult = defaultDiscussionRepository.getLikedDiscussion(pageSize, firstCursor)
-
-            // then
-            firstPageResult.onSuccess { page ->
-                assertThat(page.discussions.size).isEqualTo(pageSize)
-                assertThat(page.discussions.all { it.isLikedByMe }).isTrue()
-                assertThat(page.pageInfo.hasNext).isTrue()
-            }
-
-            // given
-            val nextCursor = (firstPageResult as NetworkResult.Success).data.pageInfo.nextCursor
-
-            // when
-            val secondPageResult = defaultDiscussionRepository.getLikedDiscussion(pageSize, nextCursor)
-
-            // then
-            secondPageResult.onSuccess { page ->
-                assertThat(page.discussions.size).isEqualTo(1)
-                assertThat(page.discussions.all { it.isLikedByMe }).isTrue()
-                assertThat(page.pageInfo.hasNext).isFalse()
+            val likedDiscussions = defaultDiscussionRepository.getLikedDiscussion()
+            likedDiscussions.onSuccess { discussions ->
+                assertThat(discussions).contains(lickedDiscussion)
             }
         }
 

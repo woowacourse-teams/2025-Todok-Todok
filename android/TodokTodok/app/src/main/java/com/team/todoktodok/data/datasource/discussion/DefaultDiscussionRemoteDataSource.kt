@@ -8,7 +8,6 @@ import com.team.todoktodok.data.network.request.DiscussionRoomRequest
 import com.team.todoktodok.data.network.request.EditDiscussionRoomRequest
 import com.team.todoktodok.data.network.request.ReportRequest
 import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
-import com.team.todoktodok.data.network.response.discussion.liked.LikedDiscussionPageResponse
 import com.team.todoktodok.data.network.response.discussion.page.ActivatedDiscussionPageResponse
 import com.team.todoktodok.data.network.response.latest.LatestDiscussionsResponse
 import com.team.todoktodok.data.network.service.DiscussionService
@@ -26,10 +25,7 @@ class DefaultDiscussionRemoteDataSource(
         cursor: String?,
     ): NetworkResult<ActivatedDiscussionPageResponse> = discussionService.fetchActivatedDiscussions(period, size, cursor)
 
-    override suspend fun getLikedDiscussion(
-        size: Int,
-        cursor: String?,
-    ): NetworkResult<LikedDiscussionPageResponse> = discussionService.fetchLikedDiscussions(size, cursor)
+    override suspend fun getLikedDiscussion(): NetworkResult<List<DiscussionResponse>> = discussionService.fetchLikedDiscussions()
 
     override suspend fun getHotDiscussion(
         period: Int,

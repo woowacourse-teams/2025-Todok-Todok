@@ -7,7 +7,6 @@ import com.team.todoktodok.data.network.model.LikeAction
 import com.team.todoktodok.data.network.response.discussion.BookResponse
 import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
 import com.team.todoktodok.data.network.response.discussion.MemberResponse
-import com.team.todoktodok.data.network.response.discussion.liked.LikedDiscussionPageResponse
 import com.team.todoktodok.data.network.response.discussion.page.ActivatedDiscussion
 import com.team.todoktodok.data.network.response.discussion.page.ActivatedDiscussionPageResponse
 import com.team.todoktodok.data.network.response.latest.LatestDiscussionsResponse
@@ -64,7 +63,7 @@ class FakeDiscussionRemoteDataSource : DiscussionRemoteDataSource {
                 likeCount = 0,
                 viewCount = 0,
                 commentCount = 0,
-                isLikedByMe = false,
+                isLikedByMe = true,
             ),
             DiscussionResponse(
                 discussionId = 5,
@@ -125,26 +124,9 @@ class FakeDiscussionRemoteDataSource : DiscussionRemoteDataSource {
         return NetworkResult.Success(page)
     }
 
-    override suspend fun getLikedDiscussion(
-        size: Int,
-        cursor: String?,
-    ): NetworkResult<LikedDiscussionPageResponse> {
+    override suspend fun getLikedDiscussion(): NetworkResult<List<DiscussionResponse>> {
         val likedDiscussions = discussionResponses.filter { it.isLikedByMe }
-
-        val startIndex = cursor?.toIntOrNull() ?: 0
-
-        val endIndex = (startIndex + size).coerceAtMost(likedDiscussions.size)
-        val pageDiscussions = likedDiscussions.subList(startIndex, endIndex)
-
-        val hasNext = endIndex < likedDiscussions.size
-        val nextCursor = if (hasNext) endIndex.toString() else ""
-        val pageResponse =
-            LikedDiscussionPageResponse(
-                items = pageDiscussions,
-                pageInfo = PageInfoResponse(hasNext, nextCursor),
-            )
-
-        return NetworkResult.Success(pageResponse)
+        return NetworkResult.Success(likedDiscussions)
     }
 
     override suspend fun getHotDiscussion(

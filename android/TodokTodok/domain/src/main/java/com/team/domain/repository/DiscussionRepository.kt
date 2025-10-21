@@ -16,10 +16,7 @@ interface DiscussionRepository {
         cursor: String? = null,
     ): NetworkResult<DiscussionPage>
 
-    suspend fun getLikedDiscussion(
-        size: Int = PAGING_SIZE,
-        cursor: String? = null,
-    ): NetworkResult<DiscussionPage>
+    suspend fun getLikedDiscussion(): NetworkResult<List<Discussion>>
 
     suspend fun getHotDiscussion(
         period: Int = DEFAULT_HOT_DISCUSSION_PERIOD,
