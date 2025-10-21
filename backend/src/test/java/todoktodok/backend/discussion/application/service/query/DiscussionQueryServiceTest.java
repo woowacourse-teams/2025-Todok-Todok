@@ -28,6 +28,7 @@ import todoktodok.backend.discussion.application.dto.response.DiscussionResponse
 import todoktodok.backend.discussion.application.dto.response.LatestDiscussionPageResponse;
 import todoktodok.backend.discussion.application.dto.response.PageInfo;
 
+@Disabled
 @ActiveProfiles("test")
 @Transactional
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)

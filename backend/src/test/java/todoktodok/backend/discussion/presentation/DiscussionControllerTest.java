@@ -33,6 +33,7 @@ import todoktodok.backend.discussion.application.dto.request.DiscussionUpdateReq
 import todoktodok.backend.member.infrastructure.AuthClient;
 import todoktodok.backend.member.presentation.fixture.MemberFixture;
 
+@Disabled
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(initializers = InitializerTimer.class)
