@@ -23,7 +23,6 @@ import com.team.todoktodok.data.local.discussion.DiscussionDatabase
 
 class DataSourceModule(
     serviceModule: ServiceModule,
-    localDataSourceModule: LocalDatabaseModule,
     context: Context,
 ) {
     val discussionRemoteDataSource: DiscussionRemoteDataSource by lazy {

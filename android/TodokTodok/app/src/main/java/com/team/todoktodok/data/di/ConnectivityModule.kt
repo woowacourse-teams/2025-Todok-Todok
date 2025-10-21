@@ -1,6 +1,7 @@
 package com.team.todoktodok.data.di
 
 import android.content.Context
+import com.team.domain.ConnectivityObserver
 import com.team.todoktodok.connectivity.NetworkConnectivityObserver
 import dagger.Module
 import dagger.Provides
@@ -16,5 +17,5 @@ object ConnectivityModule {
     @Singleton
     fun provideNetworkConnectivityObserver(
         @ApplicationContext context: Context,
-    ) = NetworkConnectivityObserver(context)
+    ): ConnectivityObserver = NetworkConnectivityObserver(context)
 }

@@ -54,7 +54,7 @@ class AppContainer(
         LocalDatabaseModule(context)
     }
     private val dataSourceModule: DataSourceModule by lazy {
-        DataSourceModule(serviceModule, localDatabaseModule, context)
+        DataSourceModule(serviceModule, context)
     }
 
     private val okHttpModule: OkhttpModule by lazy {

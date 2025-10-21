@@ -10,12 +10,14 @@ import com.team.todoktodok.data.datasource.discussion.DefaultDiscussionRemoteDat
 import com.team.todoktodok.data.datasource.discussion.DiscussionLocalDataSource
 import com.team.todoktodok.data.datasource.discussion.DiscussionRemoteDataSource
 import com.team.todoktodok.data.datasource.discussion.member.DefaultMemberRemoteDataSource
+import com.team.todoktodok.data.datasource.discussion.member.MemberRemoteDataSource
 import com.team.todoktodok.data.datasource.notification.DefaultNotificationLocalDataSource
 import com.team.todoktodok.data.datasource.notification.DefaultNotificationRemoteDataSource
 import com.team.todoktodok.data.datasource.notification.NotificationLocalDataSource
 import com.team.todoktodok.data.datasource.notification.NotificationRemoteDataSource
 import com.team.todoktodok.data.datasource.reply.DefaultReplyRemoteDataSource
 import com.team.todoktodok.data.datasource.reply.ReplyRemoteDataSource
+import com.team.todoktodok.data.datasource.token.TokenDataSource
 import com.team.todoktodok.data.datasource.token.TokenLocalDataSource
 import com.team.todoktodok.data.local.discussion.DiscussionDatabase
 import com.team.todoktodok.data.network.service.BookService
@@ -50,17 +52,18 @@ object DataSourceModuleHilt {
     @Singleton
     fun provideTokenLocalDataSource(
         @ApplicationContext context: Context,
-    ): TokenLocalDataSource = TokenLocalDataSource(context)
+    ): TokenDataSource = TokenLocalDataSource(context)
 
     @Provides
     @Singleton
     fun provideMemberRemoteDataSource(
         service: MemberService,
         tokenLocalDataSource: TokenLocalDataSource,
-    ) = DefaultMemberRemoteDataSource(
-        service,
-        tokenLocalDataSource,
-    )
+    ): MemberRemoteDataSource =
+        DefaultMemberRemoteDataSource(
+            service,
+            tokenLocalDataSource,
+        )
 
     @Provides
     @Singleton
