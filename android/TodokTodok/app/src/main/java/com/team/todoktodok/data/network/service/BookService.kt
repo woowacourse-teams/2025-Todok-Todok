@@ -4,7 +4,6 @@ import com.team.domain.model.exception.NetworkResult
 import com.team.todoktodok.data.network.request.BookRequest
 import com.team.todoktodok.data.network.response.book.SearchedBookResultResponse
 import com.team.todoktodok.data.network.response.discussion.BookDetailResponse
-import com.team.todoktodok.data.network.response.discussion.BookResponse
 import com.team.todoktodok.data.network.response.discussion.page.BookDiscussionPageResponse
 import retrofit2.http.Body
 import retrofit2.http.GET

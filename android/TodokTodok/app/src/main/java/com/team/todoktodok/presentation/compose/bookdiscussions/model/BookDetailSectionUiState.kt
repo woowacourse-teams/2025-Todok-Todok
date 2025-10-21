@@ -1,7 +1,6 @@
 package com.team.todoktodok.presentation.compose.bookdiscussions.model
 
 import androidx.compose.runtime.Immutable
-import com.team.domain.model.Book
 import com.team.domain.model.book.BookDetail
 
 @Immutable

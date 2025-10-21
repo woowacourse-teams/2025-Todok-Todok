@@ -4,7 +4,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.team.domain.ConnectivityObserver
-import com.team.domain.model.Book
 import com.team.domain.model.Discussion
 import com.team.domain.model.PageInfo
 import com.team.domain.model.book.BookDetail
