@@ -1,9 +1,8 @@
-package todoktodok.backend;
+package todoktodok.backend.member.infrastructure;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import todoktodok.backend.member.application.service.command.GoogleAuthMemberDto;
-import todoktodok.backend.member.infrastructure.AuthClient;
 
 @Component
 @ConditionalOnProperty(name = "auth.mode", havingValue = "test", matchIfMissing = true)

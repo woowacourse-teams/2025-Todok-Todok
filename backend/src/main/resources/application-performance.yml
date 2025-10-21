@@ -58,7 +58,7 @@ logging:
               NioEndpoint: DEBUG
 
 auth:
-  mode: bypass
+  mode: test
 
 management:
   endpoints:
