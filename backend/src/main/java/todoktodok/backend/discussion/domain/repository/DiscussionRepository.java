@@ -134,18 +134,11 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
             final Pageable pageable
     );
 
-    @Modifying
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query("""
                 UPDATE Discussion d
                 SET d.viewCount = d.viewCount + 1
                 WHERE d.id = :discussionId
             """)
     void increaseViewCount(@Param("discussionId") final Long discussionId);
-
-    @Query("""
-                SELECT d.viewCount
-                FROM Discussion d
-                WHERE d.id = :discussionId
-            """)
-    Long findViewCountByDiscussionId(@Param("discussionId") final Long discussionId);
 }

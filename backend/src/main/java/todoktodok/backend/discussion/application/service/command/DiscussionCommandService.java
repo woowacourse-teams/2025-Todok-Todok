@@ -1,5 +1,6 @@
 package todoktodok.backend.discussion.application.service.command;
 
+import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
@@ -96,7 +97,7 @@ public class DiscussionCommandService {
         discussion.update(discussionTitle, discussionOpinion);
     }
 
-    @Transactional(propagation = Propagation.REQUIRED)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void updateDiscussionMemberView(
             final Long memberId,
             final Long discussionId
@@ -118,7 +119,7 @@ public class DiscussionCommandService {
         }
 
         if (discussionMemberView.get().isModifiedDatePassedFrom(VIEW_THRESHOLD)) {
-            discussionMemberViewRepository.updateModifiedAtById(discussionMemberView.get().getId());
+            discussionMemberViewRepository.updateModifiedAtById(discussionMemberView.get().getId(), LocalDateTime.now());
             discussionRepository.increaseViewCount(discussionId);
         }
     }
