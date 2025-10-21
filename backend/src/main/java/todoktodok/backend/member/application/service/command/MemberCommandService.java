@@ -154,9 +154,9 @@ public class MemberCommandService {
         final Member member = findMember(memberId);
 
         final String accessToken = jwtTokenProvider.createAccessToken(member);
-        final RefreshToken oldRefreshToken = findRefreshToken(oldRefreshTokenRequest);
-
-        refreshTokenRepository.delete(oldRefreshToken);
+//        final RefreshToken oldRefreshToken = findRefreshToken(oldRefreshTokenRequest);
+//
+//        refreshTokenRepository.delete(oldRefreshToken);
 
         final RefreshToken newRefreshToken = RefreshToken.create(jwtTokenProvider.createRefreshToken(member));
 

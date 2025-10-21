@@ -183,6 +183,9 @@ public class GlobalExceptionHandler {
     }
 
     private String getSafeErrorMessage(final RuntimeException e) {
+        if (e.getMessage() == null) { // 임시 추가
+            return e.getMessage();
+        }
         return e.getMessage().split(":")[0];
     }
 }

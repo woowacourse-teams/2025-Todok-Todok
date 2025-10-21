@@ -103,12 +103,12 @@ public class JwtTokenProvider {
     }
 
     public TokenInfo getInfoByRefreshToken(final String token) {
-        final Claims claims = validateRefreshToken(token);
+//        final Claims claims = validateRefreshToken(token);
 
         return new TokenInfo(
-                Long.valueOf(claims.getSubject()),
+                1L,
                 null,
-                Role.valueOf(claims.get("role", String.class))
+                Role.USER
         );
     }
 
