@@ -79,8 +79,7 @@ class ParticipatedDiscussionsScreenScreenTest {
             ParticipatedDiscussionsScreen(
                 uiState = uiState,
                 onChangeShowMyDiscussion = {},
-                onCompleteRemoveDiscussion = {},
-                onCompleteModifyDiscussion = {},
+                onCompleteShowDiscussionDetail = {},
             )
         }
 
@@ -98,8 +97,7 @@ class ParticipatedDiscussionsScreenScreenTest {
             ParticipatedDiscussionsScreen(
                 uiState = testUiModel,
                 onChangeShowMyDiscussion = {},
-                onCompleteRemoveDiscussion = {},
-                onCompleteModifyDiscussion = {},
+                onCompleteShowDiscussionDetail = {},
             )
         }
 
@@ -112,15 +110,14 @@ class ParticipatedDiscussionsScreenScreenTest {
     @Test
     fun `내가_참여한_토론방_목록만_보인다`() {
         // given
-        val testUiModel = uiState.copy(showMyDiscussion = true, memberId = 1)
+        val testUiModel = uiState.copy(showMyDiscussion = true)
 
         // When
         composeTestRule.setContent {
             ParticipatedDiscussionsScreen(
                 uiState = testUiModel,
                 onChangeShowMyDiscussion = {},
-                onCompleteRemoveDiscussion = {},
-                onCompleteModifyDiscussion = {},
+                onCompleteShowDiscussionDetail = {},
             )
         }
 
@@ -138,8 +135,7 @@ class ParticipatedDiscussionsScreenScreenTest {
             ParticipatedDiscussionsScreen(
                 uiState = testUiModel,
                 onChangeShowMyDiscussion = {},
-                onCompleteRemoveDiscussion = {},
-                onCompleteModifyDiscussion = {},
+                onCompleteShowDiscussionDetail = {},
             )
         }
 

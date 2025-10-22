@@ -239,6 +239,10 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
 
             CommentDetailUiEvent.ShowReportReplySuccessMessage ->
                 showShortToast(R.string.all_report_reply_success)
+
+            is CommentDetailUiEvent.NavigateToProfile -> {
+                navigateToProfile(commentDetailUiEvent.memberId)
+            }
         }
     }
 
@@ -481,7 +485,7 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
             }
 
             override fun onClickReplyUser(userId: Long) {
-                navigateToProfile(userId)
+                viewModel.navigateToOtherUserProfile(userId)
             }
 
             override fun onClickReplyOption(
@@ -514,8 +518,8 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
                 commentsViewModel.showNewComment()
             }
 
-            override fun onClickCommentUserName(userId: Long) {
-                navigateToProfile(userId)
+            override fun onClickCommentUser(userId: Long) {
+                viewModel.navigateToOtherUserProfile(userId)
             }
         }
 

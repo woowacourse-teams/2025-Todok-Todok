@@ -38,7 +38,6 @@ import com.team.todoktodok.presentation.compose.core.component.DiscussionCard
 import com.team.todoktodok.presentation.compose.core.component.InfinityLazyColumn
 import com.team.todoktodok.presentation.compose.discussion.latest.vm.LatestDiscussionViewModel
 import com.team.todoktodok.presentation.compose.discussion.latest.vm.LatestDiscussionViewModelFactory
-import com.team.todoktodok.presentation.compose.discussion.model.DiscussionResult
 import com.team.todoktodok.presentation.compose.preview.LatestDiscussionsPreviewParameterProvider
 import com.team.todoktodok.presentation.compose.theme.Green1A
 import com.team.todoktodok.presentation.compose.theme.White
@@ -59,13 +58,7 @@ fun LatestDiscussionsScreen(
             ActivityResultContracts.StartActivityForResult(),
         ) { result ->
             if (result.resultCode == RESULT_OK) {
-                result.data?.let { data ->
-                    when (val result = DiscussionResult.fromIntent(data)) {
-                        is DiscussionResult.Deleted -> viewModel.removeDiscussion(result.id)
-                        is DiscussionResult.Watched -> viewModel.modifyDiscussion(result.discussion)
-                        DiscussionResult.None -> Unit
-                    }
-                }
+                viewModel.refreshLatestDiscussions()
             }
         }
 

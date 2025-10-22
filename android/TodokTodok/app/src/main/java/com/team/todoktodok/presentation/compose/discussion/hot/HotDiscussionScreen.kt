@@ -40,7 +40,6 @@ import com.team.todoktodok.presentation.compose.core.component.InfinityLazyColum
 import com.team.todoktodok.presentation.compose.discussion.activate.ActivatedDiscussionHeader
 import com.team.todoktodok.presentation.compose.discussion.hot.vm.HotDiscussionViewModel
 import com.team.todoktodok.presentation.compose.discussion.hot.vm.HotDiscussionViewModelFactory
-import com.team.todoktodok.presentation.compose.discussion.model.DiscussionResult
 import com.team.todoktodok.presentation.compose.discussion.popular.PopularDiscussionsScreen
 import com.team.todoktodok.presentation.compose.preview.HotDiscussionPreviewParameterProvider
 import com.team.todoktodok.presentation.compose.theme.Green1A
@@ -64,13 +63,7 @@ fun HotDiscussionScreen(
             ActivityResultContracts.StartActivityForResult(),
         ) { result ->
             if (result.resultCode == RESULT_OK) {
-                result.data?.let { data ->
-                    when (val result = DiscussionResult.fromIntent(data)) {
-                        is DiscussionResult.Deleted -> viewModel.removeDiscussion(result.id)
-                        is DiscussionResult.Watched -> viewModel.modifyDiscussion(result.discussion)
-                        DiscussionResult.None -> Unit
-                    }
-                }
+                viewModel.loadHotDiscussions()
             }
         }
 
@@ -97,7 +90,7 @@ fun HotDiscussionScreen(
     HotDiscussionScreen(
         uiState = uiState.value,
         isLoading = isLoading.value,
-        onLoadMore = { viewModel.loadActivatedDiscussions() },
+        onLoadMore = viewModel::loadNextActivatedDiscussions,
         onRefresh = viewModel::refreshHotDiscussions,
         pullToRefreshState = pullToRefreshState,
         onClickDiscussion = {

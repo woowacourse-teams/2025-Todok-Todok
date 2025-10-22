@@ -8,6 +8,7 @@ import com.team.domain.model.exception.NetworkResult
 import com.team.domain.model.member.Nickname
 import com.team.domain.model.member.Profile
 import com.team.domain.model.member.User
+import com.team.domain.repository.DiscussionRepository
 import com.team.domain.repository.MemberRepository
 import com.team.domain.repository.TokenRepository
 import com.team.todoktodok.CoroutinesTestExtension
@@ -31,6 +32,7 @@ import java.time.LocalDateTime
 @ExtendWith(InstantTaskExecutorExtension::class)
 class MyProfileViewModelTest {
     private lateinit var memberRepository: MemberRepository
+    private lateinit var discussionRepository: DiscussionRepository
     private lateinit var tokenRepository: TokenRepository
     private lateinit var connectivityObserver: ConnectivityObserver
     private lateinit var viewModel: MyProfileViewModel
@@ -38,11 +40,18 @@ class MyProfileViewModelTest {
     @BeforeEach
     fun setup() {
         memberRepository = mockk()
+        discussionRepository = mockk()
         connectivityObserver = mockk()
         tokenRepository = mockk()
         every { connectivityObserver.subscribe() } returns emptyFlow()
         every { connectivityObserver.value() } returns ConnectivityObserver.Status.Available
-        viewModel = MyProfileViewModel(memberRepository, tokenRepository, connectivityObserver)
+        viewModel =
+            MyProfileViewModel(
+                memberRepository,
+                discussionRepository,
+                tokenRepository,
+                connectivityObserver,
+            )
     }
 
     @Test
@@ -50,7 +59,11 @@ class MyProfileViewModelTest {
         runTest {
             // Given
             val profile = Profile(1, "페토", "안녕하세요", "")
-            val books = listOf(Book(1, "Book1", "페토", ""), Book(2, "Book2", "정페토", ""))
+            val books =
+                listOf(
+                    Book(1, "Book1", "페토", ""),
+                    Book(2, "Book2", "정페토", ""),
+                )
             val discussions =
                 listOf(
                     Discussion(
@@ -78,6 +91,9 @@ class MyProfileViewModelTest {
                     any(),
                 )
             } returns NetworkResult.Success(discussions)
+            coEvery {
+                discussionRepository.getLikedDiscussion()
+            } returns NetworkResult.Success(discussions)
             coEvery { tokenRepository.getMemberId() } returns 1
 
             // When
@@ -91,6 +107,10 @@ class MyProfileViewModelTest {
                 assertEquals(
                     discussions.map { DiscussionUiModel(it) },
                     item.participatedDiscussions.discussions,
+                )
+                assertEquals(
+                    discussions.map { DiscussionUiModel(it) },
+                    item.likedDiscussions.discussions,
                 )
             }
         }

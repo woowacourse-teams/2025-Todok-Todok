@@ -31,6 +31,10 @@ class SelectBookViewModel(
         _uiState.value = SelectBookUiState()
     }
 
+    fun deleteInformation() {
+        bookRepository.deleteCursor()
+    }
+
     fun changePageSize(size: Int) {
         setState { copy(pageSize = size) }
     }

@@ -8,21 +8,19 @@
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/srl_discussion_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/space_0"
-        android:layout_marginBottom="48dp"
-        android:fillViewport="true"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="100dp"
         android:paddingHorizontal="@dimen/space_24">
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:fillViewport="true">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_content"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:fitsSystemWindows="true"
+                android:layout_height="wrap_content"
                 tools:context=".presentation.xml.discussiondetail.DiscussionDetailActivity">
 
                 <com.google.android.material.appbar.AppBarLayout

@@ -11,6 +11,8 @@ data class MainUiState(
     val bottomNavigationTab: MainDestination = MainDestination.Discussion,
     val hasUnreadNotification: Boolean = true,
     val searchBarVisible: Boolean = false,
+    val isAllowed: Boolean = true,
+    val isLoad: Boolean = false,
 ) {
     fun addSearchDiscussion(
         keyword: String,
@@ -53,4 +55,6 @@ data class MainUiState(
         }
 
     fun changeBottomNavigationTab(destination: MainDestination): MainUiState = copy(bottomNavigationTab = destination)
+
+    fun changeAllowedNotification(isAllowed: Boolean): MainUiState = copy(isAllowed = isAllowed, isLoad = true)
 }

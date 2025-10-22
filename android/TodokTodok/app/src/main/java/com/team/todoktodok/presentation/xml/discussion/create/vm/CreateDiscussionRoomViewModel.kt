@@ -4,9 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.team.domain.model.Book
+import com.team.domain.model.book.SearchedBook
 import com.team.domain.model.discussionroom.DiscussionRoom
-import com.team.domain.model.discussionroom.DiscussionRoom.Companion.DiscussionRoom
 import com.team.domain.model.exception.onFailure
 import com.team.domain.model.exception.onSuccess
 import com.team.domain.model.exception.onSuccessSuspend
@@ -40,9 +39,40 @@ class CreateDiscussionRoomViewModel(
 
     init {
         decideMode()
+        getDraftDiscussionCount()
+    }
+
+    fun getDraft(id: Long) {
+        viewModelScope.launch {
+            val (book, discussion) =
+                awaitAll(
+                    async { discussionRepository.getBook(id) },
+                    async { discussionRepository.getDraftDiscussion(id) },
+                )
+            val bookResult = book as SearchedBook
+            val discussionResult = discussion as DiscussionRoom
+            _uiState.value =
+                _uiState.value?.copy(
+                    book = null,
+                    draftBook = bookResult,
+                    title = discussionResult.title,
+                    opinion = discussionResult.opinion,
+                )
+        }
+    }
+
+    fun getDraftDiscussionCount() {
+        viewModelScope.launch {
+            val count = discussionRepository.getDraftDiscussionCount()
+            _uiState.value = _uiState.value?.copy(draftDiscussionCount = count)
+        }
     }
 
     fun isPossibleToCreate() {
+        if (uiState.value?.isPosting ?: false) {
+            return
+        }
+        _uiState.value = _uiState.value?.copy(isPosting = true)
         val error = _uiState.value?.validate()
         if (error != null) {
             _uiEvent.setValue(CreateDiscussionUiEvent.ShowToast(error))
@@ -57,12 +87,9 @@ class CreateDiscussionRoomViewModel(
 
     fun checkIsPossibleToSave() {
         viewModelScope.launch {
-            val discussion = async { discussionRepository.getDiscussion() }.await()
-            if (discussion == null) {
-                _uiEvent.setValue(CreateDiscussionUiEvent.SaveDraft(true))
-                return@launch
-            }
-            _uiEvent.setValue(CreateDiscussionUiEvent.SaveDraft(false))
+            discussionRepository.getDiscussions()
+            _uiEvent.setValue(CreateDiscussionUiEvent.SaveDraft(true))
+            return@launch
         }
     }
 
@@ -79,30 +106,27 @@ class CreateDiscussionRoomViewModel(
 
             is SerializationCreateDiscussionRoomMode.Draft -> {
                 viewModelScope.launch {
-                    val (book, discussion) =
-                        awaitAll(
-                            async { discussionRepository.getBook() },
-                            async { discussionRepository.getDiscussion() },
-                        )
-
-                    val bookResult = book as Book
-                    val discussionResult = discussion as DiscussionRoom
-                    _uiState.value =
-                        _uiState.value?.copy(
-                            book = bookResult,
-                            title = discussionResult.title,
-                            opinion = discussionResult.opinion,
-                        )
                 }
             }
         }
     }
 
     fun saveDraft() {
+        val editBook = _uiState.value?.editBook
         val book =
-            _uiState.value?.book ?: run {
-                _uiEvent.setValue(CreateDiscussionUiEvent.ShowToast(ErrorCreateDiscussionType.BOOK_INFO_NOT_FOUND))
-                return
+            if (editBook == null) {
+                _uiState.value?.editBook ?: _uiState.value?.draftBook ?: _uiState.value?.book
+                    ?: run {
+                        _uiEvent.setValue(CreateDiscussionUiEvent.ShowToast(ErrorCreateDiscussionType.BOOK_INFO_NOT_FOUND))
+                        return
+                    }
+            } else {
+                SearchedBook.Companion.SearchedBook(
+                    isbn = editBook.id,
+                    title = editBook.title,
+                    author = editBook.author,
+                    image = editBook.image,
+                )
             }
         val title =
             _uiState.value?.title ?: run {
@@ -114,7 +138,13 @@ class CreateDiscussionRoomViewModel(
                 _uiEvent.setValue(CreateDiscussionUiEvent.ShowToast(ErrorCreateDiscussionType.CONTENT_NOT_FOUND))
                 return
             }
-        viewModelScope.launch { discussionRepository.saveDiscussionRoom(book, title, opinion) }
+        viewModelScope.launch {
+            discussionRepository.saveDiscussionRoom(
+                book = book as SearchedBook,
+                title,
+                opinion,
+            )
+        }
         _uiEvent.setValue(CreateDiscussionUiEvent.Finish)
     }
 
@@ -138,11 +168,10 @@ class CreateDiscussionRoomViewModel(
 
     private fun createDiscussionRoom() {
         val book =
-            _uiState.value?.book
-                ?: run {
-                    updateErrorCreateDiscussion(ErrorCreateDiscussionType.BOOK_INFO_NOT_FOUND)
-                    return
-                }
+            _uiState.value?.book ?: _uiState.value?.draftBook ?: run {
+                updateErrorCreateDiscussion(ErrorCreateDiscussionType.BOOK_INFO_NOT_FOUND)
+                return
+            }
         val title =
             _uiState.value?.title
                 ?: run {
@@ -177,6 +206,7 @@ class CreateDiscussionRoomViewModel(
                         ),
                     )
                 }.onFailure { exception ->
+                    _uiState.value?.copy(isPosting = false)
                     _uiEvent.setValue(CreateDiscussionUiEvent.ShowNetworkErrorMessage(exception))
                 }
         }
@@ -191,7 +221,7 @@ class CreateDiscussionRoomViewModel(
                 }
                 _uiState.value =
                     _uiState.value?.copy(
-                        book = result.book,
+                        editBook = result.book,
                         title = result.discussionTitle,
                         opinion = result.discussionOpinion,
                     )
@@ -220,8 +250,15 @@ class CreateDiscussionRoomViewModel(
                 )
                 return
             }
+        getDiscussionRoom(discussionRoomId, title, opinion)
+    }
 
-        val discussionRoom = DiscussionRoom(title, opinion)
+    private fun getDiscussionRoom(
+        discussionRoomId: Long,
+        title: String,
+        opinion: String,
+    ) {
+        val discussionRoom = DiscussionRoom(discussionRoomId, title, opinion)
         viewModelScope.launch {
             discussionRepository
                 .editDiscussionRoom(

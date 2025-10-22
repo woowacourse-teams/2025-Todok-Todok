@@ -6,7 +6,6 @@ import com.team.domain.repository.DiscussionRepository
 import com.team.todoktodok.presentation.compose.discussion.latest.LatestDiscussionsUiEvent
 import com.team.todoktodok.presentation.compose.discussion.latest.LatestDiscussionsUiState
 import com.team.todoktodok.presentation.core.base.BaseViewModel
-import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussion
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -34,7 +33,7 @@ class LatestDiscussionViewModel(
             key = KEY_LATEST_DISCUSSIONS,
             action = { discussionRepository.getLatestDiscussions(cursor = cursor) },
             handleSuccess = { result ->
-                _uiState.update { it.append(result) }
+                _uiState.update { it.appendDiscussion(result) }
             },
             handleFailure = { onUiEvent(LatestDiscussionsUiEvent.ShowErrorMessage(it)) },
         )
@@ -43,14 +42,6 @@ class LatestDiscussionViewModel(
     fun refreshLatestDiscussions() {
         _uiState.update { it.clearForRefresh() }
         loadLatestDiscussions()
-    }
-
-    fun removeDiscussion(discussionId: Long) {
-        _uiState.update { it.remove(discussionId) }
-    }
-
-    fun modifyDiscussion(discussion: SerializationDiscussion) {
-        _uiState.update { it.modify(discussion) }
     }
 
     private fun onUiEvent(event: LatestDiscussionsUiEvent) {

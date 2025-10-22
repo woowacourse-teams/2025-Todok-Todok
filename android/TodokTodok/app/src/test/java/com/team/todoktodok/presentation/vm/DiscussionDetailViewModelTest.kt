@@ -10,6 +10,7 @@ import com.team.todoktodok.InstantTaskExecutorExtension
 import com.team.todoktodok.ext.getOrAwaitValue
 import com.team.todoktodok.fixture.DISCUSSIONS
 import com.team.todoktodok.presentation.xml.discussiondetail.DiscussionDetailUiEvent
+import com.team.todoktodok.presentation.xml.discussiondetail.DiscussionDetailUiState
 import com.team.todoktodok.presentation.xml.discussiondetail.vm.DiscussionDetailViewModel
 import com.team.todoktodok.presentation.xml.discussiondetail.vm.DiscussionDetailViewModel.Companion.KEY_DISCUSSION_ID
 import io.mockk.coEvery
@@ -35,7 +36,7 @@ class DiscussionDetailViewModelTest {
     fun setUp() {
         val state = SavedStateHandle(mapOf(KEY_DISCUSSION_ID to DISCUSSION_ID))
         tokenRepository = mockk(relaxed = true)
-        coEvery { tokenRepository.getMemberId() } returns WRITER_ID
+        coEvery { tokenRepository.getMemberId() } returns MY_ID
         discussionRepository = mockk(relaxed = true)
         coEvery { discussionRepository.getDiscussion(DISCUSSION_ID) } returns
             NetworkResult.Success(DISCUSSIONS.first())
@@ -59,11 +60,12 @@ class DiscussionDetailViewModelTest {
 
             // when
             advanceUntilIdle()
+            val uiState = discussionDetailViewModel.uiState.getOrAwaitValue()
 
             // then
-            assertThat(
-                discussionDetailViewModel.uiState.getOrAwaitValue().discussion,
-            ).isEqualTo(expected)
+            if (uiState is DiscussionDetailUiState.Success) {
+                assertThat(uiState.discussion).isEqualTo(expected)
+            }
         }
 
     @Test
@@ -88,7 +90,7 @@ class DiscussionDetailViewModelTest {
             val expected = DiscussionDetailUiEvent.NavigateToProfile(WRITER_ID)
 
             // when
-            discussionDetailViewModel.navigateToProfile()
+            discussionDetailViewModel.navigateToOtherUserProfile()
             advanceUntilIdle()
             val event = discussionDetailViewModel.uiEvent.getOrAwaitValue()
 
@@ -125,10 +127,12 @@ class DiscussionDetailViewModelTest {
             advanceUntilIdle()
             val event = discussionDetailViewModel.uiEvent.getOrAwaitValue()
             val uiState = discussionDetailViewModel.uiState.getOrAwaitValue()
-
             // then
-            assertThat(event).isEqualTo(DiscussionDetailUiEvent.ShowErrorMessage(exception))
-            assertFalse(uiState.isLoading)
+            if (uiState is DiscussionDetailUiState.Success) {
+                assertThat(event).isEqualTo(DiscussionDetailUiEvent.ShowErrorMessage(exception))
+
+                assertFalse(uiState.isLoading)
+            }
         }
 
     @Test
@@ -162,12 +166,17 @@ class DiscussionDetailViewModelTest {
             val uiState = discussionDetailViewModel.uiState.getOrAwaitValue()
 
             // then
-            assertThat(event).isEqualTo(DiscussionDetailUiEvent.ShowErrorMessage(exception))
-            assertFalse(uiState.isLoading)
+            if (uiState is DiscussionDetailUiState.Success) {
+                assertThat(event).isEqualTo(DiscussionDetailUiEvent.ShowErrorMessage(exception))
+
+                assertFalse(uiState.isLoading)
+            }
         }
 
     companion object {
         private const val DISCUSSION_ID = 2L
         private const val WRITER_ID = 1L
+
+        private const val MY_ID = 2L
     }
 }

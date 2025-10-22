@@ -3,7 +3,7 @@ package com.team.todoktodok.data.datasource.discussion
 import com.team.domain.model.exception.NetworkResult
 import com.team.todoktodok.data.network.model.LikeAction
 import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
-import com.team.todoktodok.data.network.response.discussion.page.ActiveDiscussionPageResponse
+import com.team.todoktodok.data.network.response.discussion.page.ActivatedDiscussionPageResponse
 import com.team.todoktodok.data.network.response.latest.LatestDiscussionsResponse
 import retrofit2.Response
 
@@ -14,7 +14,9 @@ interface DiscussionRemoteDataSource {
         period: Int,
         size: Int,
         cursor: String? = null,
-    ): NetworkResult<ActiveDiscussionPageResponse>
+    ): NetworkResult<ActivatedDiscussionPageResponse>
+
+    suspend fun getLikedDiscussion(): NetworkResult<List<DiscussionResponse>>
 
     suspend fun getHotDiscussion(
         period: Int,

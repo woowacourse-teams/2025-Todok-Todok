@@ -39,4 +39,8 @@ sealed interface CommentDetailUiEvent {
     data object ShowReportCommentSuccessMessage : CommentDetailUiEvent
 
     data object ShowReportReplySuccessMessage : CommentDetailUiEvent
+
+    data class NavigateToProfile(
+        val memberId: Long,
+    ) : CommentDetailUiEvent
 }

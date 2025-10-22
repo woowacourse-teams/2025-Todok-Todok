@@ -9,6 +9,7 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
+import androidx.activity.addCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -29,7 +30,7 @@ import com.team.todoktodok.presentation.xml.book.vm.SelectBookViewModel
 import com.team.todoktodok.presentation.xml.book.vm.SelectBookViewModelFactory
 import com.team.todoktodok.presentation.xml.discussion.create.CreateDiscussionRoomActivity
 import com.team.todoktodok.presentation.xml.discussion.create.SerializationCreateDiscussionRoomMode
-import com.team.todoktodok.presentation.xml.serialization.SerializationBook
+import com.team.todoktodok.presentation.xml.serialization.SerializationSearchedBook
 import com.team.todoktodok.presentation.xml.serialization.toSerialization
 
 class SelectBookActivity : AppCompatActivity() {
@@ -78,7 +79,7 @@ class SelectBookActivity : AppCompatActivity() {
             val imeBottom = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
 
             initSystemBarPadding(v, binding, systemBars)
-            initSystmeBarRvPadding(binding, imeBottom)
+            initSystemBarRvPadding(binding, imeBottom)
             initSystemBarEmptyViewPadding(binding, imeBottom)
             insets
         }
@@ -96,7 +97,7 @@ class SelectBookActivity : AppCompatActivity() {
         )
     }
 
-    private fun initSystmeBarRvPadding(
+    private fun initSystemBarRvPadding(
         binding: ActivitySelectBookBinding,
         imeBottom: Int,
     ) {
@@ -127,6 +128,7 @@ class SelectBookActivity : AppCompatActivity() {
     ) {
         binding.apply {
             btnBack.setOnClickListener {
+                viewModel.deleteInformation()
                 finish()
             }
             etSearchKeyword.requestFocus()
@@ -135,13 +137,17 @@ class SelectBookActivity : AppCompatActivity() {
             }
             initRvView(adapter)
         }
+        onBackPressedDispatcher.addCallback { viewModel.deleteInformation() }
     }
 
     private fun ActivitySelectBookBinding.initRvView(adapter: SearchBooksAdapter) {
         rvSearchedBooks.apply {
             this.adapter = adapter
             addOnScrollEndListener(
-                callback = { viewModel.addSearchedBooks() },
+                callback = {
+                    viewModel.addSearchedBooks()
+                    finish()
+                },
             )
         }
     }
@@ -261,13 +267,14 @@ class SelectBookActivity : AppCompatActivity() {
     }
 
     private fun navigateToCreateDiscussionRoom(book: SearchedBook) {
-        val serializationBook: SerializationBook = book.toSerialization()
+        val serializationBook: SerializationSearchedBook = book.toSerialization()
         val intent =
             CreateDiscussionRoomActivity.Intent(
                 this,
                 SerializationCreateDiscussionRoomMode.Create(serializationBook),
             )
         startActivity(intent)
+        finish()
     }
 
     private fun hideKeyBoard(view: View) {

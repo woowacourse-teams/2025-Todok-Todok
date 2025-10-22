@@ -197,6 +197,10 @@ class CommentsFragment : Fragment(R.layout.fragment_comments) {
 
             CommentsUiEvent.ShowReportCommentSuccessMessage ->
                 showShortToast(R.string.all_report_comment_success)
+
+            is CommentsUiEvent.NavigateToProfile -> {
+                navigateToProfile(commentsUiEvent.memberId)
+            }
         }
     }
 
@@ -395,7 +399,7 @@ class CommentsFragment : Fragment(R.layout.fragment_comments) {
             }
 
             override fun onClickUser(userId: Long) {
-                navigateToProfile(userId)
+                viewModel.navigateToOtherUserProfile(userId)
             }
         }
 

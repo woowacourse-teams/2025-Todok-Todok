@@ -10,4 +10,8 @@ interface NotificationDataStore {
     suspend fun getFId(): String?
 
     suspend fun deletePushNotification()
+
+    suspend fun allowedNotification(isAllowed: Boolean)
+
+    suspend fun getIsNotificationAllowed(): Boolean?
 }

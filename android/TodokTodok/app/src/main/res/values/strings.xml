@@ -87,6 +87,7 @@
     <!-- 로그인 페이지 -->
     <string name="login_fail_to_login">로그인에 실패했어요. 다시 시도해주세요</string>
     <string name="login_cancelled">구글 로그인이 취소 되었습니다.</string>
+    <string name="login_read_write_discussion">읽고, 쓰고, 토론하자</string>
 
     <!-- 닉네임 입력 페이지 -->
     <string name="signup_text">닉네임 설정</string>
@@ -129,6 +130,8 @@
     <string name="profile_not_has_activated_book_subtitle">토론에 참여하고 활동한 책을 추가해보세요</string>
     <string name="profile_my_discussion_toggle">내 글만 보기</string>
     <string name="profile_action_activated_book">토론방 보러가기 ></string>
+    <string name="profile_not_has_liked_discussion_title">아직 좋아요한 토론방이 없어요 !</string>
+    <string name="profile_not_has_liked_discussion_subtitle">마음에 드는 글이 있다면 좋아요를 남겨보세요</string>
     <string name="profile_not_has_created_discussion_title">아직 생성한 토론방이 없어요 !</string>
     <string name="profile_not_has_created_discussion_subtitle">나만의 주제로 토론방을 생성해보세요</string>
     <string name="profile_action_created_discussion">토론방 생성하기 ></string>
@@ -195,7 +198,7 @@
     <string name="overload">덮어쓰기</string>
     <string name="error_empty_content">토론방 내용을 입력해주세요</string>
     <string name="error_empty_title">토론방 제목을 입력해주세요</string>
-    <string name="create_discussion_temp_save">임시 저장 | 3</string>
+    <string name="create_discussion_temp_save">임시 저장 | %d</string>
 
     <!-- 설정 화면 -->
     <string name="setting_modify_profile">프로필 정보 수정</string>
@@ -233,6 +236,11 @@
     <string name="error_invalid_email_format">올바른 이메일 형식을 입력해주세요.</string>
     <string name="error_profile_image_not_exist">프로필 이미지를 등록해주세요.</string>
     <string name="error_refresh_token_not_received">리프레시 토큰이 전달되지 않았습니다</string>
+
+    <!-- 도서별 토론방 관련 -->
+    <string name="bookdiscussions_content_description_navigate_to_discussions">토론방 목록 화면 이동 버튼 이미지</string>
+    <string name="book_info_message">%1$s\n도서 정보: 알라딘</string>
+    <string name="book_discussions_title">도서별 토론방</string>
 
     <!-- HTTP 예외 -->
     <string name="error_authorization">권한이 없는 요청입니다.</string>
@@ -328,4 +336,21 @@
     <string name="create_discussion_room_draft_dialog_content">작성중인 글을 취소하시겠습니까?\n작성취소 선택시, 작성된 글은 저장되지 않습니다.</string>
     <string name="create_discussion_room_draft_dialog_cancel">작성취소</string>
     <string name="create_discussion_room_draft_dialog_save">임시저장</string>
+
+    <string name="notification_count_description">개 읽지 않은 알람</string>
+    <string name="notification_dialog_title">알림을 켜고 소통을 시작하세요!</string>
+    <string name="notification_dialog_subtitle">토론방의 좋아요·댓글과 내 댓글의 대댓글을 실시간으로 확인하세요.</string>
+    <string name="notification_dialog_cancel">괜찮아요</string>
+    <string name="notification_dialog_okay">네, 알려주세요</string>
+
+    <string name="drafts">임시저장 글</string>
+    <string name="content_description_drafts_back">토론방 생성 페이지로 이동합니다</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+    <string name="drafts_no_title">제목 없음</string>
+    <string name="drafts_no_description">내용 없음</string>
+    <string name="drafts_no_exist">잠시 오류가 생겼습니다. 다시 선택해주세요</string>
 </resources>

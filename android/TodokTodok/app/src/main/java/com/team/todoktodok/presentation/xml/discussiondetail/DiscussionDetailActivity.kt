@@ -13,7 +13,6 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.marginTop
 import androidx.fragment.app.commit
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.team.todoktodok.App
@@ -21,8 +20,8 @@ import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivityDiscussionDetailBinding
 import com.team.todoktodok.databinding.MenuExternalDiscussionBinding
 import com.team.todoktodok.databinding.MenuOwnedDiscussionBinding
+import com.team.todoktodok.presentation.compose.bookdiscussions.BookDiscussionsActivity
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionResult.Companion.EXTRA_DELETE_DISCUSSION
-import com.team.todoktodok.presentation.compose.discussion.model.DiscussionResult.Companion.EXTRA_WATCHED_DISCUSSION
 import com.team.todoktodok.presentation.compose.main.MainActivity
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
@@ -70,8 +69,8 @@ class DiscussionDetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        initView()
         setContentView(binding.root)
+        initView()
         setupOnClick()
         setupObserve()
         setUpRefresh()
@@ -136,13 +135,12 @@ class DiscussionDetailActivity : AppCompatActivity() {
     }
 
     private fun initView() {
-        enableEdgeToEdge()
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.srlDiscussionContainer) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(
-                binding.root.paddingLeft,
-                binding.root.marginTop,
-                binding.root.paddingRight,
+                binding.srlDiscussionContainer.paddingLeft,
+                systemBars.top,
+                binding.srlDiscussionContainer.paddingRight,
                 systemBars.bottom,
             )
             insets
@@ -170,21 +168,24 @@ class DiscussionDetailActivity : AppCompatActivity() {
                 behavior.state = BottomSheetBehavior.STATE_EXPANDED
             }
             ivUserProfile.setOnClickListener {
-                viewModel.navigateToProfile()
+                viewModel.navigateToOtherUserProfile()
             }
             tvUserNickname.setOnClickListener {
-                viewModel.navigateToProfile()
+                viewModel.navigateToOtherUserProfile()
             }
             ivDiscussionShare.setOnClickListener {
-                viewModel.uiState.value?.discussion?.let { discussion ->
-                    this@DiscussionDetailActivity.shareDiscussionLink(
-                        discussion.id,
-                        discussion.discussionTitle,
-                    )
-                }
+                viewModel.shareDiscussion()
             }
             tvDiscussionOpinion.setOnClickListener {
                 behavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            }
+
+            ivBookImage.setOnClickListener {
+                viewModel.navigateToBookDiscussion()
+            }
+
+            tvBookTitle.setOnClickListener {
+                viewModel.navigateToBookDiscussion()
             }
             setupLikeClick()
         }
@@ -262,10 +263,10 @@ class DiscussionDetailActivity : AppCompatActivity() {
     private fun setupObserve() {
         viewModel.uiState.observe(this) { value ->
             with(binding) {
-                if (value != null) {
-                    if (value.isLoading) {
-                        progressBar.show()
-                    } else {
+                when (value) {
+                    is DiscussionDetailUiState.Failure -> {}
+                    DiscussionDetailUiState.Loading -> progressBar.show()
+                    is DiscussionDetailUiState.Success -> {
                         progressBar.hide()
                         val discussion = value.discussion
                         tvBookTitle.text = discussion.book.title.extractSubtitle()
@@ -280,8 +281,8 @@ class DiscussionDetailActivity : AppCompatActivity() {
                         tvLikeCount.text = discussion.likeCount.toString()
                         tvViewsCount.text = discussion.viewCount.toString()
                         tvCommentCount.text = discussion.commentCount.toString()
+                        setupPopUpDiscussionClick(value.isMyDiscussion)
                     }
-                    setupPopUpDiscussionClick(value.isMyDiscussion)
                 }
             }
         }
@@ -332,6 +333,18 @@ class DiscussionDetailActivity : AppCompatActivity() {
                     }
                 startActivity(intent)
             }
+
+            is DiscussionDetailUiEvent.ShareDiscussion -> {
+                this@DiscussionDetailActivity.shareDiscussionLink(
+                    event.discussionId,
+                    event.discussionTitle,
+                )
+            }
+
+            is DiscussionDetailUiEvent.NavigateToBookDiscussions -> {
+                val intent = BookDiscussionsActivity.Intent(this, event.bookId)
+                startActivity(intent)
+            }
         }
     }
 
@@ -356,11 +369,7 @@ class DiscussionDetailActivity : AppCompatActivity() {
             }
 
             else -> {
-                val resultIntent =
-                    Intent().apply {
-                        putExtra(EXTRA_WATCHED_DISCUSSION, discussion)
-                    }
-                setResult(RESULT_OK, resultIntent)
+                setResult(RESULT_OK)
                 finish()
             }
         }
@@ -390,7 +399,8 @@ class DiscussionDetailActivity : AppCompatActivity() {
         val sheetView = binding.bottomSheetContainer
         val behavior = BottomSheetBehavior.from(sheetView)
 
-        behavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+        behavior.isHideable = false
+        behavior.state = BottomSheetBehavior.STATE_COLLAPSED
         behavior.setPeekHeight(
             resources.getDimensionPixelSize(R.dimen.item_discussion_detail_bottom_sheet_min_height),
             true,

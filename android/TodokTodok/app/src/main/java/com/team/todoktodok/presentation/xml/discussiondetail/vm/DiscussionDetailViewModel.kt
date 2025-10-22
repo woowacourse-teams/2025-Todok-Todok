@@ -30,7 +30,7 @@ class DiscussionDetailViewModel(
     var mode = savedStateHandle.get<SerializationCreateDiscussionRoomMode>(KEY_MODE)
         private set
     private var coalesceJob: Job? = null
-    private val _uiState = MutableLiveData<DiscussionDetailUiState>()
+    private val _uiState = MutableLiveData<DiscussionDetailUiState>(DiscussionDetailUiState.Loading)
     val uiState: LiveData<DiscussionDetailUiState> = _uiState
 
     private val _uiEvent = MutableSingleLiveData<DiscussionDetailUiEvent>()
@@ -38,12 +38,14 @@ class DiscussionDetailViewModel(
 
     fun onFinishEvent() {
         val currentState = _uiState.value ?: return
-        onUiEvent(
-            DiscussionDetailUiEvent.NavigateToDiscussionsWithResult(
-                mode,
-                currentState.discussion.toSerialization(),
-            ),
-        )
+        if (currentState is DiscussionDetailUiState.Success) {
+            onUiEvent(
+                DiscussionDetailUiEvent.NavigateToDiscussionsWithResult(
+                    mode,
+                    currentState.discussion.toSerialization(),
+                ),
+            )
+        }
     }
 
     fun initLoadDiscission(id: Long) {
@@ -101,6 +103,7 @@ class DiscussionDetailViewModel(
 
     fun toggleLike() {
         val currentUiState = _uiState.value ?: return
+        if (currentUiState !is DiscussionDetailUiState.Success) return
         val currentDiscussion = currentUiState.discussion
         val desiredIsLikedByMe = !currentDiscussion.isLikedByMe
         val likeCountDelta = if (desiredIsLikedByMe) 1 else -1
@@ -119,8 +122,10 @@ class DiscussionDetailViewModel(
         coalesceJob =
             viewModelScope.launch {
                 delay(250)
+                val currentUiState = _uiState.value ?: return@launch
+                if (currentUiState !is DiscussionDetailUiState.Success) return@launch
                 val isToggle =
-                    currentDiscussion.likeCount != _uiState.value?.discussion?.likeCount
+                    currentDiscussion.likeCount != currentUiState.discussion.likeCount
                 if (!isToggle) return@launch
                 handleResult(discussionRepository.toggleLike(discussionId ?: THROW_DISCUSSION_ID)) {
                     loadDiscussionRoom()
@@ -128,13 +133,33 @@ class DiscussionDetailViewModel(
             }
     }
 
-    fun navigateToProfile() {
-        val memberId =
-            _uiState.value
-                ?.discussion
-                ?.writer
-                ?.id ?: return
-        _uiEvent.setValue(DiscussionDetailUiEvent.NavigateToProfile(memberId))
+    fun shareDiscussion() {
+        val currentUiState = _uiState.value ?: return
+        if (currentUiState !is DiscussionDetailUiState.Success) return
+        onUiEvent(
+            DiscussionDetailUiEvent.ShareDiscussion(
+                discussionId ?: return,
+                currentUiState.discussion.discussionTitle,
+            ),
+        )
+    }
+
+    fun navigateToOtherUserProfile() {
+        viewModelScope.launch {
+            val currentUiState = _uiState.value ?: return@launch
+            if (currentUiState !is DiscussionDetailUiState.Success) return@launch
+            val writerId = currentUiState.discussion.writer.id
+            val isMyId = writerId == tokenRepository.getMemberId()
+            if (!isMyId) onUiEvent(DiscussionDetailUiEvent.NavigateToProfile(writerId))
+        }
+    }
+
+    fun navigateToBookDiscussion() {
+        val currentUiState = _uiState.value ?: return
+        if (currentUiState !is DiscussionDetailUiState.Success) return
+        val bookId =
+            currentUiState.discussion.book.id
+        _uiEvent.setValue(DiscussionDetailUiEvent.NavigateToBookDiscussions(bookId))
     }
 
     private suspend fun loadDiscussionRoom() {
@@ -144,7 +169,7 @@ class DiscussionDetailViewModel(
             ),
         ) { discussion ->
             _uiState.value =
-                DiscussionDetailUiState(
+                DiscussionDetailUiState.Success(
                     discussion = discussion,
                     isMyDiscussion = discussion.writer.id == tokenRepository.getMemberId(),
                     isLoading = false,
@@ -174,7 +199,7 @@ class DiscussionDetailViewModel(
                         onUiEvent(
                             DiscussionDetailUiEvent.ShowErrorMessage(result.exception),
                         )
-                        _uiState.value = _uiState.value?.copy(isLoading = false)
+                        _uiState.value = DiscussionDetailUiState.Failure(result.exception)
                     }
                 }
             }

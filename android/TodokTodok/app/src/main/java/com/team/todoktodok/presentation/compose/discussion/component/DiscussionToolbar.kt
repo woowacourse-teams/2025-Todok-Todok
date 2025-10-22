@@ -1,5 +1,8 @@
 package com.team.todoktodok.presentation.compose.discussion.component
 
+import android.app.Activity
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
@@ -37,6 +40,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.team.todoktodok.R
 import com.team.todoktodok.presentation.compose.core.extension.noRippleClickable
+import com.team.todoktodok.presentation.compose.main.MainActivity.Companion.KEY_REFRESH_NOTIFICATION
 import com.team.todoktodok.presentation.compose.main.MainUiState
 import com.team.todoktodok.presentation.compose.theme.Green1A
 import com.team.todoktodok.presentation.compose.theme.White
@@ -48,12 +52,25 @@ fun DiscussionToolbar(
     mainUiState: MainUiState,
     onSearch: () -> Unit,
     onChangeSearchBarVisibility: () -> Unit,
+    onChangeIsExistNotification: () -> Unit,
     onKeywordChange: (String) -> Unit,
     isExistNotification: Boolean,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
     val density = LocalDensity.current
+
+    val notificationLauncher =
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.StartActivityForResult(),
+        ) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val isRefresh = result.data?.getBooleanExtra(KEY_REFRESH_NOTIFICATION, false) ?: false
+                if (isRefresh) {
+                    onChangeIsExistNotification()
+                }
+            }
+        }
 
     Column(
         modifier =
@@ -103,9 +120,8 @@ fun DiscussionToolbar(
                         contentDescription = stringResource(R.string.content_description_discussions_toolbar_notification),
                         modifier =
                             Modifier.noRippleClickable {
-                                context.startActivity(
-                                    NotificationActivity.Intent(context),
-                                )
+                                val intent = NotificationActivity.Intent(context)
+                                notificationLauncher.launch(intent)
                             },
                     )
                     if (isExistNotification) {
@@ -174,6 +190,7 @@ private fun DiscussionToolbarPreview() {
         onSearch = {},
         onKeywordChange = {},
         onChangeSearchBarVisibility = {},
+        onChangeIsExistNotification = {},
         isExistNotification = true,
     )
 }
@@ -187,6 +204,7 @@ private fun SearchBarExpandedToolbarPreview() {
         onSearch = {},
         onKeywordChange = {},
         onChangeSearchBarVisibility = {},
+        onChangeIsExistNotification = {},
         isExistNotification = false,
     )
 }

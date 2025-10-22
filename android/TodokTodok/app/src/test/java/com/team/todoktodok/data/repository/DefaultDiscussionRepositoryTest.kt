@@ -5,6 +5,10 @@ import com.team.domain.model.exception.NetworkResult
 import com.team.domain.model.exception.onSuccess
 import com.team.todoktodok.data.datasource.discussion.DiscussionLocalDataSource
 import com.team.todoktodok.data.datasource.discussion.DiscussionRemoteDataSource
+import com.team.todoktodok.data.network.response.discussion.BookResponse
+import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
+import com.team.todoktodok.data.network.response.discussion.MemberResponse
+import com.team.todoktodok.data.network.response.discussion.toDomain
 import com.team.todoktodok.fake.datasource.FakeDiscussionRemoteDataSource
 import com.team.todoktodok.fixture.DISCUSSIONS
 import io.mockk.mockk
@@ -145,5 +149,99 @@ class DefaultDiscussionRepositoryTest {
             val bad = defaultDiscussionRepository.reportDiscussion(badId, reason = "스팸")
             assertThat(ok).isInstanceOf(NetworkResult.Success::class.java)
             assertThat(bad).isInstanceOf(NetworkResult.Failure::class.java)
+        }
+
+    @Test
+    fun `활성 토론을 페이지 단위로 가져온다`() =
+        runTest {
+            // given
+            val pageSize = 2
+            val period = 7
+            val firstCursor: String? = null
+
+            // when
+            val firstPageResult = defaultDiscussionRepository.getActivatedDiscussion(period, pageSize, firstCursor)
+
+            // then
+            firstPageResult.onSuccess { page ->
+                assertThat(page.discussions.size).isEqualTo(pageSize)
+                assertThat(page.pageInfo.hasNext).isTrue()
+            }
+
+            // given
+            val nextCursor = (firstPageResult as NetworkResult.Success).data.pageInfo.nextCursor
+            // when
+            val secondPageResult = defaultDiscussionRepository.getActivatedDiscussion(period, pageSize, nextCursor)
+            // then
+            secondPageResult.onSuccess { page ->
+                assertThat(page.discussions.size).isEqualTo(2)
+            }
+
+            // given
+            val lastCursor = (secondPageResult as NetworkResult.Success).data.pageInfo.nextCursor
+            // when
+            val lastPageResult = defaultDiscussionRepository.getActivatedDiscussion(period, pageSize, lastCursor)
+            // then
+            lastPageResult.onSuccess { page ->
+                assertThat(page.pageInfo.hasNext).isFalse()
+            }
+        }
+
+    @Test
+    fun `내가 좋아요 누른 토론만 가져온다`() =
+        runTest {
+            val lickedDiscussion =
+                DiscussionResponse(
+                    discussionId = 4,
+                    discussionTitle = "클린 코드란 무엇인가?",
+                    book = BookResponse("Robert C. Martin", 4, "", "Clean Code"),
+                    discussionOpinion = "의도를 드러내는 코드가 중요합니다.",
+                    createdAt = "2025-07-15T12:00:00",
+                    member = MemberResponse(4, "이클린", ""),
+                    likeCount = 0,
+                    viewCount = 0,
+                    commentCount = 0,
+                    isLikedByMe = true,
+                ).toDomain()
+
+            val likedDiscussions = defaultDiscussionRepository.getLikedDiscussion()
+            likedDiscussions.onSuccess { discussions ->
+                assertThat(discussions).contains(lickedDiscussion)
+            }
+        }
+
+    @Test
+    fun `키워드로 토론방을 검색하면 해당 키워드 포함 토론만 반환한다`() =
+        runTest {
+            // given
+            val keyword = "코루틴"
+
+            // when
+            val result = defaultDiscussionRepository.getSearchDiscussion(keyword)
+
+            // then
+            result.onSuccess { discussions ->
+                assertThat(discussions).isNotEmpty
+                assertThat(
+                    discussions.all {
+                        it.discussionTitle.contains(keyword) || it.discussionOpinion.contains(keyword)
+                    },
+                ).isTrue()
+            }
+        }
+
+    @Test
+    fun `키워드가 없으면 빈 리스트를 반환한다`() =
+        runTest {
+            // given
+            val keyword = "에베베베"
+
+            // when
+            val result = defaultDiscussionRepository.getSearchDiscussion(keyword)
+
+            // then
+            result.onSuccess { discussions ->
+                assertThat(discussions).isEmpty()
+            }
         }
 }
