@@ -6,7 +6,6 @@ import com.team.todoktodok.data.datasource.discussion.DiscussionRemoteDataSource
 import com.team.todoktodok.data.network.model.LikeAction
 import com.team.todoktodok.data.network.response.discussion.BookResponse
 import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
-import com.team.todoktodok.data.network.response.discussion.DiscussionsResponse
 import com.team.todoktodok.data.network.response.discussion.MemberResponse
 import com.team.todoktodok.data.network.response.discussion.page.ActivatedDiscussion
 import com.team.todoktodok.data.network.response.discussion.page.ActivatedDiscussionPageResponse
@@ -125,9 +124,9 @@ class FakeDiscussionRemoteDataSource : DiscussionRemoteDataSource {
         return NetworkResult.Success(page)
     }
 
-    override suspend fun getLikedDiscussion(): NetworkResult<DiscussionsResponse> {
+    override suspend fun getLikedDiscussion(): NetworkResult<List<DiscussionResponse>> {
         val likedDiscussions = discussionResponses.filter { it.isLikedByMe }
-        return NetworkResult.Success(DiscussionsResponse(likedDiscussions))
+        return NetworkResult.Success(likedDiscussions)
     }
 
     override suspend fun getHotDiscussion(

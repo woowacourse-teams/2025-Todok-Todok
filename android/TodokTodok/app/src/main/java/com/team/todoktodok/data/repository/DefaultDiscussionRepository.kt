@@ -37,7 +37,7 @@ class DefaultDiscussionRepository(
     override suspend fun getLikedDiscussion(): NetworkResult<List<Discussion>> =
         discussionRemoteDataSource
             .getLikedDiscussion()
-            .map { discussions -> discussions.items.map { it.toDomain() } }
+            .map { discussions -> discussions.map { it.toDomain() } }
 
     override suspend fun getHotDiscussion(
         period: Int,
