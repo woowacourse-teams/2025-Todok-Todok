@@ -206,6 +206,7 @@ class CreateDiscussionRoomViewModel(
                         ),
                     )
                 }.onFailure { exception ->
+                    _uiState.value?.copy(isPosting = false)
                     _uiEvent.setValue(CreateDiscussionUiEvent.ShowNetworkErrorMessage(exception))
                 }
         }
