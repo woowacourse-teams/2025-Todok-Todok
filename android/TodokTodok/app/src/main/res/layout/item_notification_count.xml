@@ -25,7 +25,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/pretendard_regular"
-        android:text="개 읽지 않는 알람"
+        android:text="@string/notification_count_description"
         android:textColor="@color/gray_66"
         android:textSize="14sp"
         app:layout_constraintStart_toEndOf="@id/tv_count"

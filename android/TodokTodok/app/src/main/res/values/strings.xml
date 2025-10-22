@@ -329,6 +329,13 @@
     <string name="create_discussion_room_draft_dialog_content">작성중인 글을 취소하시겠습니까?\n작성취소 선택시, 작성된 글은 저장되지 않습니다.</string>
     <string name="create_discussion_room_draft_dialog_cancel">작성취소</string>
     <string name="create_discussion_room_draft_dialog_save">임시저장</string>
+
+    <string name="notification_count_description">개 읽지 않은 알람</string>
+    <string name="notification_dialog_title">알림을 켜고 소통을 시작하세요!</string>
+    <string name="notification_dialog_subtitle">토론방의 좋아요·댓글과 내 댓글의 대댓글을 실시간으로 확인하세요.</string>
+    <string name="notification_dialog_cancel">괜찮아요</string>
+    <string name="notification_dialog_okay">네, 알려주세요</string>
+
     <string name="drafts">임시저장 글</string>
     <string name="content_description_drafts_back">토론방 생성 페이지로 이동합니다</string>
     <!-- Strings used for fragments for navigation -->

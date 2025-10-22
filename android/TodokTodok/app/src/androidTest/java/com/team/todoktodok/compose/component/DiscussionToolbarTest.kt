@@ -25,6 +25,7 @@ class DiscussionToolbarTest {
                 onSearch = {},
                 onKeywordChange = {},
                 onChangeSearchBarVisibility = {},
+                onChangeIsExistNotification = {},
             )
         }
 
@@ -43,6 +44,7 @@ class DiscussionToolbarTest {
                 onSearch = {},
                 onKeywordChange = {},
                 onChangeSearchBarVisibility = {},
+                onChangeIsExistNotification = {},
             )
         }
 
@@ -66,6 +68,7 @@ class DiscussionToolbarTest {
                 onSearch = {},
                 onKeywordChange = {},
                 onChangeSearchBarVisibility = {},
+                onChangeIsExistNotification = {},
             )
         }
 
@@ -84,6 +87,7 @@ class DiscussionToolbarTest {
                 onSearch = {},
                 onKeywordChange = {},
                 onChangeSearchBarVisibility = {},
+                onChangeIsExistNotification = {},
             )
         }
 
