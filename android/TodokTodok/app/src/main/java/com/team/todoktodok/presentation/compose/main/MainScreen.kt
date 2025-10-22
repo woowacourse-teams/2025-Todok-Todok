@@ -155,7 +155,6 @@ fun MainScreen(
             pagerState = pagerState,
             onSearch = viewModel::loadSearchedDiscussions,
             onChangeSearchBarVisibility = viewModel::changeSearchBarVisibility,
-            onChangeBottomNavigationTab = viewModel::changeBottomNavigationTab,
             onChangeKeyword = viewModel::modifySearchKeyword,
             onChangeIsExistNotification = viewModel::loadIsUnreadNotification,
             onCompleteRemoveDiscussion = viewModel::removeDiscussion,
@@ -171,7 +170,6 @@ fun MainScreenContent(
     pagerState: PagerState,
     onSearch: () -> Unit,
     onChangeSearchBarVisibility: () -> Unit,
-    onChangeBottomNavigationTab: (MainDestination) -> Unit,
     onChangeKeyword: (String) -> Unit,
     onChangeIsExistNotification: () -> Unit,
     onCompleteRemoveDiscussion: (Long) -> Unit,
@@ -183,10 +181,6 @@ fun MainScreenContent(
         bottomBar = {
             MainBottomNavigation(
                 navController = navController,
-                selectedDestination = uiState.bottomNavigationTab,
-                onSelectedDestinationChanged = {
-                    onChangeBottomNavigationTab(it)
-                },
             )
         },
         snackbarHost = {
@@ -208,10 +202,7 @@ fun MainScreenContent(
             onCompleteModifyDiscussion = onCompleteModifyDiscussion,
             onChangeSearchBarVisibility = onChangeSearchBarVisibility,
             onChangeIsExistNotification = onChangeIsExistNotification,
-            navigateToDiscussion = {
-                navController.navigate(MainDestination.Discussion.route)
-                onChangeBottomNavigationTab(MainDestination.Discussion)
-            },
+            navigateToDiscussion = { navController.navigate(MainDestination.Discussion.route) },
             modifier = Modifier.padding(innerPadding),
         )
     }
