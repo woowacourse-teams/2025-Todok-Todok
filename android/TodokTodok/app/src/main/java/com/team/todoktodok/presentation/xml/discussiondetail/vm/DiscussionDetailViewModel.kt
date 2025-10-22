@@ -144,7 +144,7 @@ class DiscussionDetailViewModel(
         )
     }
 
-    fun navigateToProfile() {
+    fun navigateToOtherUserProfile() {
         viewModelScope.launch {
             val currentUiState = _uiState.value ?: return@launch
             if (currentUiState !is DiscussionDetailUiState.Success) return@launch

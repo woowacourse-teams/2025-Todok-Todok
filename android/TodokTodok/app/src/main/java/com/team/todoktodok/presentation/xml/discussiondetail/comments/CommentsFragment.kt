@@ -399,7 +399,7 @@ class CommentsFragment : Fragment(R.layout.fragment_comments) {
             }
 
             override fun onClickUser(userId: Long) {
-                viewModel.navigateToProfile(userId)
+                viewModel.navigateToOtherUserProfile(userId)
             }
         }
 

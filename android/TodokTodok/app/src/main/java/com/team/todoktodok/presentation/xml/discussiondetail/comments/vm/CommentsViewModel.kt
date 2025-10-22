@@ -178,7 +178,7 @@ class CommentsViewModel(
         _uiState.value = _uiState.value?.copy(commentContent = content)
     }
 
-    fun navigateToProfile(memberId: Long) {
+    fun navigateToOtherUserProfile(memberId: Long) {
         viewModelScope.launch {
             val isMyId = tokenRepository.getMemberId() == memberId
             if (!isMyId) onUiEvent(CommentsUiEvent.NavigateToProfile(memberId = memberId))

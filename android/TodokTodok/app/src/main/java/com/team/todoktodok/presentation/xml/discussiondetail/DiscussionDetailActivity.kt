@@ -168,10 +168,10 @@ class DiscussionDetailActivity : AppCompatActivity() {
                 behavior.state = BottomSheetBehavior.STATE_EXPANDED
             }
             ivUserProfile.setOnClickListener {
-                viewModel.navigateToProfile()
+                viewModel.navigateToOtherUserProfile()
             }
             tvUserNickname.setOnClickListener {
-                viewModel.navigateToProfile()
+                viewModel.navigateToOtherUserProfile()
             }
             ivDiscussionShare.setOnClickListener {
                 viewModel.shareDiscussion()

@@ -90,7 +90,7 @@ class DiscussionDetailViewModelTest {
             val expected = DiscussionDetailUiEvent.NavigateToProfile(WRITER_ID)
 
             // when
-            discussionDetailViewModel.navigateToProfile()
+            discussionDetailViewModel.navigateToOtherUserProfile()
             advanceUntilIdle()
             val event = discussionDetailViewModel.uiEvent.getOrAwaitValue()
 

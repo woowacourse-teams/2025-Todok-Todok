@@ -205,7 +205,7 @@ class CommentDetailViewModel(
         scheduleCoalescedCommentToggle(initialLikeCount)
     }
 
-    fun navigateToProfile(memberId: Long) {
+    fun navigateToOtherUserProfile(memberId: Long) {
         viewModelScope.launch {
             val isMyId = tokenRepository.getMemberId() == memberId
             if (!isMyId) onUiEvent(CommentDetailUiEvent.NavigateToProfile(memberId))

@@ -485,7 +485,7 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
             }
 
             override fun onClickReplyUser(userId: Long) {
-                viewModel.navigateToProfile(userId)
+                viewModel.navigateToOtherUserProfile(userId)
             }
 
             override fun onClickReplyOption(
@@ -519,7 +519,7 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
             }
 
             override fun onClickCommentUser(userId: Long) {
-                viewModel.navigateToProfile(userId)
+                viewModel.navigateToOtherUserProfile(userId)
             }
         }
 
