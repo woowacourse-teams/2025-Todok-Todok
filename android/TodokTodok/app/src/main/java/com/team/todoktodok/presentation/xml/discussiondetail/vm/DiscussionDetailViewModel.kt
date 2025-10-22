@@ -144,12 +144,14 @@ class DiscussionDetailViewModel(
         )
     }
 
-    fun navigateToProfile() {
-        val currentUiState = _uiState.value ?: return
-        if (currentUiState !is DiscussionDetailUiState.Success) return
-        val memberId =
-            currentUiState.discussion.writer.id
-        _uiEvent.setValue(DiscussionDetailUiEvent.NavigateToProfile(memberId))
+    fun navigateToOtherUserProfile() {
+        viewModelScope.launch {
+            val currentUiState = _uiState.value ?: return@launch
+            if (currentUiState !is DiscussionDetailUiState.Success) return@launch
+            val writerId = currentUiState.discussion.writer.id
+            val isMyId = writerId == tokenRepository.getMemberId()
+            if (!isMyId) onUiEvent(DiscussionDetailUiEvent.NavigateToProfile(writerId))
+        }
     }
 
     fun navigateToBookDiscussion() {
