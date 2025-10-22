@@ -60,6 +60,8 @@ server:
   tomcat:
     mbeanregistry:
       enabled: true
+    max-http-form-post-size: 5MB
+    max-swallow-size: 5MB
 
 firebase:
   enabled: true
