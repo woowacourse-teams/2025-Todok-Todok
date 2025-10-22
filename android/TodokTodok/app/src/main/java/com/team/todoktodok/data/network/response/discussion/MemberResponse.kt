@@ -1,6 +1,5 @@
 package com.team.todoktodok.data.network.response.discussion
 
-import com.team.domain.model.member.Nickname
 import com.team.domain.model.member.User
 import kotlinx.serialization.Serializable
 
@@ -11,4 +10,4 @@ data class MemberResponse(
     val profileImage: String,
 )
 
-fun MemberResponse.toDomain() = User(id = memberId, nickname = Nickname(nickname), profileImage = profileImage)
+fun MemberResponse.toDomain() = User(id = memberId, nickname = nickname, profileImage = profileImage)

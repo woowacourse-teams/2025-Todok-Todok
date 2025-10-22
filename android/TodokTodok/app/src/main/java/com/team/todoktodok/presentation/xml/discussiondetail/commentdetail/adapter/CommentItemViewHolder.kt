@@ -15,7 +15,7 @@ class CommentItemViewHolder private constructor(
     fun bind(commentItem: CommentDetailItems.CommentItem) {
         val comment = commentItem.value.comment
         with(binding) {
-            tvUserNickname.text = comment.writer.nickname.value
+            tvUserNickname.text = comment.writer.nickname
             tvDiscussionCreateAt.text =
                 comment.createAt.toRelativeString(
                     root.context,

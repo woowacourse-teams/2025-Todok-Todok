@@ -271,7 +271,7 @@ class DiscussionDetailActivity : AppCompatActivity() {
                         val discussion = value.discussion
                         tvBookTitle.text = discussion.book.title.extractSubtitle()
                         tvDiscussionTitle.text = discussion.discussionTitle
-                        tvUserNickname.text = discussion.writer.nickname.value
+                        tvUserNickname.text = discussion.writer.nickname
                         ivUserProfile.loadCircleImage(discussion.writer.profileImage)
                         ivBookImage.loadImage(discussion.book.image)
                         tvDiscussionCreateAt.text =
