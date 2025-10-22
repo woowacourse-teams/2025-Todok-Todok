@@ -218,7 +218,6 @@ class DiscussionDetailViewModel(
                         onUiEvent(
                             DiscussionDetailUiEvent.ShowErrorMessage(result.exception),
                         )
-                        _uiState.value = DiscussionDetailUiState.Failure(result.exception)
                     }
                 }
             }
