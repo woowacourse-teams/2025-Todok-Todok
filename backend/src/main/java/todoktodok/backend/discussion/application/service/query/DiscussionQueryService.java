@@ -128,30 +128,32 @@ public class DiscussionQueryService {
             final int period,
             final int count
     ) {
-        validateDiscussionPeriod(period);
-        validateHotDiscussionCount(count);
+//        validateDiscussionPeriod(period);
+//        validateHotDiscussionCount(count);
+//
+//        final Member member = findMember(memberId);
+//        final LocalDateTime sinceDate = LocalDate.now().minusDays(period).atStartOfDay();
+//        final List<Long> discussionIds = discussionRepository.findAllIds();
+//
+//        if (discussionIds.isEmpty()) {
+//            return Collections.emptyList();
+//        }
+//
+//        final List<DiscussionLikeSummaryDto> likeSinceCounts = discussionLikeRepository.findLikeSummariesByDiscussionIdsSinceDate(
+//                member, discussionIds, sinceDate);
+//        final List<DiscussionCommentCountDto> commentSinceCounts = commentRepository.findCommentCountsByDiscussionIdsSinceDate(
+//                discussionIds, sinceDate);
+//
+//        final Map<Long, LikeCountAndIsLikedByMeDto> likesByDiscussionId = mapLikeSummariesByDiscussionId(
+//                likeSinceCounts);
+//        final Map<Long, Integer> commentsByDiscussionId = mapTotalCommentCountsByDiscussionId(commentSinceCounts);
+//
+//        final List<Long> hotDiscussionIds = findHotDiscussions(count, likesByDiscussionId, commentsByDiscussionId,
+//                discussionIds);
+//
+//        return getDiscussionsResponses(hotDiscussionIds, member);
 
-        final Member member = findMember(memberId);
-        final LocalDateTime sinceDate = LocalDate.now().minusDays(period).atStartOfDay();
-        final List<Long> discussionIds = discussionRepository.findAllIds();
-
-        if (discussionIds.isEmpty()) {
-            return Collections.emptyList();
-        }
-
-        final List<DiscussionLikeSummaryDto> likeSinceCounts = discussionLikeRepository.findLikeSummariesByDiscussionIdsSinceDate(
-                member, discussionIds, sinceDate);
-        final List<DiscussionCommentCountDto> commentSinceCounts = commentRepository.findCommentCountsByDiscussionIdsSinceDate(
-                discussionIds, sinceDate);
-
-        final Map<Long, LikeCountAndIsLikedByMeDto> likesByDiscussionId = mapLikeSummariesByDiscussionId(
-                likeSinceCounts);
-        final Map<Long, Integer> commentsByDiscussionId = mapTotalCommentCountsByDiscussionId(commentSinceCounts);
-
-        final List<Long> hotDiscussionIds = findHotDiscussions(count, likesByDiscussionId, commentsByDiscussionId,
-                discussionIds);
-
-        return getDiscussionsResponses(hotDiscussionIds, member);
+        return List.of();
     }
 
     public ActiveDiscussionPageResponse getActiveDiscussions(
