@@ -44,10 +44,7 @@ data class MyProfileUiState(
                     memberId,
                 ),
             participatedDiscussions =
-                participatedDiscussions.modifyMyDiscussionProfileImage(
-                    profileImage,
-                    memberId,
-                ),
+                participatedDiscussions.modifyMyDiscussionProfileImage(profileImage),
         )
 
     companion object {

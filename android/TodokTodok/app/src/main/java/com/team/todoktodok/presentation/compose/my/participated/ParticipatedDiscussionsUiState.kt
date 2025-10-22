@@ -17,8 +17,6 @@ data class ParticipatedDiscussionsUiState(
         val newDiscussions =
             discussions
                 .map { DiscussionUiModel(it) }
-                .reversed()
-
         val myDiscussion = newDiscussions.filter { it.writerId == memberId }
         return copy(discussions = newDiscussions, myDiscussion = myDiscussion)
     }
@@ -27,18 +25,15 @@ data class ParticipatedDiscussionsUiState(
 
     fun toggleShowMyDiscussion(isShow: Boolean): ParticipatedDiscussionsUiState = copy(showMyDiscussion = isShow)
 
-    fun modifyMyDiscussionProfileImage(
-        profileImage: String,
-        memberId: Long,
-    ): ParticipatedDiscussionsUiState =
+    fun modifyMyDiscussionProfileImage(profileImage: String): ParticipatedDiscussionsUiState =
         copy(
             discussions =
                 discussions.map { discussion ->
-                    if (memberId == discussion.writerId) {
-                        discussion.modifyWriterProfileImage(profileImage)
-                    } else {
-                        discussion
-                    }
+                    discussion.modifyWriterProfileImage(profileImage)
+                },
+            myDiscussion =
+                myDiscussion.map { discussion ->
+                    discussion.modifyWriterProfileImage(profileImage)
                 },
         )
 }
