@@ -16,7 +16,8 @@ data class BookDiscussionsSectionUiState(
     ) = this.copy(isPagingLoading, discussionItems.toImmutableList())
 
     fun addDiscussionItems(newDiscussionItems: List<DiscussionItem>): BookDiscussionsSectionUiState {
-        val totalDiscussionItems = (discussionItems + newDiscussionItems).toImmutableList()
+        val totalDiscussionItems =
+            (discussionItems + newDiscussionItems).distinctBy { it.discussionId }.toImmutableList()
         return this.copy(discussionItems = totalDiscussionItems)
     }
 }

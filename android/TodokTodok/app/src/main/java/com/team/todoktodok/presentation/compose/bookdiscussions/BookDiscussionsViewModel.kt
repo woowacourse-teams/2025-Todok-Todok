@@ -113,7 +113,7 @@ class BookDiscussionsViewModel(
     }
 
     companion object {
-        private const val BOOK_DISCUSSIONS_PAGING_SIZE = 15
+        private const val BOOK_DISCUSSIONS_PAGING_SIZE = 2
         private const val LOAD_BOOK_KEY = "LOAD_BOOK_KEY"
         private const val LOAD_BOOK_DISCUSSIONS_KEY = "load_book_discussions_key"
         private const val LOAD_MORE_BOOK_DISCUSSIONS_KEY = "load_more_book_discussions_key"
