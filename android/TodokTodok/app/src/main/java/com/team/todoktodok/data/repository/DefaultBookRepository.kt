@@ -20,6 +20,10 @@ class DefaultBookRepository(
     private var cursor: String? = null
     private var keyword: Keyword? = null
 
+    override fun deleteCursor() {
+        cursor = null
+    }
+
     override suspend fun fetchBooks(
         size: Int,
         keyword: Keyword,
