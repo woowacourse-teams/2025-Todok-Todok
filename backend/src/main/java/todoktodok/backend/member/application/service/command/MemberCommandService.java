@@ -12,7 +12,12 @@ import todoktodok.backend.global.auth.AdminProperties;
 import todoktodok.backend.global.jwt.JwtTokenProvider;
 import todoktodok.backend.global.jwt.TokenInfo;
 import todoktodok.backend.member.application.ImageType;
-import todoktodok.backend.member.application.dto.request.*;
+import todoktodok.backend.member.application.dto.request.BypassLoginRequest;
+import todoktodok.backend.member.application.dto.request.LoginRequest;
+import todoktodok.backend.member.application.dto.request.ProfileUpdateRequest;
+import todoktodok.backend.member.application.dto.request.RefreshTokenRequest;
+import todoktodok.backend.member.application.dto.request.SignupRequest;
+import todoktodok.backend.member.application.dto.request.SignupRequestLegacy;
 import todoktodok.backend.member.application.dto.response.ProfileImageUpdateResponse;
 import todoktodok.backend.member.application.dto.response.ProfileUpdateResponse;
 import todoktodok.backend.member.application.dto.response.TokenResponse;
@@ -34,7 +39,7 @@ import todoktodok.backend.member.infrastructure.S3ImageUploadClient;
 @AllArgsConstructor
 public class MemberCommandService {
 
-    private static final long MAX_FILE_SIZE = 5 * 1024 * 1024;
+    private static final long MAX_FILE_SIZE = 10 * 1024 * 1024;
 
     private final MemberRepository memberRepository;
     private final BlockRepository blockRepository;
@@ -412,7 +417,7 @@ public class MemberCommandService {
         final long imageSize = profileImage.getSize();
         if (imageSize > MAX_FILE_SIZE) {
             throw new IllegalArgumentException(
-                    String.format("파일 크기가 5MB 초과입니다: memberId = %s, imageSize = %d", member.getId(), imageSize)
+                    String.format("파일 크기가 10MB 초과입니다: memberId = %s, imageSize = %d", member.getId(), imageSize)
             );
         }
     }
