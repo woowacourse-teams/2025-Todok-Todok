@@ -45,6 +45,8 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
         ) ?: throw IllegalStateException(MODE_NOT_EXIST)
     }
 
+    private var isPosting = false
+
     private val launcher =
         registerForActivityResult(
             ActivityResultContracts.StartActivityForResult(),
@@ -292,6 +294,10 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
             }
         }
         binding.btnCreate.setOnClickListener {
+            if (isPosting) {
+                return@setOnClickListener
+            }
+            isPosting = true
             viewModel.isPossibleToCreate()
         }
     }
