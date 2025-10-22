@@ -40,7 +40,7 @@ class NotificationViewModel(
         }
     }
 
-    private fun initNotifications() {
+    fun initNotifications() {
         _uiState.value = _uiState.value?.copy(isLoading = true)
         viewModelScope.launch {
             notificationRepository

@@ -25,6 +25,7 @@ class MainActivity : ComponentActivity() {
                 )
             }
         }
+        handleNotificationDeepLink(intent)
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -36,7 +37,6 @@ class MainActivity : ComponentActivity() {
     private fun handleNotificationDeepLink(intent: Intent) {
         val notification: SerializationFcmNotification? =
             intent.getParcelableCompat<SerializationFcmNotification>(KEY_NOTIFICATION) as? SerializationFcmNotification
-
         triggerToMoveDiscussionDetail(notification)
     }
 

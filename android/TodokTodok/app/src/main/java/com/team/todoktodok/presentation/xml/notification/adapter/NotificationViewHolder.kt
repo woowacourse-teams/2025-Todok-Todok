@@ -26,8 +26,6 @@ class NotificationViewHolder private constructor(
     fun bind(notification: Notification) {
         binding.apply {
             viewUnread.visibility = if (notification.isRead) View.GONE else View.VISIBLE
-            tvNickname.text = notification.notificationContent.nickname.value
-            tvNickname.text = notification.notificationContent.discussionTitle
             tvContent.text = notification.notificationContent.content
             tvDate.text = notification.createdAt.formatKorean()
         }
@@ -37,6 +35,12 @@ class NotificationViewHolder private constructor(
                     tvType.text = itemView.context.getString(R.string.notification_type_like)
                     tvContent.isVisible = false
                     ivIcon.setImageResource(R.drawable.ic_heart)
+                    tvNickname.text =
+                        binding.root.context.getString(
+                            R.string.notification_like,
+                            notification.notificationContent.nickname.value,
+                            notification.notificationContent.discussionTitle,
+                        )
                 }
             }
 
@@ -44,6 +48,12 @@ class NotificationViewHolder private constructor(
                 binding.apply {
                     tvType.text = itemView.context.getString(R.string.notification_type_comment)
                     ivIcon.setImageResource(R.drawable.ic_comment)
+                    tvNickname.text =
+                        binding.root.context.getString(
+                            R.string.notification_comment,
+                            notification.notificationContent.nickname.value,
+                            notification.notificationContent.discussionTitle,
+                        )
                 }
             }
 
@@ -51,6 +61,12 @@ class NotificationViewHolder private constructor(
                 binding.apply {
                     tvType.text = itemView.context.getString(R.string.notification_type_reply)
                     ivIcon.setImageResource(R.drawable.ic_reply)
+                    tvNickname.text =
+                        binding.root.context.getString(
+                            R.string.notification_comment,
+                            notification.notificationContent.nickname.value,
+                            notification.notificationContent.discussionTitle,
+                        )
                 }
             }
         }
