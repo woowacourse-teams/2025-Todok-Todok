@@ -179,9 +179,7 @@ fun MainScreenContent(
     val navController = rememberNavController()
     Scaffold(
         bottomBar = {
-            MainBottomNavigation(
-                navController = navController,
-            )
+            MainBottomNavigation(navController = navController)
         },
         snackbarHost = {
             SnackbarHost(
@@ -195,14 +193,13 @@ fun MainScreenContent(
             mainUiState = uiState,
             pagerState = pagerState,
             navController = navController,
-            startDestination = MainDestination.Discussion,
             onSearch = onSearch,
             onChangeKeyword = onChangeKeyword,
             onCompleteRemoveDiscussion = onCompleteRemoveDiscussion,
             onCompleteModifyDiscussion = onCompleteModifyDiscussion,
             onChangeSearchBarVisibility = onChangeSearchBarVisibility,
             onChangeIsExistNotification = onChangeIsExistNotification,
-            navigateToDiscussion = { navController.navigate(MainDestination.Discussion.route) },
+            navigateToDiscussion = { navController.navigate(MainDestination.Discussion) },
             modifier = Modifier.padding(innerPadding),
         )
     }

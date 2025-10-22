@@ -40,9 +40,9 @@ fun MainBottomNavigation(
     navController: NavHostController,
     modifier: Modifier = Modifier,
 ) {
+    val context = LocalContext.current
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
-    val context = LocalContext.current
 
     NavigationBar(
         windowInsets = NavigationBarDefaults.windowInsets,
@@ -50,10 +50,10 @@ fun MainBottomNavigation(
         containerColor = WhiteF9,
     ) {
         BottomNavigationItem(
-            selected = currentRoute == MainDestination.Discussion.route,
+            selected = currentRoute == MainDestination.Discussion::class.qualifiedName,
             onClick = {
-                if (currentRoute != MainDestination.Discussion.route) {
-                    navController.navigate(MainDestination.Discussion.route) {
+                if (currentRoute != MainDestination.Discussion::class.qualifiedName) {
+                    navController.navigate(MainDestination.Discussion) {
                         launchSingleTop = true
                         popUpTo(navController.graph.startDestinationId) { saveState = true }
                         restoreState = true
@@ -63,19 +63,20 @@ fun MainBottomNavigation(
             icon = {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.MenuBook,
-                    tint = if (currentRoute == MainDestination.Discussion.route) Green1A else Gray9F,
-                    contentDescription = stringResource(MainDestination.Discussion.contentDescription),
+                    tint = if (currentRoute == MainDestination.Discussion::class.qualifiedName) Green1A else Gray9F,
+                    contentDescription = stringResource(R.string.bottom_navigation_content_description_discussion),
                 )
             },
             label = {
                 Text(
-                    text = stringResource(MainDestination.Discussion.label),
-                    color = if (currentRoute == MainDestination.Discussion.route) Green1A else Gray9F,
+                    text = stringResource(R.string.bottom_navigation_discussion),
+                    color = if (currentRoute == MainDestination.Discussion::class.qualifiedName) Green1A else Gray9F,
                     style = MaterialTheme.typography.labelMedium,
                 )
             },
         )
 
+        // ✏️ 글쓰기 버튼
         Box(
             modifier =
                 Modifier
@@ -99,10 +100,10 @@ fun MainBottomNavigation(
         }
 
         BottomNavigationItem(
-            selected = currentRoute == MainDestination.My.route,
+            selected = currentRoute == MainDestination.My::class.qualifiedName,
             onClick = {
-                if (currentRoute != MainDestination.My.route) {
-                    navController.navigate(MainDestination.My.route) {
+                if (currentRoute != MainDestination.My::class.qualifiedName) {
+                    navController.navigate(MainDestination.My) {
                         launchSingleTop = true
                         popUpTo(navController.graph.startDestinationId) { saveState = true }
                         restoreState = true
@@ -112,14 +113,14 @@ fun MainBottomNavigation(
             icon = {
                 Icon(
                     imageVector = Icons.Default.PersonOutline,
-                    tint = if (currentRoute == MainDestination.My.route) Green1A else Gray9F,
-                    contentDescription = stringResource(MainDestination.My.contentDescription),
+                    tint = if (currentRoute == MainDestination.My::class.qualifiedName) Green1A else Gray9F,
+                    contentDescription = stringResource(R.string.bottom_navigation_content_description_my),
                 )
             },
             label = {
                 Text(
-                    text = stringResource(MainDestination.My.label),
-                    color = if (currentRoute == MainDestination.My.route) Green1A else Gray9F,
+                    text = stringResource(R.string.bottom_navigation_my),
+                    color = if (currentRoute == MainDestination.My::class.qualifiedName) Green1A else Gray9F,
                     style = MaterialTheme.typography.labelMedium,
                 )
             },
