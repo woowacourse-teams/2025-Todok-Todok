@@ -7,6 +7,7 @@ import com.team.domain.model.exception.NetworkResult
 
 interface BookRepository {
     fun deleteCursor()
+
     suspend fun fetchBooks(
         size: Int,
         keyword: Keyword,
