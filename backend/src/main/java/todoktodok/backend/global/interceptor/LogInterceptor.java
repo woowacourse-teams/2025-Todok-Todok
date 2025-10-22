@@ -2,8 +2,12 @@ package todoktodok.backend.global.interceptor;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -18,14 +22,59 @@ public class LogInterceptor implements HandlerInterceptor {
     private static final int HTTP_STATUS_SERVER_ERROR_MIN = 500;
 
     private static final Logger log = LoggerFactory.getLogger(LogInterceptor.class);
-    private static final String SERVER_IP = resolveServerIp();
+    private static final String SERVER_IP = getEc2PrivateIp();
 
-    private static String resolveServerIp() {
+    private static String getEc2PrivateIp() {
+        final String localEnv = System.getenv("SPRING_PROFILES_ACTIVE");
+        if ("local".equals(localEnv) || localEnv == null) {
+            return "localhost";
+        }
+
         try {
-            return InetAddress.getLocalHost().getHostAddress();
-        } catch (final UnknownHostException e) {
+            final HttpClient client = HttpClient.newBuilder()
+                    .connectTimeout(Duration.ofSeconds(1))
+                    .build();
+
+            final HttpRequest tokenRequest = getTokenRequest();
+            final HttpResponse<String> tokenResponse = client.send(tokenRequest, HttpResponse.BodyHandlers.ofString());
+            if (tokenResponse.statusCode() != 200) {
+                log.error("EC2 메타데이터 토큰 조회 실패: HTTP {}", tokenResponse.statusCode());
+                return "unknown";
+            }
+            final String token = tokenResponse.body();
+
+            final HttpRequest request = getHttpRequest(token);
+            final HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() != 200) {
+                log.error("EC2 Private IP 조회 실패: HTTP {}", response.statusCode());
+                return "unknown";
+            }
+            return response.body();
+        } catch (final IOException | InterruptedException e) {
+            log.error("EC2 private IP 확인 실패", e);
+            if (e instanceof InterruptedException) {
+                Thread.currentThread().interrupt(); // InterruptedException 안전하게 처리
+            }
             return "unknown";
         }
+    }
+
+    private static HttpRequest getTokenRequest() {
+        return HttpRequest.newBuilder()
+                .uri(URI.create("http://169.254.169.254/latest/api/token"))
+                .header("X-aws-ec2-metadata-token-ttl-seconds", "21600")
+                .PUT(HttpRequest.BodyPublishers.noBody())
+                .timeout(Duration.ofSeconds(1))
+                .build();
+    }
+
+    private static HttpRequest getHttpRequest(final String token) {
+        return HttpRequest.newBuilder()
+                .uri(URI.create("http://169.254.169.254/latest/meta-data/local-ipv4"))
+                .header("X-aws-ec2-metadata-token", token)
+                .GET()
+                .timeout(Duration.ofSeconds(1))
+                .build();
     }
 
     @Override
