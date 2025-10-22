@@ -1,0 +1,14 @@
+<resources>
+
+    <style name="Base.Theme.TodokTodok" parent="Theme.Material3.Light.NoActionBar">
+        <item name="android:windowBackground">@color/white</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+    <style name="Theme.TodokTodok" parent="Base.Theme.TodokTodok" />
+
+    <style name="text_selection_colors_black18" parent="ThemeOverlay.Material3.TextInputEditText">
+        <item name="colorControlActivated">@color/green_1A</item>
+        <item name="android:textColorHighlight">@color/green_CF</item>
+    </style>
+</resources>

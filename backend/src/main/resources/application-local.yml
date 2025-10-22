@@ -28,7 +28,12 @@ spring:
       - submodule/security/firebase.yml
 
 auth:
-  mode: bypass
+  mode: google
+
+server:
+  tomcat:
+    max-http-form-post-size: 15728640
+    max-swallow-size: 15728640
 
 firebase:
   enabled: false

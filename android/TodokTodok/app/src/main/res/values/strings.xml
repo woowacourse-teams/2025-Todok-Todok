@@ -1,0 +1,359 @@
+<resources>
+    <string name="app_name">TodokTodok</string>
+    <string name="app_name_kr">토독토독</string>
+    <string name="all_note">기록</string>
+    <string name="all_discussion">토론</string>
+    <string name="all_discussion_room">토론방</string>
+    <string name="all_library">내 서재</string>
+    <string name="all_book_search">도서 검색</string>
+    <string name="all_report">신고</string>
+    <string name="all_report_or_block">신고/차단</string>
+    <string name="book_image">도서 이미지입니다</string>
+    <string name="all_opinion">의견</string>
+    <string name="all_comment">댓글</string>
+    <string name="all_reply">대댓글</string>
+    <string name="all_unknown_exception">알 수 없는 오류가 발생했어요</string>
+    <string name="date_format_pattern">yyyy년 M월 d일</string>
+    <string name="all_divider_dot">" · "</string>
+    <string name="all_delete_action">삭제하기</string>
+    <string name="all_update_action">수정하기</string>
+    <string name="all_report_action">신고하기</string>
+    <string name="all_cancel">취소하기</string>
+    <string name="all_report_comment">댓글을 신고하시겠습니까?</string>
+    <string name="all_report_discussion">토론방을 신고하시겠습니까?</string>
+    <string name="all_report_reply">답글을 신고하시겠습니까?</string>
+    <string name="all_report_discussion_success">토론방이 신고되었습니다.</string>
+    <string name="all_report_comment_success">댓글이 신고되었습니다.</string>
+    <string name="all_report_reply_success">대댓글이 신고되었습니다.</string>
+    <string name="all_nickname">닉네임</string>
+    <string name="all_discussion_delete_confirm">토론방을 정말 삭제 하시겠습니까?</string>
+    <string name="all_comment_delete_confirm">댓글을 정말 삭제 하시겠습니까?</string>
+    <string name="all_reply_delete_confirm">답글을 정말 삭제 하시겠습니까?</string>
+    <string name="all_relative_just_now">방금전</string>
+    <string name="all_relative_soon">곧</string>
+    <string name="all_relative_seconds">%d초전</string>
+    <string name="all_relative_minutes">%d분전</string>
+    <string name="all_relative_hours">%d시간전</string>
+    <string name="all_relative_days">%d일전</string>
+    <string name="all_relative_weeks">%d주전</string>
+    <string name="all_relative_months">%d달전</string>
+    <string name="all_relative_years">%d년전</string>
+    <string name="all_last_page">마지막 페이지입니다</string>
+    <string name="all_create_discussion_room">토론방 생성</string>
+
+    <!-- BottomNavigation !-->
+    <string name="bottom_navigation_discussion">토론방</string>
+    <string name="bottom_navigation_create_discussion">토론방 생성</string>
+    <string name="bottom_navigation_my">MY</string>
+
+    <string name="bottom_navigation_content_description_discussion">모든 토론방</string>
+    <string name="bottom_navigation_content_description_create_discussion">토론방 생성</string>
+    <string name="bottom_navigation_content_description_my">내 토론방</string>
+
+    <string name="bottom_navigation_back_press">뒤로 버튼을 한번 더 누르시면 종료됩니다.</string>
+
+    <!--  토론 목록 페이지  -->
+    <string name="discussions_hot_discussion_rooms">인기 토론방</string>
+    <string name="discussions_activated_discussion_rooms">활성화된 토론방</string>
+    <string name="content_description_add_discussion">토론방 추가 화면으로 이동합니다</string>
+    <string name="content_description_book_image">도서 이미지입니다</string>
+    <string name="content_description_comments_user_profile">댓글 유저 이미지 버튼</string>
+    <string name="last_discussion_page_guide">마지막 토론이에요</string>
+    <string name="search_clear_keyword">검색어 초기화</string>
+
+    <!-- 토론 툴바 !-->
+    <string name="discussions_toolbar_search_close">취소</string>
+    <string name="content_description_discussions_toolbar_search">검색 아이콘</string>
+    <string name="content_description_discussions_toolbar_notification">알람 아이콘</string>
+    <string name="content_description_discussions_toolbar_has_notification">확인하지 않은 알람이 있어요</string>
+    <string name="content_description_discussions_toolbar_setting">설정 아이콘</string>
+    <string name="content_description_my_profile_image">프로필 사진</string>
+    <string name="content_description_icon_modify_my_profile_image">프로필 사진 수정 아이콘</string>
+
+
+    <!--  상세 토론방 페이지  -->
+    <string name="content_description_discussion_detail_back">토론 상세 화면에서 뒤로가는 버튼</string>
+    <string name="content_description_discussion_detail_option">토론방 옵션 버튼</string>
+    <string name="content_description_discussion_detail_share">토론방 공유 버튼</string>
+    <string name="content_description_discussion_detail_book_profile">토론방 도서 이미지 버튼</string>
+    <string name="content_description_discussion_detail_user_profile">토론방 유저 이미지 버튼</string>
+    <string name="comment_input_hint">댓글 입력</string>
+    <string name="content_description_add_comment">댓글을 추가합니다</string>
+    <string name="reply_input_hint">대댓글 입력</string>
+
+    <!-- 내 서재 페이지 -->
+    <string name="content_description_navigate_to_book_search">도서 검색 화면으로 이동합니다</string>
+
+    <!-- 로그인 페이지 -->
+    <string name="login_fail_to_login">로그인에 실패했어요. 다시 시도해주세요</string>
+    <string name="login_cancelled">구글 로그인이 취소 되었습니다.</string>
+    <string name="login_read_write_discussion">읽고, 쓰고, 토론하자</string>
+
+    <!-- 닉네임 입력 페이지 -->
+    <string name="signup_text">닉네임 설정</string>
+    <string name="signup_btn_text">가입하기</string>
+    <string name="signup_et_hint">닉네임을 입력해주세요</string>
+    <string name="signup_invalid_nickname_message_white_space">띄어쓰기를 제거해주세요.</string>
+    <string name="signup_invalid_nickname_message_character">한글, 영문, 숫자만 입력할 수 있어요.</string>
+    <string name="signup_invalid_nickname_message_length">1자 이상 8자 이하로 입력해주세요.</string>
+
+    <!-- 토론 화면 -->
+    <string name="discussion_search_bar_hint">도서 제목 또는 키워드를 입력해주세요.</string>
+    <string name="discussion_tab_title_hot">HOT</string>
+    <string name="discussion_tab_title_all">전체</string>
+    <string name="discussion_tab_title_my">내 토론방</string>
+    <string name="discussion_search_result_count">검색 결과(%d)</string>
+    <string name="discussion_no_search_title">%s에 대한 검색결과가 없어요</string>
+    <string name="discussion_no_search_subtitle">다른 검색어를 입력해 주세요 !</string>
+    <string name="content_description_discussion_img">토론방 도서 이미지</string>
+
+    <!-- 프로필 화면 -->
+    <string name="profile_setting">설정</string>
+    <string name="profile_active_books">활동 도서</string>
+    <string name="content_description_profile_active_books">활동 도서탭</string>
+
+    <string name="profile_liked_room">좋아요</string>
+    <string name="content_description_profile_liked_room">좋아요한 토론방탭</string>
+
+    <string name="profile_created_discussion_room">생성한 토론방</string>
+
+    <string name="profile_participated_discussion_room">참여한 토론방</string>
+    <string name="content_description_profile_participated_discussion_room">참여한 토론방탭</string>
+
+    <string name="profile_report_dialog_title">해당 회원을 신고하시겠습니까?</string>
+    <string name="profile_block_dialog_title">해당 회원을 차단하시겠습니까?</string>
+    <string name="profile_complete_report">신고가 완료 되었습니다.</string>
+    <string name="profile_complete_block">차단이 완료 되었습니다.</string>
+    <string name="profile_menu_block">차단하기</string>
+    <string name="profile_message_placeholder">상태 메시지를 입력해주세요</string>
+    <string name="profile_not_has_activated_book_title">아직 활동한 책이 없어요 !</string>
+    <string name="profile_not_has_activated_book_subtitle">토론에 참여하고 활동한 책을 추가해보세요</string>
+    <string name="profile_my_discussion_toggle">내 글만 보기</string>
+    <string name="profile_action_activated_book">토론방 보러가기 ></string>
+    <string name="profile_not_has_liked_discussion_title">아직 좋아요한 토론방이 없어요 !</string>
+    <string name="profile_not_has_liked_discussion_subtitle">마음에 드는 글이 있다면 좋아요를 남겨보세요</string>
+    <string name="profile_not_has_created_discussion_title">아직 생성한 토론방이 없어요 !</string>
+    <string name="profile_not_has_created_discussion_subtitle">나만의 주제로 토론방을 생성해보세요</string>
+    <string name="profile_action_created_discussion">토론방 생성하기 ></string>
+    <string name="profile_not_has_participated_discussions_title">아직 참여한 토론방이 없어요 !</string>
+    <string name="profile_not_has_participated_discussions_subtitle">토론에 참여하고 토론방을 추가해보세요 !</string>
+    <string name="profile_action_participated_discussion">토론방 둘러보기 ></string>
+    <string name="content_description_profile_setting">설정 버튼</string>
+
+    <!-- 프로필 수정 화면 -->
+    <string name="profile_invalid_nickname_white_space">띄어쓰기를 제거해주세요.</string>
+    <string name="profile_invalid_nickname_character">한글, 영문, 숫자만 입력할 수 있어요.</string>
+    <string name="profile_invalid_nickname_length">1자 이상 8자 이하로 입력해주세요.</string>
+    <string name="profile_invalid_nickname_same">동일한 닉네임으로 수정할 수 없습니다.</string>
+    <string name="profile_invalid_profile_message_same">동일한 메시지로 수정할 수 없습니다.</string>
+    <string name="profile_can_not_load_image">선택한 이미지를 불러올 수 없습니다. 다른 이미지를 선택해 주세요.</string>
+
+    <string name="discussion_menu_alarm">알람</string>
+    <string name="discussion_menu_profile">내정보</string>
+
+    <!-- 댓글 상세 화면-->
+    <string name="comment_content_description_comment_detail_back">댓글 상세 화면에서 뒤로가는 버튼</string>
+    <string name="comment_content_description_comment_option">댓글 옵션 클릭 버튼</string>
+    <string name="comment_content_description_reply_option">대댓글 옵션 클릭 버튼</string>
+    <string name="comment_content_description_comment_reply">대댓글 목록 버튼</string>
+    <string name="comment_content_description_comment_like">댓글 좋아요 클릭 버튼</string>
+    <string name="comment_content_description_reply_like">대댓글 좋아요 클릭 버튼</string>
+    <string name="comment_confirm_delete_message">작성중인 댓글을 삭제할까요?</string>
+    <string name="reply_confirm_delete_message">작성중인 대댓글을 삭제할까요?</string>
+    <string name="comment_content_description_comment_detail_reply_user_profile">대댓글 유저 이미지 버튼</string>
+    <string name="comment_nothing_comments">아직 의견이 없어요 🥲\n가장 먼저 의견을 달아주세요</string>
+    <string name="comment_content_description_noting_comment">댓글이 없을 때 나오는 토독이</string>
+
+    <!-- 토론방 도서 선택 화면 -->
+    <string name="select_book_content_description_ut_discussion_img">토론방 도서 이미지</string>
+    <string name="select_book_content_description_btn_back">메인 페이지로 이동합니다</string>
+    <string name="select_book_content_description_book_cover">도서 이미지입니다</string>
+    <string name="select_book">토론방 도서 선택</string>
+    <string name="select_book_content_description_search_keyword">도서 검색을 합니다</string>
+    <string name="select_book_hint_search_keyword">도서 제목 또는 저자를 입력해주세요</string>
+    <string name="select_book_empty_search_result">도서 \'%s\'\n검색 결과가 없습니다</string>
+    <string name="select_book_empty_search_result_content">입력한 검색어의 철자 또는 띄어쓰기가\n정확한지 다시 한번 확인해 주세요.</string>
+    <string name="select_book_searched_books_count">총 %,d개</string>
+    <string name="select_book_error_empty_keyword">검색어는 1자 이상이어야 합니다</string>
+    <string name="select_book_error_searched_book_total_size">책 검색 요청시 페이지 수는 1에서 200까지만 가능합니다.</string>
+    <string name="select_book_error_empty_isbn">도서 ISBN을 입력해주세요</string>
+    <string name="select_book_error_empty_author">도서의 저자가 없습니다</string>
+    <string name="select_book_error_no_selected_book">도서를 선택해주세요</string>
+    <string name="select_book_error_invalid_url">이미지 URL이 올바르지 않습니다</string>
+    <string name="select_book_error_empty_book_title">도서의 제목이 없습니다</string>
+    <string name="select_book_error_invalid_isbn_format">ISBN 형식에는 숫자만 들어올 수 있습니다</string>
+    <string name="select_book_error_invalid_isbn_length">ISBN은 10자리 또는 13자리 입니다</string>
+    <string name="select_book_error_blank_keyword">검색에는 공백이 오면 안됩니다</string>
+
+    <!-- 토론방 생성 화면 -->
+    <string name="all_create_discussion_room_appbar">토론방 생성</string>
+    <string name="create">등록</string>
+    <string name="hint_discussion_room_opinion">내용</string>
+    <string name="hint_discussion_room_title">제목</string>
+    <string name="edit_discussion_room_title">토론방 수정</string>
+    <string name="edit">수정</string>
+    <string name="draft">임시저장</string>
+    <string name="draft_message">작성중인 글을 취소하시겠습니까? 취소하기 선택시, 작성된 글은 저장되지 않습니다</string>
+    <string name="no_exist_file">이미 저장되어있는 파일이 있습니다</string>
+    <string name="overload">덮어쓰기</string>
+    <string name="error_empty_content">토론방 내용을 입력해주세요</string>
+    <string name="error_empty_title">토론방 제목을 입력해주세요</string>
+    <string name="create_discussion_temp_save">임시 저장 | %d</string>
+
+    <!-- 설정 화면 -->
+    <string name="setting_modify_profile">프로필 정보 수정</string>
+    <string name="setting_block_members">차단한 회원 관리</string>
+    <string name="setting_member_message">상태 메시지</string>
+    <string name="setting_modify_profile_complete">프로필 수정이 완료 되었습니다.</string>
+    <string name="setting_member_message_et_hint">상태 메시지를 입력해주세요</string>
+
+    <!-- 로그아웃 화면 -->
+    <string name="text_logout">로그아웃</string>
+    <string name="logout_ask">이 계정에서 로그아웃 하시겠어요?</string>
+    <string name="logout_fail">로그아웃에 실패했어요. 다시 시도해주세요</string>
+
+    <!-- 탈퇴 화면 -->
+    <string name="setting_withdraw">회원 탈퇴</string>
+    <string name="text_do_withdraw">탈퇴하기</string>
+    <string name="text_ask_really_withdraw">정말 탈퇴하시겠어요?</string>
+    <string name="text_guide_withdraw_policy">회원을 탈퇴하더라도 작성하신 토론은 유지돼요\n가입 정보는 탈퇴일로부터 7일간 보관됩니다.</string>
+    <string name="withdraw_farewell">토독이와 함께해준 시간을 소중히 기억할게요</string>
+
+    <string name="setting_unblock_content">해당 유저를 차단 해제하시겠습니까?</string>
+    <string name="setting_unblock">해제하기</string>
+    <string name="setting_send_feedback">의견 보내기</string>
+    <string name="content_description_select_book">토론하고 싶은 도서를 선택해주세요</string>
+    <string name="empty_search_result_title">선택된 도서가 없습니다</string>
+
+    <!-- 닉네임 관련 -->
+    <string name="error_duplicate_nickname">이미 사용 중인 닉네임입니다.</string>
+    <string name="error_invalid_nickname_length">닉네임은 1~8자로 입력해주세요.</string>
+    <string name="error_empty_nickname">닉네임을 입력해주세요.</string>
+
+    <!-- 회원가입 관련 -->
+    <string name="error_duplicate_email">이미 가입된 이메일입니다.</string>
+    <string name="error_invalid_token">유효하지 않은 소셜 로그인 이메일입니다.</string>
+    <string name="error_invalid_email_format">올바른 이메일 형식을 입력해주세요.</string>
+    <string name="error_profile_image_not_exist">프로필 이미지를 등록해주세요.</string>
+    <string name="error_refresh_token_not_received">리프레시 토큰이 전달되지 않았습니다</string>
+
+    <!-- 도서별 토론방 관련 -->
+    <string name="bookdiscussions_content_description_navigate_to_discussions">토론방 목록 화면 이동 버튼 이미지</string>
+    <string name="book_info_message">%1$s\n도서 정보: 알라딘</string>
+    <string name="book_discussions_title">도서별 토론방</string>
+
+    <!-- HTTP 예외 -->
+    <string name="error_authorization">권한이 없는 요청입니다.</string>
+    <string name="error_not_found">요청한 정보를 찾을 수 없습니다.</string>
+    <string name="error_server">서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.</string>
+    <string name="error_bad_request">잘못된 요청입니다.</string>
+
+    <!-- 일반 예외 -->
+    <string name="error_unknown">알 수 없는 오류가 발생했습니다.</string>
+    <string name="error_missing_location">사용자 인증 정보가 없습니다.</string>
+    <string name="error_missing_missing_field">Json 직렬화 객체 필드가 일치하지 않습니다.</string>
+    <string name="error_uri_input_stream_not_found">선택한 파일을 열 수 없습니다. 다른 파일을 선택해 주세요.</string>
+
+    <!-- 네트워크 관련 -->
+    <string name="error_timeout">서버 응답이 지연되고 있습니다. 잠시 후 다시 시도해주세요.</string>
+    <string name="error_no_internet">인터넷 연결을 확인해주세요.</string>
+    <string name="error_io_exception">서버에서 데이터를 가져올 수 없습니다.</string>
+    <string name="error_request_cancelled">요청이 취소되었습니다.</string>
+    <string name="error_empty_body">서버에서 올바른 응답을 받지 못했습니다. 잠시 후 다시 시도해주세요</string>
+
+    <!-- 차단/신고 관련 -->
+    <string name="error_already_blocked">이미 차단된 회원이에요</string>
+    <string name="error_already_reported">이미 신고한 회원이에요</string>
+
+    <!-- 토론방 생성 관련 에러 -->
+    <string name="error_create_discussion_book_info_not_found">책 정보가 없습니다</string>
+    <string name="error_create_discussion_title_not_found">제목이 없습니다</string>
+    <string name="error_create_discussion_title_and_content_not_found">제목과 내용이 없습니다</string>
+    <string name="error_create_discussion_content_not_found">내용이 없습니다</string>
+    <string name="error_create_discussion_not_my_discussion_room">내가 작성한 토론방이 아닙니다</string>
+    <string name="error_create_discussion_discussion_room_info_not_found">토론방 정보가 없습니다</string>
+    <string name="error_create_discussion_please_try_again">다시 시도해주세요</string>
+    <string name="error_create_discussion_title_length_over">제목은 50자까지 입력할 수 있습니다</string>
+    <string name="error_create_discussion_opinion_length_over">본문은 2500자까지 입력할 수 있습니다</string>
+    <string name="setting_manage_blocked_members_empty_message">차단한 사용자가 없어요</string>
+
+    <string name="report_reason_title">신고 사유를 선택해주세요</string>
+    <!-- 신고 이유 선택지 -->
+    <string name="report_reason_spam_ad">도배/광고성 게시글</string>
+    <string name="report_reason_inappropriate">부적절하거나 불쾌감을 주는 내용</string>
+    <string name="report_reason_off_topic">토론 주제와 무관한 내용</string>
+    <string name="report_reason_illegal">불법 정보 또는 정책 위반</string>
+
+    <!-- 사용자 신고 이유 선택지 -->
+    <string name="report_reason_user_abusive">욕설/인신공격</string>
+    <string name="report_reason_user_spam_activity">스팸/홍보 계정</string>
+    <string name="report_reason_user_harassment">괴롭힘/스토킹</string>
+    <string name="report_reason_user_hate_speech">혐오/차별 발언</string>
+
+    <!-- 토론 관련 예외 -->
+    <string name="error_discussion_self_report_not_allowed">자기 자신의 토론방은 신고할 수 없습니다.</string>
+    <string name="error_discussion_already_reported">이미 신고한 토론방입니다.</string>
+    <string name="error_discussion_cannot_delete_with_comments">댓글이 존재하는 토론방은 삭제할 수 없습니다.</string>
+    <string name="error_discussion_only_owner_can_modify_or_delete">자기 자신의 토론방만 수정/삭제 가능합니다.</string>
+
+    <!-- 댓글 관련 예외 -->
+    <string name="error_comment_already_reported">이미 신고한 댓글입니다</string>
+    <string name="error_comment_cannot_delete_with_replies">대댓글이 존재하는 댓글은 삭제할 수 없습니다</string>
+    <string name="error_comment_empty_content">댓글 내용을 입력해주세요</string>
+    <string name="error_comment_invalid_content_length">댓글 내용은 1자 이상, 2000자 이하여야 합니다</string>
+    <string name="error_comment_not_belong_to_discussion">해당 토론방의 댓글이 아닙니다</string>
+    <string name="error_comment_only_owner_can_modify_or_delete">자기 자신의 댓글만 수정/삭제 가능합니다</string>
+    <string name="error_comment_self_report_not_allowed">자기 자신의 댓글은 신고할 수 없습니다</string>
+
+    <!-- 대댓글 관련 예외 -->
+    <string name="error_reply_empty_content">대댓글 내용을 입력해주세요</string>
+    <string name="error_reply_invalid_length">대댓글 내용은 1자 이상, 2000자 이하여야 합니다</string>
+    <string name="error_reply_self_report_not_allowed">자기 자신의 대댓글은 신고할 수 없습니다</string>
+    <string name="error_reply_already_reported">이미 신고한 대댓글입니다</string>
+    <string name="error_reply_comment_not_in_discussion">해당 토론방에 있는 댓글이 아닙니다</string>
+    <string name="error_reply_not_in_comment">해당 댓글에 있는 대댓글이 아닙니다</string>
+    <string name="error_reply_only_owner_can_modify_or_delete">자기 자신의 대댓글만 수정/삭제 가능합니다</string>
+    <string name="content_description_delete_keyword">입력한 키워드를 삭제합니다</string>
+    <string name="discussions_content_description_notificition">알림 페이지로 이동합니다</string>
+    <string name="notification_icon">아이콘</string>
+
+    <!-- 프로필 이미지 수정 관련 예외 -->
+    <string name="error_profile_image_empty">이미지가 비어 있어요. 다시 선택해 주세요.</string>
+    <string name="error_profile_image_size">5MB 이하의 이미지를 등록해주세요.</string>
+    <string name="error_profile_image_not_image">이미지 파일만 등록할 수 있어요.</string>
+
+    <string name="network_try_connection">네트워크 연결을 재시도중입니다.</string>
+    <string name="progress_description">로딩 중</string>
+
+    <string name="notification_type_like">좋아요</string>
+    <string name="notification_type_comment">댓글</string>
+    <string name="notification_type_reply">대댓글</string>
+
+    <string name="discussion_link_title">토론 보기</string>
+    <string name="share_discussion_title">토론방 공유</string>
+    <string name="discussion_entry_invalid_message">토론 정보를 불러올 수 없습니다.</string>
+    <string name="press_back_again_to_exit">한 번 더 누르면 종료됩니다</string>
+    <string name="create_discussion_room_draft_dialog_content">작성중인 글을 취소하시겠습니까?\n작성취소 선택시, 작성된 글은 저장되지 않습니다.</string>
+    <string name="create_discussion_room_draft_dialog_cancel">작성취소</string>
+    <string name="create_discussion_room_draft_dialog_save">임시저장</string>
+
+    <string name="notification_count_description">개 읽지 않은 알람</string>
+    <string name="notification_dialog_title">알림을 켜고 소통을 시작하세요!</string>
+    <string name="notification_dialog_subtitle">토론방의 좋아요·댓글과 내 댓글의 대댓글을 실시간으로 확인하세요.</string>
+    <string name="notification_dialog_cancel">괜찮아요</string>
+    <string name="notification_dialog_okay">네, 알려주세요</string>
+
+    <string name="drafts">임시저장 글</string>
+    <string name="content_description_drafts_back">토론방 생성 페이지로 이동합니다</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+    <string name="drafts_no_title">제목 없음</string>
+    <string name="drafts_no_description">내용 없음</string>
+    <string name="drafts_no_exist">잠시 오류가 생겼습니다. 다시 선택해주세요</string>
+    <string name="notification_reply">%s님이 %s에 대댓글을 남겼습니다</string>
+    <string name="notification_like">%s님이 %s에 ❤️를 보냈습니다</string>
+    <string name="notification_comment">%s님이 %s에 댓글을 남겼습니다</string>
+</resources>

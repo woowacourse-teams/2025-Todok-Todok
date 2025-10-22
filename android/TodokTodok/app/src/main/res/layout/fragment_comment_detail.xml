@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingHorizontal="@dimen/space_24"
+    tools:context=".presentation.xml.discussiondetail.commentdetail.CommentDetailFragment">
+
+    <ImageView
+        android:id="@+id/iv_bottom_sheet_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:src="@drawable/bottom_sheet_header"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/abl_comment_detail"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/space_32"
+        android:layout_marginTop="@dimen/space_32"
+        android:layout_marginEnd="@dimen/space_4"
+        android:background="@color/white"
+        app:layout_constraintEnd_toStartOf="@id/iv_reload"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_comment_detail_back"
+        android:layout_width="@dimen/space_24"
+        android:layout_height="@dimen/space_24"
+        android:contentDescription="@string/comment_content_description_comment_detail_back"
+        android:src="@drawable/btn_back"
+        app:layout_constraintBottom_toBottomOf="@id/abl_comment_detail"
+        app:layout_constraintStart_toStartOf="@id/abl_comment_detail"
+        app:layout_constraintTop_toTopOf="@id/abl_comment_detail" />
+
+    <TextView
+        style="@style/HeaderTitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="5dp"
+        android:text="@string/all_reply"
+        app:layout_constraintBottom_toBottomOf="@id/abl_comment_detail"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/abl_comment_detail" />
+
+    <ImageView
+        android:id="@+id/iv_reload"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:padding="@dimen/space_12"
+        android:src="@drawable/cached"
+        app:layout_constraintBottom_toBottomOf="@id/abl_comment_detail"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/abl_comment_detail" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_items"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="@dimen/space_24"
+        android:layout_marginTop="14dp"
+        android:scrollbars="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toTopOf="@id/tv_input_reply"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/abl_comment_detail"
+        app:layout_constraintTop_toBottomOf="@id/abl_comment_detail" />
+
+    <TextView
+        android:id="@+id/tv_input_reply"
+        style="@style/BaseTextStyle"
+        android:layout_width="0dp"
+        android:layout_height="36dp"
+        android:layout_marginBottom="148dp"
+        android:background="@drawable/bg_green_f0_radius_8dp"
+        android:fontFamily="@font/pretendard_regular"
+        android:gravity="center_vertical"
+        android:paddingStart="10dp"
+        android:paddingTop="@dimen/space_4"
+        android:paddingBottom="2dp"
+        android:textColor="@color/gray_76"
+        android:textSize="@dimen/font_size_large"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/iv_add_reply"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="대댓글 입력" />
+
+    <ImageView
+        android:id="@+id/iv_add_reply"
+        android:layout_width="@dimen/space_28"
+        android:layout_height="@dimen/space_28"
+        android:layout_marginStart="10dp"
+        android:background="@drawable/btn_comment_background"
+        android:contentDescription="@string/content_description_add_comment"
+        app:layout_constraintBottom_toBottomOf="@id/tv_input_reply"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tv_input_reply"
+        app:layout_constraintTop_toTopOf="@id/tv_input_reply" />
+
+    <com.team.todoktodok.presentation.core.component.CloverProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
