@@ -31,6 +31,10 @@ class SelectBookViewModel(
         _uiState.value = SelectBookUiState()
     }
 
+    fun deleteInformation() {
+        bookRepository.deleteCursor()
+    }
+
     fun changePageSize(size: Int) {
         setState { copy(pageSize = size) }
     }
@@ -61,7 +65,7 @@ class SelectBookViewModel(
 
     fun isNotPossibleAddSearchedBooks(): Boolean =
         !(_uiState.value?.hasNextPage ?: false) ||
-            _uiState.value?.status == SearchedBookStatus.Loading
+                _uiState.value?.status == SearchedBookStatus.Loading
 
     fun addSearchedBooks() {
         if (isNotPossibleAddSearchedBooks()) return

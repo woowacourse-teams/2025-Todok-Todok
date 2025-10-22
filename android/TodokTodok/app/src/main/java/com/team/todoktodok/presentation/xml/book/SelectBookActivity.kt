@@ -9,6 +9,7 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
+import androidx.activity.addCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -127,6 +128,7 @@ class SelectBookActivity : AppCompatActivity() {
     ) {
         binding.apply {
             btnBack.setOnClickListener {
+                viewModel.deleteInformation()
                 finish()
             }
             etSearchKeyword.requestFocus()
@@ -135,6 +137,7 @@ class SelectBookActivity : AppCompatActivity() {
             }
             initRvView(adapter)
         }
+        onBackPressedDispatcher.addCallback { viewModel.deleteInformation() }
     }
 
     private fun ActivitySelectBookBinding.initRvView(adapter: SearchBooksAdapter) {
