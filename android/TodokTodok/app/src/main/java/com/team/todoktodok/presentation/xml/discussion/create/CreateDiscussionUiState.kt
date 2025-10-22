@@ -5,6 +5,7 @@ import com.team.domain.model.book.SearchedBook
 
 data class CreateDiscussionUiState(
     val isLoading: Boolean = false,
+    val isPosting: Boolean = false,
     val title: String = "",
     val opinion: String = "",
     val book: SearchedBook? = null,

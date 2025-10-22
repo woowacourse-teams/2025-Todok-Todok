@@ -69,6 +69,10 @@ class CreateDiscussionRoomViewModel(
     }
 
     fun isPossibleToCreate() {
+        if (uiState.value?.isPosting ?: false) {
+            return
+        }
+        _uiState.value = _uiState.value?.copy(isPosting = true)
         val error = _uiState.value?.validate()
         if (error != null) {
             _uiEvent.setValue(CreateDiscussionUiEvent.ShowToast(error))
