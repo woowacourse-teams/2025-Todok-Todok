@@ -137,7 +137,10 @@ class SelectBookActivity : AppCompatActivity() {
             }
             initRvView(adapter)
         }
-        onBackPressedDispatcher.addCallback { viewModel.deleteInformation() }
+        onBackPressedDispatcher.addCallback {
+            viewModel.deleteInformation()
+            finish()
+        }
     }
 
     private fun ActivitySelectBookBinding.initRvView(adapter: SearchBooksAdapter) {
