@@ -104,31 +104,43 @@ class DiscussionDetailViewModel(
     fun toggleLike() {
         val currentUiState = _uiState.value ?: return
         if (currentUiState !is DiscussionDetailUiState.Success) return
+
         val currentDiscussion = currentUiState.discussion
         val desiredIsLikedByMe = !currentDiscussion.isLikedByMe
         val likeCountDelta = if (desiredIsLikedByMe) 1 else -1
+        val previousDiscussion = currentDiscussion
+
         _uiState.value =
             currentUiState.copy(
                 discussion =
-                    currentUiState.discussion.copy(
+                    currentDiscussion.copy(
                         isLikedByMe = desiredIsLikedByMe,
-                        likeCount =
-                            (currentUiState.discussion.likeCount + likeCountDelta).coerceAtLeast(
-                                0,
-                            ),
+                        likeCount = (currentDiscussion.likeCount + likeCountDelta).coerceAtLeast(0),
                     ),
             )
+
         coalesceJob?.cancel()
         coalesceJob =
             viewModelScope.launch {
                 delay(250)
-                val currentUiState = _uiState.value ?: return@launch
-                if (currentUiState !is DiscussionDetailUiState.Success) return@launch
-                val isToggle =
-                    currentDiscussion.likeCount != currentUiState.discussion.likeCount
-                if (!isToggle) return@launch
-                handleResult(discussionRepository.toggleLike(discussionId ?: THROW_DISCUSSION_ID)) {
-                    loadDiscussionRoom()
+                val latestUiState = _uiState.value ?: return@launch
+                if (latestUiState !is DiscussionDetailUiState.Success) return@launch
+                val latestDiscussion = latestUiState.discussion
+                if (latestDiscussion.isLikedByMe != desiredIsLikedByMe) return@launch
+
+                val requestDiscussionId = latestDiscussion.id
+                when (val result = discussionRepository.toggleLike(requestDiscussionId)) {
+                    is NetworkResult.Success -> {
+                        loadDiscussionRoom()
+                    }
+
+                    is NetworkResult.Failure -> {
+                        val rollbackUiState = _uiState.value
+                        if (rollbackUiState is DiscussionDetailUiState.Success) {
+                            _uiState.value = rollbackUiState.copy(discussion = previousDiscussion)
+                        }
+                        onUiEvent(DiscussionDetailUiEvent.ShowErrorMessage(result.exception))
+                    }
                 }
             }
     }

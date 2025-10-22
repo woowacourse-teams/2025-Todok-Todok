@@ -97,7 +97,7 @@ fun ExpandableSection(
     sectionId: String? = null,
 ) {
     var expanded by rememberSaveable(listOf(sectionId)) { mutableStateOf(expandedInitial) }
-    val rotation by animateFloatAsState(if (expanded) 0f else 180f)
+    val rotation by animateFloatAsState(if (expanded) 0f else -90f)
     Column(
         modifier =
             modifier
