@@ -30,7 +30,7 @@ class DiscussionDetailViewModel(
     var mode = savedStateHandle.get<SerializationCreateDiscussionRoomMode>(KEY_MODE)
         private set
     private var coalesceJob: Job? = null
-    private val _uiState = MutableLiveData<DiscussionDetailUiState>(DiscussionDetailUiState.Loading)
+    private val _uiState = MutableLiveData<DiscussionDetailUiState>(DiscussionDetailUiState.Empty)
     val uiState: LiveData<DiscussionDetailUiState> = _uiState
 
     private val _uiEvent = MutableSingleLiveData<DiscussionDetailUiEvent>()

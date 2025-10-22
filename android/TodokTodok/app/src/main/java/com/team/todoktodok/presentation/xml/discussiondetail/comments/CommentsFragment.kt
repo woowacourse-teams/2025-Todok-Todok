@@ -9,6 +9,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.annotation.StringRes
 import androidx.core.os.bundleOf
 import androidx.core.view.doOnPreDraw
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.commit
@@ -130,7 +131,7 @@ class CommentsFragment : Fragment(R.layout.fragment_comments) {
             if (state.isLoading) {
                 binding.progressBar.show()
             } else {
-                binding.progressBar.hide()
+                if (binding.progressBar.isVisible) binding.progressBar.hide()
             }
             if (state.comments.isEmpty()) {
                 binding.llNothingCommentsLayout.visibility = View.VISIBLE
