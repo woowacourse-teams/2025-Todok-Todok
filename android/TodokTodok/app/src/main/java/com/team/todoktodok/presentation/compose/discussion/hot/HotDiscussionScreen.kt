@@ -90,7 +90,7 @@ fun HotDiscussionScreen(
     HotDiscussionScreen(
         uiState = uiState.value,
         isLoading = isLoading.value,
-        onLoadMore = viewModel::loadActivatedDiscussions,
+        onLoadMore = viewModel::loadNextActivatedDiscussions,
         onRefresh = viewModel::refreshHotDiscussions,
         pullToRefreshState = pullToRefreshState,
         onClickDiscussion = {
