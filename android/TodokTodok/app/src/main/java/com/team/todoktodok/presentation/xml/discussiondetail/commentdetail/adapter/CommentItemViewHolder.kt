@@ -27,10 +27,10 @@ class CommentItemViewHolder private constructor(
             tvLikeCount.setOnClickListener { handler.onClickCommentLike() }
             ivUserProfile.loadCircleImage(comment.writer.profileImage)
             ivUserProfile.setOnClickListener {
-                handler.onClickCommentUser(comment.writer.id)
+                handler.onClickCommentUser(comment.writer.id, comment.writer.nickname)
             }
             tvUserNickname.setOnClickListener {
-                handler.onClickCommentUser(comment.writer.id)
+                handler.onClickCommentUser(comment.writer.id, comment.writer.nickname)
             }
             ivCommentOption.setOnClickListener {
                 handler.onClickCommentOption(commentItem, ivCommentOption)
@@ -52,7 +52,10 @@ class CommentItemViewHolder private constructor(
     interface Handler {
         fun onClickCommentLike()
 
-        fun onClickCommentUser(userId: Long)
+        fun onClickCommentUser(
+            userId: Long,
+            userName: String,
+        )
 
         fun onClickCommentOption(
             item: CommentDetailItems.CommentItem,

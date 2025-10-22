@@ -398,8 +398,11 @@ class CommentsFragment : Fragment(R.layout.fragment_comments) {
                 viewModel.toggleLike(commentId)
             }
 
-            override fun onClickUser(userId: Long) {
-                viewModel.navigateToOtherUserProfile(userId)
+            override fun onClickUser(
+                userId: Long,
+                userName: String,
+            ) {
+                viewModel.navigateToOtherUserProfile(userId, userName)
             }
         }
 

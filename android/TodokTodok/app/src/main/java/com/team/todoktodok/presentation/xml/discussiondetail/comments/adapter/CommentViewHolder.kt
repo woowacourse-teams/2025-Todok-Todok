@@ -29,10 +29,16 @@ class CommentViewHolder private constructor(
             }
             ivUserProfile.loadCircleImage(commentItemUiState.comment.writer.profileImage)
             ivUserProfile.setOnClickListener {
-                handler.onClickUser(commentItemUiState.comment.writer.id)
+                handler.onClickUser(
+                    commentItemUiState.comment.writer.id,
+                    commentItemUiState.comment.writer.nickname,
+                )
             }
             tvUserNickname.setOnClickListener {
-                handler.onClickUser(commentItemUiState.comment.writer.id)
+                handler.onClickUser(
+                    commentItemUiState.comment.writer.id,
+                    commentItemUiState.comment.writer.nickname,
+                )
             }
             ivLike.setOnClickListener { handler.onToggleLike(commentItemUiState.comment.id) }
             ivLike.isSelected = commentItemUiState.comment.isLikedByMe
@@ -66,6 +72,9 @@ class CommentViewHolder private constructor(
 
         fun onToggleLike(commentId: Long)
 
-        fun onClickUser(userId: Long)
+        fun onClickUser(
+            userId: Long,
+            userName: String,
+        )
     }
 }
