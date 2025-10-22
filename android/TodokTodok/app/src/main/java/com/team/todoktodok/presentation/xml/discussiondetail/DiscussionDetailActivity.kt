@@ -400,7 +400,7 @@ class DiscussionDetailActivity : AppCompatActivity() {
         val behavior = BottomSheetBehavior.from(sheetView)
 
         behavior.isHideable = false
-        behavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+        behavior.state = BottomSheetBehavior.STATE_COLLAPSED
         behavior.setPeekHeight(
             resources.getDimensionPixelSize(R.dimen.item_discussion_detail_bottom_sheet_min_height),
             true,

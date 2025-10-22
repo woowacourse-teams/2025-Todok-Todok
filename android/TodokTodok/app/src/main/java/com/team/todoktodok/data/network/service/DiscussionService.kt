@@ -6,7 +6,6 @@ import com.team.todoktodok.data.network.request.EditDiscussionRoomRequest
 import com.team.todoktodok.data.network.request.ReportRequest
 import com.team.todoktodok.data.network.response.discussion.DiscussionResponse
 import com.team.todoktodok.data.network.response.discussion.page.ActivatedDiscussionPageResponse
-import com.team.todoktodok.data.network.response.discussion.page.ActiveDiscussionPageResponse
 import com.team.todoktodok.data.network.response.latest.LatestDiscussionsResponse
 import retrofit2.Response
 import retrofit2.http.Body
