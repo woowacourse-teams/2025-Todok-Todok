@@ -949,7 +949,7 @@ public interface MemberApiDocs {
                                     ),
                                     @ExampleObject(
                                             name = "파일 크기 부적합",
-                                            value = "{\"code\":400, \"message\":\"[ERROR] 파일 크기가 5MB 초과입니다\"}"
+                                            value = "{\"code\":400, \"message\":\"[ERROR] 파일 크기가 10MB 초과입니다\"}"
                                     ),
                                     @ExampleObject(
                                             name = "파일 타입 부적합",
