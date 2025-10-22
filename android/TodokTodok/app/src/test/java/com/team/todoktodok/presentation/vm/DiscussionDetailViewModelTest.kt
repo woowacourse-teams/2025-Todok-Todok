@@ -36,7 +36,7 @@ class DiscussionDetailViewModelTest {
     fun setUp() {
         val state = SavedStateHandle(mapOf(KEY_DISCUSSION_ID to DISCUSSION_ID))
         tokenRepository = mockk(relaxed = true)
-        coEvery { tokenRepository.getMemberId() } returns WRITER_ID
+        coEvery { tokenRepository.getMemberId() } returns MY_ID
         discussionRepository = mockk(relaxed = true)
         coEvery { discussionRepository.getDiscussion(DISCUSSION_ID) } returns
             NetworkResult.Success(DISCUSSIONS.first())
@@ -176,5 +176,7 @@ class DiscussionDetailViewModelTest {
     companion object {
         private const val DISCUSSION_ID = 2L
         private const val WRITER_ID = 1L
+
+        private const val MY_ID = 2L
     }
 }

@@ -150,13 +150,7 @@ class DiscussionDetailViewModel(
             if (currentUiState !is DiscussionDetailUiState.Success) return@launch
             val writerId = currentUiState.discussion.writer.id
             val isMyId = writerId == tokenRepository.getMemberId()
-            if (!isMyId) {
-                _uiEvent.setValue(
-                    DiscussionDetailUiEvent.NavigateToProfile(
-                        writerId,
-                    ),
-                )
-            }
+            if (!isMyId) onUiEvent(DiscussionDetailUiEvent.NavigateToProfile(writerId))
         }
     }
 
