@@ -18,7 +18,7 @@ class ActivatedBooksFragment : BaseProfileFragment(R.layout.fragment_activated_b
     val bookAdapterHandler =
         object : BooksAdapter.Handler {
             override fun onSelectBook(bookId: Long) {
-                val intent = BookDiscussionsActivity.intent(requireContext(), bookId)
+                val intent = BookDiscussionsActivity.Intent(requireContext(), bookId)
                 startActivity(intent)
             }
         }

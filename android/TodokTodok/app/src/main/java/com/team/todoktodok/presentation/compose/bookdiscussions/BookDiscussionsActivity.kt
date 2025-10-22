@@ -27,7 +27,7 @@ class BookDiscussionsActivity : AppCompatActivity() {
     companion object {
         private const val BOOK_ID_KEY = "book_id_key"
 
-        fun intent(
+        fun Intent(
             context: Context,
             bookId: Long,
         ) = Intent(context, BookDiscussionsActivity::class.java).apply {

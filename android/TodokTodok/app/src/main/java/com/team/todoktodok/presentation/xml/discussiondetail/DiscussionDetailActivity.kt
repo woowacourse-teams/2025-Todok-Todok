@@ -342,7 +342,7 @@ class DiscussionDetailActivity : AppCompatActivity() {
             }
 
             is DiscussionDetailUiEvent.NavigateToBookDiscussions -> {
-                val intent = BookDiscussionsActivity.intent(this, event.bookId)
+                val intent = BookDiscussionsActivity.Intent(this, event.bookId)
                 startActivity(intent)
             }
         }

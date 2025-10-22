@@ -82,7 +82,7 @@ private fun BooksRow(
                     Modifier
                         .weight(1f),
             ) { bookId ->
-                context.startActivity(BookDiscussionsActivity.intent(context, bookId))
+                context.startActivity(BookDiscussionsActivity.Intent(context, bookId))
             }
         }
 
