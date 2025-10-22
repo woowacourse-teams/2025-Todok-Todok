@@ -146,10 +146,10 @@ fun MainScreen(
 
     CompositionLocalProvider(
         LocalUiExceptionHandler provides
-                UiExceptionHandler(
-                    snackbarHostState = snackbarHostState,
-                    messageConverter = messageConverter,
-                ),
+            UiExceptionHandler(
+                snackbarHostState = snackbarHostState,
+                messageConverter = messageConverter,
+            ),
     ) {
         BackPressToExit()
         MainScreenContent(

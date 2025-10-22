@@ -55,9 +55,7 @@ class DefaultNotificationRepository(
         notificationLocalDataSource.allowedNotification(isReject)
     }
 
-    override suspend fun getIsNotificationAllowed(): Boolean? =
-        notificationLocalDataSource.getIsNotificationAllowed()
-
+    override suspend fun getIsNotificationAllowed(): Boolean? = notificationLocalDataSource.getIsNotificationAllowed()
 
     private suspend fun saveNewPushNotificationToLocal(
         fcmToken: String,

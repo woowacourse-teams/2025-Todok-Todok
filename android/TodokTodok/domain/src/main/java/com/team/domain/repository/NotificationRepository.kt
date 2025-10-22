@@ -22,5 +22,4 @@ interface NotificationRepository {
     suspend fun allowedNotification(isAllowed: Boolean)
 
     suspend fun getIsNotificationAllowed(): Boolean?
-
 }

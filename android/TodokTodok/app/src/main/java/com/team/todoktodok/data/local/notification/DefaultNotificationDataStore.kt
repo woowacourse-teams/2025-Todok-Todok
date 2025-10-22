@@ -46,8 +46,7 @@ class DefaultNotificationDataStore(
         }
     }
 
-    override suspend fun getIsNotificationAllowed(): Boolean? =
-        dataStore.data.first()[KEY_NOTIFICATION_REJECT]
+    override suspend fun getIsNotificationAllowed(): Boolean? = dataStore.data.first()[KEY_NOTIFICATION_REJECT]
 
     companion object {
         private const val DATABASE_NAME: String = "notification"
