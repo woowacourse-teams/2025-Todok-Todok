@@ -1,10 +1,12 @@
 package todoktodok.backend.discussion.application.service.command;
 
+import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.book.domain.Book;
 import todoktodok.backend.book.domain.repository.BookRepository;
@@ -13,8 +15,10 @@ import todoktodok.backend.discussion.application.dto.request.DiscussionRequest;
 import todoktodok.backend.discussion.application.dto.request.DiscussionUpdateRequest;
 import todoktodok.backend.discussion.domain.Discussion;
 import todoktodok.backend.discussion.domain.DiscussionLike;
+import todoktodok.backend.discussion.domain.DiscussionMemberView;
 import todoktodok.backend.discussion.domain.DiscussionReport;
 import todoktodok.backend.discussion.domain.repository.DiscussionLikeRepository;
+import todoktodok.backend.discussion.domain.repository.DiscussionMemberViewRepository;
 import todoktodok.backend.discussion.domain.repository.DiscussionReportRepository;
 import todoktodok.backend.discussion.domain.repository.DiscussionRepository;
 import todoktodok.backend.global.report.ContentReportReason;
@@ -26,9 +30,12 @@ import todoktodok.backend.member.domain.repository.MemberRepository;
 @AllArgsConstructor
 public class DiscussionCommandService {
 
+    private static final int VIEW_THRESHOLD = 10;
+
     private final DiscussionRepository discussionRepository;
     private final DiscussionReportRepository discussionReportRepository;
     private final DiscussionLikeRepository discussionLikeRepository;
+    private final DiscussionMemberViewRepository discussionMemberViewRepository;
     private final MemberRepository memberRepository;
     private final BookRepository bookRepository;
     private final CommentRepository commentRepository;
@@ -88,6 +95,33 @@ public class DiscussionCommandService {
         final String discussionOpinion = discussionUpdateRequest.discussionOpinion();
 
         discussion.update(discussionTitle, discussionOpinion);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void updateDiscussionMemberView(
+            final Long memberId,
+            final Long discussionId
+    ) {
+        final Member member = findMember(memberId);
+        final Discussion discussion = findDiscussion(discussionId);
+
+        final Optional<DiscussionMemberView> discussionMemberView
+                = discussionMemberViewRepository.findByMemberAndDiscussion(member, discussion);
+
+        if (discussionMemberView.isEmpty()) {
+            final DiscussionMemberView view = DiscussionMemberView.builder()
+                    .discussion(discussion)
+                    .member(member)
+                    .build();
+            discussionMemberViewRepository.save(view);
+            discussionRepository.increaseViewCount(discussionId);
+            return;
+        }
+
+        if (discussionMemberView.get().isModifiedDatePassedFrom(VIEW_THRESHOLD)) {
+            discussionMemberViewRepository.updateModifiedAtById(discussionMemberView.get().getId(), LocalDateTime.now());
+            discussionRepository.increaseViewCount(discussionId);
+        }
     }
 
     public void deleteDiscussion(

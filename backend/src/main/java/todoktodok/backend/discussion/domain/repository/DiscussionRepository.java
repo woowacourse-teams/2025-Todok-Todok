@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import todoktodok.backend.discussion.domain.Discussion;
@@ -132,4 +133,12 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
             @Param("cursorId") final Long cursorId,
             final Pageable pageable
     );
+
+    @Modifying(clearAutomatically = true)
+    @Query("""
+                UPDATE Discussion d
+                SET d.viewCount = d.viewCount + 1
+                WHERE d.id = :discussionId
+            """)
+    void increaseViewCount(@Param("discussionId") final Long discussionId);
 }

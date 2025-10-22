@@ -29,3 +29,8 @@ auth:
 jwt:
   access-token:
     expire-mills: 60_000
+
+logging:
+  level:
+    org.springframework.jdbc.datasource.DataSourceTransactionManager: DEBUG
+    org.springframework.orm.jpa.JpaTransactionManager: DEBUG

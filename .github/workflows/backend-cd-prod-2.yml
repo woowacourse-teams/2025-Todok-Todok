@@ -25,6 +25,13 @@ jobs:
         working-directory: ./backend
 
     steps:
+      - name: Fix permissions
+        run: |
+          pwd
+          ls -l
+          sudo chown -R ubuntu:ubuntu promtail_data
+          sudo chown -R ubuntu:ubuntu log
+
       - name: Cleanup backend log and promtail data directory before checkout
         run: |
           sudo rm -rf backend/promtail_data || true
@@ -54,7 +61,6 @@ jobs:
           ENV_ID: ${{ github.sha }}
           BACKEND_APP_IMAGE_NAME: woowajeff/todoktodok:prod-${{ github.sha }}
         run: |
-          cd backend
           echo "ENV_ID: $ENV_ID"
           docker compose -f config/docker-compose-prod.yml pull
           docker compose -f config/docker-compose-prod.yml up -d --no-build
@@ -79,8 +85,10 @@ jobs:
     steps:
       - name: Send Health Check Request
         run: |
+          sleep 15
+          
           for i in {1..5}; do
-          response=$(curl -s http://localhost:8080/management/health_check)
+          response=$(curl -s http://localhost:80/actuator/health_check)
           echo "Attempt $i: Response Body: $response"
           
           if [[ "$response" == *"\"status\":\"UP\""* ]]; then
@@ -108,6 +116,13 @@ jobs:
     if: failure()
 
     steps:
+      - name: Fix permissions
+        run: |
+          pwd
+          ls -l
+          sudo chown -R ubuntu:ubuntu promtail_data
+          sudo chown -R ubuntu:ubuntu log
+
       - name: Cleanup backend log and promtail data directory before checkout
         run: |
           sudo rm -rf backend/promtail_data || true
@@ -129,7 +144,6 @@ jobs:
           ENV_ID: ${{ github.sha }}
           BACKEND_APP_IMAGE_NAME: ${{ needs.find_previous_image_version.outputs.previousImageVersion }}
         run: |
-          cd backend
           echo "ENV_ID: $ENV_ID"
           docker compose -f config/docker-compose-prod.yml pull
           docker compose -f config/docker-compose-prod.yml up -d --no-build
@@ -148,8 +162,10 @@ jobs:
     steps:
       - name: Send Health Check Request
         run: |
+          sleep 15
+          
           for i in {1..5}; do
-          response=$(curl -s http://localhost:8080/management/health_check)
+          response=$(curl -s http://localhost:80/actuator/health_check)
           echo "Attempt $i: Response Body: $response"
 
           if [[ "$response" == *"\"status\":\"UP\""* ]]; then
