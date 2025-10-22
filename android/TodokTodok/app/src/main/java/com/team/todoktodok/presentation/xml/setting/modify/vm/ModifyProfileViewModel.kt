@@ -4,9 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.team.domain.model.exception.TodokTodokExceptions
 import com.team.domain.model.exception.onFailure
 import com.team.domain.model.exception.onSuccess
+import com.team.domain.model.exception.toDomain
 import com.team.domain.model.member.MemberId
 import com.team.domain.model.member.NickNameException
 import com.team.domain.model.member.Nickname
@@ -64,8 +64,17 @@ class ModifyProfileViewModel(
                 }.onSuccess {
                     val (newNickname, newMessage) = it
                     modifyProfile(newNickname, newMessage)
-                }.onFailure {
-                    onUiEvent(ModifyProfileUiEvent.ShowErrorMessage(it as TodokTodokExceptions))
+                }.onFailure { exception ->
+                    when (exception) {
+                        is NickNameException ->
+                            onUiEvent(
+                                ModifyProfileUiEvent.ShowInvalidNickNameMessage(
+                                    exception,
+                                ),
+                            )
+
+                        else -> onUiEvent(ModifyProfileUiEvent.ShowErrorMessage(exception.toDomain()))
+                    }
                 }
             }
         }

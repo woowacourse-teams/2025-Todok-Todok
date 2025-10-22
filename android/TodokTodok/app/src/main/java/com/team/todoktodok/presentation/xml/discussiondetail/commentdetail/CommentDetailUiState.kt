@@ -1,7 +1,6 @@
 package com.team.todoktodok.presentation.xml.discussiondetail.commentdetail
 
 import com.team.domain.model.Comment
-import com.team.domain.model.member.Nickname
 import com.team.domain.model.member.User
 import com.team.todoktodok.presentation.xml.discussiondetail.commentdetail.adapter.CommentDetailItems
 import com.team.todoktodok.presentation.xml.discussiondetail.model.CommentItemUiState
@@ -26,7 +25,7 @@ data class CommentDetailUiState(
                 Comment(
                     id = 0,
                     "",
-                    User(0, Nickname("기초값"), ""),
+                    User(0, "", ""),
                     LocalDateTime.of(1970, 1, 1, 0, 0),
                     0,
                     0,

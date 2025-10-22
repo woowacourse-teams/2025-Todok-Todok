@@ -3,7 +3,6 @@ package com.team.todoktodok.presentation.compose.preview
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.team.domain.model.Book
 import com.team.domain.model.Discussion
-import com.team.domain.model.member.Nickname
 import com.team.domain.model.member.User
 import com.team.todoktodok.presentation.compose.core.component.DiscussionCardType
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiModel
@@ -29,7 +28,7 @@ class SearchDiscussionsUiStatePreviewParameterProvider : PreviewParameterProvide
                         writer =
                             User(
                                 id = 11L,
-                                nickname = Nickname("개발자A"),
+                                nickname = "개발자A",
                                 profileImage = "https://dummyimage.com/100x100/aaaaaa/000000.png&text=A",
                             ),
                         createAt = LocalDateTime.now().minusDays(1),
@@ -56,7 +55,7 @@ class SearchDiscussionsUiStatePreviewParameterProvider : PreviewParameterProvide
                         writer =
                             User(
                                 id = 12L,
-                                nickname = Nickname("개발자B"),
+                                nickname = "개발자B",
                                 profileImage = "https://dummyimage.com/100x100/bbbbbb/000000.png&text=B",
                             ),
                         createAt = LocalDateTime.now().minusHours(5),

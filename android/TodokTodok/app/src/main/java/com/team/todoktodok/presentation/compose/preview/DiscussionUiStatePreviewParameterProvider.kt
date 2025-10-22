@@ -3,7 +3,6 @@ package com.team.todoktodok.presentation.compose.preview
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.team.domain.model.Book
 import com.team.domain.model.Discussion
-import com.team.domain.model.member.Nickname
 import com.team.domain.model.member.User
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiModel
 import java.time.LocalDateTime
@@ -25,7 +24,7 @@ class DiscussionUiStatePreviewParameterProvider : PreviewParameterProvider<List<
                                         author = "김영한",
                                         image = "",
                                     ),
-                                writer = User(1L, Nickname("홍길동"), ""),
+                                writer = User(1L, "홍길동", ""),
                                 createAt = LocalDateTime.of(2025, 7, 12, 12, 0),
                                 discussionOpinion =
                                     """
@@ -50,7 +49,7 @@ class DiscussionUiStatePreviewParameterProvider : PreviewParameterProvider<List<
                                         author = "Dmitry Jemerov",
                                         image = "",
                                     ),
-                                writer = User(2L, Nickname("박코루틴"), ""),
+                                writer = User(2L, "박코루틴", ""),
                                 createAt = LocalDateTime.of(2025, 7, 13, 12, 0),
                                 discussionOpinion = "suspend fun과 launch 차이를 이해해야 합니다.",
                                 likeCount = 10,
@@ -71,7 +70,7 @@ class DiscussionUiStatePreviewParameterProvider : PreviewParameterProvider<List<
                                         author = "Google",
                                         image = "",
                                     ),
-                                writer = User(3L, Nickname("김아키텍처"), ""),
+                                writer = User(3L, "김아키텍처", ""),
                                 createAt = LocalDateTime.of(2025, 7, 14, 12, 0),
                                 discussionOpinion = "UI와 로직을 분리해 유지보수가 쉬워집니다.",
                                 likeCount = 3,
@@ -92,7 +91,7 @@ class DiscussionUiStatePreviewParameterProvider : PreviewParameterProvider<List<
                                         author = "Robert C. Martin",
                                         image = "",
                                     ),
-                                writer = User(4L, Nickname("이클린"), ""),
+                                writer = User(4L, "이클린", ""),
                                 createAt = LocalDateTime.of(2025, 7, 15, 12, 0),
                                 discussionOpinion = "의도를 드러내는 코드가 중요합니다.",
                                 likeCount = 5,
@@ -113,7 +112,7 @@ class DiscussionUiStatePreviewParameterProvider : PreviewParameterProvider<List<
                                         author = "Eric Freeman",
                                         image = "",
                                     ),
-                                writer = User(5L, Nickname("정디자인"), ""),
+                                writer = User(5L, "정디자인", ""),
                                 createAt = LocalDateTime.of(2025, 7, 16, 12, 0),
                                 discussionOpinion = "상황에 맞는 패턴 선택이 중요합니다.",
                                 viewCount = 0,
@@ -134,7 +133,7 @@ class DiscussionUiStatePreviewParameterProvider : PreviewParameterProvider<List<
                                         author = "Eric Evans",
                                         image = "",
                                     ),
-                                writer = User(6L, Nickname("유DDD"), ""),
+                                writer = User(6L, "유DDD", ""),
                                 createAt = LocalDateTime.of(2025, 7, 17, 12, 0),
                                 discussionOpinion = "도메인 모델을 중심으로 설계해야 합니다.",
                                 viewCount = 0,
@@ -155,7 +154,7 @@ class DiscussionUiStatePreviewParameterProvider : PreviewParameterProvider<List<
                                         author = "Kent Beck",
                                         image = "",
                                     ),
-                                writer = User(7L, Nickname("박테스트"), ""),
+                                writer = User(7L, "박테스트", ""),
                                 createAt = LocalDateTime.of(2025, 7, 18, 12, 0),
                                 discussionOpinion = "작은 단위의 테스트가 코드 품질을 지켜줍니다.",
                                 viewCount = 0,
@@ -176,7 +175,7 @@ class DiscussionUiStatePreviewParameterProvider : PreviewParameterProvider<List<
                                         author = "Tomasz Nurkiewicz",
                                         image = "",
                                     ),
-                                writer = User(8L, Nickname("최리액티브"), ""),
+                                writer = User(8L, "최리액티브", ""),
                                 createAt = LocalDateTime.of(2025, 7, 19, 12, 0),
                                 discussionOpinion = "데이터 스트림과 비동기를 효과적으로 처리할 수 있습니다.",
                                 viewCount = 0,

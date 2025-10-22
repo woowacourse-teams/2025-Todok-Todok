@@ -21,8 +21,5 @@ data class DiscussionUiModel(
 
     val isLikedByMe: Boolean get() = item.isLikedByMe
 
-    fun modifyWriterProfileImage(profileImage: String): DiscussionUiModel =
-        copy(
-            item.modifyWriterProfileImage(profileImage),
-        )
+    fun modifyWriterProfileImage(profileImage: String): DiscussionUiModel = copy(item.modifyWriterProfileImage(profileImage))
 }

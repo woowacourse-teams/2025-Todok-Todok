@@ -16,7 +16,7 @@ class CommentViewHolder private constructor(
     fun bind(commentItemUiState: CommentItemUiState) {
         with(binding) {
             tvCommentOpinion.text = commentItemUiState.comment.content
-            tvUserNickname.text = commentItemUiState.comment.writer.nickname.value
+            tvUserNickname.text = commentItemUiState.comment.writer.nickname
             tvDiscussionCreateAt.text =
                 commentItemUiState.comment.createAt.toRelativeString(
                     binding.root.context,

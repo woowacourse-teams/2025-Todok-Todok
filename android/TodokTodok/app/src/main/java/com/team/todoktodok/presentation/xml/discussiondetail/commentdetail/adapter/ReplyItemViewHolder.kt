@@ -15,7 +15,7 @@ class ReplyItemViewHolder private constructor(
     fun bind(replyItem: CommentDetailItems.ReplyItem) {
         val reply = replyItem.value.reply
         with(binding) {
-            tvUserNickname.text = reply.writer.nickname.value
+            tvUserNickname.text = reply.writer.nickname
             tvReplyCreateAt.text =
                 reply.createdAt.toRelativeString(
                     root.context,

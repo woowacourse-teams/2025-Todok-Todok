@@ -74,7 +74,7 @@ private fun BooksRow(
     val context = LocalContext.current
     Row(
         modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(10.dp),
+        horizontalArrangement = Arrangement.spacedBy(15.dp),
     ) {
         books.forEach { book ->
             BookCover(

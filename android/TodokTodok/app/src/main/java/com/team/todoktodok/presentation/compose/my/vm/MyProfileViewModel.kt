@@ -1,6 +1,5 @@
 package com.team.todoktodok.presentation.compose.my.vm
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.team.domain.ConnectivityObserver
 import com.team.domain.model.ImagePayload
@@ -65,10 +64,7 @@ class MyProfileViewModel(
             key = KEY_FETCH_LIKED_DISCUSSIONS,
             action = { discussionRepository.getLikedDiscussion() },
             handleSuccess = { result -> _uiState.update { it.setLikedDiscussions(result) } },
-            handleFailure = {
-                Log.d("dasdas", "$it: ")
-                onUiEvent(MyProfileUiEvent.ShowErrorMessage(it))
-            },
+            handleFailure = { onUiEvent(MyProfileUiEvent.ShowErrorMessage(it)) },
         )
 
     private fun loadParticipatedDiscussions() =
