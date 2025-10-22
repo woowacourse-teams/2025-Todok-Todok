@@ -144,7 +144,10 @@ class SelectBookActivity : AppCompatActivity() {
         rvSearchedBooks.apply {
             this.adapter = adapter
             addOnScrollEndListener(
-                callback = { viewModel.addSearchedBooks() },
+                callback = {
+                    viewModel.addSearchedBooks()
+                    finish()
+                },
             )
         }
     }
