@@ -30,8 +30,9 @@ class BookDiscussionsActivity : AppCompatActivity() {
         fun Intent(
             context: Context,
             bookId: Long,
-        ) = Intent(context, BookDiscussionsActivity::class.java).apply {
-            putExtra(BOOK_ID_KEY, bookId)
-        }
+        ): Intent =
+            Intent(context, BookDiscussionsActivity::class.java).apply {
+                putExtra(BOOK_ID_KEY, bookId)
+            }
     }
 }
