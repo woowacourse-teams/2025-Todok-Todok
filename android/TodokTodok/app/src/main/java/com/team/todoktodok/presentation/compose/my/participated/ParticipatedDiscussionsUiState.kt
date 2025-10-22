@@ -25,11 +25,18 @@ data class ParticipatedDiscussionsUiState(
 
     fun toggleShowMyDiscussion(isShow: Boolean): ParticipatedDiscussionsUiState = copy(showMyDiscussion = isShow)
 
-    fun modifyMyDiscussionProfileImage(profileImage: String): ParticipatedDiscussionsUiState =
+    fun modifyMyDiscussionProfileImage(
+        profileImage: String,
+        myId: Long,
+    ): ParticipatedDiscussionsUiState =
         copy(
             discussions =
                 discussions.map { discussion ->
-                    discussion.modifyWriterProfileImage(profileImage)
+                    if (discussion.writerId == myId) {
+                        discussion.modifyWriterProfileImage(profileImage)
+                    } else {
+                        discussion
+                    }
                 },
             myDiscussion =
                 myDiscussion.map { discussion ->
