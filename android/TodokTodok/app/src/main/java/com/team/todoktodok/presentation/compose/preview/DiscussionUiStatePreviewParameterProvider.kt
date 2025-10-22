@@ -18,13 +18,20 @@ class DiscussionUiStatePreviewParameterProvider : PreviewParameterProvider<List<
                             Discussion(
                                 id = 1L,
                                 discussionTitle = "JPA 성능 최적화",
-                                book = Book(1L, "자바 ORM 표준 JPA 프로그래밍", "김영한", ""),
+                                book =
+                                    Book(
+                                        id = 1L,
+                                        title = "자바 ORM 표준 JPA 프로그래밍",
+                                        author = "김영한",
+                                        image = "",
+                                    ),
                                 writer = User(1L, Nickname("홍길동"), ""),
                                 createAt = LocalDateTime.of(2025, 7, 12, 12, 0),
                                 discussionOpinion =
-                                    "응집도와 결합도가 어떤 차이를 가지는 지에 대한 다른 분들의 생각이 궁금합니다." +
-                                        "응집도는 내부에 얼마나 비슷한 책임들이 모여있는가. 얼마나 연관있는 멤버들이 똘똘 뭉쳐있는가" +
-                                        "응집도는 내부에 얼마나 비슷한 책임들이 모여있는가. 얼마나 연관있는 멤버들이 똘똘 뭉쳐있는가",
+                                    """
+                                    응집도와 결합도의 차이에 대한 의견이 궁금합니다.
+                                    응집도는 내부에 유사한 책임이 얼마나 모여 있는가를 의미합니다.
+                                    """.trimIndent(),
                                 likeCount = 0,
                                 commentCount = 0,
                                 viewCount = 0,
@@ -36,7 +43,13 @@ class DiscussionUiStatePreviewParameterProvider : PreviewParameterProvider<List<
                             Discussion(
                                 id = 2L,
                                 discussionTitle = "코틀린 코루틴 완전 정복",
-                                book = Book(2L, "Kotlin in Action", "Dmitry Jemerov", ""),
+                                book =
+                                    Book(
+                                        id = 2L,
+                                        title = "Kotlin in Action",
+                                        author = "Dmitry Jemerov",
+                                        image = "",
+                                    ),
                                 writer = User(2L, Nickname("박코루틴"), ""),
                                 createAt = LocalDateTime.of(2025, 7, 13, 12, 0),
                                 discussionOpinion = "suspend fun과 launch 차이를 이해해야 합니다.",
@@ -51,7 +64,13 @@ class DiscussionUiStatePreviewParameterProvider : PreviewParameterProvider<List<
                             Discussion(
                                 id = 3L,
                                 discussionTitle = "MVVM 구조 제대로 이해하기",
-                                book = Book(3L, "안드로이드 아키텍처 가이드", "구글", ""),
+                                book =
+                                    Book(
+                                        id = 3L,
+                                        title = "안드로이드 아키텍처 가이드",
+                                        author = "Google",
+                                        image = "",
+                                    ),
                                 writer = User(3L, Nickname("김아키텍처"), ""),
                                 createAt = LocalDateTime.of(2025, 7, 14, 12, 0),
                                 discussionOpinion = "UI와 로직을 분리해 유지보수가 쉬워집니다.",
@@ -66,7 +85,13 @@ class DiscussionUiStatePreviewParameterProvider : PreviewParameterProvider<List<
                             Discussion(
                                 id = 4L,
                                 discussionTitle = "클린 코드란 무엇인가?",
-                                book = Book(4L, "Clean Code", "Robert C. Martin", ""),
+                                book =
+                                    Book(
+                                        id = 4L,
+                                        title = "Clean Code",
+                                        author = "Robert C. Martin",
+                                        image = "",
+                                    ),
                                 writer = User(4L, Nickname("이클린"), ""),
                                 createAt = LocalDateTime.of(2025, 7, 15, 12, 0),
                                 discussionOpinion = "의도를 드러내는 코드가 중요합니다.",
@@ -83,10 +108,10 @@ class DiscussionUiStatePreviewParameterProvider : PreviewParameterProvider<List<
                                 discussionTitle = "디자인 패턴 다시 보기",
                                 book =
                                     Book(
-                                        5L,
-                                        "Head First Design Patterns",
-                                        "Eric Freeman",
-                                        "",
+                                        id = 5L,
+                                        title = "Head First Design Patterns",
+                                        author = "Eric Freeman",
+                                        image = "",
                                     ),
                                 writer = User(5L, Nickname("정디자인"), ""),
                                 createAt = LocalDateTime.of(2025, 7, 16, 12, 0),
@@ -102,7 +127,13 @@ class DiscussionUiStatePreviewParameterProvider : PreviewParameterProvider<List<
                             Discussion(
                                 id = 6L,
                                 discussionTitle = "DDD와 헥사고날 아키텍처",
-                                book = Book(6L, "Domain-Driven Design", "Eric Evans", ""),
+                                book =
+                                    Book(
+                                        id = 6L,
+                                        title = "Domain-Driven Design",
+                                        author = "Eric Evans",
+                                        image = "",
+                                    ),
                                 writer = User(6L, Nickname("유DDD"), ""),
                                 createAt = LocalDateTime.of(2025, 7, 17, 12, 0),
                                 discussionOpinion = "도메인 모델을 중심으로 설계해야 합니다.",
@@ -117,7 +148,13 @@ class DiscussionUiStatePreviewParameterProvider : PreviewParameterProvider<List<
                             Discussion(
                                 id = 7L,
                                 discussionTitle = "테스트 주도 개발의 힘",
-                                book = Book(7L, "Test Driven Development", "Kent Beck", ""),
+                                book =
+                                    Book(
+                                        id = 7L,
+                                        title = "Test Driven Development",
+                                        author = "Kent Beck",
+                                        image = "",
+                                    ),
                                 writer = User(7L, Nickname("박테스트"), ""),
                                 createAt = LocalDateTime.of(2025, 7, 18, 12, 0),
                                 discussionOpinion = "작은 단위의 테스트가 코드 품질을 지켜줍니다.",
@@ -134,10 +171,10 @@ class DiscussionUiStatePreviewParameterProvider : PreviewParameterProvider<List<
                                 discussionTitle = "리액티브 프로그래밍의 이해",
                                 book =
                                     Book(
-                                        8L,
-                                        "Reactive Programming with RxJava",
-                                        "Tomasz Nurkiewicz",
-                                        "",
+                                        id = 8L,
+                                        title = "Reactive Programming with RxJava",
+                                        author = "Tomasz Nurkiewicz",
+                                        image = "",
                                     ),
                                 writer = User(8L, Nickname("최리액티브"), ""),
                                 createAt = LocalDateTime.of(2025, 7, 19, 12, 0),

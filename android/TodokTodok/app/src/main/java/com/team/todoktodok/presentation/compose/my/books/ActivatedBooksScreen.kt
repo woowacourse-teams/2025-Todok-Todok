@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -16,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import com.google.common.collect.ImmutableList
 import com.team.domain.model.Book
 import com.team.todoktodok.R
+import com.team.todoktodok.presentation.compose.bookdiscussions.BookDiscussionsActivity
 import com.team.todoktodok.presentation.compose.core.component.ResourceNotFoundContent
 import com.team.todoktodok.presentation.compose.my.component.BookCover
 import com.team.todoktodok.presentation.compose.preview.MyBooksUiStatePreviewParameterProvider
@@ -69,6 +71,7 @@ private fun BooksRow(
     books: ImmutableList<Book>,
     modifier: Modifier = Modifier,
 ) {
+    val context = LocalContext.current
     Row(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(10.dp),
@@ -79,7 +82,9 @@ private fun BooksRow(
                 modifier =
                     Modifier
                         .weight(1f),
-            )
+            ) { bookId ->
+                context.startActivity(BookDiscussionsActivity.Intent(context, bookId))
+            }
         }
 
         repeat(3 - books.size) {

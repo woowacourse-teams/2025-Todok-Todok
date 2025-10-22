@@ -59,7 +59,11 @@ class MyProfileViewModelTest {
         runTest {
             // Given
             val profile = Profile(1, "페토", "안녕하세요", "")
-            val books = listOf(Book(1, "Book1", "페토", ""), Book(2, "Book2", "정페토", ""))
+            val books =
+                listOf(
+                    Book(1, "Book1", "페토", ""),
+                    Book(2, "Book2", "정페토", ""),
+                )
             val discussions =
                 listOf(
                     Discussion(

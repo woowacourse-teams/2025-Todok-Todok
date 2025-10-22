@@ -11,19 +11,19 @@ import com.team.todoktodok.presentation.core.ext.extractSubtitle
 
 class BooksViewHolder private constructor(
     private val binding: ItemActivatedBookBinding,
-    handler: Handler,
+    private val handler: Handler,
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
         adjustItemSize()
-        binding.root.setOnClickListener {
-            handler.onSelectBook(absoluteAdapterPosition)
-        }
     }
 
     fun bind(item: Book) {
         with(binding) {
             tvBookTitle.text = item.title.extractSubtitle()
             tvBookAuthor.text = extractAuthorText(item.author)
+            root.setOnClickListener {
+                handler.onSelectBook(item.id)
+            }
 
             Glide
                 .with(root)
@@ -65,6 +65,6 @@ class BooksViewHolder private constructor(
     }
 
     fun interface Handler {
-        fun onSelectBook(index: Int)
+        fun onSelectBook(bookId: Long)
     }
 }

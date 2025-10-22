@@ -15,9 +15,9 @@ data class ActivatedDiscussion(
     val createdAt: String,
     val discussionTitle: String,
     val discussionOpinion: String,
-    val viewCount: Int? = null,
-    val likeCount: Int,
-    val commentCount: Int,
+    val viewCount: Long? = null,
+    val likeCount: Long,
+    val commentCount: Long,
     val isLikedByMe: Boolean,
 ) {
     fun toDomain() =

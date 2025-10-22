@@ -12,9 +12,9 @@ data class DiscussionResponse(
     val discussionId: Long,
     val discussionOpinion: String,
     val discussionTitle: String,
-    val viewCount: Int,
-    val likeCount: Int,
-    val commentCount: Int,
+    val viewCount: Long,
+    val likeCount: Long,
+    val commentCount: Long,
     val isLikedByMe: Boolean,
 )
 
