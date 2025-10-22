@@ -89,12 +89,12 @@ fun MainScreen(
         }
     }
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(uiState.value.isAllowed, uiState.value.isLoad) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
             ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)
             != PackageManager.PERMISSION_GRANTED
         ) {
-            showNotificationSheet = true
+            showNotificationSheet = uiState.value.isLoad && uiState.value.isAllowed
         }
     }
 
@@ -105,7 +105,10 @@ fun MainScreen(
             containerColor = Color.White,
         ) {
             NotificationBottomSheet(
-                onCancel = { showNotificationSheet = false },
+                onCancel = {
+                    viewModel.allowedNotification(!uiState.value.isAllowed)
+                    showNotificationSheet = false
+                },
                 onConfirm = {
                     askNotificationPermission()
                     showNotificationSheet = false
@@ -143,10 +146,10 @@ fun MainScreen(
 
     CompositionLocalProvider(
         LocalUiExceptionHandler provides
-            UiExceptionHandler(
-                snackbarHostState = snackbarHostState,
-                messageConverter = messageConverter,
-            ),
+                UiExceptionHandler(
+                    snackbarHostState = snackbarHostState,
+                    messageConverter = messageConverter,
+                ),
     ) {
         BackPressToExit()
         MainScreenContent(

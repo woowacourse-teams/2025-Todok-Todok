@@ -51,6 +51,14 @@ class DefaultNotificationRepository(
     override suspend fun readNotification(notificationId: Long): NetworkResult<Unit> =
         notificationRemoteDataSource.readNotification(notificationId)
 
+    override suspend fun allowedNotification(isReject: Boolean) {
+        notificationLocalDataSource.allowedNotification(isReject)
+    }
+
+    override suspend fun getIsNotificationAllowed(): Boolean? =
+        notificationLocalDataSource.getIsNotificationAllowed()
+
+
     private suspend fun saveNewPushNotificationToLocal(
         fcmToken: String,
         fId: String,

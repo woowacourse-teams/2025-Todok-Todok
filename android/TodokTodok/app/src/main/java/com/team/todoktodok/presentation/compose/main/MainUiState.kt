@@ -11,6 +11,8 @@ data class MainUiState(
     val bottomNavigationTab: MainDestination = MainDestination.Discussion,
     val hasUnreadNotification: Boolean = true,
     val searchBarVisible: Boolean = false,
+    val isAllowed: Boolean = true,
+    val isLoad: Boolean = false,
 ) {
     fun addSearchDiscussion(
         keyword: String,
@@ -32,14 +34,16 @@ data class MainUiState(
             allDiscussionMode = AllDiscussionMode.LATEST,
         )
 
-    fun modifySearchKeyword(keyword: String) = copy(searchDiscussion = searchDiscussion.modifyKeyword(keyword))
+    fun modifySearchKeyword(keyword: String) =
+        copy(searchDiscussion = searchDiscussion.modifyKeyword(keyword))
 
     fun removeDiscussion(discussionId: Long): MainUiState {
         val newAllDiscussionsUiState = searchDiscussion.remove(discussionId)
         return copy(newAllDiscussionsUiState)
     }
 
-    fun changeUnreadNotification(isExist: Boolean): MainUiState = copy(hasUnreadNotification = isExist)
+    fun changeUnreadNotification(isExist: Boolean): MainUiState =
+        copy(hasUnreadNotification = isExist)
 
     fun changeSearchBarVisibility(): MainUiState =
         if (searchBarVisible) {
@@ -52,5 +56,9 @@ data class MainUiState(
             copy(searchBarVisible = true)
         }
 
-    fun changeBottomNavigationTab(destination: MainDestination): MainUiState = copy(bottomNavigationTab = destination)
+    fun changeBottomNavigationTab(destination: MainDestination): MainUiState =
+        copy(bottomNavigationTab = destination)
+
+    fun changeAllowedNotification(isAllowed: Boolean): MainUiState =
+        copy(isAllowed = isAllowed, isLoad = true)
 }

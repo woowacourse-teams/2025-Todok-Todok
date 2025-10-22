@@ -30,6 +30,10 @@ class MainViewModel(
     private val _uiEvent = Channel<MainUiEvent>(Channel.BUFFERED)
     val uiEvent get() = _uiEvent.receiveAsFlow()
 
+    init {
+        getIsNotificationAllowed()
+    }
+
     fun sendPushNotificationToken() {
         viewModelScope.launch {
             notificationRepository
@@ -37,6 +41,24 @@ class MainViewModel(
                 .onFailure { exceptions ->
                     onUiEvent(MainUiEvent.ShowErrorMessage(exceptions))
                 }
+        }
+    }
+
+    fun allowedNotification(isAllowed: Boolean) {
+        viewModelScope.launch {
+            _uiState.update { it.changeAllowedNotification(isAllowed) }
+            notificationRepository.allowedNotification(_uiState.value.isAllowed)
+        }
+    }
+
+    fun getIsNotificationAllowed() {
+        viewModelScope.launch {
+            val result = notificationRepository.getIsNotificationAllowed()
+            if (result != null) {
+                _uiState.update { it.changeAllowedNotification(result) }
+            } else {
+                _uiState.update { it.changeAllowedNotification(true) }
+            }
         }
     }
 

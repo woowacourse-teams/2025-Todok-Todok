@@ -18,4 +18,9 @@ interface NotificationRepository {
     suspend fun deleteNotification(notificationId: Long): NetworkResult<Unit>
 
     suspend fun readNotification(notificationId: Long): NetworkResult<Unit>
+
+    suspend fun allowedNotification(isAllowed: Boolean)
+
+    suspend fun getIsNotificationAllowed(): Boolean?
+
 }
