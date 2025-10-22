@@ -6,7 +6,6 @@ import com.team.domain.repository.DiscussionRepository
 import com.team.todoktodok.presentation.compose.discussion.hot.HotDiscussionUiEvent
 import com.team.todoktodok.presentation.compose.discussion.hot.HotDiscussionUiState
 import com.team.todoktodok.presentation.core.base.BaseViewModel
-import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussion
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -28,7 +27,7 @@ class HotDiscussionViewModel(
     fun loadHotDiscussions() {
         viewModelScope.launch {
             loadPopularDiscussion()
-            loadActivatedDiscussions(true)
+            loadInitialActivatedDiscussions()
         }
     }
 
@@ -36,39 +35,50 @@ class HotDiscussionViewModel(
         runAsync(
             key = KEY_POPULAR_DISCUSSIONS,
             action = { discussionRepository.getHotDiscussion() },
-            handleSuccess = { result -> _uiState.update { it.addPopularDiscussions(result) } },
+            handleSuccess = { result -> _uiState.update { it.setPopularDiscussions(result) } },
             handleFailure = {
                 _uiState.update { state -> state.copy(isRefreshing = false) }
                 onUiEvent(HotDiscussionUiEvent.ShowErrorMessage(it))
             },
         )
 
-    fun loadActivatedDiscussions(initial: Boolean = false) {
-        val current = _uiState.value
-
-        if (!initial && (!current.hasNextPage || current.activatedDiscussions.notHasDiscussion)) return
-
-        val cursor = if (initial) null else current.activatedDiscussions.pageInfo.nextCursor
+    private fun loadInitialActivatedDiscussions() {
+        val currentState = _uiState.value
+        if (!currentState.activatedDiscussions.notHasDiscussion) {
+            _uiState.update { it.clearForRefresh() }
+        }
 
         runAsync(
             key = KEY_ACTIVATED_DISCUSSIONS,
-            action = { discussionRepository.getActivatedDiscussion(cursor = cursor) },
+            action = { discussionRepository.getActivatedDiscussion(cursor = null) },
             handleSuccess = { page ->
                 _uiState.update { it.appendActivatedDiscussion(page) }
             },
-            handleFailure = {
-                _uiState.update { state -> state.copy(isRefreshing = false) }
-                onUiEvent(HotDiscussionUiEvent.ShowErrorMessage(it))
+            handleFailure = { error ->
+                onUiEvent(HotDiscussionUiEvent.ShowErrorMessage(error))
             },
         )
     }
 
-    fun modifyDiscussion(discussion: SerializationDiscussion) {
-        _uiState.update { it.modifyDiscussion(discussion) }
-    }
+    fun loadNextActivatedDiscussions() {
+        val currentState = _uiState.value
+        val hasNextPage = currentState.hasNextPage
+        val hasData = !currentState.activatedDiscussions.notHasDiscussion
 
-    fun removeDiscussion(discussionId: Long) {
-        _uiState.update { it.removeDiscussion(discussionId) }
+        if (!hasNextPage || !hasData) return
+
+        val nextCursor = currentState.activatedDiscussions.pageInfo.nextCursor
+
+        runAsync(
+            key = KEY_ACTIVATED_DISCUSSIONS,
+            action = { discussionRepository.getActivatedDiscussion(cursor = nextCursor) },
+            handleSuccess = { page ->
+                _uiState.update { it.appendActivatedDiscussion(page) }
+            },
+            handleFailure = { error ->
+                onUiEvent(HotDiscussionUiEvent.ShowErrorMessage(error))
+            },
+        )
     }
 
     fun refreshHotDiscussions() {

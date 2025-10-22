@@ -1,7 +1,7 @@
 package com.team.todoktodok.data.network.response.latest
 
 import com.team.domain.model.Discussion
-import com.team.domain.model.latest.LatestDiscussionPage
+import com.team.domain.model.DiscussionPage
 import com.team.todoktodok.data.core.ext.toLocalDateTime
 import com.team.todoktodok.data.network.response.discussion.toDomain
 import kotlinx.serialization.Serializable
@@ -11,7 +11,7 @@ data class LatestDiscussionsResponse(
     val items: List<LatestDiscussionResponse>,
     val pageInfo: PageInfoResponse,
 ) {
-    fun toDomain(): LatestDiscussionPage {
+    fun toDomain(): DiscussionPage {
         val discussion =
             items.map {
                 Discussion(
@@ -28,7 +28,7 @@ data class LatestDiscussionsResponse(
                 )
             }
 
-        return LatestDiscussionPage(
+        return DiscussionPage(
             discussions = discussion,
             pageInfo = pageInfo.toDomain(),
         )

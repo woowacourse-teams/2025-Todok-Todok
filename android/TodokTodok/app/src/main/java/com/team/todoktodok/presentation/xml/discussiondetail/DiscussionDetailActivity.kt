@@ -21,7 +21,6 @@ import com.team.todoktodok.databinding.ActivityDiscussionDetailBinding
 import com.team.todoktodok.databinding.MenuExternalDiscussionBinding
 import com.team.todoktodok.databinding.MenuOwnedDiscussionBinding
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionResult.Companion.EXTRA_DELETE_DISCUSSION
-import com.team.todoktodok.presentation.compose.discussion.model.DiscussionResult.Companion.EXTRA_WATCHED_DISCUSSION
 import com.team.todoktodok.presentation.compose.main.MainActivity
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
@@ -354,11 +353,7 @@ class DiscussionDetailActivity : AppCompatActivity() {
             }
 
             else -> {
-                val resultIntent =
-                    Intent().apply {
-                        putExtra(EXTRA_WATCHED_DISCUSSION, discussion)
-                    }
-                setResult(RESULT_OK, resultIntent)
+                setResult(RESULT_OK)
                 finish()
             }
         }

@@ -17,19 +17,15 @@ import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import com.team.todoktodok.R
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionTabStatus
-import com.team.todoktodok.presentation.compose.main.MainDestination
 import com.team.todoktodok.presentation.compose.my.MyProfileUiState
 import com.team.todoktodok.presentation.compose.my.books.ActivatedBooksScreen
 import com.team.todoktodok.presentation.compose.my.liked.LikedDiscussionsScreen
@@ -38,7 +34,6 @@ import com.team.todoktodok.presentation.compose.preview.MyProfileUiStatePreviewP
 import com.team.todoktodok.presentation.compose.theme.Green1A
 import com.team.todoktodok.presentation.compose.theme.Pretendard
 import com.team.todoktodok.presentation.compose.theme.White
-import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussion
 import kotlinx.coroutines.launch
 
 enum class ProfileTabDestination(
@@ -61,11 +56,9 @@ enum class ProfileTabDestination(
 @Composable
 fun ProfileTab(
     uiState: MyProfileUiState,
-    navController: NavHostController,
-    onCompleteRemoveDiscussion: (Long) -> Unit,
+    navigateToDiscussion: () -> Unit,
+    onCompleteShowDiscussionDetail: () -> Unit,
     onChangeShowMyDiscussion: (Boolean) -> Unit,
-    onCompleteModifyDiscussion: (SerializationDiscussion) -> Unit,
-    onChangeBottomNavigationTab: (MainDestination) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val pagerState =
@@ -77,12 +70,10 @@ fun ProfileTab(
         ProfileTabRow(pagerState)
         ProfileTabPager(
             uiState = uiState,
-            navController = navController,
             pagerState = pagerState,
-            onChangeBottomNavigationTab = onChangeBottomNavigationTab,
-            onChangeShowMyDiscussion = { onChangeShowMyDiscussion(it) },
-            onCompleteRemoveDiscussion = onCompleteRemoveDiscussion,
-            onCompleteModifyDiscussion = onCompleteModifyDiscussion,
+            navigateToDiscussion = navigateToDiscussion,
+            onCompleteShowDiscussionDetail = onCompleteShowDiscussionDetail,
+            onChangeShowMyDiscussion = onChangeShowMyDiscussion,
         )
     }
 }
@@ -128,39 +119,41 @@ private fun ProfileTabRow(pagerState: PagerState) {
 @Composable
 private fun ProfileTabPager(
     uiState: MyProfileUiState,
-    navController: NavHostController,
     pagerState: PagerState,
-    onChangeBottomNavigationTab: (MainDestination) -> Unit,
+    navigateToDiscussion: () -> Unit,
     onChangeShowMyDiscussion: (Boolean) -> Unit,
-    onCompleteRemoveDiscussion: (Long) -> Unit,
-    onCompleteModifyDiscussion: (SerializationDiscussion) -> Unit,
+    onCompleteShowDiscussionDetail: () -> Unit,
 ) {
     HorizontalPager(
         state = pagerState,
         modifier = Modifier.fillMaxSize(),
     ) { page ->
-        Box(
+        Column(
             modifier =
                 Modifier
                     .fillMaxSize()
                     .background(White),
-            contentAlignment = Alignment.Center,
         ) {
             when (ProfileTabDestination.entries[page]) {
                 ProfileTabDestination.ACTIVATED_BOOKS ->
                     ActivatedBooksScreen(
                         uiState = uiState.activatedBooks,
-                        navController = navController,
-                        onChangeBottomNavigationTab = onChangeBottomNavigationTab,
+                        navigateToDiscussion = navigateToDiscussion,
                     )
 
-                ProfileTabDestination.LIKED_DISCUSSIONS -> LikedDiscussionsScreen()
+                ProfileTabDestination.LIKED_DISCUSSIONS -> {
+                    LikedDiscussionsScreen(
+                        uiState = uiState.likedDiscussions,
+                        onCompleteShowDiscussionDetail = onCompleteShowDiscussionDetail,
+                        navigateToDiscussion = navigateToDiscussion,
+                    )
+                }
+
                 ProfileTabDestination.PARTICIPATED_DISCUSSIONS ->
                     ParticipatedDiscussionsScreen(
                         uiState = uiState.participatedDiscussions,
                         onChangeShowMyDiscussion = { onChangeShowMyDiscussion(it) },
-                        onCompleteRemoveDiscussion = onCompleteRemoveDiscussion,
-                        onCompleteModifyDiscussion = onCompleteModifyDiscussion,
+                        onCompleteShowDiscussionDetail = onCompleteShowDiscussionDetail,
                     )
             }
         }
@@ -175,10 +168,8 @@ private fun ProfileTabPreview(
 ) {
     ProfileTab(
         uiState = uiState,
-        navController = NavHostController(LocalContext.current),
-        onChangeBottomNavigationTab = {},
+        navigateToDiscussion = {},
+        onCompleteShowDiscussionDetail = {},
         onChangeShowMyDiscussion = {},
-        onCompleteRemoveDiscussion = {},
-        onCompleteModifyDiscussion = {},
     )
 }

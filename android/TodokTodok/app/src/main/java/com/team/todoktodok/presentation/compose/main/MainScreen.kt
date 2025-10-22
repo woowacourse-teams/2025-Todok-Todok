@@ -31,7 +31,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.team.todoktodok.App
 import com.team.todoktodok.R
@@ -60,7 +59,6 @@ fun MainScreen(
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
-    val navController = rememberNavController()
     val snackbarHostState = remember { SnackbarHostState() }
     var showNotificationSheet by remember { mutableStateOf(false) }
 
@@ -154,7 +152,6 @@ fun MainScreen(
         BackPressToExit()
         MainScreenContent(
             uiState = uiState.value,
-            navController = navController,
             pagerState = pagerState,
             onSearch = viewModel::loadSearchedDiscussions,
             onChangeSearchBarVisibility = viewModel::changeSearchBarVisibility,
@@ -171,7 +168,6 @@ fun MainScreen(
 @Composable
 fun MainScreenContent(
     uiState: MainUiState,
-    navController: NavHostController,
     pagerState: PagerState,
     onSearch: () -> Unit,
     onChangeSearchBarVisibility: () -> Unit,
@@ -182,6 +178,7 @@ fun MainScreenContent(
     onCompleteModifyDiscussion: (SerializationDiscussion) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val navController = rememberNavController()
     Scaffold(
         bottomBar = {
             MainBottomNavigation(
@@ -210,8 +207,11 @@ fun MainScreenContent(
             onCompleteRemoveDiscussion = onCompleteRemoveDiscussion,
             onCompleteModifyDiscussion = onCompleteModifyDiscussion,
             onChangeSearchBarVisibility = onChangeSearchBarVisibility,
-            onChangeBottomNavigationTab = onChangeBottomNavigationTab,
             onChangeIsExistNotification = onChangeIsExistNotification,
+            navigateToDiscussion = {
+                navController.navigate(MainDestination.Discussion.route)
+                onChangeBottomNavigationTab(MainDestination.Discussion)
+            },
             modifier = Modifier.padding(innerPadding),
         )
     }

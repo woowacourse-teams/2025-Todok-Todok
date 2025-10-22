@@ -60,9 +60,6 @@ class ActivatedBooksFragment : BaseProfileFragment(R.layout.fragment_activated_b
             rvBooks.visibility = View.GONE
             viewResourceNotFound.show(
                 getString(R.string.profile_not_has_activated_book_title),
-                getString(R.string.profile_not_has_activated_book_subtitle),
-                getString(R.string.profile_action_activated_book),
-                { moveToDiscussions() },
             )
         }
     }
@@ -71,10 +68,6 @@ class ActivatedBooksFragment : BaseProfileFragment(R.layout.fragment_activated_b
         binding.viewResourceNotFound.hide()
         binding.rvBooks.visibility = View.VISIBLE
         booksAdapter.submitList(activatedBooks)
-    }
-
-    private fun moveToDiscussions() {
-        requireActivity().finish()
     }
 
     override fun onResume() {

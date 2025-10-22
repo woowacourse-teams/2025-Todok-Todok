@@ -25,37 +25,33 @@ import androidx.compose.ui.unit.dp
 import com.team.todoktodok.R
 import com.team.todoktodok.presentation.compose.core.component.DiscussionCard
 import com.team.todoktodok.presentation.compose.core.component.ResourceNotFoundContent
-import com.team.todoktodok.presentation.compose.discussion.model.DiscussionResult
 import com.team.todoktodok.presentation.compose.preview.ParticipatedDiscussionPreviewParameterProvider
 import com.team.todoktodok.presentation.compose.theme.Green1A
 import com.team.todoktodok.presentation.compose.theme.White
 import com.team.todoktodok.presentation.xml.book.SelectBookActivity
 import com.team.todoktodok.presentation.xml.discussiondetail.DiscussionDetailActivity
-import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussion
 
 @Composable
 fun ParticipatedDiscussionsScreen(
     uiState: ParticipatedDiscussionsUiState,
     onChangeShowMyDiscussion: (Boolean) -> Unit,
-    onCompleteRemoveDiscussion: (Long) -> Unit,
-    onCompleteModifyDiscussion: (SerializationDiscussion) -> Unit,
+    onCompleteShowDiscussionDetail: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     if (uiState.isEmpty()) {
-        ParticipatedDiscussionsEmpty()
+        EmptyParticipatedDiscussionsContent()
     } else {
         ParticipatedDiscussionsContent(
             uiState = uiState,
             onChangeShowMyDiscussion = onChangeShowMyDiscussion,
-            onCompleteRemoveDiscussion = onCompleteRemoveDiscussion,
-            onCompleteModifyDiscussion = onCompleteModifyDiscussion,
+            onCompleteShowDiscussionDetail = onCompleteShowDiscussionDetail,
             modifier = modifier,
         )
     }
 }
 
 @Composable
-private fun ParticipatedDiscussionsEmpty(modifier: Modifier = Modifier) {
+private fun EmptyParticipatedDiscussionsContent(modifier: Modifier = Modifier) {
     val context = LocalContext.current
     ResourceNotFoundContent(
         title = stringResource(R.string.profile_not_has_participated_discussions_title),
@@ -72,8 +68,7 @@ private fun ParticipatedDiscussionsEmpty(modifier: Modifier = Modifier) {
 private fun ParticipatedDiscussionsContent(
     uiState: ParticipatedDiscussionsUiState,
     onChangeShowMyDiscussion: (Boolean) -> Unit,
-    onCompleteRemoveDiscussion: (Long) -> Unit,
-    onCompleteModifyDiscussion: (SerializationDiscussion) -> Unit,
+    onCompleteShowDiscussionDetail: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.padding(10.dp)) {
@@ -101,8 +96,7 @@ private fun ParticipatedDiscussionsContent(
 
         DiscussionCards(
             uiState = uiState,
-            onCompleteRemoveDiscussion = onCompleteRemoveDiscussion,
-            onCompleteModifyDiscussion = onCompleteModifyDiscussion,
+            onCompleteShowDiscussionDetail = onCompleteShowDiscussionDetail,
         )
     }
 }
@@ -110,26 +104,21 @@ private fun ParticipatedDiscussionsContent(
 @Composable
 private fun DiscussionCards(
     uiState: ParticipatedDiscussionsUiState,
-    onCompleteRemoveDiscussion: (Long) -> Unit,
-    onCompleteModifyDiscussion: (SerializationDiscussion) -> Unit,
+    onCompleteShowDiscussionDetail: () -> Unit,
 ) {
     val activityResultLauncher =
         rememberLauncherForActivityResult(
             ActivityResultContracts.StartActivityForResult(),
         ) { result ->
             if (result.resultCode == RESULT_OK) {
-                result.data?.let { data ->
-                    when (val result = DiscussionResult.fromIntent(data)) {
-                        is DiscussionResult.Deleted -> onCompleteRemoveDiscussion(result.id)
-                        is DiscussionResult.Watched -> onCompleteModifyDiscussion(result.discussion)
-                        DiscussionResult.None -> Unit
-                    }
-                }
+                onCompleteShowDiscussionDetail()
             }
         }
 
     val context = LocalContext.current
-    uiState.visibleDiscussions(uiState.showMyDiscussion).forEach { discussion ->
+    val discussions = if (uiState.showMyDiscussion) uiState.myDiscussion else uiState.discussions
+
+    discussions.forEach { discussion ->
         DiscussionCard(
             uiState = discussion,
             discussionCardType = uiState.type,
@@ -152,8 +141,7 @@ private fun EmptyParticipatedDiscussionsScreenPreview() {
     ParticipatedDiscussionsScreen(
         uiState = ParticipatedDiscussionsUiState(),
         onChangeShowMyDiscussion = {},
-        onCompleteRemoveDiscussion = {},
-        onCompleteModifyDiscussion = {},
+        onCompleteShowDiscussionDetail = {},
     )
 }
 
@@ -166,8 +154,7 @@ private fun ParticipatedDiscussionsScreenPreview(
     ParticipatedDiscussionsScreen(
         uiState = uiState,
         onChangeShowMyDiscussion = {},
-        onCompleteRemoveDiscussion = {},
-        onCompleteModifyDiscussion = {},
+        onCompleteShowDiscussionDetail = {},
     )
 }
 
@@ -178,9 +165,8 @@ private fun MyParticipatedDiscussionsScreenPreview(
     uiState: ParticipatedDiscussionsUiState,
 ) {
     ParticipatedDiscussionsScreen(
-        uiState = uiState.copy(showMyDiscussion = true, memberId = 1),
+        uiState = uiState.copy(showMyDiscussion = true),
         onChangeShowMyDiscussion = {},
-        onCompleteRemoveDiscussion = {},
-        onCompleteModifyDiscussion = {},
+        onCompleteShowDiscussionDetail = {},
     )
 }

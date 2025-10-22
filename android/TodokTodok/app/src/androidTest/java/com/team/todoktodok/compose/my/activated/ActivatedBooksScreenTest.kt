@@ -1,10 +1,8 @@
 package com.team.todoktodok.compose.my.activated
 
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
-import androidx.navigation.NavHostController
 import com.team.todoktodok.presentation.compose.my.books.ActivatedBooksScreen
 import com.team.todoktodok.presentation.compose.my.books.MyBooksUiModel
 import org.junit.Rule
@@ -23,8 +21,7 @@ class ActivatedBooksScreenTest {
         composeTestRule.setContent {
             ActivatedBooksScreen(
                 uiState = uiState,
-                onChangeBottomNavigationTab = {},
-                navController = NavHostController(LocalContext.current),
+                navigateToDiscussion = {},
             )
         }
 

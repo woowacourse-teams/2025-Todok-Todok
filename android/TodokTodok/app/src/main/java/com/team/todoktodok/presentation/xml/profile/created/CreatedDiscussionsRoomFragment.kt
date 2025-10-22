@@ -9,7 +9,6 @@ import com.team.todoktodok.databinding.FragmentCreatedDiscussionsRoomBinding
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiModel
 import com.team.todoktodok.presentation.core.component.adapter.BaseDiscussionViewHolder
 import com.team.todoktodok.presentation.core.component.adapter.DiscussionAdapter
-import com.team.todoktodok.presentation.xml.book.SelectBookActivity
 import com.team.todoktodok.presentation.xml.discussiondetail.DiscussionDetailActivity
 import com.team.todoktodok.presentation.xml.profile.BaseProfileFragment
 
@@ -64,9 +63,7 @@ class CreatedDiscussionsRoomFragment : BaseProfileFragment(R.layout.fragment_cre
             rvDiscussions.visibility = View.GONE
             viewResourceNotFound.show(
                 getString(R.string.profile_not_has_created_discussion_title),
-                getString(R.string.profile_not_has_created_discussion_subtitle),
-                getString(R.string.profile_action_created_discussion),
-            ) { moveToCreateDiscussion() }
+            )
         }
     }
 
@@ -74,11 +71,6 @@ class CreatedDiscussionsRoomFragment : BaseProfileFragment(R.layout.fragment_cre
         binding.viewResourceNotFound.hide()
         binding.rvDiscussions.visibility = View.VISIBLE
         discussionAdapter.submitList(discussions)
-    }
-
-    private fun moveToCreateDiscussion() {
-        val intent = SelectBookActivity.Intent(requireContext())
-        startActivity(intent)
     }
 
     private val userDiscussionAdapterHandler =
