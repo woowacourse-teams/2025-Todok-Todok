@@ -26,10 +26,10 @@ class ReplyItemViewHolder private constructor(
             tvLikeCount.text = reply.likeCount.toString()
             ivUserProfile.loadCircleImage(replyItem.value.reply.writer.profileImage)
             ivUserProfile.setOnClickListener {
-                handler.onClickReplyUser(reply.writer.id)
+                handler.onClickReplyUser(reply.writer.id, reply.writer.nickname)
             }
             tvUserNickname.setOnClickListener {
-                handler.onClickReplyUser(reply.writer.id)
+                handler.onClickReplyUser(reply.writer.id, reply.writer.nickname)
             }
             ivReplyOption.setOnClickListener {
                 handler.onClickReplyOption(replyItem, ivReplyOption)
@@ -51,7 +51,10 @@ class ReplyItemViewHolder private constructor(
     interface Handler {
         fun onClickReplyLike(replyId: Long)
 
-        fun onClickReplyUser(userId: Long)
+        fun onClickReplyUser(
+            userId: Long,
+            userName: String,
+        )
 
         fun onClickReplyOption(
             item: CommentDetailItems.ReplyItem,

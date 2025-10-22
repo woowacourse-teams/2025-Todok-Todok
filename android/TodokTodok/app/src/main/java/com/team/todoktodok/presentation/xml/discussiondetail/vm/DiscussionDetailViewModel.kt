@@ -160,9 +160,16 @@ class DiscussionDetailViewModel(
         viewModelScope.launch {
             val currentUiState = _uiState.value ?: return@launch
             if (currentUiState !is DiscussionDetailUiState.Success) return@launch
-            val writerId = currentUiState.discussion.writer.id
-            val isMyId = writerId == tokenRepository.getMemberId()
-            if (!isMyId) onUiEvent(DiscussionDetailUiEvent.NavigateToProfile(writerId))
+            val writer = currentUiState.discussion.writer
+            val isWithdrewMemberName = writer.nickname == WITHDREW_MEMBER_NAME
+            val isMyId = writer.id == tokenRepository.getMemberId()
+            if (!isMyId && !isWithdrewMemberName) {
+                onUiEvent(
+                    DiscussionDetailUiEvent.NavigateToProfile(
+                        writer.id,
+                    ),
+                )
+            }
         }
     }
 
@@ -226,6 +233,7 @@ class DiscussionDetailViewModel(
         const val KEY_DISCUSSION_ID = "discussionId"
         const val KEY_MODE = "mode"
 
+        private const val WITHDREW_MEMBER_NAME = "(알수없음)"
         private const val THROW_DISCUSSION_ID = -1L
     }
 }
