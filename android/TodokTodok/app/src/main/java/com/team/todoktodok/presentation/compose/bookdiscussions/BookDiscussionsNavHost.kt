@@ -1,6 +1,5 @@
 package com.team.todoktodok.presentation.compose.bookdiscussions
 
-import android.annotation.SuppressLint
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -20,11 +19,10 @@ data class BookDetailRoute(
     val bookId: Long,
 )
 
-@SuppressLint("ComposeViewModelInjection")
 @Composable
 fun BookDetailNavHost(
     startBookId: Long,
-    onNavigateToMain: () -> Unit,
+    onNavigateToBack: () -> Unit,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
 ) {
@@ -43,7 +41,7 @@ fun BookDetailNavHost(
             composable<BookDetailRoute> { backStackEntry ->
                 BookDetailEntry(
                     backStackEntry,
-                    onNavigateToMain,
+                    onNavigateToBack,
                     modifier,
                 )
             }

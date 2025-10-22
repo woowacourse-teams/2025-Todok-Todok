@@ -54,7 +54,7 @@ class BookDiscussionsViewModel(
         )
     }
 
-    private fun loadBookDiscussions() {
+    fun loadBookDiscussions() {
         runAsync(
             LOAD_BOOK_DISCUSSIONS_KEY,
             { bookRepository.getBookDiscussions(bookId, BOOK_DISCUSSIONS_PAGING_SIZE, null) },

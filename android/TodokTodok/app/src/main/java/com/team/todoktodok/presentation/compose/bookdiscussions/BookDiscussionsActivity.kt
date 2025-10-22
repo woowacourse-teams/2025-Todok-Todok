@@ -14,13 +14,13 @@ class BookDiscussionsActivity : AppCompatActivity() {
             TodoktodokTheme {
                 BookDetailNavHost(
                     intent.getLongExtra(BOOK_ID_KEY, -1L),
-                    ::navigateToMain,
+                    ::navigateToBack,
                 )
             }
         }
     }
 
-    fun navigateToMain() {
+    fun navigateToBack() {
         onBackPressedDispatcher.onBackPressed()
     }
 

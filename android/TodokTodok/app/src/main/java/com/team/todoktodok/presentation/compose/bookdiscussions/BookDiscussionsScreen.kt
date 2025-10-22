@@ -49,6 +49,7 @@ fun BookDetailEntry(
     BookDetailScreen(
         uiState,
         viewModel::loadMoreItems,
+        viewModel::loadBookDiscussions,
         onNavigateToMain,
         modifier,
     )
@@ -58,6 +59,7 @@ fun BookDetailEntry(
 fun BookDetailScreen(
     uiState: BookDiscussionsUiState,
     loadMoreItems: () -> Unit,
+    reloadBookDiscussions: () -> Unit,
     onNavigateToMain: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -80,6 +82,7 @@ fun BookDetailScreen(
             uiState.bookDetailSectionUiState,
             uiState.bookDiscussionsSectionUiState,
             loadMoreItems,
+            reloadBookDiscussions,
             Modifier.padding(innerPadding),
         )
     }

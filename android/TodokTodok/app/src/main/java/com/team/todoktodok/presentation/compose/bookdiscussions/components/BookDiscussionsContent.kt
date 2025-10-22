@@ -1,5 +1,8 @@
 package com.team.todoktodok.presentation.compose.bookdiscussions.components
 
+import android.app.Activity.RESULT_OK
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -32,10 +35,12 @@ fun BookDiscussionsContent(
     bookDetailSectionUiState: BookDetailSectionUiState,
     bookDiscussionsSectionUiState: BookDiscussionsSectionUiState,
     loadMoreItems: () -> Unit,
+    reloadBookDiscussions: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
     val listState = rememberLazyListState()
+    val reloadBookDiscussionsLauncher = reloadBookDiscussionsLauncher(reloadBookDiscussions)
 
     LaunchedEffect(
         listState,
@@ -66,12 +71,12 @@ fun BookDiscussionsContent(
             Spacer(Modifier.height(20.dp))
         }
         bookDiscussionsSectionItems(bookDiscussionsSectionUiState) {
-            context.startActivity(DiscussionDetailActivity.Intent(context, it))
+            reloadBookDiscussionsLauncher.launch(DiscussionDetailActivity.Intent(context, it))
         }
     }
 }
 
-fun LazyListScope.bookDiscussionsSectionItems(
+private fun LazyListScope.bookDiscussionsSectionItems(
     uiState: BookDiscussionsSectionUiState,
     onActionClick: (Long) -> Unit = {},
 ) {
@@ -95,6 +100,16 @@ fun LazyListScope.bookDiscussionsSectionItems(
         }
     }
 }
+
+@Composable
+private fun reloadBookDiscussionsLauncher(reloadBookDiscussions: () -> Unit) =
+    rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult(),
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            reloadBookDiscussions()
+        }
+    }
 
 @Preview(showBackground = true)
 @Composable
@@ -129,6 +144,7 @@ private fun BookDiscussionsContentPreview() {
     BookDiscussionsContent(
         bookDetailSectionUiState,
         bookDiscussionsSectionUiState,
+        {},
         {},
         Modifier.height(500.dp),
     )
