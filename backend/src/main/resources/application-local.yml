@@ -30,6 +30,11 @@ spring:
 auth:
   mode: bypass
 
+server:
+  tomcat:
+    max-http-form-post-size: 15728640
+    max-swallow-size: 15728640
+
 firebase:
   enabled: false
   account:
