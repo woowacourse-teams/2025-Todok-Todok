@@ -2,6 +2,7 @@ package com.team.todoktodok.presentation.compose.bookdiscussions.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.offset
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -13,6 +14,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.team.todoktodok.R
 
@@ -24,7 +26,7 @@ fun BookDiscussionsTopAppBar(
 ) {
     CenterAlignedTopAppBar(
         title = { Title() },
-        modifier = modifier,
+        modifier = modifier.offset(x = (-4).dp, y = (-4).dp),
         navigationIcon = {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -46,7 +48,7 @@ private fun Title(modifier: Modifier = Modifier) {
     Text(
         stringResource(R.string.book_discussions_title),
         fontSize = 20.sp,
-        fontWeight = FontWeight.Bold,
+        fontWeight = FontWeight.SemiBold,
         modifier = modifier,
     )
 }
