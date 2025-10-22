@@ -205,6 +205,13 @@ class CommentDetailViewModel(
         scheduleCoalescedCommentToggle(initialLikeCount)
     }
 
+    fun navigateToProfile(memberId: Long) {
+        viewModelScope.launch {
+            val isMyId = tokenRepository.getMemberId() == memberId
+            if (!isMyId) onUiEvent(CommentDetailUiEvent.NavigateToProfile(memberId))
+        }
+    }
+
     private fun applyOptimisticCommentToggle(
         prevState: CommentDetailUiState,
         commentItemUiState: CommentItemUiState,

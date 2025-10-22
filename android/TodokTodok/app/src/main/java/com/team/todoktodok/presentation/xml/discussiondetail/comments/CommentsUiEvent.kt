@@ -1,6 +1,7 @@
 package com.team.todoktodok.presentation.xml.discussiondetail.comments
 
 import com.team.domain.model.exception.TodokTodokExceptions
+import com.team.todoktodok.presentation.xml.discussiondetail.DiscussionDetailUiEvent
 
 sealed interface CommentsUiEvent {
     data class ShowCommentCreate(
@@ -23,4 +24,8 @@ sealed interface CommentsUiEvent {
     ) : CommentsUiEvent
 
     data object ShowReportCommentSuccessMessage : CommentsUiEvent
+
+    data class NavigateToProfile(
+        val memberId: Long,
+    ) : CommentsUiEvent
 }
