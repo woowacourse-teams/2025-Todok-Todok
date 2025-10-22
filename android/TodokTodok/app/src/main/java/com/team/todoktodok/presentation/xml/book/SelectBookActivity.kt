@@ -273,6 +273,7 @@ class SelectBookActivity : AppCompatActivity() {
                 SerializationCreateDiscussionRoomMode.Create(serializationBook),
             )
         startActivity(intent)
+        viewModel.deleteInformation()
         finish()
     }
 
