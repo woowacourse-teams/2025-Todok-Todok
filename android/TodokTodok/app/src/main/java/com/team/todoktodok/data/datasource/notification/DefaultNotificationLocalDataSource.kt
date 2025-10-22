@@ -12,4 +12,10 @@ class DefaultNotificationLocalDataSource(
     override suspend fun saveFcmToken(token: String) = dataStore.saveFcmToken(token)
 
     override suspend fun saveFId(id: String) = dataStore.saveFId(id)
+
+    override suspend fun allowedNotification(isAllowed: Boolean) {
+        dataStore.allowedNotification(isAllowed)
+    }
+
+    override suspend fun getIsNotificationAllowed(): Boolean? = dataStore.getIsNotificationAllowed()
 }

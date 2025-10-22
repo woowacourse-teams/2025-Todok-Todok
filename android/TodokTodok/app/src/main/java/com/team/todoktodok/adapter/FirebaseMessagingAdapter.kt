@@ -1,7 +1,6 @@
 package com.team.todoktodok.adapter
 
 import android.Manifest
-import android.R
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -17,6 +16,7 @@ import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.team.todoktodok.App
+import com.team.todoktodok.R
 import com.team.todoktodok.adapter.model.FcmNotification
 import com.team.todoktodok.adapter.model.FcmNotification.Companion.FcmNotification
 import com.team.todoktodok.presentation.compose.main.MainActivity
@@ -86,7 +86,7 @@ class FirebaseMessagingAdapter : FirebaseMessagingService() {
         val alert =
             NotificationCompat
                 .Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_notification_overlay)
+                .setSmallIcon(R.drawable.ic_todoktodok)
                 .setContentTitle(title)
                 .setContentText(body)
                 .setStyle(NotificationCompat.BigTextStyle().bigText(body))

@@ -9,6 +9,7 @@ class NotificationDiffUtil : DiffUtil.ItemCallback<NotificationGroup>() {
     ): Boolean =
         when {
             oldItem is NotificationGroup.Information && newItem is NotificationGroup.Information -> true
+            oldItem is NotificationGroup.Count && newItem is NotificationGroup.Count -> true
             oldItem is NotificationGroup.Notification && newItem is NotificationGroup.Notification ->
                 oldItem.notification.id ==
                     newItem.notification.id
@@ -21,7 +22,8 @@ class NotificationDiffUtil : DiffUtil.ItemCallback<NotificationGroup>() {
         newItem: NotificationGroup,
     ): Boolean =
         when {
-            oldItem is NotificationGroup.Information && newItem is NotificationGroup.Information -> oldItem == newItem
+            oldItem is NotificationGroup.Information && newItem is NotificationGroup.Information -> true
+            oldItem is NotificationGroup.Count && newItem is NotificationGroup.Count -> oldItem == newItem
             oldItem is NotificationGroup.Notification && newItem is NotificationGroup.Notification ->
                 oldItem.notification ==
                     newItem.notification

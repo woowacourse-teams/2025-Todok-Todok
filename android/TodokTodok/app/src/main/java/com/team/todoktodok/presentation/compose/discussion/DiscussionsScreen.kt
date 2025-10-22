@@ -46,6 +46,7 @@ fun DiscussionsScreen(
     onSearch: () -> Unit,
     onChangeSearchBarVisibility: () -> Unit,
     onChangeKeyword: (String) -> Unit,
+    onChangeIsExistNotification: () -> Unit,
     onCompleteRemoveDiscussion: (Long) -> Unit,
     onCompleteModifyDiscussion: (SerializationDiscussion) -> Unit,
     modifier: Modifier = Modifier,
@@ -58,6 +59,7 @@ fun DiscussionsScreen(
             mainUiState = mainUiState,
             onSearch = onSearch,
             onChangeSearchBarVisibility = onChangeSearchBarVisibility,
+            onChangeIsExistNotification = onChangeIsExistNotification,
             onKeywordChange = { onChangeKeyword(it) },
         )
 
@@ -143,6 +145,7 @@ private fun DiscussionsScreenPreview() {
         onCompleteModifyDiscussion = {},
         onSearch = {},
         onChangeSearchBarVisibility = {},
+        onChangeIsExistNotification = {},
         onChangeKeyword = {},
     )
 }
