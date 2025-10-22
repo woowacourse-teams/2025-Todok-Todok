@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -30,6 +31,15 @@ class NotificationActivity : AppCompatActivity() {
             repositoryModule.notificationRepository,
         )
     }
+
+    private val launcher =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult(),
+        ) { result ->
+            if (result.resultCode == RESULT_OK) {
+                viewModel.initNotifications()
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,7 +72,7 @@ class NotificationActivity : AppCompatActivity() {
             when (uiEvent) {
                 is NotificationUiEvent.NavigateToDiscussionRoom -> {
                     val intent = DiscussionDetailActivity.Intent(this, uiEvent.discussionRoomId)
-                    startActivity(intent)
+                    launcher.launch(intent)
                 }
 
                 is NotificationUiEvent.ShowException -> {

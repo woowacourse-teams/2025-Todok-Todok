@@ -104,31 +104,43 @@ class DiscussionDetailViewModel(
     fun toggleLike() {
         val currentUiState = _uiState.value ?: return
         if (currentUiState !is DiscussionDetailUiState.Success) return
+
         val currentDiscussion = currentUiState.discussion
         val desiredIsLikedByMe = !currentDiscussion.isLikedByMe
         val likeCountDelta = if (desiredIsLikedByMe) 1 else -1
+        val previousDiscussion = currentDiscussion
+
         _uiState.value =
             currentUiState.copy(
                 discussion =
-                    currentUiState.discussion.copy(
+                    currentDiscussion.copy(
                         isLikedByMe = desiredIsLikedByMe,
-                        likeCount =
-                            (currentUiState.discussion.likeCount + likeCountDelta).coerceAtLeast(
-                                0,
-                            ),
+                        likeCount = (currentDiscussion.likeCount + likeCountDelta).coerceAtLeast(0),
                     ),
             )
+
         coalesceJob?.cancel()
         coalesceJob =
             viewModelScope.launch {
                 delay(250)
-                val currentUiState = _uiState.value ?: return@launch
-                if (currentUiState !is DiscussionDetailUiState.Success) return@launch
-                val isToggle =
-                    currentDiscussion.likeCount != currentUiState.discussion.likeCount
-                if (!isToggle) return@launch
-                handleResult(discussionRepository.toggleLike(discussionId ?: THROW_DISCUSSION_ID)) {
-                    loadDiscussionRoom()
+                val latestUiState = _uiState.value ?: return@launch
+                if (latestUiState !is DiscussionDetailUiState.Success) return@launch
+                val latestDiscussion = latestUiState.discussion
+                if (latestDiscussion.isLikedByMe != desiredIsLikedByMe) return@launch
+
+                val requestDiscussionId = latestDiscussion.id
+                when (val result = discussionRepository.toggleLike(requestDiscussionId)) {
+                    is NetworkResult.Success -> {
+                        loadDiscussionRoom()
+                    }
+
+                    is NetworkResult.Failure -> {
+                        val rollbackUiState = _uiState.value
+                        if (rollbackUiState is DiscussionDetailUiState.Success) {
+                            _uiState.value = rollbackUiState.copy(discussion = previousDiscussion)
+                        }
+                        onUiEvent(DiscussionDetailUiEvent.ShowErrorMessage(result.exception))
+                    }
                 }
             }
     }
@@ -148,9 +160,16 @@ class DiscussionDetailViewModel(
         viewModelScope.launch {
             val currentUiState = _uiState.value ?: return@launch
             if (currentUiState !is DiscussionDetailUiState.Success) return@launch
-            val writerId = currentUiState.discussion.writer.id
-            val isMyId = writerId == tokenRepository.getMemberId()
-            if (!isMyId) onUiEvent(DiscussionDetailUiEvent.NavigateToProfile(writerId))
+            val writer = currentUiState.discussion.writer
+            val isWithdrewMemberName = writer.nickname == WITHDREW_MEMBER_NAME
+            val isMyId = writer.id == tokenRepository.getMemberId()
+            if (!isMyId && !isWithdrewMemberName) {
+                onUiEvent(
+                    DiscussionDetailUiEvent.NavigateToProfile(
+                        writer.id,
+                    ),
+                )
+            }
         }
     }
 
@@ -199,7 +218,6 @@ class DiscussionDetailViewModel(
                         onUiEvent(
                             DiscussionDetailUiEvent.ShowErrorMessage(result.exception),
                         )
-                        _uiState.value = DiscussionDetailUiState.Failure(result.exception)
                     }
                 }
             }
@@ -214,6 +232,7 @@ class DiscussionDetailViewModel(
         const val KEY_DISCUSSION_ID = "discussionId"
         const val KEY_MODE = "mode"
 
+        private const val WITHDREW_MEMBER_NAME = "(알수없음)"
         private const val THROW_DISCUSSION_ID = -1L
     }
 }

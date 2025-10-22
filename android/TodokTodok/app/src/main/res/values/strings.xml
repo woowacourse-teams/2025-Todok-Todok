@@ -353,4 +353,7 @@
     <string name="drafts_no_title">제목 없음</string>
     <string name="drafts_no_description">내용 없음</string>
     <string name="drafts_no_exist">잠시 오류가 생겼습니다. 다시 선택해주세요</string>
+    <string name="notification_reply">%s님이 %s에 대댓글을 남겼습니다</string>
+    <string name="notification_like">%s님이 %s에 ❤️를 보냈습니다</string>
+    <string name="notification_comment">%s님이 %s에 댓글을 남겼습니다</string>
 </resources>

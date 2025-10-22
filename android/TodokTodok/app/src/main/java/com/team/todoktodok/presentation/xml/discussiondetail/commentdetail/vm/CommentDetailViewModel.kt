@@ -205,10 +205,20 @@ class CommentDetailViewModel(
         scheduleCoalescedCommentToggle(initialLikeCount)
     }
 
-    fun navigateToOtherUserProfile(memberId: Long) {
+    fun navigateToOtherUserProfile(
+        memberId: Long,
+        memberName: String,
+    ) {
         viewModelScope.launch {
-            val isMyId = tokenRepository.getMemberId() == memberId
-            if (!isMyId) onUiEvent(CommentDetailUiEvent.NavigateToProfile(memberId))
+            val isWithdrewMemberName = memberName == WITHDREW_MEMBER_NAME
+            val isMyId = memberId == tokenRepository.getMemberId()
+            if (!isMyId && !isWithdrewMemberName) {
+                onUiEvent(
+                    CommentDetailUiEvent.NavigateToProfile(
+                        memberId,
+                    ),
+                )
+            }
         }
     }
 
@@ -345,6 +355,8 @@ class CommentDetailViewModel(
     }
 
     companion object {
+        private const val WITHDREW_MEMBER_NAME = "(알수없음)"
+
         const val KEY_DISCUSSION_ID = "discussion_id"
         const val KEY_COMMENT_ID = "comment_id"
     }

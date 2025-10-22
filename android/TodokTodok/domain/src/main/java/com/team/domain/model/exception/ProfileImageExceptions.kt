@@ -10,7 +10,7 @@ sealed class ProfileImageExceptions(
     }
 
     data object OverMaxSize : ProfileImageExceptions(
-        "[ERROR] 파일 크기가 5MB 초과입니다",
+        "[ERROR] 파일 크기가 10MB 초과입니다",
     ) {
         private fun readResolve(): Any = OverMaxSize
     }

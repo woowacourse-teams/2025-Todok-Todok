@@ -16,7 +16,7 @@ data class Discussion(
     val isLikedByMe: Boolean,
 ) {
     val bookImage get() = book.image
-    val writerNickname get() = writer.nickname.value
+    val writerNickname get() = writer.nickname
 
     fun getBookTitle(): String = book.extractSubtitle()
 

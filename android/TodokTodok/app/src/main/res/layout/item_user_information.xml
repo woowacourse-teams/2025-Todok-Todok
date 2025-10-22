@@ -39,9 +39,10 @@
 
     <TextView
         android:id="@+id/tv_description"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/space_18"
+        android:layout_marginEnd="@dimen/space_18"
         android:fontFamily="@font/pretendard_regular"
         android:textColor="@color/gray_66"
         android:textSize="@dimen/font_size_large"
@@ -49,7 +50,7 @@
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_nickname"
-        tools:text="토론 좋아 독서 좋아 ~" />
+        tools:text="토론 좋아 독서 좋아 ~ 토론 좋아 독서 좋아 ~ 토론 좋아 독서 좋아 ~ 토론 좋아 독서 좋아 ~" />
 
     <View
         android:id="@+id/view_anchor"

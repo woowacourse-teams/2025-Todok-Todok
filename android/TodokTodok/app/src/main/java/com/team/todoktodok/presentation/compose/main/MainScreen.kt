@@ -155,7 +155,6 @@ fun MainScreen(
             pagerState = pagerState,
             onSearch = viewModel::loadSearchedDiscussions,
             onChangeSearchBarVisibility = viewModel::changeSearchBarVisibility,
-            onChangeBottomNavigationTab = viewModel::changeBottomNavigationTab,
             onChangeKeyword = viewModel::modifySearchKeyword,
             onChangeIsExistNotification = viewModel::loadIsUnreadNotification,
             onCompleteRemoveDiscussion = viewModel::removeDiscussion,
@@ -171,7 +170,6 @@ fun MainScreenContent(
     pagerState: PagerState,
     onSearch: () -> Unit,
     onChangeSearchBarVisibility: () -> Unit,
-    onChangeBottomNavigationTab: (MainDestination) -> Unit,
     onChangeKeyword: (String) -> Unit,
     onChangeIsExistNotification: () -> Unit,
     onCompleteRemoveDiscussion: (Long) -> Unit,
@@ -181,13 +179,7 @@ fun MainScreenContent(
     val navController = rememberNavController()
     Scaffold(
         bottomBar = {
-            MainBottomNavigation(
-                navController = navController,
-                selectedDestination = uiState.bottomNavigationTab,
-                onSelectedDestinationChanged = {
-                    onChangeBottomNavigationTab(it)
-                },
-            )
+            MainBottomNavigation(navController = navController)
         },
         snackbarHost = {
             SnackbarHost(
@@ -201,17 +193,13 @@ fun MainScreenContent(
             mainUiState = uiState,
             pagerState = pagerState,
             navController = navController,
-            startDestination = MainDestination.Discussion,
             onSearch = onSearch,
             onChangeKeyword = onChangeKeyword,
             onCompleteRemoveDiscussion = onCompleteRemoveDiscussion,
             onCompleteModifyDiscussion = onCompleteModifyDiscussion,
             onChangeSearchBarVisibility = onChangeSearchBarVisibility,
             onChangeIsExistNotification = onChangeIsExistNotification,
-            navigateToDiscussion = {
-                navController.navigate(MainDestination.Discussion.route)
-                onChangeBottomNavigationTab(MainDestination.Discussion)
-            },
+            navigateToDiscussion = { navController.navigate(MainDestination.Discussion) },
             modifier = Modifier.padding(innerPadding),
         )
     }

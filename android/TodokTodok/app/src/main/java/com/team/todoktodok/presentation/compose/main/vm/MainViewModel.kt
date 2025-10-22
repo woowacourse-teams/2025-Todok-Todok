@@ -6,7 +6,6 @@ import com.team.domain.model.exception.onFailure
 import com.team.domain.model.exception.onSuccess
 import com.team.domain.repository.DiscussionRepository
 import com.team.domain.repository.NotificationRepository
-import com.team.todoktodok.presentation.compose.main.MainDestination
 import com.team.todoktodok.presentation.compose.main.MainUiEvent
 import com.team.todoktodok.presentation.compose.main.MainUiState
 import com.team.todoktodok.presentation.core.base.BaseViewModel
@@ -91,10 +90,6 @@ class MainViewModel(
 
     fun changeSearchBarVisibility() {
         _uiState.update { it.changeSearchBarVisibility() }
-    }
-
-    fun changeBottomNavigationTab(destination: MainDestination) {
-        _uiState.update { it.changeBottomNavigationTab(destination) }
     }
 
     fun clearSearchResult() {
