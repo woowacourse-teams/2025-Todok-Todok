@@ -675,7 +675,7 @@ public interface MemberApiDocs {
             ) final Long memberId
     );
 
-    @Operation(summary = "회원별 토론방 필터 조회 API")
+    @Operation(summary = "회원별 토론방 필터 최신순 조회 API")
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
@@ -687,7 +687,7 @@ public interface MemberApiDocs {
                                     value = """
                                             [
                                                 {
-                                                  "discussionId": 1,
+                                                  "discussionId": 3,
                                                   "book": {
                                                     "bookId": 1,
                                                     "bookTitle": "엘레강트 오브젝트 - 새로운 관점에서 바라본 객체지향",
@@ -702,8 +702,8 @@ public interface MemberApiDocs {
                                                     "profileImage": "https://user.png"
                                                   },
                                                   "createdAt": "2025-08-20T10:59:48",
-                                                  "discussionTitle": "토론방 제목",
-                                                  "discussionOpinion": "토론방 내용입니다",
+                                                  "discussionTitle": "토론방 제목 3",
+                                                  "discussionOpinion": "토론방 내용 3입니다",
                                                   "viewCount": 2,
                                                   "likeCount": 0,
                                                   "commentCount": 4,
@@ -727,6 +727,29 @@ public interface MemberApiDocs {
                                                   "createdAt": "2025-08-20T10:59:48",
                                                   "discussionTitle": "토론방 제목 2",
                                                   "discussionOpinion": "토론방 내용 2입니다",
+                                                  "viewCount": 2,
+                                                  "likeCount": 0,
+                                                  "commentCount": 4,
+                                                  "isLikedByMe": false
+                                                },
+                                                {
+                                                  "discussionId": 1,
+                                                  "book": {
+                                                    "bookId": 1,
+                                                    "bookTitle": "엘레강트 오브젝트 - 새로운 관점에서 바라본 객체지향",
+                                                    "bookAuthor": "Yegor Bugayenko (지은이), 조영호 (옮긴이)",
+                                                    "bookImage": "https://image.aladin.co.kr/product/25837/40/coversum/k762736538_1.jpg",
+                                                    "bookPublisher": "지&선(지앤선)",
+                                                    "bookSummary": "기본적으로 객체지향 프로그래밍((Object-Oriented Programming, OOP)에 관한 책이다. 이 책은 전통적인 OOP의 모범 사례에 전면적으로 반기를 들고 전통적인 코딩 표준에서 벗어나 훨씬 깨끗한 코드 작성을 위한 조력자임을 자처한다."
+                                                  },
+                                                  "member": {
+                                                    "memberId": 2,
+                                                    "nickname": "모찌",
+                                                    "profileImage": "https://user.png"
+                                                  },
+                                                  "createdAt": "2025-08-20T10:59:48",
+                                                  "discussionTitle": "토론방 제목 1",
+                                                  "discussionOpinion": "토론방 내용 1입니다",
                                                   "viewCount": 2,
                                                   "likeCount": 0,
                                                   "commentCount": 4,

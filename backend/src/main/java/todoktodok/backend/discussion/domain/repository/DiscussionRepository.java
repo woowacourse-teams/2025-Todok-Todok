@@ -20,9 +20,10 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
     List<Discussion> findDiscussionsInIds(@Param("discussionIds") final List<Long> discussionIds);
 
     @Query("""
-                   SELECT d.id 
+                   SELECT d.id
                    FROM Discussion d
                    WHERE d.member = :member
+                   ORDER BY d.id DESC
             """)
     List<Long> findIdsByMember(@Param("member") final Member member);
 
@@ -70,18 +71,18 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
                 FROM discussion d
                 WHERE d.member_id = :memberId
                 AND d.deleted_at IS NULL
-                    
+
                 UNION
-                    
+
                 SELECT d.id
                 FROM discussion d
                 JOIN comment c ON c.discussion_id = d.id
                 WHERE c.member_id = :memberId
                 AND d.deleted_at IS NULL
                 AND c.deleted_at IS NULL
-                    
+
                 UNION
-                    
+
                 SELECT d.id
                 FROM discussion d
                 JOIN comment c ON c.discussion_id = d.id
@@ -90,6 +91,7 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
                 AND d.deleted_at IS NULL
                 AND c.deleted_at IS NULL
                 AND r.deleted_at IS NULL
+                ORDER BY id DESC
             """, nativeQuery = true)
     List<Long> findParticipatedDiscussionIdsByMember(@Param("memberId") final Long memberId);
 
