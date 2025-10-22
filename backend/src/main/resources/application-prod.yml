@@ -62,6 +62,8 @@ server:
   tomcat:
     mbeanregistry:
       enabled: true
+    max-http-form-post-size: 10485760
+    max-swallow-size: 10485760
 
 firebase:
   enabled: true
