@@ -24,7 +24,6 @@ import todoktodok.backend.discussion.application.dto.ActiveDiscussionCursor;
 import todoktodok.backend.discussion.application.dto.response.ActiveDiscussionPageResponse;
 import todoktodok.backend.discussion.application.dto.response.DiscussionResponse;
 import todoktodok.backend.discussion.application.dto.response.LatestDiscussionPageResponse;
-import todoktodok.backend.discussion.application.dto.response.LikedDiscussionPageResponse;
 import todoktodok.backend.discussion.application.dto.response.PageInfo;
 import todoktodok.backend.discussion.domain.Discussion;
 import todoktodok.backend.discussion.domain.DiscussionMemberView;
@@ -201,28 +200,11 @@ public class DiscussionQueryService {
         );
     }
 
-    public LikedDiscussionPageResponse getLikedDiscussions(
-            final Long memberId,
-            final int requestedSize,
-            final String cursor
-    ) {
-        validatePageSize(requestedSize);
-
+    public List<DiscussionResponse> getLikedDiscussionsByMe(final Long memberId) {
         final Member member = findMember(memberId);
-        final Long cursorId = (cursor != null && !cursor.isBlank()) ? decodeCursor(cursor) : null;
-        final Pageable pageable = PageRequest.of(0, requestedSize, Sort.Direction.DESC, "id");
+        final List<Long> likedIds = discussionLikeRepository.findLikedDiscussionIdsByMember(member);
 
-        final Slice<Long> likedIdSlice = discussionLikeRepository.findLikedDiscussionIdsByMemberAndCursor(
-                member, cursorId, pageable
-        );
-
-        final List<Long> likedIds = likedIdSlice.getContent();
-        final boolean hasNext = likedIdSlice.hasNext();
-        final String nextCursor = findNextCursor(hasNext, likedIds);
-
-        final List<DiscussionResponse> responses = getDiscussionsResponses(likedIds, member);
-
-        return new LikedDiscussionPageResponse(responses, new PageInfo(hasNext, nextCursor));
+        return getDiscussionsResponses(likedIds, member);
     }
 
     private Discussion getLastDiscussion(

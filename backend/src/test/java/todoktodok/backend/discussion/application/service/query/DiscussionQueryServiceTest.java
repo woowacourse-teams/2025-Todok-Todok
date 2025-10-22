@@ -29,7 +29,6 @@ import todoktodok.backend.InitializerTimer;
 import todoktodok.backend.discussion.application.dto.response.ActiveDiscussionPageResponse;
 import todoktodok.backend.discussion.application.dto.response.DiscussionResponse;
 import todoktodok.backend.discussion.application.dto.response.LatestDiscussionPageResponse;
-import todoktodok.backend.discussion.application.dto.response.LikedDiscussionPageResponse;
 import todoktodok.backend.discussion.application.dto.response.PageInfo;
 
 @ActiveProfiles("test")
@@ -1197,46 +1196,20 @@ class DiscussionQueryServiceTest {
         }
 
         @Test
-        @DisplayName("좋아요한 토론방을 첫 페이지로 조회한다")
-        void getLikedDiscussions_firstPage() {
+        @DisplayName("좋아요한 토론방을 전체 조회한다")
+        void getLikedDiscussions() {
             // given
             final Long memberId = 1L;
-            final int size = 2;
-            final String cursor = null;
 
             // when
-            final LikedDiscussionPageResponse response = discussionQueryService.getLikedDiscussions(memberId, size, cursor);
+            final List<DiscussionResponse> response = discussionQueryService.getLikedDiscussionsByMe(memberId);
 
             // then
             assertAll(
-                    () -> assertThat(response.items()).hasSize(size),
-                    () -> assertThat(response.items().getFirst().discussionId()).isEqualTo(3L),
-                    () -> assertThat(response.items().get(1).discussionId()).isEqualTo(2L),
-                    () -> assertThat(response.pageInfo().hasNext()).isTrue(),
-                    () -> assertThat(response.pageInfo().nextCursor()).isNotNull()
-            );
-        }
-
-        @Test
-        @DisplayName("좋아요한 토론방을 커서로 다음 페이지 조회한다")
-        void getLikedDiscussions_nextPage() {
-            // given
-            final Long memberId = 1L;
-            final int size = 2;
-            final String cursor = null;
-
-            // when
-            final LikedDiscussionPageResponse firstPage = discussionQueryService.getLikedDiscussions(memberId, size, cursor);
-            final String nextCursor = firstPage.pageInfo().nextCursor();
-
-            final LikedDiscussionPageResponse nextPage = discussionQueryService.getLikedDiscussions(memberId, size, nextCursor);
-
-            // then
-            assertAll(
-                    () -> assertThat(nextPage.items()).hasSize(1),
-                    () -> assertThat(nextPage.items().getFirst().discussionId()).isEqualTo(1L),
-                    () -> assertThat(nextPage.pageInfo().hasNext()).isFalse(),
-                    () -> assertThat(nextPage.pageInfo().nextCursor()).isNull()
+                    () -> assertThat(response).hasSize(3),
+                    () -> assertThat(response.get(0).discussionId()).isEqualTo(3L),
+                    () -> assertThat(response.get(1).discussionId()).isEqualTo(2L),
+                    () -> assertThat(response.get(2).discussionId()).isEqualTo(1L)
             );
         }
 
@@ -1249,46 +1222,12 @@ class DiscussionQueryServiceTest {
             databaseInitializer.setDefaultBookInfo();
 
             final Long memberId = 1L;
-            final int size = 2;
-            final String cursor = null;
 
             // when
-            final LikedDiscussionPageResponse response = discussionQueryService.getLikedDiscussions(memberId, size, cursor);
+            final List<DiscussionResponse> response = discussionQueryService.getLikedDiscussionsByMe(memberId);
 
             // then
-            assertAll(
-                    () -> assertThat(response.items()).isEmpty(),
-                    () -> assertThat(response.pageInfo().hasNext()).isFalse(),
-                    () -> assertThat(response.pageInfo().nextCursor()).isNull()
-            );
-        }
-
-        @ParameterizedTest
-        @ValueSource(ints = {-1, 0, 51, 100})
-        @DisplayName("좋아요한 토론방 조회 시 사이즈 값이 범위를 초과할 경우 예외가 발생한다")
-        void getLikedDiscussions_wrongSize(final int size) {
-            // given
-            final Long memberId = 1L;
-            final String cursor = null;
-
-            // when - then
-            assertThatThrownBy(() -> discussionQueryService.getLikedDiscussions(memberId, size, cursor))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessageContaining("유효하지 않은 페이지 사이즈입니다. 1 이상 50 이하의 페이징을 시도해주세요");
-        }
-
-        @Test
-        @DisplayName("좋아요한 토론방 조회 시 커서 값이 유효하지 않을 경우 예외가 발생한다")
-        void getLikedDiscussions_wrongCursor() {
-            // given
-            final Long memberId = 1L;
-            final int size = 2;
-            final String cursor = "woowa";
-
-            // when - then
-            assertThatThrownBy(() -> discussionQueryService.getLikedDiscussions(memberId, size, cursor))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessageContaining("Base64로 디코드할 수 없는 cursor 값입니다");
+            assertThat(response).isEmpty();
         }
     }
 

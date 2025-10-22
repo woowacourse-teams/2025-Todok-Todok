@@ -24,7 +24,7 @@ spring:
     enabled: false
 
 auth:
-  mode: google
+  mode: test
 
 jwt:
   access-token:

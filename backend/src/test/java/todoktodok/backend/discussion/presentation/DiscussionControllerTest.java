@@ -4,8 +4,6 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.BDDMockito.given;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -24,27 +22,17 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import todoktodok.backend.DatabaseInitializer;
 import todoktodok.backend.InitializerTimer;
 import todoktodok.backend.discussion.application.dto.request.DiscussionReportRequest;
 import todoktodok.backend.discussion.application.dto.request.DiscussionRequest;
 import todoktodok.backend.discussion.application.dto.request.DiscussionUpdateRequest;
-import todoktodok.backend.member.infrastructure.AuthClient;
 import todoktodok.backend.member.presentation.fixture.MemberFixture;
 
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(initializers = InitializerTimer.class)
 class DiscussionControllerTest {
-
-    private static final String DEFAULT_EMAIL = "user@gmail.com";
-
-    @MockitoBean
-    private AuthClient authClient;
-
-    @Autowired
-    private MemberFixture memberFixture;
 
     @Autowired
     private DatabaseInitializer databaseInitializer;
@@ -62,12 +50,10 @@ class DiscussionControllerTest {
     @DisplayName("토론방을 생성한다")
     void createDiscussion() {
         // given
-        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
-
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
 
-        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
+        final String token = MemberFixture.getTestAccessToken("user@gmail.com");
 
         final DiscussionRequest discussionRequest = new DiscussionRequest(
                 1L,
@@ -89,14 +75,12 @@ class DiscussionControllerTest {
     @DisplayName("특정 토론방을 조회한다")
     void getDiscussion() {
         // given
-        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
-
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
 
         databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
 
-        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
+        final String token = MemberFixture.getTestAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -111,8 +95,6 @@ class DiscussionControllerTest {
     @DisplayName("토론방을 최신순 조회한다 - 첫 페이지 조회")
     void getSlicedDiscussions_firstPage() {
         // given
-        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
-
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
 
@@ -122,7 +104,7 @@ class DiscussionControllerTest {
         databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
         databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
 
-        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
+        final String token = MemberFixture.getTestAccessToken("user@gmail.com");
         final String cursorMeaningThree = "Mw==";
 
         // when - then
@@ -141,8 +123,6 @@ class DiscussionControllerTest {
     @DisplayName("토론방을 최신순 조회한다 - 중간 페이지 조회")
     void getSlicedDiscussions_middlePage() {
         // given
-        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
-
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
 
@@ -152,7 +132,7 @@ class DiscussionControllerTest {
         databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
         databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
 
-        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
+        final String token = MemberFixture.getTestAccessToken("user@gmail.com");
         final String cursorMeaningFive = "NQ==";
         final String cursorMeaningTwo = "Mg==";
 
@@ -172,8 +152,6 @@ class DiscussionControllerTest {
     @DisplayName("토론방을 최신순 조회한다 - 마지막 페이지 조회")
     void getSlicedDiscussions_lastPage() {
         // given
-        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
-
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
 
@@ -183,7 +161,7 @@ class DiscussionControllerTest {
         databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
         databaseInitializer.setDiscussionInfo("토론방 제목", "토론방 내용", 1L, 1L);
 
-        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
+        final String token = MemberFixture.getTestAccessToken("user@gmail.com");
         final String cursorMeaningFour = "NA==";
 
         // when - then
@@ -202,15 +180,13 @@ class DiscussionControllerTest {
     @DisplayName("토론방을 신고한다")
     void report() {
         // given
-        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
-
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setUserInfo("user123@gmail.com", "user123", "https://image.png", "message");
         databaseInitializer.setDefaultBookInfo();
 
         databaseInitializer.setDiscussionInfo("토론방1", "토론방 내용", 2L, 1L);
 
-        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
+        final String token = MemberFixture.getTestAccessToken("user@gmail.com");
         final DiscussionReportRequest discussionReportRequest = new DiscussionReportRequest("토론 주제와 무관한 내용");
 
         // when - then
@@ -227,8 +203,6 @@ class DiscussionControllerTest {
     @DisplayName("토론방을 수정한다")
     void updateDiscussionTest() {
         // given
-        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
-
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
 
@@ -241,7 +215,7 @@ class DiscussionControllerTest {
                 updatedContent
         );
 
-        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
+        final String token = MemberFixture.getTestAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -259,15 +233,13 @@ class DiscussionControllerTest {
         // given
         final String loginUserEmail = "user2@gmail.com";
 
-        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(loginUserEmail);
-
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setUserInfo(loginUserEmail, "user2", "https://image.png", "message");
         databaseInitializer.setDefaultBookInfo();
 
         databaseInitializer.setDefaultDiscussionInfo();
 
-        final String token = memberFixture.getAccessToken(loginUserEmail);
+        final String token = MemberFixture.getTestAccessToken(loginUserEmail);
 
         // when - then
         RestAssured.given().log().all()
@@ -283,14 +255,12 @@ class DiscussionControllerTest {
     @DisplayName("토론방을 삭제한다")
     void deleteDiscussionTest() {
         // given
-        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
-
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
 
         databaseInitializer.setDefaultDiscussionInfo();
 
-        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
+        final String token = MemberFixture.getTestAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -305,15 +275,13 @@ class DiscussionControllerTest {
     @DisplayName("댓글이 있는 토론방 삭제 시 에러가 발생한다")
     void deleteDiscussion_hasComments() {
         // given
-        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
-
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
 
         databaseInitializer.setDefaultDiscussionInfo();
         databaseInitializer.setDefaultCommentInfo();
 
-        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
+        final String token = MemberFixture.getTestAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -328,14 +296,12 @@ class DiscussionControllerTest {
     @DisplayName("토론방 좋아요를 생성한다")
     void createDiscussionToggleLikeTest() {
         // given
-        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
-
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
 
         databaseInitializer.setDefaultDiscussionInfo();
 
-        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
+        final String token = MemberFixture.getTestAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -350,15 +316,13 @@ class DiscussionControllerTest {
     @DisplayName("토론방 좋아요를 삭제한다")
     void deleteDiscussionToggleLikeTest() {
         // given
-        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
-
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
 
         databaseInitializer.setDefaultDiscussionInfo();
         databaseInitializer.setDiscussionLikeInfo(1L, 1L);
 
-        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
+        final String token = MemberFixture.getTestAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
@@ -373,8 +337,6 @@ class DiscussionControllerTest {
     @DisplayName("활성화된 토론방을 조회한다")
     void getActiveDiscussions() {
         // given
-        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
-
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
 
@@ -396,7 +358,7 @@ class DiscussionControllerTest {
         databaseInitializer.setCommentInfo("2-2", memberId, 2L, base.minusMinutes(20));
         databaseInitializer.setCommentInfo("1-1", memberId, 1L, base.minusMinutes(10)); // id = 4
 
-        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
+        final String token = MemberFixture.getTestAccessToken("user@gmail.com");
         final int size = 3;
 
         // when - then
@@ -436,11 +398,9 @@ class DiscussionControllerTest {
     }
 
     @Test
-    @DisplayName("좋아요한 토론방을 첫 페이지로 조회한다")
-    void getLikedDiscussions_firstPage() {
+    @DisplayName("좋아요한 토론방을 전체 조회한다")
+    void getLikedDiscussionsByMe() {
         // given
-        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
-
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
 
@@ -454,58 +414,16 @@ class DiscussionControllerTest {
         databaseInitializer.setDiscussionInfo("좋아요 토론3", "내용3", 1L, 1L);
         databaseInitializer.setDiscussionLikeInfo(1L, 3L);
 
-        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
+        final String token = MemberFixture.getTestAccessToken("user@gmail.com");
 
         // when - then
         RestAssured.given().log().all()
                 .header("Authorization", token)
                 .contentType(ContentType.JSON)
-                .when().get("/api/v1/discussions/liked?size=2")
+                .when().get("/api/v1/discussions/liked")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
-                .body("items.size()", is(2))
-                .body("pageInfo.hasNext", is(true))
-                .body("pageInfo.nextCursor", notNullValue());
-    }
-
-    @Test
-    @DisplayName("좋아요한 토론방을 커서로 다음 페이지를 조회한다")
-    void getLikedDiscussions_nextPage() {
-        // given
-        given(authClient.resolveVerifiedEmailFrom(anyString())).willReturn(DEFAULT_EMAIL);
-
-        databaseInitializer.setDefaultUserInfo();
-        databaseInitializer.setDefaultBookInfo();
-
-        databaseInitializer.setDiscussionInfo("좋아요 토론1", "내용1", 1L, 1L);
-        databaseInitializer.setDiscussionLikeInfo(1L, 1L);
-
-        databaseInitializer.setDiscussionInfo("좋아요 토론2", "내용2", 1L, 1L);
-        databaseInitializer.setDiscussionLikeInfo(1L, 2L);
-
-        databaseInitializer.setDiscussionInfo("좋아요 토론3", "내용3", 1L, 1L);
-        databaseInitializer.setDiscussionLikeInfo(1L, 3L);
-
-        final String token = memberFixture.getAccessToken(DEFAULT_EMAIL);
-
-        final String nextCursor = RestAssured.given().log().all()
-                .header("Authorization", token)
-                .contentType(ContentType.JSON)
-                .when().get("/api/v1/discussions/liked?size=2")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .extract().jsonPath().getString("pageInfo.nextCursor");
-
-        // when - then
-        RestAssured.given().log().all()
-                .header("Authorization", token)
-                .contentType(ContentType.JSON)
-                .when().get("/api/v1/discussions/liked?size=2&cursor=" + nextCursor)
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .body("items.size()", is(1))
-                .body("pageInfo.hasNext", is(false))
-                .body("pageInfo.nextCursor", nullValue());
+                .body("size()", is(3));
     }
 
     @Disabled
@@ -522,7 +440,7 @@ class DiscussionControllerTest {
 
             databaseInitializer.setDiscussionInfo("오브젝트", "오브젝트 토론입니다", 1L, 1L);
 
-            final String token = memberFixture.getAccessToken("user@gmail.com");
+            final String token = MemberFixture.getTestAccessToken("user@gmail.com");
 
             // when - then
             RestAssured.given().log().all()
