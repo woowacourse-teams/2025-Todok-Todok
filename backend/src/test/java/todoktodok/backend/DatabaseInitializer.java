@@ -208,6 +208,24 @@ public class DatabaseInitializer {
     }
 
     @Transactional
+    public void deleteDiscussionInfo(
+            final Long id
+    ) {
+        final LocalDateTime now = LocalDateTime.now().truncatedTo(MICROS);
+
+        em.createNativeQuery(
+                        """
+                                UPDATE Discussion d 
+                                SET d.deleted_at = :deletedAt
+                                WHERE d.id = :id
+                                """
+                )
+                .setParameter("id", id)
+                .setParameter("deletedAt", now)
+                .executeUpdate();
+    }
+
+    @Transactional
     public void setDefaultDiscussionMemberViewInfo() {
         final LocalDateTime now = LocalDateTime.now().truncatedTo(MICROS);
 
