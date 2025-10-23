@@ -23,7 +23,7 @@ import com.team.todoktodok.databinding.MenuOwnedDiscussionBinding
 import com.team.todoktodok.presentation.compose.bookdiscussions.BookDiscussionsActivity
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionResult.Companion.EXTRA_DELETE_DISCUSSION
 import com.team.todoktodok.presentation.compose.main.MainActivity
-import com.team.todoktodok.presentation.core.ExceptionMessageConverter
+import com.team.todoktodok.presentation.core.ExceptionMessageConverter2
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
 import com.team.todoktodok.presentation.core.component.CommonDialog
 import com.team.todoktodok.presentation.core.component.ReportDialog
@@ -45,7 +45,10 @@ import com.team.todoktodok.presentation.xml.discussiondetail.vm.DiscussionDetail
 import com.team.todoktodok.presentation.xml.discussiondetail.vm.DiscussionDetailViewModelFactory
 import com.team.todoktodok.presentation.xml.profile.ProfileActivity
 import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussion
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class DiscussionDetailActivity : AppCompatActivity() {
     private val viewModel by viewModels<DiscussionDetailViewModel> {
         val repositoryModule = (application as App).container.repositoryModule
@@ -62,9 +65,8 @@ class DiscussionDetailActivity : AppCompatActivity() {
 
     private var popupWindow: PopupWindow? = null
 
-    private val messageConverter: ExceptionMessageConverter by lazy {
-        ExceptionMessageConverter()
-    }
+    @Inject
+    lateinit var messageConverter: ExceptionMessageConverter2
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
