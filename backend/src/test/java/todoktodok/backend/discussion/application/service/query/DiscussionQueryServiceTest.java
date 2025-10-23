@@ -1229,6 +1229,24 @@ class DiscussionQueryServiceTest {
             // then
             assertThat(response).isEmpty();
         }
-    }
 
+        @Test
+        @DisplayName("좋아요한 토론방이 삭제되면 내가 좋아요한 토론방 리스트로 조회되지 않는다")
+        void getLikedDiscussions_whenDiscussionIsDeleted() {
+            // given
+            final Long memberId = 1L;
+
+            // when
+            final Long deletedDiscussionId = 3L;
+            databaseInitializer.deleteDiscussionInfo(deletedDiscussionId);
+            final List<DiscussionResponse> response = discussionQueryService.getLikedDiscussionsByMe(memberId);
+
+            // then
+            assertAll(
+                    () -> assertThat(response).hasSize(2),
+                    () -> assertThat(response.get(0).discussionId()).isEqualTo(2L),
+                    () -> assertThat(response.get(1).discussionId()).isEqualTo(1L)
+            );
+        }
+    }
 }
