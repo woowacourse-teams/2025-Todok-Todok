@@ -25,7 +25,7 @@ class BookCoverTest {
 
         // When
         composeTestRule.setContent {
-            BookCover(book)
+            BookCover(book, onActionClick = {})
         }
 
         // Then

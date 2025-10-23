@@ -3,65 +3,44 @@ package com.team.todoktodok.presentation.compose.my.participated
 import com.team.domain.model.Discussion
 import com.team.todoktodok.presentation.compose.core.component.DiscussionCardType
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionUiModel
-import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussion
 
 data class ParticipatedDiscussionsUiState(
     val discussions: List<DiscussionUiModel> = emptyList(),
+    val myDiscussion: List<DiscussionUiModel> = emptyList(),
     val type: DiscussionCardType = DiscussionCardType.Default,
     val showMyDiscussion: Boolean = false,
-    val memberId: Long = INITIALIZE_MEMBER_ID,
 ) {
-    fun add(discussions: List<Discussion>): ParticipatedDiscussionsUiState {
+    fun setDiscussion(
+        discussions: List<Discussion>,
+        memberId: Long,
+    ): ParticipatedDiscussionsUiState {
         val newDiscussions =
             discussions
                 .map { DiscussionUiModel(it) }
-                .reversed()
-        return copy(discussions = newDiscussions)
+        val myDiscussion = newDiscussions.filter { it.writerId == memberId }
+        return copy(discussions = newDiscussions, myDiscussion = myDiscussion)
     }
-
-    fun remove(discussionId: Long): ParticipatedDiscussionsUiState =
-        copy(discussions = discussions.filter { it.discussionId != discussionId })
-
-    fun modify(discussion: SerializationDiscussion): ParticipatedDiscussionsUiState =
-        copy(
-            discussions =
-                discussions.map {
-                    if (discussion.id == it.discussionId) {
-                        DiscussionUiModel(
-                            discussion.toDomain(),
-                        )
-                    } else {
-                        it
-                    }
-                },
-        )
 
     fun isEmpty(): Boolean = discussions.isEmpty()
 
     fun toggleShowMyDiscussion(isShow: Boolean): ParticipatedDiscussionsUiState = copy(showMyDiscussion = isShow)
 
-    fun setMemberId(memberId: Long): ParticipatedDiscussionsUiState = copy(memberId = memberId)
-
-    fun visibleDiscussions(showMyOnly: Boolean): List<DiscussionUiModel> =
-        if (showMyOnly) {
-            discussions.filter { it.writerId == memberId }
-        } else {
-            discussions
-        }
-
-    fun modifyMyDiscussionProfileImage(profileImage: String): ParticipatedDiscussionsUiState =
+    fun modifyMyDiscussionProfileImage(
+        profileImage: String,
+        myId: Long,
+    ): ParticipatedDiscussionsUiState =
         copy(
             discussions =
                 discussions.map { discussion ->
-                    if (memberId == discussion.writerId) {
+                    if (discussion.writerId == myId) {
                         discussion.modifyWriterProfileImage(profileImage)
                     } else {
                         discussion
                     }
                 },
+            myDiscussion =
+                myDiscussion.map { discussion ->
+                    discussion.modifyWriterProfileImage(profileImage)
+                },
         )
-
-    companion object {
-        private const val INITIALIZE_MEMBER_ID = -1L
-    }
 }

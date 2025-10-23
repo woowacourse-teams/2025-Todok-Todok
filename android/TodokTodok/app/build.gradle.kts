@@ -28,8 +28,8 @@ android {
         applicationId = "com.team.todoktodok"
         minSdk = 30
         targetSdk = 35
-        versionCode = 5
-        versionName = "1.0.1"
+        versionCode = 9
+        versionName = "1.0.4"
 
         buildConfigField("String", "BASE_URL", "\"${properties.getProperty("base_url")}\"")
         buildConfigField(
@@ -92,6 +92,7 @@ dependencies {
     implementation(libs.bundles.google)
     implementation(libs.bundles.glide)
     implementation(libs.bundles.logging)
+    implementation(libs.kotlinx.collections.immutable)
 
     testImplementation(libs.bundles.test)
     testImplementation(libs.androidx.core.testing)

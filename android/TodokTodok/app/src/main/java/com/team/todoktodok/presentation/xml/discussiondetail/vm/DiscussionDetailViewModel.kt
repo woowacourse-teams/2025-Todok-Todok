@@ -30,7 +30,7 @@ class DiscussionDetailViewModel(
     var mode = savedStateHandle.get<SerializationCreateDiscussionRoomMode>(KEY_MODE)
         private set
     private var coalesceJob: Job? = null
-    private val _uiState = MutableLiveData<DiscussionDetailUiState>()
+    private val _uiState = MutableLiveData<DiscussionDetailUiState>(DiscussionDetailUiState.Loading)
     val uiState: LiveData<DiscussionDetailUiState> = _uiState
 
     private val _uiEvent = MutableSingleLiveData<DiscussionDetailUiEvent>()
@@ -38,12 +38,14 @@ class DiscussionDetailViewModel(
 
     fun onFinishEvent() {
         val currentState = _uiState.value ?: return
-        onUiEvent(
-            DiscussionDetailUiEvent.NavigateToDiscussionsWithResult(
-                mode,
-                currentState.discussion.toSerialization(),
-            ),
-        )
+        if (currentState is DiscussionDetailUiState.Success) {
+            onUiEvent(
+                DiscussionDetailUiEvent.NavigateToDiscussionsWithResult(
+                    mode,
+                    currentState.discussion.toSerialization(),
+                ),
+            )
+        }
     }
 
     fun initLoadDiscission(id: Long) {
@@ -101,40 +103,82 @@ class DiscussionDetailViewModel(
 
     fun toggleLike() {
         val currentUiState = _uiState.value ?: return
+        if (currentUiState !is DiscussionDetailUiState.Success) return
+
         val currentDiscussion = currentUiState.discussion
         val desiredIsLikedByMe = !currentDiscussion.isLikedByMe
         val likeCountDelta = if (desiredIsLikedByMe) 1 else -1
+        val previousDiscussion = currentDiscussion
+
         _uiState.value =
             currentUiState.copy(
                 discussion =
-                    currentUiState.discussion.copy(
+                    currentDiscussion.copy(
                         isLikedByMe = desiredIsLikedByMe,
-                        likeCount =
-                            (currentUiState.discussion.likeCount + likeCountDelta).coerceAtLeast(
-                                0,
-                            ),
+                        likeCount = (currentDiscussion.likeCount + likeCountDelta).coerceAtLeast(0),
                     ),
             )
+
         coalesceJob?.cancel()
         coalesceJob =
             viewModelScope.launch {
                 delay(250)
-                val isToggle =
-                    currentDiscussion.likeCount != _uiState.value?.discussion?.likeCount
-                if (!isToggle) return@launch
-                handleResult(discussionRepository.toggleLike(discussionId ?: THROW_DISCUSSION_ID)) {
-                    loadDiscussionRoom()
+                val latestUiState = _uiState.value ?: return@launch
+                if (latestUiState !is DiscussionDetailUiState.Success) return@launch
+                val latestDiscussion = latestUiState.discussion
+                if (latestDiscussion.isLikedByMe != desiredIsLikedByMe) return@launch
+
+                val requestDiscussionId = latestDiscussion.id
+                when (val result = discussionRepository.toggleLike(requestDiscussionId)) {
+                    is NetworkResult.Success -> {
+                        loadDiscussionRoom()
+                    }
+
+                    is NetworkResult.Failure -> {
+                        val rollbackUiState = _uiState.value
+                        if (rollbackUiState is DiscussionDetailUiState.Success) {
+                            _uiState.value = rollbackUiState.copy(discussion = previousDiscussion)
+                        }
+                        onUiEvent(DiscussionDetailUiEvent.ShowErrorMessage(result.exception))
+                    }
                 }
             }
     }
 
-    fun navigateToProfile() {
-        val memberId =
-            _uiState.value
-                ?.discussion
-                ?.writer
-                ?.id ?: return
-        _uiEvent.setValue(DiscussionDetailUiEvent.NavigateToProfile(memberId))
+    fun shareDiscussion() {
+        val currentUiState = _uiState.value ?: return
+        if (currentUiState !is DiscussionDetailUiState.Success) return
+        onUiEvent(
+            DiscussionDetailUiEvent.ShareDiscussion(
+                discussionId ?: return,
+                currentUiState.discussion.discussionTitle,
+            ),
+        )
+    }
+
+    fun navigateToOtherUserProfile() {
+        viewModelScope.launch {
+            val currentUiState = _uiState.value ?: return@launch
+            if (currentUiState !is DiscussionDetailUiState.Success) return@launch
+            val writer = currentUiState.discussion.writer
+            val isWithdrewMemberName = writer.nickname == WITHDREW_MEMBER_NAME
+            val isMyId = writer.id == tokenRepository.getMemberId()
+            if (!isMyId && !isWithdrewMemberName) {
+                onUiEvent(
+                    DiscussionDetailUiEvent.NavigateToProfile(
+                        writer.id,
+                    ),
+                )
+            }
+        }
+    }
+
+    fun navigateToBookDiscussion() {
+        val currentUiState = _uiState.value ?: return
+        if (currentUiState !is DiscussionDetailUiState.Success) return
+        val bookId =
+            currentUiState.discussion.book.id
+        _uiEvent.setValue(DiscussionDetailUiEvent.NavigateToBookDiscussions(bookId))
     }
 
     private suspend fun loadDiscussionRoom() {
@@ -144,7 +188,7 @@ class DiscussionDetailViewModel(
             ),
         ) { discussion ->
             _uiState.value =
-                DiscussionDetailUiState(
+                DiscussionDetailUiState.Success(
                     discussion = discussion,
                     isMyDiscussion = discussion.writer.id == tokenRepository.getMemberId(),
                     isLoading = false,
@@ -174,7 +218,6 @@ class DiscussionDetailViewModel(
                         onUiEvent(
                             DiscussionDetailUiEvent.ShowErrorMessage(result.exception),
                         )
-                        _uiState.value = _uiState.value?.copy(isLoading = false)
                     }
                 }
             }
@@ -189,6 +232,7 @@ class DiscussionDetailViewModel(
         const val KEY_DISCUSSION_ID = "discussionId"
         const val KEY_MODE = "mode"
 
+        private const val WITHDREW_MEMBER_NAME = "(알수없음)"
         private const val THROW_DISCUSSION_ID = -1L
     }
 }

@@ -6,7 +6,6 @@ import com.team.domain.model.exception.onFailure
 import com.team.domain.model.exception.onSuccess
 import com.team.domain.repository.DiscussionRepository
 import com.team.domain.repository.NotificationRepository
-import com.team.todoktodok.presentation.compose.main.MainDestination
 import com.team.todoktodok.presentation.compose.main.MainUiEvent
 import com.team.todoktodok.presentation.compose.main.MainUiState
 import com.team.todoktodok.presentation.core.base.BaseViewModel
@@ -29,6 +28,38 @@ class MainViewModel(
 
     private val _uiEvent = Channel<MainUiEvent>(Channel.BUFFERED)
     val uiEvent get() = _uiEvent.receiveAsFlow()
+
+    init {
+        getIsNotificationAllowed()
+    }
+
+    fun sendPushNotificationToken() {
+        viewModelScope.launch {
+            notificationRepository
+                .registerPushNotification()
+                .onFailure { exceptions ->
+                    onUiEvent(MainUiEvent.ShowErrorMessage(exceptions))
+                }
+        }
+    }
+
+    fun allowedNotification(isAllowed: Boolean) {
+        viewModelScope.launch {
+            _uiState.update { it.changeAllowedNotification(isAllowed) }
+            notificationRepository.allowedNotification(_uiState.value.isAllowed)
+        }
+    }
+
+    fun getIsNotificationAllowed() {
+        viewModelScope.launch {
+            val result = notificationRepository.getIsNotificationAllowed()
+            if (result != null) {
+                _uiState.update { it.changeAllowedNotification(result) }
+            } else {
+                _uiState.update { it.changeAllowedNotification(true) }
+            }
+        }
+    }
 
     fun loadIsUnreadNotification() {
         viewModelScope.launch {
@@ -59,10 +90,6 @@ class MainViewModel(
 
     fun changeSearchBarVisibility() {
         _uiState.update { it.changeSearchBarVisibility() }
-    }
-
-    fun changeBottomNavigationTab(destination: MainDestination) {
-        _uiState.update { it.changeBottomNavigationTab(destination) }
     }
 
     fun clearSearchResult() {

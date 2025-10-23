@@ -5,7 +5,6 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import com.team.domain.model.Book
 import com.team.domain.model.Discussion
-import com.team.domain.model.member.Nickname
 import com.team.domain.model.member.User
 import com.team.todoktodok.presentation.compose.core.component.DiscussionCard
 import com.team.todoktodok.presentation.compose.core.component.DiscussionCardType
@@ -25,7 +24,7 @@ class DiscussionCardTest {
                     id = 1L,
                     discussionTitle = "JPA 성능 최적화",
                     book = Book(1L, "자바 ORM 표준 JPA 프로그래밍", "김영한", ""),
-                    writer = User(1L, Nickname("홍길동"), ""),
+                    writer = User(1L, "홍길동", ""),
                     createAt = LocalDateTime.of(2025, 7, 12, 12, 0),
                     discussionOpinion =
                         "응집도와 결합도가 어떤 차이를 가지는 지에 대한 다른 분들의 생각이 궁금합니다." +

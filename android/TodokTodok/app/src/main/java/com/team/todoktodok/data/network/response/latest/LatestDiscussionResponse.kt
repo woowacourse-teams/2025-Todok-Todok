@@ -10,14 +10,14 @@ import kotlinx.serialization.Serializable
 data class LatestDiscussionResponse(
     val member: MemberResponse,
     val book: BookResponse,
-    val commentCount: Int,
+    val commentCount: Long,
     val discussionOpinion: String,
     val discussionTitle: String,
     val createdAt: String,
     val discussionId: Long,
     val isLikedByMe: Boolean,
-    val viewCount: Int,
-    val likeCount: Int,
+    val viewCount: Long,
+    val likeCount: Long,
 ) {
     fun toDomain(): Discussion =
         Discussion(

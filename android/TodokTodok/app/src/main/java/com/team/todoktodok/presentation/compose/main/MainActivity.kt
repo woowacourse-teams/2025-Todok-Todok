@@ -20,9 +20,12 @@ class MainActivity : ComponentActivity() {
         setContent {
             TodoktodokTheme {
                 val messageConverter = ExceptionMessageConverter()
-                MainScreen(messageConverter)
+                MainScreen(
+                    messageConverter = messageConverter,
+                )
             }
         }
+        handleNotificationDeepLink(intent)
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -34,7 +37,6 @@ class MainActivity : ComponentActivity() {
     private fun handleNotificationDeepLink(intent: Intent) {
         val notification: SerializationFcmNotification? =
             intent.getParcelableCompat<SerializationFcmNotification>(KEY_NOTIFICATION) as? SerializationFcmNotification
-
         triggerToMoveDiscussionDetail(notification)
     }
 
@@ -71,6 +73,7 @@ class MainActivity : ComponentActivity() {
     }
 
     companion object {
+        const val KEY_REFRESH_NOTIFICATION = "refresh_notification"
         private const val KEY_NOTIFICATION = "notification"
 
         fun Intent(context: Context) = Intent(context, MainActivity::class.java)

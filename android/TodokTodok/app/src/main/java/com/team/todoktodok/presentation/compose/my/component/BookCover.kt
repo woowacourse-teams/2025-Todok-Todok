@@ -1,9 +1,11 @@
 package com.team.todoktodok.presentation.compose.my.component
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -26,8 +28,16 @@ import com.team.todoktodok.presentation.compose.theme.Pretendard
 fun BookCover(
     book: Book,
     modifier: Modifier = Modifier,
+    onActionClick: (Long) -> Unit,
 ) {
-    Column(modifier = modifier.aspectRatio(0.5f)) {
+    Column(
+        modifier =
+            modifier
+                .aspectRatio(0.5f)
+                .clickable {
+                    onActionClick(book.id)
+                },
+    ) {
         SubcomposeAsyncImage(
             model =
                 ImageRequest
@@ -51,12 +61,14 @@ fun BookCover(
             minLines = 2,
             overflow = TextOverflow.Ellipsis,
             fontSize = 13.sp,
+            lineHeight = 16.sp,
             color = Black21,
             fontFamily = Pretendard,
-            fontWeight = FontWeight.Bold,
+            fontWeight = FontWeight.SemiBold,
             modifier =
                 Modifier
                     .fillMaxWidth()
+                    .padding(top = 5.dp)
                     .heightIn(min = 10.dp),
         )
 
@@ -87,5 +99,8 @@ private fun BookCoverPreview() {
             author = "Douglas Adams",
             image = "https://search2.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F1467038",
         )
-    BookCover(book)
+    BookCover(
+        book = book,
+        onActionClick = {},
+    )
 }

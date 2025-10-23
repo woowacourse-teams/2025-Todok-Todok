@@ -178,6 +178,23 @@ class CommentsViewModel(
         _uiState.value = _uiState.value?.copy(commentContent = content)
     }
 
+    fun navigateToOtherUserProfile(
+        memberId: Long,
+        memberName: String,
+    ) {
+        viewModelScope.launch {
+            val isWithdrewMemberName = memberName == WITHDREW_MEMBER_NAME
+            val isMyId = memberId == tokenRepository.getMemberId()
+            if (!isMyId && !isWithdrewMemberName) {
+                onUiEvent(
+                    CommentsUiEvent.NavigateToProfile(
+                        memberId,
+                    ),
+                )
+            }
+        }
+    }
+
     private suspend fun loadComment(commentId: Long) {
         handleResult(commentRepository.getComment(discussionId, commentId)) { comment ->
             val state = _uiState.value ?: return@handleResult
@@ -219,6 +236,8 @@ class CommentsViewModel(
     }
 
     companion object {
+        private const val WITHDREW_MEMBER_NAME = "(알수없음)"
+
         const val KEY_DISCUSSION_ID = "discussionId"
     }
 }

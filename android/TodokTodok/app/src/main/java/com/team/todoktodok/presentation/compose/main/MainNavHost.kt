@@ -15,41 +15,37 @@ fun MainNavHost(
     mainUiState: MainUiState,
     pagerState: PagerState,
     navController: NavHostController,
-    startDestination: MainDestination,
+    onSearch: () -> Unit,
     onCompleteRemoveDiscussion: (Long) -> Unit,
     onCompleteModifyDiscussion: (SerializationDiscussion) -> Unit,
-    onChangeBottomNavigationTab: (MainDestination) -> Unit,
-    onSearch: () -> Unit,
     onChangeSearchBarVisibility: () -> Unit,
+    onChangeIsExistNotification: () -> Unit,
     onChangeKeyword: (String) -> Unit,
+    navigateToDiscussion: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     NavHost(
         navController = navController,
-        startDestination = startDestination.route,
-        modifier = modifier,
+        startDestination = MainDestination.Discussion,
     ) {
-        MainDestination.entries.forEach { destination ->
-            composable(destination.route) {
-                when (destination) {
-                    MainDestination.Discussion ->
-                        DiscussionsScreen(
-                            mainUiState = mainUiState,
-                            pagerState = pagerState,
-                            onCompleteRemoveDiscussion = onCompleteRemoveDiscussion,
-                            onCompleteModifyDiscussion = onCompleteModifyDiscussion,
-                            onSearch = onSearch,
-                            onChangeSearchBarVisibility = onChangeSearchBarVisibility,
-                            onChangeKeyword = onChangeKeyword,
-                        )
-
-                    MainDestination.My ->
-                        MyScreen(
-                            navController = navController,
-                            onChangeBottomNavigationTab = onChangeBottomNavigationTab,
-                        )
-                }
-            }
+        composable<MainDestination.Discussion> {
+            DiscussionsScreen(
+                mainUiState = mainUiState,
+                pagerState = pagerState,
+                onCompleteRemoveDiscussion = onCompleteRemoveDiscussion,
+                onCompleteModifyDiscussion = onCompleteModifyDiscussion,
+                onSearch = onSearch,
+                onChangeSearchBarVisibility = onChangeSearchBarVisibility,
+                onChangeIsExistNotification = onChangeIsExistNotification,
+                onChangeKeyword = onChangeKeyword,
+                modifier = modifier,
+            )
+        }
+        composable<MainDestination.My> {
+            MyScreen(
+                navigateToDiscussion = navigateToDiscussion,
+                modifier = modifier,
+            )
         }
     }
 }

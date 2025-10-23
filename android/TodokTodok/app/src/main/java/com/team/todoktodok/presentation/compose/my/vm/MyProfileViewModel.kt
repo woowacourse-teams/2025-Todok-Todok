@@ -5,12 +5,12 @@ import com.team.domain.ConnectivityObserver
 import com.team.domain.model.ImagePayload
 import com.team.domain.model.member.MemberDiscussionType
 import com.team.domain.model.member.MemberId
+import com.team.domain.repository.DiscussionRepository
 import com.team.domain.repository.MemberRepository
 import com.team.domain.repository.TokenRepository
 import com.team.todoktodok.presentation.compose.my.MyProfileUiEvent
 import com.team.todoktodok.presentation.compose.my.MyProfileUiState
 import com.team.todoktodok.presentation.core.base.BaseViewModel
-import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussion
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,6 +21,7 @@ import kotlinx.coroutines.launch
 
 class MyProfileViewModel(
     private val memberRepository: MemberRepository,
+    private val discussionRepository: DiscussionRepository,
     private val tokenRepository: TokenRepository,
     connectivityObserver: ConnectivityObserver,
 ) : BaseViewModel(connectivityObserver) {
@@ -31,10 +32,15 @@ class MyProfileViewModel(
     val uiEvent get() = _uiEvent.receiveAsFlow()
 
     fun loadInitialProfile() {
+        loadMyMemberId()
         loadProfile()
         loadMyBooks()
+        loadDiscussions()
+    }
+
+    fun loadDiscussions() {
+        loadLikedDiscussions()
         loadParticipatedDiscussions()
-        loadMyMemberId()
     }
 
     private fun loadProfile() =
@@ -53,6 +59,14 @@ class MyProfileViewModel(
             handleFailure = { onUiEvent(MyProfileUiEvent.ShowErrorMessage(it)) },
         )
 
+    private fun loadLikedDiscussions() =
+        runAsync(
+            key = KEY_FETCH_LIKED_DISCUSSIONS,
+            action = { discussionRepository.getLikedDiscussion() },
+            handleSuccess = { result -> _uiState.update { it.setLikedDiscussions(result) } },
+            handleFailure = { onUiEvent(MyProfileUiEvent.ShowErrorMessage(it)) },
+        )
+
     private fun loadParticipatedDiscussions() =
         runAsync(
             key = KEY_FETCH_PARTICIPATED_DISCUSSIONS,
@@ -62,7 +76,7 @@ class MyProfileViewModel(
                     type = MemberDiscussionType.PARTICIPATED,
                 )
             },
-            handleSuccess = { result -> _uiState.update { it.addParticipatedDiscussions(result) } },
+            handleSuccess = { result -> _uiState.update { it.setParticipatedDiscussions(result) } },
             handleFailure = { onUiEvent(MyProfileUiEvent.ShowErrorMessage(it)) },
         )
 
@@ -74,14 +88,6 @@ class MyProfileViewModel(
 
     fun toggleShowMyDiscussion(isShow: Boolean) {
         _uiState.update { it.toggleShowMyDiscussion(isShow) }
-    }
-
-    fun removeDiscussion(discussionId: Long) {
-        _uiState.update { it.removeDiscussion(discussionId) }
-    }
-
-    fun modifyDiscussion(discussion: SerializationDiscussion) {
-        _uiState.update { it.modifyDiscussion(discussion) }
     }
 
     fun modifyProfileImage(imagePayload: ImagePayload) =
@@ -101,6 +107,7 @@ class MyProfileViewModel(
     companion object {
         private const val KEY_FETCH_PROFILE = "fetch_profile"
         private const val KEY_FETCH_MY_BOOKS = "fetch_my_books"
+        private const val KEY_FETCH_LIKED_DISCUSSIONS = "fetch_liked_discussions"
         private const val KEY_FETCH_PARTICIPATED_DISCUSSIONS = "fetch_participated_discussions"
         private const val KEY_MODIFY_PROFILE_IMAGE = "modify_profile_image"
     }

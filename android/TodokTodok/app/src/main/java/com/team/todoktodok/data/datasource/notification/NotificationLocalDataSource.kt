@@ -8,4 +8,8 @@ interface NotificationLocalDataSource {
     suspend fun saveFcmToken(token: String)
 
     suspend fun saveFId(id: String)
+
+    suspend fun allowedNotification(isAllowed: Boolean)
+
+    suspend fun getIsNotificationAllowed(): Boolean?
 }

@@ -14,6 +14,10 @@ data class SearchedBookResponse(
     val author: String,
     @SerialName("bookImage")
     val image: String,
+    @SerialName("bookPublisher")
+    val publisher: String = "",
+    @SerialName("bookSummary")
+    val summary: String = "",
 )
 
 fun SearchedBookResponse.toDomain() =
