@@ -76,6 +76,7 @@ public interface DiscussionLikeRepository extends JpaRepository<DiscussionLike, 
     @Query("""
                 SELECT dl.discussion.id
                 FROM DiscussionLike dl
+                JOIN dl.discussion d
                 WHERE dl.member = :member
                 ORDER BY dl.discussion.id DESC
             """)
