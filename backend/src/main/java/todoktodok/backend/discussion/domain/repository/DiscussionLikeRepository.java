@@ -74,10 +74,11 @@ public interface DiscussionLikeRepository extends JpaRepository<DiscussionLike, 
     boolean existsByMemberAndDiscussion(final Member member, final Discussion discussion);
 
     @Query("""
-                SELECT dl.discussion.id
+                SELECT d.id
                 FROM DiscussionLike dl
+                JOIN dl.discussion d
                 WHERE dl.member = :member
-                ORDER BY dl.discussion.id DESC
+                ORDER BY d.id DESC
             """)
     List<Long> findLikedDiscussionIdsByMember(@Param("member") final Member member);
 }
