@@ -20,30 +20,24 @@ import androidx.core.widget.addTextChangedListener
 import androidx.core.widget.doAfterTextChanged
 import com.team.domain.model.Book
 import com.team.domain.model.book.SearchedBook
-import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivityCreateDiscussionRoomBinding
 import com.team.todoktodok.presentation.compose.main.MainActivity
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
 import com.team.todoktodok.presentation.core.component.CommonDialog
-import com.team.todoktodok.presentation.core.ext.getParcelableCompat
 import com.team.todoktodok.presentation.core.ext.loadImage
 import com.team.todoktodok.presentation.xml.book.SelectBookActivity
 import com.team.todoktodok.presentation.xml.discussion.create.DraftDialog.Companion.KEY_REQUEST_DRAFT
 import com.team.todoktodok.presentation.xml.discussion.create.DraftDialog.Companion.KEY_RESULT_DRAFT
 import com.team.todoktodok.presentation.xml.discussion.create.vm.CreateDiscussionRoomViewModel
-import com.team.todoktodok.presentation.xml.discussion.create.vm.CreateDiscussionRoomViewModelFactory
+import com.team.todoktodok.presentation.xml.discussion.create.vm.CreateDiscussionRoomViewModel.Companion.EXTRA_MODE
 import com.team.todoktodok.presentation.xml.discussiondetail.DiscussionDetailActivity
 import com.team.todoktodok.presentation.xml.draft.DraftsActivity
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class CreateDiscussionRoomActivity : AppCompatActivity() {
-    private val mode by lazy {
-        intent.getParcelableCompat<SerializationCreateDiscussionRoomMode>(
-            EXTRA_MODE,
-        ) ?: throw IllegalStateException(MODE_NOT_EXIST)
-    }
-
     private val launcher =
         registerForActivityResult(
             ActivityResultContracts.StartActivityForResult(),
@@ -55,20 +49,13 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
                 viewModel.getDraft(selectedValue)
             }
         }
-    private val viewModel by viewModels<CreateDiscussionRoomViewModel> {
-        val repositoryModule = (application as App).container.repositoryModule
-        CreateDiscussionRoomViewModelFactory(
-            mode,
-            repositoryModule.bookRepository,
-            repositoryModule.discussionRepository,
-            repositoryModule.tokenRepository,
-        )
-    }
+    private val viewModel by viewModels<CreateDiscussionRoomViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityCreateDiscussionRoomBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         initSystemBar(binding)
         initView(binding)
         setupUiState(binding)
@@ -167,7 +154,7 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
                 viewModel.updateOpinion(text.toString())
             }
             etDiscussionRoomTitle.requestFocus()
-            when (mode) {
+            when (viewModel.mode) {
                 is SerializationCreateDiscussionRoomMode.Create -> settingCreateMode(binding)
                 is SerializationCreateDiscussionRoomMode.Edit -> settingEditMode(binding)
                 is SerializationCreateDiscussionRoomMode.Draft -> settingCreateMode(binding)
@@ -226,7 +213,7 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
         isDraft: Boolean,
         binding: ActivityCreateDiscussionRoomBinding,
     ) {
-        if (mode !is SerializationCreateDiscussionRoomMode.Create) return
+        if (viewModel.mode !is SerializationCreateDiscussionRoomMode.Create) return
 
         if (isDraft) {
             binding.btnBack.setOnClickListener { showDraftDialog() }
@@ -283,7 +270,7 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
     ) {
         decideBtnCreateColor(binding, isCreate)
         if (isCreate) {
-            if (mode is SerializationCreateDiscussionRoomMode.Create) {
+            if (viewModel.mode is SerializationCreateDiscussionRoomMode.Create) {
                 binding.btnBack.setOnClickListener {
                     viewModel.checkIsPossibleToSave()
                 }
@@ -386,8 +373,6 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
     companion object {
         private const val EXTRA_SELECTED_BOOK = "discussionBook"
         private const val EXTRA_DISCUSSION_ROOM_ID = "discussionRoomId"
-        private const val EXTRA_MODE = "mode"
-        private const val MODE_NOT_EXIST = "mode가 존재하지 않습니다."
 
         fun Intent(
             context: Context,
