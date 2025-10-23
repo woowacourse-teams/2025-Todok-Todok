@@ -19,33 +19,23 @@ import javax.inject.Singleton
 object ServiceModuleHilt {
     @Provides
     @Singleton
-    fun provideDiscussionService(
-        @Auth retrofit: Retrofit,
-    ): DiscussionService = retrofit.create(DiscussionService::class.java)
+    fun provideDiscussionService(retrofit: Retrofit): DiscussionService = retrofit.create(DiscussionService::class.java)
 
     @Provides
     @Singleton
-    fun provideMemberService(
-        @Auth retrofit: Retrofit,
-    ): MemberService = retrofit.create(MemberService::class.java)
+    fun provideMemberService(retrofit: Retrofit): MemberService = retrofit.create(MemberService::class.java)
 
     @Provides
     @Singleton
-    fun provideCommentService(
-        @Auth retrofit: Retrofit,
-    ): CommentService = retrofit.create(CommentService::class.java)
+    fun provideCommentService(retrofit: Retrofit): CommentService = retrofit.create(CommentService::class.java)
 
     @Provides
     @Singleton
-    fun provideBookService(
-        @Auth retrofit: Retrofit,
-    ): BookService = retrofit.create(BookService::class.java)
+    fun provideBookService(retrofit: Retrofit): BookService = retrofit.create(BookService::class.java)
 
     @Provides
     @Singleton
-    fun provideReplyService(
-        @Auth retrofit: Retrofit,
-    ): ReplyService = retrofit.create(ReplyService::class.java)
+    fun provideReplyService(retrofit: Retrofit): ReplyService = retrofit.create(ReplyService::class.java)
 
     @Provides
     @Singleton
@@ -55,7 +45,5 @@ object ServiceModuleHilt {
 
     @Provides
     @Singleton
-    fun provideNotificationService(
-        @Auth retrofit: Retrofit,
-    ): NotificationService = retrofit.create(NotificationService::class.java)
+    fun provideNotificationService(retrofit: Retrofit): NotificationService = retrofit.create(NotificationService::class.java)
 }

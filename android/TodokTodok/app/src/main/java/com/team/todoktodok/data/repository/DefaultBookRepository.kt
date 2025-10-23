@@ -31,32 +31,23 @@ class DefaultBookRepository
                 cursor = null
             }
 
-            override fun deleteCursor() {
-                cursor = null
+            this.keyword = keyword
+
+            val result =
+                bookRemoteDataSource
+                    .fetchBooks(size, cursor, keyword.value)
+
+            result.map { response ->
+                this.cursor = response.pageInfo.nextCursor
             }
 
-            override suspend fun fetchBooks(
-                size: Int,
-                keyword: Keyword,
-            ): NetworkResult<SearchedBooksResult> {
-                if (this.keyword != keyword) {
-                    cursor = null
-                }
-
-                this.keyword = keyword
-
-                val result =
-                    bookRemoteDataSource
-                        .fetchBooks(size, cursor, keyword.value)
-
-                result.map { response ->
-                    this.cursor = response.pageInfo.nextCursor
-                }
-
-                return result.map { response ->
-                    response.toDomain()
-                }
+            return result.map { response ->
+                response.toDomain()
             }
+        }
+
+        override fun deleteCursor() {
+            cursor = null
         }
 
         override suspend fun saveBook(book: SearchedBook): NetworkResult<Long> = bookRemoteDataSource.saveBook(book.toRequest())

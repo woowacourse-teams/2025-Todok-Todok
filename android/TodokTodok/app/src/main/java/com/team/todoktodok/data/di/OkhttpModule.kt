@@ -2,13 +2,13 @@ package com.team.todoktodok.data.di
 
 import com.team.todoktodok.BuildConfig
 import com.team.todoktodok.data.network.auth.AuthInterceptor
-import com.team.todoktodok.data.network.auth.TokenAuthenticator
 import com.team.todoktodok.log.PrettyJsonLogger
+import okhttp3.Authenticator
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 
 class OkhttpModule(
-    tokenAuthenticator: TokenAuthenticator,
+    tokenAuthenticator: Authenticator,
     authInterceptor: AuthInterceptor,
 ) {
     private val logger =

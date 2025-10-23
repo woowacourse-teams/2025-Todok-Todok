@@ -1,9 +1,10 @@
 package com.team.todoktodok.data.di
 
 import com.team.todoktodok.BuildConfig
+import com.team.todoktodok.data.datasource.token.TokenDataSource
 import com.team.todoktodok.data.network.auth.AuthInterceptor
-import com.team.todoktodok.data.network.auth.TokenAuthenticator
-import com.team.todoktodok.data.network.auth.TokenRefreshDelegator
+import com.team.todoktodok.data.network.auth.TokenAuthenticator2
+import com.team.todoktodok.data.network.service.RefreshService
 import com.team.todoktodok.log.PrettyJsonLogger
 import dagger.Module
 import dagger.Provides
@@ -28,16 +29,17 @@ object OkhttpModuleHilt {
         }
 
     @Provides
-    fun provideTokenAuthenticator(tokenRefreshDelegator: TokenRefreshDelegator): TokenAuthenticator =
-        TokenAuthenticator(
-            tokenRefreshDelegate = { tokenRefreshDelegator },
-        )
+    @Singleton
+    fun provideTokenAuthenticator(
+        service: RefreshService,
+        tokenDataSource: TokenDataSource,
+    ): TokenAuthenticator2 = TokenAuthenticator2(service, tokenDataSource)
 
     @Auth
     @Provides
     @Singleton
     fun provideAuthClient(
-        tokenAuthenticator: TokenAuthenticator,
+        tokenAuthenticator: TokenAuthenticator2,
         authInterceptor: AuthInterceptor,
         logger: HttpLoggingInterceptor,
     ): OkHttpClient =

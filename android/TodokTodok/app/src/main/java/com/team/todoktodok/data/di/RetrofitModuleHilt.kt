@@ -7,7 +7,6 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -29,18 +28,7 @@ object RetrofitModuleHilt {
             .addCallAdapterFactory(TodokTodokCallAdapterFactory())
             .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
 
-    @OptIn(ExperimentalSerializationApi::class)
     @Provides
-    @Singleton
-    fun provideDefaultRetrofit(): Retrofit.Builder =
-        Retrofit
-            .Builder()
-            .baseUrl(BuildConfig.BASE_URL)
-            .addCallAdapterFactory(TodokTodokCallAdapterFactory())
-            .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
-
-    @Provides
-    @Auth
     @Singleton
     fun provideAuthRetrofit(
         @Auth okHttpClient: OkHttpClient,
