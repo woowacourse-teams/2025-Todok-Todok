@@ -79,8 +79,8 @@ public class CommentEventHandler {
         }
 
         final String notificationBody = String.format("%s 님이 [%s] 토론방의 댓글에 %s를 보냈습니다",
-                commentLikeCreated.commentMemberId(),
-                commentLikeCreated, commentLikeCreated.discussionTitle(),
+                commentLikeCreated.authorNickname(),
+                commentLikeCreated.discussionTitle(),
                 HEART
         );
         final Long replyId = null;
