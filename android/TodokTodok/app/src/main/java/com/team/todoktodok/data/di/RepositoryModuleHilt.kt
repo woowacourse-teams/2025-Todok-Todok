@@ -18,28 +18,36 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class RepositoryModuleHilt {
     @Binds
+    @Singleton
     abstract fun bindsDiscussionRepository(repository: DefaultDiscussionRepository): DiscussionRepository
 
     @Binds
+    @Singleton
     abstract fun bindsCommentRepository(repository: DefaultCommentRepository): CommentRepository
 
     @Binds
+    @Singleton
     abstract fun bindsMemberRepository(repository: DefaultMemberRepository): MemberRepository
 
     @Binds
+    @Singleton
     abstract fun bindsBookRepository(repository: DefaultBookRepository): BookRepository
 
     @Binds
-    abstract fun binsTokenRepository(repository: DefaultTokenRepository): TokenRepository
+    @Singleton
+    abstract fun bindsTokenRepository(repository: DefaultTokenRepository): TokenRepository
 
     @Binds
+    @Singleton
     abstract fun bindsReplyRepository(repository: DefaultReplyRepository): ReplyRepository
 
     @Binds
+    @Singleton
     abstract fun bindsNotificationRepository(repository: DefaultNotificationRepository): NotificationRepository
 }
