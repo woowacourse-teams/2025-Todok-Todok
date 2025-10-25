@@ -154,7 +154,7 @@ jobs:
               body += `\n⚠️ **주의:** 실패한 단계: **${failedSteps.join(', ')}**\n`;
               body += `자세한 로그는 [Actions 실행 로그](${runUrl})에서 확인하세요.\n`;
             } else {
-              body += `\n🎉 SUCESS !🎉`;
+              body += `\n🎉 SUCCESS !🎉`;
             }
             
             if (context.eventName === 'pull_request') {
