@@ -10,6 +10,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.annotation.StringRes
 import androidx.core.os.bundleOf
 import androidx.core.view.doOnPreDraw
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -111,7 +112,7 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
             if (value.isLoading) {
                 binding.progressBar.show()
             } else {
-                binding.progressBar.hide()
+                if (binding.progressBar.isVisible) binding.progressBar.hide()
                 adapter.submitList(value.getCommentDetailItems())
                 val hasContent = value.content.isNotBlank()
                 binding.ivAddReply.isEnabled = hasContent

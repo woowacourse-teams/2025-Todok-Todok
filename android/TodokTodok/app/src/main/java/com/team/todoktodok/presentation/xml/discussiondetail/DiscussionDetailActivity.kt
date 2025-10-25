@@ -13,6 +13,7 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.commit
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.team.todoktodok.App
@@ -264,10 +265,9 @@ class DiscussionDetailActivity : AppCompatActivity() {
         viewModel.uiState.observe(this) { value ->
             with(binding) {
                 when (value) {
-                    is DiscussionDetailUiState.Failure -> {}
-                    DiscussionDetailUiState.Loading -> progressBar.show()
+                    DiscussionDetailUiState.Empty -> progressBar.show()
                     is DiscussionDetailUiState.Success -> {
-                        progressBar.hide()
+                        if (progressBar.isVisible) progressBar.hide()
                         val discussion = value.discussion
                         tvBookTitle.text = discussion.book.title.extractSubtitle()
                         tvDiscussionTitle.text = discussion.discussionTitle
