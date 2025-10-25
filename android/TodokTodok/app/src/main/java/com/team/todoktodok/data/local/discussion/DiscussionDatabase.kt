@@ -16,6 +16,7 @@ abstract class DiscussionDatabase : RoomDatabase() {
     companion object {
         private const val DISCUSSION_DATABASE = "discussion"
 
+        @Volatile
         private var instance: DiscussionDatabase? = null
 
         fun getInstance(context: Context): DiscussionDatabase =
