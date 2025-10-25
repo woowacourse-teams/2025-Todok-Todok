@@ -199,7 +199,7 @@ fun MainScreenContent(
             onCompleteModifyDiscussion = onCompleteModifyDiscussion,
             onChangeSearchBarVisibility = onChangeSearchBarVisibility,
             onChangeIsExistNotification = onChangeIsExistNotification,
-            navigateToDiscussion = { navController.navigate(MainDestination.Discussion) },
+            navigateToDiscussion = { navController.navigate(MainRoute.Discussion) },
             modifier = Modifier.padding(innerPadding),
         )
     }

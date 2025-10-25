@@ -26,9 +26,9 @@ fun MainNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = MainDestination.Discussion,
+        startDestination = MainRoute.Discussion,
     ) {
-        composable<MainDestination.Discussion> {
+        composable<MainRoute.Discussion> {
             DiscussionsScreen(
                 mainUiState = mainUiState,
                 pagerState = pagerState,
@@ -41,7 +41,8 @@ fun MainNavHost(
                 modifier = modifier,
             )
         }
-        composable<MainDestination.My> {
+
+        composable<MainRoute.My> {
             MyScreen(
                 navigateToDiscussion = navigateToDiscussion,
                 modifier = modifier,
