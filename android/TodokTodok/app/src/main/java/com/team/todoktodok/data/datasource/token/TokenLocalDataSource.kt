@@ -2,8 +2,8 @@ package com.team.todoktodok.data.datasource.token
 
 import android.content.Context
 import androidx.datastore.core.DataStore
-import com.team.todoktodok.data.database.UserSetting
-import com.team.todoktodok.data.database.dataStore
+import com.team.todoktodok.data.local.user.UserSetting
+import com.team.todoktodok.data.local.user.dataStore
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
