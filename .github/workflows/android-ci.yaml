@@ -164,8 +164,7 @@ jobs:
               .map(step => step.name);
             
             if (failedSteps.length > 0) {
-              body += `\n⚠️ **주의:** 실패한 단계: **${failedSteps.join(', ')}**\n`;
-              body += `자세한 로그는 [Actions 실행 로그](${runUrl})에서 확인하세요.\n`;
+              body += `\n⚠️ **실패:** : **${failedSteps.join(', ')}**\n`;
             } else {
               body += `\n🎉 SUCCESS !🎉`;
             }
