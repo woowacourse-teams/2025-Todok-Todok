@@ -2,11 +2,10 @@ package com.team.todoktodok.presentation.compose.main
 
 import kotlinx.serialization.Serializable
 
-@Serializable
-sealed class MainDestination {
+sealed interface MainRoute {
     @Serializable
-    data object Discussion : MainDestination()
+    data object Discussion : MainRoute
 
     @Serializable
-    data object My : MainDestination()
+    data object My : MainRoute
 }
