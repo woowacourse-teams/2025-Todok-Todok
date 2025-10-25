@@ -31,7 +31,6 @@ android {
         versionCode = 9
         versionName = "1.0.4"
 
-        buildConfigField("String", "BASE_URL", "\"${properties.getProperty("base_url")}\"")
         buildConfigField(
             "String",
             "GOOGLE_CLIENT_ID",
@@ -49,6 +48,15 @@ android {
     }
 
     buildTypes {
+        debug {
+            isMinifyEnabled = false
+            isShrinkResources = false
+
+            applicationIdSuffix = ".debug"
+            versionNameSuffix = "-debug"
+            buildConfigField("String", "BASE_URL", "\"${properties.getProperty("debug_base_url")}\"")
+        }
+
         release {
             isMinifyEnabled = true
             isShrinkResources = true
@@ -56,6 +64,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
             )
+            buildConfigField("String", "BASE_URL", "\"${properties.getProperty("release_base_url")}\"")
             signingConfig = signingConfigs.getByName("debug")
         }
     }
