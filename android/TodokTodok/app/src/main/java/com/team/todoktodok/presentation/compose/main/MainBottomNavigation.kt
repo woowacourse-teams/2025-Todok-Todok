@@ -6,14 +6,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.PersonOutline
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarDefaults
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -73,9 +73,10 @@ fun MainBottomNavigation(
                 )
             },
             colors = NavigationBarItemDefaults.colors(indicatorColor = Color.Transparent),
-            modifier = Modifier.noRippleClickable {
-                navigateToTab(navController, currentDestination, MainRoute.My)
-            }
+            modifier =
+                Modifier.noRippleClickable {
+                    navigateToTab(navController, currentDestination, MainRoute.My)
+                },
         )
 
         Box(
@@ -92,9 +93,10 @@ fun MainBottomNavigation(
             Icon(
                 painter = painterResource(R.drawable.stylus_24px),
                 tint = Color.White,
-                contentDescription = stringResource(
-                    R.string.bottom_navigation_content_description_create_discussion
-                ),
+                contentDescription =
+                    stringResource(
+                        R.string.bottom_navigation_content_description_create_discussion,
+                    ),
                 modifier =
                     Modifier
                         .size(50.dp)
@@ -121,9 +123,10 @@ fun MainBottomNavigation(
                 )
             },
             colors = NavigationBarItemDefaults.colors(indicatorColor = Color.Transparent),
-            modifier = Modifier.noRippleClickable {
-                navigateToTab(navController, currentDestination, MainRoute.My)
-            }
+            modifier =
+                Modifier.noRippleClickable {
+                    navigateToTab(navController, currentDestination, MainRoute.My)
+                },
         )
     }
 }
@@ -131,7 +134,7 @@ fun MainBottomNavigation(
 private fun navigateToTab(
     navController: NavHostController,
     currentDestination: NavDestination?,
-    route: MainRoute
+    route: MainRoute,
 ) {
     if (currentDestination?.hasRoute(route::class) != true) {
         navController.navigate(route) {
