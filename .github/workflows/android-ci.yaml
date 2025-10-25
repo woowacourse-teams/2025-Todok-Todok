@@ -2,11 +2,11 @@ name: Android CI [ an ]
 
 on:
   push:
-    branches: 
+    branches:
       - "an"
       - "an-user-test"
   pull_request:
-    branches: 
+    branches:
       - "an"
       - "an-user-test"
 
@@ -36,16 +36,26 @@ jobs:
           cache: gradle
 
       - name: Create local.properties
+        env:
+          RELEASE_BASE_URL: ${{ secrets.RELEASE_BASE_URL }}
+          DEBUG_BASE_URL: ${{ secrets.DEBUG_BASE_URL }}
         run: |
-          echo "sdk.dir=$ANDROID_SDK_ROOT" > local.properties
-          echo "base_url=${{ secrets.BASE_URL }}" >> local.properties          
+          echo release.base.url=\""${RELEASE_BASE_URL}"\" >> ./local.properties
+          echo debug.base.url=\""${DEBUG_BASE_URL}"\" >> ./local.properties
 
       - name: Grant execute permission to gradlew
         run: chmod +x gradlew
-   
+
       - name: Create google-services.json
-        run: echo '${{ secrets.GOOGLE_SERVICES_JSON }}' > ./app/google-services.json
-        
+        env:
+          GOOGLE_SERVICES_JSON_DEBUG: ${{ secrets.GOOGLE_SERVICES_JSON_DEBUG }}
+          GOOGLE_SERVICES_JSON_RELEASE: ${{ secrets.GOOGLE_SERVICES_JSON_RELEASE }}
+          run: |
+            mkdir -p ./app/src/debug
+            mkdir -p ./app/src/release
+            echo "${GOOGLE_SERVICES_JSON_DEBUG}" > ./app/src/debug/google-services.json
+            echo "${GOOGLE_SERVICES_JSON_RELEASE}" > ./app/google-services.json
+
       - name: Clean Project
         run: ./gradlew clean
 
