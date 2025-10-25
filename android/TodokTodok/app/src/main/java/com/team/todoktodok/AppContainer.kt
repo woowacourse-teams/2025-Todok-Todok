@@ -5,15 +5,15 @@ import com.team.domain.ConnectivityObserver
 import com.team.todoktodok.connectivity.NetworkConnectivityObserver
 import com.team.todoktodok.data.datasource.token.TokenDataSource
 import com.team.todoktodok.data.datasource.token.TokenLocalDataSource
+import com.team.todoktodok.data.network.auth.AuthInterceptor
+import com.team.todoktodok.data.network.auth.TokenAuthenticator
+import com.team.todoktodok.data.network.auth.TokenRefreshDelegator
 import com.team.todoktodok.di.DataSourceModule
 import com.team.todoktodok.di.LocalDatabaseModule
 import com.team.todoktodok.di.OkhttpModule
 import com.team.todoktodok.di.RepositoryModule
 import com.team.todoktodok.di.RetrofitModule
 import com.team.todoktodok.di.ServiceModule
-import com.team.todoktodok.data.network.auth.AuthInterceptor
-import com.team.todoktodok.data.network.auth.TokenAuthenticator
-import com.team.todoktodok.data.network.auth.TokenRefreshDelegator
 
 class AppContainer(
     context: Context,
