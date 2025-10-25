@@ -50,7 +50,7 @@ jobs:
         env:
           GOOGLE_SERVICES_JSON_DEBUG: ${{ secrets.GOOGLE_SERVICES_JSON_DEBUG }}
           GOOGLE_SERVICES_JSON_RELEASE: ${{ secrets.GOOGLE_SERVICES_JSON_RELEASE }}
-          run: |
+        run: |
             mkdir -p ./app/src/debug
             mkdir -p ./app/src/release
             echo "${GOOGLE_SERVICES_JSON_DEBUG}" > ./app/src/debug/google-services.json
