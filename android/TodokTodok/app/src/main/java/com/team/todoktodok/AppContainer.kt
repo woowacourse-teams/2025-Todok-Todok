@@ -1,43 +1,34 @@
 package com.team.todoktodok
 
 import android.content.Context
-import androidx.lifecycle.ProcessLifecycleOwner
-import androidx.lifecycle.lifecycleScope
 import com.team.domain.ConnectivityObserver
 import com.team.todoktodok.connectivity.NetworkConnectivityObserver
 import com.team.todoktodok.data.datasource.token.TokenDataSource
 import com.team.todoktodok.data.datasource.token.TokenLocalDataSource
-import com.team.todoktodok.data.di.DataSourceModule
-import com.team.todoktodok.data.di.LocalDatabaseModule
-import com.team.todoktodok.data.di.OkhttpModule
-import com.team.todoktodok.data.di.RepositoryModule
-import com.team.todoktodok.data.di.RetrofitModule
-import com.team.todoktodok.data.di.ServiceModule
 import com.team.todoktodok.data.network.auth.AuthInterceptor
 import com.team.todoktodok.data.network.auth.TokenAuthenticator
-import com.team.todoktodok.data.network.auth.TokenRefreshDelegate
 import com.team.todoktodok.data.network.auth.TokenRefreshDelegator
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlin.getValue
+import com.team.todoktodok.di.DataSourceModule
+import com.team.todoktodok.di.LocalDatabaseModule
+import com.team.todoktodok.di.OkhttpModule
+import com.team.todoktodok.di.RepositoryModule
+import com.team.todoktodok.di.RetrofitModule
+import com.team.todoktodok.di.ServiceModule
 
 class AppContainer(
     context: Context,
 ) {
-    val appScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
     val connectivityObserver: ConnectivityObserver by lazy {
-        NetworkConnectivityObserver(appScope, context)
+        NetworkConnectivityObserver(context)
     }
 
     val tokenAuthenticator: TokenAuthenticator by lazy {
         TokenAuthenticator(
             tokenRefreshDelegate = { refreshTokenHandler },
-            scope = ProcessLifecycleOwner.get().lifecycleScope,
         )
     }
 
-    private val refreshTokenHandler: TokenRefreshDelegate by lazy {
+    private val refreshTokenHandler: TokenRefreshDelegator by lazy {
         TokenRefreshDelegator(
             serviceModule.refreshService,
             tokenLocalDataSource,
@@ -63,7 +54,7 @@ class AppContainer(
         LocalDatabaseModule(context)
     }
     private val dataSourceModule: DataSourceModule by lazy {
-        DataSourceModule(serviceModule, localDatabaseModule, context)
+        DataSourceModule(serviceModule, context)
     }
 
     private val okHttpModule: OkhttpModule by lazy {

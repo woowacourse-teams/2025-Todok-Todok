@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.team.todoktodok.App
 import com.team.todoktodok.BuildConfig
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentLoginBinding
@@ -18,21 +17,14 @@ import com.team.todoktodok.presentation.core.ext.repeatOnViewStarted
 import com.team.todoktodok.presentation.view.auth.login.GoogleCredentialManager
 import com.team.todoktodok.presentation.xml.auth.signup.SignUpFragment
 import com.team.todoktodok.presentation.xml.auth.vm.AuthViewModel
-import com.team.todoktodok.presentation.xml.auth.vm.AuthViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class LoginFragment : Fragment(R.layout.fragment_login) {
     private lateinit var googleLoginManager: GoogleCredentialManager
     private lateinit var messageConverter: ExceptionMessageConverter
-    private val viewModel: AuthViewModel by viewModels {
-        val container = (requireActivity().application as App).container
-        val repositoryModule = container.repositoryModule
-        AuthViewModelFactory(
-            repositoryModule.memberRepository,
-            repositoryModule.tokenRepository,
-            container.connectivityObserver,
-        )
-    }
+    private val viewModel: AuthViewModel by viewModels()
 
     override fun onViewCreated(
         view: View,

@@ -42,7 +42,7 @@ class MyProfileViewModelTest {
         discussionRepository = mockk()
         connectivityObserver = mockk()
         tokenRepository = mockk()
-        every { connectivityObserver.subscribe() } returns emptyFlow()
+        every { connectivityObserver.subscribe(any()) } returns emptyFlow()
         every { connectivityObserver.value() } returns ConnectivityObserver.Status.Available
         viewModel =
             MyProfileViewModel(

@@ -1,4 +1,4 @@
-package com.team.todoktodok.data.di
+package com.team.todoktodok.di
 
 import android.content.Context
 import androidx.room.Room
@@ -10,8 +10,8 @@ import com.team.todoktodok.data.datasource.discussion.DefaultDiscussionLocalData
 import com.team.todoktodok.data.datasource.discussion.DefaultDiscussionRemoteDataSource
 import com.team.todoktodok.data.datasource.discussion.DiscussionLocalDataSource
 import com.team.todoktodok.data.datasource.discussion.DiscussionRemoteDataSource
-import com.team.todoktodok.data.datasource.member.DefaultMemberRemoteDataSource
-import com.team.todoktodok.data.datasource.member.MemberRemoteDataSource
+import com.team.todoktodok.data.datasource.discussion.member.DefaultMemberRemoteDataSource
+import com.team.todoktodok.data.datasource.discussion.member.MemberRemoteDataSource
 import com.team.todoktodok.data.datasource.notification.DefaultNotificationLocalDataSource
 import com.team.todoktodok.data.datasource.notification.DefaultNotificationRemoteDataSource
 import com.team.todoktodok.data.datasource.notification.NotificationLocalDataSource
@@ -23,7 +23,6 @@ import com.team.todoktodok.data.local.discussion.DiscussionDatabase
 
 class DataSourceModule(
     serviceModule: ServiceModule,
-    localDataSourceModule: LocalDatabaseModule,
     context: Context,
 ) {
     val discussionRemoteDataSource: DiscussionRemoteDataSource by lazy {
@@ -79,7 +78,7 @@ class DataSourceModule(
 
     val notificationLocalDataSource: NotificationLocalDataSource by lazy {
         DefaultNotificationLocalDataSource(
-            localDataSourceModule.notificationDataStore,
+            context,
         )
     }
 

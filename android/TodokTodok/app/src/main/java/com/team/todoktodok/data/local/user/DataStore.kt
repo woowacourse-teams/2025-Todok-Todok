@@ -1,4 +1,4 @@
-package com.team.todoktodok.data.database
+package com.team.todoktodok.data.local.user
 
 import android.content.Context
 import androidx.datastore.core.DataStore

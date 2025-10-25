@@ -34,7 +34,7 @@ class AuthViewModelTest {
         tokenRepository = mockk()
         connectivityObserver = mockk()
 
-        every { connectivityObserver.subscribe() } returns emptyFlow()
+        every { connectivityObserver.subscribe(any()) } returns emptyFlow()
         coEvery { tokenRepository.getMemberId() } returns 1L
 
         viewModel =

@@ -1,4 +1,4 @@
-package com.team.todoktodok.data.database
+package com.team.todoktodok.data.local.user
 
 import androidx.datastore.core.Serializer
 import kotlinx.coroutines.Dispatchers

@@ -43,7 +43,7 @@ abstract class BaseViewModel(
 
     private fun observeConnectivity() {
         viewModelScope.launch {
-            connectivityObserver.subscribe().collect { status ->
+            connectivityObserver.subscribe(this).collect { status ->
                 if (status == ConnectivityObserver.Status.Available && pendingActions.isNotEmpty()) {
                     _isRestoring.send(Unit)
 

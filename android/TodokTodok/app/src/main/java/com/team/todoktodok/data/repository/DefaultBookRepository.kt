@@ -13,51 +13,54 @@ import com.team.todoktodok.data.network.request.toRequest
 import com.team.todoktodok.data.network.response.book.toDomain
 import com.team.todoktodok.data.network.response.discussion.page.toDomain
 import com.team.todoktodok.data.network.response.discussion.toDomain
+import javax.inject.Inject
 
-class DefaultBookRepository(
-    private val bookRemoteDataSource: BookRemoteDataSource,
-) : BookRepository {
-    private var cursor: String? = null
-    private var keyword: Keyword? = null
+class DefaultBookRepository
+    @Inject
+    constructor(
+        private val bookRemoteDataSource: BookRemoteDataSource,
+    ) : BookRepository {
+        private var cursor: String? = null
+        private var keyword: Keyword? = null
 
-    override fun deleteCursor() {
-        cursor = null
-    }
+        override suspend fun fetchBooks(
+            size: Int,
+            keyword: Keyword,
+        ): NetworkResult<SearchedBooksResult> {
+            if (this.keyword != keyword) {
+                cursor = null
+            }
 
-    override suspend fun fetchBooks(
-        size: Int,
-        keyword: Keyword,
-    ): NetworkResult<SearchedBooksResult> {
-        if (this.keyword != keyword) {
+            this.keyword = keyword
+
+            val result =
+                bookRemoteDataSource
+                    .fetchBooks(size, cursor, keyword.value)
+
+            result.map { response ->
+                this.cursor = response.pageInfo.nextCursor
+            }
+
+            return result.map { response ->
+                response.toDomain()
+            }
+        }
+
+        override fun deleteCursor() {
             cursor = null
         }
 
-        this.keyword = keyword
+        override suspend fun saveBook(book: SearchedBook): NetworkResult<Long> = bookRemoteDataSource.saveBook(book.toRequest())
 
-        val result =
+        override suspend fun getBookDetail(bookId: Long): NetworkResult<BookDetail> =
+            bookRemoteDataSource.fetchBook(bookId).map { it.toDomain() }
+
+        override suspend fun getBookDiscussions(
+            bookId: Long,
+            size: Int,
+            cursor: String?,
+        ): NetworkResult<BookDiscussionsPage> =
             bookRemoteDataSource
-                .fetchBooks(size, cursor, keyword.value)
-
-        result.map { response ->
-            this.cursor = response.pageInfo.nextCursor
-        }
-
-        return result.map { response ->
-            response.toDomain()
-        }
+                .fetchBookDiscussions(bookId, size, cursor)
+                .map { discussions -> discussions.toDomain() }
     }
-
-    override suspend fun saveBook(book: SearchedBook): NetworkResult<Long> = bookRemoteDataSource.saveBook(book.toRequest())
-
-    override suspend fun getBookDetail(bookId: Long): NetworkResult<BookDetail> =
-        bookRemoteDataSource.fetchBook(bookId).map { it.toDomain() }
-
-    override suspend fun getBookDiscussions(
-        bookId: Long,
-        size: Int,
-        cursor: String?,
-    ): NetworkResult<BookDiscussionsPage> =
-        bookRemoteDataSource
-            .fetchBookDiscussions(bookId, size, cursor)
-            .map { discussions -> discussions.toDomain() }
-}

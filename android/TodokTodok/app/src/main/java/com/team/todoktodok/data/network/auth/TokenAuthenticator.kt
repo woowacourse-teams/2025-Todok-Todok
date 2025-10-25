@@ -3,10 +3,8 @@ package com.team.todoktodok.data.network.auth
 import com.team.todoktodok.data.core.AuthorizationConstants
 import com.team.todoktodok.data.core.ext.retryAttemptCount
 import kotlinx.coroutines.CompletableDeferred
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -18,8 +16,7 @@ import okhttp3.Route
 import java.util.concurrent.atomic.AtomicReference
 
 class TokenAuthenticator(
-    private val tokenRefreshDelegate: () -> TokenRefreshDelegate,
-    private val scope: CoroutineScope,
+    private val tokenRefreshDelegate: () -> TokenRefreshDelegator,
 ) : Authenticator {
     private val mutex = Mutex()
     private val ongoingRefresh = AtomicReference<Deferred<String?>>()
@@ -44,15 +41,13 @@ class TokenAuthenticator(
         }
     }
 
-    private fun createRefreshTask(): Deferred<String?> {
+    private suspend fun createRefreshTask(): Deferred<String?> {
         val deferred = CompletableDeferred<String?>()
         ongoingRefresh.set(deferred)
 
-        scope.launch {
-            val result = executeTokenRefresh()
-            deferred.complete(result)
-            ongoingRefresh.compareAndSet(deferred, null)
-        }
+        val result = executeTokenRefresh()
+        deferred.complete(result)
+        ongoingRefresh.compareAndSet(deferred, null)
 
         return deferred
     }
