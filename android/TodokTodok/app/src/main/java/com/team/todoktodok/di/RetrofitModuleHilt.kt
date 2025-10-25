@@ -1,4 +1,4 @@
-package com.team.todoktodok.data.di
+package com.team.todoktodok.di
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.team.todoktodok.BuildConfig

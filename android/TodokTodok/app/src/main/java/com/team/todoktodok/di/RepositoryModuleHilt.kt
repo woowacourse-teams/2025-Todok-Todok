@@ -1,4 +1,4 @@
-package com.team.todoktodok.data.di
+package com.team.todoktodok.di
 
 import com.team.domain.repository.BookRepository
 import com.team.domain.repository.CommentRepository

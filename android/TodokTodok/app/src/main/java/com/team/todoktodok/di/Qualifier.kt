@@ -1,4 +1,4 @@
-package com.team.todoktodok.data.di
+package com.team.todoktodok.di
 
 import javax.inject.Qualifier
 

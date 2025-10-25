@@ -1,4 +1,4 @@
-package com.team.todoktodok.data.di
+package com.team.todoktodok.di
 
 import com.team.todoktodok.data.network.service.BookService
 import com.team.todoktodok.data.network.service.CommentService

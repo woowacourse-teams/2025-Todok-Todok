@@ -1,4 +1,4 @@
-package com.team.todoktodok.data.di
+package com.team.todoktodok.di
 
 import com.team.todoktodok.BuildConfig
 import com.team.todoktodok.data.datasource.token.TokenDataSource

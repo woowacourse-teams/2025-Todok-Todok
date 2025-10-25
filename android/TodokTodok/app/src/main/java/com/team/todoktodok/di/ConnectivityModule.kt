@@ -1,4 +1,4 @@
-package com.team.todoktodok.data.di
+package com.team.todoktodok.di
 
 import android.content.Context
 import com.team.domain.ConnectivityObserver
