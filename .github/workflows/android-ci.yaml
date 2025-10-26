@@ -64,6 +64,10 @@ jobs:
           RELEASE_BASE_URL: ${{ secrets.RELEASE_BASE_URL }}
           DEBUG_BASE_URL: ${{ secrets.DEBUG_BASE_URL }}
         run: |
+          echo release_store_file=todoktodok.jks >> ./local.properties
+          echo "KEYSTORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}" >> local.properties
+          echo "KEY_ALIAS=${{ secrets.KEY_ALIAS }}" >> local.properties
+          echo "KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}" >> local.properties
           echo release.base.url=\""${RELEASE_BASE_URL}"\" >> ./local.properties
           echo debug.base.url=\""${DEBUG_BASE_URL}"\" >> ./local.properties
 
