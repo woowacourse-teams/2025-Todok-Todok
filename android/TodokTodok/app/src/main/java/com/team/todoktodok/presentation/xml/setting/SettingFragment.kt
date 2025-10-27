@@ -13,9 +13,9 @@ import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentSettingBinding
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
 import com.team.todoktodok.presentation.core.component.CommonDialog
-import com.team.todoktodok.presentation.view.auth.login.GoogleCredentialManager
 import com.team.todoktodok.presentation.view.setting.SettingUiEvent
 import com.team.todoktodok.presentation.xml.auth.AuthActivity
+import com.team.todoktodok.presentation.xml.auth.login.GoogleCredentialManager
 import com.team.todoktodok.presentation.xml.setting.vm.SettingViewModel
 import com.team.todoktodok.presentation.xml.setting.vm.SettingViewModelFactory
 import kotlinx.coroutines.launch

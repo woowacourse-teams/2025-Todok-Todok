@@ -28,10 +28,9 @@ android {
         applicationId = "com.team.todoktodok"
         minSdk = 30
         targetSdk = 35
-        versionCode = 9
-        versionName = "1.0.4"
+        versionCode = 12
+        versionName = "1.0.7"
 
-        buildConfigField("String", "BASE_URL", "\"${properties.getProperty("base_url")}\"")
         buildConfigField(
             "String",
             "GOOGLE_CLIENT_ID",
@@ -48,7 +47,29 @@ android {
         disable += "ComposeViewModelForwarding"
     }
 
+    signingConfigs {
+        create("release") {
+            storeFile = file(properties.getProperty("release_store_file"))
+            storePassword = properties.getProperty("release_store_password")
+            keyAlias = properties.getProperty("release_key_alias")
+            keyPassword = properties.getProperty("release_key_password")
+        }
+    }
+
     buildTypes {
+        debug {
+            isMinifyEnabled = false
+            isShrinkResources = false
+
+            applicationIdSuffix = ".debug"
+            versionNameSuffix = "-debug"
+            buildConfigField(
+                "String",
+                "BASE_URL",
+                "\"${properties.getProperty("debug_base_url")}\"",
+            )
+        }
+
         release {
             isMinifyEnabled = true
             isShrinkResources = true
@@ -56,7 +77,12 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
             )
-            signingConfig = signingConfigs.getByName("debug")
+            buildConfigField(
+                "String",
+                "BASE_URL",
+                "\"${properties.getProperty("release_base_url")}\"",
+            )
+            signingConfig = signingConfigs.getByName("release")
         }
     }
 

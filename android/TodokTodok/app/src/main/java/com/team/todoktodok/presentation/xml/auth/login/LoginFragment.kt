@@ -14,7 +14,6 @@ import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
 import com.team.todoktodok.presentation.core.ext.repeatOnStarted
 import com.team.todoktodok.presentation.core.ext.repeatOnViewStarted
-import com.team.todoktodok.presentation.view.auth.login.GoogleCredentialManager
 import com.team.todoktodok.presentation.xml.auth.signup.SignUpFragment
 import com.team.todoktodok.presentation.xml.auth.vm.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint

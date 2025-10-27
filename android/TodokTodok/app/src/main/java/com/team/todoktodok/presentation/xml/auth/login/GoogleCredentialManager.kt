@@ -1,4 +1,4 @@
-package com.team.todoktodok.presentation.view.auth.login
+package com.team.todoktodok.presentation.xml.auth.login
 
 import android.content.Context
 import androidx.credentials.ClearCredentialStateRequest
@@ -13,7 +13,6 @@ import androidx.credentials.exceptions.NoCredentialException
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
-import com.team.todoktodok.presentation.xml.auth.login.GoogleCredentialResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
