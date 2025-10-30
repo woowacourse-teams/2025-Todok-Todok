@@ -48,13 +48,20 @@ jobs:
           username: ${{ secrets.DOCKERHUB_DEPLOY_USERNAME }}
           password: ${{ secrets.DOCKERHUB_DEPLOY_TOKEN }}
 
-      - name: Stop running Container (without removing)
+      - name: Stop running Container (Gracefully)
         run: |
-          echo "prod 컨테이너 중지 중..."
-          docker ps -q --filter "name=^prod_" | xargs -r docker stop
-          echo "promtail_prod 컨테이너 중지 중..."
-          docker ps -q --filter "name=^promtail_prod_" | xargs -r docker stop
-          echo "prod/promtail 컨테이너 중지 완료"
+          echo "=== Stopping containers ==="
+
+          echo "1. Gracefully stopping application..."
+          docker stop -t 35 $(docker ps -q --filter "name=prod_") || true
+
+          echo "2. Stopping promtail..."
+          docker stop $(docker ps -q --filter "name=promtail_prod_") || true
+
+          echo "3. Waiting for ALB to detect unhealthy status..."
+          sleep 25
+
+          echo "=== Ready for new containers ==="
 
       - name: Docker Compose Pull & Up (no-build)
         env:
@@ -87,21 +94,22 @@ jobs:
         run: |
           sleep 15
           
-          for i in {1..5}; do
-          response=$(curl -s http://localhost:80/actuator/health_check)
-          echo "Attempt $i: Response Body: $response"
-        
-          if [[ "$response" == *"\"status\":\"UP\""* ]]; then
-          echo "Health check passed."
-          exit 0
-          fi
-        
-          if [ "$i" -eq 5 ]; then
-          echo "Health check failed after 5 attempts."
-          exit 1
-          fi
-        
-          sleep 5
+          for i in {1..10}; do
+            response=$(curl -s http://localhost:8080/management/health_check/readiness)
+            echo "Attempt $i: Response Body: $response"
+          
+            if [[ "$response" == *"\"status\":\"UP\""* ]]; then
+              echo "Health check passed. Application is ready."
+              exit 0
+            fi
+          
+            if [ "$i" -eq 10 ]; then
+              echo "Health check failed after 10 attempts."
+              exit 1
+            fi
+          
+            echo "Waiting 5 seconds..."
+            sleep 5
           done
 
   roll-back_prod_1:
@@ -139,6 +147,21 @@ jobs:
           username: ${{ secrets.DOCKERHUB_DEPLOY_USERNAME }}
           password: ${{ secrets.DOCKERHUB_DEPLOY_TOKEN }}
 
+      - name: Stop running Container (Gracefully)
+        run: |
+          echo "=== Stopping containers ==="
+
+          echo "1. Gracefully stopping application..."
+          docker stop -t 35 $(docker ps -q --filter "name=prod_") || true
+
+          echo "2. Stopping promtail..."
+          docker stop $(docker ps -q --filter "name=promtail_prod_") || true
+
+          echo "3. Waiting for ALB to detect unhealthy status..."
+          sleep 25
+
+          echo "=== Ready for new containers ==="
+
       - name: Docker Compose Pull & Up (no-build)
         env:
           ENV_ID: ${{ github.sha }}
@@ -164,19 +187,20 @@ jobs:
         run: |
           sleep 15
           
-          for i in {1..5}; do
-          response=$(curl -s http://localhost:80/actuator/health_check)
-          echo "Attempt $i: Response Body: $response"
-
-          if [[ "$response" == *"\"status\":\"UP\""* ]]; then
-          echo "Health check passed."
-          exit 0
-          fi
-
-          if [ "$i" -eq 5 ]; then
-          echo "Health check failed after 5 attempts."
-          exit 1
-          fi
-
-          sleep 5
+          for i in {1..10}; do
+            response=$(curl -s http://localhost:8080/management/health_check/readiness)
+            echo "Attempt $i: Response Body: $response"
+          
+            if [[ "$response" == *"\"status\":\"UP\""* ]]; then
+              echo "Health check passed. Application is ready."
+              exit 0
+            fi
+          
+            if [ "$i" -eq 10 ]; then
+              echo "Health check failed after 10 attempts."
+              exit 1
+            fi
+          
+            echo "Waiting 5 seconds..."
+            sleep 5
           done

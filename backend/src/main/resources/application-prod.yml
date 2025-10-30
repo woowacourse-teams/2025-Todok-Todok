@@ -29,6 +29,9 @@ spring:
     out-of-order: false
     encoding: UTF-8
 
+    lifecycle:
+      timeout-per-shutdown-phase: 30s
+
   config:
     activate:
       on-profile: prod
@@ -46,6 +49,19 @@ management:
         include: [prometheus, health]
       path-mapping:
         health: health_check
+
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      show-details: always
+
+  health:
+    readinessState:
+      enabled: true
+    db:
+      enabled: true
+
   prometheus:
     metrics:
       export:
@@ -58,6 +74,8 @@ management:
             requests: true
 
 server:
+  shutdown: graceful
+
   tomcat:
     mbeanregistry:
       enabled: true
