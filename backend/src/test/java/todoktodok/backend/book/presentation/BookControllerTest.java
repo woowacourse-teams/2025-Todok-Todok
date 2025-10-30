@@ -192,7 +192,7 @@ public class BookControllerTest {
         }
 
         @Test
-        @DisplayName("검색어로 도서를 검색한다 - 마지막 페이지 조회(여섯번째가 마지막일 때)")
+        @DisplayName("검색어로 도서를 검색한다 - 마지막 페이지 조회(다섯번째가 마지막일 때)")
         void searchByPagingTest_lastPage() {
             // given
             databaseInitializer.setDefaultUserInfo();
@@ -201,7 +201,7 @@ public class BookControllerTest {
             final String token = MemberFixture.getTestAccessToken("user@gmail.com");
             final String keyword = "클린";
 
-            final String cursorMeaningSix = "Ng==";
+            final String cursorMeaningSix = "NQ==";
 
             // when - then
             RestAssured.given().log().all()
@@ -245,6 +245,7 @@ public class BookControllerTest {
                     .body("pageInfo.hasNext", is(false))
                     .body("pageInfo.nextCursor", nullValue());
         }
+
         @Test
         @DisplayName("검색어로 도서를 검색한다 - cursor가 20보다 클 때")
         void searchByPagingTest_upperTwentyPage() {
