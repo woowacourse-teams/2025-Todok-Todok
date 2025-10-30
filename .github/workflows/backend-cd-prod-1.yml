@@ -95,21 +95,21 @@ jobs:
           sleep 15
           
           for i in {1..10}; do
-            response=$(curl -s http://localhost:8080/management/health_check/readiness)
-            echo "Attempt $i: Response Body: $response"
+          response=$(curl -s http://localhost:80/actuator/health_check/readiness)
+          echo "Attempt $i: Response Body: $response"
           
-            if [[ "$response" == *"\"status\":\"UP\""* ]]; then
-              echo "Health check passed. Application is ready."
-              exit 0
-            fi
-          
-            if [ "$i" -eq 10 ]; then
-              echo "Health check failed after 10 attempts."
-              exit 1
-            fi
-          
-            echo "Waiting 5 seconds..."
-            sleep 5
+          if [[ "$response" == *"\"status\":\"UP\""* ]]; then
+          echo "Health check passed. Application is ready."
+          exit 0
+          fi
+        
+          if [ "$i" -eq 10 ]; then
+          echo "Health check failed after 10 attempts."
+          exit 1
+          fi
+        
+          echo "Waiting 5 seconds..."
+          sleep 5
           done
 
   roll-back_prod_1:
@@ -188,19 +188,19 @@ jobs:
           sleep 15
           
           for i in {1..10}; do
-            response=$(curl -s http://localhost:8080/management/health_check/readiness)
-            echo "Attempt $i: Response Body: $response"
+          response=$(curl -s http://localhost:80/actuator/health_check/readiness)
+          echo "Attempt $i: Response Body: $response"
           
-            if [[ "$response" == *"\"status\":\"UP\""* ]]; then
-              echo "Health check passed. Application is ready."
-              exit 0
-            fi
+          if [[ "$response" == *"\"status\":\"UP\""* ]]; then
+          echo "Health check passed. Application is ready."
+          exit 0
+          fi
           
-            if [ "$i" -eq 10 ]; then
-              echo "Health check failed after 10 attempts."
-              exit 1
-            fi
+          if [ "$i" -eq 10 ]; then
+          echo "Health check failed after 10 attempts."
+          exit 1
+          fi
           
-            echo "Waiting 5 seconds..."
-            sleep 5
+          echo "Waiting 5 seconds..."
+          sleep 5
           done
