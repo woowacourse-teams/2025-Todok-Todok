@@ -50,18 +50,19 @@ jobs:
 
       - name: Stop running Container (Gracefully)
         run: |
-          echo "=== Stopping containers ==="
+          echo "=== Phase 1: Stop receiving new requests ==="
+          curl -X POST http://localhost:80/actuator/health/readiness/down || true
+          
+          echo "=== Phase 2: Wait for ALB to detect unhealthy ==="
+          sleep 60
+          
+          echo "=== Phase 3: Now safe to shutdown ==="
 
           echo "1. Gracefully stopping application..."
           docker stop -t 35 $(docker ps -q --filter "name=prod_") || true
 
           echo "2. Stopping promtail..."
           docker stop $(docker ps -q --filter "name=promtail_prod_") || true
-
-          echo "3. Waiting for ALB to detect unhealthy status..."
-          sleep 25
-
-          echo "=== Ready for new containers ==="
 
       - name: Docker Compose Pull & Up (no-build)
         env:
@@ -149,18 +150,19 @@ jobs:
 
       - name: Stop running Container (Gracefully)
         run: |
-          echo "=== Stopping containers ==="
+          echo "=== Phase 1: Stop receiving new requests ==="
+          curl -X POST http://localhost:80/actuator/health/readiness/down || true
+          
+          echo "=== Phase 2: Wait for ALB to detect unhealthy ==="
+          sleep 60
+          
+          echo "=== Phase 3: Now safe to shutdown ==="
 
           echo "1. Gracefully stopping application..."
           docker stop -t 35 $(docker ps -q --filter "name=prod_") || true
 
           echo "2. Stopping promtail..."
           docker stop $(docker ps -q --filter "name=promtail_prod_") || true
-
-          echo "3. Waiting for ALB to detect unhealthy status..."
-          sleep 25
-
-          echo "=== Ready for new containers ==="
 
       - name: Docker Compose Pull & Up (no-build)
         env:
