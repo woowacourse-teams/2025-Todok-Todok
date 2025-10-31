@@ -33,7 +33,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.team.todoktodok.R
-import com.team.todoktodok.presentation.compose.core.extension.noRippleClickable
 import com.team.todoktodok.presentation.compose.theme.Gray9F
 import com.team.todoktodok.presentation.compose.theme.Green1A
 import com.team.todoktodok.presentation.compose.theme.WhiteF9
@@ -54,7 +53,6 @@ fun MainBottomNavigation(
         containerColor = WhiteF9,
     ) {
         val isDiscussionSelected = currentDestination?.hasRoute<MainRoute.Discussion>() == true
-
         NavigationBarItem(
             selected = isDiscussionSelected,
             onClick = { navigateToTab(navController, currentDestination, MainRoute.Discussion) },
@@ -73,10 +71,6 @@ fun MainBottomNavigation(
                 )
             },
             colors = NavigationBarItemDefaults.colors(indicatorColor = Color.Transparent),
-            modifier =
-                Modifier.noRippleClickable {
-                    navigateToTab(navController, currentDestination, MainRoute.My)
-                },
         )
 
         Box(
@@ -123,10 +117,6 @@ fun MainBottomNavigation(
                 )
             },
             colors = NavigationBarItemDefaults.colors(indicatorColor = Color.Transparent),
-            modifier =
-                Modifier.noRippleClickable {
-                    navigateToTab(navController, currentDestination, MainRoute.My)
-                },
         )
     }
 }
