@@ -41,3 +41,8 @@ google:
 admin:
   email-path: ${admin.email-path}
   password: ${admin.password}
+
+database:
+  fragmentation-check:
+    enabled: false
+    cron: "0 0 3 * * *"

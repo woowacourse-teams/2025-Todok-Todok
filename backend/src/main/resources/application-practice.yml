@@ -61,3 +61,8 @@ firebase:
 jwt:
   access-token:
     expire-mills: ${jwt.access-token.dev.expire-mills}
+
+database:
+  fragmentation-check:
+    enabled: true
+    cron: "0 0 3 * * *"
