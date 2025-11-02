@@ -16,9 +16,12 @@ import com.team.todoktodok.presentation.core.event.SingleLiveData
 import com.team.todoktodok.presentation.xml.book.SearchedBookStatus
 import com.team.todoktodok.presentation.xml.book.SelectBookUiEvent
 import com.team.todoktodok.presentation.xml.book.SelectBookUiState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class SelectBookViewModel(
+@HiltViewModel
+class SelectBookViewModel @Inject constructor(
     private val bookRepository: BookRepository,
 ) : ViewModel() {
     private val _uiState: MutableLiveData<SelectBookUiState> = MutableLiveData(SelectBookUiState())
