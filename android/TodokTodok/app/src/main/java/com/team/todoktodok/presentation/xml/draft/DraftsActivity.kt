@@ -8,18 +8,15 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.team.todoktodok.App
 import com.team.todoktodok.databinding.ActivityDraftsBinding
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
 import com.team.todoktodok.presentation.xml.draft.adapter.DraftsAdapter
 import com.team.todoktodok.presentation.xml.draft.vm.DraftsViewModel
-import com.team.todoktodok.presentation.xml.draft.vm.DraftsViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class DraftsActivity : AppCompatActivity() {
-    private val viewModel by viewModels<DraftsViewModel> {
-        val repositoryModule = (application as App).container.repositoryModule
-        DraftsViewModelFactory(repositoryModule.discussionRepository)
-    }
+    private val viewModel by viewModels<DraftsViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
