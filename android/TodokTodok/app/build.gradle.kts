@@ -118,7 +118,6 @@ dependencies {
     implementation(libs.bundles.google)
     implementation(libs.bundles.glide)
     implementation(libs.bundles.logging)
-    implementation(libs.kotlinx.collections.immutable)
 
     testImplementation(libs.bundles.test)
     testImplementation(libs.androidx.core.testing)
@@ -127,7 +126,7 @@ dependencies {
     ksp(libs.androidx.room.compiler)
 
     // Hilt
-    implementation(libs.hilt.android)
+    implementation(libs.bundles.hilt)
 
     androidTestImplementation(libs.hilt.android.testing)
     testImplementation(libs.hilt.android.testing)
