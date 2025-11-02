@@ -10,6 +10,7 @@ import com.team.todoktodok.presentation.compose.main.MainUiEvent
 import com.team.todoktodok.presentation.compose.main.MainUiState
 import com.team.todoktodok.presentation.core.base.BaseViewModel
 import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussion
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,105 +18,109 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MainViewModel(
-    private val discussionRepository: DiscussionRepository,
-    private val notificationRepository: NotificationRepository,
-    networkConnectivityObserver: ConnectivityObserver,
-) : BaseViewModel(networkConnectivityObserver) {
-    private val _uiState = MutableStateFlow(MainUiState())
-    val uiState: StateFlow<MainUiState> get() = _uiState.asStateFlow()
+@HiltViewModel
+class MainViewModel
+    @Inject
+    constructor(
+        private val discussionRepository: DiscussionRepository,
+        private val notificationRepository: NotificationRepository,
+        networkConnectivityObserver: ConnectivityObserver,
+    ) : BaseViewModel(networkConnectivityObserver) {
+        private val _uiState = MutableStateFlow(MainUiState())
+        val uiState: StateFlow<MainUiState> get() = _uiState.asStateFlow()
 
-    private val _uiEvent = Channel<MainUiEvent>(Channel.BUFFERED)
-    val uiEvent get() = _uiEvent.receiveAsFlow()
+        private val _uiEvent = Channel<MainUiEvent>(Channel.BUFFERED)
+        val uiEvent get() = _uiEvent.receiveAsFlow()
 
-    init {
-        getIsNotificationAllowed()
-    }
-
-    fun sendPushNotificationToken() {
-        viewModelScope.launch {
-            notificationRepository
-                .registerPushNotification()
-                .onFailure { exceptions ->
-                    onUiEvent(MainUiEvent.ShowErrorMessage(exceptions))
-                }
+        init {
+            getIsNotificationAllowed()
         }
-    }
 
-    fun allowedNotification(isAllowed: Boolean) {
-        viewModelScope.launch {
-            _uiState.update { it.changeAllowedNotification(isAllowed) }
-            notificationRepository.allowedNotification(_uiState.value.isAllowed)
-        }
-    }
-
-    fun getIsNotificationAllowed() {
-        viewModelScope.launch {
-            val result = notificationRepository.getIsNotificationAllowed()
-            if (result != null) {
-                _uiState.update { it.changeAllowedNotification(result) }
-            } else {
-                _uiState.update { it.changeAllowedNotification(true) }
+        fun sendPushNotificationToken() {
+            viewModelScope.launch {
+                notificationRepository
+                    .registerPushNotification()
+                    .onFailure { exceptions ->
+                        onUiEvent(MainUiEvent.ShowErrorMessage(exceptions))
+                    }
             }
         }
-    }
 
-    fun loadIsUnreadNotification() {
-        viewModelScope.launch {
-            notificationRepository
-                .getUnreadNotificationsCount()
-                .onSuccess { isExist ->
-                    _uiState.update { it.changeUnreadNotification(isExist) }
-                }.onFailure { exceptions ->
-                    onUiEvent(MainUiEvent.ShowErrorMessage(exceptions))
+        fun allowedNotification(isAllowed: Boolean) {
+            viewModelScope.launch {
+                _uiState.update { it.changeAllowedNotification(isAllowed) }
+                notificationRepository.allowedNotification(_uiState.value.isAllowed)
+            }
+        }
+
+        fun getIsNotificationAllowed() {
+            viewModelScope.launch {
+                val result = notificationRepository.getIsNotificationAllowed()
+                if (result != null) {
+                    _uiState.update { it.changeAllowedNotification(result) }
+                } else {
+                    _uiState.update { it.changeAllowedNotification(true) }
                 }
+            }
+        }
+
+        fun loadIsUnreadNotification() {
+            viewModelScope.launch {
+                notificationRepository
+                    .getUnreadNotificationsCount()
+                    .onSuccess { isExist ->
+                        _uiState.update { it.changeUnreadNotification(isExist) }
+                    }.onFailure { exceptions ->
+                        onUiEvent(MainUiEvent.ShowErrorMessage(exceptions))
+                    }
+            }
+        }
+
+        fun loadSearchedDiscussions() {
+            val keyword = _uiState.value.searchDiscussion.type.keyword
+            if (keyword.isBlank()) return
+
+            runAsync(
+                key = KEY_SEARCH_DISCUSSIONS,
+                action = { discussionRepository.getSearchDiscussion(keyword) },
+                handleSuccess = { result ->
+                    _uiState.update { it.addSearchDiscussion(keyword, result) }
+                    onUiEvent(MainUiEvent.ScrollToAllDiscussion)
+                },
+                handleFailure = { onUiEvent(MainUiEvent.ShowErrorMessage(it)) },
+            )
+        }
+
+        fun changeSearchBarVisibility() {
+            _uiState.update { it.changeSearchBarVisibility() }
+        }
+
+        fun clearSearchResult() {
+            _uiState.update { it.clearSearchDiscussion() }
+        }
+
+        fun removeDiscussion(discussionId: Long) {
+            _uiState.update { it.removeDiscussion(discussionId) }
+        }
+
+        fun modifySearchKeyword(keyword: String) {
+            _uiState.update { it.modifySearchKeyword(keyword) }
+            if (keyword.isBlank()) clearSearchResult()
+        }
+
+        fun modifyDiscussion(discussion: SerializationDiscussion) {
+            _uiState.update { it.modifyDiscussion(discussion) }
+        }
+
+        private fun onUiEvent(event: MainUiEvent) {
+            viewModelScope.launch {
+                _uiEvent.send(event)
+            }
+        }
+
+        companion object {
+            private const val KEY_SEARCH_DISCUSSIONS = "SEARCH_DISCUSSIONS"
         }
     }
-
-    fun loadSearchedDiscussions() {
-        val keyword = _uiState.value.searchDiscussion.type.keyword
-        if (keyword.isBlank()) return
-
-        runAsync(
-            key = KEY_SEARCH_DISCUSSIONS,
-            action = { discussionRepository.getSearchDiscussion(keyword) },
-            handleSuccess = { result ->
-                _uiState.update { it.addSearchDiscussion(keyword, result) }
-                onUiEvent(MainUiEvent.ScrollToAllDiscussion)
-            },
-            handleFailure = { onUiEvent(MainUiEvent.ShowErrorMessage(it)) },
-        )
-    }
-
-    fun changeSearchBarVisibility() {
-        _uiState.update { it.changeSearchBarVisibility() }
-    }
-
-    fun clearSearchResult() {
-        _uiState.update { it.clearSearchDiscussion() }
-    }
-
-    fun removeDiscussion(discussionId: Long) {
-        _uiState.update { it.removeDiscussion(discussionId) }
-    }
-
-    fun modifySearchKeyword(keyword: String) {
-        _uiState.update { it.modifySearchKeyword(keyword) }
-        if (keyword.isBlank()) clearSearchResult()
-    }
-
-    fun modifyDiscussion(discussion: SerializationDiscussion) {
-        _uiState.update { it.modifyDiscussion(discussion) }
-    }
-
-    private fun onUiEvent(event: MainUiEvent) {
-        viewModelScope.launch {
-            _uiEvent.send(event)
-        }
-    }
-
-    companion object {
-        private const val KEY_SEARCH_DISCUSSIONS = "SEARCH_DISCUSSIONS"
-    }
-}

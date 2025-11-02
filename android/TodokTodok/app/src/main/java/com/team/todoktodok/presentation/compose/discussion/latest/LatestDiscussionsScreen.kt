@@ -26,10 +26,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.team.domain.model.PageInfo
-import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.presentation.compose.LocalUiExceptionHandler
 import com.team.todoktodok.presentation.compose.core.ObserveAsEvents
@@ -37,7 +37,6 @@ import com.team.todoktodok.presentation.compose.core.component.CloverProgressBar
 import com.team.todoktodok.presentation.compose.core.component.DiscussionCard
 import com.team.todoktodok.presentation.compose.core.component.InfinityLazyColumn
 import com.team.todoktodok.presentation.compose.discussion.latest.vm.LatestDiscussionViewModel
-import com.team.todoktodok.presentation.compose.discussion.latest.vm.LatestDiscussionViewModelFactory
 import com.team.todoktodok.presentation.compose.preview.LatestDiscussionsPreviewParameterProvider
 import com.team.todoktodok.presentation.compose.theme.Green1A
 import com.team.todoktodok.presentation.compose.theme.White
@@ -48,10 +47,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun LatestDiscussionsScreen(
     modifier: Modifier = Modifier,
-    viewModel: LatestDiscussionViewModel =
-        viewModel(
-            factory = LatestDiscussionViewModelFactory((LocalContext.current.applicationContext as App).container),
-        ),
+    viewModel: LatestDiscussionViewModel = hiltViewModel(),
 ) {
     val activityResultLauncher =
         rememberLauncherForActivityResult(

@@ -28,9 +28,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.presentation.compose.LocalUiExceptionHandler
 import com.team.todoktodok.presentation.compose.core.ObserveAsEvents
@@ -39,7 +39,6 @@ import com.team.todoktodok.presentation.compose.core.component.DiscussionCard
 import com.team.todoktodok.presentation.compose.core.component.InfinityLazyColumn
 import com.team.todoktodok.presentation.compose.discussion.activate.ActivatedDiscussionHeader
 import com.team.todoktodok.presentation.compose.discussion.hot.vm.HotDiscussionViewModel
-import com.team.todoktodok.presentation.compose.discussion.hot.vm.HotDiscussionViewModelFactory
 import com.team.todoktodok.presentation.compose.discussion.popular.PopularDiscussionsScreen
 import com.team.todoktodok.presentation.compose.preview.HotDiscussionPreviewParameterProvider
 import com.team.todoktodok.presentation.compose.theme.Green1A
@@ -50,13 +49,7 @@ import com.team.todoktodok.presentation.xml.discussiondetail.DiscussionDetailAct
 @Composable
 fun HotDiscussionScreen(
     modifier: Modifier = Modifier,
-    viewModel: HotDiscussionViewModel =
-        viewModel(
-            factory =
-                HotDiscussionViewModelFactory(
-                    appContainer = (LocalContext.current.applicationContext as App).container,
-                ),
-        ),
+    viewModel: HotDiscussionViewModel = hiltViewModel(),
 ) {
     val activityResultLauncher =
         rememberLauncherForActivityResult(

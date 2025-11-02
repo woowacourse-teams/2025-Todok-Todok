@@ -23,7 +23,7 @@ import com.team.todoktodok.databinding.MenuOwnedDiscussionBinding
 import com.team.todoktodok.presentation.compose.bookdiscussions.BookDiscussionsActivity
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionResult.Companion.EXTRA_DELETE_DISCUSSION
 import com.team.todoktodok.presentation.compose.main.MainActivity
-import com.team.todoktodok.presentation.core.ExceptionMessageConverter2
+import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
 import com.team.todoktodok.presentation.core.component.CommonDialog
 import com.team.todoktodok.presentation.core.component.ReportDialog
@@ -59,7 +59,7 @@ class DiscussionDetailActivity : AppCompatActivity() {
     private var popupWindow: PopupWindow? = null
 
     @Inject
-    lateinit var messageConverter: ExceptionMessageConverter2
+    lateinit var messageConverter: ExceptionMessageConverter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

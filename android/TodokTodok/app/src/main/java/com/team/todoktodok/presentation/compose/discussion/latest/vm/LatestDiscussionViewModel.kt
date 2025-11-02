@@ -6,6 +6,7 @@ import com.team.domain.repository.DiscussionRepository
 import com.team.todoktodok.presentation.compose.discussion.latest.LatestDiscussionsUiEvent
 import com.team.todoktodok.presentation.compose.discussion.latest.LatestDiscussionsUiState
 import com.team.todoktodok.presentation.core.base.BaseViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,44 +14,48 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class LatestDiscussionViewModel(
-    private val discussionRepository: DiscussionRepository,
-    networkConnectivityObserver: ConnectivityObserver,
-) : BaseViewModel(networkConnectivityObserver) {
-    private val _uiState = MutableStateFlow(LatestDiscussionsUiState())
-    val uiState: StateFlow<LatestDiscussionsUiState> get() = _uiState.asStateFlow()
+@HiltViewModel
+class LatestDiscussionViewModel
+    @Inject
+    constructor(
+        private val discussionRepository: DiscussionRepository,
+        networkConnectivityObserver: ConnectivityObserver,
+    ) : BaseViewModel(networkConnectivityObserver) {
+        private val _uiState = MutableStateFlow(LatestDiscussionsUiState())
+        val uiState: StateFlow<LatestDiscussionsUiState> get() = _uiState.asStateFlow()
 
-    private val _uiEvent = Channel<LatestDiscussionsUiEvent>(Channel.BUFFERED)
-    val uiEvent get() = _uiEvent.receiveAsFlow()
+        private val _uiEvent = Channel<LatestDiscussionsUiEvent>(Channel.BUFFERED)
+        val uiEvent get() = _uiEvent.receiveAsFlow()
 
-    fun loadLatestDiscussions() {
-        val currentState = _uiState.value
-        if (!currentState.hasNext || (isLoading.value)) return
-        val cursor = currentState.nextCursor
+        fun loadLatestDiscussions() {
+            val currentState = _uiState.value
+            if (!currentState.hasNext || (isLoading.value)) return
+            val cursor = currentState.nextCursor
 
-        runAsync(
-            key = KEY_LATEST_DISCUSSIONS,
-            action = { discussionRepository.getLatestDiscussions(cursor = cursor) },
-            handleSuccess = { result ->
-                _uiState.update { it.appendDiscussion(result) }
-            },
-            handleFailure = { onUiEvent(LatestDiscussionsUiEvent.ShowErrorMessage(it)) },
-        )
-    }
+            runAsync(
+                key = KEY_LATEST_DISCUSSIONS,
+                action = { discussionRepository.getLatestDiscussions(cursor = cursor) },
+                handleSuccess = { result ->
+                    _uiState.update { it.appendDiscussion(result) }
+                },
+                handleFailure = { onUiEvent(LatestDiscussionsUiEvent.ShowErrorMessage(it)) },
+            )
+        }
 
-    fun refreshLatestDiscussions() {
-        _uiState.update { it.clearForRefresh() }
-        loadLatestDiscussions()
-    }
+        fun refreshLatestDiscussions() {
+            _uiState.update { it.clearForRefresh() }
+            loadLatestDiscussions()
+        }
 
-    private fun onUiEvent(event: LatestDiscussionsUiEvent) {
-        viewModelScope.launch {
-            _uiEvent.send(event)
+        private fun onUiEvent(event: LatestDiscussionsUiEvent) {
+            viewModelScope.launch {
+                _uiEvent.send(event)
+            }
+        }
+
+        companion object {
+            private const val KEY_LATEST_DISCUSSIONS = "LATEST_DISCUSSIONS"
         }
     }
-
-    companion object {
-        private const val KEY_LATEST_DISCUSSIONS = "LATEST_DISCUSSIONS"
-    }
-}
