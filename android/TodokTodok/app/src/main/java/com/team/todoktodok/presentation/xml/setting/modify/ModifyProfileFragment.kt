@@ -14,21 +14,20 @@ import com.team.domain.model.member.NickNameException
 import com.team.domain.model.member.Nickname
 import com.team.domain.model.member.ProfileException
 import com.team.domain.model.member.ProfileMessage
-import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentModifyProfileBinding
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
 import com.team.todoktodok.presentation.xml.setting.modify.vm.ModifyProfileViewModel
-import com.team.todoktodok.presentation.xml.setting.modify.vm.ModifyProfileViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class ModifyProfileFragment : Fragment(R.layout.fragment_modify_profile) {
-    private val viewModel: ModifyProfileViewModel by viewModels {
-        val repositoryModule = (requireActivity().application as App).container.repositoryModule
-        ModifyProfileViewModelFactory(repositoryModule.memberRepository)
-    }
+    private val viewModel: ModifyProfileViewModel by viewModels()
 
-    private lateinit var messageConverter: ExceptionMessageConverter
+    @Inject
+    lateinit var messageConverter: ExceptionMessageConverter
 
     override fun onViewCreated(
         view: View,
@@ -36,7 +35,6 @@ class ModifyProfileFragment : Fragment(R.layout.fragment_modify_profile) {
     ) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentModifyProfileBinding.bind(view)
-        messageConverter = ExceptionMessageConverter()
 
         initView(binding)
         observeUiState(binding)
@@ -122,12 +120,15 @@ class ModifyProfileFragment : Fragment(R.layout.fragment_modify_profile) {
                             NickNameException.InvalidLength -> {
                                 getString(R.string.profile_invalid_nickname_length)
                             }
+
                             NickNameException.InvalidWhiteSpace -> {
                                 getString(R.string.profile_invalid_nickname_white_space)
                             }
+
                             NickNameException.InvalidCharacters -> {
                                 getString(R.string.profile_invalid_nickname_character)
                             }
+
                             NickNameException.SameNicknameModification -> {
                                 getString(R.string.profile_invalid_nickname_same)
                             }
@@ -137,7 +138,8 @@ class ModifyProfileFragment : Fragment(R.layout.fragment_modify_profile) {
                 is ModifyProfileUiEvent.ShowInvalidMessageMessage -> {
                     when (event.exception) {
                         ProfileException.SameMessageModification -> {
-                            binding.etMessageLayout.error = getString(R.string.profile_invalid_profile_message_same)
+                            binding.etMessageLayout.error =
+                                getString(R.string.profile_invalid_profile_message_same)
                         }
                     }
                 }

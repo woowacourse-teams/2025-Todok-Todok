@@ -7,7 +7,6 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import com.team.todoktodok.App
 import com.team.todoktodok.BuildConfig
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentSettingBinding
@@ -17,14 +16,12 @@ import com.team.todoktodok.presentation.view.setting.SettingUiEvent
 import com.team.todoktodok.presentation.xml.auth.AuthActivity
 import com.team.todoktodok.presentation.xml.auth.login.GoogleCredentialManager
 import com.team.todoktodok.presentation.xml.setting.vm.SettingViewModel
-import com.team.todoktodok.presentation.xml.setting.vm.SettingViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class SettingFragment : Fragment(R.layout.fragment_setting) {
-    private val viewModel: SettingViewModel by activityViewModels {
-        val repositoryModule = (requireActivity().application as App).container.repositoryModule
-        SettingViewModelFactory(repositoryModule.tokenRepository)
-    }
+    private val viewModel: SettingViewModel by activityViewModels()
 
     override fun onViewCreated(
         view: View,

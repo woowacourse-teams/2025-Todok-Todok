@@ -5,7 +5,6 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.team.domain.model.member.BlockedMember
-import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentManageBlockedMembersBinding
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
@@ -13,19 +12,17 @@ import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.A
 import com.team.todoktodok.presentation.core.component.CommonDialog
 import com.team.todoktodok.presentation.xml.setting.manage.adapter.BlockedMembersAdapter
 import com.team.todoktodok.presentation.xml.setting.manage.vm.ManageBlockedMembersViewModel
-import com.team.todoktodok.presentation.xml.setting.manage.vm.ManageBlockedMembersViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class ManageBlockedMembersFragment : Fragment(R.layout.fragment_manage_blocked_members) {
-    private val viewModel: ManageBlockedMembersViewModel by viewModels {
-        val repositoryModule = (requireActivity().application as App).container.repositoryModule
-        ManageBlockedMembersViewModelFactory(repositoryModule.memberRepository)
-    }
+    private val viewModel: ManageBlockedMembersViewModel by viewModels()
 
     private lateinit var blockedMembersAdapter: BlockedMembersAdapter
 
-    private val messageConverter: ExceptionMessageConverter by lazy {
-        ExceptionMessageConverter()
-    }
+    @Inject
+    lateinit var messageConverter: ExceptionMessageConverter
 
     override fun onViewCreated(
         view: View,
