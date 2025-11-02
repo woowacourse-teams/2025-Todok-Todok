@@ -18,12 +18,15 @@ import com.team.todoktodok.presentation.xml.auth.signup.SignUpFragment
 import com.team.todoktodok.presentation.xml.auth.vm.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class LoginFragment : Fragment(R.layout.fragment_login) {
-    private lateinit var googleLoginManager: GoogleCredentialManager
-    private lateinit var messageConverter: ExceptionMessageConverter
     private val viewModel: AuthViewModel by viewModels()
+    private lateinit var googleLoginManager: GoogleCredentialManager
+
+    @Inject
+    lateinit var messageConverter: ExceptionMessageConverter
 
     override fun onViewCreated(
         view: View,
@@ -32,7 +35,6 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentLoginBinding.bind(view)
         googleLoginManager = GoogleCredentialManager(requireContext(), BuildConfig.GOOGLE_CLIENT_ID)
-        messageConverter = ExceptionMessageConverter()
 
         setupLoading(binding)
         setUpRestoringState(binding)
