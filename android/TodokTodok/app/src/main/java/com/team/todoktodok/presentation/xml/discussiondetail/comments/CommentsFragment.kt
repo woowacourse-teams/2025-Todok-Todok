@@ -18,7 +18,6 @@ import androidx.lifecycle.DEFAULT_ARGS_KEY
 import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentCommentsBinding
 import com.team.todoktodok.databinding.MenuExternalDiscussionBinding
@@ -35,11 +34,12 @@ import com.team.todoktodok.presentation.xml.discussiondetail.commentcreate.Comme
 import com.team.todoktodok.presentation.xml.discussiondetail.commentdetail.CommentDetailFragment
 import com.team.todoktodok.presentation.xml.discussiondetail.comments.adapter.CommentAdapter
 import com.team.todoktodok.presentation.xml.discussiondetail.comments.vm.CommentsViewModel
-import com.team.todoktodok.presentation.xml.discussiondetail.comments.vm.CommentsViewModelFactory
 import com.team.todoktodok.presentation.xml.discussiondetail.model.CommentItemUiState
 import com.team.todoktodok.presentation.xml.discussiondetail.vm.DiscussionDetailViewModel
 import com.team.todoktodok.presentation.xml.profile.ProfileActivity
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class CommentsFragment : Fragment(R.layout.fragment_comments) {
     private val adapter by lazy { CommentAdapter(adapterHandler) }
 
@@ -49,13 +49,6 @@ class CommentsFragment : Fragment(R.layout.fragment_comments) {
 
     private val viewModel by viewModels<CommentsViewModel>(
         ownerProducer = { requireActivity() },
-        factoryProducer = {
-            val repositoryModule = (requireActivity().application as App).container.repositoryModule
-            CommentsViewModelFactory(
-                repositoryModule.commentRepository,
-                repositoryModule.tokenRepository,
-            )
-        },
         extrasProducer = {
             MutableCreationExtras(requireActivity().defaultViewModelCreationExtras).apply {
                 this[DEFAULT_ARGS_KEY] = buildCommentArgs()

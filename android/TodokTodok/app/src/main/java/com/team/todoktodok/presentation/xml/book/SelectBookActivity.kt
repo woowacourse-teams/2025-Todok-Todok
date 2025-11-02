@@ -19,7 +19,6 @@ import androidx.core.view.WindowInsetsCompat
 import com.team.domain.model.book.Keyword
 import com.team.domain.model.book.SearchedBook
 import com.team.domain.model.book.length
-import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivitySelectBookBinding
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter

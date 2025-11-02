@@ -12,7 +12,6 @@ import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentCommentCreateBottomSheetBinding
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
@@ -20,13 +19,11 @@ import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.A
 import com.team.todoktodok.presentation.xml.discussiondetail.BottomSheetVisibilityListener
 import com.team.todoktodok.presentation.xml.discussiondetail.commentdetail.vm.CommentDetailViewModel
 import com.team.todoktodok.presentation.xml.discussiondetail.replycreate.vm.ReplyCreateViewModel
-import com.team.todoktodok.presentation.xml.discussiondetail.replycreate.vm.ReplyCreateViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ReplyCreateBottomSheet : BottomSheetDialogFragment(R.layout.fragment_comment_create_bottom_sheet) {
-    private val viewModel by viewModels<ReplyCreateViewModel> {
-        val repoModule = (requireActivity().application as App).container.repositoryModule
-        ReplyCreateViewModelFactory(repoModule.replyRepository)
-    }
+    private val viewModel by viewModels<ReplyCreateViewModel>()
 
     private val commentDetailViewModel by viewModels<CommentDetailViewModel>(
         ownerProducer = { requireParentFragment() },

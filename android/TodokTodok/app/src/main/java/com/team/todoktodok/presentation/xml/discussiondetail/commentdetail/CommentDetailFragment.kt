@@ -14,7 +14,6 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentCommentDetailBinding
 import com.team.todoktodok.databinding.MenuExternalDiscussionBinding
@@ -31,12 +30,13 @@ import com.team.todoktodok.presentation.xml.discussiondetail.commentcreate.Comme
 import com.team.todoktodok.presentation.xml.discussiondetail.commentdetail.adapter.CommentDetailAdapter
 import com.team.todoktodok.presentation.xml.discussiondetail.commentdetail.adapter.CommentDetailItems
 import com.team.todoktodok.presentation.xml.discussiondetail.commentdetail.vm.CommentDetailViewModel
-import com.team.todoktodok.presentation.xml.discussiondetail.commentdetail.vm.CommentDetailViewModelFactory
 import com.team.todoktodok.presentation.xml.discussiondetail.comments.vm.CommentsViewModel
 import com.team.todoktodok.presentation.xml.discussiondetail.replycreate.ReplyCreateBottomSheet
 import com.team.todoktodok.presentation.xml.discussiondetail.vm.DiscussionDetailViewModel
 import com.team.todoktodok.presentation.xml.profile.ProfileActivity
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
     private val adapter by lazy { CommentDetailAdapter(commentDetailHandler) }
 
@@ -46,14 +46,7 @@ class CommentDetailFragment : Fragment(R.layout.fragment_comment_detail) {
         ownerProducer = { requireActivity() },
     )
 
-    private val viewModel by viewModels<CommentDetailViewModel> {
-        val repositoryModule = (requireActivity().application as App).container.repositoryModule
-        CommentDetailViewModelFactory(
-            repositoryModule.commentRepository,
-            repositoryModule.replyRepository,
-            repositoryModule.tokenRepository,
-        )
-    }
+    private val viewModel by viewModels<CommentDetailViewModel>()
 
     private var popupWindow: PopupWindow? = null
 

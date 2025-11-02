@@ -16,7 +16,6 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.commit
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivityDiscussionDetailBinding
 import com.team.todoktodok.databinding.MenuExternalDiscussionBinding
@@ -43,7 +42,6 @@ import com.team.todoktodok.presentation.xml.discussiondetail.comments.CommentsFr
 import com.team.todoktodok.presentation.xml.discussiondetail.vm.DiscussionDetailViewModel
 import com.team.todoktodok.presentation.xml.discussiondetail.vm.DiscussionDetailViewModel.Companion.KEY_DISCUSSION_ID
 import com.team.todoktodok.presentation.xml.discussiondetail.vm.DiscussionDetailViewModel.Companion.KEY_MODE
-import com.team.todoktodok.presentation.xml.discussiondetail.vm.DiscussionDetailViewModelFactory
 import com.team.todoktodok.presentation.xml.profile.ProfileActivity
 import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussion
 import dagger.hilt.android.AndroidEntryPoint
@@ -51,13 +49,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class DiscussionDetailActivity : AppCompatActivity() {
-    private val viewModel by viewModels<DiscussionDetailViewModel> {
-        val repositoryModule = (application as App).container.repositoryModule
-        DiscussionDetailViewModelFactory(
-            repositoryModule.discussionRepository,
-            repositoryModule.tokenRepository,
-        )
-    }
+    private val viewModel by viewModels<DiscussionDetailViewModel>()
     private val binding: ActivityDiscussionDetailBinding by lazy {
         ActivityDiscussionDetailBinding.inflate(
             layoutInflater,

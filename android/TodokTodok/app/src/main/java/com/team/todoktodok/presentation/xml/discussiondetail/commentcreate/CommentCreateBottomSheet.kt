@@ -12,31 +12,28 @@ import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentCommentCreateBottomSheetBinding
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
 import com.team.todoktodok.presentation.xml.discussiondetail.BottomSheetVisibilityListener
 import com.team.todoktodok.presentation.xml.discussiondetail.commentcreate.vm.CommentCreateViewModel
-import com.team.todoktodok.presentation.xml.discussiondetail.commentcreate.vm.CommentCreateViewModelFactory
 import com.team.todoktodok.presentation.xml.discussiondetail.comments.vm.CommentsViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class CommentCreateBottomSheet : BottomSheetDialogFragment(R.layout.fragment_comment_create_bottom_sheet) {
-    private val commentsViewModel by viewModels<CommentsViewModel>(
+    private val commentsViewModel: CommentsViewModel by viewModels(
         ownerProducer = { requireActivity() },
     )
 
-    private val viewModel by viewModels<CommentCreateViewModel> {
-        val repositoryModule = (requireActivity().application as App).container.repositoryModule
-        CommentCreateViewModelFactory(
-            repositoryModule.commentRepository,
-        )
-    }
+    private val viewModel: CommentCreateViewModel by viewModels()
 
     private var visibilityListener: BottomSheetVisibilityListener? = null
 
-    private val messageConverter by lazy { ExceptionMessageConverter() }
+    @Inject
+    lateinit var messageConverter: ExceptionMessageConverter
 
     fun setVisibilityListener(listener: BottomSheetVisibilityListener) {
         visibilityListener = listener
