@@ -13,7 +13,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.team.todoktodok.App
 import com.team.todoktodok.databinding.ActivityNotificationBinding
 import com.team.todoktodok.presentation.compose.main.MainActivity.Companion.KEY_REFRESH_NOTIFICATION
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
@@ -22,15 +21,11 @@ import com.team.todoktodok.presentation.xml.discussiondetail.DiscussionDetailAct
 import com.team.todoktodok.presentation.xml.notification.adapter.NotificationAdapter
 import com.team.todoktodok.presentation.xml.notification.adapter.NotificationGroup
 import com.team.todoktodok.presentation.xml.notification.vm.NotificationViewModel
-import com.team.todoktodok.presentation.xml.notification.vm.NotificationViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class NotificationActivity : AppCompatActivity() {
-    private val viewModel by viewModels<NotificationViewModel> {
-        val repositoryModule = (application as App).container.repositoryModule
-        NotificationViewModelFactory(
-            repositoryModule.notificationRepository,
-        )
-    }
+    private val viewModel by viewModels<NotificationViewModel>()
 
     private val launcher =
         registerForActivityResult(
