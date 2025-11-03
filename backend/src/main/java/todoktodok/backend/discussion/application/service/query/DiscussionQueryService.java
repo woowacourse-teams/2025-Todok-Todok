@@ -279,25 +279,6 @@ public class DiscussionQueryService {
         return getDiscussionsResponses(discussionIds, member);
     }
 
-//    private List<DiscussionResponse> getDiscussionsResponses(
-//            final List<Long> discussionIds,
-//            final Member member
-//    ) {
-//        if (discussionIds.isEmpty()) {
-//            return List.of();
-//        }
-//
-//        final List<DiscussionLikeSummaryDto> likeSummaries = discussionLikeRepository.findLikeSummaryByDiscussionIds(
-//                member, discussionIds);
-//        final List<DiscussionCommentCountDto> commentCounts = commentRepository.findCommentCountsByDiscussionIds(
-//                discussionIds);
-//
-//        final Map<Long, LikeCountAndIsLikedByMeDto> likesByDiscussionId = mapLikeSummariesByDiscussionId(likeSummaries);
-//        final Map<Long, Integer> commentsByDiscussionId = mapTotalCommentCountsByDiscussionId(commentCounts);
-//
-//        return makeResponsesFrom(discussionIds, likesByDiscussionId, commentsByDiscussionId);
-//    }
-
     private List<DiscussionResponse> getDiscussionsResponses(
             final List<Long> discussionIds,
             final Member member
@@ -306,14 +287,36 @@ public class DiscussionQueryService {
             return List.of();
         }
 
-        final Map<Long, DiscussionResponse> responsesById = discussionRepository.findDiscussionResponses(discussionIds,//3회
-                        member).stream()
-                .collect(Collectors.toMap(DiscussionResponse::discussionId, response -> response));
+        final List<DiscussionLikeSummaryDto> likeSummaries = discussionLikeRepository.findLikeSummaryByDiscussionIds(
+                member, discussionIds);
+        final List<DiscussionCommentCountDto> commentCounts = commentRepository.findCommentCountsByDiscussionIds(
+                discussionIds);
 
-        return discussionIds.stream()
-                .map(responsesById::get)
-                .toList();
+        final Map<Long, LikeCountAndIsLikedByMeDto> likesByDiscussionId = mapLikeSummariesByDiscussionId(likeSummaries);
+        final Map<Long, Integer> commentsByDiscussionId = mapTotalCommentCountsByDiscussionId(commentCounts);
+
+        return makeResponsesFrom(discussionIds, likesByDiscussionId, commentsByDiscussionId);
     }
+
+    /*
+    새로운 버전
+     */
+//    private List<DiscussionResponse> getDiscussionsResponses(
+//            final List<Long> discussionIds,
+//            final Member member
+//    ) {
+//        if (discussionIds.isEmpty()) {
+//            return List.of();
+//        }
+//
+//        final Map<Long, DiscussionResponse> responsesById = discussionRepository.findDiscussionResponses(discussionIds,//3회
+//                        member).stream()
+//                .collect(Collectors.toMap(DiscussionResponse::discussionId, response -> response));
+//
+//        return discussionIds.stream()
+//                .map(responsesById::get)
+//                .toList();
+//    }
 
     private List<DiscussionResponse> makeResponsesFrom(
             final List<Long> discussionIds,
