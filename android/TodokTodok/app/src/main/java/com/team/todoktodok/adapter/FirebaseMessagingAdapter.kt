@@ -21,11 +21,13 @@ import com.team.todoktodok.adapter.model.FcmNotification
 import com.team.todoktodok.adapter.model.FcmNotification.Companion.FcmNotification
 import com.team.todoktodok.presentation.compose.main.MainActivity
 import com.team.todoktodok.presentation.xml.serialization.toSerialization
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class FirebaseMessagingAdapter : FirebaseMessagingService() {
     @Inject
     lateinit var notificationRepository: NotificationRepository

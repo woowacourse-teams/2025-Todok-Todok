@@ -17,7 +17,6 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.team.domain.model.ImagePayload
 import com.team.todoktodok.presentation.compose.LocalUiExceptionHandler
 import com.team.todoktodok.presentation.compose.core.ObserveAsEvents

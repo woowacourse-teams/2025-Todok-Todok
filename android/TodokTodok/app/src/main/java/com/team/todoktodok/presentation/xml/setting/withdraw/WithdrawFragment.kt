@@ -10,7 +10,9 @@ import com.team.todoktodok.databinding.FragmentWithdrawBinding
 import com.team.todoktodok.presentation.core.component.CommonDialog
 import com.team.todoktodok.presentation.xml.auth.AuthActivity
 import com.team.todoktodok.presentation.xml.setting.withdraw.vm.WithdrawViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class WithdrawFragment : Fragment(R.layout.fragment_withdraw) {
     private val viewModel: WithdrawViewModel by viewModels()
 
