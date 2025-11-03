@@ -132,4 +132,15 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
             @Param("cursorId") final Long cursorId,
             final Pageable pageable
     );
+    
+    @Query("""
+            SELECT d.id
+            FROM Discussion d
+            LEFT JOIN DiscussionLike dl ON dl.discussion = d AND dl.createdAt >= :sinceDate
+            LEFT JOIN Comment c ON c.discussion = d AND c.createdAt >= :sinceDate
+            LEFT JOIN Reply r ON r.comment = c AND r.createdAt >= :sinceDate
+            GROUP BY d.id
+            ORDER BY (COUNT(DISTINCT dl.id) + COUNT(DISTINCT c.id) + COUNT(DISTINCT r.id)) DESC, d.id DESC
+        """)
+    List<Long> findHotDiscussionIds(@Param("sinceDate") final LocalDateTime sinceDate, final Pageable pageable);
 }

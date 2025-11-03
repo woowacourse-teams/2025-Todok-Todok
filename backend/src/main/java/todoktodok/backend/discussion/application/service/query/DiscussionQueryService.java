@@ -131,25 +131,12 @@ public class DiscussionQueryService {
         validateDiscussionPeriod(period);
         validateHotDiscussionCount(count);
 
+        // 쿼리 수 감소 진행
         final Member member = findMember(memberId);
         final LocalDateTime sinceDate = LocalDate.now().minusDays(period).atStartOfDay();
-        final List<Long> discussionIds = discussionRepository.findAllIds();
+        final Pageable pageable = PageRequest.of(0, count);
 
-        if (discussionIds.isEmpty()) {
-            return Collections.emptyList();
-        }
-
-        final List<DiscussionLikeSummaryDto> likeSinceCounts = discussionLikeRepository.findLikeSummariesByDiscussionIdsSinceDate(
-                member, discussionIds, sinceDate);
-        final List<DiscussionCommentCountDto> commentSinceCounts = commentRepository.findCommentCountsByDiscussionIdsSinceDate(
-                discussionIds, sinceDate);
-
-        final Map<Long, LikeCountAndIsLikedByMeDto> likesByDiscussionId = mapLikeSummariesByDiscussionId(
-                likeSinceCounts);
-        final Map<Long, Integer> commentsByDiscussionId = mapTotalCommentCountsByDiscussionId(commentSinceCounts);
-
-        final List<Long> hotDiscussionIds = findHotDiscussions(count, likesByDiscussionId, commentsByDiscussionId,
-                discussionIds);
+        final List<Long> hotDiscussionIds = discussionRepository.findHotDiscussionIds(sinceDate, pageable);
 
         return getDiscussionsResponses(hotDiscussionIds, member);
     }
@@ -363,27 +350,6 @@ public class DiscussionQueryService {
             throw new IllegalArgumentException(
                     String.format("유효하지 않은 기간 값입니다. 0일 ~ 7일 이내로 조회해주세요: period = %d", period));
         }
-    }
-
-    private static List<Long> findHotDiscussions(
-            final int count,
-            final Map<Long, LikeCountAndIsLikedByMeDto> likesByDiscussionId,
-            final Map<Long, Integer> commentsByDiscussionId,
-            final List<Long> discussionIds
-    ) {
-        final ToIntFunction<Long> totalCountByDiscussion =
-                discussionId ->
-                        likesByDiscussionId.get(discussionId).likeCount()
-                                + commentsByDiscussionId.getOrDefault(discussionId, 0);
-
-        return discussionIds.stream()
-                .sorted(Comparator
-                        .comparingInt(totalCountByDiscussion)
-                        .reversed()
-                        .thenComparing(discussionId -> discussionId, Comparator.reverseOrder())
-                )
-                .limit(count)
-                .toList();
     }
 
     private String getNextCursor(
