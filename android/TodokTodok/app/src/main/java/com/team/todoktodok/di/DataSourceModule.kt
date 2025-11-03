@@ -1,7 +1,6 @@
 package com.team.todoktodok.di
 
 import android.content.Context
-import androidx.room.Room
 import com.team.todoktodok.data.datasource.book.BookRemoteDataSource
 import com.team.todoktodok.data.datasource.book.DefaultBookRemoteDataSource
 import com.team.todoktodok.data.datasource.comment.CommentRemoteDataSource
@@ -18,71 +17,89 @@ import com.team.todoktodok.data.datasource.notification.NotificationLocalDataSou
 import com.team.todoktodok.data.datasource.notification.NotificationRemoteDataSource
 import com.team.todoktodok.data.datasource.reply.DefaultReplyRemoteDataSource
 import com.team.todoktodok.data.datasource.reply.ReplyRemoteDataSource
+import com.team.todoktodok.data.datasource.token.TokenDataSource
 import com.team.todoktodok.data.datasource.token.TokenLocalDataSource
 import com.team.todoktodok.data.local.discussion.DiscussionDatabase
+import com.team.todoktodok.data.network.service.BookService
+import com.team.todoktodok.data.network.service.CommentService
+import com.team.todoktodok.data.network.service.DiscussionService
+import com.team.todoktodok.data.network.service.MemberService
+import com.team.todoktodok.data.network.service.NotificationService
+import com.team.todoktodok.data.network.service.ReplyService
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
-class DataSourceModule(
-    serviceModule: ServiceModule,
-    context: Context,
-) {
-    val discussionRemoteDataSource: DiscussionRemoteDataSource by lazy {
-        DefaultDiscussionRemoteDataSource(
-            serviceModule.discussionService,
-        )
-    }
+@Module
+@InstallIn(SingletonComponent::class)
+object DataSourceModule {
+    @Provides
+    @Singleton
+    fun provideDiscussionRemoteDataSource(service: DiscussionService): DiscussionRemoteDataSource =
+        DefaultDiscussionRemoteDataSource(service)
 
-    val commentRemoteDataSource: CommentRemoteDataSource by lazy {
+    @Provides
+    @Singleton
+    fun provideCommentRemoteDataSource(service: CommentService): CommentRemoteDataSource =
         DefaultCommentRemoteDataSource(
-            serviceModule.commentService,
+            service,
         )
-    }
 
-    val tokenLocalDataSource: TokenLocalDataSource by lazy { TokenLocalDataSource(context) }
+    @Provides
+    @Singleton
+    fun provideTokenLocalDataSource(
+        @ApplicationContext context: Context,
+    ): TokenDataSource = TokenLocalDataSource(context)
 
-    val memberRemoteDataSource: MemberRemoteDataSource by lazy {
+    @Provides
+    @Singleton
+    fun provideMemberRemoteDataSource(
+        service: MemberService,
+        tokenLocalDataSource: TokenLocalDataSource,
+    ): MemberRemoteDataSource =
         DefaultMemberRemoteDataSource(
-            serviceModule.memberService,
+            service,
             tokenLocalDataSource,
         )
-    }
 
-    val bookRemoteDataSource: BookRemoteDataSource by lazy {
+    @Provides
+    @Singleton
+    fun provideBookRemoteDataSource(service: BookService): BookRemoteDataSource =
         DefaultBookRemoteDataSource(
-            serviceModule.bookService,
+            service,
         )
-    }
 
-    val replyRemoteDataSource: ReplyRemoteDataSource by lazy {
+    @Provides
+    @Singleton
+    fun provideReplyRemoteDataSource(service: ReplyService): ReplyRemoteDataSource =
         DefaultReplyRemoteDataSource(
-            serviceModule.replyService,
+            service,
         )
-    }
 
-    val discussionLocalDataSource: DiscussionLocalDataSource by lazy {
+    @Provides
+    @Singleton
+    fun provideDiscussionLocalDataSource(
+        @ApplicationContext context: Context,
+    ): DiscussionLocalDataSource =
         DefaultDiscussionLocalDataSource(
-            Room
-                .databaseBuilder(
-                    context,
-                    DiscussionDatabase::class.java,
-                    DATABASE_NAME,
-                ).build()
+            DiscussionDatabase
+                .getInstance(context)
                 .discussionDao(),
         )
-    }
 
-    val notificationRemoteDataSource: NotificationRemoteDataSource by lazy {
+    @Provides
+    @Singleton
+    fun provideNotificationRemoteDataSource(service: NotificationService): NotificationRemoteDataSource =
         DefaultNotificationRemoteDataSource(
-            serviceModule.notificationService,
+            service,
         )
-    }
 
-    val notificationLocalDataSource: NotificationLocalDataSource by lazy {
-        DefaultNotificationLocalDataSource(
-            context,
-        )
-    }
-
-    companion object {
-        private const val DATABASE_NAME: String = "discussion"
-    }
+    @Provides
+    @Singleton
+    fun provideNotificationLocalDataSource(
+        @ApplicationContext context: Context,
+    ): NotificationLocalDataSource = DefaultNotificationLocalDataSource(context)
 }

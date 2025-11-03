@@ -14,31 +14,40 @@ import com.team.todoktodok.data.repository.DefaultMemberRepository
 import com.team.todoktodok.data.repository.DefaultNotificationRepository
 import com.team.todoktodok.data.repository.DefaultReplyRepository
 import com.team.todoktodok.data.repository.DefaultTokenRepository
+import dagger.Binds
+import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
-class RepositoryModule(
-    dataSourceModule: DataSourceModule,
-) {
-    val discussionRepository: DiscussionRepository by lazy {
-        DefaultDiscussionRepository(
-            dataSourceModule.discussionRemoteDataSource,
-            dataSourceModule.discussionLocalDataSource,
-        )
-    }
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class RepositoryModule {
+    @Binds
+    @Singleton
+    abstract fun bindsDiscussionRepository(repository: DefaultDiscussionRepository): DiscussionRepository
 
-    val commentRepository: CommentRepository by lazy { DefaultCommentRepository(dataSourceModule.commentRemoteDataSource) }
+    @Binds
+    @Singleton
+    abstract fun bindsCommentRepository(repository: DefaultCommentRepository): CommentRepository
 
-    val memberRepository: MemberRepository by lazy { DefaultMemberRepository(dataSourceModule.memberRemoteDataSource) }
+    @Binds
+    @Singleton
+    abstract fun bindsMemberRepository(repository: DefaultMemberRepository): MemberRepository
 
-    val bookRepository: BookRepository by lazy { DefaultBookRepository(dataSourceModule.bookRemoteDataSource) }
+    @Binds
+    @Singleton
+    abstract fun bindsBookRepository(repository: DefaultBookRepository): BookRepository
 
-    val tokenRepository: TokenRepository by lazy { DefaultTokenRepository(dataSourceModule.tokenLocalDataSource) }
+    @Binds
+    @Singleton
+    abstract fun bindsTokenRepository(repository: DefaultTokenRepository): TokenRepository
 
-    val replyRepository: ReplyRepository by lazy { DefaultReplyRepository(dataSourceModule.replyRemoteDataSource) }
+    @Binds
+    @Singleton
+    abstract fun bindsReplyRepository(repository: DefaultReplyRepository): ReplyRepository
 
-    val notificationRepository: NotificationRepository by lazy {
-        DefaultNotificationRepository(
-            dataSourceModule.notificationRemoteDataSource,
-            dataSourceModule.notificationLocalDataSource,
-        )
-    }
+    @Binds
+    @Singleton
+    abstract fun bindsNotificationRepository(repository: DefaultNotificationRepository): NotificationRepository
 }
