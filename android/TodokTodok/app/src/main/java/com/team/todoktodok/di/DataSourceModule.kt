@@ -17,7 +17,6 @@ import com.team.todoktodok.data.datasource.notification.NotificationLocalDataSou
 import com.team.todoktodok.data.datasource.notification.NotificationRemoteDataSource
 import com.team.todoktodok.data.datasource.reply.DefaultReplyRemoteDataSource
 import com.team.todoktodok.data.datasource.reply.ReplyRemoteDataSource
-import com.team.todoktodok.data.datasource.token.TokenDataSource
 import com.team.todoktodok.data.datasource.token.TokenLocalDataSource
 import com.team.todoktodok.data.local.discussion.DiscussionDatabase
 import com.team.todoktodok.data.network.service.BookService
