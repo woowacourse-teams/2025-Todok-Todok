@@ -11,7 +11,7 @@ import com.team.domain.model.member.MemberId
 import com.team.domain.model.member.MemberType
 import com.team.todoktodok.data.core.JwtParser
 import com.team.todoktodok.data.core.ext.extractTokens
-import com.team.todoktodok.data.datasource.token.TokenDataSource
+import com.team.todoktodok.data.datasource.token.TokenLocalDataSource
 import com.team.todoktodok.data.network.request.LoginRequest
 import com.team.todoktodok.data.network.request.ModifyProfileRequest
 import com.team.todoktodok.data.network.request.ProfileImageRequest
@@ -30,7 +30,7 @@ class DefaultMemberRemoteDataSource
     @Inject
     constructor(
         private val memberService: MemberService,
-        private val tokenLocalDataSource: TokenDataSource,
+        private val tokenLocalDataSource: TokenLocalDataSource,
     ) : MemberRemoteDataSource {
         override suspend fun login(request: String): NetworkResult<MemberType> =
             runCatching {
