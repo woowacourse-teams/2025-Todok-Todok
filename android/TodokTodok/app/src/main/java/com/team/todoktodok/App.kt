@@ -11,10 +11,6 @@ import timber.log.Timber
 
 @HiltAndroidApp
 class App : Application() {
-    val container: AppContainer by lazy {
-        AppContainer(applicationContext)
-    }
-
     override fun onCreate() {
         // 앱이 크래시 될 경우 자동으로 크래시틱스 전송 비활성화
         FirebaseCrashlytics.getInstance().isCrashlyticsCollectionEnabled = BuildConfig.DEBUG.not()
