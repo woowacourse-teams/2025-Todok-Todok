@@ -15,7 +15,7 @@ import androidx.core.app.TaskStackBuilder
 import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import com.team.todoktodok.App
+import com.team.domain.repository.NotificationRepository
 import com.team.todoktodok.R
 import com.team.todoktodok.adapter.model.FcmNotification
 import com.team.todoktodok.adapter.model.FcmNotification.Companion.FcmNotification
@@ -24,9 +24,11 @@ import com.team.todoktodok.presentation.xml.serialization.toSerialization
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 class FirebaseMessagingAdapter : FirebaseMessagingService() {
-    private val notificationRepository by lazy { (application as App).container.repositoryModule.notificationRepository }
+    @Inject
+    lateinit var notificationRepository: NotificationRepository
 
     override fun onNewToken(token: String) {
         super.onNewToken(token)
