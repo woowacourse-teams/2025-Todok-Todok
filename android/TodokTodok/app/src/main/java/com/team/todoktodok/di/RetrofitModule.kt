@@ -21,7 +21,7 @@ object RetrofitModule {
             ignoreUnknownKeys = true
         }
 
-    private val builder: Retrofit.Builder =
+    private fun retrofitBuilder(): Retrofit.Builder =
         Retrofit
             .Builder()
             .baseUrl(BuildConfig.BASE_URL)
@@ -33,7 +33,7 @@ object RetrofitModule {
     fun provideAuthRetrofit(
         @Auth okHttpClient: OkHttpClient,
     ): Retrofit =
-        builder
+        retrofitBuilder()
             .client(okHttpClient)
             .build()
 
@@ -43,7 +43,7 @@ object RetrofitModule {
     fun provideRetrofit(
         @Client okHttpClient: OkHttpClient,
     ): Retrofit =
-        builder
+        retrofitBuilder()
             .client(okHttpClient)
             .build()
 }
