@@ -52,7 +52,7 @@ object DataSourceModule {
     @Singleton
     fun provideTokenLocalDataSource(
         @ApplicationContext context: Context,
-    ): TokenDataSource = TokenLocalDataSource(context)
+    ): TokenLocalDataSource = TokenLocalDataSource(context)
 
     @Provides
     @Singleton
