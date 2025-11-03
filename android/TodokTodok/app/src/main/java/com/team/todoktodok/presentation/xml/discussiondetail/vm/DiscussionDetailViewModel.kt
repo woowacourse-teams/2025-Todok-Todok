@@ -15,224 +15,229 @@ import com.team.todoktodok.presentation.xml.discussion.create.SerializationCreat
 import com.team.todoktodok.presentation.xml.discussiondetail.DiscussionDetailUiEvent
 import com.team.todoktodok.presentation.xml.discussiondetail.DiscussionDetailUiState
 import com.team.todoktodok.presentation.xml.serialization.toSerialization
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class DiscussionDetailViewModel(
-    private val savedStateHandle: SavedStateHandle,
-    private val discussionRepository: DiscussionRepository,
-    private val tokenRepository: TokenRepository,
-) : ViewModel() {
-    var discussionId: Long? = savedStateHandle.get<Long>(KEY_DISCUSSION_ID)
-        private set
+@HiltViewModel
+class DiscussionDetailViewModel
+    @Inject
+    constructor(
+        private val savedStateHandle: SavedStateHandle,
+        private val discussionRepository: DiscussionRepository,
+        private val tokenRepository: TokenRepository,
+    ) : ViewModel() {
+        var discussionId: Long? = savedStateHandle.get<Long>(KEY_DISCUSSION_ID)
+            private set
 
-    var mode = savedStateHandle.get<SerializationCreateDiscussionRoomMode>(KEY_MODE)
-        private set
-    private var coalesceJob: Job? = null
-    private val _uiState = MutableLiveData<DiscussionDetailUiState>(DiscussionDetailUiState.Empty)
-    val uiState: LiveData<DiscussionDetailUiState> = _uiState
+        var mode = savedStateHandle.get<SerializationCreateDiscussionRoomMode>(KEY_MODE)
+            private set
+        private var coalesceJob: Job? = null
+        private val _uiState = MutableLiveData<DiscussionDetailUiState>(DiscussionDetailUiState.Empty)
+        val uiState: LiveData<DiscussionDetailUiState> = _uiState
 
-    private val _uiEvent = MutableSingleLiveData<DiscussionDetailUiEvent>()
-    val uiEvent: SingleLiveData<DiscussionDetailUiEvent> = _uiEvent
+        private val _uiEvent = MutableSingleLiveData<DiscussionDetailUiEvent>()
+        val uiEvent: SingleLiveData<DiscussionDetailUiEvent> = _uiEvent
 
-    fun onFinishEvent() {
-        val currentState = _uiState.value ?: return
-        if (currentState is DiscussionDetailUiState.Success) {
-            onUiEvent(
-                DiscussionDetailUiEvent.NavigateToDiscussionsWithResult(
-                    mode,
-                    currentState.discussion.toSerialization(),
-                ),
-            )
-        }
-    }
-
-    fun initLoadDiscission(id: Long) {
-        discussionId = id
-        savedStateHandle[KEY_DISCUSSION_ID] = id
-        viewModelScope.launch {
-            loadDiscussionRoom()
-        }
-    }
-
-    fun fetchMode(mode: SerializationCreateDiscussionRoomMode) {
-        this.mode = mode
-        savedStateHandle[KEY_MODE] = mode
-    }
-
-    fun reportDiscussion(reason: String) {
-        viewModelScope.launch {
-            handleResult(
-                discussionRepository.reportDiscussion(
-                    discussionId ?: THROW_DISCUSSION_ID,
-                    reason,
-                ),
-            ) {
-                onUiEvent(DiscussionDetailUiEvent.ShowReportDiscussionSuccessMessage)
+        fun onFinishEvent() {
+            val currentState = _uiState.value ?: return
+            if (currentState is DiscussionDetailUiState.Success) {
+                onUiEvent(
+                    DiscussionDetailUiEvent.NavigateToDiscussionsWithResult(
+                        mode,
+                        currentState.discussion.toSerialization(),
+                    ),
+                )
             }
         }
-    }
 
-    fun reloadDiscussion() {
-        viewModelScope.launch {
-            loadDiscussionRoom()
-            onUiEvent(DiscussionDetailUiEvent.ReloadedDiscussion)
+        fun initLoadDiscission(id: Long) {
+            discussionId = id
+            savedStateHandle[KEY_DISCUSSION_ID] = id
+            viewModelScope.launch {
+                loadDiscussionRoom()
+            }
         }
-    }
 
-    fun updateDiscussion() {
-        onUiEvent(DiscussionDetailUiEvent.UpdateDiscussion(discussionId ?: THROW_DISCUSSION_ID))
-    }
+        fun fetchMode(mode: SerializationCreateDiscussionRoomMode) {
+            this.mode = mode
+            savedStateHandle[KEY_MODE] = mode
+        }
 
-    fun deleteDiscussion() {
-        viewModelScope.launch {
-            handleResult(
-                discussionRepository.deleteDiscussion(
-                    discussionId ?: THROW_DISCUSSION_ID,
-                ),
-            ) {
-                onUiEvent(
-                    DiscussionDetailUiEvent.DeleteDiscussion(
+        fun reportDiscussion(reason: String) {
+            viewModelScope.launch {
+                handleResult(
+                    discussionRepository.reportDiscussion(
+                        discussionId ?: THROW_DISCUSSION_ID,
+                        reason,
+                    ),
+                ) {
+                    onUiEvent(DiscussionDetailUiEvent.ShowReportDiscussionSuccessMessage)
+                }
+            }
+        }
+
+        fun reloadDiscussion() {
+            viewModelScope.launch {
+                loadDiscussionRoom()
+                onUiEvent(DiscussionDetailUiEvent.ReloadedDiscussion)
+            }
+        }
+
+        fun updateDiscussion() {
+            onUiEvent(DiscussionDetailUiEvent.UpdateDiscussion(discussionId ?: THROW_DISCUSSION_ID))
+        }
+
+        fun deleteDiscussion() {
+            viewModelScope.launch {
+                handleResult(
+                    discussionRepository.deleteDiscussion(
                         discussionId ?: THROW_DISCUSSION_ID,
                     ),
-                )
-            }
-        }
-    }
-
-    fun toggleLike() {
-        val currentUiState = _uiState.value ?: return
-        if (currentUiState !is DiscussionDetailUiState.Success) return
-
-        val currentDiscussion = currentUiState.discussion
-        val desiredIsLikedByMe = !currentDiscussion.isLikedByMe
-        val likeCountDelta = if (desiredIsLikedByMe) 1 else -1
-        val previousDiscussion = currentDiscussion
-
-        _uiState.value =
-            currentUiState.copy(
-                discussion =
-                    currentDiscussion.copy(
-                        isLikedByMe = desiredIsLikedByMe,
-                        likeCount = (currentDiscussion.likeCount + likeCountDelta).coerceAtLeast(0),
-                    ),
-            )
-
-        coalesceJob?.cancel()
-        coalesceJob =
-            viewModelScope.launch {
-                delay(250)
-                val latestUiState = _uiState.value ?: return@launch
-                if (latestUiState !is DiscussionDetailUiState.Success) return@launch
-                val latestDiscussion = latestUiState.discussion
-                if (latestDiscussion.isLikedByMe != desiredIsLikedByMe) return@launch
-
-                val requestDiscussionId = latestDiscussion.id
-                when (val result = discussionRepository.toggleLike(requestDiscussionId)) {
-                    is NetworkResult.Success -> {
-                        loadDiscussionRoom()
-                    }
-
-                    is NetworkResult.Failure -> {
-                        val rollbackUiState = _uiState.value
-                        if (rollbackUiState is DiscussionDetailUiState.Success) {
-                            _uiState.value = rollbackUiState.copy(discussion = previousDiscussion)
-                        }
-                        onUiEvent(DiscussionDetailUiEvent.ShowErrorMessage(result.exception))
-                    }
+                ) {
+                    onUiEvent(
+                        DiscussionDetailUiEvent.DeleteDiscussion(
+                            discussionId ?: THROW_DISCUSSION_ID,
+                        ),
+                    )
                 }
             }
-    }
-
-    fun shareDiscussion() {
-        val currentUiState = _uiState.value ?: return
-        if (currentUiState !is DiscussionDetailUiState.Success) return
-        onUiEvent(
-            DiscussionDetailUiEvent.ShareDiscussion(
-                discussionId ?: return,
-                currentUiState.discussion.discussionTitle,
-            ),
-        )
-    }
-
-    fun navigateToOtherUserProfile() {
-        viewModelScope.launch {
-            val currentUiState = _uiState.value ?: return@launch
-            if (currentUiState !is DiscussionDetailUiState.Success) return@launch
-            val writer = currentUiState.discussion.writer
-            val isWithdrewMemberName = writer.nickname == WITHDREW_MEMBER_NAME
-            val isMyId = writer.id == tokenRepository.getMemberId()
-            if (!isMyId && !isWithdrewMemberName) {
-                onUiEvent(
-                    DiscussionDetailUiEvent.NavigateToProfile(
-                        writer.id,
-                    ),
-                )
-            }
         }
-    }
 
-    fun navigateToBookDiscussion() {
-        val currentUiState = _uiState.value ?: return
-        if (currentUiState !is DiscussionDetailUiState.Success) return
-        val bookId =
-            currentUiState.discussion.book.id
-        _uiEvent.setValue(DiscussionDetailUiEvent.NavigateToBookDiscussions(bookId))
-    }
+        fun toggleLike() {
+            val currentUiState = _uiState.value ?: return
+            if (currentUiState !is DiscussionDetailUiState.Success) return
 
-    private suspend fun loadDiscussionRoom() {
-        handleResult(
-            discussionRepository.getDiscussion(
-                discussionId ?: THROW_DISCUSSION_ID,
-            ),
-        ) { discussion ->
+            val currentDiscussion = currentUiState.discussion
+            val desiredIsLikedByMe = !currentDiscussion.isLikedByMe
+            val likeCountDelta = if (desiredIsLikedByMe) 1 else -1
+            val previousDiscussion = currentDiscussion
+
             _uiState.value =
-                DiscussionDetailUiState.Success(
-                    discussion = discussion,
-                    isMyDiscussion = discussion.writer.id == tokenRepository.getMemberId(),
-                    isLoading = false,
+                currentUiState.copy(
+                    discussion =
+                        currentDiscussion.copy(
+                            isLikedByMe = desiredIsLikedByMe,
+                            likeCount = (currentDiscussion.likeCount + likeCountDelta).coerceAtLeast(0),
+                        ),
                 )
+
+            coalesceJob?.cancel()
+            coalesceJob =
+                viewModelScope.launch {
+                    delay(250)
+                    val latestUiState = _uiState.value ?: return@launch
+                    if (latestUiState !is DiscussionDetailUiState.Success) return@launch
+                    val latestDiscussion = latestUiState.discussion
+                    if (latestDiscussion.isLikedByMe != desiredIsLikedByMe) return@launch
+
+                    val requestDiscussionId = latestDiscussion.id
+                    when (val result = discussionRepository.toggleLike(requestDiscussionId)) {
+                        is NetworkResult.Success -> {
+                            loadDiscussionRoom()
+                        }
+
+                        is NetworkResult.Failure -> {
+                            val rollbackUiState = _uiState.value
+                            if (rollbackUiState is DiscussionDetailUiState.Success) {
+                                _uiState.value = rollbackUiState.copy(discussion = previousDiscussion)
+                            }
+                            onUiEvent(DiscussionDetailUiEvent.ShowErrorMessage(result.exception))
+                        }
+                    }
+                }
         }
-    }
 
-    private inline fun <T> handleResult(
-        result: NetworkResult<T>,
-        onFailure: () -> Unit = {},
-        onSuccess: (T) -> Unit = {},
-    ) {
-        when (result) {
-            is NetworkResult.Success -> onSuccess(result.data)
-            is NetworkResult.Failure -> {
-                onFailure()
-                when (result.exception) {
-                    is TodokTodokExceptions.HttpExceptions.UnauthorizedException -> {
-                        onUiEvent(DiscussionDetailUiEvent.Unauthorized(result.exception))
-                    }
+        fun shareDiscussion() {
+            val currentUiState = _uiState.value ?: return
+            if (currentUiState !is DiscussionDetailUiState.Success) return
+            onUiEvent(
+                DiscussionDetailUiEvent.ShareDiscussion(
+                    discussionId ?: return,
+                    currentUiState.discussion.discussionTitle,
+                ),
+            )
+        }
 
-                    is TodokTodokExceptions.HttpExceptions.NotFoundException -> {
-                        onUiEvent(DiscussionDetailUiEvent.NotFoundDiscussion(result.exception))
-                    }
+        fun navigateToOtherUserProfile() {
+            viewModelScope.launch {
+                val currentUiState = _uiState.value ?: return@launch
+                if (currentUiState !is DiscussionDetailUiState.Success) return@launch
+                val writer = currentUiState.discussion.writer
+                val isWithdrewMemberName = writer.nickname == WITHDREW_MEMBER_NAME
+                val isMyId = writer.id == tokenRepository.getMemberId()
+                if (!isMyId && !isWithdrewMemberName) {
+                    onUiEvent(
+                        DiscussionDetailUiEvent.NavigateToProfile(
+                            writer.id,
+                        ),
+                    )
+                }
+            }
+        }
 
-                    else -> {
-                        onUiEvent(
-                            DiscussionDetailUiEvent.ShowErrorMessage(result.exception),
-                        )
+        fun navigateToBookDiscussion() {
+            val currentUiState = _uiState.value ?: return
+            if (currentUiState !is DiscussionDetailUiState.Success) return
+            val bookId =
+                currentUiState.discussion.book.id
+            _uiEvent.setValue(DiscussionDetailUiEvent.NavigateToBookDiscussions(bookId))
+        }
+
+        private suspend fun loadDiscussionRoom() {
+            handleResult(
+                discussionRepository.getDiscussion(
+                    discussionId ?: THROW_DISCUSSION_ID,
+                ),
+            ) { discussion ->
+                _uiState.value =
+                    DiscussionDetailUiState.Success(
+                        discussion = discussion,
+                        isMyDiscussion = discussion.writer.id == tokenRepository.getMemberId(),
+                        isLoading = false,
+                    )
+            }
+        }
+
+        private inline fun <T> handleResult(
+            result: NetworkResult<T>,
+            onFailure: () -> Unit = {},
+            onSuccess: (T) -> Unit = {},
+        ) {
+            when (result) {
+                is NetworkResult.Success -> onSuccess(result.data)
+                is NetworkResult.Failure -> {
+                    onFailure()
+                    when (result.exception) {
+                        is TodokTodokExceptions.HttpExceptions.UnauthorizedException -> {
+                            onUiEvent(DiscussionDetailUiEvent.Unauthorized(result.exception))
+                        }
+
+                        is TodokTodokExceptions.HttpExceptions.NotFoundException -> {
+                            onUiEvent(DiscussionDetailUiEvent.NotFoundDiscussion(result.exception))
+                        }
+
+                        else -> {
+                            onUiEvent(
+                                DiscussionDetailUiEvent.ShowErrorMessage(result.exception),
+                            )
+                        }
                     }
                 }
             }
         }
-    }
 
-    private fun onUiEvent(uiEvent: DiscussionDetailUiEvent) {
-        _uiEvent.setValue(uiEvent)
-    }
+        private fun onUiEvent(uiEvent: DiscussionDetailUiEvent) {
+            _uiEvent.setValue(uiEvent)
+        }
 
-    companion object {
-        const val KEY_DISCUSSION_ID = "discussionId"
-        const val KEY_MODE = "mode"
+        companion object {
+            const val KEY_DISCUSSION_ID = "discussionId"
+            const val KEY_MODE = "mode"
 
-        private const val WITHDREW_MEMBER_NAME = "(알수없음)"
-        private const val THROW_DISCUSSION_ID = -1L
+            private const val WITHDREW_MEMBER_NAME = "(알수없음)"
+            private const val THROW_DISCUSSION_ID = -1L
+        }
     }
-}

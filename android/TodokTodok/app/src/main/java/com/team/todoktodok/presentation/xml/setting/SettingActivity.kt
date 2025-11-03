@@ -11,21 +11,18 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.commit
-import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivitySettingBinding
 import com.team.todoktodok.presentation.xml.setting.manage.ManageBlockedMembersFragment
 import com.team.todoktodok.presentation.xml.setting.modify.ModifyProfileFragment
 import com.team.todoktodok.presentation.xml.setting.vm.SettingViewModel
-import com.team.todoktodok.presentation.xml.setting.vm.SettingViewModelFactory
 import com.team.todoktodok.presentation.xml.setting.withdraw.WithdrawFragment
+import dagger.hilt.android.AndroidEntryPoint
 import kotlin.getValue
 
+@AndroidEntryPoint
 class SettingActivity : AppCompatActivity() {
-    private val viewModel: SettingViewModel by viewModels {
-        val repositoryModule = (this.application as App).container.repositoryModule
-        SettingViewModelFactory(repositoryModule.tokenRepository)
-    }
+    private val viewModel: SettingViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -19,7 +19,6 @@ import androidx.core.view.WindowInsetsCompat
 import com.team.domain.model.book.Keyword
 import com.team.domain.model.book.SearchedBook
 import com.team.domain.model.book.length
-import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivitySelectBookBinding
 import com.team.todoktodok.presentation.core.ExceptionMessageConverter
@@ -27,19 +26,15 @@ import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.A
 import com.team.todoktodok.presentation.core.ext.addOnScrollEndListener
 import com.team.todoktodok.presentation.xml.book.adapter.SearchBooksAdapter
 import com.team.todoktodok.presentation.xml.book.vm.SelectBookViewModel
-import com.team.todoktodok.presentation.xml.book.vm.SelectBookViewModelFactory
 import com.team.todoktodok.presentation.xml.discussion.create.CreateDiscussionRoomActivity
 import com.team.todoktodok.presentation.xml.discussion.create.SerializationCreateDiscussionRoomMode
 import com.team.todoktodok.presentation.xml.serialization.SerializationSearchedBook
 import com.team.todoktodok.presentation.xml.serialization.toSerialization
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SelectBookActivity : AppCompatActivity() {
-    private val viewModel by viewModels<SelectBookViewModel> {
-        val repositoryModule = (application as App).container.repositoryModule
-        SelectBookViewModelFactory(
-            repositoryModule.bookRepository,
-        )
-    }
+    private val viewModel: SelectBookViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

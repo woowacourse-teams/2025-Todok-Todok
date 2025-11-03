@@ -1,17 +1,25 @@
 package com.team.todoktodok.di
 
 import com.team.todoktodok.BuildConfig
+import com.team.todoktodok.data.datasource.token.TokenLocalDataSource
 import com.team.todoktodok.data.network.auth.AuthInterceptor
+import com.team.todoktodok.data.network.auth.TokenAuthenticator
+import com.team.todoktodok.data.network.service.RefreshService
 import com.team.todoktodok.log.PrettyJsonLogger
-import okhttp3.Authenticator
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import javax.inject.Singleton
 
-class OkhttpModule(
-    tokenAuthenticator: Authenticator,
-    authInterceptor: AuthInterceptor,
-) {
-    private val logger =
+@Module
+@InstallIn(SingletonComponent::class)
+object OkhttpModule {
+    @Provides
+    @Singleton
+    fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor =
         HttpLoggingInterceptor(PrettyJsonLogger()).apply {
             if (BuildConfig.DEBUG) {
                 setLevel(HttpLoggingInterceptor.Level.BODY)
@@ -20,7 +28,21 @@ class OkhttpModule(
             }
         }
 
-    val authClient =
+    @Provides
+    @Singleton
+    fun provideTokenAuthenticator(
+        service: RefreshService,
+        tokenDataSource: TokenLocalDataSource,
+    ): TokenAuthenticator = TokenAuthenticator(service, tokenDataSource)
+
+    @Auth
+    @Provides
+    @Singleton
+    fun provideAuthClient(
+        tokenAuthenticator: TokenAuthenticator,
+        authInterceptor: AuthInterceptor,
+        logger: HttpLoggingInterceptor,
+    ): OkHttpClient =
         OkHttpClient
             .Builder()
             .authenticator(tokenAuthenticator)
@@ -28,7 +50,10 @@ class OkhttpModule(
             .addInterceptor(logger)
             .build()
 
-    val client =
+    @Client
+    @Provides
+    @Singleton
+    fun provideClient(logger: HttpLoggingInterceptor): OkHttpClient =
         OkHttpClient
             .Builder()
             .addInterceptor(logger)

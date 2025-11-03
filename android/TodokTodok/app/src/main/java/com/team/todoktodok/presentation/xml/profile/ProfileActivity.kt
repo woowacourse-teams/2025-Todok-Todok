@@ -12,7 +12,6 @@ import androidx.core.view.WindowInsetsCompat
 import com.team.domain.model.Support
 import com.team.domain.model.exception.TodokTodokExceptions
 import com.team.domain.model.member.MemberId.Companion.DEFAULT_MEMBER_ID
-import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivityProfileBinding
 import com.team.todoktodok.presentation.compose.main.MainActivity
@@ -24,16 +23,17 @@ import com.team.todoktodok.presentation.core.ext.registerReportResultListener
 import com.team.todoktodok.presentation.xml.profile.adapter.ContentPagerAdapter
 import com.team.todoktodok.presentation.xml.profile.adapter.ProfileAdapter
 import com.team.todoktodok.presentation.xml.profile.vm.ProfileViewModel
-import com.team.todoktodok.presentation.xml.profile.vm.ProfileViewModelFactory
 import com.team.todoktodok.presentation.xml.setting.SettingActivity
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class ProfileActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProfileBinding
-    private val viewModel: ProfileViewModel by viewModels {
-        val repositoryModule = (application as App).container.repositoryModule
-        ProfileViewModelFactory(repositoryModule.memberRepository, repositoryModule.tokenRepository)
-    }
-    private lateinit var messageConverter: ExceptionMessageConverter
+    private val viewModel: ProfileViewModel by viewModels()
+
+    @Inject
+    lateinit var messageConverter: ExceptionMessageConverter
     private lateinit var profileAdapter: ProfileAdapter
     private val launcher =
         registerForActivityResult(

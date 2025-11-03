@@ -9,10 +9,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
-import com.team.todoktodok.App
 import com.team.todoktodok.presentation.compose.LocalUiExceptionHandler
 import com.team.todoktodok.presentation.compose.bookdiscussions.components.BookDiscussionsContent
 import com.team.todoktodok.presentation.compose.bookdiscussions.components.BookDiscussionsTopAppBar
@@ -25,11 +25,7 @@ fun BookDetailEntry(
     backStackEntry: NavBackStackEntry,
     onNavigateToMain: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: BookDiscussionsViewModel =
-        viewModel(
-            backStackEntry,
-            factory = BookDiscussionsViewModelFactory((LocalContext.current.applicationContext as App).container),
-        ),
+    viewModel: BookDiscussionsViewModel = hiltViewModel(backStackEntry),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current

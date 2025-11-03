@@ -10,33 +10,38 @@ import com.team.todoktodok.R
 import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
 import com.team.todoktodok.presentation.core.event.SingleLiveData
 import com.team.todoktodok.presentation.xml.draft.DraftUiEvent
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class DraftsViewModel(
-    private val discussionRepository: DiscussionRepository,
-) : ViewModel() {
-    private val _drafts: MutableLiveData<List<DiscussionRoom>> = MutableLiveData(emptyList())
-    val drafts: LiveData<List<DiscussionRoom>> get() = _drafts
-    private val _uiEvent: MutableSingleLiveData<DraftUiEvent> = MutableSingleLiveData()
-    val uiEvent: SingleLiveData<DraftUiEvent> get() = _uiEvent
+@HiltViewModel
+class DraftsViewModel
+    @Inject
+    constructor(
+        private val discussionRepository: DiscussionRepository,
+    ) : ViewModel() {
+        private val _drafts: MutableLiveData<List<DiscussionRoom>> = MutableLiveData(emptyList())
+        val drafts: LiveData<List<DiscussionRoom>> get() = _drafts
+        private val _uiEvent: MutableSingleLiveData<DraftUiEvent> = MutableSingleLiveData()
+        val uiEvent: SingleLiveData<DraftUiEvent> get() = _uiEvent
 
-    init {
-        initPage()
-    }
+        init {
+            initPage()
+        }
 
-    fun initPage() {
-        viewModelScope.launch {
-            val result = discussionRepository.getDiscussions()
-            _drafts.value = result
+        fun initPage() {
+            viewModelScope.launch {
+                val result = discussionRepository.getDiscussions()
+                _drafts.value = result
+            }
+        }
+
+        fun selectDraft(position: Int) {
+            val id = _drafts.value?.getOrNull(position)?.id
+            if (id == null) {
+                _uiEvent.setValue(DraftUiEvent.ShowToast(R.string.drafts_no_exist))
+                return
+            }
+            _uiEvent.setValue(DraftUiEvent.NavigateToCreateDiscussionRoom(id))
         }
     }
-
-    fun selectDraft(position: Int) {
-        val id = _drafts.value?.getOrNull(position)?.id
-        if (id == null) {
-            _uiEvent.setValue(DraftUiEvent.ShowToast(R.string.drafts_no_exist))
-            return
-        }
-        _uiEvent.setValue(DraftUiEvent.NavigateToCreateDiscussionRoom(id))
-    }
-}

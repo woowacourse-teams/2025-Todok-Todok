@@ -8,7 +8,6 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.team.domain.model.member.NickNameException
-import com.team.todoktodok.App
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentSignupBinding
 import com.team.todoktodok.presentation.compose.main.MainActivity
@@ -16,19 +15,15 @@ import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
 import com.team.todoktodok.presentation.core.ext.repeatOnViewStarted
 import com.team.todoktodok.presentation.xml.auth.signup.vm.SignUpViewModel
-import com.team.todoktodok.presentation.xml.auth.signup.vm.SignUpViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class SignUpFragment : Fragment(R.layout.fragment_signup) {
-    private val viewModel: SignUpViewModel by viewModels {
-        val container = (requireActivity().application as App).container
-        val repositoryModule = container.repositoryModule
-        SignUpViewModelFactory(
-            repositoryModule.memberRepository,
-            container.connectivityObserver,
-        )
-    }
+    private val viewModel: SignUpViewModel by viewModels()
 
-    private lateinit var messageConverter: ExceptionMessageConverter
+    @Inject
+    lateinit var messageConverter: ExceptionMessageConverter
 
     override fun onViewCreated(
         view: View,
@@ -37,7 +32,6 @@ class SignUpFragment : Fragment(R.layout.fragment_signup) {
         super.onViewCreated(view, savedInstanceState)
 
         val binding = FragmentSignupBinding.bind(view)
-        messageConverter = ExceptionMessageConverter()
 
         setupLoading(binding)
         setUpRestoringState(binding)

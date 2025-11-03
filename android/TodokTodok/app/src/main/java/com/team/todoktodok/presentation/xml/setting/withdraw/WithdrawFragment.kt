@@ -4,21 +4,17 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import com.team.todoktodok.App
+import androidx.fragment.app.viewModels
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentWithdrawBinding
 import com.team.todoktodok.presentation.core.component.CommonDialog
 import com.team.todoktodok.presentation.xml.auth.AuthActivity
 import com.team.todoktodok.presentation.xml.setting.withdraw.vm.WithdrawViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class WithdrawFragment : Fragment(R.layout.fragment_withdraw) {
-    private val viewModel: WithdrawViewModel by lazy {
-        val repositoryModule = (requireActivity().application as App).container.repositoryModule
-        WithdrawViewModel(
-            repositoryModule.memberRepository,
-            repositoryModule.notificationRepository,
-        )
-    }
+    private val viewModel: WithdrawViewModel by viewModels()
 
     override fun onViewCreated(
         view: View,

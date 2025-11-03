@@ -7,35 +7,43 @@ import com.team.todoktodok.data.network.service.MemberService
 import com.team.todoktodok.data.network.service.NotificationService
 import com.team.todoktodok.data.network.service.RefreshService
 import com.team.todoktodok.data.network.service.ReplyService
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import retrofit2.Retrofit
+import javax.inject.Singleton
 
-class ServiceModule(
-    retrofit: RetrofitModule,
-) {
-    val discussionService: DiscussionService by lazy {
-        retrofit.createAuthService(DiscussionService::class.java)
-    }
+@Module
+@InstallIn(SingletonComponent::class)
+object ServiceModule {
+    @Provides
+    @Singleton
+    fun provideDiscussionService(retrofit: Retrofit): DiscussionService = retrofit.create(DiscussionService::class.java)
 
-    val memberService: MemberService by lazy {
-        retrofit.createAuthService(MemberService::class.java)
-    }
+    @Provides
+    @Singleton
+    fun provideMemberService(retrofit: Retrofit): MemberService = retrofit.create(MemberService::class.java)
 
-    val commentService: CommentService by lazy {
-        retrofit.createAuthService(CommentService::class.java)
-    }
+    @Provides
+    @Singleton
+    fun provideCommentService(retrofit: Retrofit): CommentService = retrofit.create(CommentService::class.java)
 
-    val bookService: BookService by lazy {
-        retrofit.createAuthService(BookService::class.java)
-    }
+    @Provides
+    @Singleton
+    fun provideBookService(retrofit: Retrofit): BookService = retrofit.create(BookService::class.java)
 
-    val replyService: ReplyService by lazy {
-        retrofit.createAuthService(ReplyService::class.java)
-    }
+    @Provides
+    @Singleton
+    fun provideReplyService(retrofit: Retrofit): ReplyService = retrofit.create(ReplyService::class.java)
 
-    val refreshService: RefreshService by lazy {
-        retrofit.createService(RefreshService::class.java)
-    }
+    @Provides
+    @Singleton
+    fun provideRefreshService(
+        @Client retrofit: Retrofit,
+    ): RefreshService = retrofit.create(RefreshService::class.java)
 
-    val notificationService: NotificationService by lazy {
-        retrofit.createAuthService(NotificationService::class.java)
-    }
+    @Provides
+    @Singleton
+    fun provideNotificationService(retrofit: Retrofit): NotificationService = retrofit.create(NotificationService::class.java)
 }

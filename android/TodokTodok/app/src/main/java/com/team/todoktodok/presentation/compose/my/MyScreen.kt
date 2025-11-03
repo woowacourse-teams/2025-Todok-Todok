@@ -15,10 +15,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.team.domain.model.ImagePayload
-import com.team.todoktodok.App
 import com.team.todoktodok.presentation.compose.LocalUiExceptionHandler
 import com.team.todoktodok.presentation.compose.core.ObserveAsEvents
 import com.team.todoktodok.presentation.compose.core.component.CloverProgressBar
@@ -27,7 +26,6 @@ import com.team.todoktodok.presentation.compose.my.component.Information
 import com.team.todoktodok.presentation.compose.my.component.MyToolbar
 import com.team.todoktodok.presentation.compose.my.component.ProfileTab
 import com.team.todoktodok.presentation.compose.my.vm.MyProfileViewModel
-import com.team.todoktodok.presentation.compose.my.vm.MyProfileViewModelFactory
 import com.team.todoktodok.presentation.compose.preview.MyProfileUiStatePreviewParameterProvider
 import com.team.todoktodok.presentation.compose.theme.TodoktodokTheme
 import com.team.todoktodok.presentation.compose.theme.White
@@ -36,13 +34,7 @@ import com.team.todoktodok.presentation.compose.theme.White
 fun MyScreen(
     navigateToDiscussion: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: MyProfileViewModel =
-        viewModel(
-            factory =
-                MyProfileViewModelFactory(
-                    (LocalContext.current.applicationContext as App).container,
-                ),
-        ),
+    viewModel: MyProfileViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
     val exceptionHandler = LocalUiExceptionHandler.current

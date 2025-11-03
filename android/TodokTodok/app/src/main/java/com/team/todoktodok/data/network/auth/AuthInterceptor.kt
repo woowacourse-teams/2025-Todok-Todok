@@ -1,7 +1,7 @@
 package com.team.todoktodok.data.network.auth
 
 import com.team.todoktodok.data.core.AuthorizationConstants
-import com.team.todoktodok.data.datasource.token.TokenDataSource
+import com.team.todoktodok.data.datasource.token.TokenLocalDataSource
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -10,7 +10,7 @@ import javax.inject.Inject
 class AuthInterceptor
     @Inject
     constructor(
-        private val tokenLocalDataSource: TokenDataSource,
+        private val tokenLocalDataSource: TokenLocalDataSource,
     ) : Interceptor {
         override fun intercept(chain: Interceptor.Chain): Response {
             val request = chain.request()
