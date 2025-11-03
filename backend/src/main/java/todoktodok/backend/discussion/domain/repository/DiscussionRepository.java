@@ -7,6 +7,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import todoktodok.backend.discussion.application.dto.response.DiscussionResponse;
 import todoktodok.backend.discussion.domain.Discussion;
 import todoktodok.backend.member.domain.Member;
 
@@ -143,4 +144,27 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
             ORDER BY (COUNT(DISTINCT dl.id) + COUNT(DISTINCT c.id) + COUNT(DISTINCT r.id)) DESC, d.id DESC
         """)
     List<Long> findHotDiscussionIds(@Param("sinceDate") final LocalDateTime sinceDate, final Pageable pageable);
+    
+    @Query("""
+            SELECT new todoktodok.backend.discussion.application.dto.response.DiscussionResponse(
+                d.id,
+                d.title,
+                d.content,
+                d.createdAt,
+                d.viewCount,
+                d.book,
+                d.member,
+                (SELECT COUNT(dl.id) FROM DiscussionLike dl WHERE dl.discussion = d),
+                (SELECT COUNT(c.id) FROM Comment c WHERE c.discussion = d) + (SELECT COUNT(r.id) FROM Reply r WHERE r.comment.discussion = d),
+                EXISTS(SELECT 1 FROM DiscussionLike dl2 WHERE dl2.discussion = d AND dl2.member = :member)
+            )
+            FROM Discussion d
+            LEFT JOIN d.book b
+            LEFT JOIN d.member m
+            WHERE d.id IN :discussionIds
+            """)
+    List<DiscussionResponse> findDiscussionResponses(
+            @Param("discussionIds") final List<Long> discussionIds,
+            @Param("member") final Member member
+    );
 }

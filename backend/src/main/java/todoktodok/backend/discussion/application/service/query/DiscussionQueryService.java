@@ -132,13 +132,13 @@ public class DiscussionQueryService {
         validateHotDiscussionCount(count);
 
         // 쿼리 수 감소 진행
-        final Member member = findMember(memberId);
+        final Member member = findMember(memberId); //1회
         final LocalDateTime sinceDate = LocalDate.now().minusDays(period).atStartOfDay();
         final Pageable pageable = PageRequest.of(0, count);
 
-        final List<Long> hotDiscussionIds = discussionRepository.findHotDiscussionIds(sinceDate, pageable);
+        final List<Long> hotDiscussionIds = discussionRepository.findHotDiscussionIds(sinceDate, pageable);//2회
 
-        return getDiscussionsResponses(hotDiscussionIds, member);
+        return getHotDiscussionsResponses(hotDiscussionIds, member);
     }
 
     public ActiveDiscussionPageResponse getActiveDiscussions(
@@ -296,6 +296,23 @@ public class DiscussionQueryService {
         final Map<Long, Integer> commentsByDiscussionId = mapTotalCommentCountsByDiscussionId(commentCounts);
 
         return makeResponsesFrom(discussionIds, likesByDiscussionId, commentsByDiscussionId);
+    }
+
+    private List<DiscussionResponse> getHotDiscussionsResponses(
+            final List<Long> discussionIds,
+            final Member member
+    ) {
+        if (discussionIds.isEmpty()) {
+            return List.of();
+        }
+
+        final Map<Long, DiscussionResponse> responsesById = discussionRepository.findDiscussionResponses(discussionIds,//3회
+                        member).stream()
+                .collect(Collectors.toMap(DiscussionResponse::discussionId, response -> response));
+
+        return discussionIds.stream()
+                .map(responsesById::get)
+                .toList();
     }
 
     private List<DiscussionResponse> makeResponsesFrom(
