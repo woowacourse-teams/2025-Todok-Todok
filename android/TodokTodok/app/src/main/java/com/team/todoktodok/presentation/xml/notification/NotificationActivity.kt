@@ -13,9 +13,9 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.team.core.ExceptionMessageConverter
 import com.team.todoktodok.databinding.ActivityNotificationBinding
 import com.team.todoktodok.presentation.compose.main.MainActivity.Companion.KEY_REFRESH_NOTIFICATION
-import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
 import com.team.todoktodok.presentation.xml.discussiondetail.DiscussionDetailActivity
 import com.team.todoktodok.presentation.xml.notification.adapter.NotificationAdapter

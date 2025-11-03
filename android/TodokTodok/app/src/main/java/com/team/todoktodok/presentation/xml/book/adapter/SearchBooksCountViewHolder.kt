@@ -16,7 +16,7 @@ class SearchBooksCountViewHolder private constructor(
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(size: Int) {
         val context = binding.root.context
-        val text = context.getString(R.string.select_book_searched_books_count, size)
+        val text = context.getString(R.string.discussion_search_result_count, size)
 
         val spannable = SpannableString(text)
 

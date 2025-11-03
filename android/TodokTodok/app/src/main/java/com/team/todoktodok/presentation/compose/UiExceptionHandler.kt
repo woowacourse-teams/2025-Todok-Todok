@@ -2,7 +2,7 @@ package com.team.todoktodok.presentation.compose
 
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.staticCompositionLocalOf
-import com.team.todoktodok.presentation.core.ExceptionMessageConverter
+import com.team.core.ExceptionMessageConverter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch

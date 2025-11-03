@@ -1,6 +1,6 @@
 package com.team.todoktodok.presentation.xml.discussion.create
 
-import com.team.todoktodok.R
+import com.team.core.R
 
 enum class ErrorCreateDiscussionType(
     val id: Int,

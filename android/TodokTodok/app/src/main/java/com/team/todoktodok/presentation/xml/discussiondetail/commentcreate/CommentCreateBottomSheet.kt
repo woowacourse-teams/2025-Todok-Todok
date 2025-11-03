@@ -12,9 +12,9 @@ import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.team.core.ExceptionMessageConverter
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentCommentCreateBottomSheetBinding
-import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
 import com.team.todoktodok.presentation.xml.discussiondetail.BottomSheetVisibilityListener
 import com.team.todoktodok.presentation.xml.discussiondetail.commentcreate.vm.CommentCreateViewModel

@@ -1,4 +1,4 @@
-package com.team.todoktodok.presentation.core
+package com.team.core
 
 import com.team.domain.model.exception.BlockException
 import com.team.domain.model.exception.BookAuthorException
@@ -17,7 +17,6 @@ import com.team.domain.model.exception.ReportException
 import com.team.domain.model.exception.SearchedBooksTotalSize
 import com.team.domain.model.exception.SignUpException
 import com.team.domain.model.exception.TodokTodokExceptions
-import com.team.todoktodok.R
 import javax.inject.Inject
 
 class ExceptionMessageConverter
@@ -97,15 +96,15 @@ class ExceptionMessageConverter
                 ReportException.AlreadyReported ->
                     R.string.error_already_reported
 
-                DiscussionExceptions.AlreadyReported -> R.string.error_already_reported
+                DiscussionExceptions.AlreadyReported -> R.string.error_discussion_already_reported
                 DiscussionExceptions.CannotDeleteWithComments -> R.string.error_discussion_cannot_delete_with_comments
                 DiscussionExceptions.OnlyOwnerCanModifyOrDelete -> R.string.error_discussion_only_owner_can_modify_or_delete
                 DiscussionExceptions.SelfReportNotAllowed -> R.string.error_discussion_self_report_not_allowed
                 DiscussionExceptions.EmptyContent -> R.string.error_empty_content
                 DiscussionExceptions.EmptyTitle -> R.string.error_empty_title
 
-                BooksExceptions.EmptyKeyword -> R.string.select_book_error_empty_keyword
-                BooksExceptions.EmptyISBN -> R.string.select_book_error_empty_isbn
+                BooksExceptions.EmptyKeyword -> R.string.error_select_book_empty_keyword
+                BooksExceptions.EmptyISBN -> R.string.error_select_book_empty_isbn
 
                 CommentExceptions.AlreadyReported -> R.string.error_comment_already_reported
                 CommentExceptions.CannotDeleteWithReplies -> R.string.error_comment_cannot_delete_with_replies
@@ -123,20 +122,20 @@ class ExceptionMessageConverter
                 ReplyExceptions.ReplyNotBelongToComment -> R.string.error_reply_not_in_comment
                 ReplyExceptions.OnlyOwnerCanModifyOrDelete -> R.string.error_reply_only_owner_can_modify_or_delete
 
-                BookAuthorException.EmptyBookAuthor -> R.string.select_book_error_empty_author
-                BookException.EmptyISBN -> R.string.select_book_error_empty_isbn
-                BookException.EmptyKeyword -> R.string.select_book_error_empty_keyword
-                BookException.EmptySelectedBook -> R.string.select_book_error_no_selected_book
-                BookImageException.InvalidUrl -> R.string.select_book_error_invalid_url
-                BookTitleException.EmptyBookTitle -> R.string.select_book_error_empty_book_title
+                BookAuthorException.EmptyBookAuthor -> R.string.error_select_book_empty_author
+                BookException.EmptyISBN -> R.string.error_select_book_empty_isbn
+                BookException.EmptyKeyword -> R.string.error_select_book_empty_keyword
+                BookException.EmptySelectedBook -> R.string.error_select_book_no_selected_book
+                BookImageException.InvalidUrl -> R.string.error_select_book_invalid_url
+                BookTitleException.EmptyBookTitle -> R.string.error_select_book_empty_book_title
 
-                ISBNException.InvalidFormat -> R.string.select_book_error_invalid_isbn_format
-                ISBNException.InvalidLength -> R.string.select_book_error_invalid_isbn_length
+                ISBNException.InvalidFormat -> R.string.error_select_book_invalid_isbn_format
+                ISBNException.InvalidLength -> R.string.error_select_book_invalid_isbn_length
 
-                KeywordException.BlankKeyword -> R.string.select_book_error_blank_keyword
-                KeywordException.EmptyKeyword -> R.string.select_book_error_empty_keyword
+                KeywordException.BlankKeyword -> R.string.error_select_book_blank_keyword
+                KeywordException.EmptyKeyword -> R.string.error_select_book_empty_keyword
 
-                SearchedBooksTotalSize.InvalidSize -> R.string.select_book_error_searched_book_total_size
+                SearchedBooksTotalSize.InvalidSize -> R.string.error_select_book_searched_book_total_size
 
                 ProfileImageExceptions.EmptyContent -> R.string.error_profile_image_empty
                 ProfileImageExceptions.NotImageFile -> R.string.error_profile_image_not_image

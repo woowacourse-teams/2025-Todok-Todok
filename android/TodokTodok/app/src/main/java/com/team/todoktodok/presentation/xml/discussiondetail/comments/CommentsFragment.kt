@@ -18,11 +18,11 @@ import androidx.lifecycle.DEFAULT_ARGS_KEY
 import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.team.core.ExceptionMessageConverter
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentCommentsBinding
 import com.team.todoktodok.databinding.MenuExternalDiscussionBinding
 import com.team.todoktodok.databinding.MenuOwnedDiscussionBinding
-import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
 import com.team.todoktodok.presentation.core.component.CommonDialog
 import com.team.todoktodok.presentation.core.component.ReportDialog

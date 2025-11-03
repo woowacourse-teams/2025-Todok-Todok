@@ -9,9 +9,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.team.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.compose.LocalUiExceptionHandler
 import com.team.todoktodok.presentation.compose.UiExceptionHandler
-import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import kotlinx.serialization.Serializable
 
 @Serializable

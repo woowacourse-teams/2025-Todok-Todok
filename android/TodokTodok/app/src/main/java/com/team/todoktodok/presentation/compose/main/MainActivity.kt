@@ -6,8 +6,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import com.team.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.compose.theme.TodoktodokTheme
-import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.ext.getParcelableCompat
 import com.team.todoktodok.presentation.view.serialization.SerializationNotificationType
 import com.team.todoktodok.presentation.xml.discussiondetail.DiscussionDetailActivity

@@ -28,8 +28,8 @@ android {
         applicationId = "com.team.todoktodok"
         minSdk = 30
         targetSdk = 35
-        versionCode = 12
-        versionName = "1.0.7"
+        versionCode = 13
+        versionName = "1.0.8"
 
         buildConfigField(
             "String",
@@ -110,6 +110,7 @@ androidComponents {
 }
 
 dependencies {
+    implementation(project(":core"))
     implementation(project(":domain"))
 
     implementation(libs.bundles.androidx)

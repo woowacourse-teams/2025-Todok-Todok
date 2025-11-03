@@ -16,12 +16,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.Insets
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.team.core.ExceptionMessageConverter
 import com.team.domain.model.book.Keyword
 import com.team.domain.model.book.SearchedBook
 import com.team.domain.model.book.length
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivitySelectBookBinding
-import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
 import com.team.todoktodok.presentation.core.ext.addOnScrollEndListener
 import com.team.todoktodok.presentation.xml.book.adapter.SearchBooksAdapter

@@ -18,12 +18,12 @@ import androidx.core.view.WindowInsetsAnimationCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.core.widget.doAfterTextChanged
+import com.team.core.ExceptionMessageConverter
 import com.team.domain.model.Book
 import com.team.domain.model.book.SearchedBook
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivityCreateDiscussionRoomBinding
 import com.team.todoktodok.presentation.compose.main.MainActivity
-import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
 import com.team.todoktodok.presentation.core.component.CommonDialog
 import com.team.todoktodok.presentation.core.ext.loadImage
@@ -35,9 +35,13 @@ import com.team.todoktodok.presentation.xml.discussion.create.vm.CreateDiscussio
 import com.team.todoktodok.presentation.xml.discussiondetail.DiscussionDetailActivity
 import com.team.todoktodok.presentation.xml.draft.DraftsActivity
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class CreateDiscussionRoomActivity : AppCompatActivity() {
+    @Inject
+    lateinit var messageConverter: ExceptionMessageConverter
+
     private val launcher =
         registerForActivityResult(
             ActivityResultContracts.StartActivityForResult(),
@@ -337,7 +341,6 @@ class CreateDiscussionRoomActivity : AppCompatActivity() {
                 CreateDiscussionUiEvent.Finish -> finish()
 
                 is CreateDiscussionUiEvent.ShowNetworkErrorMessage -> {
-                    val messageConverter = ExceptionMessageConverter()
                     AlertSnackBar(binding.root, messageConverter(event.exception)).show()
                 }
             }

@@ -10,13 +10,13 @@ import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.team.core.ExceptionMessageConverter
 import com.team.domain.model.member.NickNameException
 import com.team.domain.model.member.Nickname
 import com.team.domain.model.member.ProfileException
 import com.team.domain.model.member.ProfileMessage
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentModifyProfileBinding
-import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
 import com.team.todoktodok.presentation.xml.setting.modify.vm.ModifyProfileViewModel
 import dagger.hilt.android.AndroidEntryPoint

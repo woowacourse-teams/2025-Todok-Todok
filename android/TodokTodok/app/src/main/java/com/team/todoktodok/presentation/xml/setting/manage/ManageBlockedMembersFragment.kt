@@ -4,10 +4,10 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.team.core.ExceptionMessageConverter
 import com.team.domain.model.member.BlockedMember
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentManageBlockedMembersBinding
-import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
 import com.team.todoktodok.presentation.core.component.CommonDialog
 import com.team.todoktodok.presentation.xml.setting.manage.adapter.BlockedMembersAdapter

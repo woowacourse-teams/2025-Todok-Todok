@@ -9,13 +9,13 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.team.core.ExceptionMessageConverter
 import com.team.domain.model.Support
 import com.team.domain.model.exception.TodokTodokExceptions
 import com.team.domain.model.member.MemberId.Companion.DEFAULT_MEMBER_ID
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivityProfileBinding
 import com.team.todoktodok.presentation.compose.main.MainActivity
-import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
 import com.team.todoktodok.presentation.core.component.ReportUserDialog
 import com.team.todoktodok.presentation.core.ext.getSerializableCompat
@@ -110,8 +110,6 @@ class ProfileActivity : AppCompatActivity() {
         val viewPagerAdapter = ContentPagerAdapter(supportFragmentManager, lifecycle)
         profileAdapter = ProfileAdapter(profileAdapterHandler, viewPagerAdapter, initialTab)
         binding.rvProfile.adapter = profileAdapter
-
-        messageConverter = ExceptionMessageConverter()
 
         viewModel.loadProfile(memberId)
     }

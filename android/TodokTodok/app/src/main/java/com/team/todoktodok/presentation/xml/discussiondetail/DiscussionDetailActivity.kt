@@ -16,6 +16,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.commit
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.team.core.ExceptionMessageConverter
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.ActivityDiscussionDetailBinding
 import com.team.todoktodok.databinding.MenuExternalDiscussionBinding
@@ -23,7 +24,6 @@ import com.team.todoktodok.databinding.MenuOwnedDiscussionBinding
 import com.team.todoktodok.presentation.compose.bookdiscussions.BookDiscussionsActivity
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionResult.Companion.EXTRA_DELETE_DISCUSSION
 import com.team.todoktodok.presentation.compose.main.MainActivity
-import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
 import com.team.todoktodok.presentation.core.component.CommonDialog
 import com.team.todoktodok.presentation.core.component.ReportDialog

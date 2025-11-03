@@ -31,8 +31,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
+import com.team.core.ExceptionMessageConverter
 import com.team.todoktodok.R
 import com.team.todoktodok.presentation.compose.LocalUiExceptionHandler
 import com.team.todoktodok.presentation.compose.UiExceptionHandler
@@ -41,7 +41,6 @@ import com.team.todoktodok.presentation.compose.core.component.AlertSnackBar
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionTabStatus
 import com.team.todoktodok.presentation.compose.discussion.model.DiscussionTabStatus.Companion.DiscussionTabStatus
 import com.team.todoktodok.presentation.compose.main.vm.MainViewModel
-import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussion
 import kotlinx.coroutines.launch
 

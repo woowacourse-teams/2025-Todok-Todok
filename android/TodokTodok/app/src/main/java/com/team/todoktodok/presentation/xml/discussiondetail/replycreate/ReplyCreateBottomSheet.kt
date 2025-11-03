@@ -12,14 +12,15 @@ import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.team.core.ExceptionMessageConverter
 import com.team.todoktodok.R
 import com.team.todoktodok.databinding.FragmentCommentCreateBottomSheetBinding
-import com.team.todoktodok.presentation.core.ExceptionMessageConverter
 import com.team.todoktodok.presentation.core.component.AlertSnackBar.Companion.AlertSnackBar
 import com.team.todoktodok.presentation.xml.discussiondetail.BottomSheetVisibilityListener
 import com.team.todoktodok.presentation.xml.discussiondetail.commentdetail.vm.CommentDetailViewModel
 import com.team.todoktodok.presentation.xml.discussiondetail.replycreate.vm.ReplyCreateViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ReplyCreateBottomSheet : BottomSheetDialogFragment(R.layout.fragment_comment_create_bottom_sheet) {
@@ -31,12 +32,11 @@ class ReplyCreateBottomSheet : BottomSheetDialogFragment(R.layout.fragment_comme
 
     private var visibilityListener: BottomSheetVisibilityListener? = null
 
+    @Inject
+    lateinit var messageConverter: ExceptionMessageConverter
+
     fun setVisibilityListener(listener: BottomSheetVisibilityListener) {
         visibilityListener = listener
-    }
-
-    private val messageConverter: ExceptionMessageConverter by lazy {
-        ExceptionMessageConverter()
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
