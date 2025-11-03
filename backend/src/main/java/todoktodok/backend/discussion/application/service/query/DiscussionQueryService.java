@@ -138,7 +138,7 @@ public class DiscussionQueryService {
 
         final List<Long> hotDiscussionIds = discussionRepository.findHotDiscussionIds(sinceDate, pageable);//2회
 
-        return getHotDiscussionsResponses(hotDiscussionIds, member);
+        return getDiscussionsResponses(hotDiscussionIds, member);
     }
 
     public ActiveDiscussionPageResponse getActiveDiscussions(
@@ -279,26 +279,26 @@ public class DiscussionQueryService {
         return getDiscussionsResponses(discussionIds, member);
     }
 
+//    private List<DiscussionResponse> getDiscussionsResponses(
+//            final List<Long> discussionIds,
+//            final Member member
+//    ) {
+//        if (discussionIds.isEmpty()) {
+//            return List.of();
+//        }
+//
+//        final List<DiscussionLikeSummaryDto> likeSummaries = discussionLikeRepository.findLikeSummaryByDiscussionIds(
+//                member, discussionIds);
+//        final List<DiscussionCommentCountDto> commentCounts = commentRepository.findCommentCountsByDiscussionIds(
+//                discussionIds);
+//
+//        final Map<Long, LikeCountAndIsLikedByMeDto> likesByDiscussionId = mapLikeSummariesByDiscussionId(likeSummaries);
+//        final Map<Long, Integer> commentsByDiscussionId = mapTotalCommentCountsByDiscussionId(commentCounts);
+//
+//        return makeResponsesFrom(discussionIds, likesByDiscussionId, commentsByDiscussionId);
+//    }
+
     private List<DiscussionResponse> getDiscussionsResponses(
-            final List<Long> discussionIds,
-            final Member member
-    ) {
-        if (discussionIds.isEmpty()) {
-            return List.of();
-        }
-
-        final List<DiscussionLikeSummaryDto> likeSummaries = discussionLikeRepository.findLikeSummaryByDiscussionIds(
-                member, discussionIds);
-        final List<DiscussionCommentCountDto> commentCounts = commentRepository.findCommentCountsByDiscussionIds(
-                discussionIds);
-
-        final Map<Long, LikeCountAndIsLikedByMeDto> likesByDiscussionId = mapLikeSummariesByDiscussionId(likeSummaries);
-        final Map<Long, Integer> commentsByDiscussionId = mapTotalCommentCountsByDiscussionId(commentCounts);
-
-        return makeResponsesFrom(discussionIds, likesByDiscussionId, commentsByDiscussionId);
-    }
-
-    private List<DiscussionResponse> getHotDiscussionsResponses(
             final List<Long> discussionIds,
             final Member member
     ) {
