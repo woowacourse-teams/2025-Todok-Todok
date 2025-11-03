@@ -13,14 +13,14 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import javax.inject.Singleton
 
-private val json =
-    Json {
-        ignoreUnknownKeys = true
-    }
-
 @Module
 @InstallIn(SingletonComponent::class)
-object RetrofitModuleHilt {
+object RetrofitModule {
+    private val json =
+        Json {
+            ignoreUnknownKeys = true
+        }
+
     private val builder: Retrofit.Builder =
         Retrofit
             .Builder()
