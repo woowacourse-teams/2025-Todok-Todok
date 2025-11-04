@@ -1,4 +1,4 @@
-package com.team.todoktodok.adapter.model
+package com.team.domain.model
 
 import com.team.domain.model.member.Nickname
 import com.team.domain.model.notification.NotificationTarget
