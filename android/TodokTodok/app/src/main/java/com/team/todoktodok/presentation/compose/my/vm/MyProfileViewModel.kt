@@ -1,6 +1,7 @@
 package com.team.todoktodok.presentation.compose.my.vm
 
 import androidx.lifecycle.viewModelScope
+import com.team.core.base.BaseViewModel
 import com.team.domain.ConnectivityObserver
 import com.team.domain.model.ImagePayload
 import com.team.domain.model.member.MemberDiscussionType
@@ -10,7 +11,6 @@ import com.team.domain.repository.MemberRepository
 import com.team.domain.repository.TokenRepository
 import com.team.todoktodok.presentation.compose.my.MyProfileUiEvent
 import com.team.todoktodok.presentation.compose.my.MyProfileUiState
-import com.team.todoktodok.presentation.core.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow

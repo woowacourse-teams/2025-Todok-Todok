@@ -1,4 +1,4 @@
-package com.team.todoktodok.presentation.core.event
+package com.team.core.event
 
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData

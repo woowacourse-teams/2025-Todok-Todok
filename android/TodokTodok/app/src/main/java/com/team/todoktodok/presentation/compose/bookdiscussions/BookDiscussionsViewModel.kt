@@ -3,6 +3,7 @@ package com.team.todoktodok.presentation.compose.bookdiscussions
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.team.core.base.BaseViewModel
 import com.team.domain.ConnectivityObserver
 import com.team.domain.model.Discussion
 import com.team.domain.model.PageInfo
@@ -12,7 +13,6 @@ import com.team.todoktodok.presentation.compose.bookdiscussions.model.BookDiscus
 import com.team.todoktodok.presentation.compose.bookdiscussions.model.BookDiscussionsUiState
 import com.team.todoktodok.presentation.compose.bookdiscussions.model.toBookDetailUiState
 import com.team.todoktodok.presentation.compose.bookdiscussions.model.toDiscussionItem
-import com.team.todoktodok.presentation.core.base.BaseViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

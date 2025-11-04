@@ -1,6 +1,7 @@
 package com.team.todoktodok.presentation.compose.main.vm
 
 import androidx.lifecycle.viewModelScope
+import com.team.core.base.BaseViewModel
 import com.team.domain.ConnectivityObserver
 import com.team.domain.model.exception.onFailure
 import com.team.domain.model.exception.onSuccess
@@ -8,7 +9,6 @@ import com.team.domain.repository.DiscussionRepository
 import com.team.domain.repository.NotificationRepository
 import com.team.todoktodok.presentation.compose.main.MainUiEvent
 import com.team.todoktodok.presentation.compose.main.MainUiState
-import com.team.todoktodok.presentation.core.base.BaseViewModel
 import com.team.todoktodok.presentation.xml.serialization.SerializationDiscussion
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel

@@ -1,11 +1,11 @@
 package com.team.todoktodok.presentation.compose.discussion.latest.vm
 
 import androidx.lifecycle.viewModelScope
+import com.team.core.base.BaseViewModel
 import com.team.domain.ConnectivityObserver
 import com.team.domain.repository.DiscussionRepository
 import com.team.todoktodok.presentation.compose.discussion.latest.LatestDiscussionsUiEvent
 import com.team.todoktodok.presentation.compose.discussion.latest.LatestDiscussionsUiState
-import com.team.todoktodok.presentation.core.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow

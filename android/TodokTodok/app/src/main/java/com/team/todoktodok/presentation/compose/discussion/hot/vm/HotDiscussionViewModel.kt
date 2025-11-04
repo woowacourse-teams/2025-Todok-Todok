@@ -1,11 +1,11 @@
 package com.team.todoktodok.presentation.compose.discussion.hot.vm
 
 import androidx.lifecycle.viewModelScope
+import com.team.core.base.BaseViewModel
 import com.team.domain.ConnectivityObserver
 import com.team.domain.repository.DiscussionRepository
 import com.team.todoktodok.presentation.compose.discussion.hot.HotDiscussionUiEvent
 import com.team.todoktodok.presentation.compose.discussion.hot.HotDiscussionUiState
-import com.team.todoktodok.presentation.core.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow

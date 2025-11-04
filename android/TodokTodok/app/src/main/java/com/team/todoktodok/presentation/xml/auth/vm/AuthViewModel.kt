@@ -1,12 +1,12 @@
 package com.team.todoktodok.presentation.xml.auth.vm
 
 import androidx.lifecycle.viewModelScope
+import com.team.core.base.BaseViewModel
 import com.team.domain.ConnectivityObserver
 import com.team.domain.model.member.MemberType
 import com.team.domain.model.member.MemberType.Companion.MemberType
 import com.team.domain.repository.MemberRepository
 import com.team.domain.repository.TokenRepository
-import com.team.todoktodok.presentation.core.base.BaseViewModel
 import com.team.todoktodok.presentation.xml.auth.login.LoginUiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel

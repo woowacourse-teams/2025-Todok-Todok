@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.team.core.event.MutableSingleLiveData
+import com.team.core.event.SingleLiveData
 import com.team.domain.model.book.Keyword
 import com.team.domain.model.book.SearchedBook
 import com.team.domain.model.exception.BookException
@@ -11,8 +13,6 @@ import com.team.domain.model.exception.TodokTodokExceptions
 import com.team.domain.model.exception.onFailure
 import com.team.domain.model.exception.onSuccess
 import com.team.domain.repository.BookRepository
-import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
-import com.team.todoktodok.presentation.core.event.SingleLiveData
 import com.team.todoktodok.presentation.xml.book.SearchedBookStatus
 import com.team.todoktodok.presentation.xml.book.SelectBookUiEvent
 import com.team.todoktodok.presentation.xml.book.SelectBookUiState

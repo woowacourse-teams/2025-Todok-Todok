@@ -4,11 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.team.core.event.MutableSingleLiveData
+import com.team.core.event.SingleLiveData
 import com.team.domain.model.discussionroom.DiscussionRoom
 import com.team.domain.repository.DiscussionRepository
 import com.team.todoktodok.R
-import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
-import com.team.todoktodok.presentation.core.event.SingleLiveData
 import com.team.todoktodok.presentation.xml.draft.DraftUiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch

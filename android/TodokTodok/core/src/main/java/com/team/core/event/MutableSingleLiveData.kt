@@ -1,4 +1,4 @@
-package com.team.todoktodok.presentation.core.event
+package com.team.core.event
 
 class MutableSingleLiveData<T> : SingleLiveData<T> {
     constructor() : super()

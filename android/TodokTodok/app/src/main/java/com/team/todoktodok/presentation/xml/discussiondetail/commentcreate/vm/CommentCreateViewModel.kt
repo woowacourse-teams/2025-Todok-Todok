@@ -5,10 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.team.core.event.MutableSingleLiveData
+import com.team.core.event.SingleLiveData
 import com.team.domain.model.exception.NetworkResult
 import com.team.domain.repository.CommentRepository
-import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
-import com.team.todoktodok.presentation.core.event.SingleLiveData
 import com.team.todoktodok.presentation.xml.discussiondetail.commentcreate.CommentCreateState
 import com.team.todoktodok.presentation.xml.discussiondetail.commentcreate.CommentCreateUiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel

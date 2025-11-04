@@ -1,4 +1,4 @@
-package com.team.todoktodok.presentation.core.base
+package com.team.core.base
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

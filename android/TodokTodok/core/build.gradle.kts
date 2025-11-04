@@ -34,6 +34,8 @@ dependencies {
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
 
+    implementation(libs.google.firebase.crashlytics.ktx)
+
     testImplementation(libs.bundles.test)
     testImplementation(libs.androidx.core.testing)
 }

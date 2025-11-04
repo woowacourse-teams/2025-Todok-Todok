@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.team.core.event.MutableSingleLiveData
+import com.team.core.event.SingleLiveData
 import com.team.domain.model.book.SearchedBook
 import com.team.domain.model.discussionroom.DiscussionRoom
 import com.team.domain.model.exception.onFailure
@@ -13,8 +15,6 @@ import com.team.domain.model.exception.onSuccessSuspend
 import com.team.domain.repository.BookRepository
 import com.team.domain.repository.DiscussionRepository
 import com.team.domain.repository.TokenRepository
-import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
-import com.team.todoktodok.presentation.core.event.SingleLiveData
 import com.team.todoktodok.presentation.xml.discussion.create.CreateDiscussionUiEvent
 import com.team.todoktodok.presentation.xml.discussion.create.CreateDiscussionUiState
 import com.team.todoktodok.presentation.xml.discussion.create.ErrorCreateDiscussionType

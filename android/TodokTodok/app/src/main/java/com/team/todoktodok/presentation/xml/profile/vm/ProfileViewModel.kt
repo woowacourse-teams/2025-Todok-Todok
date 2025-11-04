@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.team.core.event.MutableSingleLiveData
+import com.team.core.event.SingleLiveData
 import com.team.domain.model.Book
 import com.team.domain.model.Discussion
 import com.team.domain.model.Support
@@ -16,8 +18,6 @@ import com.team.domain.model.member.MemberId.Companion.MemberId
 import com.team.domain.model.member.Profile
 import com.team.domain.repository.MemberRepository
 import com.team.domain.repository.TokenRepository
-import com.team.todoktodok.presentation.core.event.MutableSingleLiveData
-import com.team.todoktodok.presentation.core.event.SingleLiveData
 import com.team.todoktodok.presentation.xml.profile.ProfileUiEvent
 import com.team.todoktodok.presentation.xml.profile.ProfileUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
