@@ -2,6 +2,7 @@ package com.team.todoktodok.presentation.xml.discussiondetail
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
@@ -33,8 +34,8 @@ import com.team.todoktodok.presentation.core.ext.loadCircleImage
 import com.team.todoktodok.presentation.core.ext.loadImage
 import com.team.todoktodok.presentation.core.ext.registerPositiveResultListener
 import com.team.todoktodok.presentation.core.ext.registerReportResultListener
+import com.team.todoktodok.presentation.core.ext.shareDiscussionLink
 import com.team.todoktodok.presentation.core.ext.toRelativeString
-import com.team.todoktodok.presentation.core.utils.shareDiscussionLink
 import com.team.todoktodok.presentation.xml.auth.AuthActivity
 import com.team.todoktodok.presentation.xml.discussion.create.CreateDiscussionRoomActivity
 import com.team.todoktodok.presentation.xml.discussion.create.SerializationCreateDiscussionRoomMode
@@ -329,7 +330,7 @@ class DiscussionDetailActivity : AppCompatActivity() {
             }
 
             is DiscussionDetailUiEvent.ShareDiscussion -> {
-                this@DiscussionDetailActivity.shareDiscussionLink(
+                shareDiscussionLink(
                     event.discussionId,
                     event.discussionTitle,
                 )
@@ -410,6 +411,30 @@ class DiscussionDetailActivity : AppCompatActivity() {
         }
     }
 
+    fun shareDiscussionLink(
+        id: Long,
+        title: String,
+    ) {
+        val url =
+            Uri
+                .Builder()
+                .scheme(HOST)
+                .authority(SCHEME)
+                .appendPath(PATH_DISCUSSION)
+                .appendPath(id.toString())
+                .build()
+                .toString()
+
+        val urlMessage = "$title\n$url"
+        val intent =
+            Intent(Intent.ACTION_SEND).apply {
+                type = "text/plain"
+                putExtra(Intent.EXTRA_SUBJECT, getString(R.string.discussion_link_title))
+                putExtra(Intent.EXTRA_TEXT, urlMessage)
+            }
+        startActivity(Intent.createChooser(intent, getString(R.string.share_discussion_title)))
+    }
+
     private fun setUpDialogResultListener() {
         supportFragmentManager.registerReportResultListener(
             this,
@@ -429,6 +454,9 @@ class DiscussionDetailActivity : AppCompatActivity() {
     }
 
     companion object {
+        private const val HOST = "todoktodok.com"
+        private const val SCHEME = "https"
+        private const val PATH_DISCUSSION = "discussiondetail"
         private const val DISCUSSION_DELETE_DIALOG_REQUEST_KEY =
             "discussion_delete_dialog_request_key"
         private const val DISCUSSION_REPORT_DIALOG_REQUEST_KEY =

@@ -1,15 +1,24 @@
-package com.team.todoktodok.presentation.core.utils
+package com.team.todoktodok.presentation.core.ext
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import com.team.todoktodok.R
-import com.team.todoktodok.presentation.core.link.ShareLinks
 
 fun Context.shareDiscussionLink(
     id: Long,
     title: String,
 ) {
-    val url = ShareLinks.discussionUrl(id)
+    val url =
+        Uri
+            .Builder()
+            .scheme("todoktodok.com")
+            .authority("https")
+            .appendPath("discussiondetail")
+            .appendPath(id.toString())
+            .build()
+            .toString()
+
     val urlMessage = "$title\n$url"
     val intent =
         Intent(Intent.ACTION_SEND).apply {
