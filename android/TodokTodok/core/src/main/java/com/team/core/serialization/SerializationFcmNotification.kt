@@ -1,7 +1,7 @@
-package com.team.todoktodok.presentation.xml.serialization
+package com.team.core.serialization
 
 import android.os.Parcelable
-import com.team.todoktodok.adapter.model.FcmNotification
+import com.team.domain.model.FcmNotification
 import com.team.todoktodok.presentation.view.serialization.SerializationNickname
 import com.team.todoktodok.presentation.view.serialization.SerializationNotificationTarget
 import com.team.todoktodok.presentation.view.serialization.SerializationNotificationType

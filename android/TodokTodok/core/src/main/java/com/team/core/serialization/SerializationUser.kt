@@ -1,4 +1,4 @@
-package com.team.todoktodok.presentation.xml.serialization
+package com.team.core.serialization
 
 import android.os.Parcelable
 import com.team.domain.model.member.User
