@@ -36,7 +36,7 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
     ) {
         // 멤버 별 조회 시 한 명의 멤버에게 과중치가 발생하지 않도록
         final HttpServletRequest httpServletRequest = webRequest.getNativeRequest(HttpServletRequest.class);
-        return ThreadLocalRandom.current().nextLong(1L, 500L);
+        return ThreadLocalRandom.current().nextLong(10L, 1500L);
     }
 
     private String getTokenFromAuthorizationHeader(HttpServletRequest httpServletRequest) {
