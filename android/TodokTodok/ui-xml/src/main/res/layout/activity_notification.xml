@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/topBar_notification"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/space_56"
+        android:layout_marginHorizontal="@dimen/space_24"
+        android:background="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_notification"
+        style="@style/HeaderTitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="알림"
+        app:layout_constraintBottom_toBottomOf="@id/topBar_notification"
+        app:layout_constraintEnd_toEndOf="@id/topBar_notification"
+        app:layout_constraintStart_toStartOf="@id/topBar_notification"
+        app:layout_constraintTop_toTopOf="@id/topBar_notification" />
+
+    <ImageView
+        android:id="@+id/btn_back"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:contentDescription="메인 페이지로 이동합니다"
+        android:paddingVertical="10dp"
+        android:paddingEnd="@dimen/space_20"
+        android:src="@drawable/btn_back"
+        app:layout_constraintBottom_toBottomOf="@id/topBar_notification"
+        app:layout_constraintStart_toStartOf="@id/topBar_notification"
+        app:layout_constraintTop_toTopOf="@id/topBar_notification" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_notifications"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/space_0"
+        android:background="@color/gray_ED"
+        android:scrollbarFadeDuration="0"
+        android:scrollbarStyle="insideOverlay"
+        android:scrollbars="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/topBar_notification"
+        app:layout_constraintVertical_bias="1.0"
+        tools:listitem="@layout/item_notification" />
+
+    <com.team.ui_xml.component.CloverProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/space_0"
+        android:background="@color/gray_ED"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/topBar_notification" />
+</androidx.constraintlayout.widget.ConstraintLayout>

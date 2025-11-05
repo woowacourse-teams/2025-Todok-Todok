@@ -20,6 +20,10 @@ plugins {
     alias(libs.plugins.hilt) apply false
 }
 
+apply {
+    from("gradle/projectDependencyGraph.gradle")
+}
+
 allprojects {
     apply(plugin = "org.jlleitschuh.gradle.ktlint")
 }

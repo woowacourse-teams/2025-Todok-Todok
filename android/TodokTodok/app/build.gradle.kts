@@ -14,6 +14,10 @@ plugins {
 }
 
 android {
+    tasks.named("build") {
+        dependsOn("ktlintCheck")
+    }
+
     val properties = Properties()
     properties.load(project.rootProject.file("local.properties").inputStream())
 
@@ -60,11 +64,6 @@ android {
 
             applicationIdSuffix = ".debug"
             versionNameSuffix = "-debug"
-            buildConfigField(
-                "String",
-                "BASE_URL",
-                "\"${properties.getProperty("debug_base_url")}\"",
-            )
         }
 
         release {
@@ -73,11 +72,6 @@ android {
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
-            )
-            buildConfigField(
-                "String",
-                "BASE_URL",
-                "\"${properties.getProperty("release_base_url")}\"",
             )
             signingConfig = signingConfigs.getByName("release")
         }
@@ -93,9 +87,7 @@ android {
         }
     }
     buildFeatures {
-        viewBinding = true
         buildConfig = true
-        compose = true
     }
 }
 
@@ -107,36 +99,19 @@ androidComponents {
 }
 
 dependencies {
+    implementation(project(":data"))
+    implementation(project(":core"))
+    implementation(project(":ui-compose"))
+    implementation(project(":ui-xml"))
     implementation(project(":domain"))
 
     implementation(libs.bundles.androidx)
     implementation(libs.bundles.kotlin)
-    implementation(libs.bundles.network)
     implementation(libs.bundles.google)
-    implementation(libs.bundles.glide)
     implementation(libs.bundles.logging)
 
-    testImplementation(libs.bundles.test)
-    testImplementation(libs.androidx.core.testing)
-    androidTestImplementation(libs.bundles.android.test)
-    androidTestRuntimeOnly(libs.mannodermaus.junit5.runner)
-    ksp(libs.androidx.room.compiler)
-
-    // Hilt
     implementation(libs.bundles.hilt)
-
-    androidTestImplementation(libs.hilt.android.testing)
-    testImplementation(libs.hilt.android.testing)
     ksp(libs.hilt.android.compiler)
-
-    // Compose
-    implementation(platform(libs.compose.bom))
-    implementation(libs.bundles.compose)
-    lintChecks(libs.compose.lint)
-
-    androidTestImplementation(platform(libs.compose.bom))
-    androidTestImplementation(libs.bundles.compose.test)
-    debugImplementation(libs.bundles.compose.debug)
 
     lintChecks(project(":lint"))
 }
