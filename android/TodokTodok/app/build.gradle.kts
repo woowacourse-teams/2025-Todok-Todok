@@ -14,10 +14,6 @@ plugins {
 }
 
 android {
-    tasks.named("build") {
-        dependsOn("ktlintCheck")
-    }
-
     val properties = Properties()
     properties.load(project.rootProject.file("local.properties").inputStream())
 
@@ -28,8 +24,8 @@ android {
         applicationId = "com.team.todoktodok"
         minSdk = 30
         targetSdk = 35
-        versionCode = 12
-        versionName = "1.0.7"
+        versionCode = 14
+        versionName = "1.0.9"
 
         buildConfigField(
             "String",
@@ -45,6 +41,7 @@ android {
     lint {
         disable += "NullSafeMutableLiveData"
         disable += "ComposeViewModelForwarding"
+        abortOnError = true
     }
 
     signingConfigs {
@@ -140,4 +137,16 @@ dependencies {
     androidTestImplementation(platform(libs.compose.bom))
     androidTestImplementation(libs.bundles.compose.test)
     debugImplementation(libs.bundles.compose.debug)
+
+    lintChecks(project(":lint"))
+}
+
+afterEvaluate {
+    tasks.named("preBuild") {
+        dependsOn("ktlintFormat")
+    }
+
+    tasks.named("assembleDebug") {
+        dependsOn("lintDebug")
+    }
 }

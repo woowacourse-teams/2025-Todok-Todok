@@ -7,7 +7,9 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.team.todoktodok.presentation.compose.theme.TodoktodokTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class BookDiscussionsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
