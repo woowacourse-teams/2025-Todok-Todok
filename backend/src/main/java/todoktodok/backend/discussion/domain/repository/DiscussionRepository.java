@@ -1,0 +1,137 @@
+package todoktodok.backend.discussion.domain.repository;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import todoktodok.backend.discussion.domain.Discussion;
+import todoktodok.backend.member.domain.Member;
+
+public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
+
+    @Query("""
+                   SELECT d
+                   FROM Discussion d
+                   WHERE d.id IN :discussionIds
+            """)
+    List<Discussion> findDiscussionsInIds(@Param("discussionIds") final List<Long> discussionIds);
+
+    @Query("""
+                   SELECT d.id
+                   FROM Discussion d
+                   WHERE d.member = :member
+                   ORDER BY d.id DESC
+            """)
+    List<Long> findIdsByMember(@Param("member") final Member member);
+
+    @Query("""
+                   SELECT d.id 
+                   FROM Discussion d
+            """)
+    List<Long> findAllIds();
+
+    @Query("""
+                    SELECT d.id
+                    FROM Discussion d
+            """)
+    Slice<Long> findAllIdsBy(final Pageable pageable);
+
+    @Query("""
+                    SELECT d.id 
+                    FROM Discussion d
+                    WHERE :cursorId IS NULL OR d.id < :cursorId
+            """)
+    Slice<Long> findIdsLessThan(
+            @Param("cursorId") final Long cursorId,
+            final Pageable pageable
+    );
+
+    @Query(value = """
+            SELECT d.id
+            FROM discussion d
+            WHERE MATCH(d.title) AGAINST(:keyword IN BOOLEAN MODE)
+              AND d.deleted_at IS NULL
+              
+            UNION
+            
+            SELECT d.id
+            FROM discussion d
+            JOIN book b ON d.book_id = b.id
+            WHERE MATCH(b.title) AGAINST(:keyword IN BOOLEAN MODE)
+              AND d.deleted_at IS NULL
+              AND b.deleted_at IS NULL
+            """, nativeQuery = true)
+    List<Long> searchIdsByKeyword(@Param("keyword") final String keyword);
+
+    @Query(value = """
+                SELECT d.id
+                FROM discussion d
+                WHERE d.member_id = :memberId
+                AND d.deleted_at IS NULL
+
+                UNION
+
+                SELECT d.id
+                FROM discussion d
+                JOIN comment c ON c.discussion_id = d.id
+                WHERE c.member_id = :memberId
+                AND d.deleted_at IS NULL
+                AND c.deleted_at IS NULL
+
+                UNION
+
+                SELECT d.id
+                FROM discussion d
+                JOIN comment c ON c.discussion_id = d.id
+                JOIN reply r ON r.comment_id = c.id
+                WHERE r.member_id = :memberId
+                AND d.deleted_at IS NULL
+                AND c.deleted_at IS NULL
+                AND r.deleted_at IS NULL
+                ORDER BY id DESC
+            """, nativeQuery = true)
+    List<Long> findParticipatedDiscussionIdsByMember(@Param("memberId") final Long memberId);
+
+    @Query("""
+        SELECT d.id
+        FROM Discussion d
+        JOIN Comment c ON c.discussion = d
+        WHERE c.createdAt >= :periodStart
+        GROUP BY d
+        HAVING (
+           :lastDiscussionLatestCommentId IS NULL
+            OR MAX(c.id) < :lastDiscussionLatestCommentId
+        )
+        ORDER BY MAX(c.id) DESC
+   """)
+    List<Long> findActiveDiscussionsByCursor(
+            @Param("periodStart") final LocalDateTime periodStart,
+            @Param("lastDiscussionLatestCommentId") final Long lastDiscussionLatestCommentId,
+            final Pageable pageable
+    );
+
+    @Query("""
+        SELECT d.id
+        FROM Discussion d
+        WHERE d.book.id = :bookId
+    """)
+    Slice<Long> findIdsByBookId(
+            @Param("bookId") final Long bookId,
+            final Pageable pageable
+    );
+
+    @Query("""
+        SELECT d.id
+        FROM Discussion d
+        WHERE d.book.id = :bookId 
+        AND (:cursorId IS NULL OR d.id < :cursorId)
+""")
+    Slice<Long> findIdsByBookIdLessThan(
+            @Param("bookId") final Long bookId,
+            @Param("cursorId") final Long cursorId,
+            final Pageable pageable
+    );
+}

@@ -1,0 +1,45 @@
+spring:
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  datasource:
+    url: jdbc:h2:mem:database
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:db/local/schema.sql
+      data-locations: classpath:db/local/data.sql
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    hibernate:
+      ddl-auto: validate
+    defer-datasource-initialization: false
+  flyway:
+    enabled: false
+
+  config:
+    activate:
+      on-profile: local
+    import:
+      - submodule/security/firebase.yml
+
+auth:
+  mode: google
+
+server:
+  tomcat:
+    max-http-form-post-size: 15728640
+    max-swallow-size: 15728640
+
+firebase:
+  enabled: false
+  account:
+    path: ${firebase.account.path}
+
+jwt:
+  access-token:
+    expire-mills: ${jwt.access-token.local.expire-mills}

@@ -1,0 +1,92 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${database.prod.url}
+    username: ${database.prod.username}
+    password: ${database.prod.password}
+  sql:
+    init:
+      mode: never
+      schema-locations:
+      data-locations:
+  jpa:
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+    hibernate:
+      ddl-auto: validate
+    defer-datasource-initialization: false
+
+  flyway:
+    enabled: true
+    user: ${database.prod.username}
+    password: ${database.prod.password}
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    validate-on-migrate: true
+    clean-disabled: true
+    out-of-order: false
+    encoding: UTF-8
+
+    lifecycle:
+      timeout-per-shutdown-phase: 30s
+
+  config:
+    activate:
+      on-profile: prod
+    import:
+      - submodule/security/database.yml
+      - submodule/security/firebase.yml
+
+auth:
+  mode: google
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: [prometheus, health]
+      path-mapping:
+        health: health_check
+
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      show-details: always
+
+  health:
+    readinessState:
+      enabled: true
+    db:
+      enabled: true
+
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+  metrics:
+    distribution:
+      percentiles-histogram:
+        http:
+          server:
+            requests: true
+
+server:
+  shutdown: graceful
+
+  tomcat:
+    mbeanregistry:
+      enabled: true
+    max-http-form-post-size: 15728640
+    max-swallow-size: 15728640
+
+firebase:
+  enabled: true
+  account:
+    path: ${firebase.account.path}
+
+jwt:
+  access-token:
+    expire-mills: ${jwt.access-token.prod.expire-mills}
