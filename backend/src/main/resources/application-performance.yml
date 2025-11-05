@@ -45,7 +45,7 @@ server:
     mbeanregistry:
       enabled: true
     threads:
-      max: 10
+      max: 5
     accept-count: 100
 
 logging:
