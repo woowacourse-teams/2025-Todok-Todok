@@ -132,6 +132,7 @@ fun DiscussionsScreen(
                     DiscussionTabStatus.HOT -> HotDiscussionScreen(discussionDetailNavigation)
                     DiscussionTabStatus.ALL ->
                         AllDiscussionsScreen(
+                            discussionDetailNavigation = discussionDetailNavigation,
                             allDiscussionScreenMode = mainUiState.allDiscussionMode,
                             searchDiscussion = mainUiState.searchDiscussion,
                             onCompleteRemoveDiscussion = onCompleteRemoveDiscussion,

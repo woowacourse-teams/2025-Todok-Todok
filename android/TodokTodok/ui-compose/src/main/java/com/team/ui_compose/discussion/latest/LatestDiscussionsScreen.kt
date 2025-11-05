@@ -1,5 +1,6 @@
 package com.team.ui_compose.discussion.latest
 
+import android.app.Activity
 import android.app.Activity.RESULT_OK
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -29,6 +30,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.team.core.navigation.DiscussionDetailRoute
 import com.team.domain.model.PageInfo
 import com.team.ui_compose.R
 import com.team.ui_compose.common.LocalUiExceptionHandler
@@ -43,6 +45,7 @@ import com.team.ui_compose.theme.Green1A
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LatestDiscussionsScreen(
+    discussionDetailNavigation: DiscussionDetailRoute,
     modifier: Modifier = Modifier,
     viewModel: LatestDiscussionViewModel = hiltViewModel(),
 ) {
@@ -85,6 +88,11 @@ fun LatestDiscussionsScreen(
         onLoadMore = { viewModel.loadLatestDiscussions() },
         onRefresh = viewModel::refreshLatestDiscussions,
         onClickDiscussion = {
+            discussionDetailNavigation.navigateToDiscussionDetailForResult(
+                fromActivity = context as Activity,
+                discussionId = it,
+                resultLauncher = activityResultLauncher,
+            )
         },
         modifier = modifier,
     )
