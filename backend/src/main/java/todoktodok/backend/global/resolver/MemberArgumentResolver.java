@@ -12,6 +12,8 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import todoktodok.backend.global.jwt.JwtTokenProvider;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 @Slf4j
 @Component
 @AllArgsConstructor
@@ -32,8 +34,9 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
             final NativeWebRequest webRequest,
             final WebDataBinderFactory binderFactory
     ) {
+        // 멤버 별 조회 시 한 명의 멤버에게 과중치가 발생하지 않도록
         final HttpServletRequest httpServletRequest = webRequest.getNativeRequest(HttpServletRequest.class);
-        return 1L;
+        return ThreadLocalRandom.current().nextLong(1L, 500L);
     }
 
     private String getTokenFromAuthorizationHeader(HttpServletRequest httpServletRequest) {
