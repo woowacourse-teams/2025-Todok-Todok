@@ -8,10 +8,10 @@ import com.team.domain.repository.CommentRepository
 import com.team.domain.repository.TokenRepository
 import com.team.ui_xml.CoroutinesTestExtension
 import com.team.ui_xml.InstantTaskExecutorExtension
-import com.team.ui_xml.ext.getOrAwaitValue
-import com.team.ui_xml.fixture.COMMENTS_FIXTURE
 import com.team.ui_xml.discussiondetail.comments.CommentsUiEvent
 import com.team.ui_xml.discussiondetail.comments.vm.CommentsViewModel
+import com.team.ui_xml.ext.getOrAwaitValue
+import com.team.ui_xml.fixture.COMMENTS_FIXTURE
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi

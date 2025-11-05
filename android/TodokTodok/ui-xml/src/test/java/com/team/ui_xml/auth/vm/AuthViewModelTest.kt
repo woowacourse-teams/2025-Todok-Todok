@@ -81,7 +81,7 @@ class AuthViewModelTest {
             every { connectivityObserver.value() } returns ConnectivityObserver.Status.Available
             coEvery { memberRepository.login(idToken) } returns
                 com.team.domain.model.exception.NetworkResult.Success(
-                    com.team.domain.model.member.MemberType.USER
+                    com.team.domain.model.member.MemberType.USER,
                 )
 
             viewModel.uiEvent.test {
@@ -101,7 +101,7 @@ class AuthViewModelTest {
             every { connectivityObserver.value() } returns ConnectivityObserver.Status.Available
             coEvery { memberRepository.login(idToken) } returns
                 com.team.domain.model.exception.NetworkResult.Success(
-                    com.team.domain.model.member.MemberType.TEMP_USER
+                    com.team.domain.model.member.MemberType.TEMP_USER,
                 )
 
             viewModel.uiEvent.test {
@@ -121,7 +121,8 @@ class AuthViewModelTest {
             every { connectivityObserver.value() } returns ConnectivityObserver.Status.Available
             val exception = com.team.domain.model.exception.TodokTodokExceptions.EmptyBodyException
             coEvery { memberRepository.login(idToken) } returns
-                com.team.domain.model.exception.NetworkResult.Failure(exception)
+                com.team.domain.model.exception.NetworkResult
+                    .Failure(exception)
 
             viewModel.uiEvent.test {
                 // when

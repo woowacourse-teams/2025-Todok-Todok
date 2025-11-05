@@ -13,9 +13,9 @@ import com.team.core.navigation.MainRoute
 import com.team.domain.model.member.NickNameException
 import com.team.ui_xml.R
 import com.team.ui_xml.auth.signup.SignUpUiEvent
-import com.team.ui_xml.auth.signup.vm.SignUpViewModel
 import com.team.ui_xml.component.AlertSnackBar.Companion.AlertSnackBar
 import com.team.ui_xml.databinding.FragmentSignupBinding
+import com.team.ui_xml.signup.vm.SignUpViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

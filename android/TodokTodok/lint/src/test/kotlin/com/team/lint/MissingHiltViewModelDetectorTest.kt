@@ -37,11 +37,10 @@ class MissingHiltViewModelDetectorTest : LintDetectorTest() {
             .run()
             .expect(
                 """
-                src/com/team/todoktodok/presentation/vm/TestViewModel.kt:5: 
-                Error: ViewModel 클래스에 @HiltViewModel 또는 @Inject 생성자가 누락되어 있습니다: com.team.todoktodok.presentation.vm.TestViewModel [MissingHiltViewModel]
+                src/com/team/todoktodok/presentation/vm/TestViewModel.kt:5: Error: ViewModel 클래스에 @HiltViewModel 또는 @Inject 생성자가 누락되어 있습니다: com.team.todoktodok.presentation.vm.TestViewModel [MissingHiltViewModel]
                 class TestViewModel : ViewModel()
                       ~~~~~~~~~~~~~
-                1 errors, 0 warnings
+                1 error
                 """.trimIndent(),
             )
     }

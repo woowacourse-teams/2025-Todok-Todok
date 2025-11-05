@@ -1,4 +1,4 @@
-package com.team.ui_xml.auth.signup.vm
+package com.team.ui_xml.signup.vm
 
 import androidx.lifecycle.viewModelScope
 import com.team.core.base.BaseViewModel

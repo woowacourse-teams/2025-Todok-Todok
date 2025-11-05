@@ -7,12 +7,12 @@ import com.team.domain.repository.DiscussionRepository
 import com.team.domain.repository.TokenRepository
 import com.team.ui_xml.CoroutinesTestExtension
 import com.team.ui_xml.InstantTaskExecutorExtension
-import com.team.ui_xml.ext.getOrAwaitValue
-import com.team.ui_xml.fixture.DISCUSSIONS_FIXTURE
 import com.team.ui_xml.discussiondetail.DiscussionDetailUiEvent
 import com.team.ui_xml.discussiondetail.DiscussionDetailUiState
 import com.team.ui_xml.discussiondetail.vm.DiscussionDetailViewModel
 import com.team.ui_xml.discussiondetail.vm.DiscussionDetailViewModel.Companion.KEY_DISCUSSION_ID
+import com.team.ui_xml.ext.getOrAwaitValue
+import com.team.ui_xml.fixture.DISCUSSIONS_FIXTURE
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi

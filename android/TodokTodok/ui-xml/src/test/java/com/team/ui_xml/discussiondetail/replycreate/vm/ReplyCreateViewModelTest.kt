@@ -6,9 +6,9 @@ import com.team.domain.model.exception.TodokTodokExceptions
 import com.team.domain.repository.ReplyRepository
 import com.team.ui_xml.CoroutinesTestExtension
 import com.team.ui_xml.InstantTaskExecutorExtension
-import com.team.ui_xml.ext.getOrAwaitValue
 import com.team.ui_xml.discussiondetail.replycreate.ReplyCreateUiEvent
 import com.team.ui_xml.discussiondetail.replycreate.vm.ReplyCreateViewModel
+import com.team.ui_xml.ext.getOrAwaitValue
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk

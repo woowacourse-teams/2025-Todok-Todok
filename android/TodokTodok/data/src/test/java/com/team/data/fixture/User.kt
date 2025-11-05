@@ -1,7 +1,7 @@
 package com.team.data.fixture
 
-import com.team.domain.model.member.User
 import com.team.data.network.response.discussion.MemberResponse
+import com.team.domain.model.member.User
 
 val USERS_FIXTURE =
     listOf(

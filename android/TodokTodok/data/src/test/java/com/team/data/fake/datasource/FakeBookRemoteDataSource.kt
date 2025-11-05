@@ -1,9 +1,5 @@
 package com.team.data.fake.datasource
 
-import com.team.domain.model.book.SearchedBook
-import com.team.domain.model.book.map
-import com.team.domain.model.exception.NetworkResult
-import com.team.domain.model.exception.TodokTodokExceptions
 import com.team.data.datasource.book.BookRemoteDataSource
 import com.team.data.fixture.BOOK_FIXTURE
 import com.team.data.network.request.BookRequest
@@ -12,6 +8,10 @@ import com.team.data.network.response.book.SearchedBookResultResponse
 import com.team.data.network.response.discussion.BookDetailResponse
 import com.team.data.network.response.discussion.page.BookDiscussionPageResponse
 import com.team.data.network.response.latest.PageInfoResponse
+import com.team.domain.model.book.SearchedBook
+import com.team.domain.model.book.map
+import com.team.domain.model.exception.NetworkResult
+import com.team.domain.model.exception.TodokTodokExceptions
 
 class FakeBookRemoteDataSource : BookRemoteDataSource {
     private val books =

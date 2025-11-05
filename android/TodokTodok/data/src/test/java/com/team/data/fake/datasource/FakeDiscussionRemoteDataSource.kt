@@ -1,8 +1,7 @@
 package com.team.data.fake.datasource
 
-import com.team.domain.model.exception.NetworkResult
-import com.team.domain.model.exception.TodokTodokExceptions
 import com.team.data.datasource.discussion.DiscussionRemoteDataSource
+import com.team.data.fixture.LATEST_DISCUSSIONS_RESPONSE_FIXTURE
 import com.team.data.network.model.LikeAction
 import com.team.data.network.response.discussion.BookResponse
 import com.team.data.network.response.discussion.DiscussionResponse
@@ -11,7 +10,8 @@ import com.team.data.network.response.discussion.page.ActivatedDiscussion
 import com.team.data.network.response.discussion.page.ActivatedDiscussionPageResponse
 import com.team.data.network.response.latest.LatestDiscussionsResponse
 import com.team.data.network.response.latest.PageInfoResponse
-import com.team.data.fixture.LATEST_DISCUSSIONS_RESPONSE_FIXTURE
+import com.team.domain.model.exception.NetworkResult
+import com.team.domain.model.exception.TodokTodokExceptions
 import retrofit2.Response
 
 class FakeDiscussionRemoteDataSource : DiscussionRemoteDataSource {

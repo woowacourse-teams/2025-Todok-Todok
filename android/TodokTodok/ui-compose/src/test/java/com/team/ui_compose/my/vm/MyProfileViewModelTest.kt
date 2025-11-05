@@ -213,7 +213,8 @@ class MyProfileViewModelTest {
             viewModel.uiEvent.test {
                 val event = awaitItem()
                 assertEquals(
-                    com.team.ui_compose.my.MyProfileUiEvent.ShowErrorMessage(exception),
+                    com.team.ui_compose.my.MyProfileUiEvent
+                        .ShowErrorMessage(exception),
                     event,
                 )
             }
@@ -244,7 +245,8 @@ class MyProfileViewModelTest {
             viewModel.uiEvent.test {
                 val event = awaitItem()
                 assertEquals(
-                    com.team.ui_compose.my.MyProfileUiEvent.ShowErrorMessage(exception),
+                    com.team.ui_compose.my.MyProfileUiEvent
+                        .ShowErrorMessage(exception),
                     event,
                 )
             }
@@ -276,7 +278,8 @@ class MyProfileViewModelTest {
             viewModel.uiEvent.test {
                 val event = awaitItem()
                 assertEquals(
-                    com.team.ui_compose.my.MyProfileUiEvent.ShowErrorMessage(exception),
+                    com.team.ui_compose.my.MyProfileUiEvent
+                        .ShowErrorMessage(exception),
                     event,
                 )
             }
