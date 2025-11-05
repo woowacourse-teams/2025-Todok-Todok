@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="book_image">도서 이미지입니다</string>
+
+    <string name="all_not_has_activated_book_title">아직 활동한 책이 없어요 !</string>
+    <string name="all_not_has_activated_book_subtitle">토론에 참여하고 활동한 책을 추가해보세요</string>
+    <string name="profile_my_discussion_toggle">내 글만 보기</string>
+    <string name="profile_action_activated_book">토론방 보러가기 ></string>
+    <string name="profile_not_has_liked_discussion_title">아직 좋아요한 토론방이 없어요 !</string>
+    <string name="profile_not_has_liked_discussion_subtitle">마음에 드는 글이 있다면 좋아요를 남겨보세요</string>
+    <string name="profile_not_has_created_discussion_subtitle">나만의 주제로 토론방을 생성해보세요</string>
+    <string name="profile_action_created_discussion">토론방 생성하기 ></string>
+    <string name="all_not_has_participated_discussions_title">아직 참여한 토론방이 없어요 !</string>
+    <string name="all_not_has_participated_discussions_subtitle">토론에 참여하고 토론방을 추가해보세요 !</string>
+    <string name="content_description_profile_setting">설정 버튼</string>
+
+    <!-- 프로필 화면 -->
+    <string name="content_description_profile_active_books">활동 도서탭</string>
+
+    <string name="profile_liked_room">좋아요</string>
+    <string name="content_description_profile_liked_room">좋아요한 토론방탭</string>
+
+    <string name="content_description_profile_participated_discussion_room">참여한 토론방탭</string>
+
+    <string name="content_description_discussions_toolbar_setting">설정 아이콘</string>
+    <string name="content_description_my_profile_image">프로필 사진</string>
+    <string name="content_description_icon_modify_my_profile_image">프로필 사진 수정 아이콘</string>
+
+    <string name="notification_count_description">개 읽지 않은 알람</string>
+    <string name="notification_dialog_title">알림을 켜고 소통을 시작하세요!</string>
+    <string name="notification_dialog_subtitle">토론방의 좋아요·댓글과 내 댓글의 대댓글을 실시간으로 확인하세요.</string>
+    <string name="notification_dialog_cancel">괜찮아요</string>
+    <string name="notification_dialog_okay">네, 알려주세요</string>
+
+    <!-- BottomNavigation !-->
+    <string name="bottom_navigation_discussion">토론방</string>
+    <string name="bottom_navigation_create_discussion">토론방 생성</string>
+    <string name="bottom_navigation_my">MY</string>
+
+    <string name="bottom_navigation_content_description_discussion">모든 토론방</string>
+    <string name="bottom_navigation_content_description_create_discussion">토론방 생성</string>
+    <string name="bottom_navigation_content_description_my">내 토론방</string>
+
+    <string name="bottom_navigation_back_press">뒤로 버튼을 한번 더 누르시면 종료됩니다.</string>
+
+    <!--  토론 목록 페이지  -->
+    <string name="discussions_hot_discussion_rooms">인기 토론방</string>
+    <string name="discussions_activated_discussion_rooms">활성화된 토론방</string>
+    <string name="content_description_add_discussion">토론방 추가 화면으로 이동합니다</string>
+    <string name="content_description_book_image">도서 이미지입니다</string>
+    <string name="content_description_comments_user_profile">댓글 유저 이미지 버튼</string>
+    <string name="last_discussion_page_guide">마지막 토론이에요</string>
+    <string name="search_clear_keyword">검색어 초기화</string>
+
+    <!-- 토론 목록 화면 -->
+    <string name="discussion_search_bar_hint">도서 제목 또는 키워드를 입력해주세요.</string>
+    <string name="discussion_tab_title_hot">HOT</string>
+    <string name="discussion_tab_title_all">전체</string>
+    <string name="discussion_tab_title_my">내 토론방</string>
+    <string name="discussion_no_search_title">%s에 대한 검색결과가 없어요</string>
+    <string name="discussion_no_search_subtitle">다른 검색어를 입력해 주세요 !</string>
+    <string name="content_description_discussion_img">토론방 도서 이미지</string>
+
+    <string name="profile_can_not_load_image">선택한 이미지를 불러올 수 없습니다. 다른 이미지를 선택해 주세요.</string>
+
+    <!-- 토론 툴바 -->
+    <string name="discussions_toolbar_search_close">취소</string>
+    <string name="content_description_discussions_toolbar_search">검색 아이콘</string>
+    <string name="content_description_discussions_toolbar_notification">알람 아이콘</string>
+    <string name="content_description_discussions_toolbar_has_notification">확인하지 않은 알람이 있어요</string>
+
+    <!-- 도서별 토론방 -->
+    <string name="book_discussions_content_description_navigate_to_discussions">토론방 목록 화면 이동 버튼 이미지</string>
+    <string name="book_info_message">%1$s\n도서 정보: 알라딘</string>
+    <string name="book_discussions_title">도서별 토론방</string>
+</resources>

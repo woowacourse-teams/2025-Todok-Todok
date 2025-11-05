@@ -1,4 +1,22 @@
 <resources>
+    <string name="all_setting">설정</string>
+    <string name="all_progress_description">로딩 중</string>
+    <string name="all_search_result_count">검색 결과(%d)</string>
+    <string name="all_complete_report">신고가 완료 되었습니다.</string>
+    <string name="all_complete_block">차단이 완료 되었습니다.</string>
+    <string name="all_report_dialog_title">해당 회원을 신고하시겠습니까?</string>
+    <string name="all_block_dialog_title">해당 회원을 차단하시겠습니까?</string>
+    <string name="all_menu_block">차단하기</string>
+    <string name="all_active_books">활동 도서</string>
+    <string name="all_created_discussion_room">생성한 토론방</string>
+    <string name="all_participated_discussion_room">참여한 토론방</string>
+    <string name="all_not_has_activated_book_title">아직 활동한 책이 없어요 !</string>
+    <string name="all_not_has_activated_book_subtitle">토론에 참여하고 활동한 책을 추가해보세요</string>
+    <string name="all_not_has_created_discussion_title">아직 생성한 토론방이 없어요 !</string>
+    <string name="all_not_has_participated_discussions_title">아직 참여한 토론방이 없어요 !</string>
+    <string name="all_not_has_participated_discussions_subtitle">토론에 참여하고 토론방을 추가해보세요 !</string>
+    <string name="all_action_participated_discussion">토론방 둘러보기 ></string>
+    <string name="all_message_placeholder">상태 메시지를 입력해주세요</string>
     <!-- 닉네임 관련 -->
     <string name="error_duplicate_nickname">이미 사용 중인 닉네임입니다.</string>
     <string name="error_invalid_nickname_length">닉네임은 1~8자로 입력해주세요.</string>
@@ -34,17 +52,6 @@
     <string name="error_already_blocked">이미 차단된 회원이에요</string>
     <string name="error_already_reported">이미 신고한 회원이에요</string>
 
-    <!-- 토론방 생성 관련 에러 -->
-    <string name="error_create_discussion_book_info_not_found">책 정보가 없습니다</string>
-    <string name="error_create_discussion_title_not_found">제목이 없습니다</string>
-    <string name="error_create_discussion_title_and_content_not_found">제목과 내용이 없습니다</string>
-    <string name="error_create_discussion_content_not_found">내용이 없습니다</string>
-    <string name="error_create_discussion_not_my_discussion_room">내가 작성한 토론방이 아닙니다</string>
-    <string name="error_create_discussion_discussion_room_info_not_found">토론방 정보가 없습니다</string>
-    <string name="error_create_discussion_please_try_again">다시 시도해주세요</string>
-    <string name="error_create_discussion_title_length_over">제목은 50자까지 입력할 수 있습니다</string>
-    <string name="error_create_discussion_opinion_length_over">본문은 2500자까지 입력할 수 있습니다</string>
-
     <!-- 토론 관련 예외 -->
     <string name="error_discussion_self_report_not_allowed">자기 자신의 토론방은 신고할 수 없습니다.</string>
     <string name="error_discussion_already_reported">이미 신고한 토론방입니다.</string>
@@ -75,7 +82,7 @@
     <string name="error_profile_image_empty">이미지가 비어 있어요. 다시 선택해 주세요.</string>
     <string name="error_profile_image_size">5MB 이하의 이미지를 등록해주세요.</string>
     <string name="error_profile_image_not_image">이미지 파일만 등록할 수 있어요.</string>
-    
+
     <!-- 도서 검색/선택 관련 예외 -->
     <string name="error_select_book_empty_keyword">검색어를 입력해주세요.</string>
     <string name="error_select_book_empty_isbn">ISBN 정보가 없습니다.</string>

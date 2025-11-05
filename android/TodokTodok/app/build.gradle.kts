@@ -6,9 +6,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.serialization)
     alias(libs.plugins.ksp)
-    alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.hilt)
-    id("kotlin-parcelize")
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
 }
@@ -37,10 +35,6 @@ android {
             "\"${properties.getProperty("google_client_id")}\"",
         )
         buildConfigField("String", "FEEDBACK_URL", "\"${properties.getProperty("feedback_url")}\"")
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        testInstrumentationRunnerArguments["runnerBuilder"] =
-            "de.mannodermaus.junit5.AndroidJUnit5Builder"
     }
     lint {
         disable += "NullSafeMutableLiveData"
@@ -96,9 +90,7 @@ android {
         }
     }
     buildFeatures {
-        viewBinding = true
         buildConfig = true
-        compose = true
     }
 }
 
@@ -110,35 +102,17 @@ androidComponents {
 }
 
 dependencies {
+    implementation(project(":data"))
     implementation(project(":core"))
+    implementation(project(":ui-compose"))
+    implementation(project(":ui-xml"))
     implementation(project(":domain"))
 
     implementation(libs.bundles.androidx)
     implementation(libs.bundles.kotlin)
-    implementation(libs.bundles.network)
     implementation(libs.bundles.google)
-    implementation(libs.bundles.glide)
     implementation(libs.bundles.logging)
 
-    testImplementation(libs.bundles.test)
-    testImplementation(libs.androidx.core.testing)
-    androidTestImplementation(libs.bundles.android.test)
-    androidTestRuntimeOnly(libs.mannodermaus.junit5.runner)
-    ksp(libs.androidx.room.compiler)
-
-    // Hilt
     implementation(libs.bundles.hilt)
-
-    androidTestImplementation(libs.hilt.android.testing)
-    testImplementation(libs.hilt.android.testing)
     ksp(libs.hilt.android.compiler)
-
-    // Compose
-    implementation(platform(libs.compose.bom))
-    implementation(libs.bundles.compose)
-    lintChecks(libs.compose.lint)
-
-    androidTestImplementation(platform(libs.compose.bom))
-    androidTestImplementation(libs.bundles.compose.test)
-    debugImplementation(libs.bundles.compose.debug)
 }

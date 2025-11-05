@@ -31,7 +31,6 @@ compose-lint = "1.4.2"
 compose-ui-test = "1.6.0"
 
 # Network
-material = "1.9.1"
 material-icons-extended = "1.7.8"
 retrofit = "3.0.0"
 retrofit-kotlinx-serialization-converter = "0.8.0"
@@ -148,7 +147,6 @@ glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "gl
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
 hilt-navigation-compose = { group = "androidx.hilt" , name = "hilt-navigation-compose", version.ref = "hilt-navigation-compose"}
-hilt-android-testing = { module = "com.google.dagger:hilt-android-testing", version.ref = "hilt" }
 
 # logging
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }

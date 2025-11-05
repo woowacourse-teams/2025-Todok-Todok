@@ -1,3 +1,9 @@
 backend/.idea/workspace.xml
 backend
 
+# IDE
+.idea/
+*.iml
+
+# macOS
+.DS_Store
