@@ -5,7 +5,7 @@ spring:
     username: ${database.performance.username}
     password: ${database.performance.password}
     hikari:
-      maximum-pool-size: 10
+      maximum-pool-size: 7
   sql:
     init:
       mode: never
