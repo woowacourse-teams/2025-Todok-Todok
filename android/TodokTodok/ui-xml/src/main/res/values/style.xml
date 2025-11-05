@@ -72,4 +72,9 @@
         <item name="android:windowMinWidthMajor">95%</item>
         <item name="android:windowNoTitle">true</item>
     </style>
+
+    <!-- 텍스트 선택 색상 -->
+    <style name="text_selection_colors_black18">
+        <item name="android:textColorHighlight">@color/black_18</item>
+    </style>
 </resources>

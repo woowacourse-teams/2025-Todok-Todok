@@ -64,11 +64,6 @@ android {
 
             applicationIdSuffix = ".debug"
             versionNameSuffix = "-debug"
-            buildConfigField(
-                "String",
-                "BASE_URL",
-                "\"${properties.getProperty("debug_base_url")}\"",
-            )
         }
 
         release {
@@ -77,11 +72,6 @@ android {
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
-            )
-            buildConfigField(
-                "String",
-                "BASE_URL",
-                "\"${properties.getProperty("release_base_url")}\"",
             )
             signingConfig = signingConfigs.getByName("release")
         }

@@ -189,4 +189,12 @@
     <string name="notification_reply">%s님이 %s에 대댓글을 남겼습니다</string>
     <string name="notification_like">%s님이 %s에 ❤️를 보냈습니다</string>
     <string name="notification_comment">%s님이 %s에 댓글을 남겼습니다</string>
+
+    <!-- 추가된 누락 리소스 -->
+    <string name="content_description_discussion_img">토론방 도서 이미지</string>
+    <string name="content_description_comments_user_profile">댓글 유저 이미지 버튼</string>
+    <string name="content_description_profile_setting">설정 버튼</string>
+    <string name="discussions_hot_discussion_rooms">인기 토론방</string>
+    <string name="discussions_activated_discussion_rooms">활성화된 토론방</string>
+    <string name="notification_count_description">개 읽지 않은 알람</string>
 </resources>
