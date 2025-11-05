@@ -14,9 +14,7 @@ android {
     properties.load(project.rootProject.file("local.properties").inputStream())
 
     namespace = "com.team.data"
-    compileSdk {
-        version = release(35)
-    }
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 30

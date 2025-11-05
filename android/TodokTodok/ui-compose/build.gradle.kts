@@ -10,9 +10,7 @@ plugins {
 
 android {
     namespace = "com.team.ui_compose"
-    compileSdk {
-        version = release(35)
-    }
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 30

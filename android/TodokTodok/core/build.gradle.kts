@@ -7,9 +7,7 @@ plugins {
 
 android {
     namespace = "com.team.core"
-    compileSdk {
-        version = release(35)
-    }
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 30
