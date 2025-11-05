@@ -1,4 +1,4 @@
-package com.team.ui_compose.bookdiscussions
+package com.team.todoktodok.presentation.compose.bookdiscussions
 
 import android.content.Context
 import android.content.Intent
@@ -7,6 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.team.core.navigation.DiscussionDetailRoute
+import com.team.ui_compose.bookdiscussions.BookDetailNavHost
 import com.team.ui_compose.theme.TodoktodokTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject

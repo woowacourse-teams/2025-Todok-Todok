@@ -6,7 +6,9 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.serialization)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.hilt)
+    id("kotlin-parcelize")
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
 }
@@ -35,10 +37,15 @@ android {
             "\"${properties.getProperty("google_client_id")}\"",
         )
         buildConfigField("String", "FEEDBACK_URL", "\"${properties.getProperty("feedback_url")}\"")
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunnerArguments["runnerBuilder"] =
+            "de.mannodermaus.junit5.AndroidJUnit5Builder"
     }
     lint {
         disable += "NullSafeMutableLiveData"
         disable += "ComposeViewModelForwarding"
+        abortOnError = true
     }
 
     signingConfigs {
@@ -115,4 +122,16 @@ dependencies {
 
     implementation(libs.bundles.hilt)
     ksp(libs.hilt.android.compiler)
+
+    lintChecks(project(":lint"))
+}
+
+afterEvaluate {
+    tasks.named("preBuild") {
+        dependsOn("ktlintFormat")
+    }
+
+    tasks.named("assembleDebug") {
+        dependsOn("lintDebug")
+    }
 }
