@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.serialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.hilt)
     id("kotlin-parcelize")
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
@@ -27,10 +28,9 @@ android {
         applicationId = "com.team.todoktodok"
         minSdk = 30
         targetSdk = 35
-        versionCode = 5
-        versionName = "1.0.1"
+        versionCode = 14
+        versionName = "1.0.9"
 
-        buildConfigField("String", "BASE_URL", "\"${properties.getProperty("base_url")}\"")
         buildConfigField(
             "String",
             "GOOGLE_CLIENT_ID",
@@ -45,9 +45,27 @@ android {
     lint {
         disable += "NullSafeMutableLiveData"
         disable += "ComposeViewModelForwarding"
+        abortOnError = true
+    }
+
+    signingConfigs {
+        create("release") {
+            storeFile = file(properties.getProperty("release_store_file"))
+            storePassword = properties.getProperty("release_store_password")
+            keyAlias = properties.getProperty("release_key_alias")
+            keyPassword = properties.getProperty("release_key_password")
+        }
     }
 
     buildTypes {
+        debug {
+            isMinifyEnabled = false
+            isShrinkResources = false
+
+            applicationIdSuffix = ".debug"
+            versionNameSuffix = "-debug"
+        }
+
         release {
             isMinifyEnabled = true
             isShrinkResources = true
@@ -55,7 +73,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
             )
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.getByName("release")
         }
     }
 
@@ -69,9 +87,7 @@ android {
         }
     }
     buildFeatures {
-        viewBinding = true
         buildConfig = true
-        compose = true
     }
 }
 
@@ -83,28 +99,29 @@ androidComponents {
 }
 
 dependencies {
+    implementation(project(":data"))
+    implementation(project(":core"))
+    implementation(project(":ui-compose"))
+    implementation(project(":ui-xml"))
     implementation(project(":domain"))
 
     implementation(libs.bundles.androidx)
     implementation(libs.bundles.kotlin)
-    implementation(libs.bundles.network)
     implementation(libs.bundles.google)
-    implementation(libs.bundles.glide)
     implementation(libs.bundles.logging)
-    implementation(libs.kotlinx.collections.immutable)
 
-    testImplementation(libs.bundles.test)
-    testImplementation(libs.androidx.core.testing)
-    androidTestImplementation(libs.bundles.android.test)
-    androidTestRuntimeOnly(libs.mannodermaus.junit5.runner)
-    ksp(libs.androidx.room.compiler)
+    implementation(libs.bundles.hilt)
+    ksp(libs.hilt.android.compiler)
 
-    // Compose
-    implementation(platform(libs.compose.bom))
-    implementation(libs.bundles.compose)
-    lintChecks(libs.compose.lint)
+    lintChecks(project(":lint"))
+}
 
-    androidTestImplementation(platform(libs.compose.bom))
-    androidTestImplementation(libs.bundles.compose.test)
-    debugImplementation(libs.bundles.compose.debug)
+afterEvaluate {
+    tasks.named("preBuild") {
+        dependsOn("ktlintFormat")
+    }
+
+    tasks.named("assembleDebug") {
+        dependsOn("lintDebug")
+    }
 }

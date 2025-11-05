@@ -4,6 +4,14 @@ backend/.DS_Store
 android/.DS_Store
 backend/src/.DS_Store
 
+# IDE
+.idea/
+*.iml
+
+# macOS
+.DS_Store
+project.dot.png
+
 # IntelliJ / IDEA
 .idea/
 

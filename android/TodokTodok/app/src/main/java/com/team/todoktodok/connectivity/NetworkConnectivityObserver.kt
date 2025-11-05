@@ -18,13 +18,12 @@ import kotlinx.coroutines.launch
 
 @OptIn(DelicateCoroutinesApi::class)
 class NetworkConnectivityObserver(
-    private val scope: CoroutineScope,
     context: Context,
 ) : ConnectivityObserver {
     private val connectivityManager =
         context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
-    override fun subscribe(): StateFlow<ConnectivityObserver.Status> =
+    override fun subscribe(scope: CoroutineScope): StateFlow<ConnectivityObserver.Status> =
         observe().stateIn(
             scope,
             WhileSubscribed(5000),

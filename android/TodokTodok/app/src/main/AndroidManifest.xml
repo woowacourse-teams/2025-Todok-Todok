@@ -17,69 +17,13 @@
         android:theme="@style/Theme.TodokTodok"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
-        <activity
-            android:name=".presentation.xml.draft.DraftsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".presentation.compose.bookdiscussions.BookDiscussionsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".presentation.xml.notification.NotificationActivity"
-            android:exported="false" />
 
         <service
-            android:name=".adapter.FirebaseMessagingAdapter"
+            android:name=".fcm.FirebaseMessagingAdapter"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
-        <activity
-            android:name=".presentation.xml.auth.AuthActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
-            <intent-filter>
-                <action android:name="com.team.todoktodok.OPEN_DISCUSSION" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".presentation.compose.main.MainActivity"
-            android:exported="false" />
-        <activity
-            android:name=".presentation.xml.discussion.create.CreateDiscussionRoomActivity"
-            android:exported="false"
-            android:windowSoftInputMode="stateVisible|adjustResize" />
-        <activity
-            android:name=".presentation.xml.setting.SettingActivity"
-            android:exported="false" />
-        <activity
-            android:name=".presentation.xml.profile.ProfileActivity"
-            android:exported="false" />
-        <activity
-            android:name=".presentation.xml.discussiondetail.DiscussionDetailActivity"
-            android:exported="true">
-            <intent-filter android:autoVerify="true">
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:host="todoktodok.com"
-                    android:pathPrefix="/discussiondetail/"
-                    android:scheme="https" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".presentation.xml.book.SelectBookActivity"
-            android:exported="false"
-            android:windowSoftInputMode="adjustResize" />
     </application>
-
 </manifest>
