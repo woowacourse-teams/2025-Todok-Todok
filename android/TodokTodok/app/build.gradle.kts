@@ -24,8 +24,8 @@ android {
         applicationId = "com.team.todoktodok"
         minSdk = 30
         targetSdk = 35
-        versionCode = 12
-        versionName = "1.0.7"
+        versionCode = 14
+        versionName = "1.0.9"
 
         buildConfigField(
             "String",
