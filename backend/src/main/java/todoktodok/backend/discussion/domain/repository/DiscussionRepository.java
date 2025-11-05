@@ -94,6 +94,33 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
             """, nativeQuery = true)
     List<Long> findParticipatedDiscussionIdsByMember(@Param("memberId") final Long memberId);
 
+    @Query(value = """
+            SELECT DISTINCT t.id FROM (
+                SELECT d.id
+                FROM discussion d
+                WHERE d.member_id = :memberId AND d.deleted_at IS NULL
+                
+                UNION ALL
+                SELECT d.id
+                FROM discussion d
+                JOIN comment c ON c.discussion_id = d.id
+                WHERE c.member_id = :memberId
+                    AND d.deleted_at IS NULL
+                    AND c.deleted_at IS NULL
+                
+                UNION ALL
+                SELECT d.id
+                FROM discussion d
+                JOIN comment c ON c.discussion_id = d.id
+                JOIN reply r ON r.comment_id = c.id
+                WHERE r.member_id = :memberId
+                    AND d.deleted_at IS NULL
+                    AND c.deleted_at IS NULL
+                    AND r.deleted_at IS NULL
+            ) AS t
+            """, nativeQuery = true)
+    List<Long> findParticipatedDiscussionIdsByMember2(@Param("memberId") final Long memberId);
+
     @Query("""
         SELECT d.id
         FROM Discussion d

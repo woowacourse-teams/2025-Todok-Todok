@@ -44,6 +44,9 @@ public class MemberQueryService {
         return new ProfileResponse(member);
     }
 
+    /*
+    오래 걸림
+     */
     public List<BookResponse> getActiveBooks(final Long memberId) {
         final Member member = findMember(memberId);
 
@@ -55,6 +58,9 @@ public class MemberQueryService {
                 .toList();
     }
 
+    /*
+    오래 걸림
+     */
     public List<DiscussionResponse> getMemberDiscussionsByType(
             final Long memberId,
             final MemberDiscussionFilterType type
@@ -90,7 +96,7 @@ public class MemberQueryService {
     }
 
     private List<DiscussionResponse> getParticipatedDiscussions(final Member member) {
-        final List<Long> participatedDiscussionIds = discussionRepository.findParticipatedDiscussionIdsByMember(member.getId());
+        final List<Long> participatedDiscussionIds = discussionRepository.findParticipatedDiscussionIdsByMember2(member.getId());
 
         return getDiscussionsResponses(participatedDiscussionIds, member);
     }
