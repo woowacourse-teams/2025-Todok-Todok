@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application>
+        <activity
+            android:name="com.team.ui_xml.draft.DraftsActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.team.ui_xml.notification.NotificationActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.team.ui_xml.auth.AuthActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="com.team.todoktodok.OPEN_DISCUSSION" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.team.ui_xml.create.CreateDiscussionRoomActivity"
+            android:exported="false"
+            android:windowSoftInputMode="stateVisible|adjustResize" />
+        <activity
+            android:name="com.team.ui_xml.setting.SettingActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.team.ui_xml.profile.ProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.team.ui_xml.discussiondetail.DiscussionDetailActivity"
+            android:exported="true">
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="todoktodok.com"
+                    android:pathPrefix="/discussiondetail/"
+                    android:scheme="https" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.team.ui_xml.book.SelectBookActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+    </application>
+</manifest>

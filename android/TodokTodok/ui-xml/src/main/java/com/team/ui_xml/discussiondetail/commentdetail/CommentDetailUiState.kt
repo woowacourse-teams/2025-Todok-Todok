@@ -1,0 +1,37 @@
+package com.team.ui_xml.discussiondetail.commentdetail
+
+import com.team.domain.model.Comment
+import com.team.domain.model.member.User
+import com.team.ui_xml.discussiondetail.commentdetail.adapter.CommentDetailItems
+import com.team.ui_xml.discussiondetail.model.CommentItemUiState
+import com.team.ui_xml.discussiondetail.model.ReplyItemUiState
+import java.time.LocalDateTime
+
+data class CommentDetailUiState(
+    val commentItem: CommentItemUiState = INIT_COMMENT,
+    val replyItems: List<ReplyItemUiState> = emptyList(),
+    val content: String = "",
+    val isLoading: Boolean = false,
+) {
+    fun getCommentDetailItems() =
+        listOf(CommentDetailItems.CommentItem(commentItem)) +
+            replyItems.map {
+                CommentDetailItems.ReplyItem(it)
+            }
+
+    companion object {
+        val INIT_COMMENT =
+            CommentItemUiState(
+                Comment(
+                    id = 0,
+                    "",
+                    User(0, "", ""),
+                    LocalDateTime.of(1970, 1, 1, 0, 0),
+                    0,
+                    0,
+                    false,
+                ),
+                false,
+            )
+    }
+}

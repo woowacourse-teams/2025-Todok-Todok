@@ -1,9 +1,10 @@
 package com.team.domain
 
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 
 interface ConnectivityObserver {
-    fun subscribe(): Flow<Status>
+    fun subscribe(scope: CoroutineScope): Flow<Status>
 
     fun value(): Status
 

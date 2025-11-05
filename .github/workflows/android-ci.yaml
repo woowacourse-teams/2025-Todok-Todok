@@ -2,13 +2,11 @@ name: Android CI [ an ]
 
 on:
   push:
-    branches: 
+    branches:
       - "an"
-      - "an-user-test"
   pull_request:
-    branches: 
+    branches:
       - "an"
-      - "an-user-test"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
@@ -16,7 +14,6 @@ concurrency:
 
 jobs:
   build:
-    name: Android Build & Verify
     runs-on: ubuntu-latest
 
     defaults:
@@ -28,10 +25,6 @@ jobs:
       contents: read
       pull-requests: write
       issues: write
-
-    env:
-      GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
-      BASE_URL: ${{ secrets.BASE_URL }}
 
     steps:
       - name: Checkout repository
@@ -59,110 +52,49 @@ jobs:
       - name: Grant execute permission to gradlew
         run: chmod +x gradlew
 
-      - name: Create local.properties
+      - name: Restore keystore
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
         run: |
-          echo "sdk.dir=$ANDROID_SDK_ROOT" > local.properties
-          echo "base_url=$BASE_URL" >> local.properties
+          echo "$KEYSTORE_BASE64" | base64 --decode > todoktodok.jks
+          ls -al todoktodok.jks
+
+      - name: Create local.properties
+        env:
+          RELEASE_BASE_URL: ${{ secrets.RELEASE_BASE_URL }}
+          DEBUG_BASE_URL: ${{ secrets.DEBUG_BASE_URL }}
+        run: |
+          echo release_store_file=todoktodok.jks >> ./local.properties
+          echo "KEYSTORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}" >> local.properties
+          echo "KEY_ALIAS=${{ secrets.KEY_ALIAS }}" >> local.properties
+          echo "KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}" >> local.properties
+          echo release.base.url=\""${RELEASE_BASE_URL}"\" >> ./local.properties
+          echo debug.base.url=\""${DEBUG_BASE_URL}"\" >> ./local.properties
 
       - name: Create google-services.json
-        run: echo "$GOOGLE_SERVICES_JSON" > ./app/google-services.json
+        env:
+          GOOGLE_SERVICES_JSON_DEBUG: ${{ secrets.GOOGLE_SERVICES_JSON_DEBUG }}
+          GOOGLE_SERVICES_JSON_RELEASE: ${{ secrets.GOOGLE_SERVICES_JSON_RELEASE }}
+        run: |
+          mkdir -p ./app/src/debug
+          mkdir -p ./app/src/release
+          echo "${GOOGLE_SERVICES_JSON_DEBUG}" > ./app/src/debug/google-services.json
+          echo "${GOOGLE_SERVICES_JSON_RELEASE}" > ./app/google-services.json
+
+      - name: Clean Project
+        run: ./gradlew clean
 
       - name: Run ktlint Check
         id: ktlint
         run: |
-          start=$(date +%s)
           ./gradlew ktlintCheck --build-cache --parallel
-          end=$(date +%s)
-          echo "time=$((end-start))" >> $GITHUB_OUTPUT
 
       - name: Run Unit Tests
         id: test
         run: |
-          start=$(date +%s)
           ./gradlew testDebugUnitTest --build-cache --parallel
-          end=$(date +%s)
-          echo "time=$((end-start))" >> $GITHUB_OUTPUT
 
       - name: Assemble Debug APK
-        id: assemble
+        id: assembleDebug
         run: |
-          start=$(date +%s)
           ./gradlew assembleDebug --build-cache --parallel
-          end=$(date +%s)
-          echo "time=$((end-start))" >> $GITHUB_OUTPUT
-
-      - name: Post CI summary as PR comment
-        if: always()
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const results = {
-              ktlint: {
-                status: '${{ steps.ktlint.outcome }}',
-                name: 'Ktlint Check',
-                time: '${{ steps.ktlint.outputs.time }}'
-              },
-              test: {
-                status: '${{ steps.test.outcome }}',
-                name: 'Unit Tests',
-                time: '${{ steps.test.outputs.time }}'
-              },
-              assemble: {
-                status: '${{ steps.assemble.outcome }}',
-                name: 'Assemble Debug APK',
-                time: '${{ steps.assemble.outputs.time }}'
-              }
-            };
-            
-            const emoji = {
-              success: '✅',
-              failure: '❌',
-              cancelled: '⚠️',
-              skipped: '⏭️'
-            };
-            
-            const runUrl = `https://github.com/${process.env.GITHUB_REPOSITORY}/runs/${process.env.GITHUB_RUN_ID}`;
-            
-            function formatTime(seconds) {
-              seconds = parseInt(seconds || 0, 10);
-              if (seconds >= 60) {
-                const min = Math.floor(seconds / 60);
-                const sec = seconds % 60;
-                return `${min}m ${sec}s`;
-              }
-              return `${seconds}s`;
-            }
-            
-            const totalTime = Object.values(results)
-              .reduce((acc, step) => acc + parseInt(step.time || 0), 0);
-            
-            let body = `## 🧩 Android CI 요약\n\n**단계별 결과:**\n`;
-            
-            for (const step of Object.values(results)) {
-              const statusEmoji = emoji[step.status] || '❔';
-              const statusText = step.status === 'success' ? '성공' : '실패';
-              body += `- **${step.name}**: ${statusEmoji} ${statusText} (${formatTime(step.time)})\n`;
-            }
-            
-            body += `\n**총 소요 시간:** **${formatTime(totalTime)}**\n`;
-            
-            const failedSteps = Object.values(results)
-              .filter(step => step.status !== 'success')
-              .map(step => step.name);
-            
-            if (failedSteps.length > 0) {
-              body += `\n⚠️ **주의:** 실패한 단계: **${failedSteps.join(', ')}**\n`;
-              body += `자세한 로그는 [Actions 실행 로그](${runUrl})에서 확인하세요.\n`;
-            } else {
-              body += `\n🎉 SUCCESS !🎉`;
-            }
-            
-            if (context.eventName === 'pull_request') {
-              await github.rest.pulls.createReview({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                pull_number: context.issue.number,
-                event: 'COMMENT',
-                body
-              });
-            }

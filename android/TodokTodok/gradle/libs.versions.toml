@@ -31,7 +31,6 @@ compose-lint = "1.4.2"
 compose-ui-test = "1.6.0"
 
 # Network
-material = "1.9.1"
 material-icons-extended = "1.7.8"
 retrofit = "3.0.0"
 retrofit-kotlinx-serialization-converter = "0.8.0"
@@ -56,6 +55,9 @@ google-firebase-messaging = "25.0.0"
 # Ktlint
 ktlint = "13.0.0"
 
+# lint
+lint = "31.13.0"
+
 # KSP
 ksp = "2.2.0-2.0.2"
 
@@ -66,11 +68,16 @@ logger = "2.2.0"
 # room
 room-runtime = "2.7.2"
 
+# hilt
+hilt = "2.57.2"
+hilt-navigation-compose = "1.3.0"
+
 # Test
 androidx-espresso-core = "3.6.1"
 androidx-test-ext-junit = "1.2.1"
 androidx-test-runner = "1.6.2"
 android-junit5 = "1.12.0.0"
+junit = "4.13.2"
 assertj-core = "3.27.3"
 core-testing = "2.2.0"
 mannodermaus-junit5 = "1.7.0"
@@ -102,7 +109,6 @@ compose-lint = { module = "com.slack.lint.compose:compose-lint-checks", version.
 compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 compose-navigtion = { module = "androidx.navigation:navigation-compose", version.ref = "compose-navigation" }
 compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "material-icons-extended" }
-compose-material = { module = "androidx.compose.material:material", version.ref = "material" }
 compose-ui = { group = "androidx.compose.ui", name = "ui" }
 compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
@@ -141,9 +147,21 @@ google-firebase-messaging = { module = "com.google.firebase:firebase-messaging",
 # Glide
 glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
 
+# Hilt
+hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
+hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
+hilt-navigation-compose = { group = "androidx.hilt" , name = "hilt-navigation-compose", version.ref = "hilt-navigation-compose"}
+
 # logging
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 logger = { module = "com.orhanobut:logger", version.ref = "logger" }
+
+# lint
+lint-api = { group = "com.android.tools.lint", name = "lint-api", version.ref = "lint" }
+lint-checks = { group = "com.android.tools.lint", name = "lint-checks", version.ref = "lint" }
+lint-cli = { group = "com.android.tools.lint", name = "lint", version.ref = "lint" }
+lint-tests = { group = "com.android.tools.lint", name = "lint-tests", version.ref = "lint" }
+kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlin" }
 
 # Test
 androidx-core-testing = { module = "androidx.arch.core:core-testing", version.ref = "core-testing" }
@@ -152,6 +170,7 @@ androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version
 androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "androidx-test-runner" }
 assertj-core = { group = "org.assertj", name = "assertj-core", version.ref = "assertj-core" }
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junit-jupiter" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
 kotest-runner-junit5 = { group = "io.kotest", name = "kotest-runner-junit5", version.ref = "kotest-runner-junit5" }
 mannodermaus-junit5-core = { group = "de.mannodermaus.junit5", name = "android-test-core", version.ref = "mannodermaus-junit5" }
 mannodermaus-junit5-runner = { group = "de.mannodermaus.junit5", name = "android-test-runner", version.ref = "mannodermaus-junit5" }
@@ -184,7 +203,6 @@ compose = [
     "compose-ui-tooling-preview",
     "compose-material3",
     "compose-material-icons-extended",
-    "compose-material",
     "compose-coil",
     "compose-coil-network-okhttp",
     "compose-navigtion"
@@ -199,10 +217,16 @@ compose-test = [
     "compose-ui-test-junit4"
 ]
 
+hilt = [
+    "hilt-android",
+    "hilt-navigation-compose"
+]
+
 kotlin = [
     "kotlinx-serialization-json",
     "kotlinx-coroutines-core",
-    "kotlinx-coroutines-core-jvm"
+    "kotlinx-coroutines-core-jvm",
+    "kotlinx-collections-immutable"
 ]
 
 network = [
@@ -233,6 +257,17 @@ logging = [
     "logger"
 ]
 
+lint-api = [
+    "kotlin-stdlib",
+    "lint-api",
+    "lint-checks",
+]
+lint-tests = [
+    "junit",
+    "lint-cli",
+    "lint-tests"
+]
+
 test = [
     "assertj-core",
     "junit-jupiter",
@@ -256,12 +291,14 @@ android-test = [
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+android-lint = { id = "com.android.lint", version.ref = "agp" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 android-junit5 = { id = "de.mannodermaus.android-junit5", version.ref = "android-junit5" }
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "google-firebase-crashlytics-plugin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 android-library = { id = "com.android.library", version.ref = "agp" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
