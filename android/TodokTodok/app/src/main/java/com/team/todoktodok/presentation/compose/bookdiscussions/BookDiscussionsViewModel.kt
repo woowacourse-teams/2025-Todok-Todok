@@ -13,15 +13,18 @@ import com.team.todoktodok.presentation.compose.bookdiscussions.model.BookDiscus
 import com.team.todoktodok.presentation.compose.bookdiscussions.model.toBookDetailUiState
 import com.team.todoktodok.presentation.compose.bookdiscussions.model.toDiscussionItem
 import com.team.todoktodok.presentation.core.base.BaseViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class BookDiscussionsViewModel(
-    private val savedStateHandle: SavedStateHandle,
+@HiltViewModel
+class BookDiscussionsViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val bookRepository: BookRepository,
     connectivityObserver: ConnectivityObserver,
 ) : BaseViewModel(connectivityObserver) {
