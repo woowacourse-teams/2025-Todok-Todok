@@ -45,6 +45,7 @@ dependencies {
     implementation(platform(libs.compose.bom))
     implementation(libs.bundles.compose)
     lintChecks(libs.compose.lint)
+    lintChecks(project(":lint"))
 
     testImplementation(project(":data"))
     testImplementation(libs.bundles.test)
