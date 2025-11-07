@@ -33,4 +33,7 @@ google-services.json
 # Android Profiling
 *.hprof
 
+# Lint baseline files
+lint-baseline.xml
+
 .DS_Store
