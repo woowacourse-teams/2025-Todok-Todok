@@ -7,6 +7,7 @@ import com.android.tools.lint.detector.api.Implementation
 import com.android.tools.lint.detector.api.Issue
 import com.android.tools.lint.detector.api.JavaContext
 import com.android.tools.lint.detector.api.LintFix
+import com.android.tools.lint.detector.api.Location
 import com.android.tools.lint.detector.api.Scope
 import com.android.tools.lint.detector.api.Severity
 import org.jetbrains.uast.UClass
@@ -138,6 +139,7 @@ class MissingHiltViewModelDetector :
                 fix()
                     .name(FIX_NAME_ADD_BOTH)
                     .composite(*fixes.toTypedArray())
+
             fixes.size == 1 -> fixes.first()
             else -> null
         }
@@ -177,31 +179,35 @@ class MissingHiltViewModelDetector :
         val constructorText = constructorPsi.text
 
         return if (constructorText.contains(CONSTRUCTOR_KEYWORD)) {
-            // 이미 constructor 키워드가 있는 경우
-            fix()
-                .name(FIX_NAME_ADD_INJECT)
-                .replace()
-                .range(location)
-                .beginning()
-                .with("$INJECT_ANNOTATION_TEXT ")
-                .reformat(true)
-                .imports(INJECT_ANNOTATION)
-                .autoFix()
-                .build()
+            injectFixWithoutConstruct(location)
         } else {
-            // constructor 키워드가 없는 경우
-            fix()
-                .name(FIX_NAME_ADD_INJECT)
-                .replace()
-                .range(location)
-                .beginning()
-                .with(" $INJECT_ANNOTATION_TEXT $CONSTRUCTOR_KEYWORD")
-                .reformat(true)
-                .imports(INJECT_ANNOTATION)
-                .autoFix()
-                .build()
+            injectFixWithConstruct(location)
         }
     }
+
+    private fun injectFixWithoutConstruct(location: Location): LintFix =
+        fix()
+            .name(FIX_NAME_ADD_INJECT)
+            .replace()
+            .range(location)
+            .beginning()
+            .with("$INJECT_ANNOTATION_TEXT ")
+            .reformat(true)
+            .imports(INJECT_ANNOTATION)
+            .autoFix()
+            .build()
+
+    private fun injectFixWithConstruct(location: Location): LintFix =
+        fix()
+            .name(FIX_NAME_ADD_INJECT)
+            .replace()
+            .range(location)
+            .beginning()
+            .with(" $INJECT_ANNOTATION_TEXT $CONSTRUCTOR_KEYWORD")
+            .reformat(true)
+            .imports(INJECT_ANNOTATION)
+            .autoFix()
+            .build()
 
     companion object {
         val ISSUE_MISSING_HILT_VIEWMODEL: Issue =
