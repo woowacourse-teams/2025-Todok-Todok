@@ -131,8 +131,8 @@ class MissingHiltViewModelDetector :
     ): LintFix? {
         val fixes = mutableListOf<LintFix>()
 
-        if (!hasHiltViewModel) addHiltFix(context, node)?.let(fixes::add)
-        if (!hasInject) addInjectFix(context, node)?.let(fixes::add)
+        if (!hasHiltViewModel) fixHiltAnnotation(context, node)?.let(fixes::add)
+        if (!hasInject) fixInjectAnnotation(context, node)?.let(fixes::add)
 
         return when {
             fixes.size > 1 ->
@@ -148,7 +148,7 @@ class MissingHiltViewModelDetector :
     /**
      * `@HiltViewModel` 어노테이션을 자동 추가하는 QuickFix 생성
      */
-    private fun addHiltFix(
+    private fun fixHiltAnnotation(
         context: JavaContext,
         node: UClass,
     ): LintFix? {
@@ -169,7 +169,7 @@ class MissingHiltViewModelDetector :
     /**
      * 기본 생성자에 `@Inject` 어노테이션을 자동 추가하는 QuickFix 생성
      */
-    private fun addInjectFix(
+    private fun fixInjectAnnotation(
         context: JavaContext,
         node: UClass,
     ): LintFix? {
@@ -179,31 +179,22 @@ class MissingHiltViewModelDetector :
         val constructorText = constructorPsi.text
 
         return if (constructorText.contains(CONSTRUCTOR_KEYWORD)) {
-            injectFixWithoutConstruct(location)
+            buildInjectAnnotation(location, "$INJECT_ANNOTATION_TEXT ")
         } else {
-            injectFixWithConstruct(location)
+            buildInjectAnnotation(location, " $INJECT_ANNOTATION_TEXT $CONSTRUCTOR_KEYWORD")
         }
     }
 
-    private fun injectFixWithoutConstruct(location: Location): LintFix =
+    private fun buildInjectAnnotation(
+        location: Location,
+        start: String,
+    ): LintFix =
         fix()
             .name(FIX_NAME_ADD_INJECT)
             .replace()
             .range(location)
             .beginning()
-            .with("$INJECT_ANNOTATION_TEXT ")
-            .reformat(true)
-            .imports(INJECT_ANNOTATION)
-            .autoFix()
-            .build()
-
-    private fun injectFixWithConstruct(location: Location): LintFix =
-        fix()
-            .name(FIX_NAME_ADD_INJECT)
-            .replace()
-            .range(location)
-            .beginning()
-            .with(" $INJECT_ANNOTATION_TEXT $CONSTRUCTOR_KEYWORD")
+            .with(start)
             .reformat(true)
             .imports(INJECT_ANNOTATION)
             .autoFix()
