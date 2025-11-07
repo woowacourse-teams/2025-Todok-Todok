@@ -61,6 +61,8 @@ dependencies {
 
     ksp(libs.hilt.android.compiler)
 
+    lintChecks(project(":lint"))
+
     testImplementation(libs.bundles.test)
     testImplementation(libs.androidx.core.testing)
     androidTestImplementation(libs.bundles.android.test)
