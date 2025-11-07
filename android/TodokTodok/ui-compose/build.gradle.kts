@@ -56,3 +56,9 @@ dependencies {
     androidTestRuntimeOnly(libs.mannodermaus.junit5.runner)
     debugImplementation(libs.bundles.compose.debug)
 }
+
+afterEvaluate {
+    tasks.named("assembleDebug") {
+        dependsOn("lintDebug")
+    }
+}

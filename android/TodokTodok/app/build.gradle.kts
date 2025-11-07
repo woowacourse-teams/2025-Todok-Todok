@@ -115,9 +115,3 @@ dependencies {
 
     lintChecks(project(":lint"))
 }
-
-afterEvaluate {
-    tasks.named("assembleDebug") {
-        dependsOn("lintDebug")
-    }
-}
