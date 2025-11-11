@@ -54,7 +54,7 @@ jobs:
           curl -X POST http://localhost:80/actuator/health_check/readiness/down || true
           
           echo "=== Phase 2: Wait for ALB to detect unhealthy ==="
-          sleep 60
+          sleep 90
           
           echo "=== Phase 3: Now safe to shutdown ==="
 
@@ -154,7 +154,7 @@ jobs:
           curl -X POST http://localhost:80/actuator/health_check/readiness/down || true
           
           echo "=== Phase 2: Wait for ALB to detect unhealthy ==="
-          sleep 60
+          sleep 90
           
           echo "=== Phase 3: Now safe to shutdown ==="
 
