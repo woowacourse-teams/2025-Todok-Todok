@@ -51,7 +51,7 @@ jobs:
       - name: Stop running Container (Gracefully)
         run: |
           echo "=== Phase 1: Stop receiving new requests ==="
-          curl -X POST http://localhost:80/actuator/health/readiness/down || true
+          curl -X POST http://localhost:80/actuator/health_check/readiness/down || true
           
           echo "=== Phase 2: Wait for ALB to detect unhealthy ==="
           sleep 60
@@ -151,7 +151,7 @@ jobs:
       - name: Stop running Container (Gracefully)
         run: |
           echo "=== Phase 1: Stop receiving new requests ==="
-          curl -X POST http://localhost:80/actuator/health/readiness/down || true
+          curl -X POST http://localhost:80/actuator/health_check/readiness/down || true
           
           echo "=== Phase 2: Wait for ALB to detect unhealthy ==="
           sleep 60
