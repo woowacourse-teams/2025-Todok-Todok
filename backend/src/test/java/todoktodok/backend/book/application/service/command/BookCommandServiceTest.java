@@ -155,4 +155,52 @@ public class BookCommandServiceTest {
                 () -> assertThat(updatedBook.getImage()).isEqualTo(updatedImage)
         );
     }
+
+    @Test
+    @DisplayName("알라딘 API에서 검색 결과가 없으면 예외가 발생한다")
+    void createOrUpdateBook_aladinApiNoResult_fail() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+
+        final Long memberId = 1L;
+        final String isbn = "9791158391409";
+        final BookRequest bookRequest = new BookRequest(
+                isbn, "오브젝트", "조영호", "image.png"
+        );
+
+        final AladinItemResponses emptyResponse = new AladinItemResponses(List.of(), 0);
+        given(aladinRestClient.searchBookByIsbn(isbn)).willReturn(emptyResponse);
+
+        // when - then
+        assertThatThrownBy(() -> bookCommandService.createOrUpdateBook(memberId, bookRequest))
+                .isInstanceOf(NoSuchElementException.class)
+                .hasMessageContaining("ISBN")
+                .hasMessageContaining("알라딘 API에서 도서 정보를 찾을 수 없습니다");
+    }
+
+    @Test
+    @DisplayName("알라딘 API에서 검색 결과가 없으면 기존 도서 업데이트 시에도 예외가 발생한다")
+    void createOrUpdateBook_existingBook_aladinApiNoResult_fail() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+
+        final String isbn = "9791158391409";
+        databaseInitializer.setBookInfo(
+                "오브젝트", "오브젝트 내용", "조영호", "인사이트", isbn, "image.png"
+        );
+
+        final Long memberId = 1L;
+        final BookRequest bookRequest = new BookRequest(
+                isbn, "업데이트된 오브젝트", "조영호", "image2.png"
+        );
+
+        final AladinItemResponses emptyResponse = new AladinItemResponses(List.of(), 0);
+        given(aladinRestClient.searchBookByIsbn(isbn)).willReturn(emptyResponse);
+
+        // when - then
+        assertThatThrownBy(() -> bookCommandService.createOrUpdateBook(memberId, bookRequest))
+                .isInstanceOf(NoSuchElementException.class)
+                .hasMessageContaining("ISBN")
+                .hasMessageContaining("알라딘 API에서 도서 정보를 찾을 수 없습니다");
+    }
 }
