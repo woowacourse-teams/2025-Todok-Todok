@@ -6,4 +6,8 @@ public record AladinItemResponses(
         List<AladinItemResponse> item,
         int totalResults
 ) {
+
+    public boolean isEmpty() {
+        return item == null || item.isEmpty();
+    }
 }
