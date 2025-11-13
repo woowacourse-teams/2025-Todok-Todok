@@ -83,6 +83,11 @@ public class BookCommandService {
 
     private AladinItemResponse getBookInfoFromAladin(final String isbn) {
         final AladinItemResponses responses = aladinRestClient.searchBookByIsbn(isbn);
+        if (responses.isEmpty()) {
+            throw new NoSuchElementException(
+                    String.format("알라딘 API에서 도서 정보를 찾을 수 없습니다: ISBN %s", isbn)
+            );
+        }
         return responses.item().getFirst();
     }
 }
