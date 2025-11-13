@@ -54,39 +54,35 @@ public class BookCommandService {
             final Book existingBook,
             final String isbn
     ) {
+        final AladinItemResponse aladinBookInfo = getBookInfoFromAladin(isbn);
         existingBook.update(
                 bookRequest.bookTitle(),
-                getSummaryFromAladin(isbn),
+                aladinBookInfo.description(),
                 bookRequest.bookAuthor(),
-                getPublisherFromAladin(isbn),
+                aladinBookInfo.publisher(),
                 isbn,
                 bookRequest.bookImage()
         );
-    }
-
-    private String getSummaryFromAladin(final String isbn) {
-        final AladinItemResponses responses = aladinRestClient.searchBookByIsbn(isbn);
-        final AladinItemResponse response = responses.item().getFirst();
-        return response.description();
-    }
-
-    private String getPublisherFromAladin(final String isbn) {
-        final AladinItemResponses responses = aladinRestClient.searchBookByIsbn(isbn);
-        final AladinItemResponse response = responses.item().getFirst();
-        return response.publisher();
     }
 
     private Book createNewBook(
             final BookRequest bookRequest,
             final String isbn
     ) {
+        final AladinItemResponse aladinBookInfo = getBookInfoFromAladin(isbn);
+
         return Book.builder()
                 .title(bookRequest.bookTitle())
-                .summary(getSummaryFromAladin(isbn))
+                .summary(aladinBookInfo.description())
                 .author(bookRequest.bookAuthor())
-                .publisher(getPublisherFromAladin(isbn))
+                .publisher(aladinBookInfo.publisher())
                 .isbn(isbn)
                 .image(bookRequest.bookImage())
                 .build();
+    }
+
+    private AladinItemResponse getBookInfoFromAladin(final String isbn) {
+        final AladinItemResponses responses = aladinRestClient.searchBookByIsbn(isbn);
+        return responses.item().getFirst();
     }
 }
