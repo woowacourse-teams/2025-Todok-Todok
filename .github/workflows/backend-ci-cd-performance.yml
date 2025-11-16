@@ -2,7 +2,7 @@ name: Backend CI/CD
 
 on:
   push:
-    branches: [ "performance" ]
+    branches: [ "performance2" ]
     paths:
       - 'backend/**'
 

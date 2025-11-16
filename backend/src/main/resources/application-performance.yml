@@ -4,8 +4,6 @@ spring:
     url: ${database.performance.url}
     username: ${database.performance.username}
     password: ${database.performance.password}
-    hikari:
-      maximum-pool-size: 5
   sql:
     init:
       mode: never
@@ -44,9 +42,6 @@ server:
   tomcat:
     mbeanregistry:
       enabled: true
-    threads:
-      max: 5
-    accept-count: 100
 
 logging:
   level:
