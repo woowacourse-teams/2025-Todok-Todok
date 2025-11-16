@@ -74,10 +74,9 @@ jobs:
 
       - name: Stop running Container (without removing)
         run: |
-          echo "performance 컨테이너 중지 중..."
-          docker stop performance && echo "performance 컨테이너 중지 완료" || echo "performance 컨테이너 없음"
-          echo "promtail_performance 컨테이너 중지 중..."
-          docker stop promtail_performance && echo "promtail_performance 컨테이너 중지 완료" || echo "promtail_performance 컨테이너 없음"
+          echo "모든 performance 관련 컨테이너 중지 중..."
+          docker ps -q --filter "name=performance" | xargs -r docker stop || true
+          echo "컨테이너 중지 완료"
 
       - name: Docker Compose Pull & Up (no-build)
         env:
