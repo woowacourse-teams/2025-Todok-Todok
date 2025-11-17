@@ -45,6 +45,7 @@ dependencies {
     implementation(platform(libs.compose.bom))
     implementation(libs.bundles.compose)
     lintChecks(libs.compose.lint)
+    lintChecks(project(":lint"))
 
     testImplementation(project(":data"))
     testImplementation(libs.bundles.test)
@@ -54,4 +55,10 @@ dependencies {
     androidTestImplementation(libs.bundles.compose.test)
     androidTestRuntimeOnly(libs.mannodermaus.junit5.runner)
     debugImplementation(libs.bundles.compose.debug)
+}
+
+afterEvaluate {
+    tasks.named("assembleDebug") {
+        dependsOn("lintDebug")
+    }
 }
