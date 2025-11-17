@@ -29,8 +29,8 @@ spring:
     out-of-order: false
     encoding: UTF-8
 
-    lifecycle:
-      timeout-per-shutdown-phase: 30s
+  lifecycle:
+    timeout-per-shutdown-phase: 30s
 
   config:
     activate:
