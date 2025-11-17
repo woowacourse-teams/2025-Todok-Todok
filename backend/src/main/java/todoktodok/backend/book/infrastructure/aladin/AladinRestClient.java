@@ -111,14 +111,14 @@ public class AladinRestClient {
         final URI requestUri = uri.apply(UriComponentsBuilder.newInstance());
 
         try {
-            final AladinItemResponses response = new AladinItemResponses(
-                    new ArrayList<>(),
-                    0
-            );
-//            final AladinItemResponses response = restClient.get()
-//                    .uri(requestUri)
-//                    .retrieve()
-//                    .body(AladinItemResponses.class);
+//            final AladinItemResponses response = new AladinItemResponses(
+//                    new ArrayList<>(),
+//                    0
+//            );
+            final AladinItemResponses response = restClient.get()
+                    .uri(requestUri)
+                    .retrieve()
+                    .body(AladinItemResponses.class);
 
             if (response == null || response.item() == null) {
                 throw new AladinApiException(
