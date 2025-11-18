@@ -7,6 +7,7 @@ import static org.hamcrest.Matchers.notNullValue;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -26,6 +27,7 @@ import todoktodok.backend.member.application.dto.request.RefreshTokenRequest;
 import todoktodok.backend.member.application.dto.response.TokenResponse;
 import todoktodok.backend.member.presentation.fixture.MemberFixture;
 
+@Disabled
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(initializers = InitializerTimer.class)

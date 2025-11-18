@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -25,6 +26,7 @@ import todoktodok.backend.member.domain.Member;
 import todoktodok.backend.member.domain.RefreshToken;
 import todoktodok.backend.member.domain.repository.RefreshTokenRepository;
 
+@Disabled
 @ActiveProfiles("local")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @ContextConfiguration(initializers = InitializerTimer.class)

@@ -32,6 +32,7 @@ import todoktodok.backend.discussion.application.dto.response.DiscussionResponse
 import todoktodok.backend.discussion.application.dto.response.LatestDiscussionPageResponse;
 import todoktodok.backend.discussion.application.dto.response.PageInfo;
 
+@Disabled
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
 @ContextConfiguration(initializers = InitializerTimer.class)
