@@ -52,7 +52,7 @@ logging:
               NioEndpoint: DEBUG
 
 auth:
-  mode: google
+  mode: test-google
 
 management:
   endpoints:
