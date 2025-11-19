@@ -114,14 +114,19 @@ public class DiscussionCommandService {
                     .member(member)
                     .build();
             discussionMemberViewRepository.save(view);
-            discussionRepository.increaseViewCount(discussionId);
+            increaseViewCountSafely(discussionId);
             return;
         }
 
         if (discussionMemberView.get().isModifiedDatePassedFrom(VIEW_THRESHOLD)) {
             discussionMemberViewRepository.updateModifiedAtById(discussionMemberView.get().getId(), LocalDateTime.now());
-            discussionRepository.increaseViewCount(discussionId);
+            increaseViewCountSafely(discussionId);
         }
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void increaseViewCountSafely(final Long discussionId) {
+        discussionRepository.increaseViewCount(discussionId);
     }
 
     public void deleteDiscussion(
