@@ -97,7 +97,6 @@ public class DiscussionCommandService {
         discussion.update(discussionTitle, discussionOpinion);
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void updateDiscussionMemberView(
             final Long memberId,
             final Long discussionId
@@ -109,19 +108,29 @@ public class DiscussionCommandService {
                 = discussionMemberViewRepository.findByMemberAndDiscussion(member, discussion);
 
         if (discussionMemberView.isEmpty()) {
-            final DiscussionMemberView view = DiscussionMemberView.builder()
-                    .discussion(discussion)
-                    .member(member)
-                    .build();
-            discussionMemberViewRepository.save(view);
-            increaseViewCountSafely(discussionId);
+            insertMemberView(member, discussion);
             return;
         }
 
         if (discussionMemberView.get().isModifiedDatePassedFrom(VIEW_THRESHOLD)) {
-            discussionMemberViewRepository.updateModifiedAtById(discussionMemberView.get().getId(), LocalDateTime.now());
-            increaseViewCountSafely(discussionId);
+            updateMemberView(discussionMemberView.get().getId(), discussionId);
         }
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void insertMemberView(final Member member, final Discussion discussion) {
+        final DiscussionMemberView view = DiscussionMemberView.builder()
+                .discussion(discussion)
+                .member(member)
+                .build();
+        discussionMemberViewRepository.save(view);
+        increaseViewCountSafely(discussion.getId());
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void updateMemberView(final Long memberViewId, final Long discussionId) {
+        discussionMemberViewRepository.updateModifiedAtById(memberViewId, LocalDateTime.now());
+        increaseViewCountSafely(discussionId);
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
