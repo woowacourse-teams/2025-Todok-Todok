@@ -1,23 +1,28 @@
 spring:
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
+#  h2:
+#    console:
+#      enabled: true
+#      path: /h2-console
   datasource:
-    url: jdbc:h2:mem:database
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:33306/todoktodok
+    username: root
+    password: root
   sql:
     init:
-      mode: always
+      mode: never
       schema-locations: classpath:db/local/schema.sql
       data-locations: classpath:db/local/data.sql
   jpa:
-    show-sql: true
+    show-sql: false # 이 값을 false로 변경합니다.
+    hibernate:
+      ddl-auto:  # 개발 환경에서는 'update'나 'create'를 사용할 수 있습니다.
     properties:
       hibernate:
+        # MySQL 버전에 맞는 Dialect를 지정합니다. (예: MySQL 8)
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        # 쿼리 포맷팅은 그대로 유지하면 좋습니다.
         format_sql: true
-    hibernate:
-      ddl-auto: validate
-    defer-datasource-initialization: false
   flyway:
     enabled: false
 
@@ -26,6 +31,15 @@ spring:
       on-profile: local
     import:
       - submodule/security/firebase.yml
+
+logging:
+  level:
+    p6spy: info
+
+decorator:
+  datasource:
+    p6spy:
+      enable-logging: true
 
 auth:
   mode: google
