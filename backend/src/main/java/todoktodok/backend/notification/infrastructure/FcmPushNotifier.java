@@ -42,6 +42,12 @@ public class FcmPushNotifier {
                 .map(NotificationToken::getToken)
                 .toList();
 
+        // FCM 토큰이 없는 경우 조기 리턴 (정상 케이스: 토큰 미등록 회원)
+        if (tokens.isEmpty()) {
+            log.debug("No FCM tokens registered for recipientId={}, skipping push notification", recipientId);
+            return;
+        }
+
         try {
             final MulticastMessage multicastMessage = MulticastMessage.builder()
                     .addAllTokens(tokens)
