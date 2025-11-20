@@ -84,13 +84,25 @@ public class DiscussionController implements DiscussionApiDocs {
     }
 
     @Auth(value = Role.USER)
-    @GetMapping("/search")
+    @GetMapping("/search/legacy")
     public ResponseEntity<List<DiscussionResponse>> getDiscussionsByKeyword(
             @LoginMember final Long memberId,
             @RequestParam final String keyword
     ) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(discussionQueryService.getDiscussionsByKeyword(memberId, keyword));
+    }
+
+    @Auth(value = Role.USER)
+    @GetMapping("/search")
+    public ResponseEntity<LatestDiscussionPageResponse> getDiscussionsByKeyword(
+            @LoginMember final Long memberId,
+            @RequestParam final String keyword,
+            @RequestParam final int size,
+            @RequestParam(required = false) final String cursor
+    ) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(discussionQueryService.getDiscussionsByKeywordWithPagination(memberId, keyword, size, cursor));
     }
 
     @Auth(value = Role.USER)

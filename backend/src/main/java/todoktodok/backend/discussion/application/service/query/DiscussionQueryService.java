@@ -91,6 +91,27 @@ public class DiscussionQueryService {
         return getDiscussionsByKeyword(keyword, member);
     }
 
+    public LatestDiscussionPageResponse getDiscussionsByKeywordWithPagination(
+            final Long memberId,
+            final String keyword,
+            final int size,
+            final String cursor
+    ) {
+        validateKeywordNotBlank(keyword);
+        validatePageSize(size);
+
+        final Member member = findMember(memberId);
+        final String keywordWithPrefix = String.format("+%s*", keyword);
+
+        // 전체 개수 조회
+        final long totalCount = discussionRepository.countSearchResultsByKeyword(keywordWithPrefix);
+
+        // 페이지네이션된 결과 조회
+        final Slice<Long> discussionIdsSlice = sliceDiscussionsByKeyword(keyword, cursor, size);
+
+        return createPageResponseWithTotalCount(discussionIdsSlice, member, totalCount);
+    }
+
     public LatestDiscussionPageResponse getDiscussionsByBook(
             final Long memberId,
             final Long bookId,
@@ -394,6 +415,18 @@ public class DiscussionQueryService {
         return discussionRepository.findIdsByBookIdLessThan(bookId, cursorId, pageable);
     }
 
+    private Slice<Long> sliceDiscussionsByKeyword(
+            final String keyword,
+            final String cursor,
+            final int size
+    ) {
+        final String keywordWithPrefix = String.format("+%s*", keyword);
+        final Pageable pageable = PageRequest.of(0, size, Direction.DESC, "id");
+        final Long cursorId = (cursor == null || cursor.isBlank()) ? null : decodeCursor(cursor);
+
+        return discussionRepository.searchIdsByKeywordWithCursor(keywordWithPrefix, cursorId, pageable);
+    }
+
     private LatestDiscussionPageResponse createPageResponse(
             final Slice<Long> discussionIdsSlice,
             final Member member
@@ -405,6 +438,21 @@ public class DiscussionQueryService {
         return new LatestDiscussionPageResponse(
                 getDiscussionsResponses(discussionIds, member),
                 new PageInfo(hasNextPage, nextCursor)
+        );
+    }
+
+    private LatestDiscussionPageResponse createPageResponseWithTotalCount(
+            final Slice<Long> discussionIdsSlice,
+            final Member member,
+            final long totalCount
+    ) {
+        final List<Long> discussionIds = discussionIdsSlice.getContent();
+        final boolean hasNextPage = discussionIdsSlice.hasNext();
+        final String nextCursor = findNextCursor(hasNextPage, discussionIds);
+
+        return new LatestDiscussionPageResponse(
+                getDiscussionsResponses(discussionIds, member),
+                new PageInfo(hasNextPage, nextCursor, totalCount)
         );
     }
 

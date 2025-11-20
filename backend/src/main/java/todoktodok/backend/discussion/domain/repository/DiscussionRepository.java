@@ -54,9 +54,9 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
             FROM discussion d
             WHERE MATCH(d.title) AGAINST(:keyword IN BOOLEAN MODE)
               AND d.deleted_at IS NULL
-              
+
             UNION
-            
+
             SELECT d.id
             FROM discussion d
             JOIN book b ON d.book_id = b.id
@@ -65,6 +65,50 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
               AND b.deleted_at IS NULL
             """, nativeQuery = true)
     List<Long> searchIdsByKeyword(@Param("keyword") final String keyword);
+
+    @Query(value = """
+            SELECT * FROM (
+                SELECT d.id
+                FROM discussion d
+                WHERE MATCH(d.title) AGAINST(:keyword IN BOOLEAN MODE)
+                  AND d.deleted_at IS NULL
+
+                UNION
+
+                SELECT d.id
+                FROM discussion d
+                JOIN book b ON d.book_id = b.id
+                WHERE MATCH(b.title) AGAINST(:keyword IN BOOLEAN MODE)
+                  AND d.deleted_at IS NULL
+                  AND b.deleted_at IS NULL
+            ) AS search_results
+            WHERE :cursorId IS NULL OR id < :cursorId
+            ORDER BY id DESC
+            """, nativeQuery = true)
+    Slice<Long> searchIdsByKeywordWithCursor(
+            @Param("keyword") final String keyword,
+            @Param("cursorId") final Long cursorId,
+            final Pageable pageable
+    );
+
+    @Query(value = """
+            SELECT COUNT(DISTINCT id) FROM (
+                SELECT d.id
+                FROM discussion d
+                WHERE MATCH(d.title) AGAINST(:keyword IN BOOLEAN MODE)
+                  AND d.deleted_at IS NULL
+
+                UNION
+
+                SELECT d.id
+                FROM discussion d
+                JOIN book b ON d.book_id = b.id
+                WHERE MATCH(b.title) AGAINST(:keyword IN BOOLEAN MODE)
+                  AND d.deleted_at IS NULL
+                  AND b.deleted_at IS NULL
+            ) AS search_results
+            """, nativeQuery = true)
+    long countSearchResultsByKeyword(@Param("keyword") final String keyword);
 
     @Query(value = """
                 SELECT d.id
