@@ -4,6 +4,8 @@ spring:
     url: ${database.performance.url}
     username: ${database.performance.username}
     password: ${database.performance.password}
+    hikari:
+      maximum-pool-size: 50
   sql:
     init:
       mode: never
