@@ -185,4 +185,49 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
                 WHERE d.id = :discussionId
             """)
     void increaseViewCount(@Param("discussionId") final Long discussionId);
+
+    @Modifying(clearAutomatically = true)
+    @Query("""
+                UPDATE Discussion d
+                SET d.likeCount = d.likeCount + 1
+                WHERE d.id = :discussionId
+            """)
+    void increaseLikeCount(@Param("discussionId") final Long discussionId);
+
+    @Modifying(clearAutomatically = true)
+    @Query("""
+                UPDATE Discussion d
+                SET d.likeCount = d.likeCount - 1
+                WHERE d.id = :discussionId
+                  AND d.likeCount > 0
+            """)
+    void decreaseLikeCount(@Param("discussionId") final Long discussionId);
+
+    @Modifying(clearAutomatically = true)
+    @Query("""
+                UPDATE Discussion d
+                SET d.commentCount = d.commentCount + 1
+                WHERE d.id = :discussionId
+            """)
+    void increaseCommentCount(@Param("discussionId") final Long discussionId);
+
+    @Modifying(clearAutomatically = true)
+    @Query("""
+                UPDATE Discussion d
+                SET d.commentCount = d.commentCount - 1
+                WHERE d.id = :discussionId
+                  AND d.commentCount > 0
+            """)
+    void decreaseCommentCount(@Param("discussionId") final Long discussionId);
+
+    @Query("""
+        SELECT d.id
+        FROM Discussion d
+        WHERE d.createdAt >= :sinceDate
+        ORDER BY (d.likeCount + d.commentCount) DESC, d.id DESC
+    """)
+    List<Long> findHotDiscussionIdsSinceDate(
+            @Param("sinceDate") final LocalDateTime sinceDate,
+            final Pageable pageable
+    );
 }

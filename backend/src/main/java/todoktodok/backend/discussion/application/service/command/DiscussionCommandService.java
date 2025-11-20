@@ -162,6 +162,7 @@ public class DiscussionCommandService {
                 member, discussion);
         if (discussionLikeOrEmpty.isPresent()) {
             discussionLikeRepository.delete(discussionLikeOrEmpty.get());
+            discussionRepository.decreaseLikeCount(discussionId);
             return false;
         }
 
@@ -171,6 +172,7 @@ public class DiscussionCommandService {
                 .build();
 
         discussionLikeRepository.save(discussionLike);
+        discussionRepository.increaseLikeCount(discussionId);
         publisher.publishEvent(new DiscussionLikeCreated(discussion, member));
 
         return true;

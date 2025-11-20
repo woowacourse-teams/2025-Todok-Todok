@@ -80,4 +80,15 @@ public interface DiscussionLikeRepository extends JpaRepository<DiscussionLike, 
                 ORDER BY dl.discussion.id DESC
             """)
     List<Long> findLikedDiscussionIdsByMember(@Param("member") final Member member);
+
+    @Query("""
+                SELECT dl.discussion.id
+                FROM DiscussionLike dl
+                WHERE dl.member = :member
+                  AND dl.discussion.id IN :discussionIds
+            """)
+    List<Long> findLikedDiscussionIdsByMemberAndDiscussionIds(
+            @Param("member") final Member member,
+            @Param("discussionIds") final List<Long> discussionIds
+    );
 }

@@ -33,6 +33,8 @@ import todoktodok.backend.member.domain.Member;
 public class Discussion extends TimeStamp {
 
     public static final Long DEFAULT_VIEW_COUNT = 0L;
+    public static final int DEFAULT_LIKE_COUNT = 0;
+    public static final int DEFAULT_COMMENT_COUNT = 0;
     public static final int TITLE_MAX_LENGTH = 50;
     public static final int CONTENT_MAX_LENGTH = 2500;
 
@@ -49,6 +51,14 @@ public class Discussion extends TimeStamp {
     @Column(nullable = false)
     @ColumnDefault("0")
     private Long viewCount;
+
+    @Column(nullable = false)
+    @ColumnDefault("0")
+    private int likeCount;
+
+    @Column(nullable = false)
+    @ColumnDefault("0")
+    private int commentCount;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
@@ -68,7 +78,7 @@ public class Discussion extends TimeStamp {
         validateTitle(title);
         validateContent(content);
 
-        return new Discussion(null, title, content, DEFAULT_VIEW_COUNT, member, book);
+        return new Discussion(null, title, content, DEFAULT_VIEW_COUNT, DEFAULT_LIKE_COUNT, DEFAULT_COMMENT_COUNT, member, book);
     }
 
     public boolean isOwnedBy(final Member member) {
@@ -84,6 +94,26 @@ public class Discussion extends TimeStamp {
 
         this.title = title;
         this.content = content;
+    }
+
+    public void increaseLikeCount() {
+        this.likeCount++;
+    }
+
+    public void decreaseLikeCount() {
+        if (this.likeCount > 0) {
+            this.likeCount--;
+        }
+    }
+
+    public void increaseCommentCount() {
+        this.commentCount++;
+    }
+
+    public void decreaseCommentCount() {
+        if (this.commentCount > 0) {
+            this.commentCount--;
+        }
     }
 
     @Override

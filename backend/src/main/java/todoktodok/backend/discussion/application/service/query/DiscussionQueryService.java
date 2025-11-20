@@ -4,12 +4,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
@@ -58,14 +56,14 @@ public class DiscussionQueryService {
         final Discussion discussion = findDiscussion(discussionId);
         final DiscussionViewEvent discussionViewEvent = new DiscussionViewEvent(member.getId(), discussion.getId());
 
-        final DiscussionLikeSummaryDto likeSummary = discussionLikeRepository.findLikeSummaryByDiscussionId(member,
-                discussionId);
-        final DiscussionCommentCountDto commentSummary = commentRepository.findCommentCountByDiscussionId(discussionId);
-        final int commentCount = commentSummary.commentCount() + commentSummary.replyCount();
+        // Discussion 엔티티의 카운트 컬럼 직접 사용
+        final int likeCount = discussion.getLikeCount();
+        final int commentCount = discussion.getCommentCount();
+        final boolean isLikedByMe = discussionLikeRepository.existsByMemberAndDiscussion(member, discussion);
 
         eventPublisher.publishEvent(discussionViewEvent);
 
-        return new DiscussionResponse(discussion, likeSummary.likeCount(), commentCount, likeSummary.isLikedByMe());
+        return new DiscussionResponse(discussion, likeCount, commentCount, isLikedByMe);
     }
 
     public LatestDiscussionPageResponse getDiscussions(
@@ -137,23 +135,10 @@ public class DiscussionQueryService {
 
         final Member member = findMember(memberId);
         final LocalDateTime sinceDate = LocalDate.now().minusDays(period).atStartOfDay();
-        final List<Long> discussionIds = discussionRepository.findAllIds();
+        final Pageable pageable = PageRequest.of(0, count);
 
-        if (discussionIds.isEmpty()) {
-            return Collections.emptyList();
-        }
-
-        final List<DiscussionLikeSummaryDto> likeSinceCounts = discussionLikeRepository.findLikeSummariesByDiscussionIdsSinceDate(
-                member, discussionIds, sinceDate);
-        final List<DiscussionCommentCountDto> commentSinceCounts = commentRepository.findCommentCountsByDiscussionIdsSinceDate(
-                discussionIds, sinceDate);
-
-        final Map<Long, LikeCountAndIsLikedByMeDto> likesByDiscussionId = mapLikeSummariesByDiscussionId(
-                likeSinceCounts);
-        final Map<Long, Integer> commentsByDiscussionId = mapTotalCommentCountsByDiscussionId(commentSinceCounts);
-
-        final List<Long> hotDiscussionIds = findHotDiscussions(count, likesByDiscussionId, commentsByDiscussionId,
-                discussionIds);
+        // discussion 테이블의 likeCount + commentCount 컬럼으로 정렬
+        final List<Long> hotDiscussionIds = discussionRepository.findHotDiscussionIdsSinceDate(sinceDate, pageable);
 
         return getDiscussionsResponses(hotDiscussionIds, member);
     }
@@ -304,21 +289,18 @@ public class DiscussionQueryService {
             return List.of();
         }
 
-        final List<DiscussionLikeSummaryDto> likeSummaries = discussionLikeRepository.findLikeSummaryByDiscussionIds(
+        // isLikedByMe 정보만 조회 (likeCount와 commentCount는 Discussion 엔티티에서 직접 가져옴)
+        final List<Long> likedDiscussionIds = discussionLikeRepository.findLikedDiscussionIdsByMemberAndDiscussionIds(
                 member, discussionIds);
-        final List<DiscussionCommentCountDto> commentCounts = commentRepository.findCommentCountsByDiscussionIds(
-                discussionIds);
+        final Map<Long, Boolean> isLikedByMeMap = discussionIds.stream()
+                .collect(Collectors.toMap(id -> id, likedDiscussionIds::contains));
 
-        final Map<Long, LikeCountAndIsLikedByMeDto> likesByDiscussionId = mapLikeSummariesByDiscussionId(likeSummaries);
-        final Map<Long, Integer> commentsByDiscussionId = mapTotalCommentCountsByDiscussionId(commentCounts);
-
-        return makeResponsesFrom(discussionIds, likesByDiscussionId, commentsByDiscussionId);
+        return makeResponsesFrom(discussionIds, isLikedByMeMap);
     }
 
     private List<DiscussionResponse> makeResponsesFrom(
             final List<Long> discussionIds,
-            final Map<Long, LikeCountAndIsLikedByMeDto> likeSummaryByDiscussionId,
-            final Map<Long, Integer> commentCountsByDiscussionId
+            final Map<Long, Boolean> isLikedByMeMap
     ) {
         final Map<Long, Discussion> discussions = discussionRepository.findDiscussionsInIds(discussionIds).stream()
                 .collect(Collectors.toMap(Discussion::getId, discussion -> discussion));
@@ -326,34 +308,13 @@ public class DiscussionQueryService {
         return discussionIds.stream()
                 .map(discussionId -> {
                     final Discussion discussion = discussions.get(discussionId);
-                    final int likeCount = likeSummaryByDiscussionId.get(discussionId).likeCount();
-                    final int commentCount = commentCountsByDiscussionId.getOrDefault(discussionId, 0);
-                    final boolean isLikedByMe = likeSummaryByDiscussionId.get(discussionId).isLikedByMe();
+                    // Discussion 엔티티의 카운트 컬럼 직접 사용
+                    final int likeCount = discussion.getLikeCount();
+                    final int commentCount = discussion.getCommentCount();
+                    final boolean isLikedByMe = isLikedByMeMap.getOrDefault(discussionId, false);
                     return new DiscussionResponse(discussion, likeCount, commentCount, isLikedByMe);
                 })
                 .toList();
-    }
-
-    private Map<Long, Integer> mapTotalCommentCountsByDiscussionId(
-            final List<DiscussionCommentCountDto> commentCounts) {
-        return commentCounts.stream()
-                .collect(Collectors.toMap(
-                        DiscussionCommentCountDto::discussionId,
-                        dto -> dto.commentCount() + dto.replyCount()
-                ));
-    }
-
-    private Map<Long, LikeCountAndIsLikedByMeDto> mapLikeSummariesByDiscussionId(
-            final List<DiscussionLikeSummaryDto> likeCounts) {
-        return likeCounts.stream()
-                .collect(Collectors.toMap(
-                        DiscussionLikeSummaryDto::discussionId,
-                        discussionLikeSummaryDto ->
-                                new LikeCountAndIsLikedByMeDto(
-                                        discussionLikeSummaryDto.likeCount(),
-                                        discussionLikeSummaryDto.isLikedByMe()
-                                )
-                ));
     }
 
     private static void validateHotDiscussionCount(final int count) {
@@ -367,27 +328,6 @@ public class DiscussionQueryService {
             throw new IllegalArgumentException(
                     String.format("유효하지 않은 기간 값입니다. 0일 ~ 7일 이내로 조회해주세요: period = %d", period));
         }
-    }
-
-    private static List<Long> findHotDiscussions(
-            final int count,
-            final Map<Long, LikeCountAndIsLikedByMeDto> likesByDiscussionId,
-            final Map<Long, Integer> commentsByDiscussionId,
-            final List<Long> discussionIds
-    ) {
-        final ToIntFunction<Long> totalCountByDiscussion =
-                discussionId ->
-                        likesByDiscussionId.get(discussionId).likeCount()
-                                + commentsByDiscussionId.getOrDefault(discussionId, 0);
-
-        return discussionIds.stream()
-                .sorted(Comparator
-                        .comparingInt(totalCountByDiscussion)
-                        .reversed()
-                        .thenComparing(discussionId -> discussionId, Comparator.reverseOrder())
-                )
-                .limit(count)
-                .toList();
     }
 
     private String getNextCursor(
