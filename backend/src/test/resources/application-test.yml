@@ -23,6 +23,11 @@ spring:
   flyway:
     enabled: false
 
+decorator:
+  datasource:
+    p6spy:
+      enable-logging: true
+
 auth:
   mode: test
 
@@ -34,3 +39,4 @@ logging:
   level:
     org.springframework.jdbc.datasource.DataSourceTransactionManager: DEBUG
     org.springframework.orm.jpa.JpaTransactionManager: DEBUG
+    p6spy: info

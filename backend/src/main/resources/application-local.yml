@@ -8,23 +8,34 @@ spring:
     url: jdbc:mysql://localhost:33306/todoktodok
     username: root
     password: root
+
   sql:
     init:
       mode: never
-      schema-locations: classpath:db/local/schema.sql
-      data-locations: classpath:db/local/data.sql
+      schema-locations:
+      data-locations:
+
   jpa:
-    show-sql: false # 이 값을 false로 변경합니다.
-    hibernate:
-      ddl-auto:  # 개발 환경에서는 'update'나 'create'를 사용할 수 있습니다.
+    show-sql: false
     properties:
       hibernate:
-        # MySQL 버전에 맞는 Dialect를 지정합니다. (예: MySQL 8)
-        dialect: org.hibernate.dialect.MySQL8Dialect
-        # 쿼리 포맷팅은 그대로 유지하면 좋습니다.
         format_sql: true
+    hibernate:
+      ddl-auto: validate
+    defer-datasource-initialization: false
+
   flyway:
-    enabled: false
+    enabled: true
+    url: jdbc:mysql://localhost:33306/todoktodok
+    user: root
+    password: root
+    locations:
+      - classpath:db/migration_dev
+      - classpath:db/seed_dev
+    baseline-on-migrate: true
+    validate-on-migrate: true
+    out-of-order: false
+    encoding: UTF-8
 
   config:
     activate:
@@ -51,4 +62,5 @@ firebase:
 
 jwt:
   access-token:
-    expire-mills: ${jwt.access-token.local.expire-mills}
+    expire-mills: 86_400_000
+#    expire-mills: ${jwt.access-token.local.expire-mills}
