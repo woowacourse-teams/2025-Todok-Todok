@@ -1,13 +1,7 @@
 package todoktodok.backend.discussion.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
+
 import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -30,6 +24,14 @@ import todoktodok.backend.member.domain.Member;
 @DynamicInsert
 @SQLRestriction("deleted_at is NULL")
 @SQLDelete(sql = "UPDATE discussion SET deleted_at = NOW() WHERE id = ?")
+
+@NamedEntityGraph(
+        name = "Discussion.withMemberAndBook",
+        attributeNodes = {
+                @NamedAttributeNode("member"),
+                @NamedAttributeNode("book")
+        }
+)
 public class Discussion extends TimeStamp {
 
     public static final Long DEFAULT_VIEW_COUNT = 0L;

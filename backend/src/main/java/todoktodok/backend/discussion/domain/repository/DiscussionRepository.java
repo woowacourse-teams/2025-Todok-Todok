@@ -2,8 +2,11 @@ package todoktodok.backend.discussion.domain.repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -14,11 +17,10 @@ import todoktodok.backend.member.domain.Member;
 public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
 
     @Query("""
-                   SELECT d
+                   SELECT d.id 
                    FROM Discussion d
-                   WHERE d.id IN :discussionIds
             """)
-    List<Discussion> findDiscussionsInIds(@Param("discussionIds") final List<Long> discussionIds);
+    List<Long> findAllIds();
 
     @Query("""
                    SELECT d.id 
@@ -28,23 +30,36 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
     List<Long> findIdsByMember(@Param("member") final Member member);
 
     @Query("""
-                   SELECT d.id 
+                   SELECT d
                    FROM Discussion d
+                   JOIN FETCH d.member
+                   JOIN FETCH d.book
+                   WHERE d.id = :discussionId
             """)
-    List<Long> findAllIds();
+    Optional<Discussion> findByIdWithMemberAndBook(final Long discussionId);
 
+    @EntityGraph(value = "Discussion.withMemberAndBook", type = EntityGraph.EntityGraphType.LOAD)
     @Query("""
-                    SELECT d.id
+                   SELECT d
+                   FROM Discussion d
+                   WHERE d.id IN :discussionIds
+            """)
+    List<Discussion> findDiscussionsInIds(@Param("discussionIds") final List<Long> discussionIds);
+
+    @EntityGraph(value = "Discussion.withMemberAndBook", type = EntityGraph.EntityGraphType.LOAD)
+    @Query("""
+                    SELECT d
                     FROM Discussion d
             """)
-    Slice<Long> findAllIdsBy(final Pageable pageable);
+    Slice<Discussion> findAllBy(final Pageable pageable);
 
+    @EntityGraph(value = "Discussion.withMemberAndBook", type = EntityGraph.EntityGraphType.LOAD)
     @Query("""
-                    SELECT d.id 
+                    SELECT d
                     FROM Discussion d
                     WHERE :cursorId IS NULL OR d.id < :cursorId
             """)
-    Slice<Long> findIdsLessThan(
+    Slice<Discussion> findDiscussionsLessThan(
             @Param("cursorId") final Long cursorId,
             final Pageable pageable
     );
@@ -94,8 +109,9 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
             """, nativeQuery = true)
     List<Long> findParticipatedDiscussionIdsByMember(@Param("memberId") final Long memberId);
 
+    @EntityGraph(value = "Discussion.withMemberAndBook", type = EntityGraph.EntityGraphType.LOAD)
     @Query("""
-        SELECT d.id
+        SELECT d
         FROM Discussion d
         JOIN Comment c ON c.discussion = d
         WHERE c.createdAt >= :periodStart
@@ -106,29 +122,31 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
         )
         ORDER BY MAX(c.id) DESC
    """)
-    List<Long> findActiveDiscussionsByCursor(
+    List<Discussion> findActiveDiscussionsByCursor(
             @Param("periodStart") final LocalDateTime periodStart,
             @Param("lastDiscussionLatestCommentId") final Long lastDiscussionLatestCommentId,
             final Pageable pageable
     );
 
+    @EntityGraph(value = "Discussion.withMemberAndBook", type = EntityGraph.EntityGraphType.LOAD)
     @Query("""
-        SELECT d.id
+        SELECT d
         FROM Discussion d
         WHERE d.book.id = :bookId
     """)
-    Slice<Long> findIdsByBookId(
+    Slice<Discussion> findDiscussionsByBookId(
             @Param("bookId") final Long bookId,
             final Pageable pageable
     );
 
+    @EntityGraph(value = "Discussion.withMemberAndBook", type = EntityGraph.EntityGraphType.LOAD)
     @Query("""
-        SELECT d.id
+        SELECT d
         FROM Discussion d
         WHERE d.book.id = :bookId 
         AND (:cursorId IS NULL OR d.id < :cursorId)
-""")
-    Slice<Long> findIdsByBookIdLessThan(
+    """)
+    Slice<Discussion> findDiscussionsByBookIdLessThan(
             @Param("bookId") final Long bookId,
             @Param("cursorId") final Long cursorId,
             final Pageable pageable
