@@ -5,8 +5,10 @@ spring:
     username: ${database.performance.username}
     password: ${database.performance.password}
     hikari:
-      maximum-pool-size: 100
-      idle-timeout: 30000
+      maximum-pool-size: 80 # RDS t3.medium 기준 최대 90
+      idle-timeout: 600000 # 10분
+      leak-detection-threshold: 60000 # 연결 누수 로그 설정, 1분 동안 연결 풀 반환이 일어나지 않으면 경고 로그
+      minimum-idle: 5 # 유휴 상태일 때 5개만 유지
   sql:
     init:
       mode: never
@@ -44,6 +46,8 @@ server:
   tomcat:
     mbeanregistry:
       enabled: true
+    threads:
+      max: 180
 
 logging:
   level:
