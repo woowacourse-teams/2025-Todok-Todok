@@ -23,12 +23,13 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
             """)
     List<Long> findAllIds();
 
+    @EntityGraph(value = "Discussion.withMemberAndBook", type = EntityGraph.EntityGraphType.LOAD)
     @Query("""
-                   SELECT d.id 
+                   SELECT d
                    FROM Discussion d
                    WHERE d.member = :member
             """)
-    List<Long> findIdsByMember(@Param("member") final Member member);
+    List<Discussion> findDiscussionsByMember(@Param("member") final Member member);
 
     @Query("""
                    SELECT d
@@ -93,6 +94,34 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
         """)
     List<Discussion> findHotDiscussionIds(@Param("sinceDate") final LocalDateTime sinceDate, final Pageable pageable);
 
+    @EntityGraph(value = "Discussion.withMemberAndBook", type = EntityGraph.EntityGraphType.LOAD)
+    @Query(value = """
+            SELECT DISTINCT t FROM (
+                SELECT d
+                FROM discussion d
+                WHERE d.member_id = :memberId AND d.deleted_at IS NULL
+                
+                UNION ALL
+                SELECT d
+                FROM discussion d
+                JOIN comment c ON c.discussion_id = d.id
+                WHERE c.member_id = :memberId
+                    AND d.deleted_at IS NULL
+                    AND c.deleted_at IS NULL
+                
+                UNION ALL
+                SELECT d
+                FROM discussion d
+                JOIN comment c ON c.discussion_id = d.id
+                JOIN reply r ON r.comment_id = c.id
+                WHERE r.member_id = :memberId
+                    AND d.deleted_at IS NULL
+                    AND c.deleted_at IS NULL
+                    AND r.deleted_at IS NULL
+            ) AS t
+            """, nativeQuery = true)
+    List<Discussion> findParticipatedDiscussionIdsByMember2(@Param("memberId") final Long memberId);
+
     @Query(value = """
                 SELECT d.id
                 FROM discussion d
@@ -120,33 +149,6 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
                 AND r.deleted_at IS NULL
             """, nativeQuery = true)
     List<Long> findParticipatedDiscussionIdsByMember(@Param("memberId") final Long memberId);
-
-    @Query(value = """
-            SELECT DISTINCT t.id FROM (
-                SELECT d.id
-                FROM discussion d
-                WHERE d.member_id = :memberId AND d.deleted_at IS NULL
-                
-                UNION ALL
-                SELECT d.id
-                FROM discussion d
-                JOIN comment c ON c.discussion_id = d.id
-                WHERE c.member_id = :memberId
-                    AND d.deleted_at IS NULL
-                    AND c.deleted_at IS NULL
-                
-                UNION ALL
-                SELECT d.id
-                FROM discussion d
-                JOIN comment c ON c.discussion_id = d.id
-                JOIN reply r ON r.comment_id = c.id
-                WHERE r.member_id = :memberId
-                    AND d.deleted_at IS NULL
-                    AND c.deleted_at IS NULL
-                    AND r.deleted_at IS NULL
-            ) AS t
-            """, nativeQuery = true)
-    List<Long> findParticipatedDiscussionIdsByMember2(@Param("memberId") final Long memberId);
 
     @EntityGraph(value = "Discussion.withMemberAndBook", type = EntityGraph.EntityGraphType.LOAD)
     @Query("""

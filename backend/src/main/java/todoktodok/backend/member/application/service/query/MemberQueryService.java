@@ -12,9 +12,7 @@ import todoktodok.backend.book.domain.Book;
 import todoktodok.backend.book.domain.repository.BookRepository;
 import todoktodok.backend.comment.domain.repository.CommentRepository;
 import todoktodok.backend.discussion.application.dto.response.DiscussionResponse;
-import todoktodok.backend.discussion.application.service.query.DiscussionCommentCountDto;
 import todoktodok.backend.discussion.application.service.query.DiscussionLikeSummaryDto;
-import todoktodok.backend.discussion.application.service.query.LikeCountAndIsLikedByMeDto;
 import todoktodok.backend.discussion.domain.Discussion;
 import todoktodok.backend.discussion.domain.repository.DiscussionLikeRepository;
 import todoktodok.backend.discussion.domain.repository.DiscussionRepository;
@@ -44,9 +42,6 @@ public class MemberQueryService {
         return new ProfileResponse(member);
     }
 
-    /*
-    오래 걸림
-     */
     public List<BookResponse> getActiveBooks(final Long memberId) {
         final Member member = findMember(memberId);
 
@@ -58,9 +53,6 @@ public class MemberQueryService {
                 .toList();
     }
 
-    /*
-    오래 걸림
-     */
     public List<DiscussionResponse> getMemberDiscussionsByType(
             final Long memberId,
             final MemberDiscussionFilterType type
@@ -90,70 +82,44 @@ public class MemberQueryService {
     }
 
     private List<DiscussionResponse> getCreatedDiscussions(final Member member) {
-        final List<Long> createdDiscussionIds = discussionRepository.findIdsByMember(member);
+        final List<Discussion> createdDiscussions = discussionRepository.findDiscussionsByMember(member);
 
-        return getDiscussionsResponses(createdDiscussionIds, member);
+        return getDiscussionsResponses(createdDiscussions, member);
     }
 
     private List<DiscussionResponse> getParticipatedDiscussions(final Member member) {
-        final List<Long> participatedDiscussionIds = discussionRepository.findParticipatedDiscussionIdsByMember2(member.getId());
+        final List<Discussion> participatedDiscussions = discussionRepository.findParticipatedDiscussionIdsByMember2(member.getId());
 
-        return getDiscussionsResponses(participatedDiscussionIds, member);
+        return getDiscussionsResponses(participatedDiscussions, member);
     }
 
     private List<DiscussionResponse> getDiscussionsResponses(
-            final List<Long> discussionIds,
+            final List<Discussion> discussions,
             final Member member
     ) {
-        if (discussionIds.isEmpty()) {
+        if (discussions.isEmpty()) {
             return List.of();
         }
 
-        final List<DiscussionLikeSummaryDto> likeSummaries = discussionLikeRepository.findLikeSummaryByDiscussionIds(
-                member, discussionIds);
-        final List<DiscussionCommentCountDto> commentCounts = commentRepository.findCommentCountsByDiscussionIds(
-                discussionIds);
-        final Map<Long, LikeCountAndIsLikedByMeDto> likesByDiscussionId = mapLikeSummariesByDiscussionId(likeSummaries);
-        final Map<Long, Integer> commentsByDiscussionId = mapTotalCommentCountsByDiscussionId(commentCounts);
+        final List<Long> discussionIds = discussions.stream()
+                .map(Discussion::getId)
+                .toList();
 
-        return makeResponsesFrom(discussionIds, likesByDiscussionId, commentsByDiscussionId);
-    }
+        final Map<Long, Boolean> likesByDiscussionId = discussionLikeRepository.findLikeSummaryByDiscussionIds(member, discussionIds)
+                .stream().collect(Collectors.toMap(DiscussionLikeSummaryDto::discussionId, DiscussionLikeSummaryDto::isLikedByMe));
 
-    private Map<Long, Integer> mapTotalCommentCountsByDiscussionId(final List<DiscussionCommentCountDto> commentCounts) {
-        return commentCounts.stream()
-                .collect(Collectors.toMap(
-                        DiscussionCommentCountDto::discussionId,
-                        dto -> dto.commentCount() + dto.replyCount()
-                ));
-    }
-
-    private Map<Long, LikeCountAndIsLikedByMeDto> mapLikeSummariesByDiscussionId(final List<DiscussionLikeSummaryDto> likeCounts) {
-        return likeCounts.stream()
-                .collect(Collectors.toMap(
-                        DiscussionLikeSummaryDto::discussionId,
-                        discussionLikeSummaryDto ->
-                                new LikeCountAndIsLikedByMeDto(
-                                        discussionLikeSummaryDto.likeCount(),
-                                        discussionLikeSummaryDto.isLikedByMe()
-                                )
-                ));
+        return makeResponsesFrom(discussions, likesByDiscussionId);
     }
 
     private List<DiscussionResponse> makeResponsesFrom(
-            final List<Long> discussionIds,
-            final Map<Long, LikeCountAndIsLikedByMeDto> likeSummaryByDiscussionId,
-            final Map<Long, Integer> commentCountsByDiscussionId
+            final List<Discussion> discussions,
+            final Map<Long, Boolean> likeSummaryByDiscussionId
     ) {
-        final Map<Long, Discussion> discussions = discussionRepository.findDiscussionsInIds(discussionIds).stream()
-                .collect(Collectors.toMap(Discussion::getId, discussion -> discussion));
-
-        return discussionIds.stream()
-                .map(discussionId -> {
-                    final Discussion discussion = discussions.get(discussionId);
-                    final int likeCount = likeSummaryByDiscussionId.get(discussionId).likeCount();
-                    final int commentCount = commentCountsByDiscussionId.getOrDefault(discussionId, 0);
-                    final boolean isLikedByMe = likeSummaryByDiscussionId.get(discussionId).isLikedByMe();
-                    return new DiscussionResponse(discussion, likeCount, commentCount, isLikedByMe);
+        return discussions.stream()
+                .map(discussion -> {
+                    final Long discussionId = discussion.getId();
+                    final boolean isLikedByMe = likeSummaryByDiscussionId.get(discussionId);
+                    return new DiscussionResponse(discussion, discussion.getLikeCount(), discussion.getCommentCount(), isLikedByMe);
                 })
                 .toList();
     }
