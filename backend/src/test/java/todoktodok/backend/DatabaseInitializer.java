@@ -237,7 +237,7 @@ public class DatabaseInitializer {
         em.createNativeQuery(
                         """
                                 INSERT INTO DISCUSSION_MEMBER_VIEW (discussion_id, member_id, created_at, modified_at)
-                                VALUES 
+                                VALUES
                                 (:discussionId, :memberId, :createdAt, :modifiedAt)
                                 """
                 )
@@ -246,6 +246,9 @@ public class DatabaseInitializer {
                 .setParameter("createdAt", now)
                 .setParameter("modifiedAt", before)
                 .executeUpdate();
+
+        em.flush();
+        em.clear();
     }
 
     @Transactional
@@ -569,6 +572,28 @@ public class DatabaseInitializer {
                 .setParameter("notificationTarget", notificationTarget)
                 .setParameter("created_at", now)
                 .setParameter("modified_at", now)
+                .executeUpdate();
+    }
+
+    @Transactional
+    public void increaseDiscussionLikeCount(final long discussionId) {
+        em.createNativeQuery("""
+                        UPDATE discussion d
+                        SET d.like_count = d.like_count + 1
+                        WHERE d.id = :discussionId
+                        """)
+                .setParameter("discussionId", discussionId)
+                .executeUpdate();
+    }
+
+    @Transactional
+    public void increaseDiscussionCommentCount(final long discussionId) {
+        em.createNativeQuery("""
+                        UPDATE discussion d
+                        SET d.comment_count = d.comment_count + 1
+                        WHERE d.id = :discussionId
+                        """)
+                .setParameter("discussionId", discussionId)
                 .executeUpdate();
     }
 }

@@ -148,8 +148,11 @@ public class ReplyControllerTest {
         databaseInitializer.setDefaultUserInfo();
         databaseInitializer.setDefaultBookInfo();
         databaseInitializer.setDefaultDiscussionInfo();
+
         databaseInitializer.setDefaultCommentInfo();
+        databaseInitializer.increaseDiscussionCommentCount(1L);
         databaseInitializer.setDefaultReplyInfo();
+        databaseInitializer.increaseDiscussionCommentCount(1L);
 
         final String token = MemberFixture.getTestAccessToken("user@gmail.com");
 

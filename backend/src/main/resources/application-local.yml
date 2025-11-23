@@ -1,31 +1,56 @@
 spring:
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
+#  h2:
+#    console:
+#      enabled: true
+#      path: /h2-console
   datasource:
-    url: jdbc:h2:mem:database
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:33306/todoktodok
+    username: root
+    password: root
+
   sql:
     init:
-      mode: always
-      schema-locations: classpath:db/local/schema.sql
-      data-locations: classpath:db/local/data.sql
+      mode: never
+      schema-locations:
+      data-locations:
+
   jpa:
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
         format_sql: true
     hibernate:
       ddl-auto: validate
     defer-datasource-initialization: false
+
   flyway:
-    enabled: false
+    enabled: true
+    url: jdbc:mysql://localhost:33306/todoktodok
+    user: root
+    password: root
+    locations:
+      - classpath:db/migration_dev
+      - classpath:db/seed_dev
+    baseline-on-migrate: true
+    validate-on-migrate: true
+    out-of-order: false
+    encoding: UTF-8
 
   config:
     activate:
       on-profile: local
     import:
       - submodule/security/firebase.yml
+
+logging:
+  level:
+    p6spy: info
+
+decorator:
+  datasource:
+    p6spy:
+      enable-logging: true
 
 auth:
   mode: google
@@ -37,4 +62,5 @@ firebase:
 
 jwt:
   access-token:
-    expire-mills: ${jwt.access-token.local.expire-mills}
+    expire-mills: 86_400_000
+#    expire-mills: ${jwt.access-token.local.expire-mills}

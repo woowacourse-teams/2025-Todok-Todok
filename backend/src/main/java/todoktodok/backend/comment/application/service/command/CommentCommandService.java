@@ -49,6 +49,8 @@ public class CommentCommandService {
                 .build();
 
         final Comment savedComment = commentRepository.save(comment);
+        discussionRepository.increaseCommentCount(discussionId);
+
         publisher.publishEvent(new CommentCreated(discussion, savedComment, member));
 
         return savedComment.getId();
@@ -135,8 +137,10 @@ public class CommentCommandService {
 //        validateHasReply(comment);
 //        validateCommentMember(comment, member);
 //        comment.validateMatchWithDiscussion(discussion);
+        discussion.validatePositiveCommentCount();
 
         commentRepository.delete(comment);
+        discussionRepository.decreaseCommentCount(discussionId);
     }
 
     private Member findMember(final Long memberId) {

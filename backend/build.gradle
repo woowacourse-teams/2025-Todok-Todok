@@ -46,15 +46,18 @@ dependencies {
 
     implementation platform('software.amazon.awssdk:bom:2.27.21')
     implementation 'software.amazon.awssdk:s3'
+    implementation 'software.amazon.awssdk:url-connection-client'
     implementation 'com.google.firebase:firebase-admin:9.6.0'
 
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'com.mysql:mysql-connector-j'
     implementation 'org.flywaydb:flyway-core'
     implementation 'org.flywaydb:flyway-mysql'
+    implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.1'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.rest-assured:rest-assured:5.3.1'
+    testImplementation 'org.awaitility:awaitility:4.2.0'
 }
 
 tasks.named('test') {

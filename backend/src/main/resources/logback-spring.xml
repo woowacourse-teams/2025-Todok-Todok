@@ -3,9 +3,9 @@
 <configuration>
     <timestamp key="BY_DATE" datePattern="yyyy-MM-dd"/>
     <property name="LOG_PATTERN_CONSOLE"
-              value="[%d{yyyy-MM-dd HH:mm:ss, Asia/Seoul}:%-4relative] %green([%thread]) %highlight(%-5level) %boldWhite([%C.%M:%yellow(%L)]) - %msg%n"/>
+              value="[%d{yyyy-MM-dd HH:mm:ss, Asia/Seoul}:%-4relative] %green([%thread]) %highlight(%-5level) %boldWhite([%C.%M:%yellow(%L)]) - client: [%X{clientIp}] -> server: [%X{serverIp}] %msg%n"/>
     <property name="LOG_PATTERN_FILE"
-              value="[%d{yyyy-MM-dd HH:mm:ss, Asia/Seoul}] [%thread] %-5level [%logger{36}:%L] - %msg%n"/>
+              value="[%d{yyyy-MM-dd HH:mm:ss, Asia/Seoul}] [%thread] %-5level [%logger{36}:%L] - client: [%X{clientIp}] -> server: [%X{serverIp}] %msg%n"/>
 
     <springProfile name="!prod">
         <include resource="logback/console-appender.xml"/>
