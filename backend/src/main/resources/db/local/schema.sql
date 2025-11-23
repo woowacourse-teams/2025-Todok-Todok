@@ -47,6 +47,8 @@ CREATE TABLE discussion
     title       VARCHAR(255)  NOT NULL,
     content     VARCHAR(2048) NOT NULL,
     view_count        BIGINT DEFAULT 0 NOT NULL,
+    like_count        BIGINT DEFAULT 0 NOT NULL,
+    comment_count     BIGINT DEFAULT 0 NOT NULL,
     FOREIGN KEY (member_id) REFERENCES member (id),
     FOREIGN KEY (book_id) REFERENCES book (id)
 );
