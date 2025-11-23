@@ -21,7 +21,7 @@ spring:
     defer-datasource-initialization: false
 
   flyway:
-    enabled: true
+    enabled: false
     user: ${database.performance.username}
     password: ${database.performance.password}
     locations:
@@ -32,7 +32,6 @@ spring:
     clean-disabled: true
     out-of-order: false
     encoding: UTF-8
-    ignore-migration-patterns: '11, 2'
 
   config:
     activate:
