@@ -30,7 +30,7 @@ spring:
     baseline-on-migrate: true
     validate-on-migrate: true
     clean-disabled: true
-    out-of-order: false
+    out-of-order: true
     encoding: UTF-8
 
   config:
