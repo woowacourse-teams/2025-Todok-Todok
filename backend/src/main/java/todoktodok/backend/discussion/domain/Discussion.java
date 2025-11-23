@@ -34,7 +34,7 @@ import todoktodok.backend.member.domain.Member;
 )
 public class Discussion extends TimeStamp {
 
-    public static final Long DEFAULT_VIEW_COUNT = 0L;
+    public static final Long DEFAULT_COUNT = 0L;
     public static final int TITLE_MAX_LENGTH = 50;
     public static final int CONTENT_MAX_LENGTH = 2500;
 
@@ -51,6 +51,14 @@ public class Discussion extends TimeStamp {
     @Column(nullable = false)
     @ColumnDefault("0")
     private Long viewCount;
+
+    @Column(nullable = false)
+    @ColumnDefault("0")
+    private Long commentCount;
+
+    @Column(nullable = false)
+    @ColumnDefault("0")
+    private Long likeCount;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
@@ -70,7 +78,7 @@ public class Discussion extends TimeStamp {
         validateTitle(title);
         validateContent(content);
 
-        return new Discussion(null, title, content, DEFAULT_VIEW_COUNT, member, book);
+        return new Discussion(null, title, content, DEFAULT_COUNT, DEFAULT_COUNT, DEFAULT_COUNT, member, book);
     }
 
     public boolean isOwnedBy(final Member member) {
@@ -124,6 +132,22 @@ public class Discussion extends TimeStamp {
         if (content.isEmpty() || content.length() > CONTENT_MAX_LENGTH) {
             throw new IllegalArgumentException(
                     String.format("토론방 내용은 1자 이상, 2500자 이하여야 합니다: %d자", content.length())
+            );
+        }
+    }
+
+    public void validatePositiveLikeCount() {
+        if (likeCount <= 0) {
+            throw new IllegalStateException(
+                    String.format("토론방 좋아요 수가 %d개입니다: discussionId= %d", likeCount, id)
+            );
+        }
+    }
+
+    public void validatePositiveCommentCount() {
+        if (commentCount <= 0) {
+            throw new IllegalStateException(
+                    String.format("토론방 댓글 + 대댓글 수 합이 %d개입니다: discussionId= %d", commentCount, id)
             );
         }
     }

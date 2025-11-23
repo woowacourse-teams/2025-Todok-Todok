@@ -327,6 +327,7 @@ class DiscussionControllerTest {
 
         databaseInitializer.setDefaultDiscussionInfo();
         databaseInitializer.setDiscussionLikeInfo(1L, 1L);
+        databaseInitializer.increaseDiscussionLikeCount(1L);
 
         final String token = MemberFixture.getTestAccessToken("user@gmail.com");
 

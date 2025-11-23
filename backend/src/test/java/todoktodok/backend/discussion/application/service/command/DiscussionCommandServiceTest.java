@@ -220,6 +220,7 @@ class DiscussionCommandServiceTest {
         databaseInitializer.setDefaultBookInfo();
         databaseInitializer.setDefaultDiscussionInfo();
         databaseInitializer.setDiscussionLikeInfo(1L, 1L);
+        databaseInitializer.increaseDiscussionLikeCount(1L);
 
         final Long memberId = 1L;
         final Long discussionId = 1L;
@@ -269,6 +270,7 @@ class DiscussionCommandServiceTest {
 
         databaseInitializer.setDiscussionInfo("캡슐화 왜 해요?", "진짜 궁금해요", recipientId, 1L);
         databaseInitializer.setDiscussionLikeInfo(authorId, discussionId);
+        databaseInitializer.increaseDiscussionLikeCount(discussionId);
 
         // when
         discussionCommandService.toggleLike(authorId, discussionId);

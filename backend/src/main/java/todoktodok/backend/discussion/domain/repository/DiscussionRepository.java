@@ -159,4 +159,36 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
                 WHERE d.id = :discussionId
             """)
     void increaseViewCount(@Param("discussionId") final Long discussionId);
+
+    @Modifying(clearAutomatically = true)
+    @Query("""
+                UPDATE Discussion d
+                SET d.commentCount = d.commentCount + 1
+                WHERE d.id = :discussionId
+            """)
+    void increaseCommentCount(@Param("discussionId") final Long discussionId);
+
+    @Modifying(clearAutomatically = true)
+    @Query("""
+                UPDATE Discussion d
+                SET d.likeCount = d.likeCount + 1
+                WHERE d.id = :discussionId
+            """)
+    void increaseLikeCount(@Param("discussionId") final Long discussionId);
+
+    @Modifying(clearAutomatically = true)
+    @Query("""
+                UPDATE Discussion d
+                SET d.commentCount = d.commentCount -1
+                WHERE d.id = :discussionId
+            """)
+    void decreaseCommentCount(@Param("discussionId") final Long discussionId);
+
+    @Modifying(clearAutomatically = true)
+    @Query("""
+                UPDATE Discussion d
+                SET d.likeCount = d.likeCount - 1
+                WHERE d.id = :discussionId
+            """)
+    void decreaseLikeCount(@Param("discussionId") final Long discussionId);
 }

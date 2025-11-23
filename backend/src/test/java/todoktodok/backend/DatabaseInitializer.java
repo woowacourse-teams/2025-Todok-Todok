@@ -574,4 +574,26 @@ public class DatabaseInitializer {
                 .setParameter("modified_at", now)
                 .executeUpdate();
     }
+
+    @Transactional
+    public void increaseDiscussionLikeCount(final long discussionId) {
+        em.createNativeQuery("""
+                        UPDATE discussion d
+                        SET d.like_count = d.like_count + 1
+                        WHERE d.id = :discussionId
+                        """)
+                .setParameter("discussionId", discussionId)
+                .executeUpdate();
+    }
+
+    @Transactional
+    public void increaseDiscussionCommentCount(final long discussionId) {
+        em.createNativeQuery("""
+                        UPDATE discussion d
+                        SET d.comment_count = d.comment_count + 1
+                        WHERE d.id = :discussionId
+                        """)
+                .setParameter("discussionId", discussionId)
+                .executeUpdate();
+    }
 }

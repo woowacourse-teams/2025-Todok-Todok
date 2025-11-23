@@ -54,6 +54,8 @@ public class ReplyCommandService {
                 .build();
 
         final Reply savedReply = replyRepository.save(reply);
+        discussionRepository.increaseCommentCount(discussionId);
+
         publisher.publishEvent(new ReplyCreated(discussion, comment, savedReply, member));
 
         return savedReply.getId();
@@ -120,8 +122,10 @@ public class ReplyCommandService {
         validateReplyMember(reply, member);
         comment.validateMatchWithDiscussion(discussion);
         reply.validateMatchWithComment(comment);
+        discussion.validatePositiveCommentCount();
 
         replyRepository.delete(reply);
+        discussionRepository.decreaseCommentCount(discussionId);
     }
 
     public boolean toggleLike(

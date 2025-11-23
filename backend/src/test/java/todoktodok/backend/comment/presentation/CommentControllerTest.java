@@ -203,7 +203,10 @@ public class CommentControllerTest {
         databaseInitializer.setDefaultBookInfo();
         databaseInitializer.setDefaultDiscussionInfo();
 
+        final Long discussionId = 1L;
+
         databaseInitializer.setCommentInfo("상속의 핵심 목적은 타입 계층의 구축입니다!", 1L, 1L);
+        databaseInitializer.increaseDiscussionCommentCount(discussionId);
 
         final String token = MemberFixture.getTestAccessToken("user@gmail.com");
 
