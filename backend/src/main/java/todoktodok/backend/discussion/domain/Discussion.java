@@ -35,6 +35,7 @@ import todoktodok.backend.member.domain.Member;
 public class Discussion extends TimeStamp {
 
     public static final Long DEFAULT_COUNT = 0L;
+    public static final int DEFAULT_COUNT_INT = 0;
     public static final int TITLE_MAX_LENGTH = 50;
     public static final int CONTENT_MAX_LENGTH = 2500;
 
@@ -54,11 +55,11 @@ public class Discussion extends TimeStamp {
 
     @Column(nullable = false)
     @ColumnDefault("0")
-    private Long commentCount;
+    private int commentCount;
 
     @Column(nullable = false)
     @ColumnDefault("0")
-    private Long likeCount;
+    private int likeCount;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
@@ -78,7 +79,7 @@ public class Discussion extends TimeStamp {
         validateTitle(title);
         validateContent(content);
 
-        return new Discussion(null, title, content, DEFAULT_COUNT, DEFAULT_COUNT, DEFAULT_COUNT, member, book);
+        return new Discussion(null, title, content, DEFAULT_COUNT, DEFAULT_COUNT_INT, DEFAULT_COUNT_INT, member, book);
     }
 
     public boolean isOwnedBy(final Member member) {
