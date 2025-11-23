@@ -51,7 +51,6 @@ public interface DiscussionLikeRepository extends JpaRepository<DiscussionLike, 
     @Query("""
                 SELECT new todoktodok.backend.discussion.application.service.query.DiscussionLikeSummaryDto(
                     d.id,
-                    COUNT(dl),
                     CASE WHEN SUM(CASE WHEN dl.member = :member THEN 1 ELSE 0 END) > 0 
                      THEN true 
                      ELSE false END
