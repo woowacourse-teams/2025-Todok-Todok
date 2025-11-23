@@ -5,7 +5,7 @@ spring:
     username: ${database.performance.username}
     password: ${database.performance.password}
     hikari:
-      maximum-pool-size: 8
+      maximum-pool-size: 80
   sql:
     init:
       mode: never
@@ -45,7 +45,7 @@ server:
     mbeanregistry:
       enabled: true
     threads:
-      max: 10
+      max: 100
     accept-count: 100
 
 logging:
