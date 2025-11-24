@@ -115,9 +115,13 @@ public class DiscussionQueryService {
         final Pageable pageable = PageRequest.of(0, count);
 
         final List<Long> hotDiscussionIds = discussionRepository.findHotDiscussionIds(sinceDate, pageable);//2회
-        final List<Discussion> hotDiscussions = discussionRepository.findDiscussionsInIds(hotDiscussionIds);
+        final Map<Long, Discussion> hotDiscussions = discussionRepository.findDiscussionsInIds(hotDiscussionIds).stream()
+                .collect(Collectors.toMap(Discussion::getId, discussion -> discussion));
+        final List<Discussion> sortedHotDiscussions = hotDiscussionIds.stream()
+                .map(hotDiscussions::get)
+                .toList();
 
-        return getDiscussionsResponses(hotDiscussions, member);
+        return getDiscussionsResponses(sortedHotDiscussions, member);
     }
 
     public ActiveDiscussionPageResponse getActiveDiscussions(
@@ -136,28 +140,36 @@ public class DiscussionQueryService {
         final ActiveDiscussionCursor activeDiscussionCursor = Optional.ofNullable(normalizedCursor)
                 .map(ActiveDiscussionCursor::fromEncoded)
                 .orElse(ActiveDiscussionCursor.empty());
-        final Pageable pageable = Pageable.ofSize(requestedSize + 1);
-        final List<Discussion> activeDiscussions = discussionRepository.findActiveDiscussionsByCursor(
+
+        final List<Long> activeDiscussionIds = discussionRepository.findActiveDiscussionsByCursorNative(
                 periodStart,
                 activeDiscussionCursor.lastDiscussionLatestCommentId(),
-                pageable
+                requestedSize + 1
         );
 
-        if (activeDiscussions.isEmpty()) {
+        final Map<Long, Discussion> activeDiscussions = discussionRepository.findDiscussionsInIds(activeDiscussionIds).stream()
+                .collect(Collectors.toMap(Discussion::getId, discussion -> discussion));
+
+        final List<Discussion> sortedActiveDiscussions = activeDiscussionIds.stream()
+                .map(activeDiscussions::get)
+                .toList();
+
+
+        if (activeDiscussionIds.isEmpty()) {
             return new ActiveDiscussionPageResponse(Collections.emptyList(), new PageInfo(false, null));
         }
 
-        final boolean hasNext = activeDiscussions.size() > requestedSize;
+        final boolean hasNext = activeDiscussionIds.size() > requestedSize;
         if (hasNext) {
-            activeDiscussions.removeLast();
+            activeDiscussionIds.removeLast();
         }
 
-        final Discussion lastDiscussion = getLastDiscussion(activeDiscussions, hasNext);
+        final Discussion lastDiscussion = getLastDiscussion(sortedActiveDiscussions, hasNext);
         final Long latestCommentIdByDiscussion = commentRepository.findLatestCommentIdByDiscussion(lastDiscussion,
                         periodStart)
                 .orElse(null);
 
-        final List<DiscussionResponse> discussionResponses = getDiscussionsResponses(activeDiscussions, member);
+        final List<DiscussionResponse> discussionResponses = getDiscussionsResponses(sortedActiveDiscussions, member);
         final String nextCursor = getNextCursor(hasNext, latestCommentIdByDiscussion);
 
         return new ActiveDiscussionPageResponse(

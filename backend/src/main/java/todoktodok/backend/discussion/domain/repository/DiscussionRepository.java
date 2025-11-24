@@ -168,9 +168,9 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
             """, nativeQuery = true)
     List<Long> findParticipatedDiscussionIdsByMember(@Param("memberId") final Long memberId);
 
-    @EntityGraph(value = "Discussion.withMemberAndBook", type = EntityGraph.EntityGraphType.LOAD)
+
     @Query("""
-        SELECT d
+        SELECT d.id
         FROM Discussion d
         JOIN Comment c ON c.discussion = d
         WHERE c.createdAt >= :periodStart
@@ -181,10 +181,40 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
         )
         ORDER BY MAX(c.id) DESC
    """)
-    List<Discussion> findActiveDiscussionsByCursor(
+    List<Long> findActiveDiscussionsByCursor(
             @Param("periodStart") final LocalDateTime periodStart,
             @Param("lastDiscussionLatestCommentId") final Long lastDiscussionLatestCommentId,
             final Pageable pageable
+    );
+
+    @Query(
+        value = """
+        SELECT d1_0.id
+        FROM discussion d1_0
+        JOIN (
+            SELECT
+                c.discussion_id, MAX(c.id) AS max_comment_id
+            FROM
+                comment c
+            WHERE
+                c.deleted_at IS NULL
+                AND c.created_at >= :periodStart
+            GROUP BY
+                c.discussion_id
+            HAVING
+                (:lastDiscussionLatestCommentId IS NULL OR MAX(c.id) < :lastDiscussionLatestCommentId)
+            ORDER BY
+                max_comment_id DESC
+            LIMIT :pageSize
+        ) AS latest_discussions ON latest_discussions.discussion_id = d1_0.id
+        WHERE d1_0.deleted_at IS NULL;
+        """,
+        nativeQuery = true
+    )
+    List<Long> findActiveDiscussionsByCursorNative(
+            @Param("periodStart") final LocalDateTime periodStart,
+            @Param("lastDiscussionLatestCommentId") final Long lastDiscussionLatestCommentId,
+            @Param("pageSize") final int pageSize
     );
 
     @EntityGraph(value = "Discussion.withMemberAndBook", type = EntityGraph.EntityGraphType.LOAD)
