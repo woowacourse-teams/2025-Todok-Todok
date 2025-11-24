@@ -83,15 +83,33 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
             """, nativeQuery = true)
     List<Long> searchIdsByKeyword(@Param("keyword") final String keyword);
 
-    @Query("""
-            SELECT d.id
-            FROM Discussion d
-            LEFT JOIN DiscussionLike dl ON dl.discussion = d AND dl.createdAt >= :sinceDate
-            LEFT JOIN Comment c ON c.discussion = d AND c.createdAt >= :sinceDate
-            LEFT JOIN Reply r ON r.comment = c AND r.createdAt >= :sinceDate
-            GROUP BY d.id
-            ORDER BY (COUNT(DISTINCT dl.id) + COUNT(DISTINCT c.id) + COUNT(DISTINCT r.id)) DESC, d.id DESC
-        """)
+    @Query(
+            value = """
+            SELECT
+                activity.discussion_id
+            FROM (
+                SELECT dl.discussion_id
+                FROM discussion_like dl
+                WHERE dl.created_at >= :sinceDate AND dl.deleted_at IS NULL
+                
+                UNION ALL
+                SELECT c.discussion_id
+                FROM comment c
+                WHERE c.created_at >= :sinceDate AND c.deleted_at IS NULL
+                
+                UNION ALL
+                SELECT c.discussion_id
+                FROM reply r
+                JOIN comment c ON r.comment_id = c.id
+                WHERE r.created_at >= :sinceDate AND r.deleted_at IS NULL AND c.deleted_at IS NULL
+            ) AS activity
+            GROUP BY
+                activity.discussion_id
+            ORDER BY
+                COUNT(activity.discussion_id) DESC, activity.discussion_id DESC
+            """,
+            nativeQuery = true
+    )
     List<Long> findHotDiscussionIds(@Param("sinceDate") final LocalDateTime sinceDate, final Pageable pageable);
 
     @EntityGraph(value = "Discussion.withMemberAndBook", type = EntityGraph.EntityGraphType.LOAD)
