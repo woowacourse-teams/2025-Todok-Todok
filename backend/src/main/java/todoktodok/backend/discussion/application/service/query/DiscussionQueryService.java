@@ -114,7 +114,8 @@ public class DiscussionQueryService {
         final LocalDateTime sinceDate = LocalDate.now().minusDays(period).atStartOfDay();
         final Pageable pageable = PageRequest.of(0, count);
 
-        final List<Discussion> hotDiscussions = discussionRepository.findHotDiscussionIds(sinceDate, pageable);//2회
+        final List<Long> hotDiscussionIds = discussionRepository.findHotDiscussionIds(sinceDate, pageable);//2회
+        final List<Discussion> hotDiscussions = discussionRepository.findDiscussionsInIds(hotDiscussionIds);
 
         return getDiscussionsResponses(hotDiscussions, member);
     }

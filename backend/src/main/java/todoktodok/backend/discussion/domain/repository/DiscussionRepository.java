@@ -84,7 +84,7 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
     List<Long> searchIdsByKeyword(@Param("keyword") final String keyword);
 
     @Query("""
-            SELECT d
+            SELECT d.id
             FROM Discussion d
             LEFT JOIN DiscussionLike dl ON dl.discussion = d AND dl.createdAt >= :sinceDate
             LEFT JOIN Comment c ON c.discussion = d AND c.createdAt >= :sinceDate
@@ -92,7 +92,7 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
             GROUP BY d.id
             ORDER BY (COUNT(DISTINCT dl.id) + COUNT(DISTINCT c.id) + COUNT(DISTINCT r.id)) DESC, d.id DESC
         """)
-    List<Discussion> findHotDiscussionIds(@Param("sinceDate") final LocalDateTime sinceDate, final Pageable pageable);
+    List<Long> findHotDiscussionIds(@Param("sinceDate") final LocalDateTime sinceDate, final Pageable pageable);
 
     @EntityGraph(value = "Discussion.withMemberAndBook", type = EntityGraph.EntityGraphType.LOAD)
     @Query(value = """
