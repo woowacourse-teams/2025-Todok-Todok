@@ -10,7 +10,7 @@ spring:
         prepStmtCacheSize: 500
         prepStmtCacheSqlLimit: 2048
         cachePrepStmts: true
-#        useServerPrepStmts: true
+        useServerPrepStmts: true
   sql:
     init:
       mode: never
