@@ -6,11 +6,6 @@ spring:
     password: ${database.performance.password}
     hikari:
       maximum-pool-size: 5
-      data-source-properties:
-        prepStmtCacheSize: 500
-        prepStmtCacheSqlLimit: 2048
-        cachePrepStmts: true
-        useServerPrepStmts: true
   sql:
     init:
       mode: never
