@@ -71,7 +71,7 @@ public class DiscussionQueryService {
         validatePageSize(size);
         final Member member = findMember(memberId);
 
-        final Slice<Discussion> discussionSlice = sliceDiscussionsBy(cursor, size);
+        final Slice<Long> discussionSlice = sliceDiscussionsBy(cursor, size);
 
         return createPageResponse(discussionSlice, member);
     }
@@ -96,7 +96,7 @@ public class DiscussionQueryService {
         final Member member = findMember(memberId);
 
         final Pageable pageable = PageRequest.of(0, size, Direction.DESC, "id");
-        final Slice<Discussion> discussionSlice = sliceDiscussionsByBook(bookId, cursor, pageable);
+        final Slice<Long> discussionSlice = sliceDiscussionsByBook(bookId, cursor, pageable);
 
         return createPageResponse(discussionSlice, member);
     }
@@ -141,7 +141,7 @@ public class DiscussionQueryService {
                 .map(ActiveDiscussionCursor::fromEncoded)
                 .orElse(ActiveDiscussionCursor.empty());
 
-        final List<Long> activeDiscussionIds = discussionRepository.findActiveDiscussionsByCursorNative(
+        final List<Long> activeDiscussionIds = discussionRepository.findActiveDiscussionsByCursor(
                 periodStart,
                 activeDiscussionCursor.lastDiscussionLatestCommentId(),
                 requestedSize + 1
@@ -180,9 +180,9 @@ public class DiscussionQueryService {
 
     public List<DiscussionResponse> getLikedDiscussionsByMe(final Long memberId) {
         final Member member = findMember(memberId);
-        final List<Discussion> likedDiscussions = discussionLikeRepository.findLikedDiscussionIdsByMember(member);
-
-        return getDiscussionsResponses(likedDiscussions, member);
+        final List<Long> likedDiscussions = discussionLikeRepository.findLikedDiscussionIdsByMember(member);
+        List<Discussion> discussions = discussionRepository.findDiscussionsInIds(likedDiscussions);
+        return getDiscussionsResponses(discussions, member);
     }
 
     private Discussion getLastDiscussion(
@@ -212,18 +212,18 @@ public class DiscussionQueryService {
                 );
     }
 
-    private Slice<Discussion> sliceDiscussionsBy(
+    private Slice<Long> sliceDiscussionsBy(
             final String cursor,
             final int size
     ) {
         final Pageable pageable = PageRequest.of(0, size, Sort.Direction.DESC, "id");
 
         if (cursor == null || cursor.isBlank()) {
-            return discussionRepository.findAllBy(pageable);
+            return discussionRepository.findAllIdsBy(pageable);
         }
 
         final Long cursorId = decodeCursor(cursor);
-        return discussionRepository.findDiscussionsLessThan(cursorId, pageable);
+        return discussionRepository.findDiscussionIdsLessThan(cursorId, pageable);
     }
 
     private String processBlankCursor(final String cursor) {
@@ -289,26 +289,6 @@ public class DiscussionQueryService {
         return makeResponsesFrom(discussions, likesByDiscussionId);
     }
 
-    /*
-    새로운 버전
-     */
-//    private List<DiscussionResponse> getDiscussionsResponses(
-//            final List<Long> discussionIds,
-//            final Member member
-//    ) {
-//        if (discussionIds.isEmpty()) {
-//            return List.of();
-//        }
-//
-//        final Map<Long, DiscussionResponse> responsesById = discussionRepository.findDiscussionResponses(discussionIds,//3회
-//                        member).stream()
-//                .collect(Collectors.toMap(DiscussionResponse::discussionId, response -> response));
-//
-//        return discussionIds.stream()
-//                .map(responsesById::get)
-//                .toList();
-//    }
-
     private List<DiscussionResponse> makeResponsesFrom(
             final List<Discussion> discussions,
             final Map<Long, Boolean> likeSummaryByDiscussionId
@@ -347,24 +327,25 @@ public class DiscussionQueryService {
         return activeDiscussionCursor.toEncoded();
     }
 
-    private Slice<Discussion> sliceDiscussionsByBook(
+    private Slice<Long> sliceDiscussionsByBook(
             final Long bookId,
             final String cursor,
             final Pageable pageable
     ) {
         if (cursor == null || cursor.isBlank()) {
-            return discussionRepository.findDiscussionsByBookId(bookId, pageable);
+            return discussionRepository.findDiscussionIdsByBookId(bookId, pageable);
         }
 
         final Long cursorId = decodeCursor(cursor);
-        return discussionRepository.findDiscussionsByBookIdLessThan(bookId, cursorId, pageable);
+        return discussionRepository.findDiscussionIdsByBookIdLessThan(bookId, cursorId, pageable);
     }
 
     private LatestDiscussionPageResponse createPageResponse(
-            final Slice<Discussion> discussionSlice,
+            final Slice<Long> discussionSlice,
             final Member member
     ) {
-        final List<Discussion> discussions = discussionSlice.getContent();
+        final List<Long> discussionIds = discussionSlice.getContent();
+        final List<Discussion> discussions = discussionRepository.findDiscussionsInIds(discussionIds);
         final boolean hasNextPage = discussionSlice.hasNext();
         final String nextCursor = findNextCursor(hasNextPage, discussions);
 

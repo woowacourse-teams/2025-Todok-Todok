@@ -11,25 +11,17 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import todoktodok.backend.discussion.application.dto.response.DiscussionResponse;
 import todoktodok.backend.discussion.domain.Discussion;
 import todoktodok.backend.member.domain.Member;
 
 public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
 
     @Query("""
-                   SELECT d.id 
-                   FROM Discussion d
-            """)
-    List<Long> findAllIds();
-
-    @EntityGraph(value = "Discussion.withMemberAndBook", type = EntityGraph.EntityGraphType.LOAD)
-    @Query("""
-                   SELECT d
+                   SELECT d.id
                    FROM Discussion d
                    WHERE d.member = :member
             """)
-    List<Discussion> findDiscussionsByMember(@Param("member") final Member member);
+    List<Long> findDiscussionIdsByMember(@Param("member") final Member member);
 
     @Query("""
                    SELECT d
@@ -50,18 +42,17 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
 
     @EntityGraph(value = "Discussion.withMemberAndBook", type = EntityGraph.EntityGraphType.LOAD)
     @Query("""
-                    SELECT d
+                    SELECT d.id
                     FROM Discussion d
             """)
-    Slice<Discussion> findAllBy(final Pageable pageable);
+    Slice<Long> findAllIdsBy(final Pageable pageable);
 
-    @EntityGraph(value = "Discussion.withMemberAndBook", type = EntityGraph.EntityGraphType.LOAD)
     @Query("""
-                    SELECT d
+                    SELECT d.id
                     FROM Discussion d
                     WHERE :cursorId IS NULL OR d.id < :cursorId
             """)
-    Slice<Discussion> findDiscussionsLessThan(
+    Slice<Long> findDiscussionIdsLessThan(
             @Param("cursorId") final Long cursorId,
             final Pageable pageable
     );
@@ -112,15 +103,14 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
     )
     List<Long> findHotDiscussionIds(@Param("sinceDate") final LocalDateTime sinceDate, final Pageable pageable);
 
-    @EntityGraph(value = "Discussion.withMemberAndBook", type = EntityGraph.EntityGraphType.LOAD)
     @Query(value = """
             SELECT DISTINCT t FROM (
-                SELECT d
+                SELECT d.id
                 FROM discussion d
                 WHERE d.member_id = :memberId AND d.deleted_at IS NULL
                 
                 UNION ALL
-                SELECT d
+                SELECT d.id
                 FROM discussion d
                 JOIN comment c ON c.discussion_id = d.id
                 WHERE c.member_id = :memberId
@@ -128,7 +118,7 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
                     AND c.deleted_at IS NULL
                 
                 UNION ALL
-                SELECT d
+                SELECT d.id
                 FROM discussion d
                 JOIN comment c ON c.discussion_id = d.id
                 JOIN reply r ON r.comment_id = c.id
@@ -138,54 +128,7 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
                     AND r.deleted_at IS NULL
             ) AS t
             """, nativeQuery = true)
-    List<Discussion> findParticipatedDiscussionIdsByMember2(@Param("memberId") final Long memberId);
-
-    @Query(value = """
-                SELECT d.id
-                FROM discussion d
-                WHERE d.member_id = :memberId
-                AND d.deleted_at IS NULL
-                    
-                UNION
-                    
-                SELECT d.id
-                FROM discussion d
-                JOIN comment c ON c.discussion_id = d.id
-                WHERE c.member_id = :memberId
-                AND d.deleted_at IS NULL
-                AND c.deleted_at IS NULL
-                    
-                UNION
-                    
-                SELECT d.id
-                FROM discussion d
-                JOIN comment c ON c.discussion_id = d.id
-                JOIN reply r ON r.comment_id = c.id
-                WHERE r.member_id = :memberId
-                AND d.deleted_at IS NULL
-                AND c.deleted_at IS NULL
-                AND r.deleted_at IS NULL
-            """, nativeQuery = true)
     List<Long> findParticipatedDiscussionIdsByMember(@Param("memberId") final Long memberId);
-
-
-    @Query("""
-        SELECT d.id
-        FROM Discussion d
-        JOIN Comment c ON c.discussion = d
-        WHERE c.createdAt >= :periodStart
-        GROUP BY d
-        HAVING (
-           :lastDiscussionLatestCommentId IS NULL
-            OR MAX(c.id) < :lastDiscussionLatestCommentId
-        )
-        ORDER BY MAX(c.id) DESC
-   """)
-    List<Long> findActiveDiscussionsByCursor(
-            @Param("periodStart") final LocalDateTime periodStart,
-            @Param("lastDiscussionLatestCommentId") final Long lastDiscussionLatestCommentId,
-            final Pageable pageable
-    );
 
     @Query(
         value = """
@@ -211,31 +154,29 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
         """,
         nativeQuery = true
     )
-    List<Long> findActiveDiscussionsByCursorNative(
+    List<Long> findActiveDiscussionsByCursor(
             @Param("periodStart") final LocalDateTime periodStart,
             @Param("lastDiscussionLatestCommentId") final Long lastDiscussionLatestCommentId,
             @Param("pageSize") final int pageSize
     );
 
-    @EntityGraph(value = "Discussion.withMemberAndBook", type = EntityGraph.EntityGraphType.LOAD)
     @Query("""
-        SELECT d
+        SELECT d.id
         FROM Discussion d
         WHERE d.book.id = :bookId
     """)
-    Slice<Discussion> findDiscussionsByBookId(
+    Slice<Long> findDiscussionIdsByBookId(
             @Param("bookId") final Long bookId,
             final Pageable pageable
     );
 
-    @EntityGraph(value = "Discussion.withMemberAndBook", type = EntityGraph.EntityGraphType.LOAD)
     @Query("""
-        SELECT d
+        SELECT d.id
         FROM Discussion d
         WHERE d.book.id = :bookId 
         AND (:cursorId IS NULL OR d.id < :cursorId)
     """)
-    Slice<Discussion> findDiscussionsByBookIdLessThan(
+    Slice<Long> findDiscussionIdsByBookIdLessThan(
             @Param("bookId") final Long bookId,
             @Param("cursorId") final Long cursorId,
             final Pageable pageable
@@ -280,27 +221,4 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
                 WHERE d.id = :discussionId
             """)
     void decreaseLikeCount(@Param("discussionId") final Long discussionId);
-
-    @Query("""
-            SELECT new todoktodok.backend.discussion.application.dto.response.DiscussionResponse(
-                d.id,
-                d.title,
-                d.content,
-                d.createdAt,
-                d.viewCount,
-                d.book,
-                d.member,
-                (SELECT COUNT(dl.id) FROM DiscussionLike dl WHERE dl.discussion = d),
-                (SELECT COUNT(c.id) FROM Comment c WHERE c.discussion = d) + (SELECT COUNT(r.id) FROM Reply r WHERE r.comment.discussion = d),
-                EXISTS(SELECT 1 FROM DiscussionLike dl2 WHERE dl2.discussion = d AND dl2.member = :member)
-            )
-            FROM Discussion d
-            LEFT JOIN d.book b
-            LEFT JOIN d.member m
-            WHERE d.id IN :discussionIds
-            """)
-    List<DiscussionResponse> findDiscussionResponses(
-            @Param("discussionIds") final List<Long> discussionIds,
-            @Param("member") final Member member
-    );
 }

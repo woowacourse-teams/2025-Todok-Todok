@@ -82,15 +82,25 @@ public class MemberQueryService {
     }
 
     private List<DiscussionResponse> getCreatedDiscussions(final Member member) {
-        final List<Discussion> createdDiscussions = discussionRepository.findDiscussionsByMember(member);
+        final List<Long> createdDiscussionIds = discussionRepository.findDiscussionIdsByMember(member);
+        final Map<Long, Discussion> createdDiscussions = discussionRepository.findDiscussionsInIds(createdDiscussionIds).stream()
+                .collect(Collectors.toMap(Discussion::getId, discussion -> discussion));
+        final List<Discussion> sortedCreatedDiscussions = createdDiscussionIds.stream()
+                .map(createdDiscussions::get)
+                .toList();
 
-        return getDiscussionsResponses(createdDiscussions, member);
+        return getDiscussionsResponses(sortedCreatedDiscussions, member);
     }
 
     private List<DiscussionResponse> getParticipatedDiscussions(final Member member) {
-        final List<Discussion> participatedDiscussions = discussionRepository.findParticipatedDiscussionIdsByMember2(member.getId());
+        final List<Long> participatedDiscussionIds = discussionRepository.findParticipatedDiscussionIdsByMember(member.getId());
+        final Map<Long, Discussion> participatedDiscussions = discussionRepository.findDiscussionsInIds(participatedDiscussionIds).stream()
+                .collect(Collectors.toMap(Discussion::getId, discussion -> discussion));
+        final List<Discussion> sortedParticipatedDiscussions = participatedDiscussionIds.stream()
+                .map(participatedDiscussions::get)
+                .toList();
 
-        return getDiscussionsResponses(participatedDiscussions, member);
+        return getDiscussionsResponses(sortedParticipatedDiscussions, member);
     }
 
     private List<DiscussionResponse> getDiscussionsResponses(

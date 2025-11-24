@@ -68,12 +68,12 @@ public interface DiscussionLikeRepository extends JpaRepository<DiscussionLike, 
 
     boolean existsByMemberAndDiscussion(final Member member, final Discussion discussion);
 
-    @EntityGraph(value = "Discussion.withMemberAndBook", type = EntityGraph.EntityGraphType.LOAD)
+//    @EntityGraph(value = "Discussion.withMemberAndBook", type = EntityGraph.EntityGraphType.LOAD)
     @Query("""
-                SELECT dl.discussion
+                SELECT dl.discussion.id
                 FROM DiscussionLike dl
                 WHERE dl.member = :member
                 ORDER BY dl.discussion.id DESC
             """)
-    List<Discussion> findLikedDiscussionIdsByMember(@Param("member") final Member member);
+    List<Long> findLikedDiscussionIdsByMember(@Param("member") final Member member);
 }
