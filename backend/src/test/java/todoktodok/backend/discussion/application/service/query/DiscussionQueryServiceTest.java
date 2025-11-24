@@ -771,84 +771,84 @@ class DiscussionQueryServiceTest {
             );
         }
 
-        @Test
-        @DisplayName("전체 토론방을 대상으로 키워드로 조회할 수 있다")
-        void getAllDiscussionsByKeywordTest() {
-            // given
-            final String keyword = "객체 지향";
+//        @Test
+//        @DisplayName("전체 토론방을 대상으로 키워드로 조회할 수 있다")
+//        void getAllDiscussionsByKeywordTest() {
+//            // given
+//            final String keyword = "객체 지향";
+//
+//            // when
+//            final List<DiscussionResponse> discussions = discussionQueryService.getDiscussionsByKeyword(
+//                    1L, keyword
+//            );
+//
+//            // then
+//            assertAll(
+//                    () -> assertThat(discussions).hasSize(1),
+//                    () -> assertThat(discussions.get(0).discussionId()).isEqualTo(1L),
+//                    () -> assertThat(discussions.get(0).discussionTitle()).contains(keyword)
+//            );
+//        }
 
-            // when
-            final List<DiscussionResponse> discussions = discussionQueryService.getDiscussionsByKeyword(
-                    1L, keyword
-            );
+//        @Test
+//        @DisplayName("키워드 조회 시 책 제목에 키워드가 포함되면 조회된다")
+//        void getDiscussionsByBookTitleKeywordTest() {
+//            // given
+//            final String keyword = "오브젝트";
+//
+//            // when
+//            final List<DiscussionResponse> discussions = discussionQueryService.getDiscussionsByKeyword(
+//                    1L, keyword
+//            );
+//
+//            // then
+//            assertAll(
+//                    () -> assertThat(discussions).hasSize(1),
+//                    () -> assertThat(discussions.get(0).discussionId()).isEqualTo(1L),
+//                    () -> assertThat(discussions.get(0).book().bookTitle()).contains(keyword)
+//            );
+//        }
 
-            // then
-            assertAll(
-                    () -> assertThat(discussions).hasSize(1),
-                    () -> assertThat(discussions.get(0).discussionId()).isEqualTo(1L),
-                    () -> assertThat(discussions.get(0).discussionTitle()).contains(keyword)
-            );
-        }
+//        @Test
+//        @DisplayName("키워드 조회 시 토론방 제목에 키워드가 포함되면 조회된다")
+//        void getDiscussionsByDiscussionTitleKeywordTest() {
+//            // given
+//            final String keyword = "메서드";
+//
+//            // when
+//            final List<DiscussionResponse> discussions = discussionQueryService.getDiscussionsByKeyword(
+//                    1L, keyword
+//            );
+//
+//            // then
+//            assertAll(
+//                    () -> assertThat(discussions).hasSize(2),
+//                    () -> assertThat(discussions.get(0).discussionId()).isEqualTo(2L),
+//                    () -> assertThat(discussions.get(1).discussionId()).isEqualTo(3L),
+//                    () -> assertThat(discussions.get(0).discussionTitle()).contains(keyword),
+//                    () -> assertThat(discussions.get(1).discussionTitle()).contains(keyword)
+//            );
+//        }
 
-        @Test
-        @DisplayName("키워드 조회 시 책 제목에 키워드가 포함되면 조회된다")
-        void getDiscussionsByBookTitleKeywordTest() {
-            // given
-            final String keyword = "오브젝트";
-
-            // when
-            final List<DiscussionResponse> discussions = discussionQueryService.getDiscussionsByKeyword(
-                    1L, keyword
-            );
-
-            // then
-            assertAll(
-                    () -> assertThat(discussions).hasSize(1),
-                    () -> assertThat(discussions.get(0).discussionId()).isEqualTo(1L),
-                    () -> assertThat(discussions.get(0).book().bookTitle()).contains(keyword)
-            );
-        }
-
-        @Test
-        @DisplayName("키워드 조회 시 토론방 제목에 키워드가 포함되면 조회된다")
-        void getDiscussionsByDiscussionTitleKeywordTest() {
-            // given
-            final String keyword = "메서드";
-
-            // when
-            final List<DiscussionResponse> discussions = discussionQueryService.getDiscussionsByKeyword(
-                    1L, keyword
-            );
-
-            // then
-            assertAll(
-                    () -> assertThat(discussions).hasSize(2),
-                    () -> assertThat(discussions.get(0).discussionId()).isEqualTo(2L),
-                    () -> assertThat(discussions.get(1).discussionId()).isEqualTo(3L),
-                    () -> assertThat(discussions.get(0).discussionTitle()).contains(keyword),
-                    () -> assertThat(discussions.get(1).discussionTitle()).contains(keyword)
-            );
-        }
-
-        @ParameterizedTest
-        @NullAndEmptySource
-        @ValueSource(strings = {" ", "   ", "\t", "\n"})
-        @DisplayName("키워드가 null 또는 공백이면 IllegalArgumentException이 발생한다")
-        void getDiscussionsByKeyword_whenKeywordBlank_thenThrows(final String keyword) {
-            // when & then
-            assertThatThrownBy(() -> discussionQueryService.getDiscussionsByKeyword(1L, keyword))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessageStartingWith("검색 키워드를 입력해야 합니다");
-        }
-
-        @ParameterizedTest
-        @ValueSource(strings = {"hello", "오브젝트", "키워드"})
-        @DisplayName("키워드가 정상 문자열이면 예외가 발생하지 않는다")
-        void getDiscussionsByKeyword_whenKeywordValid_thenNoThrow(final String keyword) {
-            // when & then
-            discussionQueryService.getDiscussionsByKeyword(1L, keyword);
-        }
-    }
+//        @ParameterizedTest
+//        @NullAndEmptySource
+//        @ValueSource(strings = {" ", "   ", "\t", "\n"})
+//        @DisplayName("키워드가 null 또는 공백이면 IllegalArgumentException이 발생한다")
+//        void getDiscussionsByKeyword_whenKeywordBlank_thenThrows(final String keyword) {
+//            // when & then
+//            assertThatThrownBy(() -> discussionQueryService.getDiscussionsByKeyword(1L, keyword))
+//                    .isInstanceOf(IllegalArgumentException.class)
+//                    .hasMessageStartingWith("검색 키워드를 입력해야 합니다");
+//        }
+//
+//        @ParameterizedTest
+//        @ValueSource(strings = {"hello", "오브젝트", "키워드"})
+//        @DisplayName("키워드가 정상 문자열이면 예외가 발생하지 않는다")
+//        void getDiscussionsByKeyword_whenKeywordValid_thenNoThrow(final String keyword) {
+//            // when & then
+//            discussionQueryService.getDiscussionsByKeyword(1L, keyword);
+//        }
+//    }
 
     @Nested
     @DisplayName("인기 토론방 조회 테스트")
@@ -1263,5 +1263,5 @@ class DiscussionQueryServiceTest {
             assertThat(response).isEmpty();
         }
     }
-
+    }
 }

@@ -440,7 +440,7 @@ public interface DiscussionApiDocs {
                     description = "토론방 필터링 목록 조회 성공",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = DiscussionResponse.class),
+                            schema = @Schema(implementation = LatestDiscussionPageResponse.class),
                             examples = @ExampleObject(
                                     value = """
                                             [
@@ -534,7 +534,7 @@ public interface DiscussionApiDocs {
                             )
                     ))
     })
-    ResponseEntity<List<DiscussionResponse>> getDiscussionsByKeyword(
+    ResponseEntity<LatestDiscussionPageResponse> getDiscussionsByKeyword(
             @Parameter(hidden = true) final Long memberId,
             @Parameter(
                     description = "도서 제목 혹은 저자",
@@ -542,7 +542,21 @@ public interface DiscussionApiDocs {
                             schema = @Schema(implementation = String.class),
                             examples = @ExampleObject(value = "오브젝트")
                     )
-            ) final String keyword
+            ) final String keyword,
+            @Parameter(
+                    description = "페이지 사이즈",
+                    content = @Content(
+                            schema = @Schema(implementation = Integer.class),
+                            examples = @ExampleObject(value = "10")
+                    )
+            ) final int size,
+            @Parameter(
+                    description = "페이지 커서",
+                    content = @Content(
+                            schema = @Schema(implementation = String.class),
+                            examples = @ExampleObject(value = "NA==")
+                    )
+            ) final String cursor
     );
 
     @Operation(summary = "인기 토론방 조회 API")

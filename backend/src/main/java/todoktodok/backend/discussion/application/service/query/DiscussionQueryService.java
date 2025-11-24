@@ -76,14 +76,25 @@ public class DiscussionQueryService {
         return createPageResponse(discussionSlice, member);
     }
 
-    public List<DiscussionResponse> getDiscussionsByKeyword(
+    public LatestDiscussionPageResponse getDiscussionsByKeyword(
             final Long memberId,
-            final String keyword
+            final String keyword,
+            final int size,
+            final String cursor
     ) {
         validateKeywordNotBlank(keyword);
+        validatePageSize(size);
 
         final Member member = findMember(memberId);
-        return getDiscussionsByKeyword(keyword, member);
+        final String keywordWithPrefix = String.format("+%s*", keyword);
+
+        // 전체 개수 조회
+        final long totalCount = discussionRepository.countSearchResultsByKeyword(keywordWithPrefix);
+
+        // 페이지네이션된 결과 조회
+        final Slice<Long> discussionIdsSlice = sliceDiscussionsByKeyword(keyword, cursor, size);
+
+        return createPageResponseWithTotalCount(discussionIdsSlice, member, totalCount);
     }
 
     public LatestDiscussionPageResponse getDiscussionsByBook(
@@ -226,6 +237,39 @@ public class DiscussionQueryService {
         return discussionRepository.findDiscussionIdsLessThan(cursorId, pageable);
     }
 
+    private Slice<Long> sliceDiscussionsByKeyword(
+            final String keyword,
+            final String cursor,
+            final int size
+    ) {
+        final String keywordWithPrefix = String.format("+%s*", keyword);
+        final Pageable pageable = PageRequest.of(0, size, Direction.DESC, "id");
+        final Long cursorId = (cursor == null || cursor.isBlank()) ? null : decodeCursor(cursor);
+
+        return discussionRepository.searchIdsByKeywordWithCursor(keywordWithPrefix, cursorId, pageable);
+    }
+
+    private LatestDiscussionPageResponse createPageResponseWithTotalCount(
+            final Slice<Long> discussionIdsSlice,
+            final Member member,
+            final long totalCount
+    ) {
+        final List<Long> discussionIds = discussionIdsSlice.getContent();
+        final Map<Long, Discussion> discussions = discussionRepository.findDiscussionsInIds(discussionIds).stream()
+                .collect(Collectors.toMap(Discussion::getId, discussion -> discussion));
+        final List<Discussion> sortedDiscussions = discussionIds.stream()
+                .map(discussions::get)
+                .toList();
+
+        final boolean hasNextPage = discussionIdsSlice.hasNext();
+        final String nextCursor = findNextCursor(hasNextPage, sortedDiscussions);
+
+        return new LatestDiscussionPageResponse(
+                getDiscussionsResponses(sortedDiscussions, member),
+                new PageInfo(hasNextPage, nextCursor, totalCount)
+        );
+    }
+
     private String processBlankCursor(final String cursor) {
         if (cursor == null || cursor.isBlank()) {
             return null;
@@ -258,17 +302,6 @@ public class DiscussionQueryService {
 
     private String encodeCursorId(final Long id) {
         return Base64.getUrlEncoder().encodeToString(id.toString().getBytes());
-    }
-
-    private List<DiscussionResponse> getDiscussionsByKeyword(
-            final String keyword,
-            final Member member
-    ) {
-        final String keywordWithPrefix = String.format("+%s*", keyword);
-        final List<Long> discussionIds = discussionRepository.searchIdsByKeyword(keywordWithPrefix);
-        final List<Discussion> discussions = discussionRepository.findDiscussionsInIds(discussionIds);
-
-        return getDiscussionsResponses(discussions, member);
     }
 
     private List<DiscussionResponse> getDiscussionsResponses(
@@ -345,12 +378,17 @@ public class DiscussionQueryService {
             final Member member
     ) {
         final List<Long> discussionIds = discussionSlice.getContent();
-        final List<Discussion> discussions = discussionRepository.findDiscussionsInIds(discussionIds);
+        final Map<Long, Discussion> discussions = discussionRepository.findDiscussionsInIds(discussionIds).stream()
+                .collect(Collectors.toMap(Discussion::getId, discussion -> discussion));
+        final List<Discussion> sortedDiscussions = discussionIds.stream()
+                .map(discussions::get)
+                .toList();
+
         final boolean hasNextPage = discussionSlice.hasNext();
-        final String nextCursor = findNextCursor(hasNextPage, discussions);
+        final String nextCursor = findNextCursor(hasNextPage, sortedDiscussions);
 
         return new LatestDiscussionPageResponse(
-                getDiscussionsResponses(discussions, member),
+                getDiscussionsResponses(sortedDiscussions, member),
                 new PageInfo(hasNextPage, nextCursor)
         );
     }
