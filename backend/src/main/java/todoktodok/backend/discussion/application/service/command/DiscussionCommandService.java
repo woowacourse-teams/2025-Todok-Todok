@@ -5,6 +5,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -107,30 +108,38 @@ public class DiscussionCommandService {
         final Optional<DiscussionMemberView> discussionMemberView
                 = discussionMemberViewRepository.findByMemberAndDiscussion(member, discussion);
 
-        if (discussionMemberView.isEmpty()) {
-            insertMemberView(member, discussion);
+        if (discussionMemberView.isPresent()) {
+            updateMemberViewIfAfter10Minutes(discussionMemberView.get(), discussionId);
             return;
         }
 
-        if (discussionMemberView.get().isModifiedDatePassedFrom(VIEW_THRESHOLD)) {
-            updateMemberView(discussionMemberView.get().getId(), discussionId);
-        }
+        insertMemberView(member, discussion);
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void insertMemberView(final Member member, final Discussion discussion) {
-        final DiscussionMemberView view = DiscussionMemberView.builder()
-                .discussion(discussion)
-                .member(member)
-                .build();
-        discussionMemberViewRepository.save(view);
-        increaseViewCountSafely(discussion.getId());
+        try {
+            final DiscussionMemberView view = DiscussionMemberView.builder()
+                    .discussion(discussion)
+                    .member(member)
+                    .build();
+
+            discussionMemberViewRepository.save(view);
+            increaseViewCountSafely(discussion.getId());
+        } catch (final DataIntegrityViolationException e) {
+            // 비동기 로직에서 Race Condition 발생한 경우 다시 업데이트 처리
+            final DiscussionMemberView savedDiscussionMemberView = discussionMemberViewRepository.findByMemberAndDiscussion(member, discussion)
+                    .orElseThrow();
+            updateMemberViewIfAfter10Minutes(savedDiscussionMemberView, discussion.getId());
+        }
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void updateMemberView(final Long memberViewId, final Long discussionId) {
-        discussionMemberViewRepository.updateModifiedAtById(memberViewId, LocalDateTime.now());
-        increaseViewCountSafely(discussionId);
+    public void updateMemberViewIfAfter10Minutes(final DiscussionMemberView discussionMemberView, final Long discussionId) {
+        if (discussionMemberView.isModifiedDatePassedFrom(VIEW_THRESHOLD)) {
+            discussionMemberViewRepository.updateModifiedAtById(discussionMemberView.getId(), LocalDateTime.now());
+            increaseViewCountSafely(discussionId);
+        }
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
