@@ -12,6 +12,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.concurrent.TimeUnit;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -23,6 +25,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import todoktodok.backend.DatabaseInitializer;
@@ -44,9 +47,22 @@ class DiscussionQueryServiceTest {
     @Autowired
     private DiscussionQueryService discussionQueryService;
 
+    @Autowired
+    private ThreadPoolTaskExecutor taskExecutor;
+
     @BeforeEach
     void setUp() {
         databaseInitializer.clear();
+    }
+
+    @AfterEach
+    void tearDown() {
+        // 비동기 테스트 떄문에 현재 큐에 남아있는 작업이나 활성 스레드가 없을 때까지 대기
+        await().atMost(5, TimeUnit.SECONDS)
+                .until(() ->
+                    taskExecutor.getThreadPoolExecutor().getActiveCount() == 0 &&
+                        taskExecutor.getThreadPoolExecutor().getQueue().isEmpty()
+        );
     }
 
     @Test
