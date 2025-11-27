@@ -40,8 +40,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "/v3/api-docs",
                         "/v3/api-docs/**",
                         "/webjars/**",
-                        "/h2-console/**",
-                        "/actuator/health_check/readiness/**"
+                        "/h2-console/**"
                 );
     }
 
