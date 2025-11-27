@@ -526,7 +526,7 @@ class MemberCommandServiceTest {
                     () -> assertThat(discussionResponse.discussionId()).isEqualTo(discussionId),
                     () -> assertThat(memberResponse.memberId()).isEqualTo(deletedUserId),
                     () -> assertThat(memberResponse.nickname()).isEqualTo("(알수없음)"),
-                    () -> assertThat(memberResponse.profileImage()).isEqualTo("https://techcourse-project-2025.s3.ap-northeast-2.amazonaws.com/todoktodok-images/profile/todoki.png")
+                    () -> assertThat(memberResponse.profileImage()).isEqualTo("https://todoktodok.s3.ap-northeast-2.amazonaws.com/todoktodok-images/profile/todoki.png")
             );
         }
     }
