@@ -8,7 +8,7 @@ public record MemberResponse(
         String profileImage
 ) {
 
-    private static final String DELETED_MEMBER_PROFILE_IMAGE = "https://techcourse-project-2025.s3.ap-northeast-2.amazonaws.com/todoktodok-images/profile/todoki.png";
+    private static final String DELETED_MEMBER_PROFILE_IMAGE = "https://todoktodok.s3.ap-northeast-2.amazonaws.com/todoktodok-images/profile/todoki.png";
     private static final String DELETED_MEMBER_NICKNAME = "(알수없음)";
 
     public MemberResponse(final Member member) {
