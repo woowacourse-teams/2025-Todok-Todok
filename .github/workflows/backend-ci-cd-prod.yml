@@ -84,8 +84,6 @@ jobs:
           docker stop promtail_prod && echo "promtail_prod 컨테이너 중지 완료" || echo "promtail_prod 컨테이너 없음"
 
       - name: Docker Compose Pull & Up (no-build)
-        env:
-          ENV_ID: ${{ github.run_id }}
         run: |
           cd backend
           echo "ENV_ID: $ENV_ID"
