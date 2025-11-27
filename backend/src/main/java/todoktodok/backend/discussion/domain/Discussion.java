@@ -86,10 +86,6 @@ public class Discussion extends TimeStamp {
         this.content = content;
     }
 
-    public void updateViewCount() {
-        this.viewCount++;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {

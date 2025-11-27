@@ -4,8 +4,10 @@ import static java.time.temporal.ChronoUnit.MICROS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
+import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,7 +25,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.DatabaseInitializer;
 import todoktodok.backend.InitializerTimer;
 import todoktodok.backend.discussion.application.dto.response.ActiveDiscussionPageResponse;
@@ -32,7 +33,6 @@ import todoktodok.backend.discussion.application.dto.response.LatestDiscussionPa
 import todoktodok.backend.discussion.application.dto.response.PageInfo;
 
 @ActiveProfiles("test")
-@Transactional
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
 @ContextConfiguration(initializers = InitializerTimer.class)
 class DiscussionQueryServiceTest {
@@ -67,16 +67,20 @@ class DiscussionQueryServiceTest {
 
         final Long discussionId = 1L;
 
-        // when
-        final DiscussionResponse discussionResponse = discussionQueryService.getDiscussion(memberId, discussionId);
+        // when - then
+        await().atMost(Duration.ofSeconds(5))
+                .pollDelay(Duration.ofMillis(200))
+                .pollInterval(Duration.ofMillis(300))
+                .untilAsserted(() -> {
+                    final DiscussionResponse discussionResponse = discussionQueryService.getDiscussion(memberId, discussionId);
 
-        // then
-        assertAll(
-                () -> assertThat(discussionResponse.discussionId()).isEqualTo(discussionId),
-                () -> assertThat(discussionResponse.discussionTitle()).isEqualTo("클린코드에 대해 논의해볼까요"),
-                () -> assertThat(discussionResponse.discussionOpinion()).isEqualTo("클린코드만세"),
-                () -> assertThat(discussionResponse.viewCount()).isEqualTo(1)
-        );
+                    assertAll(
+                            () -> assertThat(discussionResponse.discussionId()).isEqualTo(discussionId),
+                            () -> assertThat(discussionResponse.discussionTitle()).isEqualTo("클린코드에 대해 논의해볼까요"),
+                            () -> assertThat(discussionResponse.discussionOpinion()).isEqualTo("클린코드만세"),
+                            () -> assertThat(discussionResponse.viewCount()).isEqualTo(1)
+                    );
+                });
     }
 
     @Test
@@ -99,11 +103,14 @@ class DiscussionQueryServiceTest {
 
         databaseInitializer.setDiscussionMemberViewInfo(memberId, discussionId, 10);
 
-        // when
-        final DiscussionResponse discussionResponse = discussionQueryService.getDiscussion(memberId, discussionId);
-
-        // then
-        assertThat(discussionResponse.viewCount()).isEqualTo(1);
+        // when - then
+        await().atMost(Duration.ofSeconds(5))
+                .pollDelay(Duration.ofMillis(200))
+                .pollInterval(Duration.ofMillis(300))
+                .untilAsserted(() -> {
+                    final DiscussionResponse discussionResponse = discussionQueryService.getDiscussion(memberId, discussionId);
+                    assertThat(discussionResponse.viewCount()).isEqualTo(1);
+                });
     }
 
     @Test
@@ -126,10 +133,35 @@ class DiscussionQueryServiceTest {
 
         databaseInitializer.setDiscussionMemberViewInfo(memberId, discussionId, 9);
 
+        // when - then
+        await().atMost(Duration.ofSeconds(5))
+                .pollDelay(Duration.ofMillis(200))
+                .pollInterval(Duration.ofMillis(300))
+                .untilAsserted(() -> {
+                    final DiscussionResponse discussionResponse = discussionQueryService.getDiscussion(memberId, discussionId);
+                    assertThat(discussionResponse.viewCount()).isEqualTo(0);
+                });
+    }
+
+    @Test
+    @DisplayName("토론방 조회 시 예외가 발생하면 조회수가 증가하지 않고 예외를 반환한다")
+    void getDiscussion_ifThrowException_notIncrementViewCount() {
+        // given
+        databaseInitializer.setDefaultUserInfo();
+        databaseInitializer.setDefaultBookInfo();
+        databaseInitializer.setDefaultDiscussionInfo();
+
+        final Long memberId = 1L;
+        final Long existsDiscussionId = 1L;
+        final Long notExistsDiscussionId = 999L;
+
         // when
-        final DiscussionResponse discussionResponse = discussionQueryService.getDiscussion(memberId, discussionId);
+        assertThatThrownBy(() -> discussionQueryService.getDiscussion(memberId, notExistsDiscussionId))
+                .isInstanceOf(NoSuchElementException.class)
+                .hasMessageContaining("해당 토론방을 찾을 수 없습니다");
 
         // then
+        final DiscussionResponse discussionResponse = discussionQueryService.getDiscussion(memberId, existsDiscussionId);
         assertThat(discussionResponse.viewCount()).isEqualTo(0);
     }
 
