@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/actuator/health_check/readiness")
+@RequestMapping("/readiness")
 public class ReadinessController {
 
     private final ApplicationContext context;
