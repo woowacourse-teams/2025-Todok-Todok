@@ -11,7 +11,7 @@ positions:
 
 clients:
   # push할 Loki의 주소
-  - url: http://10.0.0.72:3100/loki/api/v1/push
+  - url: http://10.0.1.43:3100/loki/api/v1/push
 
 scrape_configs:
   # 해당 로그 수집 작업의 이름을 정의합니다.

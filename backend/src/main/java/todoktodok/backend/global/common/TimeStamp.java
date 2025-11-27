@@ -34,10 +34,6 @@ public abstract class TimeStamp {
     }
 
     public boolean isModifiedDatePassedFrom(final int minute) {
-        if (LocalDateTime.now().isAfter(modifiedAt.plusMinutes(minute))) {
-            modifiedAt = LocalDateTime.now();
-            return true;
-        }
-        return false;
+        return LocalDateTime.now().isAfter(modifiedAt.plusMinutes(minute));
     }
 }
