@@ -48,6 +48,8 @@ dependencies {
     implementation 'software.amazon.awssdk:s3'
     implementation 'com.google.firebase:firebase-admin:9.6.0'
 
+    implementation("io.github.resilience4j:resilience4j-spring-boot3:2.2.0")
+
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'com.mysql:mysql-connector-j'
     implementation 'org.flywaydb:flyway-core'

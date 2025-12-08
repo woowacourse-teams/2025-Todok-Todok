@@ -26,6 +26,7 @@ spring:
       on-profile: local
     import:
       - submodule/security/firebase.yml
+      - "application-external.yml"
 
 auth:
   mode: google

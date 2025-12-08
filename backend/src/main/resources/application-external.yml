@@ -1,0 +1,19 @@
+resilience4j:
+  # 1. 타임아웃 설정 (TimeLimiter)
+  timelimiter:
+    instances:
+      # 외부 API 호출에 사용할 인스턴스 이름 (예: externalBookSearch)
+      bookSearch:
+        timeoutDuration: 2s # 타임아웃 2초 설정
+        cancelRunningFuture: true # 타임아웃 발생 시 실행 중인 Future 취소
+
+  # 2. 재시도 설정 (Retry)
+  retry:
+    instances:
+      bookSearch:
+        maxAttempts: 2 # 재시도 1회 (총 2번의 시도)
+        waitDuration: 0s # 재시도 간 대기 시간 (선택 사항, 기본값 사용 가능)
+        retryExceptions:
+          - org.springframework.web.client.ResourceAccessException # RestClient 타임아웃 예외
+          - java.util.concurrent.TimeoutException # TimeLimiter 타임아웃 예외
+          - todoktodok.backend.book.infrastructure.aladin.exception.AladinApiException # 커스텀 예외
