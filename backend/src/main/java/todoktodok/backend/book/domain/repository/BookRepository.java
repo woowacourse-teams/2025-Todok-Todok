@@ -34,7 +34,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
         WHERE b.deleted_at IS NULL
           AND MATCH(b.title, b.author) AGAINST(:keyword IN BOOLEAN MODE)
     """, nativeQuery = true)
-    Slice<Book> searchBookIdsByKeyword(
+    Slice<Book> searchBooksByKeyword(
             @Param("keyword") final String keyword,
             final Pageable pageable);
 

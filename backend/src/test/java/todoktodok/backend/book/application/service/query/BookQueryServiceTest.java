@@ -3,13 +3,13 @@ package todoktodok.backend.book.application.service.query;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.IntStream;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -334,7 +334,7 @@ public class BookQueryServiceTest {
             // when - then
             assertThatThrownBy(() -> bookQueryService.searchByPaging(size, cursor, keyword))
                     .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessageContaining("Base64로 디코드할 수 없는 cursor 값입니다");
+                    .hasMessageContaining("Base64로 디코드할 수 없는 page 값입니다");
         }
     }
 

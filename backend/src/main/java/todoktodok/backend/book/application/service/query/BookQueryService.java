@@ -96,7 +96,7 @@ public class BookQueryService {
         final String keywordWithPrefix = String.format("+%s*", keyword);
         final int totalSize = Long.valueOf(bookRepository.countByKeyword(keywordWithPrefix)).intValue();
         final Pageable pageable = PageRequest.of(page - 1, size, Sort.Direction.ASC, "id");
-        final List<Book> searchedBooks = bookRepository.searchBookIdsByKeyword(keywordWithPrefix, pageable).getContent();
+        final List<Book> searchedBooks = bookRepository.searchBooksByKeyword(keywordWithPrefix, pageable).getContent();
 
         return new AladinItemResponses(
                 searchedBooks.stream()
