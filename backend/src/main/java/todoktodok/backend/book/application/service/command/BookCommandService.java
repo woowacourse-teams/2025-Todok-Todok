@@ -1,14 +1,19 @@
 package todoktodok.backend.book.application.service.command;
 
 import java.util.NoSuchElementException;
+
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.book.application.dto.request.BookRequest;
+import todoktodok.backend.book.application.service.query.BookQueryService;
 import todoktodok.backend.book.domain.Book;
 import todoktodok.backend.book.domain.repository.BookRepository;
 import todoktodok.backend.book.infrastructure.aladin.AladinItemResponse;
 import todoktodok.backend.book.infrastructure.aladin.AladinItemResponses;
+import todoktodok.backend.book.infrastructure.aladin.AladinResilienceHandler;
 import todoktodok.backend.book.infrastructure.aladin.AladinRestClient;
 import todoktodok.backend.member.domain.repository.MemberRepository;
 
@@ -17,9 +22,12 @@ import todoktodok.backend.member.domain.repository.MemberRepository;
 @AllArgsConstructor
 public class BookCommandService {
 
+    private static final Logger log = LoggerFactory.getLogger(BookQueryService.class);
+
     private final BookRepository bookRepository;
     private final MemberRepository memberRepository;
     private final AladinRestClient aladinRestClient;
+    private final AladinResilienceHandler aladinResilienceHandler;
 
     public Long createOrUpdateBook(
             final Long memberId,
@@ -82,10 +90,14 @@ public class BookCommandService {
     }
 
     private AladinItemResponse getBookInfoFromAladin(final String isbn) {
-        final AladinItemResponses responses = aladinRestClient.searchBookByIsbn(isbn);
+        final AladinItemResponses responses = aladinResilienceHandler.applyWithResilienceAndReturnOrFail(
+                () -> aladinRestClient.searchBookByIsbn(isbn),
+                aladinResilienceHandler::applyBookSearch
+        );
+
         if (responses.isEmpty()) {
             throw new NoSuchElementException(
-                    String.format("알라딘 API에서 도서 정보를 찾을 수 없습니다: ISBN %s", isbn)
+                    String.format("알라딘 API에서 도서 정보를 찾을 수 없습니다: ISBN= %s", isbn)
             );
         }
         return responses.item().getFirst();

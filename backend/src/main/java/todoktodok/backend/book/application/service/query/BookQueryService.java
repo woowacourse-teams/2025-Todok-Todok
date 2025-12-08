@@ -68,9 +68,9 @@ public class BookQueryService {
         final int decodedPage = decodePage(page);
         final String cleanKeyword = keyword.trim();
 
-        final AladinItemResponses aladinItemResponses = aladinResilienceHandler.applyWithResilienceAndReturn(
+        final AladinItemResponses aladinItemResponses = aladinResilienceHandler.applyWithResilienceAndReturnOrFallback(
                 () -> aladinRestClient.searchBooksByKeywordWithPaging(cleanKeyword, decodedPage, size),
-                aladinResilienceHandler::applyBookSearchWithResilience,
+                aladinResilienceHandler::applyBookSearch,
                 exception -> fallbackBookSearch(cleanKeyword, decodedPage, size, exception)
         );
 

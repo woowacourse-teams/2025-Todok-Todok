@@ -121,6 +121,7 @@ public class AladinRestClient {
             }
             return response;
         } catch (final RestClientException e) {
+
             throw new AladinApiException(
                     String.format("알라딘 API 통신 중 오류: %s, uri= %s, errorMessage= %s", context, requestUri, e.getMessage())
             );
