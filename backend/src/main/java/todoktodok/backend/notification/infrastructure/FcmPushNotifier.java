@@ -20,7 +20,7 @@ import todoktodok.backend.notification.domain.repository.NotificationTokenReposi
 @AllArgsConstructor
 public class FcmPushNotifier {
 
-    private static final String TODOKTODOK_LOGO_URL = "https://techcourse-project-2025.s3.ap-northeast-2.amazonaws.com/todoktodok-images/profile/todoki.png";
+    private static final String TODOKTODOK_LOGO_URL = "https://todoktodok.s3.ap-northeast-2.amazonaws.com/todoktodok-images/profile/todoki.png";
     private static final Set<MessagingErrorCode> DELETABLE_ERRORS = Set.of(
             MessagingErrorCode.UNREGISTERED,
             MessagingErrorCode.INVALID_ARGUMENT
