@@ -4,6 +4,11 @@ import java.util.Base64;
 import java.util.List;
 import java.util.NoSuchElementException;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.book.application.dto.response.AladinBookResponse;
@@ -12,7 +17,9 @@ import todoktodok.backend.book.application.dto.response.LatestAladinBookPageResp
 import todoktodok.backend.book.application.dto.response.PageInfo;
 import todoktodok.backend.book.domain.Book;
 import todoktodok.backend.book.domain.repository.BookRepository;
+import todoktodok.backend.book.infrastructure.aladin.AladinItemResponse;
 import todoktodok.backend.book.infrastructure.aladin.AladinItemResponses;
+import todoktodok.backend.book.infrastructure.aladin.AladinResilienceHandler;
 import todoktodok.backend.book.infrastructure.aladin.AladinRestClient;
 
 @Service
@@ -25,9 +32,17 @@ public class BookQueryService {
     private static final int MAX_PAGE_SIZE = 50;
     private static final int MAX_CURSOR_SIZE = 20;
     private static final int MAX_SEARCHED_BOOK_SIZE = 200;
+    private static final Logger log = LoggerFactory.getLogger(BookQueryService.class);
 
     private final AladinRestClient aladinRestClient;
+    private final AladinResilienceHandler aladinResilienceHandler;
     private final BookRepository bookRepository;
+
+    public BookResponse getBook(final Long bookId) {
+        final Book book = findBook(bookId);
+
+        return new BookResponse(book);
+    }
 
     public List<AladinBookResponse> search(final String keyword) {
         validateKeyword(keyword);
@@ -44,33 +59,58 @@ public class BookQueryService {
 
     public LatestAladinBookPageResponse searchByPaging(
             final int size,
-            final String cursor,
+            final String page,
             final String keyword
     ) {
         validatePageSize(size);
         validateKeyword(keyword);
 
-        final int decodedCursor = decodeCursor(cursor);
+        final int decodedPage = decodePage(page);
         final String cleanKeyword = keyword.trim();
 
-        final AladinItemResponses aladinItemResponses =
-                aladinRestClient.searchBooksByKeywordWithPaging(cleanKeyword, decodedCursor, size);
+        final AladinItemResponses aladinItemResponses = aladinResilienceHandler.applyWithResilienceAndReturn(
+                () -> aladinRestClient.searchBooksByKeywordWithPaging(cleanKeyword, decodedPage, size),
+                aladinResilienceHandler::applyBookSearchWithResilience,
+                exception -> fallbackBookSearch(cleanKeyword, decodedPage, size, exception)
+        );
 
         final List<AladinBookResponse> searchedBooks = aladinItemResponses.item().stream()
                 .filter(book -> book.isbn13() != null && !book.isbn13().isEmpty())
                 .filter(book -> book.isbn13().matches(ISBN13_PATTERN))
                 .map(AladinBookResponse::new)
                 .toList();
-        final PageInfo pageInfo = createNextCursor(aladinItemResponses, searchedBooks, decodedCursor, size);
+        final PageInfo pageInfo = createNextPage(aladinItemResponses, searchedBooks, decodedPage, size);
         final int totalSize = getTotalSize(aladinItemResponses);
 
         return new LatestAladinBookPageResponse(searchedBooks, pageInfo, totalSize);
     }
 
-    public BookResponse getBook(final Long bookId) {
-        final Book book = findBook(bookId);
+    private AladinItemResponses fallbackBookSearch(
+            final String keyword,
+            final int page,
+            final int size,
+            final Throwable exception
+    ) {
+        log.error("알라딘 API 호출 실패 (원인 : {}). 데이터베이스에서 검색을 시도합니다", exception.getMessage());
 
-        return new BookResponse(book);
+        final String keywordWithPrefix = String.format("+%s*", keyword);
+        final int totalSize = Long.valueOf(bookRepository.countByKeyword(keywordWithPrefix)).intValue();
+        final Pageable pageable = PageRequest.of(page - 1, size, Sort.Direction.ASC, "id");
+        final List<Book> searchedBooks = bookRepository.searchBookIdsByKeyword(keywordWithPrefix, pageable).getContent();
+
+        return new AladinItemResponses(
+                searchedBooks.stream()
+                        .map(book -> new AladinItemResponse(
+                                book.getTitle(),
+                                book.getSummary(),
+                                book.getAuthor(),
+                                book.getPublisher(),
+                                book.getIsbn(),
+                                book.getImage()
+                        ))
+                        .toList(),
+                totalSize
+        );
     }
 
     private void validateKeyword(final String keyword) {
@@ -86,16 +126,16 @@ public class BookQueryService {
         }
     }
 
-    private int decodeCursor(final String cursor) {
+    private int decodePage(final String page) {
         try {
-            if (cursor == null || cursor.isBlank()) {
+            if (page == null || page.isBlank()) {
                 return 1;
             }
 
-            final String decoded = new String(Base64.getUrlDecoder().decode(cursor));
+            final String decoded = new String(Base64.getUrlDecoder().decode(page));
             return Integer.parseInt(decoded);
         } catch (final Exception e) {
-            throw new IllegalArgumentException(String.format("Base64로 디코드할 수 없는 cursor 값입니다: cursor = %s", cursor));
+            throw new IllegalArgumentException(String.format("Base64로 디코드할 수 없는 page 값입니다: page = %s", page));
         }
     }
 
@@ -104,25 +144,26 @@ public class BookQueryService {
         return Math.min(totalResultsFromAladin, MAX_SEARCHED_BOOK_SIZE);
     }
 
-    private PageInfo createNextCursor(
+    private PageInfo createNextPage(
             final AladinItemResponses aladinItemResponses,
             final List<AladinBookResponse> searchedBooks,
-            final int cursor,
+            final int page,
             final int requestedSize
     ) {
         final int currentSize = searchedBooks.size();
         final int fetchedItemSize = aladinItemResponses.item().size();
 
-        if (fetchedItemSize < requestedSize || cursor >= MAX_CURSOR_SIZE) {
+        if (fetchedItemSize < requestedSize || page >= MAX_CURSOR_SIZE) { //TODO totalSize = 5, fetchItemSize = 5, requestedSize = 5인 경우?
+            // TODO page같은 경우는 1씩 증가하는데, MAX_CURSOR_SIZE랑 비교하는 게 맞나?
             return new PageInfo(false, null, currentSize);
         }
 
-        final String nextCursor = encodeCursorId(cursor + 1);
+        final String nextCursor = encodePage(page + 1);
         return new PageInfo(true, nextCursor, currentSize);
     }
 
-    private String encodeCursorId(final Integer id) {
-        return Base64.getUrlEncoder().encodeToString(id.toString().getBytes());
+    private String encodePage(final Integer page) {
+        return Base64.getUrlEncoder().encodeToString(page.toString().getBytes());
     }
 
     private Book findBook(final Long bookId) {

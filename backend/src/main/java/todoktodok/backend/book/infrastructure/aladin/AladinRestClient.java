@@ -53,12 +53,12 @@ public class AladinRestClient {
 
     public AladinItemResponses searchBooksByKeywordWithPaging(
             final String searchBookKeyword,
-            final int cursor,
+            final int page,
             final int size
     ) {
         return getAladinItemResponses(
-            createSearchBooksUriByPaging(searchBookKeyword, cursor, size),
-            String.format("searchBookKeyword= %s, cursor= %d, size= %d", searchBookKeyword, cursor, size)
+            createSearchBooksUriByPaging(searchBookKeyword, page, size),
+            String.format("searchBookKeyword= %s, page= %d, size= %d", searchBookKeyword, page, size)
         );
     }
 
@@ -87,14 +87,14 @@ public class AladinRestClient {
 
     private Function<UriBuilder, URI> createSearchBooksUriByPaging(
             final String searchBookKeyword,
-            final int cursor,
+            final int page,
             final int size
     ) {
         return uriBuilder -> uriBuilder
                 .path(aladinItemSearchUri)
                 .queryParam("ttbkey", aladinApiKey)
                 .queryParam("Query", searchBookKeyword)
-                .queryParam("Start", cursor)
+                .queryParam("Start", page)
                 .queryParam("MaxResults", size)
                 .queryParam("CategoryId", DOMESTIC_COMPUTER_CATEGORY_ID)
                 .queryParam("Output", OUTPUT)
@@ -120,7 +120,6 @@ public class AladinRestClient {
                 );
             }
             return response;
-
         } catch (final RestClientException e) {
             throw new AladinApiException(
                     String.format("알라딘 API 통신 중 오류: %s, uri= %s, errorMessage= %s", context, requestUri, e.getMessage())

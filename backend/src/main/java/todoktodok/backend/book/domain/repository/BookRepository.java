@@ -2,6 +2,9 @@ package todoktodok.backend.book.domain.repository;
 
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -23,4 +26,24 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     WHERE r.member = :member
     """)
     List<Book> findActiveBooksByMember(@Param("member") final Member member);
+
+
+    @Query(value = """
+        SELECT b.*
+        FROM book b
+        WHERE b.deleted_at IS NULL
+          AND MATCH(b.title, b.author) AGAINST(:keyword IN BOOLEAN MODE)
+    """, nativeQuery = true)
+    Slice<Book> searchBookIdsByKeyword(
+            @Param("keyword") final String keyword,
+            final Pageable pageable);
+
+
+    @Query(value = """
+        SELECT COUNT(b.id)
+        FROM book b
+        WHERE b.deleted_at IS NULL
+          AND MATCH(b.title, b.author) AGAINST(:keyword IN BOOLEAN MODE)
+    """, nativeQuery = true)
+    long countByKeyword(@Param("keyword") final String keyword);
 }
