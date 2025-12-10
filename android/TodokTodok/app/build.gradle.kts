@@ -115,13 +115,3 @@ dependencies {
 
     lintChecks(project(":lint"))
 }
-
-afterEvaluate {
-    tasks.named("preBuild") {
-        dependsOn("ktlintFormat")
-    }
-
-    tasks.named("assembleDebug") {
-        dependsOn("lintDebug")
-    }
-}
