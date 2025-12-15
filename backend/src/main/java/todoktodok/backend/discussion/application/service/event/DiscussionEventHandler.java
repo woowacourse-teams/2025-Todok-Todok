@@ -81,7 +81,12 @@ public class DiscussionEventHandler {
     @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void handleDiscussionView(final DiscussionViewEvent discussionViewEvent) {
-        log.info("DiscussionViewEvent 실행");
-        discussionCommandService.updateDiscussionMemberView(discussionViewEvent.memberId(), discussionViewEvent.discussionId());
+        try {
+            log.info("DiscussionViewEvent 실행");
+            discussionCommandService.updateDiscussionMemberView(discussionViewEvent.memberId(),
+                    discussionViewEvent.discussionId());
+        } catch (final Exception e) {
+            log.error("비동기 처리 중 오류 발생, cause: {}", e.getMessage(), e);
+        }
     }
 }

@@ -116,23 +116,9 @@ public class DiscussionQueryService {
 
         final Member member = findMember(memberId);
         final LocalDateTime sinceDate = LocalDate.now().minusDays(period).atStartOfDay();
-        final List<Long> discussionIds = discussionRepository.findAllIds();
+        final Pageable pageable = PageRequest.of(0, count);
 
-        if (discussionIds.isEmpty()) {
-            return Collections.emptyList();
-        }
-
-        final List<DiscussionLikeSummaryDto> likeSinceCounts = discussionLikeRepository.findLikeSummariesByDiscussionIdsSinceDate(
-                member, discussionIds, sinceDate);
-        final List<DiscussionCommentCountDto> commentSinceCounts = commentRepository.findCommentCountsByDiscussionIdsSinceDate(
-                discussionIds, sinceDate);
-
-        final Map<Long, LikeCountAndIsLikedByMeDto> likesByDiscussionId = mapLikeSummariesByDiscussionId(
-                likeSinceCounts);
-        final Map<Long, Integer> commentsByDiscussionId = mapTotalCommentCountsByDiscussionId(commentSinceCounts);
-
-        final List<Long> hotDiscussionIds = findHotDiscussions(count, likesByDiscussionId, commentsByDiscussionId,
-                discussionIds);
+        final List<Long> hotDiscussionIds = discussionRepository.findHotDiscussionIds(sinceDate, pageable);
 
         return getDiscussionsResponses(hotDiscussionIds, member);
     }
@@ -202,7 +188,7 @@ public class DiscussionQueryService {
     }
 
     private Discussion findDiscussion(final Long discussionId) {
-        return discussionRepository.findById(discussionId)
+        return discussionRepository.findByIdWithMemberAndBook(discussionId)
                 .orElseThrow(() -> new NoSuchElementException(
                                 String.format("해당 토론방을 찾을 수 없습니다: discussionId= %s", discussionId)
                         )

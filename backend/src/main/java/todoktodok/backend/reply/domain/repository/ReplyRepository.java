@@ -1,6 +1,8 @@
 package todoktodok.backend.reply.domain.repository;
 
 import java.util.List;
+
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,6 +14,9 @@ public interface ReplyRepository extends JpaRepository<Reply, Long> {
 
     int countRepliesByComment(final Comment comment);
 
+    @EntityGraph(attributePaths = {"member"})
+    List<Reply> findRepliesByComment(final Comment comment);
+
     @Query("""
                 SELECT new todoktodok.backend.comment.application.service.query.CommentReplyCountDto(c.id, COUNT(r))
                 FROM Comment c
@@ -20,8 +25,6 @@ public interface ReplyRepository extends JpaRepository<Reply, Long> {
                 GROUP BY c.id
             """)
     List<CommentReplyCountDto> findReplyCountsByCommentIds(@Param("commentIds") final List<Long> commentIds);
-
-    List<Reply> findRepliesByComment(final Comment comment);
 
     boolean existsByComment(final Comment comment);
 }

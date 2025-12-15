@@ -83,7 +83,7 @@ public class CommentQueryService {
     }
 
     private Comment findComment(final Long commentId) {
-        return commentRepository.findById(commentId)
+        return commentRepository.findByIdWithMember(commentId)
                 .orElseThrow(() -> new NoSuchElementException(String.format("해당 댓글을 찾을 수 없습니다: commentId = %s", commentId)));
     }
 
