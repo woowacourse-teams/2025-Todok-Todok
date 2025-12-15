@@ -22,7 +22,7 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
                    FROM Discussion d
                    WHERE d.id = :discussionId
             """)
-    Optional<Discussion> findByIdWithMemberAndBook(final Long discussionId);
+    Optional<Discussion> findByIdWithMemberAndBook(@Param("discussionId") final Long discussionId);
 
     @EntityGraph(value = "Discussion.withMemberAndBook", type = EntityGraph.EntityGraphType.LOAD)
     @Query("""
@@ -174,6 +174,8 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
                 JOIN comment c ON r.comment_id = c.id
                 WHERE r.created_at >= :sinceDate AND r.deleted_at IS NULL AND c.deleted_at IS NULL
             ) AS activity
+            JOIN discussion d ON d.id = activity.discussion_id
+            WHERE d.deleted_at IS NULL
             GROUP BY
                 activity.discussion_id
             ORDER BY
