@@ -2,8 +2,11 @@ package todoktodok.backend.discussion.domain.repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -141,4 +144,37 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
                 WHERE d.id = :discussionId
             """)
     void increaseViewCount(@Param("discussionId") final Long discussionId);
+
+    @Query(
+            value = """
+            SELECT
+                activity.discussion_id
+            FROM (
+                SELECT dl.discussion_id
+                FROM discussion_like dl
+                WHERE dl.created_at >= :sinceDate AND dl.deleted_at IS NULL
+
+                UNION ALL
+                SELECT c.discussion_id
+                FROM comment c
+                WHERE c.created_at >= :sinceDate AND c.deleted_at IS NULL
+
+                UNION ALL
+                SELECT c.discussion_id
+                FROM reply r
+                JOIN comment c ON r.comment_id = c.id
+                WHERE r.created_at >= :sinceDate AND r.deleted_at IS NULL AND c.deleted_at IS NULL
+            ) AS activity
+            GROUP BY
+                activity.discussion_id
+            ORDER BY
+                COUNT(activity.discussion_id) DESC, activity.discussion_id DESC
+            """,
+            nativeQuery = true
+    )
+    List<Long> findHotDiscussionIds(
+            @Param("sinceDate") final LocalDateTime sinceDate,
+            final Pageable pageable
+    );
+
 }
