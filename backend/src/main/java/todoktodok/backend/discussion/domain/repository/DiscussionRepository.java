@@ -16,6 +16,15 @@ import todoktodok.backend.member.domain.Member;
 
 public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
 
+    @EntityGraph(value = "Discussion.withMemberAndBook", type = EntityGraph.EntityGraphType.LOAD)
+    @Query("""
+                   SELECT d
+                   FROM Discussion d
+                   WHERE d.id = :discussionId
+            """)
+    Optional<Discussion> findByIdWithMemberAndBook(final Long discussionId);
+
+    @EntityGraph(value = "Discussion.withMemberAndBook", type = EntityGraph.EntityGraphType.LOAD)
     @Query("""
                    SELECT d
                    FROM Discussion d
