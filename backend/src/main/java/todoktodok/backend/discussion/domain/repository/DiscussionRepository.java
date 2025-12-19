@@ -2,8 +2,10 @@ package todoktodok.backend.discussion.domain.repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -230,4 +232,13 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
             @Param("sinceDate") final LocalDateTime sinceDate,
             final Pageable pageable
     );
+
+    @Query("""
+        SELECT d
+        FROM Discussion d
+        JOIN FETCH d.member
+        JOIN FETCH d.book
+        WHERE d.id = :discussionId
+    """)
+    Optional<Discussion> findByIdWithMemberAndBook(@Param("discussionId") final Long discussionId);
 }

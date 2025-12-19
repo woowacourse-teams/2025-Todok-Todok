@@ -78,11 +78,11 @@ public class DiscussionEventHandler {
         fcmPushNotifier.sendPush(recipientId, fcmMessagePayload);
     }
 
-    @Async
+//    @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void handleDiscussionView(final DiscussionViewEvent discussionViewEvent) {
         try {
-//            log.info("DiscussionViewEvent 실행");
+            log.info("DiscussionViewEvent 실행");
             discussionCommandService.updateDiscussionMemberView(discussionViewEvent.memberId(),
                     discussionViewEvent.discussionId());
         } catch (final Exception e) {

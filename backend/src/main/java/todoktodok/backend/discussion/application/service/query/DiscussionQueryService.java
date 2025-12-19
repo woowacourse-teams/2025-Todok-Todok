@@ -208,7 +208,7 @@ public class DiscussionQueryService {
     }
 
     private Discussion findDiscussion(final Long discussionId) {
-        return discussionRepository.findById(discussionId)
+        return discussionRepository.findByIdWithMemberAndBook(discussionId)
                 .orElseThrow(() -> new NoSuchElementException(
                                 String.format("해당 토론방을 찾을 수 없습니다: discussionId= %s", discussionId)
                         )
