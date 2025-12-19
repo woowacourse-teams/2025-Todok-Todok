@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.book.domain.Book;
 import todoktodok.backend.book.domain.repository.BookRepository;
@@ -116,8 +115,7 @@ public class DiscussionCommandService {
         insertMemberView(member, discussion);
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void insertMemberView(final Member member, final Discussion discussion) {
+    private void insertMemberView(final Member member, final Discussion discussion) {
         try {
             final DiscussionMemberView view = DiscussionMemberView.builder()
                     .discussion(discussion)
@@ -134,16 +132,14 @@ public class DiscussionCommandService {
         }
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void updateMemberViewIfAfter10Minutes(final DiscussionMemberView discussionMemberView, final Long discussionId) {
+    private void updateMemberViewIfAfter10Minutes(final DiscussionMemberView discussionMemberView, final Long discussionId) {
         if (discussionMemberView.isModifiedDatePassedFrom(VIEW_THRESHOLD)) {
             discussionMemberViewRepository.updateModifiedAtById(discussionMemberView.getId(), LocalDateTime.now());
             increaseViewCountSafely(discussionId);
         }
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void increaseViewCountSafely(final Long discussionId) {
+    private void increaseViewCountSafely(final Long discussionId) {
         discussionRepository.increaseViewCount(discussionId);
     }
 
