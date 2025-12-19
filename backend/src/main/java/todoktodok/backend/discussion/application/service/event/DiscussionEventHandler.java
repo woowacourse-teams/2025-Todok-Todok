@@ -3,6 +3,7 @@ package todoktodok.backend.discussion.application.service.event;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -80,9 +81,9 @@ public class DiscussionEventHandler {
         fcmPushNotifier.sendPush(recipientId, fcmMessagePayload);
     }
 
-//    @Async
-//    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-    @EventListener
+    @Async
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+//    @EventListener
     public void handleDiscussionView(final DiscussionViewEvent discussionViewEvent) {
         try {
             log.info("DiscussionViewEvent 실행");
