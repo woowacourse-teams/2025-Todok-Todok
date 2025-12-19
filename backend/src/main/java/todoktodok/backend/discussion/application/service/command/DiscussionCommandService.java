@@ -5,6 +5,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -108,20 +109,40 @@ public class DiscussionCommandService {
         final Optional<DiscussionMemberView> discussionMemberView
                 = discussionMemberViewRepository.findByMemberAndDiscussion(member, discussion);
 
-        if (discussionMemberView.isEmpty()) {
+        if (discussionMemberView.isPresent()) {
+            updateMemberViewIfAfter10Minutes(discussionMemberView.get(), discussionId);
+            return;
+        }
+
+        insertMemberView(member, discussion);
+    }
+
+    private void updateMemberViewIfAfter10Minutes(final DiscussionMemberView discussionMemberView, final Long discussionId) {
+        if (discussionMemberView.isModifiedDatePassedFrom(VIEW_THRESHOLD)) {
+            discussionMemberViewRepository.updateModifiedAtById(discussionMemberView.getId(), LocalDateTime.now());
+            increaseViewCountSafely(discussionId);
+        }
+    }
+
+    private void insertMemberView(final Member member, final Discussion discussion) {
+        try {
             final DiscussionMemberView view = DiscussionMemberView.builder()
                     .discussion(discussion)
                     .member(member)
                     .build();
-            discussionMemberViewRepository.save(view);
-            discussionRepository.increaseViewCount(discussionId);
-            return;
-        }
 
-        if (discussionMemberView.get().isModifiedDatePassedFrom(VIEW_THRESHOLD)) {
-            discussionMemberViewRepository.updateModifiedAtById(discussionMemberView.get().getId(), LocalDateTime.now());
-            discussionRepository.increaseViewCount(discussionId);
+            discussionMemberViewRepository.save(view);
+            increaseViewCountSafely(discussion.getId());
+        } catch (final DataIntegrityViolationException e) {
+            // 비동기 로직에서 Race Condition 발생한 경우 다시 업데이트 처리
+            final DiscussionMemberView savedDiscussionMemberView = discussionMemberViewRepository.findByMemberAndDiscussion(member, discussion)
+                    .orElseThrow();
+            updateMemberViewIfAfter10Minutes(savedDiscussionMemberView, discussion.getId());
         }
+    }
+
+    private void increaseViewCountSafely(final Long discussionId) {
+        discussionRepository.increaseViewCount(discussionId);
     }
 
     public void deleteDiscussion(

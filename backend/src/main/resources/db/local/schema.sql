@@ -213,5 +213,6 @@ CREATE TABLE discussion_member_view
     discussion_id     BIGINT NOT NULL,
     member_id         BIGINT NOT NULL,
     FOREIGN KEY (discussion_id) REFERENCES discussion (id),
-    FOREIGN KEY (member_id) REFERENCES member (id)
+    FOREIGN KEY (member_id) REFERENCES member (id),
+    UNIQUE (discussion_id, member_id)
 );
