@@ -98,6 +98,7 @@ public class DiscussionCommandService {
         discussion.update(discussionTitle, discussionOpinion);
     }
 
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void updateDiscussionMemberView(
             final Long memberId,
             final Long discussionId
@@ -116,8 +117,14 @@ public class DiscussionCommandService {
         insertMemberView(member, discussion);
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void insertMemberView(final Member member, final Discussion discussion) {
+    private void updateMemberViewIfAfter10Minutes(final DiscussionMemberView discussionMemberView, final Long discussionId) {
+        if (discussionMemberView.isModifiedDatePassedFrom(VIEW_THRESHOLD)) {
+            discussionMemberViewRepository.updateModifiedAtById(discussionMemberView.getId(), LocalDateTime.now());
+            increaseViewCountSafely(discussionId);
+        }
+    }
+
+    private void insertMemberView(final Member member, final Discussion discussion) {
         try {
             final DiscussionMemberView view = DiscussionMemberView.builder()
                     .discussion(discussion)
@@ -134,16 +141,7 @@ public class DiscussionCommandService {
         }
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void updateMemberViewIfAfter10Minutes(final DiscussionMemberView discussionMemberView, final Long discussionId) {
-        if (discussionMemberView.isModifiedDatePassedFrom(VIEW_THRESHOLD)) {
-            discussionMemberViewRepository.updateModifiedAtById(discussionMemberView.getId(), LocalDateTime.now());
-            increaseViewCountSafely(discussionId);
-        }
-    }
-
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void increaseViewCountSafely(final Long discussionId) {
+    private void increaseViewCountSafely(final Long discussionId) {
         discussionRepository.increaseViewCount(discussionId);
     }
 

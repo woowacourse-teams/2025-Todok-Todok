@@ -86,7 +86,7 @@ public class DiscussionEventHandler {
             discussionCommandService.updateDiscussionMemberView(discussionViewEvent.memberId(),
                     discussionViewEvent.discussionId());
         } catch (final Exception e) {
-            log.error("비동기 처리 중 오류 발생, cause: {}", e.getMessage(), e);
+            log.error("토론방 조회수 비동기 처리 중 오류 발생, cause: {}", e.getMessage(), e);
         }
     }
 }
