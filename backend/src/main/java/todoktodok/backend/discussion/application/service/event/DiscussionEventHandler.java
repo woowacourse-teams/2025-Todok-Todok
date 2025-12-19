@@ -81,7 +81,6 @@ public class DiscussionEventHandler {
 
 //    @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void handleDiscussionView(final DiscussionViewEvent discussionViewEvent) {
         try {
             log.info("DiscussionViewEvent 실행");

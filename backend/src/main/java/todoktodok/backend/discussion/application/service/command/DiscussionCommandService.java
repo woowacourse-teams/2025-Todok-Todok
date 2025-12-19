@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import todoktodok.backend.book.domain.Book;
 import todoktodok.backend.book.domain.repository.BookRepository;
@@ -97,6 +98,7 @@ public class DiscussionCommandService {
         discussion.update(discussionTitle, discussionOpinion);
     }
 
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void updateDiscussionMemberView(
             final Long memberId,
             final Long discussionId
